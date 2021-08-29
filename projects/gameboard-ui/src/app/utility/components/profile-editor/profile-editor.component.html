@@ -1,0 +1,31 @@
+<!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
+<ng-container *ngIf="ctx$ | async as ctx">
+
+    <h4>Set your display name</h4>
+
+    <p>
+        Choose a <em>default</em> name for public display that is suitable for all audiences.
+    </p>
+    <div class="form-group w-50 d-inline-block">
+        <label for="nameInput">Requested Display Name</label>
+        <input id="nameInput" class="form-control" [(ngModel)]="ctx.user.name" (input)="updating$.next(ctx.user)"  placeholder="display name" maxlength="64">
+    </div>
+    <div class="form-group w-50 d-inline-block">
+        <label for="">Approved Display Name</label>
+        <span class="form-control">{{ctx.user.approvedName}}</span>
+    </div>
+
+    <h4>Select your sponsoring organization</h4>
+
+    <ng-container *ngFor="let s of ctx.sponsors">
+        <div class="card" [class.active]="ctx.user.sponsor===s.logo" (click)="setSponsor(ctx.user, s)">
+            <div class="card-body p-1">
+                <div class="card-title">{{s.name || s.id}}</div>
+            </div>
+            <img class="card-img-bottom" [src]="s.logoUrl" [alt]="s.id">
+        </div>
+    </ng-container>
+
+</ng-container>

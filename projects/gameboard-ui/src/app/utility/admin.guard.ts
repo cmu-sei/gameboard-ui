@@ -36,7 +36,7 @@ export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
 
   private validateRole(): Observable<boolean | UrlTree> {
     return this.userSvc.user$.pipe(
-      map(u => u?.isAdmin || false),
+      map(u => u?.isRegistrar || u?.isDirector || u?.isAdmin || false),
       map(v => v ? v : this.router.parseUrl('/forbidden'))
     );
   }

@@ -14,6 +14,7 @@ export interface ApiUser {
   isDesigner: boolean;
   isTester: boolean;
   isObserver: boolean;
+  sponsorLogo: string;
 }
 
 export interface NewUser {

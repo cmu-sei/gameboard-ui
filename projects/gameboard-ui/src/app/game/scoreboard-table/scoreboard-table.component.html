@@ -15,7 +15,7 @@
     <ng-container *ngIf="scores$ | async as scores; else loading">
       <tr *ngFor="let s of scores; trackBy:trackById">
         <td>{{s.rank}}</td>
-        <td>{{s.sponsor}}</td>
+        <td><img [src]="s.sponsorLogo" [alt]="s.sponsor" width="48px"></td>
         <td>
           <small *ngIf="s.session.countdown" class="bg-success px-2 rounded">{{s.session.countdown | countdown}}</small>
           <span> {{s.approvedName}}</span>

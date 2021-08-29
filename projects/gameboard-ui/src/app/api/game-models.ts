@@ -17,6 +17,7 @@ export interface GameDetail {
   testCode: string;
   gameStart: Date;
   gameEnd: Date;
+  gameMarkdown: string;
   registrationMarkdown: string;
   registrationOpen: Date;
   registrationClose: Date;

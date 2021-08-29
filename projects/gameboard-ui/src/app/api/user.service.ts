@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ApiUser, ChangedUser, NewUser, TreeNode } from './user-models';
 
@@ -26,20 +26,28 @@ export class UserService {
     return this.http.get<ApiUser[]>(this.url + '/users', {params: filter});
   }
   public retrieve(id: string): Observable<ApiUser> {
-    return this.http.get<ApiUser>(`${this.url}/user/${id}`);
+    return this.http.get<ApiUser>(`${this.url}/user/${id}`).pipe(
+      map(r => this.transform(r))
+    );
   }
   public create(model: NewUser): Observable<ApiUser> {
-    return this.http.post<ApiUser>(`${this.url}/user`, model);
+    return this.http.post<ApiUser>(`${this.url}/user`, model).pipe(
+      map(r => this.transform(r))
+    );
   }
   public update(model: ChangedUser): Observable<any> {
-    return this.http.put<any>(`${this.url}/user`, model);
+    return this.http.put<any>(`${this.url}/user`, model).pipe(
+      map(() => this.transform(model as ApiUser))
+    );
   }
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/user/${id}`);
   }
   public register(model: NewUser, authorization: string): Observable<ApiUser> {
     model.id = model.sub;
-    return this.http.post<ApiUser>(`${this.url}/user`, model, {headers: {authorization}} );
+    return this.http.post<ApiUser>(`${this.url}/user`, model, {headers: {authorization}} ).pipe(
+      map(r => this.transform(r))
+    );
   }
   public logout(): Observable<any> {
     return this.http.post<any>(`${this.url}/user/logout`, null);
@@ -74,5 +82,13 @@ export class UserService {
     }
 
     this.toNode(folder, path);
+  }
+
+  private transform(user: ApiUser): ApiUser {
+    user.sponsorLogo = user.sponsor
+      ? `${this.config.imagehost}/${user.sponsor}`
+      : `${this.config.basehref}assets/sponsor.svg`
+    ;
+    return user;
   }
 }

@@ -22,6 +22,8 @@ import { YamlPipe } from './pipes/yaml.pipe';
 import { LoginComponent } from './components/login/login.component';
 import { ClipboardService } from './clipboard.service';
 import { ClockPipe } from './pipes/clock.pipe';
+import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
+import { FormsModule } from '@angular/forms';
 
 const components = [
   ClipspanComponent,
@@ -31,6 +33,7 @@ const components = [
   DropzoneComponent,
   GameCardComponent,
   LoginComponent,
+  ProfileEditorComponent,
   AgedDatePipe,
   CamelspacePipe,
   CountdownPipe,
@@ -45,6 +48,7 @@ const components = [
   exports: [...components],
   imports: [
     CommonModule,
+    FormsModule,
     FontAwesomeModule,
     AlertModule,
     TooltipModule,

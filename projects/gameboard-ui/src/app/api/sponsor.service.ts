@@ -30,7 +30,9 @@ export class SponsorService {
     );
   }
   public retrieve(id: string): Observable<Sponsor> {
-    return this.http.get<Sponsor>(`${this.url}/sponsor/${id}`);
+    return this.http.get<Sponsor>(`${this.url}/sponsor/${id}`).pipe(
+      map(r => this.transform(r))
+    );
   }
   public create(model: NewSponsor): Observable<Sponsor> {
     return this.http.post<Sponsor>(`${this.url}/sponsor`, model);
@@ -53,7 +55,7 @@ export class SponsorService {
   private transform(sponsor: Sponsor): Sponsor {
     sponsor.logoUrl = sponsor.logo
       ? `${this.config.imagehost}/${sponsor.logo}`
-      : `${this.config.basehref}assets/sponsor.png`
+      : `${this.config.basehref}assets/sponsor.svg`
     ;
     return sponsor;
   }

@@ -1,0 +1,10 @@
+.card {
+    width: 150px;
+    display: inline-block;
+    margin: 1rem;
+    cursor: pointer;
+}
+.active {
+    background-color: lightgray;
+    color: black;
+}

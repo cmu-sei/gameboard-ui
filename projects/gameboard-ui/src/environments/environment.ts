@@ -11,13 +11,13 @@ export const environment = {
     imghost: 'http://localhost:5002/img',
     oidc: {
       client_id: 'dev-code',
-      authority: 'http://localhost:5000',
-      // authority: 'https://devid.cmusei.dev',
+      // authority: 'http://localhost:5000',
+      authority: 'https://devid.cmusei.dev',
       redirect_uri: 'http://localhost:4202/oidc',
       silent_redirect_uri: 'http://localhost:4202/assets/oidc-silent.html',
       response_type: 'code',
       scope: 'openid profile dev-api',
-      accessTokenExpiringNotificationTime: 30,
+      accessTokenExpiringNotificationTime: 60,
       monitorSession: false,
       loadUserInfo: true,
       useLocalStorage: true

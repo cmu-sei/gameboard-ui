@@ -24,6 +24,7 @@ export interface Player {
   partialCount: number;
   isManager: boolean;
 
+  sponsorLogo: string;
   session: TimeWindow;
 }
 
@@ -89,6 +90,7 @@ export interface Standing {
   correctCount: number;
   partialCount: number;
   session: TimeWindow;
+  sponsorLogo: string;
 }
 
 export interface TeamInvitation {

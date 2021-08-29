@@ -33,7 +33,7 @@ export class PlayerEnlistComponent implements OnInit {
       switchMap(z => apiPlayer.enlist(z)),
       finalize(() => sub.unsubscribe())
     ).subscribe(
-      p => router.navigate(['/game', p.gameId, 'title']),
+      p => router.navigate(['/game', p.gameId]),
       err => this.errors.push(err)
     );
   }

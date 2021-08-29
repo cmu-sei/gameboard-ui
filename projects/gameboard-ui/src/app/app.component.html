@@ -5,9 +5,9 @@
   <div class="text-right">
     <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/home']">Home</a>
     <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/admin']">Admin</a>
-    <!-- <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/score']">Scores</a>
-    <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['news']">News</a>
-    <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['profile']">Profile</a> -->
+    <!-- <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/score']">Scores</a> -->
+    <!-- <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['news']">News</a> -->
+    <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['profile']">Profile</a>
     <ng-container *ngIf="user$ | async as user">
       <a *ngIf="!!user" class="btn btn-link text-success mx-1" (click)="logout()">Logout</a>
     </ng-container>

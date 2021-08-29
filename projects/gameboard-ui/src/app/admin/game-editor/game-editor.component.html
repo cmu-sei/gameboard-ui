@@ -50,13 +50,13 @@
         <div class="form-group pb-0 pt-1">
           <label for="key-input">Key</label>
           <input type="text" class="form-control" id="key-input" name="key" [(ngModel)]="game.key">
-          <small>short, unique key distinguishing <em>this</em> event. shows in center of card</small>
+          <small>short, unique key distinguishing <em>this</em> event</small>
         </div>
 
         <div class="form-group pb-0 pt-1">
           <label for="name-input">Name</label>
           <input type="text" class="form-control" id="name-input" name="name" [(ngModel)]="game.name">
-          <small>event name (i.e. Open, Semis, Finals). Shows at top of card</small>
+          <small>event name (i.e. Open, Semis, Finals)</small>
         </div>
 
         <div class="form-group pb-0 pt-1">
@@ -90,6 +90,20 @@
           <small>specify the game mode (i.e. vm, unity, offline) </small>
         </div>
 
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <div class="form-group pb-1 pt-1">
+          <label for="logo-input">Card Image</label>
+          <app-dropzone inputId="logo-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event, 'card')">
+            <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
+              <fa-icon [icon]="faTrash"></fa-icon>
+              <span>Reset</span>
+            </button>
+            <app-game-card [game]="game"></app-game-card>
+          </app-dropzone>
+        </div>
+
         <div class="form-group pb-0 pt-1">
           <label for="cardtext1-input">Card Text Top</label>
           <input type="text" class="form-control" id="cardtext1-input" name="cardText1" [(ngModel)]="game.cardText1">
@@ -108,16 +122,13 @@
           <small>text displayed at the bottom of the card</small>
         </div>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="form-group pb-1 pt-1">
-          <label for="logo-input">Card Image</label>
-          <app-dropzone inputId="logo-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event, 'card')">
-            <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
-              <fa-icon [icon]="faTrash"></fa-icon>
-              <span>Reset</span>
-            </button>
-            <app-game-card [game]="game"></app-game-card>
-          </app-dropzone>
+
+      <div class="col-12">
+        <div class="form-group pb-0 pt-1">
+          <label for="gameMarkdown-input">Lobby Markdown</label>
+          <textarea rows="11" type="text" class="form-control" id="gameMarkdown-input"
+            name="gameMarkdown" [(ngModel)]="game.gameMarkdown"></textarea>
+          <small>presented in the game lobby</small>
         </div>
       </div>
     </div>

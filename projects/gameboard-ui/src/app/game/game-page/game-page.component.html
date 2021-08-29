@@ -5,10 +5,6 @@
   <div class="jumbotron d-flex align-items-center">
     <app-game-card [game]="ctx.game"></app-game-card>
     <span class="display-4 text-success mx-4">
-      {{ctx.game.competition}}
-      {{ctx.game.season}}
-      {{ctx.game.track}}
-      {{ctx.game.division}}
       {{ctx.game.name}}
     </span>
     <div class="spacer"></div>
@@ -21,6 +17,10 @@
 
   <div class="container-fluid">
 
+    <div class="p-4">
+      <markdown [data]="ctx.game.gameMarkdown"></markdown>
+    </div>
+
     <div class="row justify-content-center">
       <!-- if auth'd -->
       <ng-container *ngIf="!!ctx.user.id">
@@ -32,7 +32,7 @@
           </div>
         </ng-container>
         <!-- if not session start -->
-        <ng-container *ngIf="(ctx.user.isTester || !ctx.game.registration.isAfter) && (!ctx.player.id || (ctx.player.sessionBegin+'').startsWith('0001'))">
+        <ng-container *ngIf="(ctx.user.isDesigner || !ctx.game.registration.isAfter) && (!ctx.player.id || ctx.player.session.isBefore)">
           <div class="col panel">
             <h2>Enrollment</h2>
             <app-player-enroll [ctx]="ctx"></app-player-enroll>
