@@ -6,6 +6,7 @@ import { faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { BoardGame } from '../../../api/board-models';
 import { Game } from '../../../api/game-models';
 import { ConfigService } from '../../config.service';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game-card',
@@ -34,8 +35,11 @@ export class GameCardComponent implements OnInit {
         ? `${this.config.basehref}assets/${this.game.mode}.png`
         : `${this.config.basehref}assets/vm.png`
       ;
-
     }
+  }
+
+  setModeUrlPath() {
+    this.game.modeUrl = '';
   }
 
   select(): void {
@@ -43,5 +47,4 @@ export class GameCardComponent implements OnInit {
       this.game
     );
   }
-
 }

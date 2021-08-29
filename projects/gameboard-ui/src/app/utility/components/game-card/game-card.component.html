@@ -25,7 +25,7 @@
       </h1>
     </div>
     <div *ngIf="game.mode" class="d-flex justify-content-start p-3 game-front w-100 h-100 position-absolute">
-      <img [src]="game.modeUrl" class="mt-auto mode-logo rounded-circle bg-white" alt="Environment Logo">
+      <img *ngIf="game.modeUrl" [src]="game.modeUrl" class="mt-auto mode-logo rounded-circle bg-white" alt="Environment Logo" (error)="setModeUrlPath()">
     </div>
     <h2>
       <span class="badge d-flex justify-content-end m-1 lb-font upper">{{ game.cardText3 }}</span>
