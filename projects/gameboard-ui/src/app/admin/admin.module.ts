@@ -27,6 +27,7 @@ import { ChallengeReportComponent } from './challenge-report/challenge-report.co
 import { AnnounceComponent } from './announce/announce.component';
 import { ConsoleObserverComponent } from './console-observer/console-observer.component';
 import { PrereqsComponent } from './prereqs/prereqs.component';
+import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { PrereqsComponent } from './prereqs/prereqs.component';
     ChallengeReportComponent,
     AnnounceComponent,
     ConsoleObserverComponent,
-    PrereqsComponent
+    PrereqsComponent,
+    FeedbackReportComponent
   ],
   imports: [
     CommonModule,
@@ -65,6 +67,7 @@ import { PrereqsComponent } from './prereqs/prereqs.component';
         { path: 'report/users', component: UserReportComponent },
         { path: 'report/sponsors', component: PlayerSponsorReportComponent },
         { path: 'report/challenges', component: ChallengeReportComponent },
+        { path: 'report/feedback', component: FeedbackReportComponent },
         { path: 'support', component: ChallengeBrowserComponent }
         // { path: '**', redirectTo: 'dashboard' }
       ]},

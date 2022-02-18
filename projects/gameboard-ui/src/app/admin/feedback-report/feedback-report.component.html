@@ -1,0 +1,166 @@
+<a class="btn btn-link" routerLink="../">
+  <fa-icon [icon]="faArrowLeft"></fa-icon>
+  <span>Back</span>
+</a>
+
+<h4 class="mb-0">Feedback</h4>
+
+<div class="pb-2 pt-0 text-center">
+  <div id="feedbackType-input" #selectType class="btn-group" btnRadioGroup name="feedbackType" tabindex="0"
+    [(ngModel)]="currentType" [ngModelOptions]="{updateOn: 'change'}" (click)="updateType(currentType!)">
+    <label class="btn btn-outline-info btn-md" btnRadio="game">Game Feedback</label>
+    <label class="btn btn-outline-info btn-md" btnRadio="challenge">Challenge Feedback</label>
+  </div>
+</div>
+
+<form #form="ngForm" autocomplete="off">
+  <div class="input-group mb-4 align-items-center" *ngIf="true">
+    <div class="pr-2">
+      <label for="gameSelect" class="m-0">Select a game: </label>
+    </div>
+    <div>
+      <select class="form-control" #selectGame (change)="updateGame(selectGame.value)">
+        <option *ngFor="let g of games" value="{{g.id}}">{{g.name}}</option>
+      </select>
+    </div>
+
+    <ng-container *ngIf="currentType == 'challenge'">
+      <div class="pl-4 pr-2" [hidden]="currentType != 'challenge' || !currentGame">
+        <label for="gameSelect" class="m-0">Select a challenge: </label>
+      </div>
+      <div>
+        <select class="form-control" #selectChallenge (change)="updateChallenge(selectChallenge.value)">
+          <option value="all">All Challenges</option>
+          <option *ngFor="let c of challenges" value="{{c.id}}">{{c.name}}</option>
+        </select>
+      </div>
+    </ng-container>
+  </div>
+</form>
+
+<div *ngIf="currentGame && !currentGame.feedbackTemplate" class="m-4 text-center">
+  Feedback questions not configured for this game yet.
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-10 p-2">
+      <div class="section-header my-2" tabindex="0" (click)="toggle('summary')">
+        <fa-icon [icon]="showSummary ? faCaretDown : faCaretRight" size="lg"></fa-icon>
+        <span class="">
+          <h3 class="d-inline">{{currentType | titlecase}} Overview - {{currentGame?.name}}<ng-container
+              *ngIf="currentType == 'challenge'">, {{currentChallenge?.name ?? 'All ' + challenges?.length + '
+              Challenges'}}</ng-container>
+          </h3>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-2" *ngIf="currentGame; else loading" [hidden]="!showSummary">
+    <div class="row border-top p-2 text-left">
+      <div class="col-3 font-weight-bold text-left">{{currentType | titlecase}} Config</div>
+      <div class="col-3">{{allCols?.length ?? 0}} <small>total question(s)</small></div>
+      <div class="col-3">{{radioCols?.length ?? 0}} <small>numeric</small></div>
+      <div class="col-3">{{(allCols?.length ?? 0) - (radioCols?.length ?? 0)}} <small>text</small></div>
+    </div>
+    <div class="row border-top p-2 text-left">
+      <div class="col-3 font-weight-bold text-left">Responses</div>
+      <div class="col-3">{{feedback?.length ?? 0}} <small>total response(s)</small></div>
+      <div class="col-3">{{feedback?.length ?? 0}} <small>in progress</small></div>
+      <div class="col-3">{{0}} <small>submitted</small></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-10 p-2">
+      <div class="section-header my-2" tabindex="0" (click)="toggle('questions')">
+        <fa-icon [icon]="showQuestions ? faCaretDown : faCaretRight" size="lg"></fa-icon>
+        <span class="">
+          <h3 class="d-inline">Question Summary</h3>
+        </span>
+      </div>
+    </div>
+    <div class="col-2 p-2 font-weight-bold">
+      <div [hidden]="!showQuestions && false">
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="export('challenge')">Export Feedback Summary to
+          CSV</button>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="!showQuestions" class="mb-2">
+    <div class="container my-2" *ngIf="currentGame; else loading">
+      <div class="row border-top p-2 text-left">
+        <div class="col-3 font-weight-bold text-left">Numerical Questions</div>
+        <div class="col-3 font-weight-bold">Average</div>
+        <div class="col-3 font-weight-bold">Min</div>
+        <div class="col-3 font-weight-bold">Max</div>
+      </div>
+
+      <div *ngFor="let q of radioCols" class="row border-top p-2 text-left">
+        <div class="col-3">{{q.id}}. {{q.prompt}}</div>
+        <div class="col-3">6</div>
+        <div class="col-3">2</div>
+        <div class="col-3">8</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-10 p-2">
+      <div class="section-header my-2" tabindex="0" (click)="toggle('table')">
+        <fa-icon [icon]="showTable ? faCaretDown : faCaretRight" size="lg"></fa-icon>
+        <span class="">
+          <h3 class="d-inline">Individual Responses</h3>
+        </span>
+      </div>
+    </div>
+    <div class="col-2 p-2 font-weight-bold">
+      <div [hidden]="!showTable && false">
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="export('challenge')">Export Raw Feedback to
+          CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper my-2" [hidden]="!showTable">
+    <table *ngIf="currentGame && currentGame.feedbackTemplate" class="table mt-2 feedback-table">
+      <thead class="thead-dark border-0">
+        <tr>
+          <th>ChallengeId</th>
+          <th>User</th>
+          <th>Name</th>
+          <th>Tag</th>
+          <th>Status</th>
+          <ng-container *ngIf="currentGame">
+            <th *ngFor="let col of allCols" [class]="col.type =='text' ? 'text-col' : ''" class="font-weight-bold">
+              {{col.id}} - {{col.shortName ?? col.prompt}}</th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody *ngIf="feedback; else loading">
+        <tr *ngFor="let r of feedback">
+          <td>{{ r.challengeId | slice:0:8 }}</td>
+          <td>{{ r.userId | slice:0:8 }}</td>
+          <td>{{ r.approvedName }}</td>
+          <td>{{ r.challengeTag }}</td>
+          <td>{{r.submitted ? "Submitted" : "In Progress"}}</td>
+          <ng-container *ngIf="currentGame">
+            <td *ngFor="let q of r.questions">{{q.answer}}</td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="feedback && feedback.length == 0" class="m-4 text-center">
+      No feedback yet.
+    </div>
+
+  </div>
+
+</div>
+
+<ng-template #loading>
+  <div class="text-center">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>

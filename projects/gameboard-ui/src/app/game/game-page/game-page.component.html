@@ -53,7 +53,7 @@
     </div>
 
     <div class="row">
-      <div class="col-12 scoreboard">
+      <div class="col-6 scoreboard">
         <h2 id="scoreboard" class="text-center my-4">
           <span>Scoreboard</span>&nbsp;&nbsp;
           <a [routerLink]="['../', 'scores', ctx.game.id]">
@@ -64,10 +64,13 @@
         </h2>
         <app-scoreboard-table [id]="ctx.game.id" [live]="ctx.game.session.isDuring"></app-scoreboard-table>
       </div>
+      <div class="col-6" *ngIf="true">
+        <app-feedback-form [game]="ctx.game" [session]="ctx.player.session"
+          [title]="'Game Feedback'" [type]="'game'"></app-feedback-form>
+      </div>
     </div>
 
   </div>
-
 
 </ng-container>
 

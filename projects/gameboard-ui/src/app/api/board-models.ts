@@ -1,6 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { FeedbackTemplate } from "./feedback-models";
 import { PlayerRole, TimeWindow } from "./player-models";
 
 export interface Challenge {
@@ -63,6 +64,7 @@ export interface BoardGame {
   division: string;
   mode: string;
   sponsor: string;
+  feedbackTemplate: FeedbackTemplate;
   background: string;
   logo: string;
   allowPreview: boolean;

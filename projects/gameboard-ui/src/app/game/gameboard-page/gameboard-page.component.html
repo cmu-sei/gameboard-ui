@@ -139,6 +139,11 @@
             Support Code:
             <app-clipspan class="text-info m-2 p-2">{{spec.instance?.id | slice:0:8}} {{spec.tag}}</app-clipspan>
           </div>
+          
+          <div *ngIf="spec.instance!.state.challenge">
+            <app-feedback-form [spec]="spec!" [specs$]="specs$" [game]="ctx.game" [session]="ctx.session"
+              [title]="'Challenge Feedback'" [type]="'challenge'"></app-feedback-form>
+          </div>
 
         </ng-container>
 

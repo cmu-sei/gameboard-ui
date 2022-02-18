@@ -13,6 +13,7 @@ import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { GameInfoComponent } from './game-info/game-info.component';
 import { PlayerSessionComponent } from './player-session/player-session.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { GamePageComponent } from './game-page/game-page.component';
 import { GameboardPageComponent } from './gameboard-page/gameboard-page.component';
 import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
@@ -21,6 +22,7 @@ import { SessionForecastComponent } from './session-forecast/session-forecast.co
 import { ScoreboardPageComponent } from './scoreboard-page/scoreboard-page.component';
 import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
+import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { PlayerPresenceComponent } from './player-presence/player-presence.compo
     SessionForecastComponent,
     ScoreboardPageComponent,
     ScoreboardTableComponent,
-    PlayerPresenceComponent
+    PlayerPresenceComponent,
+    FeedbackFormComponent
   ],
   exports: [
   ],
@@ -52,7 +55,8 @@ import { PlayerPresenceComponent } from './player-presence/player-presence.compo
     UtilityModule,
     FontAwesomeModule,
     AlertModule,
-    MarkdownModule
+    MarkdownModule,
+    ButtonsModule
   ]
 })
 export class GameModule { }

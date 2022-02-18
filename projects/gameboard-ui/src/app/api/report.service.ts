@@ -95,6 +95,14 @@ export class ReportService {
       });
   }
 
+  public exportFeedbackByChallengeSpec(challengeSpecId: string): void {
+    this.http.get(`${this.url}/report/exportchallengefeedback/${challengeSpecId}`, { responseType: 'arraybuffer' })
+      .subscribe(response => {
+        const name: string = 'feedback-challenge-report-' + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+
   private downloadFile(data: any, name: string, type: string) {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);

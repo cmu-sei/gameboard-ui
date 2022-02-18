@@ -131,6 +131,15 @@
           <small>presented in the game lobby</small>
         </div>
       </div>
+
+      <div class="col-12">
+        <div class="form-group pb-0 pt-1">
+          <label for="feedbackConfig-input">Feedback Questions</label>
+          <textarea rows="11" type="text" class="form-control" id="feedbackConfig-input"
+            name="feedbackConfig" [(ngModel)]="game.feedbackConfig"></textarea>
+          <small>follow example YAML format</small>
+        </div>
+      </div>
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(2)">

@@ -1,6 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { FeedbackTemplate } from "./feedback-models";
 import { TimeWindow } from "./player-models";
 
 export interface GameDetail {
@@ -18,6 +19,8 @@ export interface GameDetail {
   gameStart: Date;
   gameEnd: Date;
   gameMarkdown: string;
+  feedbackConfig: string;
+  feedbackTemplate: FeedbackTemplate;
   registrationMarkdown: string;
   registrationOpen: Date;
   registrationClose: Date;
