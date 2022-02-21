@@ -136,8 +136,13 @@
         <div class="form-group pb-0 pt-1">
           <label for="feedbackConfig-input">Feedback Questions</label>
           <textarea rows="11" type="text" class="form-control" id="feedbackConfig-input"
-            name="feedbackConfig" [(ngModel)]="game.feedbackConfig"></textarea>
-          <small>follow example YAML format</small>
+            name="feedbackConfig" [(ngModel)]="game.feedbackConfig" (input)="yamlChanged()"></textarea>
+          <div class="d-flex justify-content-between">
+            <small>follow example YAML format</small>
+            <small [class]="game?.feedbackTemplate ? '' : 'p-1 btn-danger rounded'">
+              {{feedbackMessage}}
+            </small>
+          </div>
         </div>
       </div>
     </div>

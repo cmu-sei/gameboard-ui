@@ -6,6 +6,7 @@ import { emit } from "process";
 export interface Feedback {
   id?: string;
   userId?: string;
+  playerId?: string;
   challengeId?: string;
   challengeSpecId?: string;
   gameId?: string;
@@ -18,6 +19,7 @@ export interface Feedback {
 export interface FeedbackReportDetails {
   id?: string;
   userId?: string;
+  playerId?: string;
   challengeId?: string;
   challengeSpecId?: string;
   gameId?: string;
@@ -45,6 +47,7 @@ export interface FeedbackQuestion {
   shortName?: string;
   answer?: string;
   options: string[];
+  required?: boolean;
 }
 
 export interface FeedbackTemplate {

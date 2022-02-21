@@ -6,6 +6,9 @@
 </div>
 
 <form #form="ngForm" [ngFormOptions]="{updateOn: 'change'}" [hidden]="!show" class="pop-light p-4 mt-4">
+
+  <app-error-div [errors]="errors"></app-error-div>
+
   <div *ngFor="let q of feedbackForm.questions; let i = index" class="mb-4">
     <label for="{{q.id}}">{{i+1}}. {{q.prompt}}</label>
     <textarea *ngIf="q.type == 'text'" rows="3" type="text" class="form-control" id="{{q.id}}" name="{{q.id}}"

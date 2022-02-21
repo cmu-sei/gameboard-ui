@@ -67,7 +67,8 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
     this.api.retrieve({gameId: this.game.id}).subscribe(
       feedback => {
         this.updateFeedback(feedback, this.game.feedbackTemplate.board);
-      }
+      },
+      (err: any) => {}
     )
   }
 
@@ -117,13 +118,22 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
       filter(f => !this.feedbackForm.submitted && !this.pending),
       tap(g => this.status = "Autosaving..."),
       switchMap(g =>
-        this.api.submit(this.createSubmission(false))
+        this.api.submit(this.createSubmission(false)).pipe(
+          catchError(err => {
+            this.errors.push("Error while saving");
+            this.status = "Error saving";
+            return of(); // nothing inside prevents anything below from happening
+          })
+        )
       ),
       tap(r => {
         this.dirty = false;
       }),
       delay(1500),
-      tap(r => this.status = "Autosaved")
+      tap(r => {
+        this.status = "Autosaved";
+        this.errors = [];
+      })
     );
     this.updated$.subscribe();
 
@@ -137,8 +147,12 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
         this.feedbackForm = feedback;
         this.status = "";
       },
-      (err: any) => this.errors.push(err.error),
+      (err: any) => {
+        this.errors.push(err.error);
+        this.pending = false;
+      },
       () => {
+        this.errors = [];
         this.pending = false;
         this.toggle();
       }

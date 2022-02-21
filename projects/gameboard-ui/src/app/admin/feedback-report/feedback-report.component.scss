@@ -5,10 +5,21 @@
 
 .feedback-table {
     width: 100%;
-    scrollbar-color: red yellow;
 }
 
 .table-wrapper {
     overflow-x: auto;
-    scrollbar-color: auto;
+}
+
+
+.table-wrapper::-webkit-scrollbar {
+    background: #00000000; 
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #434343; 
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #303030; 
 }

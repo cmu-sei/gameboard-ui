@@ -24,6 +24,8 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
   loaded$!: Observable<Game>;
   updated$!: Observable<boolean>;
   dirty = false;
+  refreshFeedback = false;
+  feedbackMessage?: string = undefined;
   viewing = 1;
 
   faCaretDown = faCaretDown;
@@ -46,7 +48,10 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
       map(p => p.id),
       filter(id => !!id),
       switchMap(id => api.retrieve(id)),
-      tap(g => this.game = g)
+      tap(g => {
+        this.game = g;
+        this.updateFeedbackMessage();
+      })
     );
   }
 
@@ -60,9 +65,32 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
       tap(g => this.dirty = true),
       debounceTime(5000),
       switchMap(g => this.api.update(this.game)),
-      tap(r => this.dirty = false)
+      tap(r => this.dirty = false),
+      filter(f => this.refreshFeedback),
+      switchMap(g => this.api.retrieve(this.game.id).pipe(
+        tap(game => {
+          this.game.feedbackTemplate = game.feedbackTemplate;
+          this.refreshFeedback = false;
+          this.updateFeedbackMessage();
+        }))
+      ),
+      map(g => false)
     );
 
+  }
+
+  yamlChanged() {
+    this.refreshFeedback = true;
+  }
+
+  updateFeedbackMessage() {
+    if (!this.game.feedbackConfig || this.game.feedbackConfig.trim().length == 0) {
+      this.feedbackMessage = "No questions configured";
+    } else if (this.game.feedbackTemplate) {
+      this.feedbackMessage = `${this.game.feedbackTemplate?.board?.length ?? 0} board, ${this.game.feedbackTemplate?.challenge?.length ?? 0} challenge questions configured`;
+    } else {
+      this.feedbackMessage = "Invalid YAML format";
+    }
   }
 
   show(i: number): void {
