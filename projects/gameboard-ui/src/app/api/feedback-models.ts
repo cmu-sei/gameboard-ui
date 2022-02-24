@@ -24,8 +24,6 @@ export interface FeedbackReportDetails {
   challengeSpecId?: string;
   gameId?: string;
   questions: FeedbackQuestion[];
-  radioQuestions?: FeedbackQuestion[];
-  textQuestions?: FeedbackQuestion[];
   submitted?: boolean;
   timestamp?: Date;
   approvedName?: string;
@@ -46,8 +44,11 @@ export interface FeedbackQuestion {
   prompt: string;
   shortName?: string;
   answer?: string;
-  options: string[];
   required?: boolean;
+  min?: number;
+  max?: number;
+  minLabel?: string;
+  maxLabel?: string;
 }
 
 export interface FeedbackTemplate {
@@ -55,15 +56,33 @@ export interface FeedbackTemplate {
   challenge: FeedbackQuestion[];
 }
 
-export interface FeedbackSearchParams {
-  gameId?: string;
-  challengeSpecId?: string;
-  type?: string;
-}
-
 export enum QuestionType {
-  radio = 'radio',
+  likert = 'likert',
   text = 'text'
 }
 
+export interface QuestionStats {
+  id?: string; 
+  prompt?: string; 
+  shortName?: string; 
+  average?: string; 
+  min?: string; 
+  max?: string; 
+  count?: string; 
+  lowest?: string; 
+  highest?: string; 
+}
+
+export interface FeedbackStats {
+  gameId: number;
+  challengeSpecId: number; 
+  configuredCount: number;
+  likertCount: number;
+  textCount: number;
+  requiredCount: number;
+  responsesCount: number;
+  inProgressCount: number;
+  submittedCount: number;
+  questionStats: QuestionStats[];
+}
 

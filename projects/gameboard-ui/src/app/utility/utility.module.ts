@@ -14,6 +14,7 @@ import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { ShortDatePipe } from './pipes/short-date.pipe';
+import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
@@ -40,6 +41,7 @@ const components = [
   CamelspacePipe,
   CountdownPipe,
   ShortDatePipe,
+  ShortTimePipe,
   UntagPipe,
   YamlPipe,
   ClockPipe

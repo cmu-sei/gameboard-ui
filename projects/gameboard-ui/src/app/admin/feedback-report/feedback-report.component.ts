@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { faTrash, faList, faSearch, faFilter, faCheck, faTintSlash, faArrowLeft, faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faList, faSearch, faFilter, faCheck, faTintSlash, faArrowLeft, faCaretDown, faCaretRight, faCaretLeft, faSync, faFile, faFileAlt, faFileArchive, faFileAudio, faFileCode, faFileContract, faFileCsv, faFileDownload, faFileExcel } from '@fortawesome/free-solid-svg-icons';
 import { Challenge, ChallengeSummary } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
-import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSearchParams, QuestionType } from '../../api/feedback-models';
+import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackStats, QuestionStats, QuestionType } from '../../api/feedback-models';
 import { FeedbackService } from '../../api/feedback.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Search } from '../../api/models';
 import { ReportService } from '../../api/report.service';
+import { Spec } from '../../api/spec-models';
 
 @Component({
   selector: 'app-feedback-report',
@@ -15,25 +16,37 @@ import { ReportService } from '../../api/report.service';
   styleUrls: ['./feedback-report.component.scss']
 })
 export class FeedbackReportComponent implements OnInit {
+  errors: any[] = [];
+  
   showSummary: boolean = true;
   showQuestions: boolean = false;
   showTable: boolean = false;
   
   games?: Game[];
-  challenges?: any[];
+  challengeSpecs?: Spec[];
   feedback?: FeedbackReportDetails[];
+  feedbackStats?: FeedbackStats;
   currentGame?: Game;
-  currentChallenge?: any;
+  currentChallengeSpec?: Spec;
   currentType?: string = 'game';
-  
-  radioCols?: FeedbackQuestion[] = [];
-  allCols?: FeedbackQuestion[] = [];
+  submittedOnly: boolean = true;
 
-  search: FeedbackSearchParams = {};
+  configQuestions: FeedbackQuestion[] = [];
+
+  tablePageSize: number = 50;
+  take = 0;
+  skip = 0;
+
   faArrowLeft = faArrowLeft;
   faList = faList;
   faCaretDown = faCaretDown;
   faCaretRight = faCaretRight;
+  faCaretLeft = faCaretLeft;
+  faSync = faSync;
+
+  faFileCsv = faFileCsv;
+  faFileDownload = faFileDownload;
+  
   constructor(
     private gameService: GameService,
     private boardService: BoardService,
@@ -41,13 +54,14 @@ export class FeedbackReportComponent implements OnInit {
     private reportService: ReportService,
   ) {
     this.gameService.list({}).subscribe(
-      r => {
-        this.games = r;
+      (games: Game[]) => {
+        this.games = games;
         if (this.games.length > 0) {
           this.currentGame = this.games[0];
-          this.afterGameSelected();
+          this.gameSelected();
         }
-      }
+      },
+      (error: any) => {}
     );
   }
 
@@ -56,84 +70,108 @@ export class FeedbackReportComponent implements OnInit {
 
   updateGame(id: string) {
     if (this.games) {
-      this.currentGame = this.games.find(g => g.id === id);
-      this.afterGameSelected();
+      this.currentGame = this.games?.find(g => g.id === id);
+      this.gameSelected();
     }
   }
 
-  afterGameSelected() {
-    console.log(this.currentGame);
-    this.currentChallenge = undefined;
-    this.challenges = [];
-    this.updateCols();
+  gameSelected() {
+    this.currentChallengeSpec = undefined;
+    this.challengeSpecs = [];
+    this.updateTableCols();
     this.gameService.retrieveSpecs(this.currentGame?.id!).subscribe(
       r => {
-        this.challenges = r;
+        this.challengeSpecs = r;
       }
     );
-    this.fetchFeedback();
+    this.fetchAll();
   }
 
   updateChallenge(id: string) {
     console.log(id)
     if (id == "all") {
-      this.currentChallenge = undefined;
-    } else if (this.challenges) {
-      this.currentChallenge = this.challenges?.find(g => g.id === id);
-      
+      this.currentChallengeSpec = undefined;
+    } else if (this.challengeSpecs) {
+      this.currentChallengeSpec = this.challengeSpecs?.find(g => g.id === id);
     }
-    this.fetchFeedback();
+    this.fetchAll();
   }
 
   updateType(type: string) {
-    console.log(type)
     this.currentType = type;
-
-    this.updateCols();
-
-    this.fetchFeedback();
+    this.currentChallengeSpec = undefined;
+    this.updateTableCols();
+    this.fetchAll();
   }
 
-  updateCols() {
+  updateTableCols() {
     if (this.currentType == "game") {
-      this.radioCols = this.currentGame?.feedbackTemplate?.board?.filter(q => q.type == QuestionType.radio);
-      this.allCols = this.currentGame?.feedbackTemplate?.board;
+      this.configQuestions = this.currentGame?.feedbackTemplate?.board ?? [];
     } else if (this.currentType == "challenge") {
-      this.radioCols = this.currentGame?.feedbackTemplate?.challenge?.filter(q => q.type == QuestionType.radio);
-      this.allCols = this.currentGame?.feedbackTemplate?.challenge;
+      this.configQuestions = this.currentGame?.feedbackTemplate?.challenge ?? [];
+    }
+  }
+
+  fetchAll() {
+    if (this.currentGame?.feedbackTemplate && this.configQuestions.length) {
+      this.fetchFeedback();
+      this.fetchStats();
+    } else {
+      this.feedback = undefined;
+      this.feedbackStats = undefined;
     }
   }
 
   fetchFeedback() {
     this.feedback = undefined;
-    this.search.type = this.currentType;
-    this.search.gameId = this.currentGame?.id;
-    this.search.challengeSpecId = this.currentChallenge?.id;
-    console.log(this.search)
-    let model:any = {};
-    if (this.search.type)
-      model.type = this.search.type;
-    if (this.search.challengeSpecId)
-      model.challengeSpecId = this.search.challengeSpecId;
-    if (this.search.gameId)
-      model.gameId = this.search.gameId;
-    this.api.list(model).subscribe(
-      r => {
-        console.log(r);
-        this.feedback = r;
-        this.feedback = this.feedback.map(f => {
-          f.radioQuestions = f.questions.filter(q => q.type == QuestionType.radio);
-          f.textQuestions = f.questions.filter(q => q.type == QuestionType.text);
-          return f;
-        })
-      }
+    const params = this.makeSearchParams();
+    this.api.list(params).subscribe(
+      (feedback: FeedbackReportDetails[]) => {
+        this.feedback = feedback;
+      },
+      (error: any) => {}
+    );
+  }
+
+  fetchStats() {
+    this.feedbackStats = undefined;
+    const params = this.makeSearchParams();
+    this.reportService.feedbackStats(params).subscribe(
+      (feedbackStats: FeedbackStats) => {
+        this.feedbackStats = feedbackStats;
+      },
+      (error: any) => {}
     );
   }
 
   export(key: string) {
-    if (key == "challenge") {
-      this.reportService.exportFeedbackByChallengeSpec(this.currentChallenge.id);
-    }
+    if (key == "details")
+      this.reportService.exportFeedbackDetails(this.makeSearchParams(), this.createExportName(false));
+    else if (key == "stats")
+      this.reportService.exportFeedbackStats(this.makeSearchParams(), this.createExportName(true));
+  }
+
+  makeSearchParams() {
+    let params: any = {};
+    if (this.currentType)
+      params.type = this.currentType;
+    if (this.currentChallengeSpec)
+      params.challengeSpecId = this.currentChallengeSpec.id;
+    if (this.currentGame?.id)
+      params.gameId = this.currentGame?.id;
+    if (this.submittedOnly) // currently, only show summitted
+      params.submitStatus = 'submitted';
+    params.sort = 'newest';
+    params.skip = this.skip;
+    params.take = this.tablePageSize;
+    return params;
+  }
+
+  createExportName(isStats: boolean) {
+    const label = this.currentChallengeSpec?.tag ?? this.currentGame?.name;
+    const type = this.currentType;
+    const stats = isStats ? "-stats" : "";
+    return `${label}-${type}-feedback${stats}-`;
   }
 
   toggle(item: string) {
@@ -143,6 +181,18 @@ export class FeedbackReportComponent implements OnInit {
       this.showTable = !this.showTable;
     if (item == 'questions')
       this.showQuestions = !this.showQuestions;
+  }
+
+  next() {
+    this.skip = this.skip + this.tablePageSize;
+    this.fetchFeedback()
+  }
+
+  prev() {
+    this.skip = this.skip - this.tablePageSize;
+    if (this.skip < 0)
+      this.skip = 0;
+    this.fetchFeedback()
   }
 
 }

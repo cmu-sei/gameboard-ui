@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Challenge } from './board-models';
+import { FeedbackStats } from './feedback-models';
 import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport } from './report-models';
 
 @Injectable({
@@ -95,12 +96,25 @@ export class ReportService {
       });
   }
 
-  public exportFeedbackByChallengeSpec(challengeSpecId: string): void {
-    this.http.get(`${this.url}/report/exportchallengefeedback/${challengeSpecId}`, { responseType: 'arraybuffer' })
+  public exportFeedbackDetails(params: any, exportName: string): void {
+    this.http.get(`${this.url}/report/exportfeedbackdetails`, { responseType: 'arraybuffer', params: params })
       .subscribe(response => {
-        const name: string = 'feedback-challenge-report-' + this.timestamp() + '.csv';
+        const name: string = exportName + this.timestamp() + '.csv';
         this.downloadFile(response, name, 'application/ms-excel');
       });
+  }
+  
+  public exportFeedbackStats(params: any, exportName: string): void {
+    this.http.get(`${this.url}/report/exportfeedbackstats`, { responseType: 'arraybuffer', params: params })
+      .subscribe(response => {
+        console.log(response);
+        const name: string = exportName + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+
+  public feedbackStats(params: any): Observable<FeedbackStats> {
+    return this.http.get<FeedbackStats>(`${this.url}/report/feedbackstats/`, { params: params });
   }
 
   private downloadFile(data: any, name: string, type: string) {

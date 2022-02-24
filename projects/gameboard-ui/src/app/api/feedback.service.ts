@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { Feedback, FeedbackReportDetails, FeedbackSearchParams, FeedbackSubmission } from './feedback-models';
+import { Feedback, FeedbackReportDetails, FeedbackSubmission } from './feedback-models';
 
 @Injectable({
   providedIn: 'root'

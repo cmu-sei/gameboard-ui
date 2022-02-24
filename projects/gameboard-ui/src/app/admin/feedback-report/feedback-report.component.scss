@@ -1,16 +1,45 @@
 
 .text-col {
-    min-width: 500px;
+    min-width: 400px;
+}
+
+.num-col {
+    min-width: 80px;
+}
+
+.table-cell {
+    max-width: 900px;
+}
+
+.long-text {
+    min-width: 800px;
+}
+
+.q-id {
+    opacity: 70%;
+}
+
+.time-col {
+    min-width: 120px;
 }
 
 .feedback-table {
     width: 100%;
+    // border-left: 1px solid rgba(68, 68, 68, 0.283);
 }
 
 .table-wrapper {
     overflow-x: auto;
 }
 
+td {
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+// thead th {
+//     vertical-align: text-top !important;
+// }
 
 .table-wrapper::-webkit-scrollbar {
     background: #00000000; 

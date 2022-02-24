@@ -26,6 +26,7 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
   dirty = false;
   refreshFeedback = false;
   feedbackMessage?: string = undefined;
+  feedbackWarning: boolean = false;
   viewing = 1;
 
   faCaretDown = faCaretDown;
@@ -70,8 +71,8 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
       switchMap(g => this.api.retrieve(this.game.id).pipe(
         tap(game => {
           this.game.feedbackTemplate = game.feedbackTemplate;
-          this.refreshFeedback = false;
           this.updateFeedbackMessage();
+          this.refreshFeedback = false;
         }))
       ),
       map(g => false)
@@ -81,16 +82,6 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
 
   yamlChanged() {
     this.refreshFeedback = true;
-  }
-
-  updateFeedbackMessage() {
-    if (!this.game.feedbackConfig || this.game.feedbackConfig.trim().length == 0) {
-      this.feedbackMessage = "No questions configured";
-    } else if (this.game.feedbackTemplate) {
-      this.feedbackMessage = `${this.game.feedbackTemplate?.board?.length ?? 0} board, ${this.game.feedbackTemplate?.challenge?.length ?? 0} challenge questions configured`;
-    } else {
-      this.feedbackMessage = "Invalid YAML format";
-    }
   }
 
   show(i: number): void {
@@ -113,6 +104,33 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
         this.game.cardUrl = `${this.config.basehref}assets/card.png`;
       }
     );
+  }
+
+  
+  updateFeedbackMessage() {
+    this.feedbackWarning = true;
+    if (!this.game.feedbackConfig || this.game.feedbackConfig.trim().length == 0) {
+      this.feedbackMessage = "No questions configured";
+    } else if (this.game.feedbackTemplate) {
+      if (!this.checkFeedbackIds()) {
+        this.feedbackMessage = "IDs not unique in each list";
+      } else {
+        this.feedbackMessage = `${this.game.feedbackTemplate?.board?.length ?? 0} board, ${this.game.feedbackTemplate?.challenge?.length ?? 0} challenge questions configured`;
+        this.feedbackWarning = false;
+      }
+    } else {
+      this.feedbackMessage = "Invalid YAML format";
+    }
+  }
+
+  checkFeedbackIds(): boolean {
+    const boardIds = new Set(this.game.feedbackTemplate.board?.map(q => q.id));   
+    const challengeIds = new Set(this.game.feedbackTemplate.challenge?.map(q => q.id));   
+    console.log(boardIds, challengeIds, this.game)
+    if ([...boardIds].length != (this.game.feedbackTemplate.board?.length ?? 0) || [...challengeIds].length != (this.game.feedbackTemplate.challenge?.length ?? 0)) {
+      return false;
+    }
+    return true;
   }
 
 }

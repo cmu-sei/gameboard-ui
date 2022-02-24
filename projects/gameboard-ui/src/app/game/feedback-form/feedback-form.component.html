@@ -1,7 +1,8 @@
 <div class="section-header" tabindex="0" (click)="toggle()">
   <fa-icon [icon]="show ? faCaretDown : faCaretRight" size="lg"></fa-icon>
-  <span class="">
-    <h3 class="d-inline">{{title}}</h3>
+  <span>
+    <h3 *ngIf="type == 'challenge'" class="d-inline">{{title}}</h3>
+    <h2 *ngIf="type == 'game'" class="d-inline">{{title}}</h2>
   </span>
 </div>
 
@@ -10,21 +11,24 @@
   <app-error-div [errors]="errors"></app-error-div>
 
   <div *ngFor="let q of feedbackForm.questions; let i = index" class="mb-4">
-    <label for="{{q.id}}">{{i+1}}. {{q.prompt}}</label>
+    <label for="{{q.id}}">
+      {{i+1}}. {{q.prompt}}
+      <span *ngIf="q.required" class="required">*</span>
+    </label>
     <textarea *ngIf="q.type == 'text'" rows="3" type="text" class="form-control" id="{{q.id}}" name="{{q.id}}"
       [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!"></textarea>
-    <div *ngIf="q.type == 'radio'" class="">
-      <small class="pr-2 text-dark">low</small>
+    <div *ngIf="q.type == 'likert'">
+      <small class="pr-2 text-dark">{{q.minLabel}}</small>
       <div id="{{q.id}}" class="btn-group" btnRadioGroup name="{{q.id}}" tabindex="0" [(ngModel)]="q.answer"
         [disabled]="feedbackForm.submitted!">
-        <label *ngFor="let i of q.options" class="btn btn-outline-dark btn-sm m-0" btnRadio="{{i}}">{{i}}
+        <label *ngFor="let i of options(q.min ?? 1, q.max ?? 1)" class="btn btn-outline-dark btn-sm m-0" btnRadio="{{i}}">{{i}}
         </label>
       </div>
-      <small class="pl-2 text-dark">high</small>
+      <small class="pl-2 text-dark">{{q.maxLabel}}</small>
     </div>
   </div>
 
-  <app-confirm-button btnClass="btn btn-sm btn-secondary" (confirm)="submit()" [disabled]="feedbackForm.submitted!">
+  <app-confirm-button btnClass="btn btn-sm btn-secondary" (confirm)="submit()" [disabled]="feedbackForm.submitted! || !feedbackForm?.questions?.length">
     <fa-icon [icon]="faSubmit"></fa-icon>
     <span>{{feedbackForm.submitted ? "Submitted" : "Submit"}}</span>
   </app-confirm-button>
