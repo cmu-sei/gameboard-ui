@@ -22,7 +22,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
   @Input() session!: TimeWindow;
   @Input() spec!: BoardSpec;
   @Input() specs$!: Observable<BoardSpec>;
-  @Input() game!: Game | BoardGame;
+  @Input() game!: Game | BoardGame; // these share: id, name, feedbacktemplate
   @Input() type!: string;
   @ViewChild(NgForm) form!: FormGroup;
 
@@ -41,6 +41,8 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
   updated$!: Observable<any>;
   status: string = "";
 
+  characterLimit: number = 2000;
+
   constructor(
     private api: FeedbackService
   ) {
@@ -51,9 +53,8 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit(): void {
-    console.log(this.game)
     if (this.type == "game") {
-      this.setTemplate(this.game.feedbackTemplate.board);
+      this.setTemplate(this.game.feedbackTemplate.game);
     } else if (this.type == "challenge") {
       // set template only once since all challenges of a game have same template
       this.setTemplate(this.game.feedbackTemplate.challenge);
@@ -112,7 +113,6 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
     if (feedback && feedback.questions.length > 0) {
       // swap in the answers from user submitted response object, but only answers
       feedback.questions.forEach((question) => {
-        console.log(question, this.templateMap.get(question.id))
         // templateMap holds references to feedback form question objects, mapped by id
         let questionTemplate = this.templateMap.get(question.id);
         if (questionTemplate)

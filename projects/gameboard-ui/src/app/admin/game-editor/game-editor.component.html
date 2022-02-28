@@ -139,7 +139,7 @@
             name="feedbackConfig" [(ngModel)]="game.feedbackConfig" (input)="yamlChanged()"></textarea>
           <div class="d-flex justify-content-between">
             <small>follow example YAML format</small>
-            <small [class]="feedbackWarning ? 'p-1 btn-danger rounded' : ''">
+            <small [class]="feedbackWarning ? 'p-1 bg-danger rounded' : ''">
               {{feedbackMessage}}
             </small>
           </div>

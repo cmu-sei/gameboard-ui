@@ -52,7 +52,7 @@ export interface FeedbackQuestion {
 }
 
 export interface FeedbackTemplate {
-  board: FeedbackQuestion[];
+  game: FeedbackQuestion[];
   challenge: FeedbackQuestion[];
 }
 
@@ -65,9 +65,10 @@ export interface QuestionStats {
   id?: string; 
   prompt?: string; 
   shortName?: string; 
+  required?: boolean; 
   average?: string; 
-  min?: string; 
-  max?: string; 
+  scaleMin?: string; 
+  scaleMax?: string; 
   count?: string; 
   lowest?: string; 
   highest?: string; 

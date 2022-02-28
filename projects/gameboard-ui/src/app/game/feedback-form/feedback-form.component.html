@@ -15,11 +15,16 @@
       {{i+1}}. {{q.prompt}}
       <span *ngIf="q.required" class="required">*</span>
     </label>
-    <textarea *ngIf="q.type == 'text'" rows="3" type="text" class="form-control" id="{{q.id}}" name="{{q.id}}"
-      [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!"></textarea>
+    <ng-container *ngIf="q.type == 'text'">
+      <textarea rows="3" type="text" class="form-control" id={{q.id}} name={{q.id}}
+      [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!" maxlength={{characterLimit}}></textarea>
+      <small class="d-flex justify-content-end" [class]="q.answer?.length == characterLimit ? 'text-warning' : 'text-muted'">
+        {{characterLimit - (q.answer?.length ?? 0)}}
+      </small>
+    </ng-container>
     <div *ngIf="q.type == 'likert'">
       <small class="pr-2 text-dark">{{q.minLabel}}</small>
-      <div id="{{q.id}}" class="btn-group" btnRadioGroup name="{{q.id}}" tabindex="0" [(ngModel)]="q.answer"
+      <div id={{q.id}} class="btn-group" btnRadioGroup name={{q.id}} tabindex="0" [(ngModel)]="q.answer"
         [disabled]="feedbackForm.submitted!">
         <label *ngFor="let i of options(q.min ?? 1, q.max ?? 1)" class="btn btn-outline-dark btn-sm m-0" btnRadio="{{i}}">{{i}}
         </label>

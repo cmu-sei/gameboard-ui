@@ -44,7 +44,7 @@
       Challenges'}}</ng-container>
   </h2>
   <div class="align-self-center">
-    <button class="btn btn-outline-info" (click)="fetchAll()" [disabled]="!configQuestions.length">
+    <button class="btn btn-outline-info" (click)="refresh()" [disabled]="!configQuestions.length">
       <fa-icon [icon]="faSync"></fa-icon>
       <span>Refresh</span>
     </button>
@@ -119,10 +119,10 @@
       <ng-container *ngIf="configQuestions.length">
         <ng-container *ngIf="feedbackStats; else loading">
           <div *ngFor="let q of feedbackStats.questionStats" class="row border-top p-2 pl-4 text-left">
-            <div class="col-4">{{q.id}}) {{q.prompt}}</div>
-            <div class="col-2">{{!!q.count ? (q.average | number:'1.0-2'): ''}}<span class="m-0 p-0 text-muted">/{{q.max}}</span></div>
-            <div class="col-2">{{!!q.count ? q.lowest : ''}}<span class="m-0 p-0 text-muted">/{{q.max}}</span></div>
-            <div class="col-2">{{!!q.count ? q.highest : ''}}<span class="m-0 p-0 text-muted">/{{q.max}}</span></div>
+            <div class="col-4">{{q.id}}) {{q.prompt}}<span *ngIf="q.required" class="required">*</span></div>
+            <div class="col-2">{{!!q.count ? (q.average | number:'1.2-2'): ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
+            <div class="col-2">{{!!q.count ? q.lowest : ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
+            <div class="col-2">{{!!q.count ? q.highest : ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
             <div class="col-2">{{q.count}}</div>
           </div>
         </ng-container>
@@ -154,7 +154,7 @@
     <div class="container table-wrapper mb-2">
 
       <table *ngIf="configQuestions.length" class="table mt-2 feedback-table">
-        <thead class="thead-dark border-0">
+        <thead class="thead-dark border-0 table-header">
           <tr>
             <th class="time-col">Time</th>
             <th *ngIf="currentType == 'challenge'">Challenge</th>
@@ -164,21 +164,22 @@
             <!-- <th>Status</th> -->
             <th *ngFor="let q of configQuestions" [class]="q.type =='text' ? 'text-col' : 'num-col'" class="pt-1 font-weight-bold">
               <small class="q-id">{{q.id}})</small>
-              <div>{{q.shortName ?? q.prompt}}</div>
+              <div class="prompt">{{q.shortName ?? q.prompt}}</div>
             </th>
           </tr>
         </thead>
         <tbody *ngIf="feedback; else loading">
-          <tr *ngFor="let r of feedback">
-            <td>{{ r.timestamp | shorttime }}</td>
-            <td *ngIf="currentType == 'challenge'">{{ r.challengeTag }}</td>
+          <tr *ngFor="let r of feedback; let i = index" (click)="toggleRow(i)" id="row-{{i}}" class="minimized table-row">
+            
+            <td><div class="text-align-left">{{ r.timestamp | shorttime }}</div></td>
+            <td *ngIf="currentType == 'challenge'"><div>{{ r.challengeTag }}</div></td>
             <!-- <td>{{ r.challengeId | slice:0:8 }}</td> -->
             <!-- <td>{{ r.userId }}</td> -->
             <!-- <td>{{ r.userId | slice:0:8 }}</td> -->
-            <td>{{ r.approvedName }}</td>
+            <td><div>{{ r.approvedName }}</div></td>
             <!-- <td >{{r.submitted ? "Submitted" : "In Progress"}}</td> -->
             <td *ngFor="let q of r.questions" class="table-cell" [class]="(q.answer?.length ?? 0) > 500 ? 'long-text' : ''">
-              {{q.answer}}
+              <div>{{q.answer}}</div>
             </td>
           </tr>
         </tbody>

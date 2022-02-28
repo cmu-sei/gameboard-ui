@@ -33,7 +33,7 @@ export class FeedbackReportComponent implements OnInit {
 
   configQuestions: FeedbackQuestion[] = [];
 
-  tablePageSize: number = 50;
+  tablePageSize: number = 25;
   take = 0;
   skip = 0;
 
@@ -106,7 +106,7 @@ export class FeedbackReportComponent implements OnInit {
 
   updateTableCols() {
     if (this.currentType == "game") {
-      this.configQuestions = this.currentGame?.feedbackTemplate?.board ?? [];
+      this.configQuestions = this.currentGame?.feedbackTemplate?.game ?? [];
     } else if (this.currentType == "challenge") {
       this.configQuestions = this.currentGame?.feedbackTemplate?.challenge ?? [];
     }
@@ -177,10 +177,15 @@ export class FeedbackReportComponent implements OnInit {
   toggle(item: string) {
     if (item == 'summary')
       this.showSummary = !this.showSummary;
-    if (item == 'table')
-      this.showTable = !this.showTable;
     if (item == 'questions')
       this.showQuestions = !this.showQuestions;
+    if (item == 'table')
+      this.showTable = !this.showTable;
+  }
+
+  refresh() {
+    this.skip = 0;
+    this.fetchAll();
   }
 
   next() {
@@ -193,6 +198,13 @@ export class FeedbackReportComponent implements OnInit {
     if (this.skip < 0)
       this.skip = 0;
     this.fetchFeedback()
+  }
+
+  toggleRow(i: number) {
+    if (window.getSelection()?.toString()?.length != 0)
+      return;
+    let id = "row-"+i;
+    document.getElementById(id)?.classList.toggle('minimized');
   }
 
 }

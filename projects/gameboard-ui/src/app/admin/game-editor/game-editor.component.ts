@@ -108,26 +108,26 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
 
   
   updateFeedbackMessage() {
-    this.feedbackWarning = true;
+    this.feedbackWarning = false;
     if (!this.game.feedbackConfig || this.game.feedbackConfig.trim().length == 0) {
       this.feedbackMessage = "No questions configured";
     } else if (this.game.feedbackTemplate) {
       if (!this.checkFeedbackIds()) {
         this.feedbackMessage = "IDs not unique in each list";
+        this.feedbackWarning = true;
       } else {
-        this.feedbackMessage = `${this.game.feedbackTemplate?.board?.length ?? 0} board, ${this.game.feedbackTemplate?.challenge?.length ?? 0} challenge questions configured`;
-        this.feedbackWarning = false;
+        this.feedbackMessage = `${this.game.feedbackTemplate?.game?.length ?? 0} game, ${this.game.feedbackTemplate?.challenge?.length ?? 0} challenge questions configured`;
       }
     } else {
       this.feedbackMessage = "Invalid YAML format";
+      this.feedbackWarning = true;
     }
   }
 
   checkFeedbackIds(): boolean {
-    const boardIds = new Set(this.game.feedbackTemplate.board?.map(q => q.id));   
+    const boardIds = new Set(this.game.feedbackTemplate.game?.map(q => q.id));   
     const challengeIds = new Set(this.game.feedbackTemplate.challenge?.map(q => q.id));   
-    console.log(boardIds, challengeIds, this.game)
-    if ([...boardIds].length != (this.game.feedbackTemplate.board?.length ?? 0) || [...challengeIds].length != (this.game.feedbackTemplate.challenge?.length ?? 0)) {
+    if ([...boardIds].length != (this.game.feedbackTemplate.game?.length ?? 0) || [...challengeIds].length != (this.game.feedbackTemplate.challenge?.length ?? 0)) {
       return false;
     }
     return true;
