@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { faTrash, faList, faSearch, faFilter, faCheck, faTintSlash, faArrowLeft, faCaretDown, faCaretRight, faCaretLeft, faSync, faFile, faFileAlt, faFileArchive, faFileAudio, faFileCode, faFileContract, faFileCsv, faFileDownload, faFileExcel } from '@fortawesome/free-solid-svg-icons';
-import { Challenge, ChallengeSummary } from '../../api/board-models';
+import { faArrowLeft, faCaretDown, faCaretRight, faCaretLeft, faSync, faFileDownload } from '@fortawesome/free-solid-svg-icons';
 import { BoardService } from '../../api/board.service';
-import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackStats, QuestionStats, QuestionType } from '../../api/feedback-models';
+import { FeedbackQuestion, FeedbackReportDetails, FeedbackStats } from '../../api/feedback-models';
 import { FeedbackService } from '../../api/feedback.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { Search } from '../../api/models';
 import { ReportService } from '../../api/report.service';
 import { Spec } from '../../api/spec-models';
 
@@ -38,13 +36,10 @@ export class FeedbackReportComponent implements OnInit {
   skip = 0;
 
   faArrowLeft = faArrowLeft;
-  faList = faList;
   faCaretDown = faCaretDown;
   faCaretRight = faCaretRight;
   faCaretLeft = faCaretLeft;
   faSync = faSync;
-
-  faFileCsv = faFileCsv;
   faFileDownload = faFileDownload;
   
   constructor(

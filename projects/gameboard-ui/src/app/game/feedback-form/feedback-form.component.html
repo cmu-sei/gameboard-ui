@@ -9,6 +9,11 @@
 <form #form="ngForm" [ngFormOptions]="{updateOn: 'change'}" [hidden]="!show" class="pop-light p-4 mt-4">
 
   <app-error-div [errors]="errors"></app-error-div>
+  
+  <div *ngIf="game.feedbackTemplate.message as message" class="mb-3 bg-light p-2 rounded d-flex justify-content-between">
+    <fa-icon [icon]="faExclamationCircle" class="pr-1"></fa-icon>
+    <small class="font-weight-bold">{{message}}</small>
+  </div>
 
   <div *ngFor="let q of feedbackForm.questions; let i = index" class="mb-4">
     <label for="{{q.id}}">

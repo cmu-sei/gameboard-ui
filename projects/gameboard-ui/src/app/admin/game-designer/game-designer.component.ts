@@ -5,7 +5,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { faArrowLeft, faCopy, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, BehaviorSubject, merge, Observable, of, scheduled, Subject } from 'rxjs';
 import { catchError, debounceTime, delay, filter, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { Game } from '../../api/game-models';
+import { Game, NewGame } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Search } from '../../api/models';
 import * as YAML from 'yaml';
@@ -18,8 +18,8 @@ import { ClipboardService } from '../../utility/clipboard.service';
 })
 export class GameDesignerComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
-  creating$ = new Subject<Game>();
-  created$: Observable<Game>;
+  creating$ = new Subject<NewGame>();
+  created$: Observable<NewGame>;
   games$: Observable<Game[]>;
   games: Game[] = [];
   game: any;
@@ -82,14 +82,21 @@ export class GameDesignerComponent implements OnInit {
   }
 
   clone(game: Game): void {
-    this.creating$.next({...game, name: `${game.name}_CLONE`});
+    this.creating$.next({...game, name: `${game.name}_CLONE`, isClone: true});
   }
 
   clip(game: Game): void {
     this.clipboard.copyToClipboard(
-      YAML.stringify(game, { keepNodeTypes: true })
+      YAML.stringify(game, this.replacer)
     );
   }
+
+  // don't stringify parsed feedbackTemplate object, just string property
+  replacer(key: any, value: any) {
+    if (key == "feedbackTemplate") return undefined;
+    else return value;
+  }
+
   trackById(index: number, g: Game): string {
     return g.id;
   }
@@ -99,7 +106,7 @@ export class GameDesignerComponent implements OnInit {
       const fr = new FileReader();
       fr.onload = ev => {
         const model = YAML.parse(fr.result as string) as Game[];
-        model.forEach(m => this.creating$.next(m));
+        model.forEach(m => this.creating$.next({...m, isClone: true}));
       }
       if (file.size < 8192) {
         fr.readAsText(file);

@@ -30,7 +30,6 @@
 
 .feedback-table {
     width: 100%;
-    // border-left: 1px solid rgba(68, 68, 68, 0.283);
 }
 
 .table-wrapper {
@@ -40,22 +39,6 @@
 td {
     white-space: normal;
     overflow-wrap: break-word;
-}
-
-// thead th {
-//     vertical-align: text-top !important;
-// }
-
-.table-wrapper::-webkit-scrollbar {
-    background: #00000000; 
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-    background: #434343; 
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #303030; 
 }
 
 .required {
@@ -83,11 +66,15 @@ td {
     cursor: pointer;
 }
 
-// .fixed {
-//     position: sticky;
-// }
+// for table scroll bar to match theme
+.table-wrapper::-webkit-scrollbar {
+    background: #00000000; 
+}
 
-// .table-header > tr > th {
-//     position: sticky;
-//     top:0;
-// }
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #434343; 
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #303030; 
+}

@@ -57,6 +57,7 @@ export interface Game extends GameDetail
 }
 
 export interface NewGame extends GameDetail {
+  isClone?: boolean;
 }
 
 export interface ChangedGame extends Game {

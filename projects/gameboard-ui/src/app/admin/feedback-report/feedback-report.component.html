@@ -40,8 +40,7 @@
 
 <div class="d-flex justify-content-between">
   <h2>{{currentGame?.name}}<ng-container *ngIf="currentType == 'challenge'"> - {{currentChallengeSpec?.name ?? 'All ' +
-    challengeSpecs?.length + '
-      Challenges'}}</ng-container>
+    challengeSpecs?.length + ' Challenges'}}</ng-container>
   </h2>
   <div class="align-self-center">
     <button class="btn btn-outline-info" (click)="refresh()" [disabled]="!configQuestions.length">
@@ -51,7 +50,7 @@
   </div>
 </div>
 
-<div *ngIf="!configQuestions.length" class="pt-3 text-center text-warning">
+<div *ngIf="currentGame && !configQuestions.length" class="pt-3 text-center text-warning">
   {{currentType | titlecase}} feedback questions not configured for this game yet.
 </div>
 
@@ -74,21 +73,23 @@
     <ng-container *ngIf="configQuestions.length">
       <ng-container *ngIf="feedbackStats; else loading">
         <div class="row border-top p-2 text-left">
-          <div class="col-4 font-weight-bold text-left">{{currentType | titlecase}} Question Config</div>
-          <div class="col-2">{{feedbackStats?.configuredCount}} <span class="m-0 p-0 text-muted">total</span></div>
-          <div class="col-2">{{feedbackStats?.likertCount}} <span class="m-0 p-0 text-muted">likert</span></div>
-          <div class="col-2">{{feedbackStats?.textCount}} <span class="m-0 p-0 text-muted">text</span></div>
-          <div class="col-2">{{feedbackStats?.requiredCount}} <span class="m-0 p-0 text-muted">required</span></div>
+          <div class="col-4 font-weight-bold text-left">{{currentType | titlecase}} Config</div>
+          <div class="col-2">{{feedbackStats.configuredCount}} <span class="m-0 p-0 text-muted">questions</span></div>
+          <div class="col-2">{{feedbackStats.likertCount}} <span class="m-0 p-0 text-muted">likert</span></div>
+          <div class="col-2">{{feedbackStats.textCount}} <span class="m-0 p-0 text-muted">text</span></div>
+          <div class="col-2">{{feedbackStats.requiredCount}} <span class="m-0 p-0 text-muted">required</span></div>
         </div>
         <div class="row border-top p-2 text-left">
           <div class="col-4 font-weight-bold text-left">Responses</div>
-          <div class="col-2">{{feedbackStats?.responsesCount}} <span class="m-0 p-0 text-muted">total</span></div>
-          <div class="col-2">{{feedbackStats?.submittedCount}} <span class="m-0 p-0 text-muted">submitted</span></div>
-          <div class="col-2">{{feedbackStats?.inProgressCount}} <span class="m-0 p-0 text-muted">in progress</span></div>
+          <div class="col-2">{{feedbackStats.responsesCount}} <span class="m-0 p-0 text-muted">responses</span></div>
+          <div class="col-2">{{feedbackStats.submittedCount}} <span class="m-0 p-0 text-muted">submitted</span></div>
+          <div class="col-2">{{feedbackStats.inProgressCount}} <span class="m-0 p-0 text-muted">in progress</span></div>
+          <div class="col-2">{{feedbackStats.maxResponseCount - feedbackStats.responsesCount}} <span class="m-0 p-0 text-muted">not started</span></div>
         </div>
       </ng-container>
     </ng-container>
   </div>
+
   <div class="row">
     <div class="col-10 p-2">
       <div class="section-header my-2" tabindex="0" (click)="toggle('questions')">
@@ -107,6 +108,7 @@
       </div>
     </div>
   </div>
+
   <div [hidden]="!showQuestions" class="mb-2">
     <div class="container my-2">
       <div class="row border-top p-2 text-left">
@@ -152,16 +154,12 @@
   <div [hidden]="!showTable">
 
     <div class="container table-wrapper mb-2">
-
       <table *ngIf="configQuestions.length" class="table mt-2 feedback-table">
         <thead class="thead-dark border-0 table-header">
           <tr>
             <th class="time-col">Time</th>
             <th *ngIf="currentType == 'challenge'">Challenge</th>
-            <!-- <th>ChallengeId</th> -->
-            <!-- <th>User</th> -->
             <th>Name</th>
-            <!-- <th>Status</th> -->
             <th *ngFor="let q of configQuestions" [class]="q.type =='text' ? 'text-col' : 'num-col'" class="pt-1 font-weight-bold">
               <small class="q-id">{{q.id}})</small>
               <div class="prompt">{{q.shortName ?? q.prompt}}</div>
@@ -170,14 +168,9 @@
         </thead>
         <tbody *ngIf="feedback; else loading">
           <tr *ngFor="let r of feedback; let i = index" (click)="toggleRow(i)" id="row-{{i}}" class="minimized table-row">
-            
             <td><div class="text-align-left">{{ r.timestamp | shorttime }}</div></td>
-            <td *ngIf="currentType == 'challenge'"><div>{{ r.challengeTag }}</div></td>
-            <!-- <td>{{ r.challengeId | slice:0:8 }}</td> -->
-            <!-- <td>{{ r.userId }}</td> -->
-            <!-- <td>{{ r.userId | slice:0:8 }}</td> -->
+            <td *ngIf="currentType == 'challenge'"><div>{{r.challengeId | slice:0:8}} {{r.challengeTag}}</div></td>
             <td><div>{{ r.approvedName }}</div></td>
-            <!-- <td >{{r.submitted ? "Submitted" : "In Progress"}}</td> -->
             <td *ngFor="let q of r.questions" class="table-cell" [class]="(q.answer?.length ?? 0) > 500 ? 'long-text' : ''">
               <div>{{q.answer}}</div>
             </td>
@@ -188,7 +181,7 @@
       <div *ngIf="feedback && feedback.length == 0 && skip == 0" class="m-4 text-center">
         No feedback yet.
       </div>
-
+      
     </div>
 
     <div *ngIf="feedback" class="d-flex justify-content-between">

@@ -54,6 +54,7 @@ export interface FeedbackQuestion {
 export interface FeedbackTemplate {
   game: FeedbackQuestion[];
   challenge: FeedbackQuestion[];
+  message?: string;
 }
 
 export enum QuestionType {
@@ -82,6 +83,7 @@ export interface FeedbackStats {
   textCount: number;
   requiredCount: number;
   responsesCount: number;
+  maxResponseCount: number;
   inProgressCount: number;
   submittedCount: number;
   questionStats: QuestionStats[];

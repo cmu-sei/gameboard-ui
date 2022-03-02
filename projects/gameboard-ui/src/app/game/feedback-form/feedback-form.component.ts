@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { BoardSpec, Challenge, ChallengeView, GameState } from '../../api/board-models';
-import { faCaretDown, faCaretRight, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretRight, faCloudUploadAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, combineLatest, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
 import { FeedbackService } from '../../api/feedback.service';
 import { Feedback, QuestionType, FeedbackSubmission, FeedbackTemplate, FeedbackQuestion } from '../../api/feedback-models';
@@ -29,6 +29,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
   faSubmit = faCloudUploadAlt;
   faCaretDown = faCaretDown;
   faCaretRight = faCaretRight;
+  faExclamationCircle = faExclamationCircle;
 
   feedbackForm: Feedback;
   templateMap: Map<string, FeedbackQuestion> = new Map<string, FeedbackQuestion>();
