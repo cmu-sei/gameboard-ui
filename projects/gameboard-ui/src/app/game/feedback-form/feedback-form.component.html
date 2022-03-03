@@ -10,7 +10,7 @@
 
   <app-error-div [errors]="errors"></app-error-div>
   
-  <div *ngIf="game.feedbackTemplate.message as message" class="mb-3 bg-light p-2 rounded d-flex justify-content-between">
+  <div *ngIf="game.feedbackTemplate.message as message" class="mb-3 bg-light p-2 rounded d-flex justify-content-left">
     <fa-icon [icon]="faExclamationCircle" class="pr-1"></fa-icon>
     <small class="font-weight-bold">{{message}}</small>
   </div>
