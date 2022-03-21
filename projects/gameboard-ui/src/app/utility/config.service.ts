@@ -157,6 +157,7 @@ export interface Settings {
   imghost?: string;
   tochost?: string;
   tocfile?: string;
+  countdownStartSecondsAtMinute?: number;
   oidc: AppUserManagerSettings;
 }
 

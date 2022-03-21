@@ -2,11 +2,20 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Pipe, PipeTransform } from '@angular/core';
+import { ConfigService } from '.././config.service';
 
 @Pipe({
   name: 'countdown'
 })
 export class CountdownPipe implements PipeTransform {
+  startSecondsAtMinute: number = 5; // default to 5 minutes
+
+  constructor(
+    private config?: ConfigService
+  ) {
+    if ((config?.settings.countdownStartSecondsAtMinute ?? 0) > 0) // lowest allowed setting is 1 min
+      this.startSecondsAtMinute = config?.settings.countdownStartSecondsAtMinute!;
+  }
 
   transform(value: number, ...args: unknown[]): string {
     const days = Math.floor(value / 1000 / 60 / 60 / 24);
@@ -23,7 +32,7 @@ export class CountdownPipe implements PipeTransform {
     if (!days && (!!hours || !!minutes)) { // days < 1 and total minutes > 0
       r.push(minutes + "m");
     } 
-    if (!days && !hours && (minutes < 5) && (!!minutes || !!seconds)) { // total hours < 1, minutes < 5, total seconds > 0
+    if (!days && !hours && (minutes < this.startSecondsAtMinute) && (!!minutes || !!seconds)) { // total hours < 1, minutes < 5, total seconds > 0
       r.push(seconds + "s");
     }
     return r.join(" ");
