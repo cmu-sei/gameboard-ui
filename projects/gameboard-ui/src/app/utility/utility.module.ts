@@ -13,6 +13,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { CountdownPipe } from './pipes/countdown.pipe';
+import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { ShortDatePipe } from './pipes/short-date.pipe';
 import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
@@ -40,6 +41,7 @@ const components = [
   AgedDatePipe,
   CamelspacePipe,
   CountdownPipe,
+  CountdownColorPipe,
   ShortDatePipe,
   ShortTimePipe,
   UntagPipe,

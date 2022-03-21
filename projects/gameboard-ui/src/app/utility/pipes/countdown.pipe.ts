@@ -8,24 +8,25 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CountdownPipe implements PipeTransform {
 
-  transform(value: number, ...args: unknown[]): unknown {
-    const tag = [ 's', 'm', 'h', 'd' ];
-    const a: number[] = [
-      value / 1000,
-      value / 1000 / 60,
-      value / 1000 / 60 / 60,
-      value / 1000 / 60 / 60 / 24
-    ];
-
-    let r = '';
-
-    for (let i = 0; i < a.length; i++) {
-      value = Math.floor(a[i]);
-      if (!!value) {
-        r = value + tag[i];
-      }
+  transform(value: number, ...args: unknown[]): string {
+    const days = Math.floor(value / 1000 / 60 / 60 / 24);
+    const hours = Math.floor(value / 1000 / 60 / 60 % 24);
+    const minutes =  Math.floor(value / 1000 / 60 % 60);
+    const seconds = Math.floor(value / 1000 % 60);
+    let r: string[] = [];
+    if (!!days) { // total days > 0
+      r.push(days + "d");
     }
-    return r;
+    if (!!days || !!hours) { // total hours > 0
+      r.push(hours + "h");
+    }
+    if (!days && (!!hours || !!minutes)) { // days < 1 and total minutes > 0
+      r.push(minutes + "m");
+    } 
+    if (!days && !hours && (minutes < 5) && (!!minutes || !!seconds)) { // total hours < 1, minutes < 5, total seconds > 0
+      r.push(seconds + "s");
+    }
+    return r.join(" ");
   }
 
 }
