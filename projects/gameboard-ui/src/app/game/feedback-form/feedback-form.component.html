@@ -12,7 +12,7 @@
   
   <div *ngIf="game.feedbackTemplate.message as message" class="mb-3 bg-light p-2 rounded d-flex justify-content-left">
     <fa-icon [icon]="faExclamationCircle" class="pr-1"></fa-icon>
-    <small class="font-weight-bold">{{message}}</small>
+    <small><span class="font-weight-bold align-middle">{{message}}</span></small>
   </div>
 
   <div *ngFor="let q of feedbackForm.questions; let i = index" class="mb-4">

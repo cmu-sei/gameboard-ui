@@ -66,6 +66,10 @@ td {
     cursor: pointer;
 }
 
+.blank-cell {
+    opacity: 50%;
+}
+
 // for table scroll bar to match theme
 .table-wrapper::-webkit-scrollbar {
     background: #00000000; 

@@ -91,6 +91,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
       // try fetch saved or submitted feedback, or return null if none exists
       switchMap(spec => this.api.retrieve({
         challengeSpecId: spec.id,
+        challengeId: spec.instance?.id,
         gameId: this.game.id
       })),
     ).subscribe(feedback => {
@@ -105,7 +106,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
         this.show = false;
       }
     });
-    // use input spec to intitially trigger above loading for first spec
+    // use input spec to initially trigger above loading for first spec
     this.refreshSpec$.next(this.spec);
   }
 

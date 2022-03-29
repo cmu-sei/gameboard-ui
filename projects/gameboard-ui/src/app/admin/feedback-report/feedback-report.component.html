@@ -172,7 +172,7 @@
             <td *ngIf="currentType == 'challenge'"><div>{{r.challengeId | slice:0:8}} {{r.challengeTag}}</div></td>
             <td><div>{{ r.approvedName }}</div></td>
             <td *ngFor="let q of r.questions" class="table-cell" [class]="(q.answer?.length ?? 0) > 500 ? 'long-text' : ''">
-              <div>{{q.answer}}</div>
+              <div [class]="(q.answer && q.answer.length) ? '' : 'text-muted blank-cell'">{{(q.answer && q.answer.length) ? q.answer : "--"}}</div>
             </td>
           </tr>
         </tbody>

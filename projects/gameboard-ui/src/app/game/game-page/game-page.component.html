@@ -66,7 +66,7 @@
       </div>
       <div class="col-xl-5 pr-5 my-4" *ngIf="ctx.game.feedbackTemplate?.game?.length && (ctx?.player?.session?.isDuring ||ctx?.player?.session?.isAfter)">
           <app-feedback-form [game]="ctx.game" [session]="ctx.player.session"
-            [title]="'Game Feedback'" [type]="'game'">
+            [title]="ctx.game.name + ' Feedback'" [type]="'game'">
           </app-feedback-form>
       </div>
     </div>
