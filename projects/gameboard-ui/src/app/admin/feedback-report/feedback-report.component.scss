@@ -1,3 +1,4 @@
+@import '../../../scss/variables';
 
 .text-col {
     min-width: 400px;
@@ -55,7 +56,7 @@ td {
 }
 
 :not(.minimized) > td, .minimized:hover {
-    background-color: #30303046;
+    background-color: rgba($dark, 0.5);
 }
 
 .table-row > td > div {
@@ -72,13 +73,13 @@ td {
 
 // for table scroll bar to match theme
 .table-wrapper::-webkit-scrollbar {
-    background: #00000000; 
+    background: $black; 
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-    background: #434343; 
+    background: $dark; 
 }
 
 .table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #303030; 
+    background: darken($dark, 5%); 
 }

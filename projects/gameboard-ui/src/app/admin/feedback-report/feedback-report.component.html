@@ -24,8 +24,8 @@
       </select>
     </div>
 
-    <ng-container *ngIf="currentType == 'challenge'">
-      <div class="pl-4 pr-2" [hidden]="currentType != 'challenge' || !currentGame">
+    <ng-container *ngIf="currentType == 'challenge' && currentGame">
+      <div class="pl-4 pr-2">
         <label for="gameSelect" class="m-0">Select a challenge: </label>
       </div>
       <div>
