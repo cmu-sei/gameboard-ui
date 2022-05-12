@@ -27,6 +27,25 @@
       <markdown [data]="ctx.game.gameMarkdown"></markdown>
     </div>
 
+     <!-- if auth'd, enrolled, game ended, and certificate defined -->
+    <ng-container *ngIf="!!ctx.user.id && !!ctx.player.id && ctx.game.hasEnded && !!ctx.game.certificateTemplate">
+      <div class="row justify-content-center">
+        <div class="col panel">
+          <div tabindex="0" (click)="showCert = !showCert">
+            <div class="d-flex align-items-center">
+              <fa-icon class="d-inline" [icon]="showCert ? faCaretDown : faCaretRight" size="lg"></fa-icon>
+              <span>
+                <h2 class="d-inline">Certificate</h2>
+              </span>
+            </div>
+          </div>
+          <div [hidden]="!showCert">
+              <app-certificate [ctx]="ctx"></app-certificate>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
     <div class="row justify-content-center">
       <!-- if auth'd -->
       <ng-container *ngIf="!!ctx.user.id">

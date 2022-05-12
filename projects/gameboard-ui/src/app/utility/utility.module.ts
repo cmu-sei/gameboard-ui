@@ -29,6 +29,7 @@ import { MessageBoardComponent } from './components/message-board/message-board.
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
+import { RouterModule } from '@angular/router';
 
 const components = [
   ClipspanComponent,
@@ -62,7 +63,8 @@ const components = [
     FontAwesomeModule,
     AlertModule,
     TooltipModule.forRoot(),
-    ButtonsModule
+    ButtonsModule,
+    RouterModule
   ],
 })
 export class UtilityModule { }

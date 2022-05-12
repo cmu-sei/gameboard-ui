@@ -2,6 +2,10 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <ng-container *ngIf="ctx$ | async as ctx">
+    
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-link" [routerLink]="['/', 'profile', 'certificates']">Certificates</a>
+    </div>
 
     <h4>Set your display name</h4>
 

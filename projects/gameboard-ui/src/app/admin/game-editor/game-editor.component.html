@@ -145,6 +145,36 @@
           </div>
         </div>
       </div>
+
+      <div class="col-12">
+        <div class="form-group pb-0 pt-1">
+          <label for="certificateTemplate-input">Certificate Template</label>
+          <textarea rows="11" type="text" class="form-control" id="certificateTemplate-input"
+            name="certificateTemplate" [(ngModel)]="game.certificateTemplate"></textarea>
+          <small>design with HTML and inline/internal CSS; use a 11:8.5 aspect ratio</small>
+          <button class="btn btn-sm btn-link-white" [(ngModel)]="showCertificateInfo" [ngModelOptions]="{standalone: true}" btnCheckbox>
+            <fa-icon [icon]="faInfoCircle"></fa-icon>
+          </button>
+          <div class="ml-4 px-2"*ngIf="showCertificateInfo">
+            <p class="cert-info mb-2">
+    Insert dynamic content by referring to a property with double-curly syntax <code>{{"\{\{game_name\}\}"}}</code>. For example, <code>&lt;h1&gt;{{"\{\{leaderboard_name\}\}"}}&lt;/h1&gt;</code>. <br>
+    The following properties will get replaced when a player certificate renders:
+            </p>
+            <pre>
+      game_name &mdash; Name of this game 
+      competition &mdash; Competition type of this game
+      season &mdash; Season of this game
+      round &mdash; Round of this game
+      track &mdash; Track of this game
+      user_name &mdash; Individual user's approved name
+      score &mdash; Total player score for this game
+      rank &mdash; Final leaderboard ranking of the player
+      leaderboard_name &mdash; Approved name for either team or individual
+      date &mdash; Date player's session ended for this game</pre>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(2)">
