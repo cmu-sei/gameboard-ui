@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faUsers, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { BoardGame } from '../../../api/board-models';
 import { Game } from '../../../api/game-models';
 import { ConfigService } from '../../config.service';
@@ -19,6 +19,7 @@ export class GameCardComponent implements OnInit {
 
   faUser = faUser;
   faUsers = faUsers;
+  faEyeSlash = faEyeSlash;
 
   constructor(
     private config: ConfigService
