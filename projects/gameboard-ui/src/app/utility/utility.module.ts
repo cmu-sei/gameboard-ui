@@ -29,6 +29,7 @@ import { MessageBoardComponent } from './components/message-board/message-board.
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 const components = [
   ClipspanComponent,
@@ -61,8 +62,9 @@ const components = [
     FormsModule,
     FontAwesomeModule,
     AlertModule,
-    TooltipModule.forRoot(),
-    ButtonsModule
+    TooltipModule,
+    ButtonsModule,
+    BsDropdownModule
   ],
 })
 export class UtilityModule { }

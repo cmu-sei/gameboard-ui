@@ -1,3 +1,5 @@
+@import '../../../scss/variables';
+
 .wrapper {
   // position: relative;
 }
@@ -10,4 +12,82 @@
   border-radius: .25rem;
   background-color: rgba(black, .8);
   z-index: 10;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: none;
+  background-color: $body-bg;
+}
+table {
+  border-collapse: separate; 
+  border-spacing: 0; 
+}
+
+td {
+  vertical-align: middle;
+}
+td:not(.thin-col) {
+  min-width: 80px;
+  max-width: 300px;
+  padding: 0.5rem;
+  word-wrap: break-word;
+}
+td.thin-col {
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
+}
+td.name-col {
+  min-width: 250px;
+  max-width: 350px;
+}
+
+td.date-col {
+  min-width: 120px;
+}
+
+// 3 'sticky' columns to never scroll out of view
+.sticky-card {
+  position: sticky; 
+  left: 0; 
+}
+.sticky-options {
+  position: sticky; 
+  left: 45px; 
+  z-index: 30;
+}
+.sticky-name {
+  position: sticky;
+  left: 112px;
+  div {
+    border-right: #444 solid 1px;
+  }
+}
+.sticky-cell {
+  background-color: $body-bg;
+}
+.sticky-header {
+  background-color: $dark;
+}
+
+.table-card {
+  height: 50px;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+// for table scroll bar to match theme
+.table-wrapper::-webkit-scrollbar {
+  background: $black; 
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: $dark; 
+}
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: darken($dark, 5%); 
 }

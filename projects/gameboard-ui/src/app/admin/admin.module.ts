@@ -11,6 +11,7 @@ import { UserRegistrarComponent } from './user-registrar/user-registrar.componen
 import { UtilityModule } from '../utility/utility.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ApiModule } from '../api/api.module';
 import { FormsModule } from '@angular/forms';
 import { GameEditorComponent } from './game-editor/game-editor.component';
@@ -78,7 +79,8 @@ import { FeedbackReportComponent } from './feedback-report/feedback-report.compo
     ApiModule,
     UtilityModule,
     FontAwesomeModule,
-    ButtonsModule
+    ButtonsModule,
+    BsDropdownModule
   ]
 })
 export class AdminModule { }

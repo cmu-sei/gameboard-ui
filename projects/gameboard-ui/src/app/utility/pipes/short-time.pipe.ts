@@ -5,7 +5,7 @@ export class ShortTimePipe implements PipeTransform {
 
   transform(date: any): string {
     const t = new Date(date);
-    return t.toLocaleTimeString("en-US", { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'});
+    return t.toLocaleTimeString("en-US", { month: 'short', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric'});
 }
 
 }
