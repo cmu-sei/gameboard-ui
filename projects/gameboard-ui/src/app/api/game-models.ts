@@ -69,6 +69,13 @@ export enum GameRegistrationType {
   domain = 'domain'
 }
 
+export interface  GameGroup {
+  year: number;
+  month: number;
+  monthName: string;
+  games: Game[];
+}
+
 export interface UploadedFile {
   filename: string;
 }

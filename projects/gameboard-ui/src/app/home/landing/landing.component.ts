@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { BoardGame } from '../../api/board-models';
-import { Game } from '../../api/game-models';
+import { Game, GameGroup } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { GameService } from '../../api/game.service';
 })
 export class LandingComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
-  past$: Observable<Game[]>;
+  past$: Observable<GameGroup[]>;
   present$: Observable<Game[]>;
   future$: Observable<Game[]>;
 
@@ -26,7 +26,7 @@ export class LandingComponent implements OnInit {
   ) {
     this.past$ = this.refresh$.pipe(
       debounceTime(400),
-      switchMap(() => api.list({filter: ['past']}))
+      switchMap(() => api.listGrouped({filter: ['past']}))
     );
     this.present$ = this.refresh$.pipe(
       debounceTime(200),
