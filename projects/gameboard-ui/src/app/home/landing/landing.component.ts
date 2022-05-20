@@ -18,7 +18,7 @@ export class LandingComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
   past$: Observable<GameGroup[]>;
   present$: Observable<Game[]>;
-  future$: Observable<Game[]>;
+  future$: Observable<GameGroup[]>;
 
   constructor(
     private router: Router,
@@ -34,7 +34,7 @@ export class LandingComponent implements OnInit {
     );
     this.future$ = this.refresh$.pipe(
       debounceTime(300),
-      switchMap(() => api.list({filter: ['future']}))
+      switchMap(() => api.listGrouped({filter: ['future']}))
     );
   }
 
