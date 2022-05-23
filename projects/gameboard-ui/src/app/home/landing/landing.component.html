@@ -1,8 +1,21 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
+<!-- Search Bar -->
+<div *ngIf="showSearchBar" class="row mt-4 mb-0">
+  <div class="input-group input-group-sm col-5 ml-auto">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </span>
+    </div>
+    <input type="search" [(ngModel)]="searchText" placeholder="term" class="form-control border-0"
+      (input)="typing($event)">
+  </div>
+</div>
+
 <!-- Live -->
-<div class="row mt-4" *ngIf="present$ | async as present; else loading">
+<div class="row mt-1" *ngIf="present$ | async as present; else loading">
 
   <ng-container *ngIf="!!present.length">
     <div class="col-12 mx-0 px-0 mb-2">

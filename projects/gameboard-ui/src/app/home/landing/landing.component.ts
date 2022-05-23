@@ -3,9 +3,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { faGamepad, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faPlusSquare, faSearch, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { BoardGame } from '../../api/board-models';
 import { Game, GameGroup } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
@@ -25,6 +25,11 @@ export class LandingComponent implements OnInit {
 
   faGamepad = faGamepad;
   faUserPlus = faUserPlus;
+  faSearch = faSearch;
+  faPlusSquare = faPlusSquare;
+
+  showSearchBar = false;
+  searchText = "";
 
   constructor(
     private router: Router,
@@ -32,15 +37,18 @@ export class LandingComponent implements OnInit {
   ) {
     this.past$ = this.refresh$.pipe(
       debounceTime(400),
-      switchMap(() => api.listGrouped({filter: ['past']}))
+      switchMap(() => api.listGrouped({filter: ['past'], term: this.searchText})),
+      tap(g => {if (g.length > 0) { this.showSearchBar = true} })
     );
     this.present$ = this.refresh$.pipe(
       debounceTime(200),
-      switchMap(() => api.list({filter: ['present']}))
+      switchMap(() => api.list({filter: ['present'], term: this.searchText})),
+      tap(g => {if (g.length > 0) { this.showSearchBar = true} })
     );
     this.future$ = this.refresh$.pipe(
       debounceTime(300),
-      switchMap(() => api.listGrouped({filter: ['future']}))
+      switchMap(() => api.listGrouped({filter: ['future'], term: this.searchText})),
+      tap(g => {if (g.length > 0) { this.showSearchBar = true} })
     );
   }
 
@@ -57,6 +65,10 @@ export class LandingComponent implements OnInit {
 
   off(g: Game): void {
     this.hot = null;
+  }
+
+  typing(e: Event): void {
+    this.refresh$.next(true);
   }
 
 }
