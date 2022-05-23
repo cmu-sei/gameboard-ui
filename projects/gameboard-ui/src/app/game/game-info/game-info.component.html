@@ -6,30 +6,37 @@
     <div class="card-body">
 
       <div class="lead mt-4">Execution</div>
-
-      <table class="table">
-        <tbody>
-          <tr><th>Starts</th><td>{{game.gameStart}}</td></tr>
-          <tr><th>Ends</th><td>{{game.gameEnd}}</td></tr>
-          <tr><th>Session</th><td>{{game.sessionMinutes}} minutes</td></tr>
-        </tbody>
-      </table>
+      <div class="row px-2 mx-0 border-top border-dark">
+        <div class="col-6 p-2 font-weight-bold">Starts</div>
+        <div class="col-6 p-2">{{game.gameStart | shorttime}}</div>
+      </div>
+      <div class="row px-2 mx-0 border-top border-dark">
+        <div class="col-6 p-2 font-weight-bold">Ends</div>
+        <div class="col-6 p-2">{{game.gameEnd | shorttime}}</div>
+      </div>
+      <div class="row px-2 mx-0 border-top border-dark">
+        <div class="col-6 p-2 font-weight-bold">Session</div>
+        <div class="col-6 p-2">{{game.sessionMinutes}} minutes</div>
+      </div>
 
       <div class="lead mt-4">Registration</div>
+      <div class="row px-2 mx-0 border-top border-dark">
+        <div class="col-6 p-2 font-weight-bold">Opens</div>
+        <div class="col-6 p-2">{{game.registrationOpen | shorttime}}</div>
+      </div>
+      <div class="row px-2 mx-0 border-top border-dark">
+        <div class="col-6 p-2 font-weight-bold">Closes</div>
+        <div class="col-6 p-2">{{game.registrationClose | shorttime}}</div>
+      </div>
+      <div class="row px-2 mx-0 border-top border-dark">
+        <div class="col-6 p-2 font-weight-bold">Access</div>
+        <div class="col-6 p-2 text-capitalize">{{game.registrationType}}</div>
+      </div>
+      <div class="row px-2 mx-0 border-top border-dark">
+        <div class="col-6 p-2 font-weight-bold">Team Size</div>
+        <div class="col-6 p-2">{{game.allowTeam ? (game.minTeamSize || 1)+" - "+(game.maxTeamSize || 1) : "Individual"}}</div>
+      </div>
 
-      <table class="table">
-        <tbody>
-          <tr><th>Access</th><td>{{game.registrationType}}</td></tr>
-          <tr><th>Opens</th><td>{{game.registrationOpen}}</td></tr>
-          <tr><th>Closes</th><td>{{game.registrationClose}}</td></tr>
-          <tr><th>Constraint</th><td>{{game.registrationConstraint}}</td></tr>
-          <tr><th>Min Team Size</th><td>{{game.minTeamSize}}</td></tr>
-          <tr><th>Max Team Size</th><td>{{game.maxTeamSize}}</td></tr>
-          <tr><th>Require same-sponsor team</th><td>{{game.requireSponsoredTeam}}</td></tr>
-        </tbody>
-      </table>
-
-      <!-- <pre>{{game | yaml}}</pre> -->
     </div>
   </div>
 </ng-container>
