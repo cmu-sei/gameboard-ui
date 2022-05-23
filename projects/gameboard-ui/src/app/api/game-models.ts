@@ -69,7 +69,7 @@ export enum GameRegistrationType {
   domain = 'domain'
 }
 
-export interface  GameGroup {
+export interface GameGroup {
   year: number;
   month: number;
   monthName: string;

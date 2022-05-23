@@ -3,6 +3,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { faGamepad, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { BoardGame } from '../../api/board-models';
@@ -19,6 +20,11 @@ export class LandingComponent implements OnInit {
   past$: Observable<GameGroup[]>;
   present$: Observable<Game[]>;
   future$: Observable<GameGroup[]>;
+
+  hot!: Game | null;
+
+  faGamepad = faGamepad;
+  faUserPlus = faUserPlus;
 
   constructor(
     private router: Router,
@@ -44,4 +50,13 @@ export class LandingComponent implements OnInit {
   selected(game: Game | BoardGame): void {
     this.router.navigate(['/game', game.id]);
   }
+
+  on(g: Game): void {
+    this.hot = g;
+  }
+
+  off(g: Game): void {
+    this.hot = null;
+  }
+
 }

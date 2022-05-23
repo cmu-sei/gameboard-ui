@@ -30,6 +30,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { UntilPipe } from './pipes/until-date.pipe';
 
 const components = [
   ClipspanComponent,
@@ -42,6 +43,7 @@ const components = [
   ProfileEditorComponent,
   MessageBoardComponent,
   AgedDatePipe,
+  UntilPipe,
   CamelspacePipe,
   CountdownPipe,
   ShortDatePipe,

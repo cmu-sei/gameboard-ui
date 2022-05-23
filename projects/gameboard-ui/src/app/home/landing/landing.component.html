@@ -8,10 +8,9 @@
     <div class="col-12 mx-0 px-0 mb-2">
       <h2>Live!</h2>
     </div>
-    <app-game-card *ngFor="let g of present"
-      [game]="g" (selected)="selected(g)"
-      class="col-lg-3 col-md-4 col-6 mb-4">
-    </app-game-card>
+    <ng-container *ngFor="let game of present">
+      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+    </ng-container>
   </ng-container>
 
 </div>
@@ -29,10 +28,9 @@
         <div class="border-dark my-3 group-line"></div>
       </h3>
     </div>
-    <app-game-card *ngFor="let g of group.games"
-      [game]="g" (selected)="selected($event)"
-      class="col-lg-3 col-md-4 col-6 mb-4">
-    </app-game-card>
+    <ng-container *ngFor="let game of group.games">
+      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+    </ng-container>
   </ng-container>
 </div>
 
@@ -49,12 +47,36 @@
         <div class="border-dark my-3 group-line"></div>
       </h3>
     </div>
-    <app-game-card *ngFor="let g of group.games"
-      [game]="g" (selected)="selected($event)"
-      class="col-lg-3 col-md-4 col-6 mb-4">
-    </app-game-card>
+    <ng-container *ngFor="let game of group.games">
+      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+    </ng-container>
   </ng-container>
 </div>
+
+<!-- game wrapper template  -->
+<ng-template #gameWrapper let-game="game">
+  <div class="card-wrapper col-lg-3 col-md-4 col-6 mb-4" tabindex="0">
+    <div class="hover-wrapper" (mouseenter)="on(game)" (mouseleave)="off(game)" (focus)="on(game)">
+      <app-game-card [game]="game"> 
+      </app-game-card> 
+      <div class="overlay py-4 px-4 d-flex" *ngIf="hot===game">
+        <div class="rounded text-center py-3 px-2 mx-3 my-auto w-100">
+          <h5 class="mb-0 font-weight-bold">Registration<fa-icon [icon]="faUserPlus" class="ml-2"></fa-icon></h5>
+          <p *ngIf="game.registration.isBefore">Starts in {{game.registrationOpen | until}}</p>
+          <p *ngIf="game.registration.isDuring">Ends in {{game.registrationClose | until}}</p>
+          <p *ngIf="game.registration.isAfter">Ended {{game.registrationClose | ago}}</p>
+          <h5 class="mb-0 font-weight-bold">Competition<fa-icon [icon]="faGamepad" class="ml-2"></fa-icon></h5>
+          <p class="mb-0 pb-0" *ngIf="game.session.isBefore">Starts in {{game.gameStart | until}}</p>
+          <p class="mb-0 pb-0" *ngIf="game.session.isDuring">Ends in {{game.gameEnd | until}}</p>
+          <p class="mb-0 pb-0" *ngIf="game.session.isAfter">Ended {{game.gameEnd | ago}}</p>
+          <button class="btn btn-outline-success btn-lg mx-1 mt-4 open-button" (click)="selected(game)">
+            <h2 class="p-0 m-0 font-weight-bold">Open Game</h2>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #loading>
   <div class="text-center">
