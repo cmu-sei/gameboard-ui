@@ -3,7 +3,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap, mergeMap } from 'rxjs/operators';
 import { Game, NewGame } from '../../api/game-models';
@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
   faUsers = faUsersCog;
   faCog = faCog;
   faTv = faTv;
+  faGamepad = faGamepad; // game lobby
   faToggleOn = faToggleOn; // on table view
   faToggleOff = faToggleOff; // on card view
   faEyeSlash = faEyeSlash; // unpublished game
