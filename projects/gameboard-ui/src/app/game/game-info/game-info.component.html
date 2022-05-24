@@ -8,11 +8,11 @@
       <div class="lead mt-4">Execution</div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Starts</div>
-        <div class="col-6 p-2">{{game.gameStart | shorttime}}</div>
+        <div class="col-6 p-2">{{game.gameStart | shorttime:true}}</div>
       </div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Ends</div>
-        <div class="col-6 p-2">{{game.gameEnd | shorttime}}</div>
+        <div class="col-6 p-2">{{game.gameEnd | shorttime:true}}</div>
       </div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Session</div>
@@ -22,11 +22,11 @@
       <div class="lead mt-4">Registration</div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Opens</div>
-        <div class="col-6 p-2">{{game.registrationOpen | shorttime}}</div>
+        <div class="col-6 p-2">{{game.registrationOpen | shorttime:true}}</div>
       </div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Closes</div>
-        <div class="col-6 p-2">{{game.registrationClose | shorttime}}</div>
+        <div class="col-6 p-2">{{game.registrationClose | shorttime:true}}</div>
       </div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Access</div>
