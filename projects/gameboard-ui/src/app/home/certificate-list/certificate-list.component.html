@@ -14,7 +14,7 @@
   <div *ngFor="let cert of certs" class="row rounded bg-secondary mb-1 mx-0 py-2">
     <div class="col-3 d-flex flex-wrap">
       <div class="ml-2">
-        <a class="btn btn-link p-0" [routerLink]="['/', 'game', cert.game.id]"><span class="mr-2 h5">{{cert.game.name}}</span></a>
+        <a class="btn btn-link p-0 text-left" [routerLink]="['/', 'game', cert.game.id]"><span class="mr-2 h5">{{cert.game.name}}</span></a>
         <div class="text-muted">
           <span> {{cert.game.gameEnd | shortdate}}</span>
         </div>
