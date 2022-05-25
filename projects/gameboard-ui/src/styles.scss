@@ -121,3 +121,21 @@ app-spinner svg {
 .grayText {
   color: #767676;
 }
+
+// bootstrap tooltip styled to show up on dark theme
+.light-tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: white;
+}
+.light-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: white;
+}
+.light-tooltip.bs-tooltip-right .tooltip-arrow::before {
+  border-right-color: white;
+}
+.light-tooltip.bs-tooltip-left .tooltip-arrow::before {
+  border-left-color: white;
+}
+.light-tooltip .tooltip-inner {
+  background-color: white;
+  color: black;
+}

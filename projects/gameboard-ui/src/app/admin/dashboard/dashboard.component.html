@@ -133,12 +133,20 @@
                 <tr *ngFor="let game of games; trackBy:trackById">
                   <td class="thin-col sticky-card sticky-cell"><img [src]="game.cardUrl" class="table-card"></td>
                   <td class="thin-col">
-                    <fa-icon [icon]="game.isPublished ? faGlobe : faEyeSlash" [class.text-success1]="game.isPublished"></fa-icon>
-                    <fa-icon [icon]="game.allowReset ? faUndo : faLock"></fa-icon>
+                    <div [tooltip]="game.isPublished ? 'Published' : 'Unpublished'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                      <fa-icon [icon]="game.isPublished ? faGlobe : faEyeSlash"></fa-icon>
+                    </div>
+                    <div [tooltip]="game.allowReset ? 'Reset Allowed' : 'Reset Not Allowed'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                      <fa-icon [icon]="game.allowReset ? faUndo : faLock"></fa-icon>
+                    </div>
                   </td>
                   <td class="thin-col">
-                    <fa-icon [icon]="game.allowTeam ? faTeam : faUser"></fa-icon>
-                    <fa-icon [icon]="!!game.feedbackTemplate?.challenge?.length || !!game.feedbackTemplate?.game?.length ? faChartBar : faCommentSlash"></fa-icon>
+                    <div [tooltip]="game.allowTeam ? 'Team' : 'Individual'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                      <fa-icon [icon]="game.allowTeam ? faTeam : faUser"></fa-icon>
+                    </div>
+                    <div [tooltip]="!!game.feedbackTemplate?.challenge?.length || !!game.feedbackTemplate?.game?.length ? 'Accepts Feedback' : 'No Feedback'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                      <fa-icon [icon]="!!game.feedbackTemplate?.challenge?.length || !!game.feedbackTemplate?.game?.length ? faChartBar : faCommentSlash"></fa-icon>
+                    </div>
                   </td>
                   <td class="thin-col sticky-options sticky-cell">
                     <div dropdown class="btn-group" container="body" #dropdown="bs-dropdown" [autoClose]="true" [insideClick]="true">

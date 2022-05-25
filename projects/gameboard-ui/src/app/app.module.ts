@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
@@ -32,6 +33,7 @@ import { UtilityModule } from './utility/utility.module';
     AppRoutingModule,
     ApiModule,
     UtilityModule,
+    TooltipModule.forRoot(),
     ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),
     MarkdownModule.forRoot({
