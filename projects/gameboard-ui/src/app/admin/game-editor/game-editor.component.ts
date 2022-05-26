@@ -83,7 +83,7 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
     this.updated$ = this.form.valueChanges.pipe(
       filter(f => !this.form.pristine && (this.form.valid || false)),
       tap(g => this.dirty = true),
-      debounceTime(5000),
+      debounceTime(500),
       switchMap(g => this.api.update(this.game)),
       tap(r => this.dirty = false),
       filter(f => this.refreshFeedback),

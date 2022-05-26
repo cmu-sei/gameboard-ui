@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <ng-container *ngIf="games$ | async as games">
+    <ng-container *ngIf="games$ | async as games; else loading">
 
       <!-- Card view mode -->
       <ng-container *ngIf="!tableView">
@@ -210,3 +210,9 @@
     <app-announce></app-announce>
   </div>
 </div>
+
+<ng-template #loading>
+  <div class="text-center w-100">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>
