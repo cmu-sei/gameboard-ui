@@ -23,6 +23,7 @@ import { ScoreboardPageComponent } from './scoreboard-page/scoreboard-page.compo
 import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
 import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
+import { CertificateComponent } from './certificate/certificate.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
     ScoreboardPageComponent,
     ScoreboardTableComponent,
     PlayerPresenceComponent,
-    FeedbackFormComponent
+    FeedbackFormComponent,
+    CertificateComponent
   ],
   exports: [
   ],

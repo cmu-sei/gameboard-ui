@@ -1,5 +1,5 @@
-<div class="section-header" tabindex="0" (click)="toggle()">
-  <fa-icon [icon]="show ? faCaretDown : faCaretRight" size="lg"></fa-icon>
+<div class="d-flex align-items-center" tabindex="0" (click)="toggle()">
+  <fa-icon class="d-inline" [icon]="show ? faCaretDown : faCaretRight" size="lg"></fa-icon>
   <span>
     <h3 *ngIf="type == 'challenge'" class="d-inline">{{title}}</h3>
     <h2 *ngIf="type == 'game'" class="d-inline">{{title}}</h2>

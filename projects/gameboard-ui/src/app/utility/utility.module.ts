@@ -12,6 +12,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { CountdownPipe } from './pipes/countdown.pipe';
+import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { ShortDatePipe } from './pipes/short-date.pipe';
 import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
@@ -31,6 +32,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
+import { RouterModule } from '@angular/router';
 
 const components = [
   ClipspanComponent,
@@ -46,6 +48,7 @@ const components = [
   UntilPipe,
   CamelspacePipe,
   CountdownPipe,
+  CountdownColorPipe,
   ShortDatePipe,
   ShortTimePipe,
   UntagPipe,
@@ -66,7 +69,8 @@ const components = [
     AlertModule,
     TooltipModule,
     ButtonsModule,
-    BsDropdownModule
+    BsDropdownModule,
+    RouterModule
   ],
 })
 export class UtilityModule { }

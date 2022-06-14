@@ -11,6 +11,7 @@ export const environment = {
     imghost: 'http://localhost:5002/img',
     tochost: 'http://localhost:5002/doc',
     tocfile: 'toc.json',
+    countdownStartSecondsAtMinute: 5,
     oidc: {
       client_id: 'dev-code',
       // authority: 'http://localhost:5000',
