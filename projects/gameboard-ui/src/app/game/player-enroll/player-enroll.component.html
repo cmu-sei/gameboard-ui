@@ -55,7 +55,7 @@
           </div>
         </ng-container>
 
-        <div *ngIf="ctx.user.isDesigner && !ctx.game.registration.isDuring" class="text-center">
+        <div *ngIf="ctx.user.isRegistrar && !ctx.game.registration.isDuring" class="text-center">
           <app-confirm-button btnClass="btn btn-primary btn-lg" (confirm)="enroll(ctx.user.id, ctx.game.id)">
             <fa-icon [icon]="faEdit"></fa-icon>
             <span>Admin Enroll</span>
