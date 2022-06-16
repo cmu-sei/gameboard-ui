@@ -25,6 +25,11 @@ const routes: Routes = [
     loadChildren: () => import('./score/score.module').then(m => m.ScoreModule)
   },
   {
+    path: 'support',
+    canLoad: [AuthGuard], canActivate: [AuthGuard], canActivateChild: [AuthGuard],
+    loadChildren: () => import('./support/support.module').then(m => m.SupportModule)
+  },
+  {
     path: '',
     // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule)

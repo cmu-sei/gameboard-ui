@@ -1,0 +1,328 @@
+
+<!-- <div class="container-xl bg-danger">
+  <h1>hi</h1>
+</div>
+<div class="container bg-danger">
+  <h1>hi</h1>
+</div>
+<div class="container-fluid bg-danger">
+  <div style="max-width: 1400px; margin:auto;" class="d-flex">
+    <div class="container">hello</div>
+    <div class="">yoo</div>
+  </div>
+  <h1>hi</h1>
+</div>
+<div class="container-lg bg-danger">
+  <h1>hi</h1>
+</div> -->
+
+<div >
+
+  
+
+  <div *ngIf="ctx$ | async as ctx" class="container-xl" [class.expand]="ctx.canManage">
+
+    <a class="btn btn-link ml-0 pl-0" routerLink="../">
+      <fa-icon [icon]="faArrowLeft"></fa-icon>
+      <span>Back</span>
+    </a>
+
+    <h2  class="m-0 p-0 summary-break">
+      <span class="text-muted">{{ctx.ticket.fullKey}}</span>&nbsp;
+      <span *ngIf="!editingContent">{{ctx.ticket.summary}}</span>
+    </h2>
+    <div *ngIf="editingContent && changedTicket && !!changedTicket?.id" class="form-row p-0 mx-0 mb-1">
+      <!-- <div class="col-2 p-0 m-0">
+        
+      </div> -->
+      <div class="col-10 p-0 pr-4 m-0">
+        <input type="text" class="form-control border border-dark text-white w-100" id="form-summary" name="form-summary" autocomplete="off" [maxlength]="128" style="background:#000"
+        [(ngModel)]="changedTicket.summary">
+      </div>
+      <div class="col-2 p-0 m-0">
+        <button class="btn btn-link text-success float-right" (click)="editingContent = false" >Cancel</button>
+        <button class="btn btn-success float-right" (click)="saveEditedTicket()" >Save</button>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap align-items-center mb-2">
+      <h4 class="m-0 p-0 mr-2"><span class="badge" 
+        [class.badge-info]="ctx.ticket.status == 'Open' || !ctx.ticket.status"
+        [class.badge-success]="ctx.ticket.status == 'In Progress'"
+        [class.badge-dark]="ctx.ticket.status == 'Closed'">{{ctx.ticket.status}}</span>
+      </h4>
+      <ng-container *ngIf="ctx.ticket.player as player">
+        <span class="mr-4">{{true ? 'Team:' : 'Player:'}} {{player.approvedName}}</span>
+        <span class="mr-4">Game:
+          <a [routerLink]="['/game', ctx.ticket.player.gameId]">
+          <span>{{player.gameName}}</span>
+          </a>
+        </span>
+      </ng-container>
+      <ng-container *ngIf="ctx.ticket.challenge as challenge">
+        <span class="mr-4">Challenge:
+          <a *ngIf="ctx.canManage"  target="_blank" [routerLink]="['/admin/support']" [queryParams]="{search: ctx.ticket.challengeId}">
+            <span>{{challenge?.name}} ({{(challenge?.id | slice:0:8)}} {{challenge?.tag}})</span>
+          </a>
+          <span *ngIf="!ctx.canManage"> {{challenge?.name}} ({{(challenge?.id | slice:0:8)}} {{challenge?.tag}})</span>
+        </span>
+      </ng-container>
+    </div>
+    <div class="d-flex m-0 p-0">
+      
+      <div class="flex-grow-1" style="min-width: 0">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between py-2" style="background: #222">
+            <div>
+              <ng-container *ngIf="ctx.ticket.selfCreated"><span class="font-weight-bold">{{ctx.ticket.requester?.approvedName}}</span>&nbsp;created&nbsp;<span class="">{{ctx.ticket.created | ago}}</span></ng-container>
+              <ng-container *ngIf="!ctx.ticket.selfCreated"><span class="font-weight-bold">{{ctx.ticket.creator?.approvedName}}</span>&nbsp;created for&nbsp;<span class="font-weight-bold">{{ctx.ticket.requester?.approvedName}}</span>&nbsp;<span class="">{{ctx.ticket.created | ago}}</span></ng-container>
+            </div>
+            <div>
+              <fa-icon *ngIf="ctx.ticket.canUpdate && ctx.ticket.creatorId == currentUser?.id && !editingContent" [icon]="faEllipsisH" (click)="startEditTicketContent()"></fa-icon>
+            </div>
+          </div>
+          <div class="card-body" style="min-height:100px;">
+            <p *ngIf="!editingContent" class="card-text" [innerText]="ctx.ticket.description"></p>
+            <ng-container *ngIf="editingContent && changedTicket && !!changedTicket?.id">
+              <textarea type="text" class="form-control w-100 text-white" rows=8  autocomplete="off" style="background:#000"
+              [(ngModel)]="changedTicket.description"></textarea>
+            </ng-container>
+            <div *ngIf="ctx.ticket.attachmentFiles?.length" class="d-flex overflow-auto my-auto">
+              <ng-container *ngFor="let file of ctx.ticket.attachmentFiles; let i = index;">
+                <div class="attachment m-2" (click)="enlarge(ctx.ticket.attachmentFiles, i)">
+                  <img *ngIf="!!file.showPreview" [src]="file.fullPath" class="rounded">
+                  <div *ngIf="!file.showPreview" class="p-2 rounded no-preview text-center d-flex flex-column rounded border border-dark">
+                    <fa-icon class="mt-0 mb-auto no-preview-icon text-dark" [icon]="faFileAlt" size="lg"></fa-icon>
+                    <p class="mb-0 mt-auto no-preview-text text-break text-white">{{file.filename | slice:0:26}}</p>
+                  </div>
+                </div>
+              </ng-container>
+            </div>  
+          </div>
+        </div>
+
+        <h4 class="mt-2 d-flex justify-content-between">
+          <span>Activity</span>
+          <button class="btn btn-link text-info mr-2" (click)="refresh$.next(true)">
+          <fa-icon [icon]="faSync"></fa-icon>
+          <span>Refresh</span>
+        </button>
+      </h4>
+
+        <div class="mx-md-4 mx-0 mt-2">
+          <div class="card mx-3">
+            <div class="card-body rounded p-2">
+              <textarea class="form-control w-100 text-white border-0 dark-textarea" [rows]="newCommentFocus? 4 : 2" placeholder="Add a comment..."
+              (focus)="newCommentFocus = true"
+              [(ngModel)]="newCommentText"
+              style="background-color: #111"></textarea>
+              
+              <div class="text-muted border-top2 border-dark2 border-0">
+                <ng-container >
+                  <div class="mt-2 d-flex justify-content-between">
+                    <div >
+                      <button *ngIf="!newCommentFocus" class="btn text-info btn-link" (click)="toggleAttachments = !toggleAttachments; newCommentFocus = true"><fa-icon [icon]="faPaperclip"></fa-icon> Attach</button>
+                    </div>
+                    <div>
+                      <button *ngIf="newCommentFocus" class="btn text-info btn-link ml-1" (click)="newCommentFocus = false">Cancel</button>
+                      <button class="btn btn-info py-1" [disabled]="!newCommentText" (click)="addComment()">Comment</button>
+                    </div>
+                  </div>
+                  <div class="mt-2" [hidden]="!newCommentFocus">
+                    <app-image-manager (added)="updateAttachments($event)" [reset$]="resetAttachments$"
+                      [showIcon]="false" [defaultHeight]="70" browseButtonStyle="btn-outline-light"></app-image-manager>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+
+
+        <div *ngIf="!!ctx.ticket.activity" class="mx-md-4 mx-0">
+          <div *ngFor="let activity of ctx.ticket.activity" class="border-dark1 border-top1 ">
+            <div class="card my-3 mx-3" *ngIf="activity.type == 0"> <!-- Comment -->
+              <div class="card-header py-2">
+                <div>
+                  <span class="font-weight-bold">{{activity.user?.approvedName}}</span>&nbsp;&middot;&nbsp;<span class="">{{activity.timestamp | ago}}</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="card-text" [innerText]="activity.message" style="max-height: 300px; overflow-y:auto"></p>
+                <div *ngIf="activity.attachmentFiles?.length" class="d-flex overflow-auto my-auto">
+                  <ng-container *ngFor="let file of activity.attachmentFiles; let i = index;">
+                    <div class="attachment m-2" (click)="enlarge(activity.attachmentFiles, i)">
+                      <img *ngIf="!!file.showPreview" [src]="file.fullPath" class="rounded">
+                      <div *ngIf="!file.showPreview" class="p-2 rounded no-preview text-center d-flex flex-column rounded border border-dark">
+                        <fa-icon class="mt-0 mb-auto no-preview-icon text-dark" [icon]="faFileAlt" size="lg"></fa-icon>
+                        <p class="mb-0 mt-auto no-preview-text text-break text-white">{{file.filename | slice:0:26}}</p>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>  
+              </div>
+            </div>
+            <div class="my-3 mx-3 px-3 border-0 text-center" *ngIf="activity.type == 1"> <!-- Status Change -->
+              <span class="text-center py-2 d-flex rounded" style="background: black">
+                <div>Status Changed to&nbsp;<span class="badge badge-info" style="font-size: 100%" 
+                  [class.badge-info]="activity.status == 'Open' || !activity.status"
+                  [class.badge-success]="activity.status == 'In Progress'"
+                  [class.badge-dark]="activity.status == 'Closed'">{{activity.status}}</span></div>&nbsp;{{activity.timestamp | ago}}
+              </span>
+            </div>
+            <div class="my-3 mx-3 px-3 border-0 text-center" *ngIf="activity.type == 2"> <!-- Assignee Change -->
+              <span class="text-center  py-2 d-flex rounded" style="background: black">
+                <span *ngIf="!!activity.assigneeId">Assigned to&nbsp;<span class="font-weight-bold">{{activity.assignee?.approvedName}}</span>&nbsp;{{activity.timestamp | ago}}</span>
+                <span *ngIf="!activity.assigneeId">Unassigned&nbsp;{{activity.timestamp | ago}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="ctx.canManage">
+        <div class="card ml-2 mb-auto" style="width: 350px;">
+          <div class="card-header d-flex justify-content-end pb-0" style="background-color: #111;">
+            Manage&nbsp;<fa-icon [icon]="faCog"></fa-icon>
+          </div>
+          <div class="card-body pt-0" style="background-color: #111;">
+            <div *ngIf="changedTicket && !!changedTicket?.id">
+
+              <div class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="assignee-input">Assigned to <fa-icon *ngIf="!changedTicket.assigneeId" class="text-warning ml-1" [icon]="faExclamationCircle"></fa-icon></label><br />
+                <!-- <ng-container *ngTemplateOutlet="inPlaceEditor;context: {editData: assignees, 
+                    currentText: changedTicket.assignee?.approvedName ?? ctx.ticket.assignee?.approvedName ?? 'Unassigned'}"></ng-container> -->
+                <app-inplace-editor [editData]="assignees" [currentText]="changedTicket.assignee?.approvedName ?? 'None'"
+                (startEditFunc)="startEditAssignee()" (selectOptionFunc)="selectAssignee($event)"></app-inplace-editor>
+                <a *ngIf="!!currentUser && !changedTicket.assigneeId" class="btn btn-link px-2 pt-0 text-info" (click)="selectAssignToMe()">Assign to me</a>
+              </div>
+
+              <div class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="__-input">Status</label><br />
+                <div id="___-input" class="btn-group" btnRadioGroup name="____" tabindex="0"
+                  [(ngModel)]="changedTicket.status" (click)="changed$.next(changedTicket)">
+                  <label class="btn btn-outline-info btn-sm" btnRadio="Open">Open</label>
+                  <label class="btn btn-outline-info btn-sm" btnRadio="In Progress">In Progress</label>
+                  <label class="btn btn-outline-info btn-sm" btnRadio="Closed">Closed</label>
+                </div>
+              </div>
+
+              <div class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="__-input">Labels</label><br />
+                <div class="d-flex flex-wrap">
+                  <span *ngFor="let label of currentLabels" class="badge badge-pill mr-2 py-0 mb-2" [ngStyle]="label | textcolor">
+                    <span class="">{{label}}</span>&nbsp;
+                    <button class="btn p-0 m-0 border-0" (click)="deleteLabel(label)" style="color: inherit">
+                      <fa-icon class="p-0 m-0" [icon]="faTimes" style="color: inherit"></fa-icon>
+                    </button>
+                  </span>
+                </div>
+                <app-inplace-editor [editData]="labels" [currentText]="'Add more...'"
+                (startEditFunc)="startEditLabels()" (selectOptionFunc)="selectLabel($event)"></app-inplace-editor>
+              </div>
+
+              <div class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="assignee-input">Challenge</label><br />
+                <app-inplace-editor [editData]="challenges" [currentText]="changedTicket.challenge?.name || 'None'"
+                (startEditFunc)="startEditChallenge()" (selectOptionFunc)="selectChallenge($event)"></app-inplace-editor>
+                <p *ngIf="changedTicket.challenge" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Support Code: {{(changedTicket.challenge?.id | slice:0:8) + ' ' + changedTicket.challenge?.tag}}</p>
+              </div>
+
+              <div class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="assignee-input">Game Session <fa-icon *ngIf="!changedTicket.playerId && false" class="text-danger ml-1" [icon]="faExclamationCircle"></fa-icon></label><br />
+                <app-inplace-editor [editData]="sessions" [noEdit]="!!changedTicket.challengeId" [currentText]="changedTicket.player?.gameName || 'None'"
+                (startEditFunc)="startEditSession()" (selectOptionFunc)="selectSession($event)"></app-inplace-editor>
+                <p *ngIf="changedTicket.playerId" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Game Id: {{changedTicket.player?.gameId | slice:0:16}}</p>
+              </div>
+
+              <div class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="assignee-input">Team / Player</label><br />
+                  <p style="vertical-align:middle;" class="mb-0 pt-0 mb-1 px-2 align-items-center">{{ctx.ticket.player?.approvedName || 'None'}}</p>
+                  <p *ngIf="ctx.ticket.playerId" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Player Id: {{ctx.ticket.playerId | slice:0:16}}</p>
+                  <p *ngIf="ctx.ticket.playerId" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Team Id: {{ctx.ticket.teamId | slice:0:16}}</p>
+              </div>
+
+              <div class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="assignee-input">Requested by <fa-icon *ngIf="!changedTicket.requesterId" class="text-danger ml-1" [icon]="faExclamationCircle"></fa-icon></label><br />
+                <app-inplace-editor [editData]="requesters" [noEdit]="!ctx.ticket.staffCreated || !!ctx.ticket.playerId" [currentText]="changedTicket.requester?.approvedName ?? 'None'"
+                (startEditFunc)="startEditRequesters()" (selectOptionFunc)="selectRequester($event)"></app-inplace-editor>
+                <p class="mb-0  pt-0 mb-1 px-2 align-items-center small">User Id: {{changedTicket.requesterId | slice:0:16}}</p>
+              </div>
+
+              <div *ngIf="ctx.ticket.staffCreated" class="form-group p-0 m-0 mb-4">
+                <label class="font-weight-bold" for="assignee-input">Created by</label><br />
+                  <p style="vertical-align:middle;" class="mb-0 pt-0 mb-1 px-2 align-items-center">{{ctx.ticket.creator?.approvedName || 'None'}}</p>
+                  <!-- <p class="mb-0  pt-0 mb-1 px-2 align-items-center small">User Id: {{ctx.ticket.creatorId | slice:0:16}}</p> -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+    
+    
+  </div>
+
+</div>
+
+<div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div *ngIf="selectedAttachmentList && selectedAttachmentList.length > 0" class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{selectedAttachmentList[selectedIndex]?.filename}}&nbsp;
+          <a class="link-success" [href]="selectedAttachmentList[selectedIndex]?.fullPath" target="_blank">
+            <fa-icon [icon]="faExternalLinkAlt"></fa-icon>
+          </a>
+        </h4>
+        <button type="button" class="btn-close close pull-right" (click)="modal.hide()" aria-label="Close">
+          <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center" >
+        <div class="row m-0 p-0" >
+          <div class="col-1 align-self-center m-0 p-0">
+            <button class="btn image-nav" (click)="prevAttachment()" [disabled]="selectedIndex <= 0">
+              <fa-icon class="h2" [icon]="faCaretLeft"></fa-icon>
+            </button>
+          </div>
+          <div class="col" style="height: 80vh">
+            <img *ngIf="!!selectedAttachmentList[selectedIndex]?.showPreview" [src]="selectedAttachmentList[selectedIndex]?.fullPath" style="width: 100%; height: 100%; object-fit: contain;">
+            <iframe  *ngIf="!selectedAttachmentList[selectedIndex]?.showPreview" [src]="selectedAttachmentList[selectedIndex]?.fullPath" width="100%" height="100%" style="border: none; background-color: white;"></iframe>
+          </div>
+          <div class="col-1 align-self-center m-0 p-0">
+            <button class="btn image-nav" (click)="nextAttachment()" [disabled]="selectedIndex >= selectedAttachmentList.length - 1">
+              <fa-icon class="h2" [icon]="faCaretRight"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- in place edit + suggestions template  -->
+<!-- <ng-template #inPlaceEditor let-editData="editData" let-currentText="currentText" let-noEdit="noEdit">
+  <div *ngIf="editData.isEditing" class="w-100" style="position: relative;">
+    <div class="input-group">
+      <input #input1 type="text" autoFocus class="form-control mb-0 py-0 pr-1 edit-h" id="{{editData.type}}-input" (input)="editData.filtering$.next(input1.value)">
+      <div class="input-group-append edit-h">
+        <button class="btn btn-secondary" type="button" (click)="editData.isEditing=false"><fa-icon class="p-0 m-0 " [icon]="faTimes"></fa-icon></button>
+      </div>
+    </div>
+    <div style="position: absolute; z-index: 20;" class="w-100">
+      <div *ngFor="let option of editData.filteredOptions" class="bg-white w-100 text-black px-2 py-1 select-item d-flex justify-content-between" (click)="selectOption(option, editData)">
+        <span>{{option.name}} <span class="text-muted ml-2">{{option.secondary}}</span></span>
+        <span class="plus-icon text-muted"><fa-icon [icon]="faPlusSquare"></fa-icon></span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!editData.isEditing" (click)="startEditing(editData, noEdit)" class="edit-h" [class.editable]="!noEdit" style="display:table;">
+    <span style="display:table-cell;vertical-align:middle;" class="mb-0 py-0 px-2 align-items-center">{{currentText}}&nbsp;&nbsp;<fa-icon *ngIf="!noEdit" class="p-0 m-0 " [icon]="faPen" size="sm"></fa-icon></span>
+  </div>
+</ng-template> -->

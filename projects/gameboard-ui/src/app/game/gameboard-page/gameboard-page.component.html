@@ -135,10 +135,22 @@
           <h3 *ngIf="spec.instance!.state.challenge?.questions?.length">Challenge Questions</h3>
           <app-gamespace-quiz [spec]="spec!" [session]="ctx.session" (graded)="graded()"></app-gamespace-quiz>
 
-          <div *ngIf="spec.instance?.id" class="text-right m-4">
-            Support Code:
-            <app-clipspan class="text-info m-2 p-2">{{spec.instance?.id | slice:0:8}} {{spec.tag}}</app-clipspan>
+
+          <div *ngIf="spec.instance?.id" class="text-right m-4 ">
+            <div class="mb-1">
+              Need Challenge Support?
+              <span class="m-2 p-2">
+                <a class="btn btn-info" target="_blank" [routerLink]="['/support/create']" [queryParams]="{cid: spec.instance?.id!}">
+                  <span>Create Ticket</span>
+                </a>
+              </span>
+            </div>
+            <div>
+              Support Code:
+              <app-clipspan class="text-info m-2 p-2">{{spec.instance?.id | slice:0:8}} {{spec.tag}}</app-clipspan>
+            </div>
           </div>
+          
           
           <div *ngIf="spec.instance!.state.challenge && ctx.game.feedbackTemplate?.challenge?.length">
             <app-feedback-form [spec]="spec!" [specs$]="specs$" [game]="ctx.game" [session]="ctx.session"

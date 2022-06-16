@@ -97,6 +97,8 @@
             <div class="btn-group" id="role-button-group">
               <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isObserver" (click)="role(user, 'observer')"
                      btnCheckbox tabindex="0" role="button">Observer</label>
+              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isSupport" (click)="role(user, 'support')"
+                     btnCheckbox tabindex="0" role="button">Support</label>
               <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isTester" (click)="role(user, 'tester')"
                      btnCheckbox tabindex="0" role="button">Tester</label>
               <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDesigner"  (click)="role(user, 'designer')"

@@ -85,6 +85,10 @@ export class ConfigService {
     return this.settings.tochost || `${this.basehref}doc`;
   }
 
+  get supporthost(): string {
+    return (this.settings.imghost || `${this.basehref}img`) + "/secure/support";
+  }
+
   load(): Observable<any> {
     return this.http.get<Settings>(this.basehref + this.url)
       .pipe(

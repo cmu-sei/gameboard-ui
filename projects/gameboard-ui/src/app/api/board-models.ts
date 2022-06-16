@@ -46,6 +46,20 @@ export interface ChallengeSummary {
   submissions: SectionSubmission[];
 }
 
+export interface ChallengeOverview {
+  id: string;
+  teamId: string;
+  gameId: string;
+  name: string;
+  tag: string;
+  points: number;
+  score: number;
+  duration: number;
+  playerName: string;
+  gameName: string;
+  allowTeam: boolean;
+}
+
 export interface ChallengeEvent {
   userId: string;
   text: string;

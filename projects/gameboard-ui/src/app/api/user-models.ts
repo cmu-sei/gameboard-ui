@@ -14,6 +14,7 @@ export interface ApiUser {
   isDesigner: boolean;
   isTester: boolean;
   isObserver: boolean;
+  isSupport: boolean;
   sponsorLogo: string;
   pendingName: string;
   roleTag: string;
@@ -48,9 +49,15 @@ export interface TeamMember {
   role: PlayerRole;
 }
 
+export interface UserSummary {
+  id: string;
+  approvedName: string;
+}
+
 export enum UserRole {
   member = 'member',
   observer = 'observer',
+  support = 'support',
   tester = 'tester',
   designer = 'designer',
   registrar = 'registrar',

@@ -1,0 +1,33 @@
+.editor {
+  // max-width: 500px;
+}
+
+.edit-h {
+  height: 35px;;
+}
+
+.editable {
+  border: rgba(0, 0, 0, 0) solid 1px;
+  cursor: pointer;
+}
+
+.editable:hover {
+  border: 1px solid;
+  border-radius: 0.25rem;
+}
+
+.select-item {
+  cursor: pointer;
+}
+
+.select-item:not(:hover) .plus-icon {
+  visibility: hidden;
+}
+
+.select-item:hover {
+  background-color: #f0f0f1 !important;
+}
+
+.select-item:hover .plus-icon {
+  visibility: visible;
+}

@@ -1,0 +1,134 @@
+<div *ngIf="ctx$ | async as ctx; else loading" class="container-xl" [class.expand]="ctx.canManage">
+
+  <div class="d-flex justify-content-between mb-2">
+    <h3 class="m-0 p-0 align-self-center">{{ctx.canManage ? 'Manage Tickets' : 'My Tickets'}}</h3>
+    <a class="btn btn-outline-info" [routerLink]="['../create']">
+      <span>Create Ticket</span>
+    </a>
+  </div>
+  <div class="row mb-2">
+    <div class="d-flex" [class]="ctx.canManage ? 'col-4' : 'col-2'">
+      <div class="input-group input-group-sm mr-2">
+        <select class="form-control" [(ngModel)]="statusFilter" (change)="this.refresh$.next(true)">
+          <option *ngFor="let option of ['Any Status', 'Open', 'In Progress', 'Closed', 'Not Closed']" [value]="option">{{option}}</option>
+        </select>
+      </div>
+      <div *ngIf="ctx.canManage" class="input-group input-group-sm ml-2">
+        <select class="form-control" [(ngModel)]="assignFilter" (change)="this.refresh$.next(true)">
+          <option *ngFor="let option of ['Any', 'Assigned to me', 'Unassigned']" [value]="option">{{option}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-group input-group-sm col-5 ml-auto">
+      <div class="input-group-prepend">
+        <span class="input-group-text">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </span>
+      </div>
+      <input type="search" [(ngModel)]="searchText" placeholder="term" class="form-control border-0"
+        (input)="refresh$.next(true)">
+    </div>
+  </div>
+
+  <!-- <ng-container *ngIf="ctx.tickets as tickets; else loading">
+    <table class="table mt-2 text-left">
+      <tbody>
+        <tr class="bg-dark">
+          <td>Key</td>
+          <td>Summary</td>
+          <td>Status</td>
+          <td>Created</td>
+          <td>Updated</td>
+        </tr>
+          <tr *ngFor="let ticket of tickets">
+            <td><a class="btn btn-link p-0 text-left" [routerLink]="[ticket.id]">{{ticket.fullKey}}</a></td>
+            <td>{{ticket.summary}}</td>
+            <td><span class="badge badge-info">{{ticket.status || "Waiting"}}</span></td>
+            <td>{{ticket.created | shortdate}}</td>
+            <td>{{ticket.lastUpdated | ago}}</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </ng-container> -->
+
+
+  <div class="row m-0 p-0 mb-1">
+    <div class="col-1">Key</div>
+    <div class="col-7">Summary</div>
+    <div class="col-2">Status{{ctx.canManage ? ' / Assignee' : ''}}</div>
+    <div class="col-1 text-right">Created</div>
+    <div class="col-1 text-right">Updated</div>
+  </div>
+
+  <div class="list">
+    <div *ngFor="let ticket of ctx.tickets" class="row b-1 mx-0 py-2">
+      <div class="col-1">
+        <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.id]">{{ticket.fullKey}}</a>
+      </div>
+
+      <div class="col-7 d-flex flex-wrap">
+        <div class="ml-2">
+          <div class="d-inline flex-wrap">
+            <a class="p-0 text-left" [routerLink]="[ticket.id]" ><span class="mr-2 h5 summary-break" >{{ticket.summary || "No summary"}}</span></a>
+            <ng-container *ngIf="ctx.canManage">
+              <span class="badge badge-pill text-black mr-2" *ngFor="let label of ticket.labelsList" [ngStyle]="label | textcolor">{{label}}</span>
+            </ng-container>
+          </div>
+          <div class="text-muted">
+            <!-- <span>Created {{ticket.created | ago}}</span>&nbsp;by&nbsp;<span class="font-weight-bold">{{ticket.requester?.approvedName}}</span> -->
+            <span class="font-weight-bold-">{{ticket.requester?.approvedName}}</span>
+            <span *ngIf="ticket.challenge">&nbsp;&middot;&nbsp;{{ticket.challenge.name}} ({{ticket.challenge.tag}})</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 align-self-center d-flex flex-column justify-content-between">
+        <div class="text-left">
+          <span class="badge mr-2" style="font-size: 90%"
+            [class.badge-info]="ticket.status == 'Open' || !ticket.status"
+            [class.badge-success]="ticket.status == 'In Progress'"
+            [class.badge-dark]="ticket.status == 'Closed'">
+            {{ticket.status}}
+          </span>&nbsp;
+        </div>
+        <div class="text-left">
+          <ng-container *ngIf="ctx.canManage">
+            <span *ngIf="!!ticket.assignee" class="mb-1">{{ticket.assignee.approvedName}}</span>
+            <span *ngIf="!ticket.assignee" class="text-muted">Unassigned</span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-1 align-self-center d-flex text-right">
+        <span>{{ticket.created | shortdate}}</span>
+      </div>
+        <div class="col-1 align-self-center d-flex text-right">
+        <span>{{ticket.lastUpdated | ago}}</span>
+      </div>
+    </div> 
+  </div>
+
+  <div *ngIf="!!ctx.tickets" class="d-flex justify-content-between">
+    <div>
+      <a class="btn btn-link" (click)="prev()" [hidden]="skip == 0">
+        <fa-icon class="m-0 p-1" [icon]="faCaretLeft"></fa-icon>
+        <span class="m-0 p-1">prev</span>
+      </a>
+    </div>
+    <div>
+      <a class="btn btn-link" (click)="next()" [hidden]="ctx.tickets.length == 0">
+        <span class="m-0 p-1">next</span>
+        <fa-icon class="m-0 p-1" [icon]="faCaretRight"></fa-icon>
+      </a>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+<ng-template #loading>
+  <div class="text-center w-100 mx-auto">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>

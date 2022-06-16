@@ -117,6 +117,17 @@ export class ReportService {
     return this.http.get<FeedbackStats>(`${this.url}/report/feedbackstats/`, { params: params });
   }
 
+  public supportDays(params: any): Observable<any> {
+    return this.http.get<any>(`${this.url}/report/supportdaystats/`, { params: params });
+  }
+
+  public supportLabels(params: any): Observable<any> {
+    return this.http.get<any>(`${this.url}/report/supportlabelstats/`, { params: params });
+  }
+  public supportChallenges(params: any): Observable<any> {
+    return this.http.get<any>(`${this.url}/report/supportchallengestats/`, { params: params });
+  }
+
   private downloadFile(data: any, name: string, type: string) {
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);

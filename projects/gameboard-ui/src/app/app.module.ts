@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { Observable } from 'rxjs';
 import { ApiModule } from './api/api.module';
@@ -30,6 +31,7 @@ import { UtilityModule } from './utility/utility.module';
     ApiModule,
     UtilityModule,
     ButtonsModule.forRoot(),
+    ModalModule.forRoot(),
     MarkdownModule.forRoot({
       loader: HttpClient,
       markedOptions: {
@@ -44,6 +46,7 @@ import { UtilityModule } from './utility/utility.module';
     UtilityModule,
     FontAwesomeModule,
     ButtonsModule,
+    ModalModule,
     MarkdownModule
   ],
   providers: [

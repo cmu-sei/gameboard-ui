@@ -9,6 +9,7 @@
     </ng-container>
     <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['profile']">Profile</a>
     <ng-container *ngIf="user$ | async as user">
+      <a *ngIf="!!user" class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['support']">Support</a>
       <a *ngIf="!!user && (user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver)" class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/admin']">Admin</a>
       <a *ngIf="!!user" class="btn btn-link text-success mx-1" (click)="logout()">Logout</a>
     </ng-container>

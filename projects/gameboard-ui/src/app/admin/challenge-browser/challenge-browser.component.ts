@@ -2,8 +2,9 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faEllipsisV, faInfoCircle, faSearch, faSyncAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, interval, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, interval, merge, Observable, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Challenge, ChallengeSummary } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
@@ -35,8 +36,16 @@ export class ChallengeBrowserComponent implements OnInit {
   faCircle = faCircle;
 
   constructor(
-    private api: BoardService
+    private api: BoardService,
+    private route: ActivatedRoute,
   ) {
+
+    route.queryParams.pipe(
+      tap(p => this.search.term = p.search || "")
+    ).subscribe(
+      () => this.refresh$.next(true)
+    )
+
     this.challenges$ = merge(
       this.refresh$,
       interval(60000).pipe(
@@ -45,7 +54,11 @@ export class ChallengeBrowserComponent implements OnInit {
     ).pipe(
       debounceTime(500),
       switchMap(() => api.list(this.search)),
-      tap(r => this.challenges = r)
+      tap(r => this.challenges = r),
+      tap(result => {
+        if (result.length == 1)
+          this.select(result[0])
+      })
     );
     this.archived$ = merge(
       this.refresh$,

@@ -1,0 +1,117 @@
+@import '../../../scss/variables';
+.card {
+  border: 1px solid #222;
+}
+.card-body {
+  background-color: #111;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+.card-footer {
+  background-color: #111;
+}
+.card-header {
+  background-color: #222;
+  border: #222;
+}
+
+textarea {
+  background-color: #111;
+}
+
+
+.no-preview {
+  // background-color:;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+}
+.no-preview-icon {
+  // opacity: 20%;
+  font-size: 50px;
+}
+.no-preview-text {
+  font-size: 12px;
+}
+.summary-break {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+
+.attachment {
+  cursor: pointer;
+  img {
+    // cursor: pointer;
+    max-height: 120px;
+    // background-color: white;
+  }
+}
+
+// for table scroll bar to match theme
+::-webkit-scrollbar {
+  background: rgba(0, 0, 0, 0); 
+}
+
+::-webkit-scrollbar-thumb {
+  background: $dark; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: darken($dark, 5%); 
+}
+::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0); 
+}
+::-webkit-resizer{
+  // border: red;
+}
+.dark-textarea:focus-visible, .dark-textarea:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+.edit-label {
+  cursor: pointer;
+}
+
+.edit-h {
+  height: 35px;;
+}
+
+.editable {
+  border: rgba(0, 0, 0, 0) solid 1px;
+  cursor: pointer;
+}
+
+.editable:hover {
+  border: white 1px solid;
+  border-radius: 0.25rem;
+}
+
+.select-item {
+  cursor: pointer;
+}
+
+.select-item:not(:hover) .plus-icon {
+  visibility: hidden;
+}
+
+.select-item:hover {
+  background-color: #f0f0f1 !important;
+}
+
+.select-item:hover .plus-icon {
+  visibility: visible;
+}
+
+.expand {
+  max-width: 1400px;
+}
+
+.image-nav:disabled {
+  opacity: 20%;
+}
+

@@ -29,8 +29,11 @@
           <div class="col-1 px-1 align-self-center">
             <fa-icon *ngIf="s.isActive" class="small text-success align-self-center" [icon]="faCircle"></fa-icon>
           </div>
-          <span class="col mr-2 px-1 align-self-center">{{s.id | slice:0:8}}: {{s.tag}}</span>
-          <small class="col px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
+          <span class="col mr-2 px-1 align-self-center d-flex justify-content-between">
+            <span>{{s.id | slice:0:8}}: {{s.tag}}</span>
+            <small class="px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
+          </span>
+          
         </li>
       </ul>
     </div>
@@ -42,8 +45,10 @@
       <ul class="list-unstyled">
         <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable" [class]="s.id == selected?.id ? 'clicked' : ''" 
           (click)="select(s)">
-          <span class="col offset-1 mr-2 px-1 align-self-center">{{s.id | slice:0:8}}: {{s.tag}}</span>
-          <small class="col px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
+          <span class="col offset-1 mr-2 px-1 align-self-center d-flex justify-content-between">
+            <span>{{s.id | slice:0:8}}: {{s.tag}}</span>
+            <small class="px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
+          </span>
         </li>
       </ul>
     </div>
