@@ -24,6 +24,7 @@ import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.co
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
 import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CertificateComponent } from './certificate/certificate.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     ScoreboardPageComponent,
     ScoreboardTableComponent,
     PlayerPresenceComponent,
-    FeedbackFormComponent
+    FeedbackFormComponent,
+    CertificateComponent
   ],
   exports: [
   ],

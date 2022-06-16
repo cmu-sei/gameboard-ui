@@ -17,6 +17,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
+import { CertificateListComponent } from './certificate-list/certificate-list.component';
 
 
 
@@ -30,6 +31,7 @@ import { TocPageComponent } from './toc-page/toc-page.component';
     ForbiddenComponent,
     LoginPageComponent,
     TocPageComponent,
+    CertificateListComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +41,7 @@ import { TocPageComponent } from './toc-page/toc-page.component';
         { path: 'login', component: LoginPageComponent },
         { path: 'oidc', component: OidcComponent },
         { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+        { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
         { path: 'doc/:id', component: TocPageComponent },
         { path: 'forbidden', component: ForbiddenComponent },
         { path: 'home', component: LandingComponent }

@@ -17,7 +17,7 @@
 @import "../../../node_modules/bootstrap/scss/forms";
 @import "../../../node_modules/bootstrap/scss/buttons";
 @import "../../../node_modules/bootstrap/scss/transitions";
-// @import "../../../node_modules/bootstrap/scss/dropdown";
+@import "../../../node_modules/bootstrap/scss/dropdown";
 @import "../../../node_modules/bootstrap/scss/button-group";
 @import "../../../node_modules/bootstrap/scss/input-group";
 // @import "../../../node_modules/bootstrap/scss/custom-forms";
@@ -123,4 +123,21 @@ app-spinner svg {
 }
 .text-black {
   color: black;
+}
+
+// bootstrap tooltip styled to show up on dark theme
+.light-tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: white;
+}
+.light-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: white;
+}
+.light-tooltip.bs-tooltip-right .tooltip-arrow::before {
+  border-right-color: white;
+}
+.light-tooltip.bs-tooltip-left .tooltip-arrow::before {
+  border-left-color: white;
+}
+.light-tooltip .tooltip-inner {
+  background-color: white;
 }

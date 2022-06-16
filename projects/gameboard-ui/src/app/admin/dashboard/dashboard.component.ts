@@ -3,7 +3,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUsersCog, faCog, faTv } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap, mergeMap } from 'rxjs/operators';
 import { Game, NewGame } from '../../api/game-models';
@@ -23,18 +23,33 @@ export class DashboardComponent implements OnInit {
   created$: Observable<NewGame>;
   games$: Observable<Game[]>;
   games: Game[] = [];
-  // game: any;
+
+  preferenceKey = 'admin.dashboard.game.viewer.mode'; // key to save toggle in local storage
+  tableView: boolean; // true = table, false = cards
+
   search: Search = { term: '' };
   hot!: Game | null;
 
   faArrowLeft = faArrowLeft;
   faPlus = faPlus;
   faCopy = faCopy;
+  faClone = faClone;
   faTrash = faTrash;
   faEdit = faEdit;
   faUsers = faUsersCog;
   faCog = faCog;
   faTv = faTv;
+  faGamepad = faGamepad; // game lobby
+  faToggleOn = faToggleOn; // on table view
+  faToggleOff = faToggleOff; // on card view
+  faEyeSlash = faEyeSlash; // unpublished game
+  faGlobe = faGlobeAmericas; // published game
+  faUser = faUser; // individual game
+  faTeam = faUsers; // team game
+  faUndo = faUndo; // allow reset 
+  faLock = faLock; // don't allow reset
+  faChartBar = faChartBar; // has feedback configured
+  faCommentSlash = faCommentSlash; // doesn't have feedback configured
 
   constructor(
     private api: GameService,
@@ -53,7 +68,9 @@ export class DashboardComponent implements OnInit {
       tap(m => this.games.unshift(m)),
       tap(m => this.select(m))
     );
-
+    // use local storage to keep toggle preference when returning to dashboard for continuity
+    // default to false (card view) when no preference stored yet
+    this.tableView = window.localStorage[this.preferenceKey] == 'true' ? true : false;
   }
 
   ngOnInit(): void {
@@ -129,5 +146,10 @@ export class DashboardComponent implements OnInit {
   }
   off(g: Game): void {
     this.hot = null;
+  }
+
+  toggleViewMode() {
+    this.tableView = !this.tableView;
+    window.localStorage[this.preferenceKey] = this.tableView;
   }
 }

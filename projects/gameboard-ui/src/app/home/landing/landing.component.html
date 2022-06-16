@@ -1,75 +1,95 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<!-- <div class="card-deck">
-  <div class="card">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+<!-- Search Bar -->
+<div *ngIf="showSearchBar" class="row mt-4 mb-0">
+  <div class="input-group input-group-sm col-5 ml-auto">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </span>
     </div>
+    <input type="search" [(ngModel)]="searchText" placeholder="term" class="form-control border-0"
+      (input)="typing($event)">
   </div>
-  <div class="card">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-    </div>
-  </div>
-  <div class="card">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-    </div>
-  </div>
-</div> -->
+</div>
 
 <!-- Live -->
-<div class="row mt-4" *ngIf="present$ | async as present; else loading">
+<div class="row mt-1" *ngIf="present$ | async as present; else loading">
 
   <ng-container *ngIf="!!present.length">
-    <div class="col-12">
-      <h4>Live!</h4>
+    <div class="col-12 mx-0 px-0 mb-2">
+      <h2>Live!</h2>
     </div>
-    <app-game-card *ngFor="let g of present"
-      [game]="g" (selected)="selected(g)"
-      class="col-lg-3 col-md-4 col-6 mb-4">
-    </app-game-card>
+    <ng-container *ngFor="let game of present">
+      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+    </ng-container>
   </ng-container>
 
 </div>
 
 <!-- Upcoming -->
 <div class="row mt-4" *ngIf="future$ | async as future; else loading">
-
-  <div class="col-12">
-    <h4>Upcoming Games</h4>
+  <div class="col-12 mx-0 px-0">
+    <h2>Upcoming Games</h2>
   </div>
-
-  <app-game-card *ngFor="let g of future"
-    [game]="g" (selected)="selected(g)"
-    class="col-lg-3 col-md-4 col-6 mb-4">
-  </app-game-card>
-
+  <ng-container *ngFor="let group of future">
+    <div class="col-12 mt-2 mb-0 pb-0 mx-0 pl-1">
+      <h3 class="mb-0 pb-0">
+        <span class="badge badge-dark group-badge text-white p-2">{{group.monthName}} {{group.year}}</span> 
+        <span class="ml-3 align-self-center group-count">{{group.games.length}}</span>
+        <div class="border-dark my-3 group-line"></div>
+      </h3>
+    </div>
+    <ng-container *ngFor="let game of group.games">
+      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+    </ng-container>
+  </ng-container>
 </div>
 
 <!-- past -->
 <div class="row mt-4" *ngIf="past$ | async as past; else loading">
-
-  <div class="col-12">
-    <h4>Completed Games</h4>
+  <div class="col-12 mx-0 px-0">
+    <h2>Completed Games</h2>
   </div>
-
-  <app-game-card *ngFor="let g of past"
-    [game]="g" (selected)="selected($event)"
-    class="col-lg-3 col-md-4 col-6 mb-4">
-  </app-game-card>
-
+  <ng-container *ngFor="let group of past">
+    <div class="col-12 mt-2 mb-0 pb-0 mx-0 pl-1">
+      <h3 class="mb-0 pb-0">
+        <span class="badge badge-dark group-badge text-white p-2">{{group.monthName}} {{group.year}}</span> 
+        <span class="ml-3 align-self-center group-count">{{group.games.length}}</span>
+        <div class="border-dark my-3 group-line"></div>
+      </h3>
+    </div>
+    <ng-container *ngFor="let game of group.games">
+      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+    </ng-container>
+  </ng-container>
 </div>
+
+<!-- game wrapper template  -->
+<ng-template #gameWrapper let-game="game">
+  <div class="card-wrapper col-lg-3 col-md-4 col-6 mb-4" tabindex="0">
+    <div class="hover-wrapper" (mouseenter)="on(game)" (mouseleave)="off(game)" (focus)="on(game)">
+      <app-game-card [game]="game"> 
+      </app-game-card> 
+      <div class="overlay py-4 px-4 d-flex" *ngIf="hot===game">
+        <div class="rounded text-center py-3 px-2 mx-3 my-auto w-100">
+          <h5 class="mb-0 font-weight-bold">Registration<fa-icon [icon]="faUserPlus" class="ml-2"></fa-icon></h5>
+          <p *ngIf="game.registration.isBefore">Opens in {{game.registrationOpen | until}}</p>
+          <p *ngIf="game.registration.isDuring">Closes in {{game.registrationClose | until}}</p>
+          <p *ngIf="game.registration.isAfter">Closed {{game.registrationClose | ago}}</p>
+          <h5 class="mb-0 font-weight-bold">Competition<fa-icon [icon]="faGamepad" class="ml-2"></fa-icon></h5>
+          <p class="mb-0 pb-0" *ngIf="game.session.isBefore">Starts in {{game.gameStart | until}}</p>
+          <p class="mb-0 pb-0" *ngIf="game.session.isDuring">Ends in {{game.gameEnd | until}}</p>
+          <p class="mb-0 pb-0" *ngIf="game.session.isAfter">Ended {{game.gameEnd | ago}}</p>
+          <button class="btn btn-outline-success btn-lg mx-1 mt-4 open-button" (click)="selected(game)">
+            <h2 class="p-0 m-0 font-weight-bold">Open Game</h2>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #loading>
   <div class="text-center">

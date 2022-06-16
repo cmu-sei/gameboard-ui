@@ -7,7 +7,7 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 
@@ -28,6 +28,18 @@ export class GameService {
     return this.http.get<Game[]>(this.url + '/games', { params: filter }).pipe(
       map(r => {
         r.forEach(g => this.transform(g));
+        return r;
+      })
+    );
+  }
+
+  public listGrouped(filter: any): Observable<GameGroup[]> {
+    return this.http.get<GameGroup[]>(this.url + '/games/grouped', { params: filter }).pipe(
+      map(r => {
+        r.forEach(c => {
+          c.monthName = this.monthName(c.month);
+          c.games.forEach(g => this.transform(g))
+        });
         return r;
       })
     );
@@ -138,6 +150,13 @@ export class GameService {
 
     return game;
   }
+
+  private monthName(monthNum: number) {
+    if (!monthNum || monthNum < 1 || monthNum > 12)
+      return '';
+    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][monthNum - 1];
+  }
+
 }
 export class CachedGame {
   id: string;

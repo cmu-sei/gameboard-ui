@@ -61,32 +61,47 @@
 
         <div class="form-group pb-0 pt-1">
           <label for="competition-input">Series</label>
-          <input type="text" class="form-control" id="competition-input" name="competition"
+          <input type="text" list="competition-list" class="form-control" id="competition-input" name="competition"
                  [(ngModel)]="game.competition">
+          <datalist id="competition-list">
+            <option *ngFor="let o of suggestions.competition | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>links this event to others in the series</small>
         </div>
 
         <div class="form-group pb-0 pt-1">
           <label for="track-input">Track</label>
-          <input type="text" class="form-control" id="track-input" name="track" [(ngModel)]="game.track">
+          <input type="text" list="track-list" class="form-control" id="track-input" name="track" [(ngModel)]="game.track">
+          <datalist id="track-list">
+            <option *ngFor="let o of suggestions.track | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>distinguish which track of the series</small>
         </div>
 
         <div class="form-group pb-0 pt-1">
           <label for="season-input">Season</label>
-          <input type="text" class="form-control" id="season-input" name="season" [(ngModel)]="game.season">
+          <input type="text" list="season-list" class="form-control" id="season-input" name="season" [(ngModel)]="game.season">
+          <datalist id="season-list">
+            <option *ngFor="let o of suggestions.season | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>links this event to others in this series season</small>
         </div>
 
         <div class="form-group pb-0 pt-1">
           <label for="division-input">Division</label>
-          <input type="text" class="form-control" id="division-input" name="division" [(ngModel)]="game.division">
+          <input type="text" list="division-list" class="form-control" id="division-input" name="division" [(ngModel)]="game.division">
+          <datalist id="division-list">
+            <option *ngFor="let o of suggestions.division | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>specify the attended audience level (i.e. Open, Amatuer, Pro, etc.) </small>
         </div>
 
         <div class="form-group pb-0 pt-1">
           <label for="mode-input">Mode</label>
-          <input type="text" class="form-control" id="mode-input" name="mode" [(ngModel)]="game.mode">
+          <input type="text" list="mode-list" class="form-control" id="mode-input" name="mode" [(ngModel)]="game.mode">
+          <datalist id="mode-list">
+            <option *ngFor="let o of suggestions.mode | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>specify the game mode (i.e. vm, unity, offline) </small>
         </div>
 
@@ -106,19 +121,28 @@
 
         <div class="form-group pb-0 pt-1">
           <label for="cardtext1-input">Card Text Top</label>
-          <input type="text" class="form-control" id="cardtext1-input" name="cardText1" [(ngModel)]="game.cardText1">
+          <input type="text" list="cardText1-list" class="form-control" id="cardtext1-input" name="cardText1" [(ngModel)]="game.cardText1">
+          <datalist id="cardText1-list">
+            <option *ngFor="let o of suggestions.cardText1 | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>text displayed at the top of the card</small>
         </div>
 
         <div class="form-group pb-0 pt-1">
           <label for="cardtext2-input">Card Text Middle</label>
-          <input type="text" class="form-control" id="cardtext2-input" name="cardText2" [(ngModel)]="game.cardText2">
+          <input type="text" list="cardText2-list" class="form-control" id="cardtext2-input" name="cardText2" [(ngModel)]="game.cardText2">
+          <datalist id="cardText2-list">
+            <option *ngFor="let o of suggestions.cardText2 | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>text displayed in the middle of the card</small>
         </div>
 
         <div class="form-group pb-0 pt-1">
           <label for="cardtext3-input">Card Text Bottom</label>
-          <input type="text" class="form-control" id="cardtext3-input" name="cardText3" [(ngModel)]="game.cardText3">
+          <input type="text" list="cardText3-list" class="form-control" id="cardtext3-input" name="cardText3" [(ngModel)]="game.cardText3">
+          <datalist id="cardText3-list">
+            <option *ngFor="let o of suggestions.cardText3 | keyvalue: sortByCount;" [value]="o.key">
+          </datalist>
           <small>text displayed at the bottom of the card</small>
         </div>
       </div>
@@ -145,6 +169,40 @@
           </div>
         </div>
       </div>
+
+      <div class="col-12">
+        <div class="form-group pb-0 pt-1">
+          <label for="certificateTemplate-input">Certificate Template</label>
+          <textarea rows="11" type="text" class="form-control" id="certificateTemplate-input"
+            name="certificateTemplate" [(ngModel)]="game.certificateTemplate"></textarea>
+          <small>design with HTML and inline/internal CSS; use a 11:8.5 aspect ratio</small>
+          <button class="btn btn-sm btn-link-white" [(ngModel)]="showCertificateInfo" [ngModelOptions]="{standalone: true}" btnCheckbox>
+            <fa-icon [icon]="faInfoCircle"></fa-icon>
+          </button>
+          <div class="ml-4 px-2"*ngIf="showCertificateInfo">
+            <p class="cert-info mb-2">
+    Insert dynamic content by referring to a property with double-curly syntax <code>{{"\{\{game_name\}\}"}}</code>. For example, <code>&lt;h1&gt;{{"\{\{leaderboard_name\}\}"}}&lt;/h1&gt;</code>. <br>
+    The following properties will get replaced when a player certificate renders:
+            </p>
+            <pre class="mb-1">
+      game_name &mdash; Name of this game 
+      competition &mdash; Competition type of this game
+      season &mdash; Season of this game
+      round &mdash; Round of this game
+      track &mdash; Track of this game
+      user_name &mdash; Individual user's approved name
+      score &mdash; Total player score for this game
+      rank &mdash; Final leaderboard ranking of the player
+      leaderboard_name &mdash; Approved name for either team or individual
+      date &mdash; Date player's session ended for this game</pre>
+            <p class="cert-info mb-2">
+      Tip: Create an outer div with fixed height and width and <code>position: relative</code>. Create inner divs with <code>position: absolute; text-align: center;</code> and set textbox width and X/Y position with <code>top: __px; left: __px; width: __px;</code>.
+      To add a background image, use <code>background-size: 100% 100%; background-image: url('URL_HERE');</code>
+            </p>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(2)">

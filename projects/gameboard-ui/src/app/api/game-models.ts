@@ -20,6 +20,7 @@ export interface GameDetail {
   gameEnd: Date;
   gameMarkdown: string;
   feedbackConfig: string;
+  certificateTemplate: string;
   feedbackTemplate: FeedbackTemplate;
   registrationMarkdown: string;
   registrationOpen: Date;
@@ -45,6 +46,8 @@ export interface GameDetail {
   cardText1: string;
   cardText2: string;
   cardText3: string;
+  isLive: boolean;
+  hasEnded: boolean;
 }
 
 export interface Game extends GameDetail
@@ -67,6 +70,13 @@ export enum GameRegistrationType {
   none = 'none',
   open = 'open',
   domain = 'domain'
+}
+
+export interface GameGroup {
+  year: number;
+  month: number;
+  monthName: string;
+  games: Game[];
 }
 
 export interface UploadedFile {

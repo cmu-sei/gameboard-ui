@@ -94,6 +94,7 @@ export interface BoardGame {
   feedbackTemplate: FeedbackTemplate;
   background: string;
   logo: string;
+  isPublished: boolean;
   allowPreview: boolean;
   allowTeam: boolean;
   specs: BoardSpec[];

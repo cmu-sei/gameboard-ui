@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { ChangedPlayer, NewPlayer, Player, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +85,12 @@ export class PlayerService {
   }
   public observeTeams(id: string): Observable<any> {
     return this.http.get<Team>(`${this.url}/teams/observe/${id}`);
+  }
+  public getCertificate(id: string): Observable<PlayerCertificate> {
+    return this.http.get<PlayerCertificate>(`${this.url}/certificate/${id}`);
+  }
+  public getUserCertificates(): Observable<PlayerCertificate[]> {
+    return this.http.get<PlayerCertificate[]>(`${this.url}/certificates`);
   }
 
   public transform(p: Player): Player {

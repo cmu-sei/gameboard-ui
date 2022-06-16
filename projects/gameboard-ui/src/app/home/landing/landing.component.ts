@@ -3,10 +3,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { faGamepad, faPlusSquare, faSearch, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { BoardGame } from '../../api/board-models';
-import { Game } from '../../api/game-models';
+import { Game, GameGroup } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 
 @Component({
@@ -16,9 +17,19 @@ import { GameService } from '../../api/game.service';
 })
 export class LandingComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
-  past$: Observable<Game[]>;
+  past$: Observable<GameGroup[]>;
   present$: Observable<Game[]>;
-  future$: Observable<Game[]>;
+  future$: Observable<GameGroup[]>;
+
+  hot!: Game | null;
+
+  faGamepad = faGamepad;
+  faUserPlus = faUserPlus;
+  faSearch = faSearch;
+  faPlusSquare = faPlusSquare;
+
+  showSearchBar = false;
+  searchText = "";
 
   constructor(
     private router: Router,
@@ -26,15 +37,18 @@ export class LandingComponent implements OnInit {
   ) {
     this.past$ = this.refresh$.pipe(
       debounceTime(400),
-      switchMap(() => api.list({filter: ['past']}))
+      switchMap(() => api.listGrouped({filter: ['past'], term: this.searchText})),
+      tap(g => {if (g.length > 0) { this.showSearchBar = true} })
     );
     this.present$ = this.refresh$.pipe(
       debounceTime(200),
-      switchMap(() => api.list({filter: ['present']}))
+      switchMap(() => api.list({filter: ['present'], term: this.searchText})),
+      tap(g => {if (g.length > 0) { this.showSearchBar = true} })
     );
     this.future$ = this.refresh$.pipe(
       debounceTime(300),
-      switchMap(() => api.list({filter: ['future']}))
+      switchMap(() => api.listGrouped({filter: ['future'], term: this.searchText})),
+      tap(g => {if (g.length > 0) { this.showSearchBar = true} })
     );
   }
 
@@ -44,4 +58,17 @@ export class LandingComponent implements OnInit {
   selected(game: Game | BoardGame): void {
     this.router.navigate(['/game', game.id]);
   }
+
+  on(g: Game): void {
+    this.hot = g;
+  }
+
+  off(g: Game): void {
+    this.hot = null;
+  }
+
+  typing(e: Event): void {
+    this.refresh$.next(true);
+  }
+
 }

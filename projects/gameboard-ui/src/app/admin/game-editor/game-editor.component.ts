@@ -3,13 +3,14 @@
 
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
-import { faArrowLeft, faCaretDown, faCaretRight, faCloudUploadAlt, faCopy, faGamepad, faToggleOff, faToggleOn, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCaretDown, faCaretRight, faCloudUploadAlt, faCopy, faGamepad, faToggleOff, faToggleOn, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-game-editor',
@@ -28,7 +29,20 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
   feedbackMessage?: string = undefined;
   feedbackWarning: boolean = false;
   viewing = 1;
+  showCertificateInfo = false;
 
+  // store unique values of each game field with their frequencies for ordered suggestion lists
+  suggestions = {
+    competition: new Map<string,number>(), 
+    track: new Map<string,number>(), 
+    season: new Map<string,number>(), 
+    division: new Map<string,number>(), 
+    mode: new Map<string,number>(), 
+    cardText1: new Map<string,number>(), 
+    cardText2: new Map<string,number>(), 
+    cardText3: new Map<string,number>()
+  };
+  
   faCaretDown = faCaretDown;
   faCaretRight = faCaretRight;
   faToggleOn = faToggleOn;
@@ -38,6 +52,7 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
   faSave = faCloudUploadAlt;
   faGo = faGamepad;
   faArrowLeft = faArrowLeft;
+  faInfoCircle = faInfoCircle;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +60,12 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
     private api: GameService,
     private config: ConfigService
   ) {
+
+    // one-time get list of all games for field suggestions
+    api.list({}).subscribe(
+      games => this.addSuggestions(games)
+    );
+
     this.game$ = route.params.pipe(
       map(p => p.id),
       filter(id => !!id),
@@ -64,7 +85,7 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
     this.updated$ = this.form.valueChanges.pipe(
       filter(f => !this.form.pristine && (this.form.valid || false)),
       tap(g => this.dirty = true),
-      debounceTime(5000),
+      debounceTime(500),
       switchMap(g => this.api.update(this.game)),
       tap(r => this.dirty = false),
       filter(f => this.refreshFeedback),
@@ -107,6 +128,26 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
   }
 
   
+  addSuggestions(games: Game[]) {
+    // add properties of each game into respective map to record distinct values and maintain counts
+    for (const game of games) {
+      this.countGameField(this.suggestions.competition, game.competition);
+      this.countGameField(this.suggestions.track, game.track);
+      this.countGameField(this.suggestions.season, game.season);
+      this.countGameField(this.suggestions.division, game.division);
+      this.countGameField(this.suggestions.mode, game.mode);
+      this.countGameField(this.suggestions.cardText1, game.cardText1);
+      this.countGameField(this.suggestions.cardText1, game.cardText1);
+      this.countGameField(this.suggestions.cardText1, game.cardText1);
+    }
+  }
+
+  countGameField(fieldMap: Map<string, number>, value: string) {
+    // if field value not blank, increment occurrence count by 1
+    if (!!value)
+      fieldMap.set(value, (fieldMap.get(value) ?? 0) + 1);
+  }
+
   updateFeedbackMessage() {
     this.feedbackWarning = false;
     if (!this.game.feedbackConfig || this.game.feedbackConfig.trim().length == 0) {
@@ -131,6 +172,16 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
       return false;
     }
     return true;
+  }
+
+  sortByCount(a: KeyValue<string, number>, b: KeyValue<string, number>) {
+    // order DESC by occurrence count
+    if (a.value < b.value) return 1;
+    if (a.value > b.value) return -1;
+    // order ASC alphabetically by name for occurrence tie
+    if (a.key < b.key) return -1;
+    if (a.key > b.key) return 1;
+    return 0;
   }
 
 }

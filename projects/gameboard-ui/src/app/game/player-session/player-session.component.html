@@ -17,9 +17,9 @@
       <div class="card-title lead">
         <ng-container *ngIf="!ctx.player.session.isBefore">
           <div class="d-flex text-info card-text">
-            <span *ngIf="ctx.player.session.isDuring">Session ends in </span>
+            <span *ngIf="ctx.player.session.isDuring">Time Remaining: </span>
             <span *ngIf="ctx.player.session.isAfter">Session ended </span>
-            <span class="">&nbsp;{{ctx.player.session.countdown | countdown}}</span>
+            <span class="font-weight-bold" [class]="ctx.player.session.countdown | countdowncolor">&nbsp;{{ctx.player.session.countdown | countdown}}</span>
             <div class="spacer"></div>
             <app-confirm-button *ngIf="ctx.game.allowReset" class="mx-2"
               btnClass="btn btn-sm pop-warning" (confirm)="reset(ctx.player)">

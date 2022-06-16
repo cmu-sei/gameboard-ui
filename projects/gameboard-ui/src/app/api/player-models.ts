@@ -1,7 +1,9 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { SafeHtml } from "@angular/platform-browser";
 import { ChallengeResult } from "./board-models";
+import { Game } from "./game-models";
 import { Search } from "./models";
 
 export interface Player {
@@ -230,6 +232,12 @@ export interface ObserveTeamMember {
   role: PlayerRole;
   minimized: boolean;
   fullWidth: boolean;
+}
+
+export interface PlayerCertificate {
+  game: Game;
+  player: Player;
+  html: string;
 }
 
 export interface PlayerSearch extends Search {
