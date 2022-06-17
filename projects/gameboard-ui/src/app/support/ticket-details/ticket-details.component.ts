@@ -192,10 +192,16 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
 
   mapFile(filename: string, path: string): AttachmentFile {
     let ext = filename.split('.').pop() || "";
+    let fullPath = `${this.config.supporthost}/${path}/${filename}`;
+    // this.api.getFile(fullPath).subscribe(
+    //   (result) => {
+    //
+    //   }
+    // );
     return {
       filename: filename,
       extension: ext,
-      fullPath: this.sanitizer.bypassSecurityTrustResourceUrl(`${this.config.supporthost}/tickets/${path}/${filename}`),
+      fullPath: this.sanitizer.bypassSecurityTrustResourceUrl(fullPath),
       showPreview: !!ext.match(/(png|jpeg|jpg|gif|webp|svg)/)
     };
   }

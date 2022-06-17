@@ -10,6 +10,7 @@ export const environment = {
     mkshost: 'http://localhost:4201',
     imghost: 'http://localhost:5002/img',
     tochost: 'http://localhost:5002/doc',
+    supporthost: 'http://localhost:5002/supportfiles',
     tocfile: 'toc.json',
     countdownStartSecondsAtMinute: 5,
     oidc: {

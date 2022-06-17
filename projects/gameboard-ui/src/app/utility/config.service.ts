@@ -86,7 +86,7 @@ export class ConfigService {
   }
 
   get supporthost(): string {
-    return (this.settings.imghost || `${this.basehref}img`) + "/secure/support";
+    return this.settings.supporthost || `${this.basehref}supportfiles`;
   }
 
   load(): Observable<any> {
@@ -160,6 +160,7 @@ export interface Settings {
   mkshost?: string;
   imghost?: string;
   tochost?: string;
+  supporthost?: string;
   tocfile?: string;
   countdownStartSecondsAtMinute?: number;
   oidc: AppUserManagerSettings;

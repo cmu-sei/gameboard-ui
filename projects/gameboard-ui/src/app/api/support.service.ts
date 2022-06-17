@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeOverview } from './board-models';
-import { Feedback, FeedbackReportDetails, FeedbackSubmission } from './feedback-models';
 import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, Ticket, TicketActivity, TicketSummary } from './support-models';
 import { UserSummary } from './user-models';
 
@@ -83,8 +82,12 @@ export class SupportService {
     return this.http.get<ChallengeOverview[]>(`${this.url}/userchallenges`, {params: search});
   }
 
-  // public staticFile(): Observable<string> {
-  //   return this.http.get<string>(`${this.url}/ticket/${id}/attachments`);
-  // }
+  // TODO: use this to make ajax request instead of requesting directly from img/iframe [src] 
+  // which doesn't include token for static file auth
+  public getFile(fileUrl: string): Observable<Blob> {
+    return this.http.get<Blob>(`${fileUrl}`, {params: {responseType: 'blob'} }).pipe(
+
+    );
+  }
 
 }
