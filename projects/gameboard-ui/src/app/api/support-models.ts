@@ -60,10 +60,10 @@ export interface TicketSummary {
   created: Date;
   lastUpdated: Date;
     
-  requester: UserSummary;
-  assignee: UserSummary;
-  creator: UserSummary;
-  challenge: ChallengeSummary;
+  requester?: UserSummary;
+  assignee?: UserSummary;
+  creator?: UserSummary;
+  challenge?: ChallengeSummary;
 
 }
 
@@ -167,13 +167,6 @@ export interface AttachmentFile {
 export interface LabelSuggestion {
   name: string;
   custom?: boolean;
-}
-
-export enum TicketStatus
-{
-    open = 0,
-    inProgress,
-    closed
 }
 
 

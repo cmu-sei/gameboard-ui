@@ -1,14 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
-import { FormGroup, NgForm } from '@angular/forms';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { faArrowLeft, faCaretLeft, faCaretRight, faCog, faEdit, faEllipsisH, faExclamationCircle, faExternalLinkAlt, faFileAlt, faPaperclip, faPeace, faPen, faPlusSquare, faSync, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { BsModalRef, BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
-import { User } from 'oidc-client';
-import { BehaviorSubject, Subject, Observable, combineLatest, interval, timer } from 'rxjs';
-import { debounceTime, switchMap, tap, mergeMap, filter, map } from 'rxjs/operators';
+import { faArrowLeft, faCaretLeft, faCaretRight, faCog, faEdit, faEllipsisH, faExclamationCircle, faExternalLinkAlt, faFileAlt, faPaperclip, faPen, faPlusSquare, faSync, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { BehaviorSubject, Subject, Observable, combineLatest, timer } from 'rxjs';
+import { debounceTime, switchMap, tap, filter, map } from 'rxjs/operators';
 import { PlayerService } from '../../api/player.service';
-import { ActivityType, AttachmentFile, ChangedTicket, LabelSuggestion, Ticket, TicketSummary } from '../../api/support-models';
+import { AttachmentFile, ChangedTicket, Ticket } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
 import { ApiUser, UserSummary } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
@@ -23,18 +21,11 @@ import { UserService as LocalUserService } from '../../utility/user.service';
 })
 export class TicketDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild('modal') modal!: ModalDirective;
-  // @ViewChildren('input1') input1!: QueryList<ElementRef>;
-  // @ViewChild('assignInput') assignInput!: ElementRef;
-  // @ViewChild('labelInput') labelInput!: ElementRef;
   
   ctx$: Observable<{ ticket: Ticket; canManage: boolean; }>;
 
   refresh$ = new BehaviorSubject<any>(true);
-  // ticket$: Observable<Ticket>;
   changed$ = new Subject<ChangedTicket>();
-  // canManage$ = new Observable<boolean>();
-  // attachments: AttachmentFile[] = [];
-  // attachments$: Observable<AttachmentFile[]>;
 
   id: string = "";
 
@@ -47,6 +38,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   changedTicket?: Ticket;
   currentUser: ApiUser | null = null;
 
+  // objects for managing options and filtering and in place editing feature
   assignees: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
   labels: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
   challenges: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
@@ -74,8 +66,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   faExclamationCircle = faExclamationCircle;
   faSync = faSync;
 
-  modalRef?: BsModalRef;
-  // modalRef?: BsModalRef;
   selectedAttachmentList?: AttachmentFile[];
   selectedIndex: number = 0;
 
@@ -85,7 +75,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     private userApi: UserService,
     private route: ActivatedRoute,
     private config: ConfigService,
-    // private modalService: BsModalService
     private sanitizer: DomSanitizer,
     private local: LocalUserService
   ) { 
@@ -101,9 +90,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
         timer(0, 30_000)
       ]).pipe(
       map(([p, r]) => p),
-      tap(a => console.log(a, this.savingContent)),
-      filter(p => !!p.id && (!this.editingContent || this.savingContent)),
-      // filter(p => !this.editingContent),
+      filter(p => !!p.id && (!this.editingContent || this.savingContent)), // don't refresh data if editing and not saving yet
       tap(p => this.id = p.id),
       switchMap(p => api.retrieve(p.id)),
       tap(t => {
@@ -111,7 +98,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
         this.savingContent = false;
         this.changedTicket = {...t};
       }),
-      // tap(t => {this.editingContent = false}),
       tap(t => {
         this.currentLabels.clear();
         t.label?.split(" ")?.forEach(label => {
@@ -126,9 +112,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
         a.created = new Date(a.created);
         let recent = new Date(new Date().getTime() - (5)*60_000);
         a.canUpdate = a.created > recent;
-        console.log(a.created, recent, a.canUpdate)
       })
-      // tap(a => console.log(a, this.changedTicket))
     );
 
     this.ctx$ = combineLatest([ ticket$, canManage$]).pipe(
@@ -142,7 +126,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
       switchMap(c => api.update(c))
     ).subscribe(
       a => {
-        console.log(a);
         this.refresh$.next(true);
       }
     );
@@ -187,7 +170,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
 
   updateAttachments(files: File[]) {
     this.newCommentAttachments = files;
-    console.log(this.newCommentAttachments);
   }
 
   mapFile(filename: string, path: string): AttachmentFile {
@@ -195,7 +177,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     let fullPath = `${this.config.supporthost}/${path}/${filename}`;
     // this.api.getFile(fullPath).subscribe(
     //   (result) => {
-    //
     //   }
     // );
     return {
@@ -258,7 +239,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
       this.api.listLabels({}).subscribe(
         (a) => {
           this.labels.allOptions = a.map(l => ({name:l, secondary: "", data:l}));
-          // this.filteredLabels = this.allLabels;
           this.labels.filtering$.next("");
           this.labels.loaded = true;
         }
@@ -277,7 +257,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
         (a) => {
           this.challenges.allOptions = a.map(c => ({name:c.name, secondary: c.id.slice(0,8)+(!!c.tag ? ' '+c.tag : ''), data:c}));
           this.challenges.allOptions.push({name: "None", secondary:"", data:{}});
-          // this.challenges.filteredOptions = this.challenges.allOptions;
           this.challenges.filtering$.next("");
           this.challenges.loaded = true;
         }
@@ -310,7 +289,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
       this.userApi.list({}).subscribe(
         (a) => {
           this.requesters.allOptions = a.map(u => ({name:u.approvedName, secondary: u.id.slice(0,8), data:u}));
-          // this.requesters.allOptions.push({name: "No one", secondary:"", data:{}});
           this.requesters.filteredOptions = this.requesters.allOptions;
           this.requesters.loaded = true;
 
@@ -415,7 +393,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
       map(a => a.toLowerCase())
     ).subscribe(
       a => {
-        console.log(this.changedTicket, this.challenges)
         this.challenges.filteredOptions = this.challenges.allOptions?.filter(l => {
           return l.name.toLowerCase().includes(a) || l.data.id?.toLowerCase()?.startsWith(a) ||
             l.data.tag?.toLowerCase().includes(a)

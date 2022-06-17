@@ -13,12 +13,8 @@ import { UserService as LocalUserService } from '../../utility/user.service';
 })
 export class TicketListComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
-  // tickets$: Observable<TicketSummary[]>;
-  // tickets: TicketSummary[] = [];
-
   ctx$: Observable<{ tickets: TicketSummary[]; canManage: boolean; }>;
 
-  //TODOOOO
   searchText: string = "";
   statusFilter: string = "Any Status";
   assignFilter: string = "Any";
@@ -46,8 +42,6 @@ export class TicketListComponent implements OnInit {
       timer(0, 60_000)
     ]).pipe(
       debounceTime(250),
-      // tap(a => console.log(this.filter)),
-      // map(a => {term: this.searchText, filter: [this.statusFilter, this.assignFilter]}),
       switchMap(() => api.list({
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
@@ -57,15 +51,12 @@ export class TicketListComponent implements OnInit {
         a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l))
         return a;
       })
-      // tap(result => this.tickets = result)
     );
 
     this.ctx$ = combineLatest([ ticket$, canManage$]).pipe(
       map(([tickets, canManage]) => ({tickets: tickets, canManage: canManage}))
     );
   }
-
-  
 
   ngOnInit(): void {
   }

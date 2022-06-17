@@ -1,4 +1,5 @@
 @import '../../../scss/variables';
+
 .card {
   border: 1px solid #222;
 }
@@ -19,15 +20,12 @@ textarea {
   background-color: #111;
 }
 
-
 .no-preview {
-  // background-color:;
   width: 120px;
   height: 120px;
   overflow: hidden;
 }
 .no-preview-icon {
-  // opacity: 20%;
   font-size: 50px;
 }
 .no-preview-text {
@@ -43,9 +41,7 @@ textarea {
 .attachment {
   cursor: pointer;
   img {
-    // cursor: pointer;
     max-height: 120px;
-    // background-color: white;
   }
 }
 
@@ -64,14 +60,13 @@ textarea {
 ::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0); 
 }
-::-webkit-resizer{
-  // border: red;
-}
+// ::-webkit-resizer{
+  
+// }
 .dark-textarea:focus-visible, .dark-textarea:focus {
   outline: none;
   box-shadow: none;
 }
-
 
 .edit-label {
   cursor: pointer;

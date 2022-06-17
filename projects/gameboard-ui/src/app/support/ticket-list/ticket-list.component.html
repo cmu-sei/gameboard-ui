@@ -30,29 +30,6 @@
     </div>
   </div>
 
-  <!-- <ng-container *ngIf="ctx.tickets as tickets; else loading">
-    <table class="table mt-2 text-left">
-      <tbody>
-        <tr class="bg-dark">
-          <td>Key</td>
-          <td>Summary</td>
-          <td>Status</td>
-          <td>Created</td>
-          <td>Updated</td>
-        </tr>
-          <tr *ngFor="let ticket of tickets">
-            <td><a class="btn btn-link p-0 text-left" [routerLink]="[ticket.id]">{{ticket.fullKey}}</a></td>
-            <td>{{ticket.summary}}</td>
-            <td><span class="badge badge-info">{{ticket.status || "Waiting"}}</span></td>
-            <td>{{ticket.created | shortdate}}</td>
-            <td>{{ticket.lastUpdated | ago}}</td>
-          </tr>
-        
-      </tbody>
-    </table>
-  </ng-container> -->
-
-
   <div class="row m-0 p-0 mb-1">
     <div class="col-1">Key</div>
     <div class="col-7">Summary</div>
@@ -76,7 +53,6 @@
             </ng-container>
           </div>
           <div class="text-muted">
-            <!-- <span>Created {{ticket.created | ago}}</span>&nbsp;by&nbsp;<span class="font-weight-bold">{{ticket.requester?.approvedName}}</span> -->
             <span class="font-weight-bold-">{{ticket.requester?.approvedName}}</span>
             <span *ngIf="ticket.challenge">&nbsp;&middot;&nbsp;{{ticket.challenge.name}} ({{ticket.challenge.tag}})</span>
           </div>
@@ -121,10 +97,7 @@
       </a>
     </div>
   </div>
-
-
 </div>
-
 
 
 <ng-template #loading>

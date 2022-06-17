@@ -20,10 +20,8 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   @Input() showIcon = true;
   @Input() defaultHeight = 200;
   @Input() browseButtonStyle = "btn-outline-secondary";
-  // @Input() fileList!: File[];
-  // @Output() fileListChange = new EventEmitter<File[]>();
 
-  @Output() added = new EventEmitter<File[]>();
+  @Output() added = new EventEmitter<File[]>(); // emit files to parent component when changed
 
   @Input() reset$?: Subject<boolean>;
 
@@ -46,34 +44,16 @@ export class ImageManagerComponent implements OnInit, OnChanges {
     private sanitizer: DomSanitizer
   ) {
 
-    // this.images$ = this.refresh.pipe(
-    //   switchMap(() => api.listImages(this.guid)),
-    //   tap((list: ImageFile[]) => list.forEach(img => this.setUrl(img))),
-    //   tap((list: ImageFile[]) => this.images = list)
-    // );
-
-
     this.drops.pipe(
-      // mergeMap((list: FileList) => Array.from(list)),
-      // tap(a => console.log("files::::::", a)),
-      // map(a => Array.from(a).filter((f: Blob) => f.size < this.maxImageSize && 
-      //   !!f.type.match(/(image|application)\/(png|jpeg|gif|webp|svg)/)))
       map(a => Array.from(a)),
-      // filter((f: File) => f.size < this.maxImageSize),
-      // filter((f: File) => !!f.type.match(/(image|application)\/(png|jpeg|gif|webp|pdf)/)),
-      // tap((f: File) => console.log(f.name + ' ' + f.size)),
-      // tap(a => console.log(a)),
-      // switchMap(a => api.upload({files: a} as NewTicket))
     ).subscribe(
       files => {
 
         files.forEach(file => {
-          console.log(file)
           var key = file.name + file.lastModified;
           if (!this.files.has(key)) {
             if (this.combineSize + file.size < this.maxCombinedSizeMB * 1_000_000) {
               this.combineSize += file.size;
-              console.log(this.combineSize, this.maxCombinedSizeMB * 1_000_000)
               var data: FileData = {file: file}
               if (file.type.match(/(image|application)\/(png|jpeg|gif|webp|svg)/)) {
                 const reader = new FileReader();
@@ -88,10 +68,8 @@ export class ImageManagerComponent implements OnInit, OnChanges {
             }
           }
         });
-
         this.emitFiles();
        
-
       }
     );
 
@@ -100,14 +78,11 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   emitFiles() {
     const files = Array.from(this.files.values()).map((f: FileData) => f.file);
     this.added.emit(files);
-    // this.fileListChange.emit(files);
   }
 
   ngOnInit(): void {
-    console.log(this.reset$)
     this.reset$?.subscribe(
       () => {
-        console.log("RESET");
         this.files.clear();
       }
     );
@@ -119,19 +94,10 @@ export class ImageManagerComponent implements OnInit, OnChanges {
     }
   }
 
-  dropped(img: any): void {
-    // this.setUrl(img);
-    // this.images.push(img);
-  }
-
-  setUrl(img: any): void {
-  }
-
   delete(imgKey: string): void {
     this.combineSize -= (this.files.get(imgKey)?.file.size ?? 0)
     this.files.delete(imgKey);
     this.emitFiles();
-    console.log(this.combineSize, this.maxCombinedSizeMB * 1_000_000)
   }
 
   //
@@ -149,6 +115,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
     this.activeImage = null;
   }
 
+  // for maintaining insertion order of set 
   insertOrder() {
     return 0;
   }

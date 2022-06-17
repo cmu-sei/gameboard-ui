@@ -8,8 +8,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./inplace-editor.component.scss']
 })
 export class InplaceEditorComponent implements OnInit {
-  // @ViewChildren('input1') input1!: QueryList<ElementRef>;
-  @ViewChild('input1') input1!: ElementRef;
+  @ViewChild('input') input!: ElementRef;
 
   @Input() editData!: EditData;
   @Input() noEdit = false;
@@ -21,7 +20,6 @@ export class InplaceEditorComponent implements OnInit {
   faPen = faPen; 
 
   constructor() {
-    console.log("constructor")
    }
 
   ngOnInit(): void {
@@ -31,7 +29,7 @@ export class InplaceEditorComponent implements OnInit {
     if (!this.noEdit) {
       this.startEditFunc.emit(true);
       setTimeout(() => {
-        this.input1?.nativeElement?.focus();
+        this.input?.nativeElement?.focus();
       }, 10);
     }
   }
@@ -42,7 +40,6 @@ export class InplaceEditorComponent implements OnInit {
   }
 
 }
-
 
 
 export interface EditData {

@@ -1,7 +1,7 @@
 <!-- in place edit + suggestions template  -->
   <div *ngIf="editData.isEditing" class="editor" style="position: relative;">
     <div class="input-group">
-      <input #input1 type="text" autoFocus class="form-control mb-0 py-0 pr-1 edit-h" (input)="editData.filtering$.next(input1.value)">
+      <input #input type="text" autoFocus class="form-control mb-0 py-0 pr-1 edit-h" (input)="editData.filtering$.next(input.value)">
       <div class="input-group-append edit-h">
         <button class="btn btn-secondary" type="button" (click)="editData.isEditing=false"><fa-icon class="p-0 m-0 " [icon]="faTimes"></fa-icon></button>
       </div>

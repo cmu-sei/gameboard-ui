@@ -48,7 +48,7 @@ export class TicketFormComponent implements OnInit {
     private local: LocalUserService
   ) { 
 
-
+    // todo, could remove this and just set the challenge id since it is also fetching list of challenge options
     const paramChallenge$ = route.queryParams.pipe(
       filter(p => !!p.cid),
       switchMap(p => boardApi.retrieve(p.cid)),
@@ -73,7 +73,6 @@ export class TicketFormComponent implements OnInit {
     ).subscribe(
       (result) => {
         this.requesters.filteredOptions = result.map(u => ({name:u.approvedName, secondary: u.id.slice(0,8), data:u})).slice(0, 20);
-        // this.requesters.filteredOptions.push({name:'Me', })
       }
     );
 
@@ -84,7 +83,6 @@ export class TicketFormComponent implements OnInit {
   }
 
   submit() {
-    // this.api.create(this.ticket).subscribe()
     this.api.upload(this.ticket).subscribe(
       (ticket) => {
         if (!!ticket.id) { // success
@@ -97,7 +95,6 @@ export class TicketFormComponent implements OnInit {
 
   attachments(files: File[]) {
     this.ticket.uploads = files;
-    console.log(this.ticket)
   }
 
   startEditRequesters() {

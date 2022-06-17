@@ -1,24 +1,5 @@
 
-<!-- <div class="container-xl bg-danger">
-  <h1>hi</h1>
-</div>
-<div class="container bg-danger">
-  <h1>hi</h1>
-</div>
-<div class="container-fluid bg-danger">
-  <div style="max-width: 1400px; margin:auto;" class="d-flex">
-    <div class="container">hello</div>
-    <div class="">yoo</div>
-  </div>
-  <h1>hi</h1>
-</div>
-<div class="container-lg bg-danger">
-  <h1>hi</h1>
-</div> -->
-
-<div >
-
-  
+<div>
 
   <div *ngIf="ctx$ | async as ctx" class="container-xl" [class.expand]="ctx.canManage">
 
@@ -32,9 +13,6 @@
       <span *ngIf="!editingContent">{{ctx.ticket.summary}}</span>
     </h2>
     <div *ngIf="editingContent && changedTicket && !!changedTicket?.id" class="form-row p-0 mx-0 mb-1">
-      <!-- <div class="col-2 p-0 m-0">
-        
-      </div> -->
       <div class="col-10 p-0 pr-4 m-0">
         <input type="text" class="form-control border border-dark text-white w-100" id="form-summary" name="form-summary" autocomplete="off" [maxlength]="128" style="background:#000"
         [(ngModel)]="changedTicket.summary">
@@ -191,8 +169,6 @@
 
               <div class="form-group p-0 m-0 mb-4">
                 <label class="font-weight-bold" for="assignee-input">Assigned to <fa-icon *ngIf="!changedTicket.assigneeId" class="text-warning ml-1" [icon]="faExclamationCircle"></fa-icon></label><br />
-                <!-- <ng-container *ngTemplateOutlet="inPlaceEditor;context: {editData: assignees, 
-                    currentText: changedTicket.assignee?.approvedName ?? ctx.ticket.assignee?.approvedName ?? 'Unassigned'}"></ng-container> -->
                 <app-inplace-editor [editData]="assignees" [currentText]="changedTicket.assignee?.approvedName ?? 'None'"
                 (startEditFunc)="startEditAssignee()" (selectOptionFunc)="selectAssignee($event)"></app-inplace-editor>
                 <a *ngIf="!!currentUser && !changedTicket.assigneeId" class="btn btn-link px-2 pt-0 text-info" (click)="selectAssignToMe()">Assign to me</a>
@@ -253,21 +229,13 @@
               <div *ngIf="ctx.ticket.staffCreated" class="form-group p-0 m-0 mb-4">
                 <label class="font-weight-bold" for="assignee-input">Created by</label><br />
                   <p style="vertical-align:middle;" class="mb-0 pt-0 mb-1 px-2 align-items-center">{{ctx.ticket.creator?.approvedName || 'None'}}</p>
-                  <!-- <p class="mb-0  pt-0 mb-1 px-2 align-items-center small">User Id: {{ctx.ticket.creatorId | slice:0:16}}</p> -->
               </div>
-
             </div>
           </div>
         </div>
       </div>
-
-
-
     </div>
-    
-    
   </div>
-
 </div>
 
 <div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -304,25 +272,3 @@
     </div>
   </div>
 </div>
-
-
-<!-- in place edit + suggestions template  -->
-<!-- <ng-template #inPlaceEditor let-editData="editData" let-currentText="currentText" let-noEdit="noEdit">
-  <div *ngIf="editData.isEditing" class="w-100" style="position: relative;">
-    <div class="input-group">
-      <input #input1 type="text" autoFocus class="form-control mb-0 py-0 pr-1 edit-h" id="{{editData.type}}-input" (input)="editData.filtering$.next(input1.value)">
-      <div class="input-group-append edit-h">
-        <button class="btn btn-secondary" type="button" (click)="editData.isEditing=false"><fa-icon class="p-0 m-0 " [icon]="faTimes"></fa-icon></button>
-      </div>
-    </div>
-    <div style="position: absolute; z-index: 20;" class="w-100">
-      <div *ngFor="let option of editData.filteredOptions" class="bg-white w-100 text-black px-2 py-1 select-item d-flex justify-content-between" (click)="selectOption(option, editData)">
-        <span>{{option.name}} <span class="text-muted ml-2">{{option.secondary}}</span></span>
-        <span class="plus-icon text-muted"><fa-icon [icon]="faPlusSquare"></fa-icon></span>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="!editData.isEditing" (click)="startEditing(editData, noEdit)" class="edit-h" [class.editable]="!noEdit" style="display:table;">
-    <span style="display:table-cell;vertical-align:middle;" class="mb-0 py-0 px-2 align-items-center">{{currentText}}&nbsp;&nbsp;<fa-icon *ngIf="!noEdit" class="p-0 m-0 " [icon]="faPen" size="sm"></fa-icon></span>
-  </div>
-</ng-template> -->

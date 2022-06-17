@@ -44,7 +44,6 @@ export class SupportReportComponent implements OnInit {
     );
 
     this.dayStats$ = this.refresh$.pipe(
-      tap(() => console.log(this.startRange)),
       switchMap(() => this.reportService.supportDays(this.search))
     )
     this.labelStats$ = this.refresh$.pipe(
