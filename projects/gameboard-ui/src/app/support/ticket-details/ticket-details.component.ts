@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faCaretLeft, faCaretRight, faCog, faEdit, faEllipsisH, faExclamationCircle, faExternalLinkAlt, faFileAlt, faPaperclip, faPen, faPlusSquare, faSync, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { HttpClient } from '@angular/common/http';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, Subject, Observable, combineLatest, timer } from 'rxjs';
-import { debounceTime, switchMap, tap, filter, map } from 'rxjs/operators';
+import { debounceTime, switchMap, tap, filter, map, first } from 'rxjs/operators';
 import { PlayerService } from '../../api/player.service';
-import { AttachmentFile, ChangedTicket, Ticket } from '../../api/support-models';
+import { AttachmentFile, ChangedTicket, Ticket, TicketActivity } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
 import { ApiUser, UserSummary } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
@@ -67,6 +68,12 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   faSync = faSync;
 
   selectedAttachmentList?: AttachmentFile[];
+  // Storage for attachments uploaded in the original ticket request
+  attachmentObjectUrls: SafeResourceUrl[] = [];
+  // Storage for attachments uploaded via comments in the ticket
+  commentAttachmentMap: Map<string, SafeResourceUrl[]> = new Map<string, SafeResourceUrl[]>();
+  // Storage for selected images' URLs
+  selectedObjectUrls: SafeResourceUrl[] = this.attachmentObjectUrls;
   selectedIndex: number = 0;
 
   constructor(
@@ -76,7 +83,8 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private config: ConfigService,
     private sanitizer: DomSanitizer,
-    private local: LocalUserService
+    private local: LocalUserService,
+    private http: HttpClient
   ) { 
 
     const canManage$ = local.user$.pipe(
@@ -107,7 +115,17 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
       }),
       tap(a => {
         a.attachmentFiles = a.attachments.map(f => this.mapFile(f, this.id));
+        // Initialize ticket attachment URL object
+        this.attachmentObjectUrls = new Array<SafeResourceUrl>(a.attachmentFiles.length);
+        // Set the selected object urls
+        this.selectedObjectUrls = this.attachmentObjectUrls;
+        // Fetch each original ticket's attachment file
+        a.attachmentFiles.forEach((f, i) => this.fetchFile(f, i));
         a.activity.forEach(g => g.attachmentFiles = g.attachments.map(f => this.mapFile(f, `${this.id}/${g.id}`)));
+        // Initialize comment attachment URL object - store it in a map to account for multiple comments
+        a.activity.forEach((g, i) => this.commentAttachmentMap.set(g.id, new Array<SafeResourceUrl>(g.attachmentFiles.length)));
+        // Fetch each comment's attachments
+        a.activity.forEach((g, i) => g.attachmentFiles.forEach((f, j) => this.fetchFile(f, j, g)));
         a.selfCreated = a.creatorId == a.requesterId;
         a.created = new Date(a.created);
         let recent = new Date(new Date().getTime() - (5)*60_000);
@@ -131,6 +149,31 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     );
     
 
+  }
+
+  // Grabs a given file, then sets the source of an image to be the URL within manifested as a blob.
+  fetchFile(file: AttachmentFile, imgId: number, activity: TicketActivity | null = null) {
+    // Run a get request to the file location; retrieve as a blob to avoid storing an absolute link
+    this.http.get(file.fullPath,
+      { observe: 'response', responseType: 'blob' }
+    ).pipe(first()).subscribe(
+      // a represents the response, in this case a blob
+      (a) => {
+        // Get the image element on the screen, abort if it or the blob is null
+        let img = activity ? document.getElementById(`comment-attachment-${activity.id}-${imgId}`) : document.getElementById(`attachment-${imgId}`);
+        if (img == null || a.body == null) return;
+        // Create a new object URL from the blob, then set the src to reference that
+        let url: string = URL.createObjectURL(a.body);
+        img.setAttribute("src", url);
+        // Set the appropriate storage object based on whether this is being called on a comment or not
+        if (activity) this.commentAttachmentMap.get(activity.id)![imgId] = this.sanitizer.bypassSecurityTrustUrl(url);
+        else this.attachmentObjectUrls[imgId] = this.sanitizer.bypassSecurityTrustUrl(url);
+      }, async (error) => {
+        // In case of an error, print it
+        console.log("Error encountered while retrieving image.");
+        console.log(error);
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -182,12 +225,18 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     return {
       filename: filename,
       extension: ext,
-      fullPath: this.sanitizer.bypassSecurityTrustResourceUrl(fullPath),
+      // fullPath: this.sanitizer.bypassSecurityTrustResourceUrl(fullPath),
+      fullPath: fullPath,
       showPreview: !!ext.match(/(png|jpeg|jpg|gif|webp|svg)/)
     };
   }
 
-  enlarge(attachmentList: AttachmentFile[], index: number) {
+  // Expand an image in a new viewer window.
+  enlarge(attachmentList: AttachmentFile[], index: number, objectUrls: SafeResourceUrl[] | undefined) {
+    // Abort if the list of URLs we reference isn't initialized yet
+    if (objectUrls == undefined) return;
+    // Otherwise, set the currently selected object URLs to be the given ones
+    this.selectedObjectUrls = objectUrls;
     this.selectedAttachmentList = attachmentList;
     this.selectedIndex = index;
     this.modal.show();

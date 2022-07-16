@@ -160,7 +160,8 @@ export interface AttachmentFile {
   filename: string;
   extension: string;
 
-  fullPath: SafeResourceUrl;
+  // Not SafeResourceUrl so it can be retrieved in a function
+  fullPath: string
   showPreview: boolean;
 }
 
