@@ -190,7 +190,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   }
 
   addComment() {
-    if (!!this.newCommentText) {
+    if (!!this.newCommentText || !!this.newCommentAttachments) {
       let newComment = {
         ticketId: this.id, 
         message: this.newCommentText,

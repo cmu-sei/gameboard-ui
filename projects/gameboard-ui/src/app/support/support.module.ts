@@ -16,7 +16,7 @@ import { TicketDetailsComponent } from './ticket-details/ticket-details.componen
 import { TicketListComponent } from './ticket-list/ticket-list.component';
 import { SupportPageComponent } from './support-page/support-page.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     AlertModule,
     MarkdownModule,
     ButtonsModule,
-    ModalModule
+    ModalModule,
+    TooltipModule
   ]
 })
 export class SupportModule { }

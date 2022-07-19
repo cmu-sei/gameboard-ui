@@ -13,7 +13,8 @@ import { UserService as LocalUserService } from '../../utility/user.service';
 })
 export class TicketListComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
-  ctx$: Observable<{ tickets: TicketSummary[]; canManage: boolean; }>;
+  ctx$: Observable<{ tickets: TicketSummary[]; nextTicket: TicketSummary[]; canManage: boolean; }>;
+  advanceRefresh$ = new BehaviorSubject<any>(true);
 
   searchText: string = "";
   statusFilter: string = "Any Status";
@@ -46,15 +47,33 @@ export class TicketListComponent implements OnInit {
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
         take: this.take,
-        skip: this.skip})),
+        skip: this.skip
+      })),
       map(a => {
-        a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l))
+        a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l));
         return a;
       })
     );
 
-    this.ctx$ = combineLatest([ ticket$, canManage$]).pipe(
-      map(([tickets, canManage]) => ({tickets: tickets, canManage: canManage}))
+    const nextTicket$ = combineLatest([
+      this.advanceRefresh$,
+      timer(0, 60_000)
+    ]).pipe(
+      debounceTime(250),
+      switchMap(() => api.list({
+        term: this.searchText,
+        filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
+        take: 1,
+        skip: this.skip + this.take
+      })),
+      map(a => {
+        a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l));
+        return a;
+      })
+    );
+
+    this.ctx$ = combineLatest([ ticket$, nextTicket$, canManage$]).pipe(
+      map(([tickets, nextTicket, canManage]) => ({tickets: tickets, nextTicket: nextTicket, canManage: canManage}))
     );
   }
 
@@ -64,6 +83,7 @@ export class TicketListComponent implements OnInit {
   next() {
     this.skip = this.skip + this.take;
     this.refresh$.next(true);
+    this.advanceRefresh$.next(true);
   }
 
   prev() {
@@ -72,6 +92,11 @@ export class TicketListComponent implements OnInit {
       this.skip = 0;
 
     this.refresh$.next(true);
+    this.advanceRefresh$.next(true);
+  }
+
+  getLatterDateString(date: string): string {
+    return date.split(", ")[2];
   }
 
 }

@@ -54,7 +54,8 @@ import { UtilityModule } from './utility/utility.module';
     ButtonsModule,
     ModalModule,
     BsDropdownModule,
-    MarkdownModule
+    MarkdownModule,
+    TooltipModule
   ],
   providers: [
     {
