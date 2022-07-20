@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Subject, Observable, timer, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, tap, mergeMap, map, filter } from 'rxjs/operators';
+import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { BehaviorSubject, Observable, timer, combineLatest } from 'rxjs';
+import { debounceTime, switchMap, map } from 'rxjs/operators';
 import { TicketSummary } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
@@ -20,12 +20,19 @@ export class TicketListComponent implements OnInit {
   statusFilter: string = "Any Status";
   assignFilter: string = "Any";
 
+  curOrderItem: string = "created";
+  isDescending: boolean = true;
+  hoverOrderItem: string = "";
+  showHoverCaret: boolean = false;
+
   take = 25;
   skip = 0;
 
   faComments = faComments;
   faPaperclip = faPaperclip;
   faSearch = faSearch;
+  faCaretDown = faCaretDown;
+  faCaretUp = faCaretUp;
   faCaretRight = faCaretRight;
   faCaretLeft =faCaretLeft;
 
@@ -47,7 +54,9 @@ export class TicketListComponent implements OnInit {
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
         take: this.take,
-        skip: this.skip
+        skip: this.skip,
+        orderItem: this.curOrderItem,
+        isDescending: this.isDescending
       })),
       map(a => {
         a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l));
@@ -64,7 +73,9 @@ export class TicketListComponent implements OnInit {
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
         take: 1,
-        skip: this.skip + this.take
+        skip: this.skip + this.take,
+        orderItem: this.curOrderItem,
+        isDescending: this.isDescending
       })),
       map(a => {
         a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l));
@@ -99,4 +110,17 @@ export class TicketListComponent implements OnInit {
     return date.split(", ")[2];
   }
 
+  // Orders by a given column name by querying the API.
+  orderByColumn(orderItem: string) {
+    // If the provided item is the currently ordered one, just switch the ordering
+    if (orderItem == this.curOrderItem) this.isDescending = !this.isDescending;
+    // Otherwise, always start ordering it in descending order
+    else {
+      this.curOrderItem = orderItem;
+      this.isDescending = true;
+    }
+    
+    this.refresh$.next(true);
+    this.advanceRefresh$.next(true);
+  }
 }

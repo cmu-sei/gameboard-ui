@@ -31,11 +31,46 @@
   </div>
 
   <div class="row m-0 p-0 mb-1">
-    <div class="col-1">Key</div>
-    <div class="col-6">Summary</div>
-    <div class="col-2">Status{{ctx.canManage ? ' / Assignee' : ''}}</div>
-    <div class="col-2 text-right">Created</div>
-    <div class="col-1 text-right">Updated</div>
+    <!-- Key column with ordering -->
+    <div class="col-1" (click)="orderByColumn('key')" (mouseover)="showHoverCaret=true; hoverOrderItem='key'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+      <span class="m-0 p-1">Key</span>
+      <span class="m-0 p-1" [hidden]="curOrderItem != 'key' && hoverOrderItem != 'key'">
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'key' || curOrderItem == 'key')) || (curOrderItem != 'key' && hoverOrderItem != 'key')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'key'"></fa-icon>
+      </span>
+    </div>
+    <!-- Summary column with ordering -->
+    <div class="col-6" (click)="orderByColumn('summary')" (mouseover)="showHoverCaret=true; hoverOrderItem='summary'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+      <span class="m-0 p-1">Summary</span>
+      <span class="m-0 p-1" [hidden]="curOrderItem != 'summary' && hoverOrderItem != 'summary'">
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'summary' || curOrderItem == 'summary')) || (curOrderItem != 'summary' && hoverOrderItem != 'summary')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'summary'"></fa-icon>
+      </span>
+    </div>
+    <!-- Status column with ordering -->
+    <div class="col-2" (click)="orderByColumn('status')" (mouseover)="showHoverCaret=true; hoverOrderItem='status'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+      <span class="m-0 p-1">Status{{ctx.canManage ? ' / Assignee' : ''}}</span>
+      <span class="m-0 p-1" [hidden]="curOrderItem != 'status' && hoverOrderItem != 'status'">
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'status' || curOrderItem == 'status')) || (curOrderItem != 'status' && hoverOrderItem != 'status')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'status'"></fa-icon>
+      </span>
+    </div>
+    <!-- Created column with ordering -->
+    <div class="col-2 text-right" (click)="orderByColumn('created')" (mouseover)="showHoverCaret=true; hoverOrderItem='created'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+      <span class="m-0 p-1">Created</span>
+      <span class="m-0 p-1" [hidden]="curOrderItem != 'created' && hoverOrderItem != 'created'">
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'created' || curOrderItem == 'created')) || (curOrderItem != 'created' && hoverOrderItem != 'created')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'created'"></fa-icon>
+      </span>
+    </div>
+    <!-- Updated column with ordering -->
+    <div class="col-1 text-right" (click)="orderByColumn('updated')" (mouseover)="showHoverCaret=true; hoverOrderItem='updated'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+      <span class="m-0 p-1">Updated</span>
+      <span class="m-0 p-1" [hidden]="curOrderItem != 'updated' && hoverOrderItem != 'updated'">
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'updated' || curOrderItem == 'updated')) || (curOrderItem != 'updated' && hoverOrderItem != 'updated')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'updated'"></fa-icon>
+      </span>
+    </div>
   </div>
 
   <div class="list">
