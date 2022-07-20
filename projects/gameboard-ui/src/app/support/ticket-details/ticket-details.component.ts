@@ -227,7 +227,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
       extension: ext,
       // fullPath: this.sanitizer.bypassSecurityTrustResourceUrl(fullPath),
       fullPath: fullPath,
-      showPreview: !!ext.match(/(png|jpeg|jpg|gif|webp|svg)/)
+      showPreview: !!ext.toLowerCase().match(/(png|jpeg|jpg|gif|webp|svg)/)
     };
   }
 
