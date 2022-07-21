@@ -5,7 +5,7 @@ import { faArrowLeft, faCaretLeft, faCaretRight, faCog, faEdit, faEllipsisH, faE
 import { HttpClient } from '@angular/common/http';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, Subject, Observable, combineLatest, timer } from 'rxjs';
-import { debounceTime, switchMap, tap, filter, map, first } from 'rxjs/operators';
+import { debounceTime, switchMap, tap, filter, map, first, take } from 'rxjs/operators';
 import { PlayerService } from '../../api/player.service';
 import { AttachmentFile, ChangedTicket, Ticket, TicketActivity } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
@@ -95,7 +95,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     const ticket$ = combineLatest([
         route.params,
         this.refresh$,
-        timer(0, 30_000)
+        // timer(0, 30_000) // refresh-causing line - runs every 30 seconds
       ]).pipe(
       map(([p, r]) => p),
       filter(p => !!p.id && (!this.editingContent || this.savingContent)), // don't refresh data if editing and not saving yet
@@ -274,7 +274,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
           this.assignees.allOptions.push({name: "None", secondary:"", data:{}});
           this.assignees.filteredOptions = this.assignees.allOptions;
           this.assignees.loaded = true;
-
         }
       );
     }
@@ -340,7 +339,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
           this.requesters.allOptions = a.map(u => ({name:u.approvedName, secondary: u.id.slice(0,8), data:u}));
           this.requesters.filteredOptions = this.requesters.allOptions;
           this.requesters.loaded = true;
-
         }
       );
     }
