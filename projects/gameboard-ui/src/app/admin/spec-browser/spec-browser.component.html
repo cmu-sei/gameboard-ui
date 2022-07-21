@@ -9,20 +9,28 @@
       <span>Search</span>
     </span>
   </div>
-  <input id="search-input" type="search" class="form-control"
-    [(ngModel)]="search.term" (input)="typing($event)"
-    aria-label="search term" aria-describedby="search-label">
+  <input
+    id="search-input"
+    type="search"
+    class="form-control"
+    [(ngModel)]="search.term"
+    (input)="typing($event)"
+    aria-label="search term"
+    aria-describedby="search-label"
+  />
 </div>
 
 <!-- filters -->
 <div></div>
 
 <!-- list -->
-<ng-container *ngFor="let item of list$ | async; trackBy:trackById">
+<ng-container *ngFor="let item of list$ | async; trackBy: trackById">
   <div class="card m-2" tabindex="0" (click)="select(item)">
     <div class="card-body">
-      <div class="card-title">{{item.name}}</div>
-      <p>{{item.description}}</p>
+      <div class="card-title">
+        {{ item.name }} ({{ item.gameEngineType | titlecase }})
+      </div>
+      <p>{{ item.description }}</p>
     </div>
   </div>
 </ng-container>
