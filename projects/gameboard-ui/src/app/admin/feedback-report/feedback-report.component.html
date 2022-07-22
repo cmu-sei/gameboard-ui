@@ -168,7 +168,7 @@
         </thead>
         <tbody *ngIf="feedback; else loading">
           <tr *ngFor="let r of feedback; let i = index" (click)="toggleRow(i)" id="row-{{i}}" class="minimized table-row">
-            <td><div class="text-align-left">{{ r.timestamp | shorttime }}</div></td>
+            <td><div class="text-align-left">{{ r.timestamp | shorttime:true }}</div></td>
             <td *ngIf="currentType == 'challenge'"><div>{{r.challengeId | slice:0:8}} {{r.challengeTag}}</div></td>
             <td><div>{{ r.approvedName }}</div></td>
             <td *ngFor="let q of r.questions" class="table-cell" [class]="(q.answer?.length ?? 0) > 500 ? 'long-text' : ''">

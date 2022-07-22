@@ -4,7 +4,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subscription, timer } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
+import { finalize, map, tap, delay } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { NewPlayer, Player, PlayerEnlistment, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -28,6 +28,8 @@ export class PlayerEnrollComponent implements OnInit {
   faTrash = faTrash;
   token = '';
   ctx$: Observable<GameContext>;
+  delayMs: number = 2000;
+  ctxDelayed$: Observable<GameContext>;
 
   constructor(
     private api: PlayerService,
@@ -41,6 +43,11 @@ export class PlayerEnrollComponent implements OnInit {
         ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
         ctx.game.registration = new TimeWindow(ctx.game.registrationOpen, ctx.game.registrationClose);
       })
+    );
+
+    // Delay needed to prevent an enroll refresh error; 2 seconds should be enough
+    this.ctxDelayed$ = this.ctx$.pipe(
+      delay(this.delayMs)
     )
   }
 

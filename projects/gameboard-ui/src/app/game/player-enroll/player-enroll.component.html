@@ -48,15 +48,16 @@
           </div>
           <!-- accept -->
           <div class="text-center">
-            <app-confirm-button btnClass="btn btn-primary btn-lg" (confirm)="enroll(ctx.user.id, ctx.game.id)">
+            <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg" (confirm)="enroll(ctx.user.id, ctx.game.id)">
               <fa-icon [icon]="faEdit"></fa-icon>
               <span>Enroll</span>
             </app-confirm-button>
+            
           </div>
         </ng-container>
 
         <div *ngIf="ctx.user.isRegistrar && !ctx.game.registration.isDuring" class="text-center">
-          <app-confirm-button btnClass="btn btn-primary btn-lg" (confirm)="enroll(ctx.user.id, ctx.game.id)">
+          <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg" (confirm)="enroll(ctx.user.id, ctx.game.id)">
             <fa-icon [icon]="faEdit"></fa-icon>
             <span>Admin Enroll</span>
           </app-confirm-button>
