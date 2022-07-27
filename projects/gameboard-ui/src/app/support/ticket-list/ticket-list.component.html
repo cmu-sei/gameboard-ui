@@ -40,7 +40,7 @@
       </span>
     </div>
     <!-- Summary column with ordering -->
-    <div class="col-6" (click)="orderByColumn('summary')" (mouseover)="showHoverCaret=true; hoverOrderItem='summary'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+    <div class="col-5" (click)="orderByColumn('summary')" (mouseover)="showHoverCaret=true; hoverOrderItem='summary'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Summary</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'summary' && hoverOrderItem != 'summary'">
         <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'summary' || curOrderItem == 'summary')) || (curOrderItem != 'summary' && hoverOrderItem != 'summary')"></fa-icon>
@@ -64,7 +64,7 @@
       </span>
     </div>
     <!-- Updated column with ordering -->
-    <div class="col-1 text-right" (click)="orderByColumn('updated')" (mouseover)="showHoverCaret=true; hoverOrderItem='updated'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+    <div class="col-2 text-right" (click)="orderByColumn('updated')" (mouseover)="showHoverCaret=true; hoverOrderItem='updated'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Updated</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'updated' && hoverOrderItem != 'updated'">
         <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'updated' || curOrderItem == 'updated')) || (curOrderItem != 'updated' && hoverOrderItem != 'updated')"></fa-icon>
@@ -79,7 +79,7 @@
         <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.id]">{{ticket.fullKey}}</a>
       </div>
 
-      <div class="col-6 d-flex flex-wrap">
+      <div class="col-5 d-flex flex-wrap">
         <div class="ml-2">
           <div class="d-inline flex-wrap">
             <a class="p-0 text-left" [routerLink]="[ticket.id]" ><span class="mr-2 h5 summary-break" >{{ticket.summary || "No summary"}}</span></a>
@@ -113,7 +113,7 @@
         <span>{{ ticket.created | date: 'longDate' }}</span>
         <span>{{ getLatterDateString(ticket.created | shorttime: true) }}</span>
       </div>
-        <div class="col-1 align-self-center d-flex text-right">
+        <div class="col-2 align-self-center d-flex text-right flex-column justify-content-between">
         <span>{{ticket.lastUpdated | ago}}</span>
       </div>
     </div> 
