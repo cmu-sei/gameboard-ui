@@ -98,6 +98,7 @@ export class GameboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
     );
 
     const selected$ = this.selecting$.pipe(
+      // If s.instance does not exist, fetch; otherwise, preview
       switchMap(s => !!s.instance && !!s.instance.state
         ? of(s)
         : (!!s.instance

@@ -8,7 +8,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { NewSpec, Spec } from '../../api/spec-models';
+import { ExternalSpec, NewSpec, Spec } from '../../api/spec-models';
 import { SpecService } from '../../api/spec.service';
 import { ConfigService } from '../../utility/config.service';
 
@@ -32,10 +32,12 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   refresh$ = new Subject<string>();
   updating$ = new Subject<Spec>();
   deleting$ = new Subject<Spec>();
+  recentExternals$ = new Subject<ExternalSpec>();
   updated$: Observable<Spec>;
   created$: Observable<Spec>;
   deleted$: Observable<any>;
   list$: Observable<Spec[]>;
+  recentExternalSpecList$: Observable<ExternalSpec[]>;
   list: Spec[] = [];
   faSearch = faSearch;
   faTrash = faTrash;
@@ -60,6 +62,30 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
       switchMap(id => gameSvc.retrieveSpecs(id)),
       tap(r => this.list = r)
     );
+
+    // Grabs external specs
+    this.recentExternalSpecList$ = this.recentExternals$.pipe(
+      debounceTime(500),
+      // Get a list of the external specs in the API and iterate through each
+      switchMap(() => api.list('')),
+      tap(extSpecArr => {
+        extSpecArr.forEach(
+          extSpec => {
+            // Find the one in the local list that matches this one
+            var item = this.list.find(i => i.externalId === extSpec.externalId);
+            // Compare the name and description of each; if they aren't equal, update the challenge in the GB database
+            if (item) {
+              var tmpName = item.name;
+              var tmpDesc = item.description;
+              item.name = extSpec.name;
+              item.description = extSpec.description;
+              if (tmpName != extSpec.name || tmpDesc != extSpec.description) api.update(item).subscribe();
+            }
+          })
+      })
+    );
+    this.recentExternalSpecList$.subscribe();
+    // this.recentExternals$.next();
 
     this.created$ = api.selected$.pipe(
       // tap(s => console.log(s)),
@@ -97,6 +123,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
   refresh(): void {
     this.refresh$.next(this.game.id);
+    this.recentExternals$.next();
   }
 
   view(v: string): void {
