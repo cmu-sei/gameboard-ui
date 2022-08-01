@@ -93,11 +93,20 @@ export class PlayerService {
     return this.http.get<PlayerCertificate[]>(`${this.url}/certificates`);
   }
 
-  public transform(p: Player): Player {
+  public transform(p: Player, disallowedName: string | null = null): Player {
     p.sponsorLogo = p.sponsor
       ? `${this.config.imagehost}/${p.sponsor}`
       : `${this.config.basehref}assets/sponsor.svg`
     ;
+
+    // If the user has no name status but they changed their name, it's pending approval
+    if (!p.nameStatus && p.approvedName !== p.name) {
+      p.nameStatus = 'pending';
+    }
+    // Otherwise, if the user entered a name and an admin rejected it, but the new name entered is different, it's pending
+    else if (p.nameStatus != 'pending' && disallowedName && disallowedName !== p.name) {
+      p.nameStatus = 'pending';
+    }
 
     p.pendingName = p.approvedName !== p.name
       ? p.name + (!!p.nameStatus ? `...${p.nameStatus}` : '...pending')

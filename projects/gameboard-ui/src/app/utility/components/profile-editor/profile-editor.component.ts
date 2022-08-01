@@ -44,7 +44,6 @@ export class ProfileEditorComponent implements OnInit {
           if (u.name != this.disallowedName) u.nameStatus = "pending";
           // Otherwise, if there is a disallowed reason as well, mark it as that reason
           else if (this.disallowedReason) u.nameStatus = this.disallowedReason;
-          //
         }),
         switchMap(u => api.update(u, this.disallowedName))
         // todo handle errors

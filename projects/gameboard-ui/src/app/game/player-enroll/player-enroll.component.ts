@@ -31,6 +31,9 @@ export class PlayerEnrollComponent implements OnInit {
   delayMs: number = 2000;
   ctxDelayed$: Observable<GameContext>;
 
+  disallowedName: string | null = null;
+  disallowedReason: string | null = null;
+
   constructor(
     private api: PlayerService,
     private config: ConfigService,
@@ -42,6 +45,14 @@ export class PlayerEnrollComponent implements OnInit {
         ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
         ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
         ctx.game.registration = new TimeWindow(ctx.game.registrationOpen, ctx.game.registrationClose);
+      }),
+      tap((gc) => {
+        if (gc.player.nameStatus && gc.player.nameStatus != 'pending') {
+          if (this.disallowedName == null) {
+            this.disallowedName = gc.player.name;
+            this.disallowedReason = gc.player.nameStatus;
+          }
+        }
       })
     );
 
@@ -96,6 +107,12 @@ export class PlayerEnrollComponent implements OnInit {
       p.name = '';
       return;
     }
+    
+    // If the user's name isn't the disallowed one, mark it as pending
+    if (p.name != this.disallowedName) p.nameStatus = "pending";
+    // Otherwise, if there is a disallowed reason as well, mark it as that reason
+    else if (this.disallowedReason) p.nameStatus = this.disallowedReason;
+
     const sub: Subscription = this.api.update(p).pipe(
       finalize(() => sub.unsubscribe())
     ).subscribe(

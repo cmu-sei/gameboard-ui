@@ -71,6 +71,27 @@
         *ngIf="!!ctx.player.id && ctx.player.session.isBefore && ctx.game.registration.isDuring">
 
         <div *ngIf="ctx.player.isManager" class="form-group mb-0">
+
+          <ng-container *ngIf="!ctx.player.nameStatus && ctx.player.name == ctx.player.approvedName">
+            <div class="alert alert-success">
+                Your name has been approved.
+            </div>
+          </ng-container>
+          <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
+              <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
+                  <div class="alert alert-info">
+                      Your name is pending approval from an administrator. Return later or select 'Refresh' to see if it's been approved.
+                  </div>
+              </ng-container>
+              <ng-container *ngIf="ctx.player.nameStatus && ctx.player.nameStatus != 'pending'">
+                  <div class="alert alert-danger">
+                      Your name was rejected by an administrator for the following reason:<br>
+                      <strong>{{ctx.player.nameStatus}}</strong><br>
+                      Please change it and try again.
+                  </div>
+              </ng-container>
+          </ng-container>
+
           <label for="name-input">Set {{ctx.game.maxTeamSize > 1 ? 'Team' : 'Game'}} Display Name</label>
           <div class="input-group mb-0">
             <input id="name-input" type="text" class="form-control" [(ngModel)]="ctx.player.name" maxlength="64" autocomplete="off"
