@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode } from './user-models';
 
@@ -40,9 +40,9 @@ export class UserService {
       map(r => this.transform(r))
     );
   }
-  public update(model: ChangedUser): Observable<any> {
+  public update(model: ChangedUser, disallowedName: string | null = null): Observable<any> {
     return this.http.put<any>(`${this.url}/user`, model).pipe(
-      map(() => this.transform(model as ApiUser))
+      map(() => this.transform(model as ApiUser, disallowedName)),
     );
   }
   public delete(id: string): Observable<any> {
@@ -97,13 +97,18 @@ export class UserService {
     this.toNode(folder, path);
   }
 
-  private transform(user: ApiUser): ApiUser {
+  private transform(user: ApiUser, disallowedName: string | null = null): ApiUser {
     user.sponsorLogo = user.sponsor
       ? `${this.config.imagehost}/${user.sponsor}`
       : `${this.config.basehref}assets/sponsor.svg`
     ;
 
+    // If the user has no name status but they changed their name, it's pending approval
     if (!user.nameStatus && user.approvedName !== user.name) {
+      user.nameStatus = 'pending';
+    }
+    // Otherwise, if the user entered a name and an admin rejected it, but the new name entered is different, it's pending
+    else if (user.nameStatus != 'pending' && disallowedName && disallowedName !== user.name) {
       user.nameStatus = 'pending';
     }
 

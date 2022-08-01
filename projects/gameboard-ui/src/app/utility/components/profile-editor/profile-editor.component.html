@@ -7,11 +7,31 @@
         <a class="btn btn-link" [routerLink]="['/', 'profile', 'certificates']">Certificates</a>
     </div>
 
-    <h4>Set your display name</h4>
+    <h4>1. Set your display name</h4>
 
-    <p>
-        Choose a <em>default</em> name for public display that is suitable for all audiences.
-    </p>
+    <div>
+        Choose a <em>default</em> name for public display that is suitable for all audiences. This name will apply to <em>all new games</em>, however you can customize it during registration.
+    </div>
+    <br>
+    <ng-container *ngIf="!ctx.user.nameStatus && ctx.user.name == ctx.user.approvedName">
+        <div class="alert alert-success">
+            Your name has been approved.
+        </div>
+    </ng-container>
+    <ng-container *ngIf="ctx.user.name !== ctx.user.approvedName">
+        <ng-container *ngIf="ctx.user.nameStatus == 'pending' && ctx.user.name != disallowedName">
+            <div class="alert alert-info">
+                Your name is pending approval from an administrator. Return later or select 'Refresh' to see if it's been approved.
+            </div>
+        </ng-container>
+        <ng-container *ngIf="ctx.user.nameStatus && ctx.user.nameStatus != 'pending'">
+            <div class="alert alert-danger">
+                Your name was rejected by an administrator for the following reason:<br>
+                <strong>{{ctx.user.nameStatus}}</strong><br>
+                Please change it and try again.
+            </div>
+        </ng-container>
+    </ng-container>
     <div class="row">
         <div class="form-group w-25 d-inline-block">
             <label for="nameInput">Requested Display Name</label>
@@ -22,11 +42,11 @@
                 <label for="">Approved Display Name</label>
                 <span class="form-control bg-light text-dark">{{ctx.user.approvedName}}</span>
             </div>
-            <div class="form-group w-25 d-inline-block">
+            <!--div class="form-group w-25 d-inline-block">
                 <label for="">Display Name Status</label>
                 <span class="form-control bg-light text-dark">{{ctx.user.nameStatus}}</span>
-            </div>
-            <div class="form-group w-25 d-inline-block">
+            </div-->
+            <div class="form-group w-25 d-inline-block d-flex align-items-end">
                 <button class="btn btn-secondary" (click)="refresh(ctx.user)">
                     <fa-icon [icon]="faSync"></fa-icon>
                     <span>Refresh</span>
@@ -35,7 +55,21 @@
         </ng-container>
     </div>
 
-    <h4>Select your sponsoring organization</h4>
+    <!-- hr style="border-color:white" -->
+
+    <h4>2. Select your sponsoring organization</h4>
+    
+    <div>
+        To participate in a game, you must select your organization. This organization will display on the leaderboard alongside your name.<br>
+        If your sponsor isn't represented here, <a [routerLink]="'/support/create'">file a support ticket</a>.
+    </div>
+
+    <ng-container *ngIf="!ctx.user.sponsor">
+        <br>
+        <div class="alert alert-danger">
+            No sponsoring organization selected. Please select an organization below.
+        </div>
+    </ng-container>
 
     <ng-container *ngFor="let s of ctx.sponsors">
         <div class="card" [class.active]="ctx.user.sponsor===s.logo" (click)="setSponsor(ctx.user, s)">
