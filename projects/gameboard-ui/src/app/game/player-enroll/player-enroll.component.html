@@ -80,7 +80,7 @@
           <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
               <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
                   <div class="alert alert-info">
-                      Your name is pending approval from an administrator. Return later or select 'Refresh' to see if it's been approved.
+                      Your name is pending approval from an administrator. Return later or select 'Update' to see if it's been approved.
                   </div>
               </ng-container>
               <ng-container *ngIf="ctx.player.nameStatus && ctx.player.nameStatus != 'pending'">
