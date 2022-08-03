@@ -19,6 +19,7 @@ import { UserService } from './utility/user.service';
 export class AppComponent {
   user$: Observable<ApiUser | null>;
   toc$: Observable<TocFile[]>;
+  custom_bg = "";
 
   constructor(
     private usersvc: UserService,
@@ -29,8 +30,9 @@ export class AppComponent {
     this.user$ = usersvc.user$;
     this.toc$ = toc.toc$;
     title.setTitle(config.settings.appname || 'Gameboard');
-    if (config.settings.custom_background) {
-      document.getElementsByTagName('body')[0].classList.add(config.settings.custom_background);
+    this.custom_bg = config.settings.custom_background || "";
+    if (this.custom_bg) {
+      document.getElementsByTagName('body')[0].classList.add(this.custom_bg);
     }
   }
 
