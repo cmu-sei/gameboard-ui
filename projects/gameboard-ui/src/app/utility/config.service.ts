@@ -162,6 +162,7 @@ export interface Settings {
   tochost?: string;
   supporthost?: string;
   tocfile?: string;
+  custom_background?: string;
   countdownStartSecondsAtMinute?: number;
   oidc: AppUserManagerSettings;
 }

@@ -29,6 +29,9 @@ export class AppComponent {
     this.user$ = usersvc.user$;
     this.toc$ = toc.toc$;
     title.setTitle(config.settings.appname || 'Gameboard');
+    if (config.settings.custom_background) {
+      document.getElementsByTagName('body')[0].classList.add(config.settings.custom_background);
+    }
   }
 
   logout(): void {
