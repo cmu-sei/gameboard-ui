@@ -68,7 +68,7 @@
             If your sponsor isn't represented here, <a [routerLink]="'/support/create'">file a support ticket</a>.
         </div>
 
-        <ng-container *ngIf="ctx.user.sponsor">
+        <ng-container *ngIf="!ctx.user.sponsor">
             <br>
             <div class="alert alert-warning">
                 No sponsoring organization selected. Please select an organization below.
