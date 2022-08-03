@@ -72,11 +72,12 @@
 
         <div *ngIf="ctx.player.isManager" class="form-group mb-0">
 
-          <ng-container *ngIf="!ctx.player.nameStatus && ctx.player.name == ctx.player.approvedName">
+          <!-- Confirmation popup -->
+          <!-- ng-container *ngIf="!ctx.player.nameStatus && ctx.player.name == ctx.player.approvedName">
             <div class="alert alert-success">
                 Your name has been approved.
             </div>
-          </ng-container>
+          </ng-container -->
           <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
               <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
                   <div class="alert alert-info">
