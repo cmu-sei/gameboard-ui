@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faCaretLeft, faCaretRight, faCog, faEdit, faEllipsisH, faExclamationCircle, faExternalLinkAlt, faFileAlt, faPaperclip, faPen, faPlusSquare, faSync, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -14,21 +14,23 @@ import { UserService } from '../../api/user.service';
 import { EditData, SuggestionOption } from '../../utility/components/inplace-editor/inplace-editor.component';
 import { ConfigService } from '../../utility/config.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
+import { NotificationService } from '../../utility/notification.service';
 
 @Component({
   selector: 'app-ticket-details',
   templateUrl: './ticket-details.component.html',
   styleUrls: ['./ticket-details.component.scss']
 })
-export class TicketDetailsComponent implements OnInit, AfterViewInit {
+export class TicketDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('modal') modal!: ModalDirective;
-  
+
   ctx$: Observable<{ ticket: Ticket; canManage: boolean; }>;
 
   refresh$ = new BehaviorSubject<any>(true);
   changed$ = new Subject<ChangedTicket>();
 
   id: string = "";
+  key = 0;
 
   newCommentFocus = false;
   newCommentText = "";
@@ -45,7 +47,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   challenges: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
   sessions: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
   requesters: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
-  
+
   editingContent = false;
   savingContent = false;
   editingCommentId = null;
@@ -84,8 +86,9 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     private config: ConfigService,
     private sanitizer: DomSanitizer,
     private local: LocalUserService,
-    private http: HttpClient
-  ) { 
+    private http: HttpClient,
+    hub: NotificationService
+  ) {
 
     const canManage$ = local.user$.pipe(
       tap(u => this.currentUser = u),
@@ -99,12 +102,13 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
       ]).pipe(
       map(([p, r]) => p),
       filter(p => !!p.id && (!this.editingContent || this.savingContent)), // don't refresh data if editing and not saving yet
-      tap(p => this.id = p.id),
+      tap(p => this.key = p.id),
       switchMap(p => api.retrieve(p.id)),
       tap(t => {
         this.editingContent = false;
         this.savingContent = false;
         this.changedTicket = {...t};
+        this.id = t.id;
       }),
       tap(t => {
         this.currentLabels.clear();
@@ -147,7 +151,10 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
         this.refresh$.next(true);
       }
     );
-    
+
+    hub.ticketEvents.pipe(
+      filter(e => e.model.key !== this.key)
+    ).subscribe(e => this.refresh$.next(true));
 
   }
 
@@ -177,7 +184,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   ngAfterViewInit(): void {
@@ -189,10 +196,14 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     )
   }
 
+  ngOnDestroy(): void {
+    this.api.seen(this.key);
+  }
+
   addComment() {
     if (!!this.newCommentText || !!this.newCommentAttachments) {
       let newComment = {
-        ticketId: this.id, 
+        ticketId: this.id,
         message: this.newCommentText,
         uploads: this.newCommentAttachments
       };
@@ -266,7 +277,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   startEditAssignee() {
     this.resetEditing();
     this.assignees.isEditing = true;
-    
+
     if (!this.assignees.loaded) {
       this.api.listSupport({}).subscribe(
         (a) => {
@@ -299,7 +310,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   startEditChallenge() {
     this.resetEditing();
     this.challenges.isEditing = true;
-    
+
     if (!this.challenges.loaded) {
       this.api.listUserChallenges({uid: this.changedTicket?.requesterId!}).subscribe(
         (a) => {
@@ -332,7 +343,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
   startEditRequesters() {
     this.resetEditing();
     this.requesters.isEditing = true;
-    
+
     if (!this.requesters.loaded) {
       this.userApi.list({}).subscribe(
         (a) => {
@@ -416,10 +427,10 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit {
     ).subscribe(
       a => {
         this.labels.filteredOptions = this.labels.allOptions?.filter(l => {
-          return (!a || l.name.toLowerCase().includes(a.toLowerCase())) 
+          return (!a || l.name.toLowerCase().includes(a.toLowerCase()))
             && !this.currentLabels.has(l.name);
         });
-        
+
         if (!!a && this.labels.filteredOptions?.length == 0 && !this.currentLabels.has(a)) {
           this.labels.filteredOptions!.push({name: a, secondary: "(New Label)", data:a});
         }

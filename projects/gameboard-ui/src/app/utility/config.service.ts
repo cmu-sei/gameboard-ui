@@ -51,6 +51,25 @@ export class ConfigService {
     fixedOverflowWidgets: true
   };
 
+  datedisplay_options: Intl.DateTimeFormatOptions = {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+    // hour12: false
+  };
+
+  _shortdate_formatter = new Intl.DateTimeFormat(
+    'en-US',
+    this.datedisplay_options
+  );
+
+  _shorttz_formatter = new Intl.DateTimeFormat(
+    'en-US',
+    {...this.datedisplay_options, timeZoneName: 'short'}
+  );
+
   constructor(
     private http: HttpClient,
     private location: Location,
@@ -59,6 +78,9 @@ export class ConfigService {
     this.basehref = platform.getBaseHrefFromDOM();
     this.absoluteUrl = `${window.location.protocol}//${window.location.host}${this.basehref}`;
     this.local = this.getLocal();
+    if (!this.local.lastSeenSupport) {
+      this.local.lastSeenSupport = Date.now();
+    }
   }
 
   get apphost(): string {
@@ -82,11 +104,23 @@ export class ConfigService {
   }
 
   get tochost(): string {
-    return this.settings.tochost || `${this.basehref}doc`;
+    return this.settings.tochost || `${this.basehref}docs`;
   }
 
   get supporthost(): string {
     return this.settings.supporthost || `${this.basehref}supportfiles`;
+  }
+
+  get shortdate_formatter(): any {
+    return this._shortdate_formatter;
+  }
+
+  get shorttz_formatter(): any {
+    return this._shorttz_formatter;
+  }
+
+  get lastSeenSupport(): Date {
+    return new Date(this.local.lastSeenSupport!);
   }
 
   load(): Observable<any> {
@@ -152,6 +186,7 @@ export class ConfigService {
 export interface LocalAppSettings {
   theme?: string;
   last?: string;
+  lastSeenSupport?: number;
 }
 
 export interface Settings {

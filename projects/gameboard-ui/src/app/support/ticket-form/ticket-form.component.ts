@@ -46,7 +46,7 @@ export class TicketFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private local: LocalUserService
-  ) { 
+  ) {
 
     // todo, could remove this and just set the challenge id since it is also fetching list of challenge options
     const paramChallenge$ = route.queryParams.pipe(
@@ -69,7 +69,7 @@ export class TicketFormComponent implements OnInit {
 
     this.requesters.filtering$.pipe(
       debounceTime(200),
-      switchMap((term) => this.userApi.list({term: term})),
+      switchMap((term) => this.userApi.list({term: term, take: 25})),
     ).subscribe(
       (result) => {
         this.requesters.filteredOptions = result.map(u => ({name:u.approvedName, secondary: u.id.slice(0,8), data:u})).slice(0, 20);

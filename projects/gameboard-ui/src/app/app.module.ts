@@ -21,10 +21,12 @@ import { AuthInterceptor } from './utility/auth.interceptor';
 import { ConfigService, markedOptionsFactory } from './utility/config.service';
 import { UserService } from './utility/user.service';
 import { UtilityModule } from './utility/utility.module';
+import { SupportPillComponent } from './support/support-pill/support-pill.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SupportPillComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +35,7 @@ import { UtilityModule } from './utility/utility.module';
     HttpClientModule,
     AppRoutingModule,
     ApiModule,
+    FontAwesomeModule,
     UtilityModule,
     TooltipModule.forRoot(),
     ButtonsModule.forRoot(),

@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, timer, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, map } from 'rxjs/operators';
-import { TicketSummary } from '../../api/support-models';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch, faExclamationCircle, faAsterisk } from '@fortawesome/free-solid-svg-icons';
+import { BehaviorSubject, Observable, timer, combineLatest, Subscription } from 'rxjs';
+import { debounceTime, switchMap, map, tap } from 'rxjs/operators';
+import { TicketNotification, TicketSummary } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
+import { ConfigService } from '../../utility/config.service';
+import { NotificationService } from '../../utility/notification.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 
 @Component({
@@ -11,11 +13,12 @@ import { UserService as LocalUserService } from '../../utility/user.service';
   templateUrl: './ticket-list.component.html',
   styleUrls: ['./ticket-list.component.scss']
 })
-export class TicketListComponent implements OnInit {
+export class TicketListComponent implements OnInit, OnDestroy {
+  subs: Subscription[] = [];
   refresh$ = new BehaviorSubject<any>(true);
   ctx$: Observable<{ tickets: TicketSummary[]; nextTicket: TicketSummary[]; canManage: boolean; }>;
   advanceRefresh$ = new BehaviorSubject<any>(true);
-
+  list: TicketSummary[] = [];
   searchText: string = "";
   statusFilter: string = "Any Status";
   assignFilter: string = "Any";
@@ -35,11 +38,14 @@ export class TicketListComponent implements OnInit {
   faCaretUp = faCaretUp;
   faCaretRight = faCaretRight;
   faCaretLeft =faCaretLeft;
+  faNote = faExclamationCircle;
 
   constructor(
     private api: SupportService,
-    private local: LocalUserService
-  ) { 
+    private local: LocalUserService,
+    private config: ConfigService,
+    hub: NotificationService
+  ) {
 
     const canManage$ = local.user$.pipe(
       map(u => !!u?.isObserver || !!u?.isSupport)
@@ -61,7 +67,8 @@ export class TicketListComponent implements OnInit {
       map(a => {
         a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l));
         return a;
-      })
+      }),
+      tap(a => this.list = a)
     );
 
     const nextTicket$ = combineLatest([
@@ -86,9 +93,27 @@ export class TicketListComponent implements OnInit {
     this.ctx$ = combineLatest([ ticket$, nextTicket$, canManage$]).pipe(
       map(([tickets, nextTicket, canManage]) => ({tickets: tickets, nextTicket: nextTicket, canManage: canManage}))
     );
+
+    this.subs.push(
+      hub.ticketEvents.subscribe(
+        e => {
+          const n = e.model as TicketNotification;
+          const f = this.list.find(t => t.key === n.key);
+          if (!!f) {
+            f.lastUpdated = new Date(n.lastUpdated);
+            f.status = n.status;
+          }
+        }
+      )
+    );
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+    this.config.updateLocal({ lastSeenSupport: Date.now() })
   }
 
   next() {
@@ -106,10 +131,6 @@ export class TicketListComponent implements OnInit {
     this.advanceRefresh$.next(true);
   }
 
-  getLatterDateString(date: string): string {
-    return date.split(", ")[2];
-  }
-
   // Orders by a given column name by querying the API.
   orderByColumn(orderItem: string) {
     // If the provided item is the currently ordered one, just switch the ordering
@@ -119,7 +140,7 @@ export class TicketListComponent implements OnInit {
       this.curOrderItem = orderItem;
       this.isDescending = true;
     }
-    
+
     this.refresh$.next(true);
     this.advanceRefresh$.next(true);
   }

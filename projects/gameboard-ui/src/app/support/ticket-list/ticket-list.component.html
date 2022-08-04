@@ -10,7 +10,8 @@
     <div class="d-flex" [class]="ctx.canManage ? 'col-4' : 'col-2'">
       <div class="input-group input-group-sm mr-2">
         <select class="form-control" [(ngModel)]="statusFilter" (change)="this.refresh$.next(true)">
-          <option *ngFor="let option of ['Any Status', 'Open', 'In Progress', 'Closed', 'Not Closed']" [value]="option">{{option}}</option>
+          <option *ngFor="let option of ['Any Status', 'Open', 'In Progress', 'Closed', 'Not Closed']" [value]="option">
+            {{option}}</option>
         </select>
       </div>
       <div *ngIf="ctx.canManage" class="input-group input-group-sm ml-2">
@@ -32,42 +33,59 @@
 
   <div class="row m-0 p-0 mb-1">
     <!-- Key column with ordering -->
-    <div class="col-1" (click)="orderByColumn('key')" (mouseover)="showHoverCaret=true; hoverOrderItem='key'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+    <div class="col-1" (click)="orderByColumn('key')" (mouseover)="showHoverCaret=true; hoverOrderItem='key'"
+      (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Key</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'key' && hoverOrderItem != 'key'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'key' || curOrderItem == 'key')) || (curOrderItem != 'key' && hoverOrderItem != 'key')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+          [hidden]="(!isDescending && (hoverOrderItem != 'key' || curOrderItem == 'key')) || (curOrderItem != 'key' && hoverOrderItem != 'key')">
+        </fa-icon>
         <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'key'"></fa-icon>
       </span>
     </div>
     <!-- Summary column with ordering -->
-    <div class="col-5" (click)="orderByColumn('summary')" (mouseover)="showHoverCaret=true; hoverOrderItem='summary'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+    <div class="col-5" (click)="orderByColumn('summary')" (mouseover)="showHoverCaret=true; hoverOrderItem='summary'"
+      (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Summary</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'summary' && hoverOrderItem != 'summary'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'summary' || curOrderItem == 'summary')) || (curOrderItem != 'summary' && hoverOrderItem != 'summary')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+          [hidden]="(!isDescending && (hoverOrderItem != 'summary' || curOrderItem == 'summary')) || (curOrderItem != 'summary' && hoverOrderItem != 'summary')">
+        </fa-icon>
         <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'summary'"></fa-icon>
       </span>
     </div>
     <!-- Status column with ordering -->
-    <div class="col-2" (click)="orderByColumn('status')" (mouseover)="showHoverCaret=true; hoverOrderItem='status'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+    <div class="col-2" (click)="orderByColumn('status')" (mouseover)="showHoverCaret=true; hoverOrderItem='status'"
+      (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Status{{ctx.canManage ? ' / Assignee' : ''}}</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'status' && hoverOrderItem != 'status'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'status' || curOrderItem == 'status')) || (curOrderItem != 'status' && hoverOrderItem != 'status')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+          [hidden]="(!isDescending && (hoverOrderItem != 'status' || curOrderItem == 'status')) || (curOrderItem != 'status' && hoverOrderItem != 'status')">
+        </fa-icon>
         <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'status'"></fa-icon>
       </span>
     </div>
     <!-- Created column with ordering -->
-    <div class="col-2 text-right" (click)="orderByColumn('created')" (mouseover)="showHoverCaret=true; hoverOrderItem='created'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+    <div class="col-2 text-right" (click)="orderByColumn('created')"
+      (mouseover)="showHoverCaret=true; hoverOrderItem='created'"
+      (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Created</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'created' && hoverOrderItem != 'created'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'created' || curOrderItem == 'created')) || (curOrderItem != 'created' && hoverOrderItem != 'created')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+          [hidden]="(!isDescending && (hoverOrderItem != 'created' || curOrderItem == 'created')) || (curOrderItem != 'created' && hoverOrderItem != 'created')">
+        </fa-icon>
         <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'created'"></fa-icon>
       </span>
     </div>
     <!-- Updated column with ordering -->
-    <div class="col-2 text-right" (click)="orderByColumn('updated')" (mouseover)="showHoverCaret=true; hoverOrderItem='updated'" (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
+    <div class="col-2 text-right" (click)="orderByColumn('updated')"
+      (mouseover)="showHoverCaret=true; hoverOrderItem='updated'"
+      (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Updated</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'updated' && hoverOrderItem != 'updated'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown" [hidden]="(!isDescending && (hoverOrderItem != 'updated' || curOrderItem == 'updated')) || (curOrderItem != 'updated' && hoverOrderItem != 'updated')"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+          [hidden]="(!isDescending && (hoverOrderItem != 'updated' || curOrderItem == 'updated')) || (curOrderItem != 'updated' && hoverOrderItem != 'updated')">
+        </fa-icon>
         <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'updated'"></fa-icon>
       </span>
     </div>
@@ -76,29 +94,32 @@
   <div class="list">
     <div *ngFor="let ticket of ctx.tickets" class="row b-1 mx-0 py-2">
       <div class="col-1">
-        <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.id]">{{ticket.fullKey}}</a>
+        <!-- <span class="mr-1 badge badge-pill bg-danger">*</span> -->
+        <fa-icon *ngIf="ticket.lastSeen < ticket.lastUpdated" class="text-warning" [icon]="faNote"></fa-icon>
+        <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.key]">{{ticket.fullKey}}</a>
       </div>
 
       <div class="col-5 d-flex flex-wrap">
         <div class="ml-2">
           <div class="d-inline flex-wrap">
-            <a class="p-0 text-left" [routerLink]="[ticket.id]" ><span class="mr-2 h5 summary-break" >{{ticket.summary || "No summary"}}</span></a>
+            <a class="p-0 text-left" [routerLink]="[ticket.key]"><span class="mr-2 h5 summary-break">{{ticket.summary ||
+                "No summary"}}</span></a>
             <ng-container *ngIf="ctx.canManage">
-              <span class="badge badge-pill text-black mr-2" *ngFor="let label of ticket.labelsList" [ngStyle]="label | textcolor">{{label}}</span>
+              <span class="badge badge-pill text-black mr-2" *ngFor="let label of ticket.labelsList"
+                [ngStyle]="label | textcolor">{{label}}</span>
             </ng-container>
           </div>
           <div class="text-muted">
             <span class="font-weight-bold-">{{ticket.requester?.approvedName}}</span>
-            <span *ngIf="ticket.challenge">&nbsp;&middot;&nbsp;{{ticket.challenge.name}} ({{ticket.challenge.tag}})</span>
+            <span *ngIf="ticket.challenge">&nbsp;&middot;&nbsp;{{ticket.challenge.name}}
+              ({{ticket.challenge.tag}})</span>
           </div>
         </div>
       </div>
       <div class="col-2 align-self-center d-flex flex-column justify-content-between">
         <div class="text-left">
-          <span class="badge mr-2" style="font-size: 90%"
-            [class.badge-info]="ticket.status == 'Open' || !ticket.status"
-            [class.badge-success]="ticket.status == 'In Progress'"
-            [class.badge-dark]="ticket.status == 'Closed'">
+          <span class="badge mr-2" style="font-size: 90%" [class.badge-info]="ticket.status == 'Open' || !ticket.status"
+            [class.badge-success]="ticket.status == 'In Progress'" [class.badge-dark]="ticket.status == 'Closed'">
             {{ticket.status}}
           </span>&nbsp;
         </div>
@@ -109,14 +130,13 @@
           </ng-container>
         </div>
       </div>
-      <div class="col-2 align-self-center d-flex text-right flex-column justify-content-between">
-        <span>{{ ticket.created | date: 'longDate' }}</span>
-        <span>{{ getLatterDateString(ticket.created | shorttime: true) }}</span>
+      <div class="col-3 align-self-center d-flex text-right flex-column justify-content-between">
+        <span>{{ ticket.created | shorttime }}</span>
       </div>
-        <div class="col-2 align-self-center d-flex text-right flex-column justify-content-between">
+      <div class="col-1 align-self-center d-flex text-right flex-column justify-content-between">
         <span>{{ticket.lastUpdated | ago}}</span>
       </div>
-    </div> 
+    </div>
   </div>
 
   <div *ngIf="!!ctx.tickets" class="d-flex justify-content-between">

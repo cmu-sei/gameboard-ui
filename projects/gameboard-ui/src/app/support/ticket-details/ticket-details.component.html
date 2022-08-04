@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="d-flex flex-wrap align-items-center mb-2">
-      <h4 class="m-0 p-0 mr-2"><span class="badge" 
+      <h4 class="m-0 p-0 mr-2"><span class="badge"
         [class.badge-info]="ctx.ticket.status == 'Open' || !ctx.ticket.status"
         [class.badge-success]="ctx.ticket.status == 'In Progress'"
         [class.badge-dark]="ctx.ticket.status == 'Closed'">{{ctx.ticket.status}}</span>
@@ -49,14 +49,13 @@
     <div class="d-flex m-0 p-0">
       <div class="flex-grow-1" style="min-width: 0">
         <div class="card">
-          <div class="card-header d-flex justify-content-between py-2" style="background: #222">
+          <div class="card-header d-flex justify-content-between py-2">
             <div>
-              <ng-container *ngIf="ctx.ticket.selfCreated">
-                <span class="font-weight-bold">{{ctx.ticket.requester?.approvedName}}</span>&nbsp;created&nbsp;<div style="display: inline-block" [tooltip]="ctx.ticket.created | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">{{ctx.ticket.created | ago}}</div>
-              </ng-container>
-              <ng-container *ngIf="!ctx.ticket.selfCreated">
-                <span class="font-weight-bold">{{ctx.ticket.creator?.approvedName}}</span>&nbsp;created for&nbsp;<span class="font-weight-bold">{{ctx.ticket.requester?.approvedName}}</span>&nbsp;<div style="display: inline-block" [tooltip]="ctx.ticket.created | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">{{ctx.ticket.created | ago}}</div>
-              </ng-container>
+                <span class="mr-1 font-weight-bold">{{ctx.ticket.requester?.approvedName}}</span>
+                <span *ngIf="!ctx.ticket.selfCreated" class="mr-1 font-weight-bold">(by {{ctx.ticket.creator?.approvedName}})</span>
+                <span [tooltip]="ctx.ticket.created | shorttime" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                  {{ctx.ticket.created | ago}}
+                </span>
             </div>
             <div>
               <fa-icon *ngIf="ctx.ticket.canUpdate && ctx.ticket.creatorId == currentUser?.id && !editingContent" [icon]="faEllipsisH" (click)="startEditTicketContent()"></fa-icon>
@@ -78,7 +77,7 @@
                   </div>
                 </div>
               </ng-container>
-            </div>  
+            </div>
           </div>
         </div>
 
@@ -97,7 +96,7 @@
               (focus)="newCommentFocus = true"
               [(ngModel)]="newCommentText"
               style="background-color: #111"></textarea>
-              
+
               <div class="text-muted border-top2 border-dark2 border-0">
                 <ng-container >
                   <div class="mt-2 d-flex justify-content-between">
@@ -117,7 +116,7 @@
               </div>
             </div>
           </div>
-          
+
         </div>
 
 
@@ -146,12 +145,12 @@
                       </div>
                     </div>
                   </ng-container>
-                </div>  
+                </div>
               </div>
             </div>
             <div class="my-3 mx-3 px-3 border-0 text-center" *ngIf="activity.type == 1"> <!-- Status Change -->
               <span class="text-center py-2 d-flex rounded" style="background: black">
-                <div>Status Changed to&nbsp;<span class="badge badge-info" style="font-size: 100%" 
+                <div>Status Changed to&nbsp;<span class="badge badge-info" style="font-size: 100%"
                   [class.badge-info]="activity.status == 'Open' || !activity.status"
                   [class.badge-success]="activity.status == 'In Progress'"
                   [class.badge-dark]="activity.status == 'Closed'">{{activity.status}}</span></div>

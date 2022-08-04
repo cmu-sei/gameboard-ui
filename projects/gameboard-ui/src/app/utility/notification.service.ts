@@ -24,6 +24,7 @@ export class NotificationService {
   presenceEvents = new Subject<HubEvent>();
   teamEvents = new Subject<HubEvent>();
   challengeEvents = new Subject<HubEvent>();
+  ticketEvents = new Subject<HubEvent>();
 
   constructor(
     private config: ConfigService,
@@ -36,7 +37,7 @@ export class NotificationService {
     // refresh connection on token refresh
     const authtoken$ = this.auth.tokenState$.pipe(
       debounceTime(250),
-      distinctUntilChanged(),
+      distinctUntilChanged()
     );
 
     combineLatest([authtoken$, this.playerId$]).pipe(
@@ -51,7 +52,8 @@ export class NotificationService {
 
   }
 
-  init(id: string): void {
+  init(id: string, preserveExisting?: boolean): void {
+    if (preserveExisting && this.hubState.connected) { return; }
     if (this.hubState?.id !== id) {
       this.playerId$.next(id);
     }
@@ -134,6 +136,7 @@ export class NotificationService {
     connection.on('teamEvent', (e: HubEvent) => this.teamEvents.next(e));
     connection.on('challengeEvent', (e: HubEvent) => this.challengeEvents.next(e));
     connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
+    connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
 
     return connection;
   }

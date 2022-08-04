@@ -7,6 +7,7 @@ export const environment = {
     imghost: '',
     tochost: '',
     tocfile: 'toc.json',
+    supporthost: '',
     custom_background: '',
     oidc: {}
   }

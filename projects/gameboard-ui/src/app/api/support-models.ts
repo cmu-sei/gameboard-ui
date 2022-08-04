@@ -8,7 +8,7 @@ import { UserSummary } from "./user-models";
 
 export interface Ticket {
   id: string;
-  key: string;
+  key: number;
   fullKey: string;
   requesterId: string;
   assigneeId: string;
@@ -29,7 +29,7 @@ export interface Ticket {
 
   attachments: string[];
   attachmentFiles: AttachmentFile[]
-    
+
   requester?: UserSummary;
   assignee?: UserSummary;
   creator?: UserSummary;
@@ -41,7 +41,7 @@ export interface Ticket {
 
 export interface TicketSummary {
   id: string;
-  key: string;
+  key: number;
   fullKey: string;
   requesterId: string;
   assigneeId: string;
@@ -59,7 +59,8 @@ export interface TicketSummary {
 
   created: Date;
   lastUpdated: Date;
-    
+  lastSeen: Date;
+
   requester?: UserSummary;
   assignee?: UserSummary;
   creator?: UserSummary;
@@ -170,4 +171,11 @@ export interface LabelSuggestion {
   custom?: boolean;
 }
 
-
+export interface TicketNotification {
+  id: string;
+  key: number;
+  requesterId: string;
+  teamId: string;
+  status: string;
+  lastUpdated: string;
+}
