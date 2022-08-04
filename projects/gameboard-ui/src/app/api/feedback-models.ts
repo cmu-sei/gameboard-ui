@@ -49,6 +49,8 @@ export interface FeedbackQuestion {
   max?: number;
   minLabel?: string;
   maxLabel?: string;
+  options?: string[];
+  display?: string;
 }
 
 export interface FeedbackTemplate {
@@ -59,7 +61,9 @@ export interface FeedbackTemplate {
 
 export enum QuestionType {
   likert = 'likert',
-  text = 'text'
+  text = 'text',
+  selectOne = 'selectOne',
+  selectAllThatApply = 'selectAllThatApply'
 }
 
 export interface QuestionStats {
@@ -81,6 +85,8 @@ export interface FeedbackStats {
   configuredCount: number;
   likertCount: number;
   textCount: number;
+  selectOneCount: number;
+  selectAllThatApplyCount: number;
   requiredCount: number;
   responsesCount: number;
   maxResponseCount: number;

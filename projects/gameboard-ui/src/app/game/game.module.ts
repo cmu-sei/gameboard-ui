@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UtilityModule } from '../utility/utility.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayerEnlistComponent } from './player-enlist/player-enlist.component';
 import { AuthGuard } from '../utility/auth.guard';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
@@ -25,6 +25,7 @@ import { PlayerPresenceComponent } from './player-presence/player-presence.compo
 import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CertificateComponent } from './certificate/certificate.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { CertificateComponent } from './certificate/certificate.component';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
       { path: 'teamup/:code', canActivate: [AuthGuard], component: PlayerEnlistComponent },
       { path: 'board/:id', canActivate: [AuthGuard], component: GameboardPageComponent },
@@ -60,7 +62,8 @@ import { CertificateComponent } from './certificate/certificate.component';
     AlertModule,
     MarkdownModule,
     ButtonsModule,
-    ModalModule
+    ModalModule,
+    BsDropdownModule
   ]
 })
 export class GameModule { }

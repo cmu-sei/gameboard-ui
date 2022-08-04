@@ -20,13 +20,15 @@
       {{i+1}}. {{q.prompt}}
       <span *ngIf="q.required" class="required">*</span>
     </label>
+    <!-- Text -->
     <ng-container *ngIf="q.type == 'text'">
-      <textarea rows="3" type="text" class="form-control" id={{q.id}} name={{q.id}}
-      [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!" maxlength={{characterLimit}}></textarea>
+      <textarea rows="1" type="text" class="form-control" id={{q.id}} name={{q.id}}
+      [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!" maxlength={{characterLimit}} style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; resize: none"></textarea>
       <small class="d-flex justify-content-end" [class]="q.answer?.length == characterLimit ? 'text-warning' : 'text-muted'">
         {{characterLimit - (q.answer?.length ?? 0)}}
       </small>
     </ng-container>
+    <!-- Likert -->
     <div *ngIf="q.type == 'likert'">
       <small class="pr-2 text-dark">{{q.minLabel}}</small>
       <div id={{q.id}} class="btn-group" btnRadioGroup name={{q.id}} tabindex="0" [(ngModel)]="q.answer"
@@ -36,6 +38,36 @@
       </div>
       <small class="pl-2 text-dark">{{q.maxLabel}}</small>
     </div>
+    <!-- Select one -->
+    <ng-container *ngIf="q.type == 'selectOne'">
+      <!-- Dropdown -->
+      <div *ngIf="q.display == 'dropdown'" id={{q.id}}>
+        <select id="dropdown-{{q.id}}" class="btn btn-secondary">
+          <option *ngFor="let option of q.options" class="dropdown-item px-3" [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!" ngDefaultControl [id]="option" [name]="option" [value]="option">{{option}}</option>
+          <option ngDefaultControl id="{{q.id}}-Unspecified" name="(Unspecified)" value="(Unspecified)" class="dropdown-item" selected>(Unspecified)</option>
+        </select>
+      </div>
+      <!-- Radio buttons -->
+      <div *ngIf="q.display != 'dropdown'" id={{q.id}}>
+        <ng-container *ngFor="let option of q.options">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!" [id]="option" [name]="option" [value]="option">
+            <label class="form-check-label" for="{{option}}">{{option}}</label>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+    <!-- Select all that apply -->
+    <ng-container *ngIf="q.type == 'selectAllThatApply'">
+      <div id={{q.id}}>
+        <ng-container *ngFor="let option of q.options">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" (change)="modifyMultipleAnswer(q, option, $event)" [checked]="q.answer && q.answer!.indexOf(option) > -1" [disabled]="feedbackForm.submitted!" [id]="option" [name]="option" [value]="option">
+            <label class="form-check-label" for="{{option}}">{{option}}</label>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 
   <app-confirm-button btnClass="btn btn-sm btn-secondary" (confirm)="submit()" [disabled]="feedbackForm.submitted! || !feedbackForm?.questions?.length">

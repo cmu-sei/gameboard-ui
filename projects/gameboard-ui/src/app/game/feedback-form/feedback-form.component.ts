@@ -210,4 +210,17 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
     return Array.from(new Array(max), (x, i) => i + min);
   }
 
+  // Used to change the answer for a question as multiple choices are selected
+  modifyMultipleAnswer(question: FeedbackQuestion, answerChunk: string, checkedEvent: any) {
+    // If the answer is undefined, set it to be an empty string
+    if (!question.answer) question.answer = "";
+
+    // Otherwise, combine it with other answers or remove it from the string
+    if (checkedEvent.target.checked) question.answer += "," + answerChunk;
+    else question.answer = `,${question.answer}`.split(`,${answerChunk}`).join("");
+
+    // If we lead with a comma, remove the comma
+    if (question.answer?.charAt(0) == ",") question.answer = question.answer?.substring(1, question.answer?.length);
+  }
+
 }
