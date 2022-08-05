@@ -42,17 +42,19 @@
     <ng-container *ngIf="q.type == 'selectOne'">
       <!-- Dropdown -->
       <div *ngIf="q.display == 'dropdown'" id={{q.id}}>
-        <select id="dropdown-{{q.id}}" class="btn btn-secondary">
-          <option *ngFor="let option of q.options" class="dropdown-item px-3" [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!" ngDefaultControl [id]="option" [name]="option" [value]="option">{{option}}</option>
-          <option ngDefaultControl id="{{q.id}}-Unspecified" name="(Unspecified)" value="(Unspecified)" class="dropdown-item" selected>(Unspecified)</option>
+        <select id="dropdown-{{q.id}}" class="btn btn-secondary" [(ngModel)]="q.answer" [name]="q.id">
+          <option ngDefaultControl [value]="null" class="dropdown-item" selected>---</option>
+          <option *ngFor="let option of q.options" class="dropdown-item px-3" [disabled]="feedbackForm.submitted!" ngDefaultControl [value]="option" [selected]="q.answer == option">{{option}}</option>
         </select>
       </div>
       <!-- Radio buttons -->
       <div *ngIf="q.display != 'dropdown'" id={{q.id}}>
         <ng-container *ngFor="let option of q.options">
           <div class="form-check">
-            <input class="form-check-input" type="radio" [(ngModel)]="q.answer" [disabled]="feedbackForm.submitted!" [id]="option" [name]="option" [value]="option">
-            <label class="form-check-label" for="{{option}}">{{option}}</label>
+            <input class="form-check-input" type="radio" (change)="modifyMultipleAnswer(q, option, $event, true)" [checked]="q.answer && q.answer!.indexOf(option) > -1" [disabled]="feedbackForm.submitted!" id="check-{{q.id}}-{{option}}" [name]="q.id" [value]="option">
+            <label class="form-check-label" for="{{option}}">{{option}}{{q.specify && q.specify.key == option ? ": " + (q.specify.prompt ? q.specify.prompt : "") : "" }}</label>
+            <br>
+            <textarea *ngIf="q.specify && q.specify.key == option" rows="1" type="text" [disabled]="feedbackForm.submitted!" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; resize: none" (change)="modifySpecifiedAnswer(q, option, $event)" id="input-{{q.id}}-{{option}}"></textarea>
           </div>
         </ng-container>
       </div>
@@ -62,8 +64,10 @@
       <div id={{q.id}}>
         <ng-container *ngFor="let option of q.options">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" (change)="modifyMultipleAnswer(q, option, $event)" [checked]="q.answer && q.answer!.indexOf(option) > -1" [disabled]="feedbackForm.submitted!" [id]="option" [name]="option" [value]="option">
-            <label class="form-check-label" for="{{option}}">{{option}}</label>
+            <input class="form-check-input" type="checkbox" (change)="modifyMultipleAnswer(q, option, $event)" [checked]="q.answer && q.answer!.indexOf(option) > -1" [disabled]="feedbackForm.submitted!" id="check-{{q.id}}-{{option}}" [name]="option" [value]="option">
+            <label class="form-check-label" for="{{option}}">{{option}}{{q.specify && q.specify.key == option ? ": " + (q.specify.prompt ? q.specify.prompt : "") : "" }}</label>
+            <br>
+            <textarea *ngIf="q.specify && q.specify.key == option" rows="1" type="text" [disabled]="feedbackForm.submitted!" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; resize: none" (change)="modifySpecifiedAnswer(q, option, $event)" id="input-{{q.id}}-{{option}}"></textarea>
           </div>
         </ng-container>
       </div>

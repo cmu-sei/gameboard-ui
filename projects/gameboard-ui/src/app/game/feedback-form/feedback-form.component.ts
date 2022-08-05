@@ -211,16 +211,41 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
   }
 
   // Used to change the answer for a question as multiple choices are selected
-  modifyMultipleAnswer(question: FeedbackQuestion, answerChunk: string, checkedEvent: any) {
+  modifyMultipleAnswer(question: FeedbackQuestion, answerChunk: string, checkedEvent: any, isRadio: boolean = false) {
     // If the answer is undefined, set it to be an empty string
     if (!question.answer) question.answer = "";
 
-    // Otherwise, combine it with other answers or remove it from the string
-    if (checkedEvent.target.checked) question.answer += "," + answerChunk;
-    else question.answer = `,${question.answer}`.split(`,${answerChunk}`).join("");
+    // If we're asking for specific information, we have to add on the info entered in the specific info box by looking up its ID
+    let addition: string = ""
+    if (question.specify && question.specify.key == answerChunk) addition = " (" + (<HTMLInputElement>document.getElementById(`input-${question.id}-${answerChunk}`)).value + ")";
+
+    // If this is a radio button, we can just set the answer
+    if (isRadio) {
+      question.answer = answerChunk + addition;
+    }
+    else {
+      // Otherwise, combine it with other answers or remove it from the string
+      if (checkedEvent.target.checked) question.answer += "," + answerChunk + addition;
+      else question.answer = `,${question.answer}`.split(`,${answerChunk + addition}`).join("");
+
+      // If we lead with a comma, remove the comma
+      if (question.answer?.charAt(0) == ",") question.answer = question.answer?.substring(1, question.answer?.length);
+    }
+  }
+
+  // Used to change an answer when the user should enter specific information (like "Other")
+  modifySpecifiedAnswer(question: FeedbackQuestion, answerChunk: string, textChangedEvent: any) {
+    // If the text box is checked and this question has specific info, we can retrieve the box's info and add that onto the answer
+    if ((<HTMLInputElement>document.getElementById(`check-${question.id}-${answerChunk}`)).checked) {
+      if (question.specify && question.specify.key == answerChunk && question.answer) {
+        // Split the string by the option given and whatever characters come after its first parentheses and right before its end parentheses
+        question.answer = question.answer.split(new RegExp(`,?${answerChunk} \\(.*?\\),?`)).join("");
+        // Then add this new answer onto the end
+        question.answer += `,${answerChunk} (${textChangedEvent.target.value})`;
+      }
+    }
 
     // If we lead with a comma, remove the comma
     if (question.answer?.charAt(0) == ",") question.answer = question.answer?.substring(1, question.answer?.length);
   }
-
 }

@@ -51,6 +51,7 @@ export interface FeedbackQuestion {
   maxLabel?: string;
   options?: string[];
   display?: string;
+  specify?: QuestionSpecify;
 }
 
 export interface FeedbackTemplate {
@@ -77,6 +78,11 @@ export interface QuestionStats {
   count?: string; 
   lowest?: string; 
   highest?: string; 
+}
+
+export interface QuestionSpecify {
+  key?: string,
+  prompt?: string
 }
 
 export interface FeedbackStats {
