@@ -2,15 +2,11 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, OnInit } from '@angular/core';
-import { Location, PlatformLocation } from '@angular/common';
-import { faTrash, faList, faSearch, faFilter, faCheck, faTintSlash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
-import { debounceTime, switchMap, tap } from 'rxjs/operators';
-import { Search } from '../../api/models';
+import { PlatformLocation } from '@angular/common';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ReportService } from '../../api/report.service';
 import { UserReport, PlayerReport } from '../../api/report-models';
 import { environment } from '../../../environments/environment';
-import { debug } from 'console';
 
 @Component({
   selector: 'app-user-report',

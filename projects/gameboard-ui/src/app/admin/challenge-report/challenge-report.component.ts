@@ -2,14 +2,11 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Location, PlatformLocation } from '@angular/common';
-import { faTrash, faList, faSearch, faFilter, faCheck, faTintSlash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
-import { debounceTime, switchMap, tap } from 'rxjs/operators';
+import { PlatformLocation } from '@angular/common';
+import { faList, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Search } from '../../api/models';
 import { ReportService } from '../../api/report.service';
 import { environment } from '../../../environments/environment';
-import { debug } from 'console';
 import { FormGroup, NgForm } from '@angular/forms';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
@@ -59,9 +56,9 @@ export class ChallengeReportComponent implements OnInit {
 
   view(id: string): void {
     if (!this.challengeDetailReports[id]) {
-      this.api.challengeDetails(id).subscribe(r => {          
+      this.api.challengeDetails(id).subscribe(r => {
           this.challengeDetailReports[r.challengeId] = r as ChallengeDetailReportView;
-          this.challengeDetailReports[r.challengeId].visible = true;          
+          this.challengeDetailReports[r.challengeId].visible = true;
       });
     }
     else {

@@ -1,8 +1,6 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { emit } from "process";
-
 export interface Feedback {
   id?: string;
   userId?: string;
@@ -68,16 +66,16 @@ export enum QuestionType {
 }
 
 export interface QuestionStats {
-  id?: string; 
-  prompt?: string; 
-  shortName?: string; 
-  required?: boolean; 
-  average?: string; 
-  scaleMin?: string; 
-  scaleMax?: string; 
-  count?: string; 
-  lowest?: string; 
-  highest?: string; 
+  id?: string;
+  prompt?: string;
+  shortName?: string;
+  required?: boolean;
+  average?: string;
+  scaleMin?: string;
+  scaleMax?: string;
+  count?: string;
+  lowest?: string;
+  highest?: string;
 }
 
 export interface QuestionSpecify {
@@ -87,7 +85,7 @@ export interface QuestionSpecify {
 
 export interface FeedbackStats {
   gameId: number;
-  challengeSpecId: number; 
+  challengeSpecId: number;
   configuredCount: number;
   likertCount: number;
   textCount: number;
@@ -100,4 +98,3 @@ export interface FeedbackStats {
   submittedCount: number;
   questionStats: QuestionStats[];
 }
-
