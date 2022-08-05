@@ -1,7 +1,6 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { ThrowStmt } from '@angular/compiler';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { faEdit, faMapMarker, faPlus, faSearch, faSyncAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
