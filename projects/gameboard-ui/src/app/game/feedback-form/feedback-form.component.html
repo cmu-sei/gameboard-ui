@@ -43,7 +43,7 @@
       <!-- Dropdown -->
       <div *ngIf="q.display == 'dropdown'" id={{q.id}}>
         <select id="dropdown-{{q.id}}" class="btn btn-secondary" [(ngModel)]="q.answer" [name]="q.id">
-          <option ngDefaultControl [value]="null" class="dropdown-item" selected>---</option>
+          <option ngDefaultControl [value]="''" class="dropdown-item" selected>---</option>
           <option *ngFor="let option of q.options" class="dropdown-item px-3" [disabled]="feedbackForm.submitted!" ngDefaultControl [value]="option" [selected]="q.answer == option">{{option}}</option>
         </select>
       </div>
