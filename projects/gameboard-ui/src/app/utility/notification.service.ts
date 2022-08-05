@@ -256,10 +256,11 @@ export interface Actor {
 
 export enum HubEventAction
 {
-  arrived = 0, //'Arrived',
-  greeted = 1, //'Greeted',
-  departed =2, // 'Departed',
-  created = 3, //'Created',
-  updated = 4, //'Updated',
-  deleted = 5, //'Deleted',
+  arrived = 'arrived',
+  greeted = 'greeted',
+  departed = 'departed',
+  created = 'created',
+  updated = 'updated',
+  deleted = 'deleted',
+  started = 'started'
 }
