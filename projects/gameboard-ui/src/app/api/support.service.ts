@@ -46,7 +46,7 @@ export class SupportService {
     return this.http.put<Ticket>(`${this.url}/ticket`, model);
   }
 
-  public comment(model: NewTicketComment): Observable<Ticket> {
+  public comment(model: NewTicketComment): Observable<TicketActivity> {
     const payload: FormData = new FormData();
     Object.keys(model).forEach(key => {
       if (key != "uploads")
@@ -57,10 +57,10 @@ export class SupportService {
         payload.append('uploads', file, file.name);
       })
     }
-    return this.http.post<Ticket>(`${this.url}/ticket/comment`, payload);
+    return this.http.post<TicketActivity>(`${this.url}/ticket/comment`, payload);
   }
 
-  public upload(model: NewTicket): Observable<TicketActivity> {
+  public upload(model: NewTicket): Observable<Ticket> {
     const payload: FormData = new FormData();
     Object.keys(model).forEach(key => {
       if (key != "uploads")
@@ -71,7 +71,7 @@ export class SupportService {
         payload.append('uploads', file, file.name);
       })
     }
-    return this.http.post<TicketActivity>(`${this.url}/ticket`, payload);
+    return this.http.post<Ticket>(`${this.url}/ticket`, payload);
   }
 
   public listAttachments(id: string): Observable<AttachmentFile[]> {
