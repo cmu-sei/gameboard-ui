@@ -64,7 +64,7 @@ export enum QuestionType {
   likert = 'likert',
   text = 'text',
   selectOne = 'selectOne',
-  selectAllThatApply = 'selectAllThatApply'
+  selectMany = 'selectMany'
 }
 
 export interface QuestionStats {
@@ -92,7 +92,7 @@ export interface FeedbackStats {
   likertCount: number;
   textCount: number;
   selectOneCount: number;
-  selectAllThatApplyCount: number;
+  selectManyCount: number;
   requiredCount: number;
   responsesCount: number;
   maxResponseCount: number;

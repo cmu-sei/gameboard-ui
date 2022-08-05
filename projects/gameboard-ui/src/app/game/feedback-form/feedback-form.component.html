@@ -60,7 +60,7 @@
       </div>
     </ng-container>
     <!-- Select all that apply -->
-    <ng-container *ngIf="q.type == 'selectAllThatApply'">
+    <ng-container *ngIf="q.type == 'selectMany'">
       <div id={{q.id}}>
         <ng-container *ngFor="let option of q.options">
           <div class="form-check">
