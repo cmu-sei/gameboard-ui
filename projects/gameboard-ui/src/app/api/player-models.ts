@@ -138,6 +138,8 @@ export interface Standing {
   session: TimeWindow;
   sponsorLogo: string;
   advanced: boolean;
+  sponsorList: string[];
+  sponsorTooltip: string;
 }
 
 export interface TeamInvitation {

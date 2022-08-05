@@ -15,7 +15,9 @@
     <ng-container *ngIf="scores$ | async as scores; else loading">
       <tr *ngFor="let s of scores; trackBy:trackById">
         <td>{{s.rank}}</td>
-        <td><img [src]="s.sponsorLogo" [alt]="s.sponsor" width="48px"></td>
+        <td>
+          <app-imagestack [imagelist]="s.sponsorList" width="48px" [tooltip]="s.sponsorTooltip"></app-imagestack>
+        </td>
         <td>
           <span *ngIf="s.advanced" class="text-success ml-2">
             <fa-icon [icon]="faStar"></fa-icon>

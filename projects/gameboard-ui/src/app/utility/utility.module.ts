@@ -37,6 +37,7 @@ import { InplaceEditorComponent } from './components/inplace-editor/inplace-edit
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
 import { RouterModule } from '@angular/router';
+import { ImagestackComponent } from './components/imagestack/imagestack.component';
 
 const components = [
   ClipspanComponent,
@@ -63,7 +64,8 @@ const components = [
   SafeUrlPipe,
   ObserveOrderPipe,
   MatchesTermPipe,
-  TextToColorPipe
+  TextToColorPipe,
+  ImagestackComponent
 ]
 
 @NgModule({

@@ -123,6 +123,8 @@ export class PlayerService {
       ? `${this.config.imagehost}/${p.sponsor}`
       : `${this.config.basehref}assets/sponsor.svg`
     ;
+    p.sponsorTooltip = p.sponsorList.map(s => s.split('.').reverse().pop()?.toUpperCase()).join(' | ');
+    p.sponsorList.forEach((s,i,a) => a[i] = `${this.config.imagehost}/${s}`);
     p.session = new TimeWindow(p.sessionBegin, p.sessionEnd);
     return p;
   }
