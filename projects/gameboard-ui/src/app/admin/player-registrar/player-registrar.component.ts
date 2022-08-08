@@ -170,6 +170,8 @@ export class PlayerRegistrarComponent implements OnInit {
 
   approveName(model: Player): void {
     model.approvedName = model.name;
+    model.nameStatus = "";
+    model.pendingName = "";
     this.update(model);
   }
 

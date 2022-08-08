@@ -113,6 +113,8 @@ export class UserRegistrarComponent implements OnInit {
 
   approveName(model: ApiUser): void {
     model.approvedName = model.name;
+    model.nameStatus = "";
+    model.pendingName = "";
     this.update(model);
   }
 
