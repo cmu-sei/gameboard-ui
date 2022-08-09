@@ -187,6 +187,11 @@ export interface LocalAppSettings {
   theme?: string;
   last?: string;
   lastSeenSupport?: number;
+  ticketFilter?: string;
+  ticketType?: string;
+  ticketTerm?: string;
+  ticketOrder?: string;
+  ticketOrderDesc?: boolean;
 }
 
 export interface Settings {

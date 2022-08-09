@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch, faExclamationCircle, faAsterisk } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, timer, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, switchMap, map, tap } from 'rxjs/operators';
 import { TicketNotification, TicketSummary } from '../../api/support-models';
@@ -47,6 +47,12 @@ export class TicketListComponent implements OnInit, OnDestroy {
     hub: NotificationService
   ) {
 
+    this.searchText = config.local.ticketTerm || "";
+    this.statusFilter = config.local.ticketFilter || "Any Status";
+    this.assignFilter = config.local.ticketType || "Any";
+    this.curOrderItem = config.local.ticketOrder || "created";
+    this.isDescending = config.local.ticketOrderDesc|| true;
+
     const canManage$ = local.user$.pipe(
       map(u => !!u?.isObserver || !!u?.isSupport)
     );
@@ -56,6 +62,11 @@ export class TicketListComponent implements OnInit, OnDestroy {
       timer(0, 60_000)
     ]).pipe(
       debounceTime(250),
+      tap(() => config.updateLocal({
+        ticketTerm: this.searchText,
+        ticketFilter: this.statusFilter,
+        ticketType: this.assignFilter
+      })),
       switchMap(() => api.list({
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
@@ -134,12 +145,16 @@ export class TicketListComponent implements OnInit, OnDestroy {
   // Orders by a given column name by querying the API.
   orderByColumn(orderItem: string) {
     // If the provided item is the currently ordered one, just switch the ordering
-    if (orderItem == this.curOrderItem) this.isDescending = !this.isDescending;
+    if (orderItem == this.curOrderItem) {
+      this.isDescending = !this.isDescending;
+    }
     // Otherwise, always start ordering it in descending order
     else {
       this.curOrderItem = orderItem;
       this.isDescending = true;
     }
+
+    this.config.updateLocal({ ticketOrder: this.curOrderItem, ticketOrderDesc: this.isDescending });
 
     this.refresh$.next(true);
     this.advanceRefresh$.next(true);
