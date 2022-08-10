@@ -33,6 +33,7 @@ import { PrereqsComponent } from './prereqs/prereqs.component';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SupportReportComponent } from './support-report/support-report.component';
+import { PlayerNamesComponent } from './player-names/player-names.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { SupportReportComponent } from './support-report/support-report.componen
     TeamObserverComponent,
     PrereqsComponent,
     FeedbackReportComponent,
-    SupportReportComponent
+    SupportReportComponent,
+    PlayerNamesComponent
   ],
   imports: [
     CommonModule,
@@ -68,6 +70,7 @@ import { SupportReportComponent } from './support-report/support-report.componen
         { path: 'designer/:id', component: GameEditorComponent },
         { path: 'registrar/sponsors', component: SponsorBrowserComponent },
         { path: 'registrar/users', component: UserRegistrarComponent },
+        { path: 'registrar/players', component: PlayerNamesComponent },
         { path: 'registrar/:id', component: PlayerRegistrarComponent },
         { path: 'observer/challenges/:id', component: ChallengeObserverComponent },
         { path: 'observer/teams/:id', component: TeamObserverComponent },

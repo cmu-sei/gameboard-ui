@@ -47,10 +47,6 @@ export class UserRegistrarComponent implements OnInit {
       tap(r => this.source = r),
       tap(() => this.review()),
     );
-
-    // api.listScopes().subscribe(
-    //   result => this.scopes = result
-    // );
   }
 
   ngOnInit(): void {
@@ -67,20 +63,6 @@ export class UserRegistrarComponent implements OnInit {
     // this.search.scope = this.scope;
     this.refresh$.next(true);
   }
-
-
-  // create(): void {
-  //   this.api.update({
-  //     name: this.search.term || 'NEW-USER'
-  //   }).pipe(
-  //     debounceTime(500)
-  //   ).subscribe(
-  //     (u: ApiUser) => {
-  //       this.source.unshift(u);
-  //       this.view(u);
-  //     }
-  //   );
-  // }
 
   view(u: ApiUser): void {
     this.viewed = this.viewed !== u ? u : undefined;

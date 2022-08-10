@@ -5,66 +5,65 @@
   <fa-icon [icon]="faArrowLeft"></fa-icon>
   <span>Back</span>
 </a>
-<h4>Players</h4>
 
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
-
-<div>
-  <div class="input-group input-group-sm">
-    <div class="input-group-prepend">
-      <span class="input-group-text">
-        <fa-icon [icon]="faSearch"></fa-icon>
-        <span>Search</span>
-      </span>
-    </div>
-    <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control" (input)="refresh$.next(true)">
-  </div>
+  <h4>Players &mdash; {{ctx.game.name}}</h4>
   <div>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('active')">
-      <fa-icon [hidden]="filter!=='active'" [icon]="faFilter"></fa-icon>
-      <span>active-only</span>
-    </button>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('complete')">
-      <fa-icon [hidden]="filter!=='complete'" [icon]="faFilter"></fa-icon>
-      <span>complete-only</span>
-    </button>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('advanced')">
-      <fa-icon [hidden]="filter!=='advanced'" [icon]="faFilter"></fa-icon>
-      <span>advanced</span>
-    </button>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('dismissed')">
-      <fa-icon [hidden]="filter!=='dismissed'" [icon]="faFilter"></fa-icon>
-      <span>dismissed</span>
-    </button>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
-      <fa-icon [hidden]="filter!=='pending'" [icon]="faFilter"></fa-icon>
-      <span>names-pending</span>
-    </button>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('disallowed')">
-      <fa-icon [hidden]="filter!=='disallowed'" [icon]="faFilter"></fa-icon>
-      <span>names-disallowed</span>
-    </button>
-    <ng-container *ngIf="ctx.game.allowTeam">
-      <span class="text-warning"> | </span>
-      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleTeamView()">
-        <fa-icon [hidden]="teamView===''" [icon]="faFilter"></fa-icon>
-        <span>consolidate-teams</span>
+    <div class="input-group input-group-sm">
+      <div class="input-group-prepend">
+        <span class="input-group-text">
+          <fa-icon [icon]="faSearch"></fa-icon>
+          <span>Search</span>
+        </span>
+      </div>
+      <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control" (input)="refresh$.next(true)">
+    </div>
+    <div>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('active')">
+        <fa-icon [hidden]="filter!=='active'" [icon]="faFilter"></fa-icon>
+        <span>active-only</span>
       </button>
-    </ng-container>
-    <span class="text-warning"> | </span>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleSort('time')">
-      <fa-icon [hidden]="search.sort!=='time'" [icon]="faArrowDown"></fa-icon>
-      <span>time</span>
-    </button>
-    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleSort('rank')">
-      <fa-icon [hidden]="search.sort!=='rank'" [icon]="faArrowDown"></fa-icon>
-      <span>rank</span>
-    </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('complete')">
+        <fa-icon [hidden]="filter!=='complete'" [icon]="faFilter"></fa-icon>
+        <span>complete-only</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('advanced')">
+        <fa-icon [hidden]="filter!=='advanced'" [icon]="faFilter"></fa-icon>
+        <span>advanced</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('dismissed')">
+        <fa-icon [hidden]="filter!=='dismissed'" [icon]="faFilter"></fa-icon>
+        <span>dismissed</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
+        <fa-icon [hidden]="filter!=='pending'" [icon]="faFilter"></fa-icon>
+        <span>names-pending</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('disallowed')">
+        <fa-icon [hidden]="filter!=='disallowed'" [icon]="faFilter"></fa-icon>
+        <span>names-disallowed</span>
+      </button>
+      <ng-container *ngIf="ctx.game.allowTeam">
+        <span class="text-warning"> | </span>
+        <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleTeamView()">
+          <fa-icon [hidden]="teamView===''" [icon]="faFilter"></fa-icon>
+          <span>consolidate-teams</span>
+        </button>
+      </ng-container>
+      <span class="text-warning"> | </span>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleSort('time')">
+        <fa-icon [hidden]="search.sort!=='time'" [icon]="faArrowDown"></fa-icon>
+        <span>time</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleSort('rank')">
+        <fa-icon [hidden]="search.sort!=='rank'" [icon]="faArrowDown"></fa-icon>
+        <span>rank</span>
+      </button>
+    </div>
   </div>
-</div>
 
-<small *ngIf="source.length === 100" class="text-warning">Results limited to 100. Refine search term if necessary.</small>
-<hr/>
+  <small *ngIf="source.length === 100" class="text-warning">Results limited to 100. Refine search term if necessary.</small>
+  <hr/>
 
   <div class="mb-2 d-flex align-items-baseline">
     <small class="text-warning mx-2">count: {{ctx.players.length}}</small>

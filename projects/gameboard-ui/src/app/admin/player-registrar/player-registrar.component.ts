@@ -27,7 +27,7 @@ export class PlayerRegistrarComponent implements OnInit {
   viewChange$ = new BehaviorSubject<Player | undefined>(this.viewed);
   search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time'};
   filter = '';
-  teamView = 'collapsed';
+  teamView = 'collapse';
   scope = '';
   scopes: string[] = [];
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique']
