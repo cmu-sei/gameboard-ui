@@ -34,6 +34,7 @@ import { FeedbackReportComponent } from './feedback-report/feedback-report.compo
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SupportReportComponent } from './support-report/support-report.component';
 import { PlayerNamesComponent } from './player-names/player-names.component';
+import { ParticipationReportComponent } from './participation-report/participation-report.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { PlayerNamesComponent } from './player-names/player-names.component';
     PrereqsComponent,
     FeedbackReportComponent,
     SupportReportComponent,
-    PlayerNamesComponent
+    PlayerNamesComponent,
+    ParticipationReportComponent
   ],
   imports: [
     CommonModule,
@@ -80,6 +82,7 @@ import { PlayerNamesComponent } from './player-names/player-names.component';
         { path: 'report/challenges', component: ChallengeReportComponent },
         { path: 'report/feedback', component: FeedbackReportComponent },
         { path: 'report/support', component: SupportReportComponent },
+        { path: 'report/participation', component: ParticipationReportComponent },
         { path: 'support', component: ChallengeBrowserComponent }
         // { path: '**', redirectTo: 'dashboard' }
       ]},

@@ -1,0 +1,43 @@
+<!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
+<a class="btn btn-link" routerLink="../">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+    <span>Back</span>
+  </a>
+  
+  <h4>Participation Reports</h4>
+
+  <div class="container table-dark border mb-4">
+  <div class="row">
+    <div class="col-10 p-2">
+    </div>
+    <div class="col-2 p-2 font-weight-bold" *ngIf="seasons">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadSeasonReport()">Export Season Report to CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h5 class="pt-5 border-top">Seasons</h5>
+<div class="container pt-4" *ngIf="seasons; else loading">
+  <div class="row border-top p-3">
+    <div class="col-3 font-weight-bold">Season</div>
+    <div class="col-3 font-weight-bold">Game Count</div>
+    <div class="col-3 font-weight-bold">Player Count</div>
+    <div class="col-3 font-weight-bold">Players with Sessions Count</div>
+  </div>
+  <div class="row border-top p-3" *ngFor="let s of seasons.stats">
+    <div class="col-3">{{s.season}}</div>
+    <div class="col-3">{{s.gameCount}}</div>
+    <div class="col-3">{{s.playerCount}}</div>
+    <div class="col-3">{{s.sessionPlayerCount}}</div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>

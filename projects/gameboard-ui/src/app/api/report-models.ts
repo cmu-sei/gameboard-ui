@@ -20,6 +20,7 @@ export interface PlayerStat {
   gameId: string;
   gameName: string;
   playerCount: number;
+  sessionPlayerCount: number;
 }
 
 export interface SponsorReport {
@@ -82,4 +83,15 @@ export interface Part {
   weight: number;
 }
 
+export interface SeasonReport {
+  title: string;
+  timestamp: Date;
+  stats: SeasonStat[];
+}
 
+export interface SeasonStat {
+  season: string;
+  gameCount: number;
+  playerCount: number;
+  sessionPlayerCount: number;
+}
