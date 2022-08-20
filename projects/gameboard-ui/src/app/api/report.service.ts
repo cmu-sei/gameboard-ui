@@ -8,7 +8,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Challenge } from './board-models';
 import { FeedbackStats } from './feedback-models';
-import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport, ParticipationReport } from './report-models';
+import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport, ParticipationReport, CorrelationReport } from './report-models';
 
 @Injectable({
   providedIn: 'root'
@@ -136,6 +136,18 @@ export class ReportService {
     this.http.get(`${this.url}/report/export${participationItem}stats/`, { responseType: 'arraybuffer' })
       .subscribe(response => {
         const name: string = `${participationItem}-stats-report-` + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+
+  public correlationReport(): Observable<any> {
+    return this.http.get<CorrelationReport>(`${this.url}/report/correlationstats`);
+  }
+
+  public exportCorrelationStats(): void {
+    this.http.get(`${this.url}/report/exportcorrelationstats/`, { responseType: 'arraybuffer' })
+      .subscribe(response => {
+        const name: string = `correlation-stats-report-` + this.timestamp() + '.csv';
         this.downloadFile(response, name, 'application/ms-excel');
       });
   }

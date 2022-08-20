@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ReportService } from '../../api/report.service';
-import { ParticipationReport } from '../../api/report-models';
+import { CorrelationReport, ParticipationReport } from '../../api/report-models';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -19,6 +19,7 @@ export class ParticipationReportComponent implements OnInit {
   seasons?: ParticipationReport;
   divisions?: ParticipationReport;
   modes?: ParticipationReport;
+  correlations?: CorrelationReport;
   totalUserCount = 0;
   errorMessage = "";
   url = '';
@@ -60,6 +61,12 @@ export class ParticipationReportComponent implements OnInit {
         this.modes = r;
       }
     );
+
+    this.api.correlationReport().subscribe(
+      r => {
+        this.correlations = r;
+      }
+    )
   }
 
   ngOnInit(): void {
@@ -83,5 +90,9 @@ export class ParticipationReportComponent implements OnInit {
 
   downloadModeReport() {
     this.api.exportParticipationStats("mode");
+  }
+
+  downloadCorrelationReport() {
+    this.api.exportCorrelationStats();
   }
 }

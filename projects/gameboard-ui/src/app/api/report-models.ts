@@ -95,3 +95,14 @@ export interface ParticipationStat {
   playerCount: number;
   sessionPlayerCount: number;
 }
+
+export interface CorrelationReport {
+  key: string;
+  timestamp: Date;
+  stats: CorrelationStat[];
+}
+
+export interface CorrelationStat {
+  gameCount: number;
+  userCount: number;
+}
