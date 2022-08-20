@@ -83,14 +83,14 @@ export interface Part {
   weight: number;
 }
 
-export interface SeasonReport {
-  title: string;
+export interface ParticipationReport {
+  key: string;
   timestamp: Date;
-  stats: SeasonStat[];
+  stats: ParticipationStat[];
 }
 
-export interface SeasonStat {
-  season: string;
+export interface ParticipationStat {
+  key: string;
   gameCount: number;
   playerCount: number;
   sessionPlayerCount: number;

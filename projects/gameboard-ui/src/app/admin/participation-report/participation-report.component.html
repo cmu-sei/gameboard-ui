@@ -10,17 +10,69 @@
 
   <div class="container table-dark border mb-4">
   <div class="row">
-    <div class="col-10 p-2">
+    <div class="col-2 p-2">
+    </div>
+    <div class="col-2 p-2 font-weight-bold" *ngIf="series">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadSeriesReport()">Export Series Report to CSV</button>
+      </div>
+    </div>
+    <div class="col-2 p-2 font-weight-bold" *ngIf="tracks">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTrackReport()">Export Track Report to CSV</button>
+      </div>
     </div>
     <div class="col-2 p-2 font-weight-bold" *ngIf="seasons">
       <div>
         <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadSeasonReport()">Export Season Report to CSV</button>
       </div>
     </div>
+    <div class="col-2 p-2 font-weight-bold" *ngIf="divisions">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadDivisionReport()">Export Division Report to CSV</button>
+      </div>
+    </div>
+    <div class="col-2 p-2 font-weight-bold" *ngIf="modes">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadModeReport()">Export Mode Report to CSV</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<h5 class="pt-5 border-top">Seasons</h5>
+<h5 class="pt-5 border-top">Series</h5>
+<div class="container pt-4" *ngIf="series; else loading">
+  <div class="row border-top p-3">
+    <div class="col-3 font-weight-bold">Series</div>
+    <div class="col-3 font-weight-bold">Game Count</div>
+    <div class="col-3 font-weight-bold">Player Count</div>
+    <div class="col-3 font-weight-bold">Players with Sessions Count</div>
+  </div>
+  <div class="row border-top p-3" *ngFor="let s of series.stats">
+    <div class="col-3">{{s.key}}</div>
+    <div class="col-3">{{s.gameCount}}</div>
+    <div class="col-3">{{s.playerCount}}</div>
+    <div class="col-3">{{s.sessionPlayerCount}}</div>
+  </div>
+</div>
+
+<h5 class="pt-5">Tracks</h5>
+<div class="container pt-4" *ngIf="tracks; else loading">
+  <div class="row border-top p-3">
+    <div class="col-3 font-weight-bold">Track</div>
+    <div class="col-3 font-weight-bold">Game Count</div>
+    <div class="col-3 font-weight-bold">Player Count</div>
+    <div class="col-3 font-weight-bold">Players with Sessions Count</div>
+  </div>
+  <div class="row border-top p-3" *ngFor="let s of tracks.stats">
+    <div class="col-3">{{s.key}}</div>
+    <div class="col-3">{{s.gameCount}}</div>
+    <div class="col-3">{{s.playerCount}}</div>
+    <div class="col-3">{{s.sessionPlayerCount}}</div>
+  </div>
+</div>
+
+<h5 class="pt-5">Seasons</h5>
 <div class="container pt-4" *ngIf="seasons; else loading">
   <div class="row border-top p-3">
     <div class="col-3 font-weight-bold">Season</div>
@@ -29,7 +81,39 @@
     <div class="col-3 font-weight-bold">Players with Sessions Count</div>
   </div>
   <div class="row border-top p-3" *ngFor="let s of seasons.stats">
-    <div class="col-3">{{s.season}}</div>
+    <div class="col-3">{{s.key}}</div>
+    <div class="col-3">{{s.gameCount}}</div>
+    <div class="col-3">{{s.playerCount}}</div>
+    <div class="col-3">{{s.sessionPlayerCount}}</div>
+  </div>
+</div>
+
+<h5 class="pt-5">Divisions</h5>
+<div class="container pt-4" *ngIf="divisions; else loading">
+  <div class="row border-top p-3">
+    <div class="col-3 font-weight-bold">Division</div>
+    <div class="col-3 font-weight-bold">Game Count</div>
+    <div class="col-3 font-weight-bold">Player Count</div>
+    <div class="col-3 font-weight-bold">Players with Sessions Count</div>
+  </div>
+  <div class="row border-top p-3" *ngFor="let s of divisions.stats">
+    <div class="col-3">{{s.key}}</div>
+    <div class="col-3">{{s.gameCount}}</div>
+    <div class="col-3">{{s.playerCount}}</div>
+    <div class="col-3">{{s.sessionPlayerCount}}</div>
+  </div>
+</div>
+
+<h5 class="pt-5">Modes</h5>
+<div class="container pt-4" *ngIf="modes; else loading">
+  <div class="row border-top p-3">
+    <div class="col-3 font-weight-bold">Mode</div>
+    <div class="col-3 font-weight-bold">Game Count</div>
+    <div class="col-3 font-weight-bold">Player Count</div>
+    <div class="col-3 font-weight-bold">Players with Sessions Count</div>
+  </div>
+  <div class="row border-top p-3" *ngFor="let s of modes.stats">
+    <div class="col-3">{{s.key}}</div>
     <div class="col-3">{{s.gameCount}}</div>
     <div class="col-3">{{s.playerCount}}</div>
     <div class="col-3">{{s.sessionPlayerCount}}</div>

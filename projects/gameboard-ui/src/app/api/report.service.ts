@@ -8,7 +8,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Challenge } from './board-models';
 import { FeedbackStats } from './feedback-models';
-import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport, SeasonReport } from './report-models';
+import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport, ParticipationReport } from './report-models';
 
 @Injectable({
   providedIn: 'root'
@@ -128,14 +128,14 @@ export class ReportService {
     return this.http.get<any>(`${this.url}/report/supportchallengestats/`, { params: params });
   }
 
-  public seasonReport(): Observable<any> {
-    return this.http.get<SeasonReport>(`${this.url}/report/seasonstats`);
+  public participationReport(participationItem: string): Observable<any> {
+    return this.http.get<ParticipationReport>(`${this.url}/report/${participationItem}stats`);
   }
 
-  public exportSeasonStats(): void {
-    this.http.get(`${this.url}/report/exportseasonstats/`, { responseType: 'arraybuffer' })
+  public exportParticipationStats(participationItem: string): void {
+    this.http.get(`${this.url}/report/export${participationItem}stats/`, { responseType: 'arraybuffer' })
       .subscribe(response => {
-        const name: string = 'season-stats-report-' + this.timestamp() + '.csv';
+        const name: string = `${participationItem}-stats-report-` + this.timestamp() + '.csv';
         this.downloadFile(response, name, 'application/ms-excel');
       });
   }

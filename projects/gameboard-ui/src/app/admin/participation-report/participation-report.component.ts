@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ReportService } from '../../api/report.service';
-import { SeasonReport } from '../../api/report-models';
+import { ParticipationReport } from '../../api/report-models';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -14,7 +14,11 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./participation-report.component.scss']
 })
 export class ParticipationReportComponent implements OnInit {
-  seasons?: SeasonReport;
+  series?: ParticipationReport;
+  tracks?: ParticipationReport;
+  seasons?: ParticipationReport;
+  divisions?: ParticipationReport;
+  modes?: ParticipationReport;
   totalUserCount = 0;
   errorMessage = "";
   url = '';
@@ -27,9 +31,33 @@ export class ParticipationReportComponent implements OnInit {
   ) {
     this.url = environment.settings.apphost;
 
-    this.api.seasonReport().subscribe(
+    this.api.participationReport("series").subscribe(
+      r => {
+        this.series = r;
+      }
+    );
+
+    this.api.participationReport("track").subscribe(
+      r => {
+        this.tracks = r;
+      }
+    );
+
+    this.api.participationReport("season").subscribe(
       r => {
         this.seasons = r;
+      }
+    );
+
+    this.api.participationReport("division").subscribe(
+      r => {
+        this.divisions = r;
+      }
+    );
+
+    this.api.participationReport("mode").subscribe(
+      r => {
+        this.modes = r;
       }
     );
   }
@@ -37,7 +65,23 @@ export class ParticipationReportComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  downloadSeriesReport() {
+    this.api.exportParticipationStats("series");
+  }
+
+  downloadTrackReport() {
+    this.api.exportParticipationStats("track");
+  }
+
   downloadSeasonReport() {
-    this.api.exportSeasonStats();
+    this.api.exportParticipationStats("season");
+  }
+
+  downloadDivisionReport() {
+    this.api.exportParticipationStats("division");
+  }
+
+  downloadModeReport() {
+    this.api.exportParticipationStats("mode");
   }
 }
