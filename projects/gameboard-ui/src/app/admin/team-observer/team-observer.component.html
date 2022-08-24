@@ -109,7 +109,7 @@
                   </div> <!-- end challenge and console info header -->
                     <div class="iframe-wrapper mt-auto" style="padding: 0px;">
                       <iframe *ngIf="user.vm; else empty;" class="rounded-bottom" frameborder="0"
-                        [src]="(mksHost+'?f=0&o=1&s='+user.vm.challengeId+'&v='+user.vm.challengeName) | safeurl">
+                        [src]="(mksHost+'?f=0&o=1&u='+member.id) | safeurl">
                       </iframe>
                     </div> <!-- end iframe wrapper -->
                   </div>
