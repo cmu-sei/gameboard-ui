@@ -129,11 +129,11 @@ export class ReportService {
   }
 
   public participationReport(participationItem: string): Observable<any> {
-    return this.http.get<ParticipationReport>(`${this.url}/report/${participationItem}stats`);
+    return this.http.get<ParticipationReport>(`${this.url}/report/game${participationItem}stats`);
   }
 
   public exportParticipationStats(participationItem: string): void {
-    this.http.get(`${this.url}/report/export${participationItem}stats/`, { responseType: 'arraybuffer' })
+    this.http.get(`${this.url}/report/exportgame${participationItem}stats/`, { responseType: 'arraybuffer' })
       .subscribe(response => {
         const name: string = `${participationItem}-stats-report-` + this.timestamp() + '.csv';
         this.downloadFile(response, name, 'application/ms-excel');
