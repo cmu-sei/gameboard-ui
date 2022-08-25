@@ -173,8 +173,8 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit, OnDestroy 
         let url: string = URL.createObjectURL(a.body);
         img.setAttribute("src", url);
         // Set the appropriate storage object based on whether this is being called on a comment or not
-        if (activity) this.commentAttachmentMap.get(activity.id)![imgId] = this.sanitizer.bypassSecurityTrustUrl(url);
-        else this.attachmentObjectUrls[imgId] = this.sanitizer.bypassSecurityTrustUrl(url);
+        if (activity) this.commentAttachmentMap.get(activity.id)![imgId] = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        else this.attachmentObjectUrls[imgId] = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       }, async (error) => {
         // In case of an error, print it
         console.log("Error encountered while retrieving image.");
@@ -238,6 +238,7 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit, OnDestroy 
       extension: ext,
       // fullPath: this.sanitizer.bypassSecurityTrustResourceUrl(fullPath),
       fullPath: fullPath,
+      // This should be composed of images only
       showPreview: !!ext.toLowerCase().match(/(png|jpeg|jpg|gif|webp|svg)/)
     };
   }

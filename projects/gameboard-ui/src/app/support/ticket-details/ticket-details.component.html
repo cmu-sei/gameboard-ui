@@ -71,7 +71,7 @@
               <ng-container *ngFor="let file of ctx.ticket.attachmentFiles; let i = index;">
                 <div class="attachment m-2" (click)="enlarge(ctx.ticket.attachmentFiles, i, attachmentObjectUrls)">
                   <img *ngIf="!!file.showPreview" id="attachment-{{i}}" class="rounded">
-                  <div *ngIf="!file.showPreview" class="p-2 rounded no-preview text-center d-flex flex-column rounded border border-dark">
+                  <div *ngIf="!file.showPreview" id="attachment-{{i}}" class="p-2 rounded no-preview text-center d-flex flex-column rounded border border-dark">
                     <fa-icon class="mt-0 mb-auto no-preview-icon text-dark" [icon]="faFileAlt" size="lg"></fa-icon>
                     <p class="mb-0 mt-auto no-preview-text text-break text-white">{{file.filename | slice:0:26}}</p>
                   </div>
@@ -139,7 +139,7 @@
                   <ng-container *ngFor="let file of activity.attachmentFiles; let j = index;">
                     <div class="attachment m-2" (click)="enlarge(activity.attachmentFiles, j, commentAttachmentMap.get(activity.id))">
                       <img *ngIf="!!file.showPreview" id="comment-attachment-{{activity.id}}-{{j}}" class="rounded">
-                      <div *ngIf="!file.showPreview" class="p-2 rounded no-preview text-center d-flex flex-column rounded border border-dark">
+                      <div *ngIf="!file.showPreview" id="comment-attachment-{{activity.id}}-{{j}}" class="p-2 rounded no-preview text-center d-flex flex-column rounded border border-dark">
                         <fa-icon class="mt-0 mb-auto no-preview-icon text-dark" [icon]="faFileAlt" size="lg"></fa-icon>
                         <p class="mb-0 mt-auto no-preview-text text-break text-white">{{file.filename | slice:0:26}}</p>
                       </div>
