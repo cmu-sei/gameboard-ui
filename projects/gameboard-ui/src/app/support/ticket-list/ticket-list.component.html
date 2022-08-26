@@ -2,9 +2,15 @@
 
   <div class="d-flex justify-content-between mb-2">
     <h3 class="m-0 p-0 align-self-center">{{ctx.canManage ? 'Manage Tickets' : 'My Tickets'}}</h3>
-    <a class="btn btn-outline-info" [routerLink]="['../create']">
-      <span>Create Ticket</span>
-    </a>
+    <div class="align-self-right">
+      <button class="btn btn-outline-info p-2" (click)="downloadTicketDetailReport()" [disabled]="!ctx.canManage">
+        <fa-icon [icon]="faFileDownload"></fa-icon>
+        <span>Export to CSV</span>
+      </button>
+      <a class="btn btn-outline-info p-2" [routerLink]="['../create']">
+        <span>Create Ticket</span>
+      </a>
+    </div>
   </div>
   <div class="row mb-2">
     <div class="d-flex" [class]="ctx.canManage ? 'col-4' : 'col-2'">

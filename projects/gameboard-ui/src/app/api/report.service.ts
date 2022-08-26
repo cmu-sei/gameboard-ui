@@ -116,6 +116,7 @@ export class ReportService {
     return this.http.get<FeedbackStats>(`${this.url}/report/feedbackstats/`, { params: params });
   }
 
+  //#region Support Reports
   public supportDays(params: any): Observable<any> {
     return this.http.get<any>(`${this.url}/report/supportdaystats/`, { params: params });
   }
@@ -127,6 +128,17 @@ export class ReportService {
   public supportChallenges(params: any): Observable<any> {
     return this.http.get<any>(`${this.url}/report/supportchallengestats/`, { params: params });
   }
+  //#endregion
+
+  //#region Support Report Exports
+  public exportTicketDetails(): void {
+    this.http.get(`${this.url}/report/exportticketdetails/`, { responseType: 'arraybuffer' })
+      .subscribe(response => {
+        const name: string = `ticket-details-report-` + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+  //#endregion
 
   public participationReport(participationItem: string): Observable<any> {
     return this.http.get<ParticipationReport>(`${this.url}/report/game${participationItem}stats`);

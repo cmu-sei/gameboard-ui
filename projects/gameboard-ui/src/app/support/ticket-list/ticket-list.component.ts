@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch, faExclamationCircle, faFileDownload } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, timer, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, switchMap, map, tap } from 'rxjs/operators';
+import { ReportService } from '../../api/report.service';
 import { TicketNotification, TicketSummary } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
 import { ConfigService } from '../../utility/config.service';
@@ -39,11 +40,13 @@ export class TicketListComponent implements OnInit, OnDestroy {
   faCaretRight = faCaretRight;
   faCaretLeft =faCaretLeft;
   faNote = faExclamationCircle;
+  faFileDownload = faFileDownload;
 
   constructor(
     private api: SupportService,
     private local: LocalUserService,
     private config: ConfigService,
+    private reportApi: ReportService,
     hub: NotificationService
   ) {
 
@@ -159,4 +162,9 @@ export class TicketListComponent implements OnInit, OnDestroy {
     this.refresh$.next(true);
     this.advanceRefresh$.next(true);
   }
+
+  downloadTicketDetailReport() {
+    this.reportApi.exportTicketDetails();
+  }
+
 }
