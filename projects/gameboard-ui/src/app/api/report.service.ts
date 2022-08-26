@@ -8,7 +8,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Challenge } from './board-models';
 import { FeedbackStats } from './feedback-models';
-import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport } from './report-models';
+import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport, ParticipationReport, CorrelationReport } from './report-models';
 
 @Injectable({
   providedIn: 'root'
@@ -126,6 +126,30 @@ export class ReportService {
 
   public supportChallenges(params: any): Observable<any> {
     return this.http.get<any>(`${this.url}/report/supportchallengestats/`, { params: params });
+  }
+
+  public participationReport(participationItem: string): Observable<any> {
+    return this.http.get<ParticipationReport>(`${this.url}/report/game${participationItem}stats`);
+  }
+
+  public exportParticipationStats(participationItem: string): void {
+    this.http.get(`${this.url}/report/exportgame${participationItem}stats/`, { responseType: 'arraybuffer' })
+      .subscribe(response => {
+        const name: string = `${participationItem}-stats-report-` + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+
+  public correlationReport(): Observable<any> {
+    return this.http.get<CorrelationReport>(`${this.url}/report/correlationstats`);
+  }
+
+  public exportCorrelationStats(): void {
+    this.http.get(`${this.url}/report/exportcorrelationstats/`, { responseType: 'arraybuffer' })
+      .subscribe(response => {
+        const name: string = `correlation-stats-report-` + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
   }
 
   private downloadFile(data: any, name: string, type: string) {

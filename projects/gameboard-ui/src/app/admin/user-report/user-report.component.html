@@ -49,11 +49,13 @@
 <div class="container pt-4" *ngIf="players; else loading">
   <div class="row border-top p-3">
     <div class="col-6 font-weight-bold">Game</div>
-    <div class="col-6 font-weight-bold">Player Count</div>
+    <div class="col-3 font-weight-bold">Player Count</div>
+    <div class="col-3 font-weight-bold">Players with Sessions Count</div>
   </div>
   <div class="row border-top p-3" *ngFor="let p of players.stats">
     <div class="col-6">{{p.gameName}}</div>
-    <div class="col-6">{{p.playerCount}}</div>  
+    <div class="col-3">{{p.playerCount}}</div>  
+    <div class="col-3">{{p.sessionPlayerCount}}</div>
   </div>
 </div>
 
