@@ -52,8 +52,8 @@ export class ReportService {
     return this.http.get<SponsorReport>(`${this.url}/report/sponsorstats`);
   }
 
-  public exportSponsorReport(id: string): void {
-    this.http.get(`${this.url}/report/exportsponsorstats/${id}`, { responseType: 'arraybuffer' })
+  public exportSponsorReport(): void {
+    this.http.get(`${this.url}/report/exportsponsorstats/`, { responseType: 'arraybuffer' })
       .subscribe(response => {
         const name: string = 'sponsor-report-' + this.timestamp() + '.csv';
         this.downloadFile(response, name, 'application/ms-excel');

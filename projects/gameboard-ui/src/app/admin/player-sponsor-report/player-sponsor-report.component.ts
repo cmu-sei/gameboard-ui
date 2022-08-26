@@ -79,7 +79,7 @@ export class PlayerSponsorReportComponent implements OnInit {
     this.api.exportGameSponsorReport(id);
   }
 
-  downloadSponsorReport(id: string) {
-    this.api.exportSponsorReport(id);
+  downloadSponsorReport() {
+    this.api.exportSponsorReport();
   }
 }
