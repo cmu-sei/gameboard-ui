@@ -128,7 +128,7 @@
                 <div>
                   <span class="">
                     <div>
-                      <span class="font-weight-bold">{{activity.user?.approvedName}}</span>&nbsp;&middot;&nbsp;<div style="display: inline-block" [tooltip]="ctx.ticket.created | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">{{activity.timestamp | ago}}</div>
+                      <span class="font-weight-bold">{{activity.user?.approvedName}}</span>&nbsp;&middot;&nbsp;<div style="display: inline-block" [tooltip]="activity.timestamp | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">{{activity.timestamp | ago}}</div>
                     </div>
                   </span>
                 </div>
@@ -154,7 +154,7 @@
                   [class.badge-info]="activity.status == 'Open' || !activity.status"
                   [class.badge-success]="activity.status == 'In Progress'"
                   [class.badge-dark]="activity.status == 'Closed'">{{activity.status}}</span></div>
-                  <div style="display: inline-block" [tooltip]="ctx.ticket.created | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                  <div style="display: inline-block" [tooltip]="activity.timestamp | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
                     &nbsp;{{activity.timestamp | ago}}
                   </div>
               </span>
@@ -162,12 +162,12 @@
             <div class="my-3 mx-3 px-3 border-0 text-center" *ngIf="activity.type == 2"> <!-- Assignee Change -->
               <span class="text-center  py-2 d-flex rounded" style="background: black">
                 <span *ngIf="!!activity.assigneeId">Assigned to&nbsp;<span class="font-weight-bold">{{activity.assignee?.approvedName}}</span>
-                  <div style="display: inline-block" [tooltip]="ctx.ticket.created | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                  <div style="display: inline-block" [tooltip]="activity.timestamp | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
                     &nbsp;{{activity.timestamp | ago}}
                   </div>
                 </span>
                 <span *ngIf="!activity.assigneeId">Unassigned
-                  <div style="display: inline-block" [tooltip]="ctx.ticket.created | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                  <div style="display: inline-block" [tooltip]="activity.timestamp | shorttime:true" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
                     &nbsp;{{activity.timestamp | ago}}
                   </div>
                 </span>
