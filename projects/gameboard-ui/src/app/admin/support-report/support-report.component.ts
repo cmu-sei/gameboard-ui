@@ -77,7 +77,18 @@ export class SupportReportComponent implements OnInit {
   }
 
   downloadTicketDetailReport() {
-    this.api.exportTicketDetails();
+    this.api.exportTicketDetails(this.search);
   }
 
+  downloadTicketDayStatsReport() {
+    this.api.exportTicketDayStats(this.search);
+  }
+
+  downloadTicketLabelStatsReport() {
+    this.api.exportTicketLabelStats(this.search);
+  }
+
+  downloadTicketChallengeStatsReport() {
+    this.api.exportTicketChallengeStats(this.search);
+  }
 }

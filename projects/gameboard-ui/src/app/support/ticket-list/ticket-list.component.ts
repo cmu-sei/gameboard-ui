@@ -164,7 +164,7 @@ export class TicketListComponent implements OnInit, OnDestroy {
   }
 
   downloadTicketDetailReport() {
-    this.reportApi.exportTicketDetails();
+    this.reportApi.exportTicketDetails({ term: this.searchText, filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()] });
   }
 
 }

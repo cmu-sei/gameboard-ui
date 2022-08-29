@@ -131,10 +131,34 @@ export class ReportService {
   //#endregion
 
   //#region Support Report Exports
-  public exportTicketDetails(): void {
-    this.http.get(`${this.url}/report/exportticketdetails/`, { responseType: 'arraybuffer' })
+  public exportTicketDetails(params: any): void {
+    this.http.get(`${this.url}/report/exportticketdetails/`, { responseType: 'arraybuffer', params: params })
       .subscribe(response => {
         const name: string = `ticket-details-report-` + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+
+  public exportTicketDayStats(params: any): void {
+    this.http.get(`${this.url}/report/exportticketdaystats/`, { responseType: 'arraybuffer', params: params })
+      .subscribe(response => {
+        const name: string = `ticket-day-stats-report-` + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+
+  public exportTicketLabelStats(params: any): void {
+    this.http.get(`${this.url}/report/exportticketlabelstats/`, { responseType: 'arraybuffer', params: params })
+      .subscribe(response => {
+        const name: string = `ticket-label-stats-report-` + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
+      });
+  }
+
+  public exportTicketChallengeStats(params: any): void {
+    this.http.get(`${this.url}/report/exportticketchallengestats/`, { responseType: 'arraybuffer', params: params })
+      .subscribe(response => {
+        const name: string = `ticket-challenge-stats-report-` + this.timestamp() + '.csv';
         this.downloadFile(response, name, 'application/ms-excel');
       });
   }
