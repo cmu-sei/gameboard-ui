@@ -28,6 +28,33 @@
   </div>
 </form>
 
+<br>
+
+<div class="container table-dark border mb-4">
+  <div class="row">
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketDetailReport()">Export Ticket Detail Report to CSV</button>
+      </div>
+    </div>
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketDayStatsReport()">Export Ticket Day Stats Report to CSV</button>
+      </div>
+    </div>
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketLabelStatsReport()">Export Ticket Label Stats Report to CSV</button>
+      </div>
+    </div>
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketChallengeStatsReport()">Export Ticket Challenge Stats Report to CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <div class="row">
     <div class="col-10 p-2">

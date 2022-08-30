@@ -34,7 +34,7 @@ export class SupportReportComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
-    private reportService: ReportService,
+    private api: ReportService,
   ) { 
 
     this.gameService.list({}).subscribe(
@@ -44,13 +44,13 @@ export class SupportReportComponent implements OnInit {
     );
 
     this.dayStats$ = this.refresh$.pipe(
-      switchMap(() => this.reportService.supportDays(this.search))
+      switchMap(() => this.api.supportDays(this.search))
     )
     this.labelStats$ = this.refresh$.pipe(
-      switchMap(() => this.reportService.supportLabels(this.search))
+      switchMap(() => this.api.supportLabels(this.search))
     )
     this.challengeStats$ = this.refresh$.pipe(
-      switchMap(() => this.reportService.supportChallenges(this.search))
+      switchMap(() => this.api.supportChallenges(this.search))
     )
   
   }
@@ -76,4 +76,19 @@ export class SupportReportComponent implements OnInit {
     this.refresh$.next(true);
   }
 
+  downloadTicketDetailReport() {
+    this.api.exportTicketDetails(this.search);
+  }
+
+  downloadTicketDayStatsReport() {
+    this.api.exportTicketDayStats(this.search);
+  }
+
+  downloadTicketLabelStatsReport() {
+    this.api.exportTicketLabelStats(this.search);
+  }
+
+  downloadTicketChallengeStatsReport() {
+    this.api.exportTicketChallengeStats(this.search);
+  }
 }

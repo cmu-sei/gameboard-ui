@@ -83,6 +83,28 @@ export interface Part {
   weight: number;
 }
 
+export interface TicketDetailReport {
+  key: string;
+  timestamp: Date;
+  details: TicketDetail[];
+}
+
+export interface TicketDetail {
+  key: number;
+  summary: string;
+  description: string;
+  challenge: string;
+  gameSession: string;
+  team: string;
+  assignee: string;
+  requester: string;
+  creator: string;
+  created: Date;
+  lastUpdated: Date;
+  label: string;
+  status: string;
+}
+
 export interface ParticipationReport {
   key: string;
   timestamp: Date;
