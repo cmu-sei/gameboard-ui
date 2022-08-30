@@ -94,6 +94,7 @@ export interface ParticipationStat {
   gameCount: number;
   playerCount: number;
   sessionPlayerCount: number;
+  challengesDeployedCount: number;
 }
 
 export interface CorrelationReport {
