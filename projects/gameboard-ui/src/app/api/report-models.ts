@@ -116,6 +116,8 @@ export interface ParticipationStat {
   gameCount: number;
   playerCount: number;
   sessionPlayerCount: number;
+  teamCount: number;
+  sessionTeamCount: number;
   challengesDeployedCount: number;
 }
 
