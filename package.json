@@ -27,6 +27,8 @@
     "bootstrap": "^4.6.2",
     "jquery": "^3.6.0",
     "jquery-ui-dist": "^1.13.1",
+    "linkify-html": "^3.0.5",
+    "linkifyjs": "^3.0.5",
     "ngx-bootstrap": "^9.0.0",
     "ngx-markdown": "^14.0.1",
     "oidc-client": "^1.11.5",

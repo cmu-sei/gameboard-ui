@@ -15,6 +15,8 @@ import { EditData, SuggestionOption } from '../../utility/components/inplace-edi
 import { ConfigService } from '../../utility/config.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { NotificationService } from '../../utility/notification.service';
+import * as linkify from 'linkifyjs';
+import linkifyHtml from 'linkify-html';
 
 @Component({
   selector: 'app-ticket-details',
@@ -485,4 +487,8 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit, OnDestroy 
     );
   }
 
+  public detectLinks(body: string, id: string): void {
+    var elem = document.getElementById(id);
+    if (elem) elem.innerHTML = linkifyHtml(body, { nl2br: true });
+  }
 }
