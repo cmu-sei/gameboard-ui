@@ -50,6 +50,8 @@ export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   private isLinkAllowedForSupportRole(): boolean {
-    return !(this.destinationUrl.startsWith("/admin/registrar") || this.destinationUrl.startsWith("admin/designer"));
+    return !(this.destinationUrl.startsWith("/admin/registrar") 
+          || this.destinationUrl.startsWith("/admin/designer")
+          || this.destinationUrl.startsWith("/admin/report"));
   }
 }
