@@ -5,7 +5,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ReportService } from '../../api/report.service';
-import { TicketChallengeGroup, TicketDayGroup, TicketLabelGroup } from '../../api/support-models';
+import { TicketChallengeGroup, TicketDayGroup, TicketDayReport, TicketLabelGroup } from '../../api/support-models';
 
 @Component({
   selector: 'app-support-report',
@@ -24,7 +24,7 @@ export class SupportReportComponent implements OnInit {
   endRange?: Date;
   search: any = {};
 
-  dayStats$: Observable<TicketDayGroup[]>;
+  dayStats$: Observable<TicketDayReport>;
   labelStats$: Observable<TicketLabelGroup[]>;
   challengeStats$: Observable<TicketChallengeGroup[]>;
 
