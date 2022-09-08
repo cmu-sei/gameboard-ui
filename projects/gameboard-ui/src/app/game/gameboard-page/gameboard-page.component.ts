@@ -5,7 +5,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, combineLatest, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
-import { catchError, combineAll, filter, map, mergeAll, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { catchError, combineAll, debounceTime, filter, map, mergeAll, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { ApiUser } from '../../api/user-models';
@@ -66,6 +66,7 @@ export class GameboardPageComponent implements OnInit, AfterViewInit, OnDestroy 
       this.refresh$
     ).pipe(
       filter(id => !!id),
+      debounceTime(100),
       switchMap(id => api.load(id).pipe(
         catchError(err => of({} as BoardPlayer))
       )),
