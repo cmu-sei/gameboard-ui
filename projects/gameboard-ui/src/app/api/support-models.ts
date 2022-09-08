@@ -129,12 +129,17 @@ export interface TicketActivity {
   assignee: UserSummary;
 }
 
+export interface TicketDayReport {
+  shifts: string[][];
+  timezone: string;
+  ticketDays: TicketDayGroup[];
+}
+
 export interface TicketDayGroup {
   date: string;
   dayOfWeek: string;
   count: number;
-  shift1Count: number;
-  shift2Count: number;
+  shiftCounts: number[];
   outsideShiftCount: number;
 }
 

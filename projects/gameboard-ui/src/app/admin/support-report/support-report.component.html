@@ -69,24 +69,24 @@
   </div>
 
   <div class="container" [hidden]="!showDays">
-    <table class="table mb-1">
+    <table class="table mb-1" *ngIf="dayStats$ | async as report; else loading">
       <thead class="thead-dark border-0 table-header">
         <tr>
           <th>Day</th>
-          <th class="text-center">8:00am-4:00pm ET</th>
-          <th class="text-center">4:00pm-11:00pm ET</th>
+          <th class="text-center" *ngFor="let shift of report.shifts">{{shift[0]}}-{{shift[1]}} {{report.timezone}}</th>
           <th class="text-center">Outside of Shifts</th>
           <th class="text-center">Total Created</th>
         </tr>
       </thead>
-      <tbody *ngIf="dayStats$ | async as stats; else loading">
-        <tr *ngFor="let stat of stats">
+      <tbody>
+        <tr *ngFor="let stat of report.ticketDays">
           <td>
             <div class="font-weight-bold">{{stat.dayOfWeek}}</div>
             <small>{{stat.date}}</small>
           </td>
-          <td class="text-center"><div>{{stat.shift1Count}}</div></td>
-          <td class="text-center"><div>{{stat.shift2Count}}</div></td>
+          <td *ngFor="let count of stat.shiftCounts" class="text-center">
+            <div>{{count}}</div>
+          </td>
           <td class="text-center"><div>{{stat.outsideShiftCount}}</div></td>
           <td class="text-center"><div>{{stat.count}}</div></td>
         </tr>
