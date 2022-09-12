@@ -490,6 +490,6 @@ export class TicketDetailsComponent implements OnInit, AfterViewInit, OnDestroy 
 
   public detectLinks(body: string, id: string): void {
     var elem = document.getElementById(id);
-    if (elem) elem.innerHTML = linkifyHtml(body, { nl2br: true });
+    if (elem && body) elem.innerHTML = linkifyHtml(body, { nl2br: true });
   }
 }
