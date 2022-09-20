@@ -44,7 +44,7 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
         { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
         { path: 'doc/:id', component: TocPageComponent },
         { path: 'forbidden', component: ForbiddenComponent },
-        { path: 'home', component: LandingComponent }
+        { path: 'home', component: LandingComponent, canActivate: [AuthGuard]  }
       ]},
       { path: '**', redirectTo: '/home' }
     ]),
