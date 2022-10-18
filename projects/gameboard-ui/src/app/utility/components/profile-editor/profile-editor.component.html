@@ -1,8 +1,8 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<ng-container *ngIf="ctx$ | async as ctx">
-    
+<ng-container *ngIf="currentUser$ | async as currentUser">
+
     <div class="d-flex justify-content-end">
         <a class="btn btn-link" [routerLink]="['/', 'profile', 'certificates']">Certificates</a>
     </div>
@@ -11,46 +11,45 @@
         <h4>1. Set your display name</h4>
 
         <div>
-            Choose a <em>default</em> name for public display that is suitable for all audiences. This name will apply to <em>all new games</em>, however you can customize it during registration.
+            Choose a <em>default</em> name for public display that is suitable for all audiences. This name will apply
+            to <em>all new games</em>, however you can customize it during registration.
         </div>
         <br>
-        <!-- Confirmation popup -->
-        <!-- ng-container *ngIf="!ctx.user.nameStatus && ctx.user.name == ctx.user.approvedName">
-            <div class="alert alert-success">
-                Your name has been approved.
-            </div>
-        </ng-container -->
-        <ng-container *ngIf="ctx.user.name !== ctx.user.approvedName">
-            <ng-container *ngIf="ctx.user.nameStatus == 'pending' && ctx.user.name != disallowedName">
+
+        <ng-container *ngIf="currentUser.name !== currentUser.approvedName">
+            <ng-container *ngIf="currentUser.nameStatus == 'pending' && currentUser.name != disallowedName">
                 <div class="alert alert-info">
-                    Your name is pending approval from an administrator. Return later or select 'Refresh' to see if it's been approved.
+                    Your name is pending approval from an administrator. Return later or select 'Refresh' to see if it's
+                    been approved.
+
+                    {{currentUser.name}}
+                    {{currentUser.approvedName}}
                 </div>
             </ng-container>
-            <ng-container *ngIf="ctx.user.nameStatus && ctx.user.nameStatus != 'pending'">
+            <ng-container *ngIf="currentUser.nameStatus && currentUser.nameStatus != 'pending'">
                 <div class="alert alert-danger">
                     Your name was rejected by an administrator for the following reason:<br>
-                    <strong>{{ctx.user.nameStatus}}</strong><br>
+                    <strong>{{currentUser.nameStatus}}</strong><br>
                     Please change it and try again.
                 </div>
             </ng-container>
         </ng-container>
     </div>
+
     <div class="row">
         <div class="form-group w-25 d-inline-block">
             <label for="nameInput">Requested Display Name</label>
-            <input id="nameInput" class="form-control" [(ngModel)]="ctx.user.name" (input)="updating$.next(ctx.user)"  placeholder="display name" maxlength="64">
+            <input id="nameInput" class="form-control" [(ngModel)]="currentUser.name"
+                (input)="updateUser(currentUser, currentUser.sponsor)" placeholder="display name" maxlength="64">
         </div>
         <ng-container>
             <div class="form-group w-25 d-inline-block">
                 <label for="">Approved Display Name</label>
-                <span class="form-control bg-light text-dark">{{ctx.user.approvedName}}</span>
+                <span class="form-control bg-light text-dark">{{currentUser.approvedName}}</span>
             </div>
-            <!--div class="form-group w-25 d-inline-block">
-                <label for="">Display Name Status</label>
-                <span class="form-control bg-light text-dark">{{ctx.user.nameStatus}}</span>
-            </div-->
+
             <div class="form-group w-25 d-inline-block d-flex align-items-end">
-                <button class="btn btn-secondary" (click)="refresh(ctx.user)">
+                <button class="btn btn-secondary" (click)="refresh(currentUser)">
                     <fa-icon [icon]="faSync"></fa-icon>
                     <span>Refresh</span>
                 </button>
@@ -58,32 +57,36 @@
         </ng-container>
     </div>
 
-    <!-- hr style="border-color:white" -->
-
     <div class="w-75 d-inline-block">
         <h4>2. Select your sponsoring organization</h4>
-        
+
         <div>
-            To participate in a game, you must select your organization. This organization will display on the leaderboard alongside your name.<br>
-            If your sponsor isn't represented here, please <a [routerLink]="'/support/create'">file a support ticket</a>.
+            <p>
+                To participate in a game, you must select your organization. This organization will display on the
+                leaderboard alongside your name.
+            </p>
+            <br>
+            <p>
+                If your sponsor isn't represented here, please
+                <a [routerLink]="'/support/create'">file a support ticket</a>.
+            </p>
         </div>
 
-        <ng-container *ngIf="!ctx.user.sponsor">
+        <ng-container *ngIf="!currentUser.sponsor">
             <br>
             <div class="alert alert-warning">
-                No sponsoring organization selected. Please select an organization below.
+                You'll need to select the organization sponsoring you before you play. Choose your organization below.
             </div>
         </ng-container>
     </div>
     <br>
 
-    <ng-container *ngFor="let s of ctx.sponsors">
-        <div class="card" [class.active]="ctx.user.sponsor===s.logo" (click)="setSponsor(ctx.user, s)">
+    <ng-container *ngFor="let s of sponsors$ | async">
+        <div class="card" [class.active]="currentUser.sponsor===s.logo" (click)="updateUser(currentUser, s.logo)">
             <div class="card-body p-1">
                 <div class="card-title">{{s.name || s.id}}</div>
             </div>
             <img class="card-img-bottom" [src]="s.logoUrl" [alt]="s.id">
         </div>
     </ng-container>
-
 </ng-container>
