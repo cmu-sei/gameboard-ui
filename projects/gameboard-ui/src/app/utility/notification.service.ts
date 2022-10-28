@@ -15,7 +15,7 @@ import { UserService } from '../api/user.service';
 export class NotificationService {
 
   private connection: HubConnection;
-  private hubState: HubState = { id: '', initialized: false, connected: false, joined: false, actors: [] };
+  private hubState: HubState = { id: '', initialized: false, connected: false, joined: false, actors: []};
   private playerId$ = new Subject<string>();
   private initialActors: Actor[] = [];
 
@@ -26,7 +26,7 @@ export class NotificationService {
   challengeEvents = new Subject<HubEvent>();
   ticketEvents = new Subject<HubEvent>();
 
-  constructor (
+  constructor(
     private config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService
@@ -41,7 +41,7 @@ export class NotificationService {
     );
 
     combineLatest([authtoken$, this.playerId$]).pipe(
-      map(([token, id]) => ({ token, id }))
+      map(([token, id]) => ({token, id}))
     ).subscribe(ctx => {
       this.hubState.id = ctx.id;
       this.disconnect();
@@ -67,7 +67,7 @@ export class NotificationService {
         p.pendingName = p.userApprovedName !== p.userName
           ? p.userName
           : ''
-          ;
+        ;
         p.online = p.id === this.hubState.id;
         this.hubState.actors.push(p as Actor);
       }
@@ -127,7 +127,7 @@ export class NotificationService {
 
     connection.on('presenceEvent', (event: HubEvent) => {
       if (event.action === HubEventAction.arrived) {
-        connection.invoke('Greet');
+          connection.invoke('Greet');
       }
       this.presenceEvents.next(event);
       this.updatePresence(event);
@@ -156,20 +156,20 @@ export class NotificationService {
     }
   }
 
-  public async disconnect(): Promise<void> {
+  private async disconnect(): Promise<void> {
     try {
       if (this.connection?.state === HubConnectionState.Connected) {
         await this.connection.stop();
         this.setDisconnected();
       }
-    } finally { }
+    } finally {}
   }
 
   private async setConnected(): Promise<void> {
     this.hubState.connected = true;
     this.hubState.initialized = true;
     this.postState();
-    if (this.hubState.id) {
+    if (this.hubState.id){
       await this.joinChannel(this.hubState.id); // rejoin if was previously joined
     }
   }
@@ -184,12 +184,12 @@ export class NotificationService {
   private updatePresence(event: HubEvent): void {
 
     let actor = this.hubState.actors.find(a => a.id === event.model.id)
-      ?? { ...event.model } as Actor
-      ;
+      ?? {...event.model} as Actor
+    ;
 
     actor.userName = event.model.userName;
     actor.userApprovedName = event.model.userApprovedName;
-    actor.userNameStatus = event.model.userNameStatus;
+    actor.userNameStatus  = event.model.userNameStatus;
     actor.sponsor = event.model.sponsor;
 
     actor.online = (
@@ -200,12 +200,12 @@ export class NotificationService {
     actor.sponsorLogo = actor.sponsor
       ? `${this.config.imagehost}/${actor.sponsor}`
       : `${this.config.basehref}assets/sponsor.svg`
-      ;
+    ;
 
     actor.pendingName = actor.userApprovedName !== actor.userName
       ? actor.userName
       : ''
-      ;
+    ;
     const i = this.hubState.actors.indexOf(actor);
 
     if (
@@ -254,7 +254,8 @@ export interface Actor {
   online: boolean;
 }
 
-export enum HubEventAction {
+export enum HubEventAction
+{
   arrived = 'arrived',
   greeted = 'greeted',
   departed = 'departed',
