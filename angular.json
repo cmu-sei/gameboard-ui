@@ -81,6 +81,9 @@
               "browserTarget": "gameboard-ui:build:development"
             }
           },
+          "options": {
+            "port": 4202
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
