@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "ef9a1ffb-e346-443a-9ff0-7e10ba1da948",
+    "name": "Work",
+    "default": true,
+    "sortNum": 10000,
+    "created": "2022-10-28T18:58:47.185Z",
+    "modified": "2022-10-28T19:00:52.978Z",
+    "data": [
+      {
+        "name": "identity.api.url",
+        "value": "http://localhost:5000"
+      },
+      {
+        "name": "identity.app.url",
+        "value": "http://localhost:4200"
+      },
+      {
+        "name": "gameboard.api.url",
+        "value": "http://localhost:5002"
+      },
+      {
+        "name": "gameboard.app.url",
+        "value": "http://localhost:4202"
+      },
+      {
+        "name": "topo.api.url",
+        "value": "http://localhost:5004"
+      },
+      {
+        "name": "topo.app.url",
+        "value": "http://localhost:4204"
+      }
+    ]
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "_id": "985281a8-1f69-444b-8229-2e839a0ba0b1",
+    "colId": "history",
+    "containerId": "",
+    "name": "localhost:5000/api/resource/devimport",
+    "url": "localhost:5000/api/resource/devimport",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2022-10-28T19:01:35.950Z",
+    "modified": "2022-10-28T19:01:36.070Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\r\n    \"Apis\": [\r\n        {\r\n            \"Name\": \"dev-api\",\r\n            \"Scopes\": \"dev-api\",\r\n            \"UserClaims\": \"\"\r\n        }\r\n    ],\r\n    \"Clients\": [\r\n        {\r\n            \"Id\": \"dev-client\",\r\n            \"Secret\": \"dev-secret\",\r\n            \"GrantType\": \"client_credentials password\",\r\n            \"Scopes\": \" dev-api dev-api-admin openid profile\"\r\n        },\r\n        {\r\n            \"Id\": \"dev-code\",\r\n            \"GrantType\": \"authorization_code\",\r\n            \"Scopes\": \"dev-api openid profile\",\r\n            \"RedirectUrl\": [\r\n                \"http://localhost:4200/oidc\",\r\n                \"http://localhost:4201/oidc\",\r\n                \"http://localhost:4202/oidc\",\r\n                \"http://localhost:4204/oidc\",\r\n                \"http://localhost:4200/assets/oidc-silent.html\",\r\n                \"http://localhost:4201/assets/oidc-silent.html\",\r\n                \"http://localhost:4202/assets/oidc-silent.html\",\r\n                \"http://localhost:4204/assets/oidc-silent.html\",\r\n                \"http://localhost:5000/api/oauth2-redirect.html\",\r\n                \"http://localhost:5001/api/oauth2-redirect.html\",\r\n                \"http://localhost:5002/api/oauth2-redirect.html\",\r\n                \"http://localhost:5004/api/oauth2-redirect.html\"\r\n            ]\r\n        }\r\n    ]\r\n}",
+      "form": []
+    },
+    "tests": []
+  }
+]

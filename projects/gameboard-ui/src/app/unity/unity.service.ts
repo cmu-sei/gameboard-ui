@@ -27,6 +27,10 @@ export class UnityService {
   public async startGame(ctx: UnityDeployContext) {
     this.log("Validating context for the game...", ctx);
 
+    if (!ctx) {
+      this.reportError("UnityService can't start a game without a context.");
+    }
+
     if (!ctx.sessionExpirationTime) {
       this.reportError("Can't start the game - no session expiration time was specified.");
     }
