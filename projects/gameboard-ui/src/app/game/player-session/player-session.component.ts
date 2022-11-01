@@ -29,9 +29,8 @@ export class PlayerSessionComponent implements OnInit {
   faTrash = faTrash;
   faDot = faCircle;
 
-  constructor(
+  constructor (
     private api: PlayerService,
-    private boardApi: BoardService,
     private hub: NotificationService,
     private unityService: UnityService
   ) {
@@ -48,7 +47,7 @@ export class PlayerSessionComponent implements OnInit {
     // listen for hub session events (update / start) to keep team sync'd
     this.teamEvents$ = hub.teamEvents.pipe(
       tap(e => {
-        this.ctx.player = ({...this.ctx.player, ...e.model});
+        this.ctx.player = ({ ...this.ctx.player, ...e.model });
         this.api.transform(this.ctx.player);
         if (e.action === HubEventAction.deleted) {
           console.log(e);
@@ -76,6 +75,8 @@ export class PlayerSessionComponent implements OnInit {
       () => this.doublechecking = false
     );
   }
+
+
 
   reset(p: Player): void {
     if (this.ctx.game.mode == 'unity') {

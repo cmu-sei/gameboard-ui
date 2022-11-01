@@ -6,6 +6,8 @@ import { UnityActiveGame, UnityDeployContext } from '../unity-models';
 import { UnityService } from '../unity.service';
 import { DOCUMENT } from '@angular/common';
 import { LayoutService } from '../../utility/layout.service';
+import { ActivatedRoute } from '@angular/router';
+import { switchMap, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unity-board',
@@ -28,7 +30,8 @@ export class UnityBoardComponent implements OnInit {
     private config: ConfigService,
     private sanitizer: DomSanitizer,
     public unityService: UnityService,
-    public layoutService: LayoutService) { }
+    public layoutService: LayoutService,
+    public route: ActivatedRoute) { }
 
   ngOnDestroy(): void {
     this.layoutService.stickyMenu$.next(true);
@@ -48,7 +51,19 @@ export class UnityBoardComponent implements OnInit {
     this.unityHost = this.config.settings.unityclienthost || null;
     this.unityClientLink = this.sanitizer.bypassSecurityTrustResourceUrl(this.unityHost!);
     this.unityService.activeGame$.subscribe(game => this.unityActiveGame = game);
-    this.unityService.startGame(this.ctx);
+
+    this.route.paramMap.pipe(
+      take(1),
+      tap(params => {
+        const deployContext: UnityDeployContext = {
+          gameId: params.get("gameId")!,
+          teamId: params.get("teamId")!,
+          sessionExpirationTime: new Date(Date.parse(params.get("sessionExpirationTime")!))
+        };
+
+        this.unityService.startGame(deployContext);
+      })
+    );
 
     combineLatest([
       interval(1000),
