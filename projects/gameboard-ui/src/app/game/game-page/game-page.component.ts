@@ -23,10 +23,10 @@ export class GamePageComponent {
   showCert = false;
   faLink = faExternalLinkAlt;
   faList = faListOl;
-  faCaretDown = faCaretDown; 
+  faCaretDown = faCaretDown;
   faCaretRight = faCaretRight;
   minDate = new Date(1, 1, 1, 0, 0, 0, 0);
-  constructor(
+  constructor (
     router: Router,
     route: ActivatedRoute,
     apiGame: GameService,
@@ -47,15 +47,14 @@ export class GamePageComponent {
       local.user$
     ], asyncScheduler).pipe(
       zipAll(),
-      map(([p,u]) => ({ gid: p?.id, uid: u?.id })),
+      map(([p, u]) => ({ gid: p?.id, uid: u?.id })),
       switchMap(z => apiPlayer.list(z).pipe(
-        map(p => p.length ? p[0] : {userId: z.uid} as Player)
+        map(p => p.length ? p[0] : { userId: z.uid } as Player)
       ))
     );
 
-    this.ctx$ = combineLatest([ user$, game$, player$]).pipe(
-      map(([user, game, player]) => ({user, game, player})),
-      // tap(c => console.log(c)),
+    this.ctx$ = combineLatest([user$, game$, player$]).pipe(
+      map(([user, game, player]) => ({ user, game, player })),
       tap(c => {
         if (!c.game) { router.navigateByUrl("/"); }
       }),

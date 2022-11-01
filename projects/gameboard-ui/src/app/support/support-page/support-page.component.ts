@@ -13,7 +13,7 @@ import { UserService } from '../../utility/user.service';
 export class SupportPageComponent implements OnInit, OnDestroy {
   s: Subscription[] = [];
 
-  constructor(
+  constructor (
     private config: ConfigService,
     hub: NotificationService,
     user: UserService

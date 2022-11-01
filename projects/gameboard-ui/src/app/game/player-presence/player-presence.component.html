@@ -1,15 +1,15 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<ng-container *ngIf="hub$ | async as hub">
-
+<ng-container *ngIf="hubState$ | async as hub">
+  <div class="light-container">
+    <div class="light-spacer"></div>
+    <app-game-hub-status></app-game-hub-status>
+  </div>
   <div *ngFor="let actor of hub.actors" [class.text-muted]="!actor.online" [class.text-success]="actor.online">
     <img [src]="actor.sponsorLogo" width="48px" class="mr-2">
     <fa-icon [icon]="actor.isManager ? faStar : faDot"></fa-icon>
     <span class="mr-2">{{actor.userApprovedName}}</span>
     <small *ngIf="!!actor.pendingName" class="text-muted">({{actor.pendingName}})</small>
   </div>
-
 </ng-container>
-
-<ng-component *ngIf="team$ | async"></ng-component>

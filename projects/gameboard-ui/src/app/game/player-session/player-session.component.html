@@ -30,10 +30,17 @@
             </app-confirm-button>
           </div>
         </ng-container>
-        <img [src]="ctx.player.sponsorLogo" width="64px" class="mr-2">
-        <span class="mr-2">{{ctx.player.approvedName}}</span>
-        <small *ngIf="!!ctx.player.pendingName" class="text-muted">({{ctx.player.pendingName}})</small>
       </div>
+      <div class="team-leader">
+        <img [src]="ctx.player.sponsorLogo" width="64px" class="mr-3 team-leader-sponsor-logo">
+        <div class="mr-2 team-leader-name">
+          <p class="team-header">Team</p>
+          <p class="team-leader-name-text">{{ctx.player.approvedName}}</p>
+          <small *ngIf="!!ctx.player.pendingName" class="text-muted">({{ctx.player.pendingName}})</small>
+        </div>
+      </div>
+
+      <hr class="team-leader-divider" />
 
       <ng-container *ngIf="ctx.game.allowTeam">
         <app-player-presence [id]="ctx.player.teamId"></app-player-presence>

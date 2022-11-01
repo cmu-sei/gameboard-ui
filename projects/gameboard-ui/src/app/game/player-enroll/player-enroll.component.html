@@ -18,7 +18,7 @@
       <!-- not yet enrolled -->
       <ng-container *ngIf="!ctx.player.id">
         <div *ngIf="!ctx.user.name || !ctx.user.sponsor">
-          Ready to play? Before you do, you'll need to visit your 
+          Ready to play? Before you do, you'll need to visit your
           <a [routerLink]="['/profile']">profile</a> to...
 
           <ul class="profile-validation">
@@ -47,23 +47,27 @@
               sized team at game-open will be unable to participate.
             </p>
           </div>
+
           <!-- disclosure -->
           <div *ngIf="ctx.game.registrationMarkdown">
             <alert type="info">By enrolling in {{ctx.game.name}}, you are accepting the following terms.</alert>
             <markdown [data]="ctx.game.registrationMarkdown"></markdown>
           </div>
+
           <!-- accept -->
           <div class="text-center">
-            <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg" (confirm)="enroll(ctx.user.id, ctx.game.id)">
+            <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg"
+              (confirm)="enroll(ctx.user.id, ctx.game.id)">
               <fa-icon [icon]="faEdit"></fa-icon>
               <span>Enroll</span>
             </app-confirm-button>
-            
+
           </div>
         </ng-container>
 
         <div *ngIf="ctx.user.isRegistrar && !ctx.game.registration.isDuring" class="text-center">
-          <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg" (confirm)="enroll(ctx.user.id, ctx.game.id)">
+          <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg"
+            (confirm)="enroll(ctx.user.id, ctx.game.id)">
             <fa-icon [icon]="faEdit"></fa-icon>
             <span>Admin Enroll</span>
           </app-confirm-button>
@@ -73,36 +77,28 @@
       </ng-container>
 
       <!-- already enrolled -->
-      <ng-container
-        *ngIf="!!ctx.player.id && ctx.player.session.isBefore && ctx.game.registration.isDuring">
-
+      <ng-container *ngIf="!!ctx.player.id && ctx.player.session.isBefore && ctx.game.registration.isDuring">
         <div *ngIf="ctx.player.isManager" class="form-group mb-0">
-
-          <!-- Confirmation popup -->
-          <!-- ng-container *ngIf="!ctx.player.nameStatus && ctx.player.name == ctx.player.approvedName">
-            <div class="alert alert-success">
-                Your name has been approved.
-            </div>
-          </ng-container -->
           <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
-              <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
-                  <div class="alert alert-info">
-                      Your name is pending approval from an administrator. Return later or select 'Update' to see if it's been approved.
-                  </div>
-              </ng-container>
-              <ng-container *ngIf="ctx.player.nameStatus && ctx.player.nameStatus != 'pending'">
-                  <div class="alert alert-danger">
-                      Your name was rejected by an administrator for the following reason:<br>
-                      <strong>{{ctx.player.nameStatus}}</strong><br>
-                      Please change it and try again.
-                  </div>
-              </ng-container>
+            <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
+              <div class="alert alert-info">
+                Your name is pending approval from an administrator. Return later or select 'Update' to see if it's been
+                approved.
+              </div>
+            </ng-container>
+            <ng-container *ngIf="ctx.player.nameStatus && ctx.player.nameStatus != 'pending'">
+              <div class="alert alert-danger">
+                Your name was rejected by an administrator for the following reason:<br>
+                <strong>{{ctx.player.nameStatus}}</strong><br>
+                Please change it and try again.
+              </div>
+            </ng-container>
           </ng-container>
 
           <label for="name-input">Set {{ctx.game.maxTeamSize > 1 ? 'Team' : 'Game'}} Display Name</label>
           <div class="input-group mb-0">
-            <input id="name-input" type="text" class="form-control" [(ngModel)]="ctx.player.name" maxlength="64" autocomplete="off"
-              placeholder="display name">
+            <input id="name-input" type="text" class="form-control" [(ngModel)]="ctx.player.name" maxlength="64"
+              autocomplete="off" placeholder="display name">
             <div class="input-group-append">
               <button id="name-update-button" class="btn btn-outline-info" (click)="update(ctx.player)">
                 <span>Update</span>
@@ -121,19 +117,18 @@
             <div class="mb-2">
               <span class="lead">Manager</span>, generate an invitation for your teammates.<br />
               <small>NOTE: generating an invitation invalidates previous invitations.</small>
-            </div>
-            <button class="btn btn-outline-info mb-2" (click)="invite(ctx.player)">
-              <fa-icon [icon]="faCopy"></fa-icon>
-              <span>Generate</span>
-            </button>
-            <div class="text-center mb-2">
-              <app-clipspan *ngIf="invitation" class="mb-2">{{code}}</app-clipspan><br />
-              <!-- <app-clipspan *ngIf="invitation" class="mb-2" [text]="invitation">convenience url</app-clipspan> -->
+              <button class="btn btn-outline-info mb-2" (click)="invite(ctx.player)">
+                <fa-icon [icon]="faCopy"></fa-icon>
+                <span>Generate</span>
+              </button>
+              <div class="text-center mb-2">
+                <app-clipspan *ngIf="invitation" class="mb-2">{{code}}</app-clipspan><br />
+              </div>
             </div>
           </div>
 
 
-          <div  *ngIf="ctx.player.isManager" class="form-group d-flex flex-column">
+          <div *ngIf="ctx.player.isManager" class="form-group d-flex flex-column">
             <div class="mb-2">
               <span class="lead">Member</span>, redeem the invitation code here to team up.<br />
               <!-- <small>Or click on the convenience url if you were given one.</small> -->
