@@ -18,12 +18,11 @@ export class UnityBoardComponent implements OnInit {
   @Input('gameContext') public ctx!: UnityDeployContext;
   @ViewChild('iframe') private iframe: HTMLIFrameElement | null = null;
   @Output() public gameOver = new EventEmitter();
-  @Output() public error = new EventEmitter<string>();
 
   unityHost: string | null = null;
   unityClientLink: SafeResourceUrl | null = null;
   unityActiveGame: UnityActiveGame | null = null;
-  isError = false;
+  errors: string[] = [];
 
   constructor (
     @Inject(DOCUMENT) private document: Document,
@@ -76,7 +75,6 @@ export class UnityBoardComponent implements OnInit {
   }
 
   private handleError(error: string) {
-    this.isError = true;
-    this.error.emit(error);
+    this.errors.push(error);
   }
 }

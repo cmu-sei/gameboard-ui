@@ -6,9 +6,54 @@
 .countdown-green {
   color: rgb(0, 191, 0);
 }
+
 .countdown-yellow {
   color: rgb(236, 236, 130);
 }
+
 .countdown-red {
   color: rgb(255, 53, 53);
+}
+
+.team-leader {
+  margin: 0;
+  padding: 0;
+}
+
+.team-leader-sponsor-logo {
+  display: block;
+  min-width: 6rem;
+  object-fit: scale-down;
+  // min-height: 6rem;
+  aspect-ratio: 1 / 1;
+}
+
+.team-leader-name {
+  flex-shrink: 1;
+}
+
+.team-leader-name-text {
+  text-transform: lowercase;
+  font-size: 3rem;
+  line-height: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+hr.team-leader-divider {
+  border: solid 1px #aaaaaa;
+}
+
+.team-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #aaaaaa;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+}
+
+.team-leader {
+  display: flex;
+  flex-direction: row;
 }

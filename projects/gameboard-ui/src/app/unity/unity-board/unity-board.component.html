@@ -5,8 +5,10 @@
     </div>
 </ng-container>
 
+<app-error-div [errors]="errors"></app-error-div>
+
 <ng-template #loadingUnity>
-    <div class="loading-container">
+    <div class="loading-container" *ngIf="!errors?.length">
         <div class="flex-spacer"></div>
         <div class="loading-unity">
             <app-morphing-text></app-morphing-text>

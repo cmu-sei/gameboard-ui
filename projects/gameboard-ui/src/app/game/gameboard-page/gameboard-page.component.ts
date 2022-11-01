@@ -132,7 +132,7 @@ export class GameboardPageComponent implements OnDestroy {
 
   startHub(b: BoardPlayer): void {
     if (b.session.isDuring) {
-      this.hub.init(b.id);
+      this.hub.init(b.teamId);
     }
   }
 

@@ -1,0 +1,15 @@
+.light-container {
+    display: flex;
+
+    .light-spacer {
+        flex-grow: 1;
+    }
+
+    app-game-hub-status {
+        position: relative;
+        width: 0;
+        height: 0;
+        right: 2rem;
+        top: 0.4rem;
+    }
+}

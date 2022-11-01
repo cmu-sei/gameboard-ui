@@ -28,6 +28,7 @@ import { CertificateComponent } from './certificate/certificate.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UnityModule } from '../unity/unity.module';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
+import { GameHubStatusComponent } from './game-hub-status/game-hub-status.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { UnityBoardComponent } from '../unity/unity-board/unity-board.component'
     ScoreboardTableComponent,
     PlayerPresenceComponent,
     FeedbackFormComponent,
-    CertificateComponent
+    CertificateComponent,
+    GameHubStatusComponent
   ],
   exports: [
   ],

@@ -1,23 +1,23 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { BehaviorSubject, combineLatest, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { UserService } from '../api/user.service';
+import { Player } from '../api/player-models';
+import { UserService as CurrentUserService } from './user.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NotificationService {
 
-  private connection: HubConnection;
-  private hubState: HubState = { id: '', initialized: false, connected: false, joined: false, actors: []};
-  private playerId$ = new Subject<string>();
-  private initialActors: Actor[] = [];
+  public connection: HubConnection;
+  private hubState: HubState = { id: '', initialized: false, connected: false, joined: false, actors: [] };
+  private teamId$ = new Subject<string>();
+  private userId: string | null = null;
 
   state$ = new BehaviorSubject<HubState>(this.hubState);
   announcements = new Subject<HubEvent>();
@@ -26,13 +26,17 @@ export class NotificationService {
   challengeEvents = new Subject<HubEvent>();
   ticketEvents = new Subject<HubEvent>();
 
-  constructor(
+  private playersHere: string[] = [];
+
+  constructor (
     private config: ConfigService,
     private auth: AuthService,
-    private apiUserSvc: UserService
+    private apiUserSvc: UserService,
+    private userSvc: CurrentUserService
   ) {
 
     this.connection = this.getConnection(`${config.apphost}hub`);
+    this.userSvc.user$.pipe(take(1)).subscribe(u => this.userId = u?.id || null);
 
     // refresh connection on token refresh
     const authtoken$ = this.auth.tokenState$.pipe(
@@ -40,44 +44,60 @@ export class NotificationService {
       distinctUntilChanged()
     );
 
-    combineLatest([authtoken$, this.playerId$]).pipe(
-      map(([token, id]) => ({token, id}))
-    ).subscribe(ctx => {
-      this.hubState.id = ctx.id;
-      this.disconnect();
-      if (!!ctx.id && ctx.token === AuthTokenState.valid) {
-        this.connect();
+    combineLatest([authtoken$, this.teamId$]).pipe(
+      map(([token, id]) => ({ token, id }))
+    ).subscribe(async ctx => {
+      if (!ctx.id || ctx.token != AuthTokenState.valid) {
+        this.disconnect();
+        return;
+      }
+
+      if (ctx.id != this.hubState.id) {
+        await this.joinChannel(ctx.id);
+        this.hubState.id = ctx.id;
       }
     });
-
   }
 
-  init(id: string, preserveExisting?: boolean): void {
+  async init(id: string, preserveExisting?: boolean): Promise<void> {
     if (preserveExisting && this.hubState.connected) { return; }
-    if (this.hubState?.id !== id) {
-      this.playerId$.next(id);
+
+
+    if (!this.hubState.connected) {
+      await this.connect();
     }
+
+    console.log("HUBCONNECT: connecting to hub", id);
+    this.teamId$.next(id);
   }
 
-  initActors(players: Actor[]): void {
-    this.initialActors = players;
+  async initActors(teamId: string): Promise<void> {
+    const players: Player[] = await this.connection.invoke("ListTeam", teamId) as unknown as Player[];
+    this.hubState.actors = [];
+
     players.forEach(p => {
-      const actor = this.hubState.actors.find(a => a.id === p.id);
-      if (!actor) {
-        p.pendingName = p.userApprovedName !== p.userName
-          ? p.userName
-          : ''
-        ;
-        p.online = p.id === this.hubState.id;
-        this.hubState.actors.push(p as Actor);
-      }
+      this.addToHereIfNotPresent(p.id);
+
+      this.hubState.actors.push({
+        ...p,
+        userApprovedName: p.approvedName,
+        userName: p.name,
+        pendingName: p.userName === p.userApprovedName ? p.userName : '',
+        userNameStatus: p.nameStatus,
+        online: p.userId == this.userId || this.playersHere.indexOf(p.id) >= 0,
+        sponsorLogo: p.sponsor ?
+          `${this.config.imagehost}/${p.sponsor}`
+          : `${this.config.basehref}assets/sponsor.svg`
+      })
     });
+
+
 
     this.postState();
   }
 
-  private async joinChannel(id: string): Promise<void> {
 
+  private async joinChannel(id: string): Promise<void> {
     // prevent race if trying to join channel before connection is fully up
     if (this.connection.state !== HubConnectionState.Connected) {
       timer(1000).subscribe(() => this.joinChannel(id));
@@ -90,11 +110,13 @@ export class NotificationService {
         await this.connection.invoke('Listen', id);
         this.hubState.id = id;
         this.hubState.joined = true;
+        console.log("HUBCONNECT: joined channel", id);
+
+        await this.initActors(id);
         this.postState();
-        this.initActors(this.initialActors);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -104,13 +126,11 @@ export class NotificationService {
       this.hubState.id = '';
       this.hubState.joined = false;
       this.hubState.actors = [];
-      // this.initialActors = [];
       this.postState();
     }
   }
 
   private getConnection(url: string): HubConnection {
-
     const connection = new HubConnectionBuilder()
       .withUrl(url, {
         accessTokenFactory: () => this.getTicket(),
@@ -126,11 +146,24 @@ export class NotificationService {
     connection.onreconnected(cid => this.setConnected());
 
     connection.on('presenceEvent', (event: HubEvent) => {
-      if (event.action === HubEventAction.arrived) {
-          connection.invoke('Greet');
+      if (event.action === HubEventAction.arrived && event.model?.id != this.userId) {
+        this.connection.invoke("Greet");
       }
+
+      if (event.action === HubEventAction.arrived || event.action === HubEventAction.greeted) {
+        if (event.model?.playerId) {
+          this.addToHereIfNotPresent(event.model?.playerId);
+        }
+      }
+      else if (event.action == HubEventAction.departed || event.action == HubEventAction.deleted) {
+        if (event.model?.playerId) {
+          this.removeFromHereIfPresent(event.model.playerId);
+        }
+      }
+
+      this.initActors(this.hubState.id);
       this.presenceEvents.next(event);
-      this.updatePresence(event);
+      this.postState()
     });
 
     connection.on('teamEvent', (e: HubEvent) => this.teamEvents.next(e));
@@ -151,6 +184,7 @@ export class NotificationService {
     try {
       await this.connection.start();
       await this.setConnected();
+      this.connection.invoke("Greet");
     } catch (e) {
       timer(5000).subscribe(() => this.connect());
     }
@@ -162,15 +196,16 @@ export class NotificationService {
         await this.connection.stop();
         this.setDisconnected();
       }
-    } finally {}
+    } finally { }
   }
 
   private async setConnected(): Promise<void> {
     this.hubState.connected = true;
     this.hubState.initialized = true;
     this.postState();
-    if (this.hubState.id){
+    if (this.hubState.id) {
       await this.joinChannel(this.hubState.id); // rejoin if was previously joined
+
     }
   }
 
@@ -181,52 +216,22 @@ export class NotificationService {
     this.postState();
   }
 
-  private updatePresence(event: HubEvent): void {
-
-    let actor = this.hubState.actors.find(a => a.id === event.model.id)
-      ?? {...event.model} as Actor
-    ;
-
-    actor.userName = event.model.userName;
-    actor.userApprovedName = event.model.userApprovedName;
-    actor.userNameStatus  = event.model.userNameStatus;
-    actor.sponsor = event.model.sponsor;
-
-    actor.online = (
-      event.action === HubEventAction.arrived ||
-      event.action === HubEventAction.greeted
-    );
-
-    actor.sponsorLogo = actor.sponsor
-      ? `${this.config.imagehost}/${actor.sponsor}`
-      : `${this.config.basehref}assets/sponsor.svg`
-    ;
-
-    actor.pendingName = actor.userApprovedName !== actor.userName
-      ? actor.userName
-      : ''
-    ;
-    const i = this.hubState.actors.indexOf(actor);
-
-    if (
-      i < 0 &&
-      event.action !== HubEventAction.departed &&
-      event.action !== HubEventAction.deleted
-    ) {
-      this.hubState.actors.push(actor);
-    }
-
-    if (i >= 0 && event.action === HubEventAction.deleted) {
-      this.hubState.actors.splice(i, 1);
-    }
-
-    this.postState();
-  }
-
   private postState(): void {
     this.state$.next(this.hubState);
   }
 
+  private addToHereIfNotPresent(playerId: string) {
+    if (this.playersHere.indexOf(playerId) == -1) {
+      this.playersHere.push(playerId);
+    }
+  }
+
+  private removeFromHereIfPresent(playerId: string) {
+    const playerIndex = this.playersHere.indexOf(playerId);
+    if (playerIndex >= 0) {
+      this.playersHere.splice(playerIndex, 1);
+    }
+  }
 }
 
 export interface HubState {
@@ -254,8 +259,7 @@ export interface Actor {
   online: boolean;
 }
 
-export enum HubEventAction
-{
+export enum HubEventAction {
   arrived = 'arrived',
   greeted = 'greeted',
   departed = 'departed',
