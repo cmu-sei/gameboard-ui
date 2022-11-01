@@ -3,7 +3,9 @@
     display: inline-block;
     margin: 1rem;
     cursor: pointer;
+    transition: all 0.25s linear;
 }
+
 .active {
     background-color: lightgray;
     color: black;

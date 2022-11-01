@@ -15,7 +15,7 @@ export class UserService {
 
   url = '';
 
-  constructor(
+  constructor (
     private http: HttpClient,
     private config: ConfigService
   ) {
@@ -23,40 +23,47 @@ export class UserService {
   }
 
   public list(filter: any): Observable<ApiUser[]> {
-    return this.http.get<ApiUser[]>(this.url + '/users', {params: filter}).pipe(
+    return this.http.get<ApiUser[]>(this.url + '/users', { params: filter }).pipe(
       map(r => {
         r.forEach(u => this.transform(u));
         return r;
       })
     );
   }
+
   public retrieve(id: string): Observable<ApiUser> {
     return this.http.get<ApiUser>(`${this.url}/user/${id}`).pipe(
       map(r => this.transform(r))
     );
   }
+
   public create(model: NewUser): Observable<ApiUser> {
     return this.http.post<ApiUser>(`${this.url}/user`, model).pipe(
       map(r => this.transform(r))
     );
   }
-  public update(model: ChangedUser, disallowedName: string | null = null): Observable<any> {
+
+  public update(model: ChangedUser, disallowedName: string | null = null): Observable<ApiUser> {
     return this.http.put<any>(`${this.url}/user`, model).pipe(
       map(() => this.transform(model as ApiUser, disallowedName)),
     );
   }
+
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/user/${id}`);
   }
+
   public register(model: NewUser, authorization: string): Observable<ApiUser> {
     model.id = model.sub;
-    return this.http.post<ApiUser>(`${this.url}/user`, model, {headers: {authorization}} ).pipe(
+    return this.http.post<ApiUser>(`${this.url}/user`, model, { headers: { authorization } }).pipe(
       map(r => this.transform(r))
     );
   }
+
   public logout(): Observable<any> {
     return this.http.post<any>(`${this.url}/user/logout`, null);
   }
+
   public ticket(): Observable<any> {
     return this.http.post<any>(`${this.url}/user/ticket`, null);
   }
@@ -72,7 +79,7 @@ export class UserService {
   }
 
   private mapToTree(list: string[]): TreeNode {
-    const root: TreeNode = {name: '', path: `${this.config.apphost}doc`, folders: [], files: []};
+    const root: TreeNode = { name: '', path: `${this.config.apphost}doc`, folders: [], files: [] };
     list.forEach(f => {
       let path = f.split('/');
       path.shift();
@@ -80,9 +87,8 @@ export class UserService {
     });
     return root;
   }
-  private toNode(node: TreeNode, path: string[]): void {
-    console.log(path.join('/'));
 
+  private toNode(node: TreeNode, path: string[]): void {
     if (path.length === 1) {
       node.files.push(path[0]);
       return;
@@ -90,7 +96,7 @@ export class UserService {
     const name = path.shift() || '';
     let folder = node.folders.find(n => n.name === name);
     if (!folder) {
-      folder = {name, path: `${node.path}/${name}`, folders: [], files: []};
+      folder = { name, path: `${node.path}/${name}`, folders: [], files: [] };
       node.folders.push(folder);
     }
 
@@ -101,7 +107,7 @@ export class UserService {
     user.sponsorLogo = user.sponsor
       ? `${this.config.imagehost}/${user.sponsor}`
       : `${this.config.basehref}assets/sponsor.svg`
-    ;
+      ;
 
     // If the user has no name status but they changed their name, it's pending approval
     if (!user.nameStatus && user.approvedName !== user.name) {
@@ -115,12 +121,12 @@ export class UserService {
     user.pendingName = user.approvedName !== user.name
       ? user.name + (!!user.nameStatus ? `...${user.nameStatus}` : '...pending')
       : ''
-    ;
+      ;
 
     user.roleTag = user.role.split(', ')
       .map(a => a.substring(0, 1).toUpperCase() + (a.startsWith('d') ? a.substring(1, 2) : ''))
       .join('')
-    ;
+      ;
     return user;
   }
 }
