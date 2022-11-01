@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild, } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { combineLatest, interval } from 'rxjs';
+import { combineLatest, interval, Observable, of } from 'rxjs';
 import { ConfigService } from '../../utility/config.service';
 import { UnityActiveGame, UnityDeployContext } from '../unity-models';
 import { UnityService } from '../unity.service';
 import { DOCUMENT } from '@angular/common';
 import { LayoutService } from '../../utility/layout.service';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unity-board',
@@ -54,16 +54,16 @@ export class UnityBoardComponent implements OnInit {
 
     this.route.paramMap.pipe(
       take(1),
-      tap(params => {
-        const deployContext: UnityDeployContext = {
+      switchMap(params => {
+        return of({
           gameId: params.get("gameId")!,
           teamId: params.get("teamId")!,
           sessionExpirationTime: new Date(Date.parse(params.get("sessionExpirationTime")!))
-        };
-
-        this.unityService.startGame(deployContext);
+        }) as Observable<UnityDeployContext>;
       })
-    );
+    ).subscribe(ctx => {
+      this.unityService.startGame(ctx);
+    });
 
     combineLatest([
       interval(1000),
