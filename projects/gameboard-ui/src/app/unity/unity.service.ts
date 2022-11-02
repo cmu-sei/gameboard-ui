@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { NewUnityChallenge, UnityActiveGame, UnityDeployContext, UnityDeployResult, UnityUndeployContext } from '../unity/unity-models';
 import { LocalStorageService, StorageKey } from '../utility/local-storage.service';
+import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UnityService {
@@ -154,7 +155,9 @@ export class UnityService {
       maxPoints: ctx.maxPoints,
       gamespaceId: ctx.gamespaceId,
       vms: ctx.vms
-    });
+    }).pipe(take(1)).subscribe(result => {
+      this.log("Deployed challenge data:", result);
+    })
 
     // emit the result
     this.activeGame$.next(ctx);
