@@ -4,7 +4,7 @@
 <ng-container *ngIf="hubState$ | async as hub">
   <div class="light-container">
     <div class="light-spacer"></div>
-    <app-game-hub-status></app-game-hub-status>
+    <app-game-hub-status *ngIf="hub.actors?.length"></app-game-hub-status>
   </div>
   <div *ngFor="let actor of hub.actors" [class.text-muted]="!actor.online" [class.text-success]="actor.online">
     <img [src]="actor.sponsorLogo" width="48px" class="mr-2">

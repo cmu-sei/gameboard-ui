@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { BehaviorSubject, combineLatest, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
@@ -107,7 +107,13 @@ export class NotificationService {
     try {
       await this.leaveChannel();
       if (!!id) {
-        await this.connection.invoke('Listen', id);
+        try {
+          await this.connection.invoke('Listen', id);
+        }
+        catch (listenErr) {
+          console.error(`Error on calling "Listen":`, listenErr)
+        }
+
         this.hubState.id = id;
         this.hubState.joined = true;
         console.log("HUBCONNECT: joined channel", id);
