@@ -78,7 +78,8 @@
               "browserTarget": "gameboard-ui:build:production"
             },
             "development": {
-              "browserTarget": "gameboard-ui:build:development"
+              "browserTarget": "gameboard-ui:build:development",
+              "port": 4202
             }
           },
           "defaultConfiguration": "development"

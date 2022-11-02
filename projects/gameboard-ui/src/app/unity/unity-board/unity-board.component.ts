@@ -45,10 +45,10 @@ export class UnityBoardComponent implements OnInit {
       this.handleError(errorMessage);
     }
 
+    this.unityHost = this.config.settings.unityclienthost || null;
     this.unityService.error$.subscribe(err => this.handleError(err));
 
     this.layoutService.stickyMenu$.next(false);
-    this.unityHost = this.config.settings.unityclienthost || null;
     this.unityClientLink = this.sanitizer.bypassSecurityTrustResourceUrl(this.unityHost!);
     this.unityService.activeGame$.subscribe(game => this.unityActiveGame = game);
 

@@ -9,6 +9,7 @@ export class MorphingTextComponent implements AfterViewInit {
   @Input() cooldownTime = 4;
   @Input() morphTime = 2;
   @Input() messages: string[] = [
+    "Preparing for departure to CubeSpace...",
     "Starting preflight checks...",
     "Navigation systems: ONLINE.",
     "Propulsion systems: ONLINE.",
@@ -93,7 +94,7 @@ export class MorphingTextComponent implements AfterViewInit {
 
     if (this._cooldown <= 0) {
       if (shouldAdvanceIndex) {
-        this._textIndex = this.resolveNextIndex(this._textIndex);  
+        this._textIndex = this.resolveNextIndex(this._textIndex);
       }
 
       this.doMorph(this._textIndex);

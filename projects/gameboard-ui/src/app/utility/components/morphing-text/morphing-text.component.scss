@@ -1,8 +1,9 @@
 $font-size: 4rem;
 
-:host { 
+:host {
     display: block;
     width: 100%;
+    min-width: 100%;
 }
 
 .morphing-text-component {
