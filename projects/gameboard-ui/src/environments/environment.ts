@@ -18,7 +18,6 @@ export const environment = {
     oidc: {
       client_id: 'dev-code',
       authority: 'http://localhost:5000',
-      // authority: 'https://devid.cmusei.dev',
       redirect_uri: 'http://localhost:4202/oidc',
       silent_redirect_uri: 'http://localhost:4202/assets/oidc-silent.html',
       response_type: 'code',

@@ -1,10 +1,10 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
-import { faSync, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, combineLatest, Observable, of, scheduled, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { Component } from '@angular/core';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { asyncScheduler, Observable, scheduled, Subject } from 'rxjs';
+import { mergeAll, tap } from 'rxjs/operators';
 import { Sponsor } from '../../../api/sponsor-models';
 import { SponsorService } from '../../../api/sponsor.service';
 import { ApiUser } from '../../../api/user-models';
@@ -16,8 +16,9 @@ import { UserService } from '../../../utility/user.service';
   templateUrl: './profile-editor.component.html',
   styleUrls: ['./profile-editor.component.scss']
 })
-export class ProfileEditorComponent implements OnInit {
-  ctx$: Observable<any>;
+export class ProfileEditorComponent {
+  currentUser$: Observable<ApiUser | null>;
+  sponsors$: Observable<Sponsor[]>;
   updating$ = new Subject<ApiUser>();
   errors = [];
 
@@ -26,53 +27,49 @@ export class ProfileEditorComponent implements OnInit {
   disallowedName: string | null = null;
   disallowedReason: string | null = null;
 
-  constructor(
-    api: ApiUserService,
+  constructor (
+    private api: ApiUserService,
     private userSvc: UserService,
     sponsorSvc: SponsorService
   ) {
+    this.sponsors$ = sponsorSvc.list('');
 
-    const currentUser$ = scheduled([
-      userSvc.user$.pipe(
-        filter(u => !!u)
-      ),
-      this.updating$.pipe(
-        debounceTime(500),
-        filter(u => !!u.name.trim()),
-        tap(u => {
-          // If the user's name isn't the disallowed one, mark it as pending
-          if (u.name != this.disallowedName) u.nameStatus = "pending";
-          // Otherwise, if there is a disallowed reason as well, mark it as that reason
-          else if (this.disallowedReason) u.nameStatus = this.disallowedReason;
-        }),
-        switchMap(u => api.update(u, this.disallowedName))
-        // todo handle errors
-      )
+    this.currentUser$ = scheduled([
+      userSvc.user$,
+      this.updating$
     ], asyncScheduler).pipe(
-      mergeAll()
-    );
+      mergeAll(),
+      tap(user => {
 
-    this.ctx$ = combineLatest([
-      currentUser$,
-      sponsorSvc.list('')
-    ]).pipe(
-      map(([user, sponsors]) => ({user, sponsors})),
-      tap((us) => {
-        if (us.user.nameStatus && us.user.nameStatus != 'pending') {
+        if (user?.nameStatus && user.nameStatus != "pending") {
           if (this.disallowedName == null) {
-            this.disallowedName = us.user.name;
-            this.disallowedReason = us.user.nameStatus;
+            this.disallowedName = user.name;
+            this.disallowedReason = user.nameStatus;
           }
         }
       })
     );
+
+    this.userSvc.refresh();
   }
 
-  ngOnInit(): void {
-  }
+  async updateUser(u: ApiUser | null, sponsorLogo: string): Promise<void> {
+    if (!u) {
+      throw new Error("Can't access user to update sponsor.");
+    }
 
-  setSponsor(u: ApiUser, s: Sponsor): void {
-    this.updating$.next({...u, sponsor: s.logo});
+    if (sponsorLogo) {
+      u.sponsor = sponsorLogo;
+    }
+
+    // If the user's name isn't the disallowed one, mark it as pending
+    if (u.name != this.disallowedName) u.nameStatus = "pending";
+    // Otherwise, if there is a disallowed reason as well, mark it as that reason
+    else if (this.disallowedReason) u.nameStatus = this.disallowedReason;
+
+    // update the api
+    const updatedUser = await this.api.update(u, this.disallowedName).toPromise();
+    this.updating$.next(updatedUser);
   }
 
   refresh(u: ApiUser): void {

@@ -1,21 +1,11 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Chrome (GMUI)",
+            "name": "Debug Gameboard",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}"
-        },
-        {
-            "name": "Attach (GMUI)",
-            "type": "chrome",
-            "request": "attach",
-            "url": "http://localhost:4200",
+            "url": "http://localhost:4202",
             "webRoot": "${workspaceFolder}"
         }
     ]
