@@ -1,8 +1,3 @@
-:host {
-    display: block;
-    min-height: 80vh;
-}
-
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -21,7 +16,8 @@
 }
 
 .unity-container {
-    aspect-ratio: 16 /10;
+    aspect-ratio: 16 /10 !important;
+    max-height: 100vh;
     width: 100%;
 }
 
