@@ -57,7 +57,7 @@ import { GameHubStatusComponent } from './game-hub-status/game-hub-status.compon
     RouterModule.forChild([
       { path: 'teamup/:code', canActivate: [AuthGuard], component: PlayerEnlistComponent },
       { path: 'board/:id', canActivate: [AuthGuard], component: GameboardPageComponent },
-      { path: 'unity-board/:gameId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
+      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),

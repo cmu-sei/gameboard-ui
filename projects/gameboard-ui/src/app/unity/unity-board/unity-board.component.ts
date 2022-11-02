@@ -57,6 +57,7 @@ export class UnityBoardComponent implements OnInit {
         return of({
           gameId: params.get("gameId")!,
           teamId: params.get("teamId")!,
+          playerId: params.get("playerId")!,
           sessionExpirationTime: new Date(Date.parse(params.get("sessionExpirationTime")!))
         }) as Observable<UnityDeployContext>;
       })

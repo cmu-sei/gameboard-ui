@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { UnityActiveGame, UnityDeployContext, UnityDeployResult, UnityUndeployContext } from '../unity/unity-models';
+import { NewUnityChallenge, UnityActiveGame, UnityDeployContext, UnityDeployResult, UnityUndeployContext } from '../unity/unity-models';
 import { LocalStorageService, StorageKey } from '../utility/local-storage.service';
 
 @Injectable({ providedIn: 'root' })
@@ -59,7 +59,7 @@ export class UnityService {
 
     this.log("Checking for an active game for the context:", ctx);
     const currentGameJson = await this.getCurrentGame(ctx).toPromise();
-    this.log("This is the current game we got back:", currentGameJson);
+    this.log("Active game?:", currentGameJson);
 
     let currentGame: UnityActiveGame;
     if (typeof currentGameJson === "string") {
@@ -78,7 +78,7 @@ export class UnityService {
       this.startupExistingGame(currentGame);
     }
     else {
-      this.log("This context doesn't have an active game. This is what we got for their active game:", currentGame);
+      this.log("They don't have a current game. Let's fire one up!")
       this.launchGame(ctx);
     }
   }
@@ -111,11 +111,13 @@ export class UnityService {
     this.http.post<UnityDeployResult>(deployUrl, {}).subscribe(deployResult => {
       this.log("Deployed this ->", deployResult);
 
-      const activeGame = {
+      const activeGame: UnityActiveGame = {
         gamespaceId: deployResult.gamespaceId,
         headlessUrl: deployResult.headlessUrl,
+        maxPoints: deployResult.totalPoints,
         vms: deployResult.vms,
         gameId: ctx.gameId,
+        playerId: ctx.playerId,
         teamId: ctx.teamId,
         sessionExpirationTime: ctx.sessionExpirationTime
       };
@@ -141,6 +143,18 @@ export class UnityService {
       this.endGame(ctx);
       return;
     }
+
+    //
+    this.log(`Creating challenge data for team ${ctx.teamId}...`);
+
+    this.http.post<NewUnityChallenge>(`${this.API_ROOT}/unity/challenges`, {
+      gameId: ctx.gameId,
+      playerId: ctx.playerId,
+      teamId: ctx.teamId,
+      maxPoints: ctx.maxPoints,
+      gamespaceId: ctx.gamespaceId,
+      vms: ctx.vms
+    });
 
     // emit the result
     this.activeGame$.next(ctx);
