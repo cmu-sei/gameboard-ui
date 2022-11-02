@@ -18,7 +18,7 @@ export class MorphingTextComponent implements AfterViewInit {
     "Hardlight shields: GREEN.",
     "Cargo weight: WNL.",
     "ALL SYSTEMS: GREEN.",
-    "Daunless, you are cleared for departure."
+    "Dauntless, you are cleared for departure."
   ];
   @Input() isRandom = false;
 
