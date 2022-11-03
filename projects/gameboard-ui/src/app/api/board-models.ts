@@ -13,7 +13,7 @@ export interface Challenge {
   endTime: Date;
   lastScoreTime: Date;
   lastSyncTime: Date;
-  hasGamespaceDeployed: boolean;
+  hasDeployedGamespace: boolean;
   points: number;
   score: number;
   duration: number;
@@ -34,7 +34,7 @@ export interface ChallengeSummary {
   endTime: Date;
   lastScoreTime: Date;
   lastSyncTime: Date;
-  hasGamespaceDeployed: boolean;
+  hasDeployedGamespace: boolean;
   points: number;
   score: number;
   duration: number;

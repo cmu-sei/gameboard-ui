@@ -72,6 +72,13 @@ export class GameboardPageComponent implements OnDestroy {
       )),
       tap(b => this.ctx = b),
       tap(b => this.startHub(b)),
+      tap(b => {
+        this.unityGameContext = {
+          gameId: b.gameId,
+          teamId: b.teamId,
+          sessionExpirationTime: b.sessionEnd
+        }
+      }),
       tap(b => this.reselect())
     ).subscribe();
 

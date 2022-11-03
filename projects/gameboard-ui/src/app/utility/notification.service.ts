@@ -196,7 +196,7 @@ export class NotificationService {
     }
   }
 
-  private async disconnect(): Promise<void> {
+  public async disconnect(): Promise<void> {
     try {
       if (this.connection?.state === HubConnectionState.Connected) {
         await this.connection.stop();
