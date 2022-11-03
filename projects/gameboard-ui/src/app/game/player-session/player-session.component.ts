@@ -5,6 +5,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { faBolt, faCircle, faDotCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subscription, timer } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
+import { BoardService } from '../../api/board.service';
 import { GameContext } from '../../api/models';
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';

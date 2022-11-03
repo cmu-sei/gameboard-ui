@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Observable, of, Subscription, timer } from 'rxjs';
@@ -17,7 +17,7 @@ import { HubEventAction, NotificationService } from '../../utility/notification.
   templateUrl: './player-enroll.component.html',
   styleUrls: ['./player-enroll.component.scss']
 })
-export class PlayerEnrollComponent implements OnInit {
+export class PlayerEnrollComponent {
   @Input() ctx!: GameContext;
   errors: any[] = [];
   code = '';

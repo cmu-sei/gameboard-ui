@@ -8,7 +8,7 @@ $font-size: 4rem;
 
 .morphing-text-component {
     display: flex;
-    font-family: Raleway 'sans-serif';
+    font-family: 'Source Code Pro', 'Raleway', 'Lucida Console', monospace;
 }
 
 svg {
@@ -25,7 +25,7 @@ svg {
 
 #text1,
 #text2 {
-    font-family: 'Source Code Pro', 'Lucida Console', monospace;
+    font-family: 'Source Code Pro', 'Raleway', 'Lucida Console', monospace;
     color: white;
     position: absolute;
     width: 100%;
