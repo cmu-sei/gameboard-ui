@@ -8,7 +8,6 @@ $font-size: 4rem;
 
 .morphing-text-component {
     display: flex;
-    font-family: 'Source Code Pro', 'Raleway', 'Lucida Console', monospace;
 }
 
 svg {
@@ -23,16 +22,18 @@ svg {
     filter: url(#threshold) blur(0.6px);
 }
 
-#text1,
-#text2 {
-    font-family: 'Source Code Pro', 'Raleway', 'Lucida Console', monospace;
-    color: white;
+.morphing-text {
+    font-family: 'Source Code Pro', monospace;
+    // color: white;
     position: absolute;
     width: 100%;
     display: inline-block;
-    font-family: "Lucida Console", monospace;
     font-size: $font-size;
     line-height: $font-size;
     text-align: center;
     user-select: none;
+
+    strong {
+        color: #1eb4d6;
+    }
 }

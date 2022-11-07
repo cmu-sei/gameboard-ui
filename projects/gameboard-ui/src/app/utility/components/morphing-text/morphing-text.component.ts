@@ -1,26 +1,33 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, SecurityContext, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MarkdownService } from 'ngx-markdown';
 
 @Component({
   selector: 'app-morphing-text',
   templateUrl: './morphing-text.component.html',
-  styleUrls: ['./morphing-text.component.scss']
+  styleUrls: ['./morphing-text.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MorphingTextComponent implements AfterViewInit {
   @Input() cooldownTime = 4;
   @Input() morphTime = 2;
   @Input() messages: string[] = [
-    "Preparing for departure to CubeSpace...",
+    "Preparing for departure to Cubespace...",
     "Starting preflight checks...",
-    "Navigation systems: ONLINE.",
-    "Propulsion systems: ONLINE.",
-    "Fuel reserves: NOMINAL.",
-    "Weapons systems: GREEN.",
-    "Hardlight shields: GREEN.",
-    "Cargo weight: WNL.",
-    "ALL SYSTEMS: GREEN.",
+    "Navigation systems: **ONLINE**.",
+    "Propulsion systems: **ONLINE**.",
+    "Fuel reserves: **NOMINAL**.",
+    "Weapons systems: **OPERATIONAL**.",
+    "Hardlight shields: **MAXIMUM STRENGTH**.",
+    "Cargo weight: **WNL**.",
+    "ALL SYSTEMS: **GO**.",
     "Dauntless, you are cleared for departure."
   ];
+  @Input() emphasisExpression = /[A-Z]/g
   @Input() isRandom = false;
+
+  public text1Content: SafeHtml = "";
+  public text2Content: SafeHtml = ""
 
   @ViewChild("text1") text1!: ElementRef<HTMLSpanElement>;
   @ViewChild("text2") text2!: ElementRef<HTMLSpanElement>;
@@ -29,6 +36,10 @@ export class MorphingTextComponent implements AfterViewInit {
   private _morph = 0;
   private _referenceTime = new Date();
   private _textIndex = this.messages.length - 1;
+
+  constructor (
+    private markdown: MarkdownService,
+    private sanitizer: DomSanitizer) { }
 
   ngAfterViewInit(): void {
     this.updateTextContent(this._textIndex % this.messages.length, (this._textIndex + 1) % this.messages.length);
@@ -60,8 +71,8 @@ export class MorphingTextComponent implements AfterViewInit {
   }
 
   private updateTextContent(index: number, nextIndex: number) {
-    this.text1.nativeElement.textContent = this.messages[index % this.messages.length];
-    this.text2.nativeElement.textContent = this.messages[nextIndex % this.messages.length];
+    this.text1Content = this.renderTextContent(this.messages[index % this.messages.length]);
+    this.text2Content = this.renderTextContent(this.messages[nextIndex % this.messages.length]);
   }
 
   private doCooldown() {
@@ -102,5 +113,13 @@ export class MorphingTextComponent implements AfterViewInit {
     else {
       this.doCooldown();
     }
+  }
+
+  private renderTextContent(text: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(
+      this.markdown.parse(
+        this.sanitizer.sanitize(SecurityContext.HTML, text) || ""
+      )
+    );
   }
 }
