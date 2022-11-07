@@ -1,29 +1,28 @@
-.component-container {
+.loading-container {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 50px);
+    align-items: center;
+    min-height: 70vh;
+    width: 100%;
+}
+
+.loading-unity {
+    width: 100%;
 }
 
 .flex-spacer {
-    flex: 1 1 0;
+    flex-grow: 1;
+    width: 100%;
 }
 
 .unity-container {
     aspect-ratio: 16 /10 !important;
-    display: flex;
     max-height: 100vh;
     width: 100%;
 }
 
 iframe {
     height: 100%;
-    width: 100%;
-}
-
-app-morphing-text {
-    // display: block;
-    // flex: 0 0 auto;
-    min-height: 30vh;
     width: 100%;
 }
 
@@ -34,8 +33,8 @@ app-morphing-text {
     text-transform: uppercase;
     font-size: 0.8rem;
     text-align: center;
+}
 
-    p {
-        margin: 0;
-    }
+.connecting-to-launch-p {
+    margin: 0;
 }

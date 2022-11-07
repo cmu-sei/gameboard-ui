@@ -1,24 +1,23 @@
-<div class="component-container">
-    <div class="flex-spacer"></div>
+<ng-container *ngIf="unityActiveGame; else loadingUnity">
+    <div class="unity-container">
+        <iframe [src]="unityClientLink" id="unity-game-window" title="Unity Game Window" frameborder="0"
+            scrolling="no"></iframe>
+    </div>
+</ng-container>
 
-    <ng-template *ngIf="unityActiveGame; else loadingUnity">
-        <div class="unity-container">
-            <iframe [src]="unityClientLink" id="unity-game-window" title="Unity Game Window" frameborder="0"
-                scrolling="no"></iframe>
+<app-error-div [errors]="errors"></app-error-div>
+
+<ng-template #loadingUnity>
+    <div class="loading-container" *ngIf="!errors?.length">
+        <div class="flex-spacer"></div>
+        <div class="loading-unity">
+            <app-morphing-text></app-morphing-text>
         </div>
-    </ng-template>
+        <div class="flex-spacer"></div>
+    </div>
 
-    <ng-template #loadingUnity>
-        <div class="loading-container">
-            <app-error-div [errors]="errors"></app-error-div>
-            <app-morphing-text *ngIf="!errors.length"></app-morphing-text>
-        </div>
-
-        <div class="connecting-to-host">
-            <p><strong>Connecting to launch control at</strong></p>
-            <p>{{ unityHost }}</p>
-        </div>
-    </ng-template>
-
-    <div class="flex-spacer"></div>
-</div>
+    <div class="connecting-to-host">
+        <p class="connecting-to-launch-p"><strong>Connecting to launch control at</strong></p>
+        <p>{{ unityHost }}</p>
+    </div>
+</ng-template>
