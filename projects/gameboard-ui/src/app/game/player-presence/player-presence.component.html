@@ -7,7 +7,7 @@
     <app-game-hub-status *ngIf="hub.actors?.length"></app-game-hub-status>
   </div>
   <div *ngFor="let actor of hub.actors" [class.text-muted]="!actor.online" [class.text-success]="actor.online">
-    <img [src]="actor.sponsorLogo" width="48px" class="mr-2">
+    <img [src]="actor.sponsorLogo" class="avatar mr-2">
     <fa-icon [icon]="actor.isManager ? faStar : faDot"></fa-icon>
     <span class="mr-2">{{actor.userApprovedName}}</span>
     <small *ngIf="!!actor.pendingName" class="text-muted">({{actor.pendingName}})</small>
