@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild, } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { combineLatest, interval, Observable, of } from 'rxjs';
 import { ConfigService } from '../../utility/config.service';
 import { UnityActiveGame, UnityDeployContext } from '../unity-models';
 import { UnityService } from '../unity.service';
-import { DOCUMENT } from '@angular/common';
 import { LayoutService } from '../../utility/layout.service';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap, take } from 'rxjs/operators';
@@ -14,9 +13,9 @@ import { switchMap, take } from 'rxjs/operators';
   templateUrl: './unity-board.component.html',
   styleUrls: ['./unity-board.component.scss']
 })
-export class UnityBoardComponent implements OnInit {
+export class UnityBoardComponent implements OnInit, AfterViewInit {
   @Input('gameContext') public ctx!: UnityDeployContext;
-  @ViewChild('iframe') private iframe: HTMLIFrameElement | null = null;
+  @ViewChild("componentContainer") componentContainer!: ElementRef<HTMLDivElement>;
   @Output() public gameOver = new EventEmitter();
 
   unityHost: string | null = null;
@@ -25,7 +24,6 @@ export class UnityBoardComponent implements OnInit {
   errors: string[] = [];
 
   constructor (
-    @Inject(DOCUMENT) private document: Document,
     private config: ConfigService,
     private sanitizer: DomSanitizer,
     public unityService: UnityService,
@@ -73,6 +71,14 @@ export class UnityBoardComponent implements OnInit {
         alert("The game's over! What's supposed to happen now?");
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    // TODO: longterm, revisit layout concerns
+    console.log("set this", `calc(100vh - ${this.layoutService.getNavHeight()}px)`);
+    this.componentContainer.nativeElement.style.minHeight = `calc(100vh - ${this.layoutService.getNavHeight()})`;
+    this.componentContainer.nativeElement.style.height = `calc(100vh - ${this.layoutService.getNavHeight()})`;
+    console.log("see?", this.componentContainer.nativeElement.style.minHeight);
   }
 
   private handleError(error: string) {
