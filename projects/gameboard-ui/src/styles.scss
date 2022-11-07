@@ -44,7 +44,8 @@
 
 @import './scss/bootswatch';
 
-@each $color, $value in $theme-colors {
+@each $color,
+$value in $theme-colors {
   .pop-#{$color} {
     background-color: theme-color-level($color, -8);
     color: $dark;
@@ -53,36 +54,58 @@
   }
 }
 
+body {
+  min-height: 100vh;
+}
+
 nav {
   background-color: $body-bg;
 }
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
 .reader-slim {
   max-width: 600px;
   margin: 0 auto;
 }
+
 .reader {
   max-width: 800px;
   margin: 0 auto;
   // margin: auto;
 }
+
 .fs-15 {
   font-size: 1.5em;
 }
+
 .fs-20 {
   font-size: 2em;
 }
+
 .auto-h {
   height: auto;
 }
-fa-icon + span {
+
+fa-icon+span {
   margin-left: 4px;
 }
-h1,h2,h3,h4,h5 {
+
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-weight: 300;
 }
+
 .spacer {
   flex: 1;
 }
+
 // .img-fluid {
 //   max-height: 600px;
 //   max-width: 600px;
@@ -92,35 +115,46 @@ h1,h2,h3,h4,h5 {
   min-width: 240px;
   margin: 0;
 }
+
 .form-group {
   padding: 1.5rem;
   margin-bottom: .5rem;
   border-radius: .25rem;
 }
-.form-group > .form-control {
-  font-size: .875rem!important;
+
+.form-group>.form-control {
+  font-size: .875rem !important;
   padding: .25rem .5rem !important;
 }
-.form-group > label {
+
+.form-group>label {
   font-size: .875rem !important;
 }
-.untack > svg {
+
+.untack>svg {
   transform: rotate(45deg);
 }
+
 .jambotron {
   margin: 6rem auto;
 }
+
 .alert {
   margin-bottom: .25rem !important;
 }
+
 app-spinner svg {
-  rect,path {
+
+  rect,
+  path {
     fill: theme-color("success");
   }
 }
+
 .grayText {
   color: #767676;
 }
+
 .text-black {
   color: black;
 }
@@ -129,15 +163,19 @@ app-spinner svg {
 .light-tooltip.bs-tooltip-top .tooltip-arrow::before {
   border-top-color: white;
 }
+
 .light-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
   border-bottom-color: white;
 }
+
 .light-tooltip.bs-tooltip-right .tooltip-arrow::before {
   border-right-color: white;
 }
+
 .light-tooltip.bs-tooltip-left .tooltip-arrow::before {
   border-left-color: white;
 }
+
 .light-tooltip .tooltip-inner {
   background-color: white;
   color: black;
@@ -146,18 +184,23 @@ app-spinner svg {
 .custom-bg-red {
   background-color: #422;
 }
+
 .custom-bg-orange {
   background-color: #431;
 }
+
 .custom-bg-yellow {
   background-color: #442;
 }
+
 .custom-bg-green {
   background-color: #1c3417;
 }
+
 .custom-bg-blue {
   background-color: #183248;
 }
+
 .custom-bg-purple {
   background-color: #424;
 }

@@ -1,28 +1,29 @@
-.loading-container {
+.component-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 70vh;
-    width: 100%;
-}
-
-.loading-unity {
-    width: 100%;
+    min-height: calc(100vh - 50px);
 }
 
 .flex-spacer {
-    flex-grow: 1;
-    width: 100%;
+    flex: 1 1 0;
 }
 
 .unity-container {
     aspect-ratio: 16 /10 !important;
+    display: flex;
     max-height: 100vh;
     width: 100%;
 }
 
 iframe {
     height: 100%;
+    width: 100%;
+}
+
+app-morphing-text {
+    // display: block;
+    // flex: 0 0 auto;
+    min-height: 30vh;
     width: 100%;
 }
 
@@ -33,8 +34,8 @@ iframe {
     text-transform: uppercase;
     font-size: 0.8rem;
     text-align: center;
-}
 
-.connecting-to-launch-p {
-    margin: 0;
+    p {
+        margin: 0;
+    }
 }
