@@ -110,7 +110,8 @@
 
             <markdown [data]="spec.instance!.state.markdown ||''"></markdown>
 
-            <markdown [data]="spec.instance!.state.challenge.text || ''"></markdown>
+            <markdown *ngIf="spec.instance?.state?.challenge" [data]="spec.instance!.state.challenge.text || ''">
+            </markdown>
 
             <ng-container *ngIf="!!spec.instance!.state && spec.instance!.state.isActive">
               <h3>Gamespace Resources</h3>
