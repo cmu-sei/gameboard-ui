@@ -1,6 +1,7 @@
 nav {
   top: 0px;
   left: 0px;
+  position: sticky;
 
   &.nonsticky {
     position: unset;

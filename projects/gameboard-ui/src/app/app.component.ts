@@ -36,7 +36,7 @@ export class AppComponent {
 
     this.custom_bg = this.config.settings.custom_background || "";
     if (this.custom_bg) {
-      document.getElementsByTagName('body')[0].classList.add(this.custom_bg);
+      this.document.getElementsByTagName('body')[0].classList.add(this.custom_bg);
     }
   }
 
