@@ -79,7 +79,7 @@ export class PlayerSessionComponent implements OnInit {
 
   reset(p: Player): void {
     if (this.ctx.game.mode == 'unity') {
-      this.unityService.undeployGame({ gameId: p.gameId, teamId: p.teamId }).pipe(
+      this.unityService.undeployGame({ ctx: { gameId: p.gameId, teamId: p.teamId } }).pipe(
         tap(() => this.api.delete(p.id).subscribe(() => {
           window.location.reload();
         }))

@@ -170,7 +170,8 @@ export class PlayerRegistrarComponent implements OnInit {
   }
 
   undeploy(model: Player): void {
-    this.unityService.undeployGame({ gameId: model.gameId, teamId: model.teamId })
+    this.unityService
+      .undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true })
       .subscribe(result => console.log("Undeploy result: ", result));
   }
 
