@@ -14,8 +14,8 @@ export class MorphingTextComponent implements AfterViewInit {
     "Navigation systems: ONLINE.",
     "Propulsion systems: ONLINE.",
     "Fuel reserves: NOMINAL.",
-    "Weapons systems: GREEN.",
-    "Hardlight shields: GREEN.",
+    "Planetary scanning array: 5x5",
+    "External stabilizers: STABLE",
     "Cargo weight: WNL.",
     "ALL SYSTEMS: GREEN.",
     "Dauntless, you are cleared for departure."
