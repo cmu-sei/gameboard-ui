@@ -34,6 +34,13 @@ export interface UnityGameVM {
     Name: string;
 }
 
+export interface GamebrainActiveGame {
+    gamespaceId: string;
+    headlessUrl: string;
+    vms: UnityGameVM[];
+    totalPoints: number;
+}
+
 export interface NewUnityChallenge {
     gameId: string,
     playerId: string,

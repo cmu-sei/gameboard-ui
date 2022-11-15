@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { NewUnityChallenge, UnityActiveGame, UnityDeployContext, UnityDeployResult, UnityUndeployContext } from '../unity/unity-models';
+import { GamebrainActiveGame, NewUnityChallenge, UnityActiveGame, UnityDeployContext, UnityDeployResult, UnityUndeployContext } from '../unity/unity-models';
 import { LocalStorageService, StorageKey } from '../utility/local-storage.service';
 import { first, map } from 'rxjs/operators';
 
@@ -15,7 +15,6 @@ export class UnityService {
   activeGame$ = new Subject<UnityActiveGame>();
   gameOver$ = new Observable();
   error$ = new Subject<any>();
-
 
   constructor (
     private config: ConfigService,
@@ -32,17 +31,26 @@ export class UnityService {
     this.validateDeployContext(ctx);
 
     this.log("Checking for an active game for the context:", ctx);
-    const currentGame = await this.getCurrentGame(ctx).toPromise();
-    this.log("Active game?:", currentGame)
+    const currentGamebrainData = await this.getCurrentGame(ctx).toPromise();
+    this.log("Active game?:", currentGamebrainData)
 
-    this.log("Checking current game for validity...", currentGame);
-    if (currentGame.gamespaceId) {
-      this.log("It's valid. Starting up existing game.", currentGame);
-      this.startupExistingGame(currentGame);
+    this.log("Checking current game for validity...", currentGamebrainData);
+    if (this.isValidActiveGame(currentGamebrainData)) {
+      const activeGame: UnityActiveGame = {
+        ...currentGamebrainData,
+        gameId: ctx.gameId,
+        teamId: ctx.teamId,
+        playerId: ctx.playerId,
+        maxPoints: currentGamebrainData.totalPoints,
+        sessionExpirationTime: ctx.sessionExpirationTime
+      };
+
+      this.log("It's valid. Augmenting Gamebrain data with data from  the deploy context... ", activeGame);
+      this.startupExistingGame(activeGame);
     }
     else {
       this.log("They don't have a current game. Let's fire one up!")
-      this.launchGame(ctx);
+      this.launchNewGame(ctx);
     }
   }
 
@@ -101,7 +109,7 @@ export class UnityService {
     return `unityChallenge:${teamId}`;
   }
 
-  private launchGame(ctx: UnityDeployContext) {
+  private launchNewGame(ctx: UnityDeployContext) {
     const deployUrl = `${this.API_ROOT}/unity/deploy/${ctx.gameId}/${ctx.teamId}`;
     this.log("Launching a new game at", deployUrl);
 
@@ -126,10 +134,11 @@ export class UnityService {
 
   private startupExistingGame(ctx: UnityActiveGame) {
     try {
+      this.log("Starting up existing game...");
       this.log("Starting pre-launch validation. The active game to run in the client is ->", ctx);
 
       // validation - did we make it?
-      if (!this.isValidActiveGame(ctx)) {
+      if (!this.isValidActiveGame({ ...ctx, totalPoints: ctx.maxPoints })) {
         this.reportError(`Couldn't resolve the deploy result for team ${ctx.teamId}. No gamespaces available.\n\nContext: ${JSON.stringify(ctx)}`, ctx.teamId);
       }
 
@@ -168,15 +177,15 @@ export class UnityService {
     this.log("Game is active. Booting Unity client!", ctx);
   }
 
-  private getCurrentGame(ctx: UnityDeployContext): Observable<UnityActiveGame> {
+  private getCurrentGame(ctx: UnityDeployContext): Observable<GamebrainActiveGame> {
     // this comes back as JSON, so we have to parse it into a real object
     return this.http.get<string>(`${this.API_ROOT}/unity/${ctx.gameId}/${ctx.teamId}`).pipe(
       first(),
-      map(gameJson => JSON.parse(gameJson) as UnityActiveGame)
+      map(gameJson => JSON.parse(gameJson) as GamebrainActiveGame)
     );
   }
 
-  private isValidActiveGame = (game: UnityActiveGame) => game.gamespaceId;
+  private isValidActiveGame = (game: GamebrainActiveGame) => game.gamespaceId;
 
   private log(...messages: (string | any)[]) {
     if (this.VERBOSE) {
