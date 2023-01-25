@@ -20,11 +20,19 @@
 
   <app-announce [teamId]="team.teamId"></app-announce>
 
-  <button class="btn btn-info btn-sm" (click)="showRaw=!showRaw">
-    <fa-icon [icon]="faInfo"></fa-icon>
-    <span>Data</span>
-  </button>
-  <pre *ngIf="showRaw">{{team | yaml}}</pre>
+  <div class="yaml-container">
+    <button class="btn btn-info btn-sm" (click)="toggleRawView(!showRaw)">
+      <fa-icon [icon]="faInfo"></fa-icon>
+      <span>Data</span>
+    </button>
+
+    <ng-template *ngIf="isLoadingChallenges">
+      <div class="text-center">
+        <app-spinner></app-spinner>
+      </div>
+    </ng-template>
+    <app-yaml-block *ngIf="showRaw && !isLoadingChallenges" [source]="team"></app-yaml-block>
+  </div>
 </ng-container>
 
 <ng-template #loading>

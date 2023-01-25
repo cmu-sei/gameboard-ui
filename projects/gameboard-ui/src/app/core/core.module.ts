@@ -6,26 +6,29 @@ import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
 import { PlayerAvatarComponent } from './components/player-avatar/player-avatar.component';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { PlayerAvatarListComponent } from './components/player-avatar-list/player-avatar-list.component';
+import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
+import { YamlPipe } from './pipes/yaml.pipe';
+
+const PUBLIC_DECLARATIONS = [
+  LinkifyHtmlPipe,
+  LongContentHiderComponent,
+  PlayerAvatarComponent,
+  PlayerAvatarListComponent,
+  RelativeUrlsPipe,
+  UrlRewritePipe,
+  YamlBlockComponent,
+  YamlPipe
+];
 
 @NgModule({
   declarations: [
-    LinkifyHtmlPipe,
-    LongContentHiderComponent,
-    PlayerAvatarComponent,
-    RelativeUrlsPipe,
-    UrlRewritePipe,
-    PlayerAvatarListComponent
+    ...PUBLIC_DECLARATIONS
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    LinkifyHtmlPipe,
-    RelativeUrlsPipe,
-    UrlRewritePipe,
-    LongContentHiderComponent,
-    PlayerAvatarComponent,
-    PlayerAvatarListComponent
+    ...PUBLIC_DECLARATIONS
   ]
 })
 export class CoreModule { }

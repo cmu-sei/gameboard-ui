@@ -4,7 +4,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { first, tap } from 'rxjs/operators';
 import { Team } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 
@@ -22,7 +22,9 @@ export class PlayerSessionComponent implements OnInit {
   faInfo = faInfoCircle;
   errors: any[] = [];
 
-  constructor (
+  protected isLoadingChallenges = false;
+
+  constructor(
     private api: PlayerService
   ) { }
 
@@ -40,5 +42,19 @@ export class PlayerSessionComponent implements OnInit {
       () => { },
       (err) => this.errors.push(err)
     );
+  }
+
+  toggleRawView(isExpanding: boolean): void {
+    if (isExpanding) {
+      this.team.challenges = [];
+      this.isLoadingChallenges = true;
+
+      this.api.getTeamChallenges(this.team.teamId)
+        .pipe(first())
+        .subscribe(c => {
+          this.team.challenges = c;
+          this.isLoadingChallenges = false;
+        });
+    }
   }
 }

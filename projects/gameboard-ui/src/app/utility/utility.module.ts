@@ -20,7 +20,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { GameCardComponent } from './components/game-card/game-card.component';
-import { YamlPipe } from './pipes/yaml.pipe';
 import { LoginComponent } from './components/login/login.component';
 import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
@@ -61,7 +60,6 @@ const components = [
   ShortDatePipe,
   ShortTimePipe,
   UntagPipe,
-  YamlPipe,
   ClockPipe,
   FriendlyTimePipe,
   SafeUrlPipe,
