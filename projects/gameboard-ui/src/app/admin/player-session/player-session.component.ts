@@ -56,5 +56,7 @@ export class PlayerSessionComponent implements OnInit {
           this.isLoadingChallenges = false;
         });
     }
+
+    this.showRaw = isExpanding;
   }
 }

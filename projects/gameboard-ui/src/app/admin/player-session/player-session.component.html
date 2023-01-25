@@ -2,7 +2,6 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <ng-container *ngIf="team$ | async as team; else loading">
-
   <div class="form-group">
     <label class="mb-0" for="reason-input">Extend Session</label>
     <div class="input-group">
@@ -20,10 +19,10 @@
 
   <app-announce [teamId]="team.teamId"></app-announce>
 
-  <div class="yaml-container">
-    <button class="btn btn-info btn-sm" (click)="toggleRawView(!showRaw)">
+  <div class="yaml-container mt-4 ml-4 pb-4">
+    <button class="btn btn-info btn-sm d-block mb-4" (click)="toggleRawView(!showRaw)">
       <fa-icon [icon]="faInfo"></fa-icon>
-      <span>Data</span>
+      <span>{{ (showRaw ? "Hide" : "View") }} Data</span>
     </button>
 
     <ng-template *ngIf="isLoadingChallenges">
