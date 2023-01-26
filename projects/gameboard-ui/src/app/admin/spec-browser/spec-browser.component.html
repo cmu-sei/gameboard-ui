@@ -9,15 +9,9 @@
       <span>Search</span>
     </span>
   </div>
-  <input
-    id="search-input"
-    type="search"
-    class="form-control"
-    [(ngModel)]="search.term"
-    (input)="typing($event)"
-    aria-label="search term"
-    aria-describedby="search-label"
-  />
+  <input id="search-input" type="search" class="form-control"
+    [(ngModel)]="search.term" (input)="typing($event)"
+    aria-label="search term" aria-describedby="search-label">
 </div>
 
 <!-- filters -->
