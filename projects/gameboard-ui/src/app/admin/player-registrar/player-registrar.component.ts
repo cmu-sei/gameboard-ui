@@ -163,7 +163,6 @@ export class PlayerRegistrarComponent {
         );
       }
     });
-
   }
 
   undeploy(model: Player): void {

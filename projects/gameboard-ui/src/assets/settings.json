@@ -1,0 +1,19 @@
+{
+    "appname": "Gameboard",
+    "apphost": "http://localhost:5202",
+    "mkshost": "",
+    "oidc": {
+        "client_id": "gameboard-ui-dev",
+        "authority": "https://foundry.local/identity",
+        "redirect_uri": "http://localhost:4202/oidc",
+        "silent_redirect_uri": "http://localhost:4202/oidc-silent.html",
+        "response_type": "code",
+        "scope": "openid profile organization gameboard-api",
+        "monitorSession": true,
+        "automaticSilentRenew": true,
+        "loadUserInfo": true,
+        "checkSessionInterval": 30000,
+        "useLocalStorage": true,
+        "accessTokenExpiringNotificationTime": 120
+    }
+}

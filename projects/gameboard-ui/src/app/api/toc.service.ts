@@ -20,6 +20,13 @@ export class TocService {
     private http: HttpClient,
     private config: ConfigService
   ) {
+
+    if (!config.tochost || !config.settings.tocfile) {
+      this.toc$ = of([]);
+      this.tocfile$ = (id: string) => of("");
+      return;
+    }
+
     const tag = `?t=${new Date().valueOf()}`;
     const tocUrl = `${config.tochost}/${config.settings.tocfile + ''}${tag}`;
     let url = config.tochost;
@@ -54,7 +61,7 @@ export class TocService {
       }
       return this.http.get(
         `${url}/${tocfile?.filename}${tag}`,
-        { responseType: 'text'}
+        { responseType: 'text' }
       ).pipe(
         tap(t => tocfile.text = t)
       );

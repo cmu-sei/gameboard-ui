@@ -9,7 +9,6 @@ import { TocFile, TocService } from './api/toc.service';
 import { ApiUser } from './api/user-models';
 import { ConfigService } from './utility/config.service';
 import { LayoutService } from './utility/layout.service';
-import { ClipboardService } from './utility/services/clipboard.service';
 import { UserService } from './utility/user.service';
 
 @Component({
@@ -23,7 +22,7 @@ export class AppComponent {
   custom_bg = "";
   env: any;
 
-  constructor (
+  constructor(
     private usersvc: UserService,
     private config: ConfigService,
     public layoutService: LayoutService,

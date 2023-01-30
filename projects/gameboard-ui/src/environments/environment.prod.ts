@@ -10,6 +10,6 @@ export const environment = {
     supporthost: '',
     // unityclienthost: '',
     custom_background: '',
-    oidc: {}
+    oidc: {},
   }
 };

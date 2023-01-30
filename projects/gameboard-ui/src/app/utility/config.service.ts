@@ -37,11 +37,9 @@ export class ConfigService {
   }
 
   embeddedMonacoOptions = {
-    // theme: this.codeTheme,
     language: 'markdown',
     lineNumbers: 'off',
     minimap: { enabled: false },
-    // scrollbar: { vertical: 'visible' },
     quickSuggestions: false,
     wordWrap: 'on',
     scrollBeyondLastLine: false,
