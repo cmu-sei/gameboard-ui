@@ -204,6 +204,7 @@ export interface TeamState {
   approvedName: string;
   sessionBegin: Date;
   sessionEnd: Date;
+  actor: { userId: string };
 }
 
 export interface TeamSummary {

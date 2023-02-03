@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UserManagerSettings } from 'oidc-client';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Location, PlatformLocation } from '@angular/common';
 import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
@@ -37,11 +37,9 @@ export class ConfigService {
   }
 
   embeddedMonacoOptions = {
-    // theme: this.codeTheme,
     language: 'markdown',
     lineNumbers: 'off',
     minimap: { enabled: false },
-    // scrollbar: { vertical: 'visible' },
     quickSuggestions: false,
     wordWrap: 'on',
     scrollBeyondLastLine: false,

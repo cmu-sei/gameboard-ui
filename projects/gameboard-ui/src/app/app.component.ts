@@ -2,14 +2,13 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { TocFile, TocService } from './api/toc.service';
 import { ApiUser } from './api/user-models';
 import { ConfigService } from './utility/config.service';
 import { LayoutService } from './utility/layout.service';
-import { ClipboardService } from './utility/services/clipboard.service';
 import { UserService } from './utility/user.service';
 
 @Component({
@@ -17,23 +16,25 @@ import { UserService } from './utility/user.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  user$: Observable<ApiUser | null>;
-  toc$: Observable<TocFile[]>;
+export class AppComponent implements OnInit {
+  user$!: Observable<ApiUser | null>;
+  toc$!: Observable<TocFile[]>;
   custom_bg = "";
   env: any;
 
-  constructor (
+  constructor(
     private usersvc: UserService,
     private config: ConfigService,
     public layoutService: LayoutService,
     @Inject(DOCUMENT) private document: Document,
-    toc: TocService,
-    title: Title
-  ) {
-    this.user$ = usersvc.user$;
-    this.toc$ = toc.toc$;
-    title.setTitle(this.config.settings.appname || 'Gameboard');
+    private toc: TocService,
+    private title: Title
+  ) { }
+
+  ngOnInit(): void {
+    this.user$ = this.usersvc.user$;
+    this.toc$ = this.toc.toc$;
+    this.title.setTitle(this.config.settings.appname || 'Gameboard');
 
     this.custom_bg = this.config.settings.custom_background || "";
     if (this.custom_bg) {

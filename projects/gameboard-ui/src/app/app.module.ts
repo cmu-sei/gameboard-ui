@@ -34,10 +34,10 @@ import { CoreModule } from './core/core.module';
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    CoreModule,
     AppRoutingModule,
     ApiModule,
     FontAwesomeModule,
+    CoreModule,
     UtilityModule,
     TooltipModule.forRoot(),
     ButtonsModule.forRoot(),
@@ -50,7 +50,6 @@ import { CoreModule } from './core/core.module';
         useFactory: markedOptionsFactory,
       },
     }),
-
   ],
   exports: [
     ApiModule,

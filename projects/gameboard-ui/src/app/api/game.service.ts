@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
 import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
@@ -15,7 +15,8 @@ import { Spec } from './spec-models';
 export class GameService {
   url = '';
   private cache: CachedGame[] = [];
-  constructor (
+
+  constructor(
     private http: HttpClient,
     private config: ConfigService
   ) {
@@ -92,9 +93,11 @@ export class GameService {
   public getPrereqs(g: string): Observable<ChallengeGate[]> {
     return this.http.get<ChallengeGate[]>(`${this.url}/challengegates`, { params: { g } });
   }
+
   public savePrereq(g: ChallengeGate): Observable<ChallengeGate> {
     return this.http.post<ChallengeGate>(`${this.url}/challengegate`, g);
   }
+
   public deletePrereq(id: string): Observable<any> {
     return this.http.delete(`${this.url}/challengegate/${id}`);
   }
@@ -109,7 +112,7 @@ export class GameService {
   }
   private addOrUpdateCache(game: Game): void {
     if (!game || !game.id) { return; }
-    // console.log(game.id + ' cache load');
+
     const item = this.cache.find(c => c.id === game.id);
     if (item) {
       item.update(game);
@@ -120,7 +123,7 @@ export class GameService {
   private removeCache(id: string): void {
     const item = this.cache.find(c => c.id === id);
     if (!item) { return; }
-    // console.log(id + ' cache unload');
+
     this.cache.splice(
       this.cache.indexOf(item), 1
     );
@@ -129,21 +132,17 @@ export class GameService {
   private transform(game: Game): Game {
     game.cardUrl = game.logo
       ? `${this.config.imagehost}/${game.logo}`
-      : `${this.config.basehref}assets/card.png`
-      ;
+      : `${this.config.basehref}assets/card.png`;
 
     game.mapUrl = game.background
       ? `${this.config.imagehost}/${game.background}`
-      : `${this.config.basehref}assets/map.png`
-      ;
+      : `${this.config.basehref}assets/map.png`;
 
     game.modeUrl = game.mode
       ? `${this.config.basehref}assets/${game.mode}.png`
-      : `${this.config.basehref}assets/vm.png`
-      ;
+      : `${this.config.basehref}assets/vm.png`;
 
     game.session = new TimeWindow(game.gameStart, game.gameEnd);
-
     game.registration = new TimeWindow(game.registrationOpen, game.registrationClose);
 
     return game;
@@ -160,17 +159,20 @@ export class CachedGame {
   id: string;
   ts: number = 0;
   game: Game;
-  constructor (
+
+  constructor(
     game: Game
   ) {
     this.game = game;
     this.id = this.game.id;
     this.ts = Date.now();
   }
+
   update(game: Game): void {
     this.game = game;
     this.ts = Date.now();
   }
+
   latest(limit: number = 10): Game | null {
     const hit = Date.now() - this.ts < (limit * 1000);
     return hit ? this.game : null;
