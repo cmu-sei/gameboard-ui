@@ -55,7 +55,7 @@ export class PlayerSessionComponent implements OnInit {
     this.hubState$ = this.hub.state$;
     hub.state$.pipe(tap(s => {
       this.evaluateHasTeammates(s);
-    }));
+    })).subscribe();
 
     // listen for hub session events (update / start) to keep team sync'd
     this.teamEvents$ = hub.teamEvents.pipe(
@@ -98,7 +98,6 @@ export class PlayerSessionComponent implements OnInit {
       finalize(() => sub.unsubscribe())
     ).subscribe(
       p => {
-        // this.ctx.player = p;
         this.ctx.player$.next(p);
       },
       err => this.errors.push(err),
@@ -136,12 +135,11 @@ export class PlayerSessionComponent implements OnInit {
   }
 
   private evaluateHasTeammates(state: HubState) {
-    if (!!this.ctx.user?.id) {
+    if (!state) {
       this.hasTeammates$.next(false);
       return;
     }
 
-    const hasTeammates = state.actors.some(a => a.id != this.ctx.user!.id);
-    this.hasTeammates$.next(hasTeammates);
+    this.hasTeammates$.next(state.actors.length > 1);
   }
 }

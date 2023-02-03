@@ -14,7 +14,7 @@ import { ModalConfirmConfig } from '../../directives/modal-confirm.directive';
       </div>
       <div class="modal-body" [innerHTML]="config.bodyContent"></div>
       <div class="modal-footer">
-          <button type="button" *ngIf="config.hideCancel || false" class="btn btn-default" (click)="cancel()">{{ config.cancelButtonText }}</button>
+          <button type="button" *ngIf="config.hideCancel === true" class="btn btn-default" (click)="cancel()">{{ config.cancelButtonText }}</button>
           <button type="button" class="btn btn-warning" (click)="confirm()">{{ config.confirmButtonText }}</button>
       </div>
     </div>
