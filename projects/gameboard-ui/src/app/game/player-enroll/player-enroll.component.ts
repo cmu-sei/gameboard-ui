@@ -54,6 +54,8 @@ export class PlayerEnrollComponent {
             this.disallowedReason = gc.player.nameStatus;
           }
         }
+
+        this.ctx.player$.next(gc.player);
       })
     );
 
@@ -122,18 +124,15 @@ export class PlayerEnrollComponent {
       finalize(() => sub.unsubscribe())
     ).subscribe(
       () => {
-        this.api.transform(this.ctx.player);
+        const updatedPlayer = this.api.transform(this.ctx.player);
+        this.ctx.player$.next(updatedPlayer);
       }
     );
   }
 
   delete(p: Player): void {
-    const sub: Subscription = this.api.delete(p.id).pipe(
-      first(),
-      tap(() => {
-        this.ctx.player.id = "";
-      })
-    ).subscribe(() =>
+    this.api.delete(p.id).pipe(first()).subscribe(() =>
+      // note that `enrolled` updates the context
       this.enrolled(null)
     );
   }
@@ -143,7 +142,7 @@ export class PlayerEnrollComponent {
       return;
     }
 
-    this.ctx.player = p;
+    this.ctx.player$.next(p);
 
     if (this.ctx.game.allowTeam) {
       this.notificationService.init(p.teamId);

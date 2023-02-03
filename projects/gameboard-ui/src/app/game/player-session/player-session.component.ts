@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faBolt, faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable, of, Subscription, BehaviorSubject, timer } from 'rxjs';
@@ -12,7 +12,7 @@ import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
 import { UnityService } from '../../unity/unity.service';
-import { HubEvent, HubEventAction, HubState, NotificationService } from '../../utility/notification.service';
+import { HubEvent, HubState, NotificationService } from '../../utility/notification.service';
 
 @Component({
   selector: 'app-player-session',
@@ -95,14 +95,11 @@ export class PlayerSessionComponent implements OnInit {
   start(p: Player): void {
     const sub: Subscription = this.api.start(p).pipe(
       tap(p => p.session = new TimeWindow(p.sessionBegin, p.sessionEnd)),
-      tap(p => console.log("started the session with p", p)),
       finalize(() => sub.unsubscribe())
     ).subscribe(
       p => {
-        console.log("finalzed p", p);
-        console.log("with ctx", this.ctx);
-        this.ctx.player = p;
-        console.log("So now ctx", this.ctx)
+        // this.ctx.player = p;
+        this.ctx.player$.next(p);
       },
       err => this.errors.push(err),
       () => this.doublechecking = false
@@ -114,9 +111,10 @@ export class PlayerSessionComponent implements OnInit {
       this.unityService.undeployGame({ ctx: { gameId: p.gameId, teamId: p.teamId } }).pipe(
         catchError(err => of("Player session couldn't undeploy the Unity game:", err)),
         first(),
+        tap(() => this.api.delete(p.id)),
         // management of state is taken care of at the level of the game page - 
-        // they should get redirected after the hub tells them that their game is deleted
-        tap(() => this.api.delete(p.id))
+        // they should get redirected after the hub tells them that their player is deleted
+        tap(() => this.ctx.player$.next({ userId: p.userId } as Player))
       ).subscribe();
     }
     else {
@@ -138,8 +136,6 @@ export class PlayerSessionComponent implements OnInit {
   }
 
   private evaluateHasTeammates(state: HubState) {
-    console.log("got this hub state", state.actors.map(a => a.id));
-
     if (!!this.ctx.user?.id) {
       this.hasTeammates$.next(false);
       return;

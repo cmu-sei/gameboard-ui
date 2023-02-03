@@ -24,8 +24,7 @@ export class PlayerService {
       map(r => {
         r.forEach(p => p = this.transform(p));
         return r;
-      }),
-      tap(f => console.log("see", f))
+      })
     );
   }
 
