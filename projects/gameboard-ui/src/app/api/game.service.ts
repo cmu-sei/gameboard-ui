@@ -105,7 +105,6 @@ export class GameService {
   private tryCache(id: string, limit: number = 20): Game | null {
     const item = this.cache.find(c => c.id === id);
     const entity = !!item ? item.latest(limit) : null;
-    // console.log(id + ' cache ' + (entity ? 'hit' : 'miss'));
 
     if (!entity) { this.removeCache(id); }
     return entity;
