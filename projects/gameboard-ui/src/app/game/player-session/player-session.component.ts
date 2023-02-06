@@ -1,16 +1,18 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { faBolt, faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Observable, of, Subscription, BehaviorSubject, timer } from 'rxjs';
-import { catchError, finalize, first, map, tap } from 'rxjs/operators';
+import { WindowService } from 'projects/gameboard-ui/src/services/window.service';
+import { Observable, Subscription, BehaviorSubject, timer } from 'rxjs';
+import { finalize, map, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
+import { LogService } from '../../services/log.service';
 import { UnityService } from '../../unity/unity.service';
 import { HubEvent, HubState, NotificationService } from '../../utility/notification.service';
 
@@ -39,7 +41,9 @@ export class PlayerSessionComponent implements OnInit {
   constructor(
     private api: PlayerService,
     private hub: NotificationService,
+    private log: LogService,
     private unityService: UnityService,
+    private windowService: WindowService,
     private modalService: BsModalService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
@@ -105,21 +109,19 @@ export class PlayerSessionComponent implements OnInit {
     );
   }
 
-  reset(p: Player): void {
-    if (this.ctx.game?.mode == 'unity') {
-      this.unityService.undeployGame({ ctx: { gameId: p.gameId, teamId: p.teamId } }).pipe(
-        catchError(err => of("Player session couldn't undeploy the Unity game:", err)),
-        first(),
-        tap(() => this.api.delete(p.id)),
-        // management of state is taken care of at the level of the game page - 
-        // they should get redirected after the hub tells them that their player is deleted
-        tap(() => this.ctx.player$.next({ userId: p.userId } as Player))
-      ).subscribe();
-    }
-    else {
-      this.api.delete(p.id).subscribe(() => {
-        window.location.reload();
-      });
+  async reset(p: Player): Promise<void> {
+    await this.api.delete(p.id).toPromise();
+    this.ctx.player$.next({ userId: p.userId } as Player);
+
+    if (this.ctx.game?.mode === 'unity') {
+      try {
+        await this.unityService.undeployGame({ ctx: { gameId: p.gameId, teamId: p.teamId } }).toPromise();
+      }
+      catch (err) {
+        this.log.logWarning("Couldn't undeploy the external game:", err);
+      }
+
+      this.windowService.get()?.location.reload();
     }
   }
 
@@ -128,7 +130,6 @@ export class PlayerSessionComponent implements OnInit {
   }
 
   confirmResetTeam(p: Player): void {
-    // TODO
     this.modalService.hide(this.modalRef?.id);
     this.modalRef = undefined;
     this.reset(p);

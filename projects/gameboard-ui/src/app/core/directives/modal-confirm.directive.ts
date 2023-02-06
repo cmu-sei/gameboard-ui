@@ -31,7 +31,8 @@ export class ModalConfirmDirective implements OnDestroy, AfterViewInit {
         this.modalRef = this.modalService.show(ModalConfirmComponent, {
           initialState: {
             config: this.config
-          }
+          },
+          class: "modal-dialog-centered"
         });
       }
     }
