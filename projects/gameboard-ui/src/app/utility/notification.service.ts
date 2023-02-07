@@ -240,6 +240,7 @@ export interface HubState {
 export interface HubEvent {
   action: HubEventAction;
   model?: any;
+  actorUserId: string;
 }
 
 export interface Actor {

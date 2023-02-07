@@ -1,6 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ModalConfirmComponent } from '../components/modal/modal-confirm.component';
+import { ModalConfirmService } from '../../services/modal-confirm.service';
 
 export interface ModalConfirmConfig {
   bodyContent: string;
@@ -13,11 +12,10 @@ export interface ModalConfirmConfig {
 }
 
 @Directive({ selector: '[appModalConfirm]' })
-export class ModalConfirmDirective implements OnDestroy, AfterViewInit {
+export class ModalConfirmDirective implements AfterViewInit {
   @Input('appModalConfirm') config?: ModalConfirmConfig;
-  private modalRef?: BsModalRef;
 
-  constructor(private buttonRef: ElementRef, private modalService: BsModalService) { }
+  constructor(private buttonRef: ElementRef, private modalService: ModalConfirmService) { }
 
   ngAfterViewInit(): void {
     const existingOnClick = this.buttonRef.nativeElement.onclick;
@@ -28,20 +26,8 @@ export class ModalConfirmDirective implements OnDestroy, AfterViewInit {
       }
 
       if (this.config) {
-        this.modalRef = this.modalService.show(ModalConfirmComponent, {
-          initialState: {
-            config: this.config
-          },
-          class: "modal-dialog-centered"
-        });
+        this.modalService.open(this.config);
       }
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.modalRef) {
-      this.modalRef.hide();
-      this.modalRef = undefined;
     }
   }
 }

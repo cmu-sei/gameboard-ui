@@ -150,7 +150,7 @@ export class PlayerEnrollComponent {
       // connectionId is null when disconnected
       if (this.notificationService.connection.connectionId) {
         this.notificationService.connection.invoke("Greet");
-        this.notificationService.presenceEvents.next({ action: HubEventAction.arrived, model: p.teamId });
+        this.notificationService.presenceEvents.next({ action: HubEventAction.arrived, model: p.teamId, actorUserId: p.userId });
       }
       else {
         this.notificationService.state$.pipe(

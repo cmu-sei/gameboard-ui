@@ -13,7 +13,6 @@ import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ApiUser } from '../../api/user-models';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
-import { LogService } from '../../services/log.service';
 import { HubEvent, HubEventAction, NotificationService } from '../../utility/notification.service';
 import { ToastService } from '../../utility/services/toast.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
@@ -130,9 +129,9 @@ export class GamePageComponent {
           confirmButtonText: "Got it",
           hideCancel: true
         }
-      }
-    }
-    )
+      },
+      class: "modal-dialog-centered"
+    });
   }
 }
 
