@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, BehaviorSubject, Observable, scheduled, Subject } from 'rxjs';
 import { debounceTime, map, mergeAll, switchMap, tap } from 'rxjs/operators';
@@ -14,23 +14,22 @@ import { Spec } from '../../api/spec-models';
   templateUrl: './prereqs.component.html',
   styleUrls: ['./prereqs.component.scss']
 })
-export class PrereqsComponent implements OnInit, AfterViewInit, OnChanges {
+export class PrereqsComponent implements OnChanges {
   @Input() gameId = '';
   @Input() specs: Spec[] = [];
+
   list$: Observable<ChallengeGate[]>;
   list: ChallengeGate[] = [];
   refresh$ = new Subject<boolean>();
   updating$ = new Subject<ChallengeGate>();
   deleting$ = new Subject<ChallengeGate>();
   newgate = {} as ChallengeGate;
+  errors: string[] = [];
   faTrash = faTrash;
   faPlus = faPlus;
 
-  constructor(
-    api: GameService
-  ) {
+  constructor(api: GameService) {
     this.list$ = scheduled([
-
       this.refresh$.pipe(
         debounceTime(500),
         switchMap(() => api.getPrereqs(this.gameId))
@@ -61,37 +60,53 @@ export class PrereqsComponent implements OnInit, AfterViewInit, OnChanges {
       })
     );
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.specs || changes.gameId) {
       this.refresh$.next(true);
     }
   }
 
-  ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-    // this.refresh$.next(true);
-  }
-
-
   save(): void {
     const t = this.specs.find(s => s.tag == this.newgate.targetTag);
     const s = this.specs.find(s => s.tag == this.newgate.requiredTag);
-    if (!t || !s) { return; }
 
-    this.newgate.requiredId = s.id;
-    this.newgate.targetId = t.id;
+    const errors = this.validateNewGate(this.newgate, t, s);
+    if (errors.length) {
+      this.errors = errors;
+      return;
+    }
+
+    this.newgate.requiredId = s!.id;
+    this.newgate.targetId = t!.id;
     this.newgate.gameId = this.gameId;
 
-    // console.log(this.newgate);
     this.updating$.next(this.newgate);
+  }
+
+  private validateNewGate(gate: ChallengeGate, targetSpec?: Spec, requiredSpec?: Spec): string[] {
+    const errors = [];
+
+    if (!targetSpec) {
+      errors.push(`Couldn't find the target spec with tag "${this.newgate.targetTag}".`);
+    }
+
+    if (!requiredSpec) {
+      errors.push(`Couldn't find the required spec with tag "${this.newgate.requiredTag}".`);
+    }
+
+    // later hope to implement total cycle checking, if not here then at the API level
+    // in the meantime, at least ensure they don't lock themselves out of their own challenge
+    if (targetSpec && requiredSpec && targetSpec?.tag === requiredSpec?.tag) {
+      this.errors.push(`The tags for this pre-req are identical (both "${targetSpec!.tag}"). Use a different source or target tag to create an enforceable pre-requisite.`);
+    }
+
+    return errors;
   }
 
   delete(g: ChallengeGate): void {
     this.deleting$.next(g);
   }
-
 }
 
 export interface Prereq {

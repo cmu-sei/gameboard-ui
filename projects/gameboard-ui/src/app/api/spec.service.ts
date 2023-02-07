@@ -7,11 +7,8 @@ import { Observable, Subject } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { ChangedSpec, ExternalSpec, NewSpec, Spec } from './spec-models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SpecService {
-
   url = '';
   selected$ = new Subject<ExternalSpec>();
 
@@ -23,20 +20,25 @@ export class SpecService {
   }
 
   public list(filter: any): Observable<ExternalSpec[]> {
-    return this.http.get<Spec[]>(this.url + '/challengespecs', {params: filter});
+    return this.http.get<Spec[]>(this.url + '/challengespecs', { params: filter });
   }
+
   public retrieve(id: string): Observable<Spec> {
     return this.http.get<Spec>(`${this.url}/challengespec/${id}`);
   }
+
   public create(model: NewSpec): Observable<Spec> {
     return this.http.post<Spec>(`${this.url}/challengespec`, model);
   }
+
   public update(model: ChangedSpec): Observable<any> {
     return this.http.put<any>(`${this.url}/challengespec`, model);
   }
+
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/challengespec/${id}`);
   }
+
   public sync(id: string): Observable<any> {
     return this.http.post<any>(`${this.url}/challengespecs/sync/${id}`, null);
   }

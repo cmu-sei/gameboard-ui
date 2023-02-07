@@ -1,7 +1,3 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
   production: false,
   settings: {
@@ -11,10 +7,11 @@ export const environment = {
     imghost: 'http://localhost:5002/img',
     tochost: 'http://localhost:5002/doc',
     supporthost: 'http://localhost:5002/supportfiles',
-    gamebrainhost: 'https://launchpad.cisa.gov/test/gamebrain/api',
-    unityhost: 'https://launchpad.cisa.gov/test/cubespace',
+    gamebrainhost: '',
+    unityhost: '',
     tocfile: 'toc.json',
     countdownStartSecondsAtMinute: 5,
+    isProduction: false,
     oidc: {
       client_id: 'gameboard-ui-dev',
       authority: 'https://foundry.local/identity',
@@ -29,12 +26,3 @@ export const environment = {
     }
   }
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
