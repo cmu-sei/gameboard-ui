@@ -6,7 +6,6 @@
 <ng-container *ngIf="deleted$ | async"></ng-container>
 
 <div class="row">
-
   <!-- search external specs -->
   <div class="col-2">
     <div class="d-flex flex-column">
@@ -60,15 +59,15 @@
           <div class="col-1">
             <div class="form-group form-check pb-0 pt-1">
               <input type="checkbox" class="form-check-input" id="disabled-input-{{item.id}}" name="disabled"
-              [(ngModel)]="item.disabled" (ngModelChange)="updating$.next(item)">
+                [(ngModel)]="item.disabled" (ngModelChange)="updating$.next(item)">
               <label for="disabled-input-{{item.id}}">Disabled</label>
             </div>
           </div>
           <div class="col-2">
             <div class="form-group pb-0 pt-1">
               <label for="slug-input-{{item.id}}">Support Key</label>
-              <input type="text" class="form-control" id="slug-input-{{item.id}}" name="slug"
-                [(ngModel)]="item.tag" (ngModelChange)="updating$.next(item)">
+              <input type="text" class="form-control" id="slug-input-{{item.id}}" name="slug" [(ngModel)]="item.tag"
+                (ngModelChange)="updating$.next(item)">
               <small></small>
             </div>
           </div>
@@ -93,7 +92,7 @@
     </div>
 
     <!-- search external specs -->
-    <app-spec-browser  [hidden]="viewing!=='search'"></app-spec-browser>
+    <app-spec-browser [hidden]="viewing!=='search'"></app-spec-browser>
 
 
     <!-- edit spec map locations -->
@@ -102,7 +101,7 @@
 
       <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.mapbox-hover]="!!specHover">
         <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
-          <span>{{this.specHover?.name}}</span><br/>
+          <span>{{this.specHover?.name}}</span><br />
           <span>Points: {{this.specHover?.points}}</span>
         </div>
         <svg viewBox="0 0 100 100" (mousemove)="mousemove($event)">
@@ -110,13 +109,16 @@
 
           <ng-container *ngIf="showGrid">
             <ng-container *ngFor="let i of [0,10,20,30,40,50,60,70,80,90,100]">
-              <svg:line [attr.x1]=i y1=0 [attr.x2]=i y2=100 stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05"></svg:line>
-              <svg:line x1=0 [attr.y1]=i x2=100 [attr.y2]=i stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05"></svg:line>
+              <svg:line [attr.x1]=i y1=0 [attr.x2]=i y2=100 stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
+              </svg:line>
+              <svg:line x1=0 [attr.y1]=i x2=100 [attr.y2]=i stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
+              </svg:line>
             </ng-container>
           </ng-container>
 
           <ng-container *ngFor="let c of list">
-            <a class="mapbox-dot" (mousedown)="mousedrag($event, c)" (mouseup)="mousedrag($event, c)" (mouseenter)="mouseenter($event, c)" (mouseleave)="mouseleave($event, c)">
+            <a class="mapbox-dot" (mousedown)="mousedrag($event, c)" (mouseup)="mousedrag($event, c)"
+              (mouseenter)="mouseenter($event, c)" (mouseleave)="mouseleave($event, c)">
               <svg:circle [attr.cx]="c.x *100" [attr.cy]="c.y*100" [attr.r]="c.r*100" [attr.fill]="c.c"></svg:circle>
             </a>
 

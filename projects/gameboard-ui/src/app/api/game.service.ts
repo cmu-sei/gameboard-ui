@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
 import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
@@ -15,7 +15,7 @@ import { Spec } from './spec-models';
 export class GameService {
   url = '';
   private cache: CachedGame[] = [];
-  constructor (
+  constructor(
     private http: HttpClient,
     private config: ConfigService
   ) {
@@ -92,9 +92,11 @@ export class GameService {
   public getPrereqs(g: string): Observable<ChallengeGate[]> {
     return this.http.get<ChallengeGate[]>(`${this.url}/challengegates`, { params: { g } });
   }
+
   public savePrereq(g: ChallengeGate): Observable<ChallengeGate> {
     return this.http.post<ChallengeGate>(`${this.url}/challengegate`, g);
   }
+
   public deletePrereq(id: string): Observable<any> {
     return this.http.delete(`${this.url}/challengegate/${id}`);
   }
@@ -102,14 +104,13 @@ export class GameService {
   private tryCache(id: string, limit: number = 20): Game | null {
     const item = this.cache.find(c => c.id === id);
     const entity = !!item ? item.latest(limit) : null;
-    // console.log(id + ' cache ' + (entity ? 'hit' : 'miss'));
 
     if (!entity) { this.removeCache(id); }
     return entity;
   }
+
   private addOrUpdateCache(game: Game): void {
     if (!game || !game.id) { return; }
-    // console.log(game.id + ' cache load');
     const item = this.cache.find(c => c.id === game.id);
     if (item) {
       item.update(game);
@@ -117,10 +118,10 @@ export class GameService {
       this.cache.push(new CachedGame(game));
     }
   }
+
   private removeCache(id: string): void {
     const item = this.cache.find(c => c.id === id);
     if (!item) { return; }
-    // console.log(id + ' cache unload');
     this.cache.splice(
       this.cache.indexOf(item), 1
     );
@@ -156,11 +157,12 @@ export class GameService {
   }
 
 }
+
 export class CachedGame {
   id: string;
   ts: number = 0;
   game: Game;
-  constructor (
+  constructor(
     game: Game
   ) {
     this.game = game;
