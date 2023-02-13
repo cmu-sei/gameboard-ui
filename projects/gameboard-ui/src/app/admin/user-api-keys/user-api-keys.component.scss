@@ -1,0 +1,15 @@
+table {
+    border-collapse: separate;
+    border-spacing: 10px 1rem;
+    width: 90%;
+}
+
+td {
+    margin-right: 1rem;
+}
+
+input[type=text],
+input[type=date],
+input[type=datetime] {
+    width: 100%;
+}

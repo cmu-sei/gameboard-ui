@@ -3,12 +3,13 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+// internal components and pipes
 import { ClipspanComponent } from './components/clipspan/clipspan.component';
 import { ConfirmButtonComponent } from './components/confirm-button/confirm-button.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AlertModule } from 'ngx-bootstrap/alert';
 import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { CountdownPipe } from './pipes/countdown.pipe';
@@ -16,9 +17,6 @@ import { ShortDatePipe } from './pipes/short-date.pipe';
 import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { GameCardComponent } from './components/game-card/game-card.component';
 import { YamlPipe } from './pipes/yaml.pipe';
 import { LoginComponent } from './components/login/login.component';
@@ -31,15 +29,22 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
 import { ImageManagerComponent } from './components/image-manager/image-manager.component';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { InplaceEditorComponent } from './components/inplace-editor/inplace-editor.component';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
-import { RouterModule } from '@angular/router';
 import { ImagestackComponent } from './components/imagestack/imagestack.component';
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { NAVIGATOR } from './services/navigator.service';
+
+// external modules
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 const components = [
   ClipspanComponent,
@@ -84,6 +89,7 @@ const components = [
     ModalModule,
     TooltipModule,
     ButtonsModule,
+    BsDatepickerModule,
     BsDropdownModule,
     RouterModule
   ],

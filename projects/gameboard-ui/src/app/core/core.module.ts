@@ -6,26 +6,27 @@ import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
 import { PlayerAvatarComponent } from './components/player-avatar/player-avatar.component';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { PlayerAvatarListComponent } from './components/player-avatar-list/player-avatar-list.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+
+const MODULE_DECLARATIONS = [
+  LinkifyHtmlPipe,
+  LongContentHiderComponent,
+  PlayerAvatarComponent,
+  PlayerAvatarListComponent,
+  RelativeUrlsPipe,
+  SafeHtmlPipe,
+  UrlRewritePipe
+]
 
 @NgModule({
   declarations: [
-    LinkifyHtmlPipe,
-    LongContentHiderComponent,
-    PlayerAvatarComponent,
-    RelativeUrlsPipe,
-    UrlRewritePipe,
-    PlayerAvatarListComponent
+    ...MODULE_DECLARATIONS
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    LinkifyHtmlPipe,
-    RelativeUrlsPipe,
-    UrlRewritePipe,
-    LongContentHiderComponent,
-    PlayerAvatarComponent,
-    PlayerAvatarListComponent
+    ...MODULE_DECLARATIONS
   ]
 })
 export class CoreModule { }
