@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { faArrowLeft, faCaretDown, faCaretRight, faCloudUploadAlt, faCopy, faGamepad, faToggleOff, faToggleOn, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
@@ -17,7 +17,7 @@ import { KeyValue } from '@angular/common';
   templateUrl: './game-editor.component.html',
   styleUrls: ['./game-editor.component.scss']
 })
-export class GameEditorComponent implements OnInit, AfterViewInit {
+export class GameEditorComponent implements AfterViewInit {
   @Input() game!: Game;
   @ViewChild(NgForm) form!: FormGroup;
 
@@ -33,16 +33,16 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
 
   // store unique values of each game field with their frequencies for ordered suggestion lists
   suggestions = {
-    competition: new Map<string,number>(), 
-    track: new Map<string,number>(), 
-    season: new Map<string,number>(), 
-    division: new Map<string,number>(), 
-    mode: new Map<string,number>(), 
-    cardText1: new Map<string,number>(), 
-    cardText2: new Map<string,number>(), 
-    cardText3: new Map<string,number>()
+    competition: new Map<string, number>(),
+    track: new Map<string, number>(),
+    season: new Map<string, number>(),
+    division: new Map<string, number>(),
+    mode: new Map<string, number>(),
+    cardText1: new Map<string, number>(),
+    cardText2: new Map<string, number>(),
+    cardText3: new Map<string, number>()
   };
-  
+
   faCaretDown = faCaretDown;
   faCaretRight = faCaretRight;
   faToggleOn = faToggleOn;
@@ -75,9 +75,6 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
         this.updateFeedbackMessage();
       })
     );
-  }
-
-  ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
@@ -127,7 +124,7 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
     );
   }
 
-  
+
   addSuggestions(games: Game[]) {
     // add properties of each game into respective map to record distinct values and maintain counts
     for (const game of games) {
@@ -166,8 +163,8 @@ export class GameEditorComponent implements OnInit, AfterViewInit {
   }
 
   checkFeedbackIds(): boolean {
-    const boardIds = new Set(this.game.feedbackTemplate.game?.map(q => q.id));   
-    const challengeIds = new Set(this.game.feedbackTemplate.challenge?.map(q => q.id));   
+    const boardIds = new Set(this.game.feedbackTemplate.game?.map(q => q.id));
+    const challengeIds = new Set(this.game.feedbackTemplate.challenge?.map(q => q.id));
     if ([...boardIds].length != (this.game.feedbackTemplate.game?.length ?? 0) || [...challengeIds].length != (this.game.feedbackTemplate.challenge?.length ?? 0)) {
       return false;
     }

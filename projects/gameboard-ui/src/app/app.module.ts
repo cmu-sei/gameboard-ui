@@ -9,7 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { Observable } from 'rxjs';
@@ -23,6 +23,7 @@ import { UserService } from './utility/user.service';
 import { UtilityModule } from './utility/utility.module';
 import { SupportPillComponent } from './support/support-pill/support-pill.component';
 import { CoreModule } from './core/core.module';
+import { ModalConfirmService } from './services/modal-confirm.service';
 
 @NgModule({
   declarations: [
@@ -34,10 +35,10 @@ import { CoreModule } from './core/core.module';
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    CoreModule,
     AppRoutingModule,
     ApiModule,
     FontAwesomeModule,
+    CoreModule,
     UtilityModule,
     TooltipModule.forRoot(),
     ButtonsModule.forRoot(),
@@ -50,7 +51,6 @@ import { CoreModule } from './core/core.module';
         useFactory: markedOptionsFactory,
       },
     }),
-
   ],
   exports: [
     ApiModule,
@@ -79,6 +79,11 @@ import { CoreModule } from './core/core.module';
       useFactory: register,
       deps: [UserService],
       multi: true
+    },
+    {
+      provide: ModalConfirmService,
+      useFactory: (bsModalService: BsModalService) => new ModalConfirmService(bsModalService),
+      deps: [BsModalService]
     }
   ],
   bootstrap: [AppComponent]

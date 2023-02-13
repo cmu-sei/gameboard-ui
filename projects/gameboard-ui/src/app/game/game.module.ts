@@ -31,7 +31,6 @@ import { UnityBoardComponent } from '../unity/unity-board/unity-board.component'
 import { GameHubStatusComponent } from './game-hub-status/game-hub-status.component';
 import { CoreModule } from '../core/core.module';
 
-
 @NgModule({
   declarations: [
     PlayerEnlistComponent,
@@ -47,7 +46,7 @@ import { CoreModule } from '../core/core.module';
     PlayerPresenceComponent,
     FeedbackFormComponent,
     CertificateComponent,
-    GameHubStatusComponent
+    GameHubStatusComponent,
   ],
   exports: [
   ],

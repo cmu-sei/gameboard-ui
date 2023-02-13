@@ -1,7 +1,7 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<ng-container *ngIf="ctx$ | async as ctx; else loading">
+<ng-container *ngIf="(ctx$ | async) as ctx; else loading">
   <div class="jumbotron d-flex align-items-center">
     <app-game-card [game]="ctx.game"></app-game-card>
     <span class="display-4 text-success mx-4">
@@ -16,20 +16,19 @@
         </span>
       </a>
       <app-login [hidden]="!!ctx.user.id">
-        <span class="">Login to enroll or play!</span>
+        <span class="">Log in to enroll or play!</span>
       </app-login>
     </div>
   </div>
 
   <div class="container-fluid">
-
     <div class="p-4">
       <markdown [data]="ctx.game.gameMarkdown"></markdown>
     </div>
 
     <!-- if auth'd, enrolled, opened a session, game ended, and certificate defined -->
     <ng-container
-      *ngIf="!!ctx.user.id && !!ctx.player.id && !!ctx.player.sessionEnd && ctx.player.sessionEnd.toString() != '-infinity' && ctx.player.sessionEnd > minDate && ctx.game.hasEnded && !!ctx.game.certificateTemplate">
+      *ngIf="!!ctx.user.id && !!ctx.player.id && !!ctx.player.sessionEnd && ctx.player.sessionEnd?.toString() != '-infinity' && (ctx.player.sessionEnd || minDate) > minDate && ctx.game.hasEnded && !!ctx.game.certificateTemplate">
       <div class="row justify-content-center">
         <div class="col panel">
           <div tabindex="0" (click)="showCert = !showCert">
@@ -86,21 +85,24 @@
         <app-scoreboard-table [id]="ctx.game.id" [live]="ctx.game.session.isDuring"></app-scoreboard-table>
       </div>
       <div class="col-xl-5 pr-5 my-4"
-        *ngIf="ctx.game.feedbackTemplate?.game?.length && (ctx?.player?.session?.isDuring ||ctx?.player?.session?.isAfter)">
+        *ngIf="ctx.game.feedbackTemplate?.game?.length && (ctx.player.session.isDuring ||ctx.player.session.isAfter)">
         <app-feedback-form [game]="ctx.game" [session]="ctx.player.session" [title]="ctx.game.name + ' Feedback'"
           [type]="'game'">
         </app-feedback-form>
       </div>
     </div>
-
   </div>
 </ng-container>
 
 <ng-template #loading>
   <div class="jumbotron mb-4">
-    <span class="display-4 text-muted">Game Title</span>
+    <span class="display-4 text-muted">Loading your game...</span>
   </div>
   <div class="text-center">
     <app-spinner></app-spinner>
   </div>
+</ng-template>
+
+<ng-template>
+
 </ng-template>
