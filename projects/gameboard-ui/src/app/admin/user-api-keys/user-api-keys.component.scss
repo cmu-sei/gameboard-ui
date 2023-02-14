@@ -1,6 +1,6 @@
 table {
     border-collapse: separate;
-    border-spacing: 10px 1rem;
+    border-spacing: 0.5rem 1rem;
     width: 90%;
 }
 
@@ -12,4 +12,32 @@ input[type=text],
 input[type=date],
 input[type=datetime] {
     width: 100%;
+}
+
+hr {
+    border: double 1px #bbbbbb;
+    align-items: start;
+}
+
+.alert-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    .text-content {
+        flex-grow: 1;
+    }
+
+    h6 {
+        font-size: 1.1rem;
+    }
+
+    .visible-key {
+        display: inline-block;
+        margin: 0.5rem 0 0.5rem 0.75rem;
+    }
+
+    .buttons {
+        margin-left: 0.5rem;
+    }
 }

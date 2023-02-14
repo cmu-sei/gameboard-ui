@@ -6,6 +6,24 @@
             <em>This user doesn't have any API keys. You can add one using the form below.</em>
         </p>
 
+        <alert type="success" *ngIf="visibleKey">
+            <div class="alert-container">
+                <div class="text-content">
+                    <h6>You've got a new API key!</h6>
+                    <p>The key is: <em class="visible-key">{{visibleKey}}</em></p>
+                    <p>Be sure to record this somewhere; you'll never be able to view it again.</p>
+                </div>
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" (click)="copyKey(visibleKey)">
+                        <fa-icon [icon]="copyIcon"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-secondary ml-2" (click)="visibleKey = ''">
+                        <fa-icon [icon]="closeIcon"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </alert>
+
         <table>
             <tr>
                 <th>Key</th>
@@ -17,7 +35,9 @@
                 <td [innerHTML]="key.name || '<em>Unnamed</em>' | safeHtml"></td>
                 <td>{{ key.generatedOn | shortdate }}</td>
                 <td [innerHTML]="(key.expiresOn | shortdate) || '<em>Doesn\'t expire</em>'"></td>
-                <td><button type="button" class="btn btn-danger">Delete</button></td>
+                <td><button type="button" class="btn btn-danger"
+                        [appModalConfirm]="getConfirmSettings(key.id)">Delete</button>
+                </td>
             </tr>
             <tr *ngIf="apiKeys.length">
                 <td colspan="4">
@@ -33,7 +53,7 @@
                     <span>{{dummyGeneratedOn | shortdate}} @ {{dummyGeneratedOn | friendlyTime}}</span>
                 </td>
                 <td>
-                    <input type="datetime" placeholder="Leave blank for permanent access"
+                    <input type="datetime" placeholder="Leave blank for permanent access" [minDate]="minDate"
                         [(ngModel)]="newApiKey.expiresOn" class="form-control" bsDatepicker>
                 </td>
                 <td>

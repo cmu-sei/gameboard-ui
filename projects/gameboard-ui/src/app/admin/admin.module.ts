@@ -38,6 +38,7 @@ import { ParticipationReportComponent } from './participation-report/participati
 import { CoreModule } from '../core/core.module';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     SupportReportComponent,
     PlayerNamesComponent,
     ParticipationReportComponent,
-    UserApiKeysComponent
+    UserApiKeysComponent,
   ],
   imports: [
     CommonModule,
@@ -100,6 +101,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     ButtonsModule,
     ModalModule,
     TooltipModule,
+    AlertModule,
     BsDatepickerModule,
     BsDropdownModule
   ]

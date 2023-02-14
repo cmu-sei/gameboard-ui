@@ -52,11 +52,10 @@ export class PrereqsComponent implements OnInit, AfterViewInit, OnChanges {
       tap(r => this.list = r),
       map(r => {
         return r.map(p => {
-          console.log(this.specs);
           const t = this.specs.find(s => s.id === p.targetId);
           const d = this.specs.find(s => s.id === p.requiredId);
-          p.targetTag = t?.tag || t?.id.slice(0,8) || '';
-          p.requiredTag = d?.tag || d?.id.slice(0,8) || '';
+          p.targetTag = t?.tag || t?.id.slice(0, 8) || '';
+          p.requiredTag = d?.tag || d?.id.slice(0, 8) || '';
           return p;
         })
       })
@@ -79,7 +78,7 @@ export class PrereqsComponent implements OnInit, AfterViewInit, OnChanges {
   save(): void {
     const t = this.specs.find(s => s.tag == this.newgate.targetTag);
     const s = this.specs.find(s => s.tag == this.newgate.requiredTag);
-    if (!t || !s) { return;  }
+    if (!t || !s) { return; }
 
     this.newgate.requiredId = s.id;
     this.newgate.targetId = t.id;

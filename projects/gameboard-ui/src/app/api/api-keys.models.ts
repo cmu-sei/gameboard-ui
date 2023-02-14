@@ -13,5 +13,5 @@ export interface ApiKeyViewModel {
 }
 
 export interface ApiKeyViewModelWithPlainKey extends ApiKeyViewModel {
-    key: string;
+    plainKey: string;
 }
