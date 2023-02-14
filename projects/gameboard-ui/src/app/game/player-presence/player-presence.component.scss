@@ -19,3 +19,10 @@
     height: 48px;
     object-fit: contain;
 }
+
+.player-list {
+    li {
+        display: flex;
+        width: 100%;
+    }
+}

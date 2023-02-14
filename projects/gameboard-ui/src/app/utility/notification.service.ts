@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { BehaviorSubject, combineLatest, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, map } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { UserService } from '../api/user.service';
@@ -28,7 +28,7 @@ export class NotificationService {
 
   private playersHere: string[] = [];
 
-  constructor (
+  constructor(
     private config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
@@ -36,7 +36,7 @@ export class NotificationService {
   ) {
 
     this.connection = this.getConnection(`${config.apphost}hub`);
-    this.userSvc.user$.pipe(take(1)).subscribe(u => this.userId = u?.id || null);
+    this.userSvc.user$.pipe(first()).subscribe(u => this.userId = u?.id || null);
 
     // refresh connection on token refresh
     const authtoken$ = this.auth.tokenState$.pipe(
@@ -91,7 +91,6 @@ export class NotificationService {
 
     this.postState();
   }
-
 
   private async joinChannel(id: string): Promise<void> {
     // prevent race if trying to join channel before connection is fully up

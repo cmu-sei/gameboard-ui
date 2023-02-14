@@ -1,8 +1,10 @@
 .game-hub-status-component {
     display: block;
-    width: 1.5rem;
-    height: 1.5rem;
+    // width: 1.5rem;
+    // height: 1.5rem;
     aspect-ratio: 1 / 1;
-    background: rgba(0, 0, 0, 0) no-repeat center center;
-    background-size: cover;
+    width: 8px;
+    height: 8px;
+    // background: rgba(0, 0, 0, 0) no-repeat center center;
+    // background-size: cover;
 }

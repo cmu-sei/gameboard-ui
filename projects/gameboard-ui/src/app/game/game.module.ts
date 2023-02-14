@@ -30,6 +30,8 @@ import { UnityModule } from '../unity/unity.module';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
 import { GameHubStatusComponent } from './game-hub-status/game-hub-status.component';
 import { CoreModule } from '../core/core.module';
+import { PlayerStatusComponent } from './player-status/player-status.component';
+import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
 
 
 @NgModule({
@@ -47,7 +49,9 @@ import { CoreModule } from '../core/core.module';
     PlayerPresenceComponent,
     FeedbackFormComponent,
     CertificateComponent,
-    GameHubStatusComponent
+    GameHubStatusComponent,
+    PlayerStatusComponent,
+    HubStateToPlayerStatusPipe
   ],
   exports: [
   ],

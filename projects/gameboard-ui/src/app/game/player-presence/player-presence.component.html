@@ -2,14 +2,17 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <ng-container *ngIf="hubState$ | async as hub">
-  <div class="light-container">
-    <div class="light-spacer"></div>
-    <app-game-hub-status *ngIf="hub.actors?.length"></app-game-hub-status>
-  </div>
-  <div *ngFor="let actor of hub.actors" [class.text-muted]="!actor.online" [class.text-success]="actor.online">
-    <img [src]="actor.sponsorLogo" class="avatar mr-2">
-    <fa-icon [icon]="actor.isManager ? faStar : faDot"></fa-icon>
-    <span class="mr-2">{{actor.userApprovedName}}</span>
-    <small *ngIf="!!actor.pendingName" class="text-muted">({{actor.pendingName}})</small>
-  </div>
+  <ul class="player-list">
+    <li *ngFor="let actor of hub.actors" [class.text-muted]="!actor.online" [class.text-success]="actor.online">
+      <app-player-avatar [sponsorLogoUri]="actor.sponsorLogo" [size]="avatarSize"></app-player-avatar>
+      <fa-icon [icon]="actor.isManager ? faStar : faDot"></fa-icon>
+      <div class="player-name">
+        <span class="mr-2">{{actor.userApprovedName}}</span>
+        <small *ngIf="!!actor.pendingName" class="text-muted">({{actor.pendingName}})</small>
+      </div>
+      <div class="player-controls">
+        <app-player-status [userId]="actor.id"></app-player-status>
+      </div>
+    </li>
+  </ul>
 </ng-container>

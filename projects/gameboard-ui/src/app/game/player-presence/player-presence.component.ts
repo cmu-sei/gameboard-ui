@@ -3,8 +3,9 @@
 
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { faCircle, faStar } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, Subject, Subscribable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { ApiUser } from '../../api/user-models';
+import { PlayerAvatarSize } from '../../core/components/player-avatar/player-avatar.component';
 import { HubState, NotificationService } from '../../utility/notification.service';
 import { UserService } from '../../utility/user.service';
 import { GameHubStatus } from '../game-hub-status/game-hub-status.component';
@@ -22,9 +23,12 @@ export class PlayerPresenceComponent implements OnChanges, OnDestroy {
   faDot = faCircle;
   faStar = faStar;
   gameHubStatus = GameHubStatus.Disconnected;
-  gameStatusSubscription$: Subscription | null = null;
 
-  constructor (
+  protected avatarSize = PlayerAvatarSize.Small;
+
+  private gameStatusSubscription$: Subscription | null = null;
+
+  constructor(
     private hub: NotificationService,
     private userSvc: UserService
   ) {

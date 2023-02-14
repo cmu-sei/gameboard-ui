@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ConfigService } from '../../utility/config.service';
-import { HubState, NotificationService } from '../../utility/notification.service';
+import { NotificationService } from '../../utility/notification.service';
 
 export enum GameHubStatus {
   Disconnected,
@@ -19,25 +19,29 @@ export class GameHubStatusComponent {
   public imagePath = "assets/red-light.png";
   public tooltip = "Disconnected from the matchmaking hub";
 
-  constructor (config: ConfigService, notificationService: NotificationService) {
+  protected statusIndicatorFill = "#ff0000";
+  protected isActive = false;
+  protected tooltipText = "Disconnected from the matchmaking hub";
+
+  constructor(config: ConfigService, notificationService: NotificationService) {
     this.baseHref = config.absoluteUrl;
 
     notificationService.state$.subscribe(state => {
-      this.gameHubStatus = state.connected ? GameHubStatus.Connected : GameHubStatus.Disconnected;
+      this.isActive = state.connected;
+      this.tooltip = state.connected ? "Connected to the game" : "Not connected to the game";
+      this.statusIndicatorFill = state.connected ? "#ff0000" : "#00ff00";
+      // this.gameHubStatus = state.connected ? GameHubStatus.Connected : GameHubStatus.Disconnected;
 
-      switch (this.gameHubStatus) {
-        case GameHubStatus.Connected:
-          this.imagePath = "assets/green-light.png";
-          this.tooltip = "Connected to the matchmaking hub";
-          break;
-        // case GameHubStatus.Connecting:
-        //   this.imagePath = "assets/yellow-light.png";
-        //   break;
-        default:
-          this.imagePath = "assets/red-light.png";
-          this.tooltip = "Disconnected from the matchmaking hub";
-          break;
-      }
+      // switch (this.gameHubStatus) {
+      //   case GameHubStatus.Connected:
+      //     this.imagePath = "assets/green-light.png";
+      //     this.tooltip = "Connected to the matchmaking hub";
+      //     break;
+      //   default:
+      //     this.imagePath = "assets/red-light.png";
+      //     this.tooltip = "Disconnected from the matchmaking hub";
+      //     break;
+      // }
     });
   }
 }
