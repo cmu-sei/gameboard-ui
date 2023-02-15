@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
+import { CoreModule } from '../core/core.module';
 
 
 
@@ -36,19 +37,22 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', component: HomePageComponent, children: [
-        { path: '', pathMatch: 'full', redirectTo: '/home' },
-        { path: 'login', component: LoginPageComponent },
-        { path: 'oidc', component: OidcComponent },
-        { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-        { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
-        { path: 'doc/:id', component: TocPageComponent },
-        { path: 'forbidden', component: ForbiddenComponent },
-        { path: 'home', component: LandingComponent  }
-      ]},
+      {
+        path: '', component: HomePageComponent, children: [
+          { path: '', pathMatch: 'full', redirectTo: '/home' },
+          { path: 'login', component: LoginPageComponent },
+          { path: 'oidc', component: OidcComponent },
+          { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+          { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
+          { path: 'doc/:id', component: TocPageComponent },
+          { path: 'forbidden', component: ForbiddenComponent },
+          { path: 'home', component: LandingComponent }
+        ]
+      },
       { path: '**', redirectTo: '/home' }
     ]),
     FormsModule,
+    CoreModule,
     UtilityModule,
     FontAwesomeModule,
     MarkdownModule

@@ -1,0 +1,83 @@
+$max-players-per-team: 5;
+
+$player-avatar-dimensions: (
+    "small": ("radius": 20px,
+        "addedWidthPerAvatar": 10px),
+    "medium": ("radius": 30px,
+        "addedWidthPerAvatar": 15px),
+    "large": ("radius": 48px,
+        "addedWidthPerAvatar": 24px)
+);
+
+@function getAddedWidthPerAvatarBySize($size) {
+    $dimensions: map.get($player-avatar-dimensions, $size);
+    @return map.get($dimensions, "addedWidthPerAvatar");
+}
+
+@function getAvatarRadiusBySize($size) {
+    $dimensions: map.get($player-avatar-dimensions, $size);
+    @return map.get($dimensions, "radius");
+}
+
+@function getAvatarDiameterBySize($size) {
+    @return getAvatarRadiusBySize($size) * 2;
+}
+
+@function getPlayerAvatarListTransform($size, $index) {
+    $diameter: getAvatarDiameterBySize($size);
+    $added-width: getAddedWidthPerAvatarBySize($size);
+
+    @if ($index==0) {
+        @return null;
+    }
+
+    @return translateX(-($index * $diameter) + ($index * $added-width));
+}
+
+@function getAvatarListTotalWidth($size, $num-avatars) {
+    $diameter: getAvatarDiameterBySize($size);
+    $width-per-avatar: getAddedWidthPerAvatarBySize($size);
+
+    @return $diameter + (($num-avatars - 1) * $width-per-avatar);
+}
+
+// these classes are used both by player-avatar and player-avatar-list
+@for $i from 1 through $max-players-per-team {
+    $width-value-small: getAvatarListTotalWidth("small", $i);
+    $width-value-med: getAvatarListTotalWidth("medium", $i);
+    $width-value-lg: getAvatarListTotalWidth("large", $i);
+
+    .avatar-list-size.avatar-size-small.avatar-count-#{$i} {
+        width: $width-value-small;
+        min-width: $width-value-small;
+    }
+
+    .avatar-list-size.avatar-size-medium.avatar-count-#{$i} {
+        width: $width-value-med;
+        min-width: $width-value-med;
+    }
+
+    .avatar-list-size.avatar-size-large.avatar-count-#{$i} {
+        width: $width-value-lg;
+        min-width: $width-value-lg;
+    }
+}
+
+$avatarSizeSmall: getAvatarDiameterBySize("small");
+$avatarSizeMedium: getAvatarDiameterBySize("medium");
+$avatarSizeLarge: getAvatarDiameterBySize("large");
+
+.avatar-size.avatar-size-small {
+    width: $avatarSizeSmall;
+    height: $avatarSizeSmall;
+}
+
+.avatar-size.avatar-size-medium {
+    width: $avatarSizeMedium;
+    height: $avatarSizeMedium;
+}
+
+.avatar-size.avatar-size-large {
+    width: $avatarSizeLarge;
+    height: $avatarSizeLarge;
+}

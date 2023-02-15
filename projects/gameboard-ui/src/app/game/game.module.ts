@@ -33,28 +33,30 @@ import { CoreModule } from '../core/core.module';
 import { PlayerStatusComponent } from './player-status/player-status.component';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
 
+const MODULE_DECLARATIONS = [
+  PlayerEnlistComponent,
+  PlayerEnrollComponent,
+  GameInfoComponent,
+  PlayerSessionComponent,
+  GamePageComponent,
+  GameboardPageComponent,
+  GamespaceQuizComponent,
+  SessionForecastComponent,
+  ScoreboardPageComponent,
+  ScoreboardTableComponent,
+  PlayerPresenceComponent,
+  FeedbackFormComponent,
+  CertificateComponent,
+  GameHubStatusComponent,
+  PlayerStatusComponent,
+  HubStateToPlayerStatusPipe
+];
 
 @NgModule({
   declarations: [
-    PlayerEnlistComponent,
-    PlayerEnrollComponent,
-    GameInfoComponent,
-    PlayerSessionComponent,
-    GamePageComponent,
-    GameboardPageComponent,
-    GamespaceQuizComponent,
-    SessionForecastComponent,
-    ScoreboardPageComponent,
-    ScoreboardTableComponent,
-    PlayerPresenceComponent,
-    FeedbackFormComponent,
-    CertificateComponent,
-    GameHubStatusComponent,
-    PlayerStatusComponent,
-    HubStateToPlayerStatusPipe
+    ...MODULE_DECLARATIONS
   ],
-  exports: [
-  ],
+  exports: [],
   imports: [
     CommonModule,
     FormsModule,

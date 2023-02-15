@@ -3,7 +3,7 @@
 
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
 
-  <div class="card">
+  <div class="card" *ngIf="ctx">
     <div class="card-body">
 
       <div class="text-info card-text mb-2">
@@ -25,11 +25,9 @@
             <li *ngIf="!ctx.user.name">Make sure you've entered your name</li>
             <li *ngIf="!ctx.user.sponsor">Select your sponsor</li>
           </ul>
-
         </div>
 
         <ng-container *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
-
           <!-- team -->
           <div *ngIf="ctx.game.allowTeam">
             <p>
@@ -151,8 +149,10 @@
             <fa-icon [icon]="faTrash"></fa-icon>
             <span>Unenroll</span>
           </app-confirm-button>
-          <p class="small">You can delete this enrollment until either the enrollment period ends or your game session
-            starts.</p>
+          <p class="small">
+            You can unenroll until either the enrollment period ends or your game session
+            starts.
+          </p>
         </div>
       </ng-container>
     </div>

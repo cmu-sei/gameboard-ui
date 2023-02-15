@@ -3,21 +3,20 @@
 
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
-import { BehaviorSubject, combineLatest, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, first, map } from 'rxjs/operators';
-import { ConfigService } from './config.service';
-import { AuthService, AuthTokenState } from './auth.service';
-import { UserService } from '../api/user.service';
-import { Player } from '../api/player-models';
-import { UserService as CurrentUserService } from './user.service';
-import { LogService } from '../services/log.service';
+import { BehaviorSubject, combineLatest, of, Subject, timer } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, map, takeUntil } from 'rxjs/operators';
+import { ConfigService } from '../app/utility/config.service';
+import { AuthService, AuthTokenState } from '../app/utility/auth.service';
+import { UserService } from '../app/api/user.service';
+import { Player } from '../app/api/player-models';
+import { UserService as CurrentUserService } from '../app/utility/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
 
   public connection: HubConnection;
-  private hubState: HubState = { id: '', connected: false, joined: false, actors: [] };
-  private teamId$ = new BehaviorSubject<string>("");
+  private hubState: HubState = { id: '', connectionState: HubConnectionState.Disconnected, joined: false, actors: [] };
+  private teamId$ = new Subject<string>();
   private userId: string | null = null;
 
   state$ = new BehaviorSubject<HubState>(this.hubState);
@@ -31,66 +30,67 @@ export class NotificationService {
     private config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
-    private userSvc: CurrentUserService,
-    private log: LogService
+    private userSvc: CurrentUserService
   ) {
-
     this.connection = this.getConnection(`${config.apphost}hub`);
     this.userSvc.user$.pipe(first()).subscribe(u => this.userId = u?.id || null);
 
     // refresh connection on token refresh
-    const authtoken$ = this.auth.tokenState$.pipe(
-      debounceTime(250),
-      distinctUntilChanged()
-    );
-
-    combineLatest([authtoken$, this.teamId$]).pipe(
+    combineLatest([
+      this.auth.tokenState$.pipe(
+        debounceTime(250),
+        distinctUntilChanged()
+      ),
+      this.teamId$
+    ]).pipe(
       map(([token, id]) => ({ token, id }))
     ).subscribe(async ctx => {
       if (!ctx.id || ctx.token != AuthTokenState.valid) {
-        this.disconnect();
+        await this.disconnect();
         return;
       }
 
       if (ctx.id != this.hubState.id) {
+        await this.maybeConnect(ctx.id, true);
+
+        // join and post events
         await this.joinChannel(ctx.id);
-        this.hubState.id = ctx.id;
+        this.connection.invoke("Greet");
+        this.presenceEvents.next({ action: HubEventAction.arrived, model: ctx.id });
       }
     });
   }
 
-  async init(id: string, preserveExisting?: boolean): Promise<void> {
-    if (preserveExisting && this.hubState.connected) { return; }
-
-    if (!this.hubState.connected) {
-      await this.connect();
-    }
-
-    this.teamId$.next(id);
-    return
+  async init(groupId: string, preserveExisting = true): Promise<HubState> {
+    await this.maybeConnect(groupId, preserveExisting);
+    this.teamId$.next(groupId);
+    return this.hubState;
   }
 
   async initActors(teamId: string): Promise<void> {
+    this.hubState.actors = [];
+
+    if (!teamId || this.connection.state != HubConnectionState.Connected) {
+      return;
+    }
+
     const players: Player[] = await this.connection.invoke("ListTeam", teamId) as unknown as Player[];
-    const actors: Actor[] = [];
 
     players.forEach(p => {
-      actors.push({
+      this.hubState.actors.push({
         ...p,
         userApprovedName: p.approvedName,
         userName: p.name,
         pendingName: p.userName === p.userApprovedName ? p.userName : '',
-        playerId: p.id,
         userNameStatus: p.nameStatus,
-        // TODO: this was always true previously
         online: true,
         sponsorLogo: p.sponsor ?
           `${this.config.imagehost}/${p.sponsor}`
           : `${this.config.basehref}assets/sponsor.svg`
-      });
+      })
     });
 
-    this.postState(state => state.actors = actors);
+    this.postState();
   }
 
   private async joinChannel(id: string): Promise<void> {
@@ -101,19 +101,24 @@ export class NotificationService {
     }
 
     try {
-      await this.leaveChannel();
+      if (this.hubState.id !== id && this.hubState.joined) {
+        await this.leaveChannel();
+      }
+
       if (!!id) {
         try {
-          await this.connection.invoke("Listen", id);
+          await this.connection.invoke('Listen', id);
+
+          this.hubState.id = id;
+          this.hubState.joined = true;
+
+          await this.initActors(id);
         }
         catch (listenErr) {
-          this.log.logError("Error on calling \"Listen\" on the team hub: ", listenErr);
+          console.error(`Error on calling "Listen":`, listenErr)
         }
 
-        this.hubState.id = id;
-        this.hubState.joined = true;
-
-        await this.initActors(id);
+        this.postState();
       }
     } catch (e) {
       console.error(e);
@@ -126,19 +131,14 @@ export class NotificationService {
       this.hubState.id = '';
       this.hubState.joined = false;
       this.hubState.actors = [];
-
-      this.postState(state => {
-        state.id = '';
-        state.joined = false;
-        state.actors = [];
-      });
+      this.postState();
     }
   }
 
   private getConnection(url: string): HubConnection {
     const connection = new HubConnectionBuilder()
       .withUrl(url, {
-        accessTokenFactory: () => this.getTicket(),
+        accessTokenFactory: () => this.apiUserSvc.ticket().pipe(map(result => result.ticket)).toPromise(),
         transport: HttpTransportType.WebSockets,
         skipNegotiation: true,
       } as IHttpConnectionOptions)
@@ -150,6 +150,11 @@ export class NotificationService {
     connection.onreconnecting(err => this.setDisconnected());
     connection.onreconnected(cid => this.setConnected());
 
+    connection.on('teamEvent', (e: HubEvent) => this.teamEvents.next(e));
+    connection.on('challengeEvent', (e: HubEvent) => this.challengeEvents.next(e));
+    connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
+    connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
+
     connection.on('presenceEvent', (event: HubEvent) => {
       if (event.action === HubEventAction.arrived && event.model?.id != this.userId) {
         this.connection.invoke("Greet");
@@ -157,35 +162,61 @@ export class NotificationService {
 
       this.initActors(this.hubState.id);
       this.presenceEvents.next(event);
+      this.postState();
     });
-
-    connection.on('teamEvent', (e: HubEvent) => this.teamEvents.next(e));
-    connection.on('challengeEvent', (e: HubEvent) => this.challengeEvents.next(e));
-    connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
-    connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
 
     return connection;
   }
 
-  private async getTicket(): Promise<string> {
-    return this.apiUserSvc.ticket().pipe(
-      map(result => result.ticket)
-    ).toPromise();
-  }
-
-  private async connect(): Promise<void> {
+  private async maybeConnect(groupId: string, preserveExisting: boolean): Promise<HubState> {
     try {
+      if (
+        this.hubState &&
+        this.connection.state === HubConnectionState.Connected
+      ) {
+        // if the caller wants to trash the existing connection, do that and start again
+        if (!preserveExisting) {
+          await this.disconnect();
+          return await this.maybeConnect(groupId, preserveExisting);
+        }
+
+        // it's okay if they're connected but not in a group - we can fix that
+        if (groupId == this.hubState.id || !this.hubState.id) {
+          await this.joinChannel(groupId);
+        }
+
+        return this.hubState;
+      }
+
+      console.log("Called with", groupId, preserveExisting);
+
+
+
+      // if we make it here, we need to connect and possibly rejoin the channel requested
+      if (this.connection.state != HubConnectionState.Disconnected) {
+        console.log("what the state", this.connection.state);
+      }
+
       await this.connection.start();
-      await this.setConnected();
-      this.connection.invoke("Greet");
+      await this.joinChannel(groupId);
+
+      if (this.hubState.connectionState != HubConnectionState.Connected) {
+        console.warn(`Couldn't connect to the hub on group ${groupId}. State:`, this.hubState);
+      }
+
+      return this.hubState;
     } catch (e) {
-      timer(5000).subscribe(() => this.connect());
+      console.error(`Error connecting to the hub on group ${groupId} → `, e);
+      timer(5000).subscribe(() => this.maybeConnect(groupId, preserveExisting));
+    } finally {
+      return this.hubState;
     }
   }
 
   public async disconnect(): Promise<void> {
     try {
       if (this.connection?.state === HubConnectionState.Connected) {
+        await this.leaveChannel();
         await this.connection.stop();
         this.setDisconnected();
       }
@@ -193,9 +224,8 @@ export class NotificationService {
   }
 
   private async setConnected(): Promise<void> {
-    this.postState(state => {
-      state.connected = true;
-    });
+    this.hubState.connectionState = this.connection.state;
+    this.postState();
 
     if (this.hubState.id) {
       await this.joinChannel(this.hubState.id); // rejoin if was previously joined
@@ -203,36 +233,20 @@ export class NotificationService {
   }
 
   private setDisconnected(): void {
-    this.postState(state => {
-      state.connected = false;
-      state.joined = false;
-      state.actors = [];
-    });
+    this.hubState.connectionState = this.connection.state;
+    this.hubState.joined = false;
+    this.hubState.actors = [];
+    this.postState();
   }
 
-  private postState(buildAction: (state: HubState) => void): void {
-    const currentState = this.state$.getValue();
-    buildAction(currentState);
-    this.state$.next(currentState);
+  private postState(): void {
+    this.state$.next(this.hubState);
   }
-
-  // private addToHereIfNotPresent(playerId: string) {
-  //   if (this.playersHere.indexOf(playerId) == -1) {
-  //     this.playersHere.push(playerId);
-  //   }
-  // }
-
-  // private removeFromHereIfPresent(playerId: string) {
-  //   const playerIndex = this.playersHere.indexOf(playerId);
-  //   if (playerIndex >= 0) {
-  //     this.playersHere.splice(playerIndex, 1);
-  //   }
-  // }
 }
 
 export interface HubState {
   id: string;
-  connected: boolean;
+  connectionState: HubConnectionState;
   joined: boolean;
   actors: Actor[];
 }
@@ -240,12 +254,10 @@ export interface HubState {
 export interface HubEvent {
   action: HubEventAction;
   model?: any;
-  actorUserId: string;
 }
 
 export interface Actor {
   id: string;
-  playerId: string;
   userName: string;
   userApprovedName: string;
   userNameStatus: string;
