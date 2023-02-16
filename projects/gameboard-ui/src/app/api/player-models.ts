@@ -18,6 +18,7 @@ export interface Player {
   approvedName: string;
   sponsor: string;
   role: PlayerRole;
+  mode: PlayerMode;
   sessionBegin: Date;
   sessionEnd: Date;
   sessionMinutes: number;
@@ -117,7 +118,7 @@ export interface SelfChangedPlayer {
 
 export interface SessionChangeRequest {
   teamId: string;
-  sessionEnd: Date;
+  sessionEnd: string;
 }
 
 export interface PlayerEnlistment {
@@ -158,8 +159,8 @@ export interface TeamAdvancement {
 export interface Team {
   teamId: string;
   gameId: string;
-  sessionBegin: Date;
-  sessionEnd: Date;
+  sessionBegin: string;
+  sessionEnd: string;
   rank: number;
   score: number;
   time: number;
@@ -250,9 +251,15 @@ export interface PlayerSearch extends Search {
   gid?: string;
   uid?: string;
   org?: string;
+  mode?: string;
 }
 
 export enum PlayerRole {
   member = 'member',
   manager = 'manager'
+}
+
+export enum PlayerMode {
+  competition = 'competition',
+  practice = 'practice'
 }

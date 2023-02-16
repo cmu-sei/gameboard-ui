@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
+import { ProfileHistoryComponent } from './profile-history/profile-history.component';
 
 
 
@@ -32,6 +33,7 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
     LoginPageComponent,
     TocPageComponent,
     CertificateListComponent,
+    ProfileHistoryComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +44,7 @@ import { CertificateListComponent } from './certificate-list/certificate-list.co
         { path: 'oidc', component: OidcComponent },
         { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
         { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
+        { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
         { path: 'doc/:id', component: TocPageComponent },
         { path: 'forbidden', component: ForbiddenComponent },
         { path: 'home', component: LandingComponent  }

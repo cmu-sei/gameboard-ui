@@ -36,14 +36,29 @@
         <fa-icon [hidden]="filter!=='dismissed'" [icon]="faFilter"></fa-icon>
         <span>dismissed</span>
       </button>
-      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
+
+      <span class="text-warning"> | </span>
+
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('competition')">
+        <fa-icon [hidden]="mode!=='competition'" [icon]="faFilter"></fa-icon>
+        <span>comp</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('practice')">
+        <fa-icon [hidden]="mode!=='practice'" [icon]="faFilter"></fa-icon>
+        <span>prac</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('test')">
+        <fa-icon [hidden]="mode!=='test'" [icon]="faFilter"></fa-icon>
+        <span>test</span>
+      </button>
+      <!-- <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
         <fa-icon [hidden]="filter!=='pending'" [icon]="faFilter"></fa-icon>
         <span>names-pending</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('disallowed')">
         <fa-icon [hidden]="filter!=='disallowed'" [icon]="faFilter"></fa-icon>
         <span>names-disallowed</span>
-      </button>
+      </button> -->
       <ng-container *ngIf="ctx.game.allowTeam">
         <span class="text-warning"> | </span>
         <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleTeamView()">

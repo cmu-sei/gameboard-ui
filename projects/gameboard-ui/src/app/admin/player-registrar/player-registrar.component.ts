@@ -27,10 +27,11 @@ export class PlayerRegistrarComponent {
   selected: Player[] = [];
   viewed: Player | undefined = undefined;
   viewChange$ = new BehaviorSubject<Player | undefined>(this.viewed);
-  search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time' };
+  search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time', mode: 'competition' };
   filter = '';
   teamView = 'collapse';
   scope = '';
+  mode = 'competition';
   scopes: string[] = [];
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique']
   advanceOptions = false;
@@ -118,6 +119,12 @@ export class PlayerRegistrarComponent {
 
   toggleScope(scope: string): void {
     this.scope = this.scope !== scope ? scope : '';
+    this.refresh$.next(true);
+  }
+
+  toggleMode(mode: string): void {
+    this.mode = this.mode !== mode ? mode : '';
+    this.search.mode = this.mode;
     this.refresh$.next(true);
   }
 

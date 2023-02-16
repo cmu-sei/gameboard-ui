@@ -57,6 +57,7 @@ import { CoreModule } from '../core/core.module';
     ReactiveFormsModule,
     RouterModule.forChild([
       { path: 'teamup/:code', canActivate: [AuthGuard], component: PlayerEnlistComponent },
+      { path: 'board/:id/:cid', canActivate: [AuthGuard], component: GameboardPageComponent },
       { path: 'board/:id', canActivate: [AuthGuard], component: GameboardPageComponent },
       { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },

@@ -38,7 +38,7 @@
         </tbody>
       </table>
       <ng-container *ngIf="ctx.session.isDuring">
-        <div *ngIf="hubstate$ | async as hubstate" class="text-center">
+        <div *ngIf="hubstate$ | async as hubstate" class="text-center mb-2">
           <small *ngIf="!!hubstate.joined" class="text-success">
             <fa-icon [icon]="faBolt"></fa-icon>
             connected
@@ -48,7 +48,21 @@
             disconnected
           </small>
         </div>
+        <div *ngIf="ctx.game.isPracticeMode" class="text-center">
+          <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession(false)">
+            Extend Session
+          </app-confirm-button>
+          <span class="mr-2"></span>
+          <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession(true)">
+            End Session
+          </app-confirm-button>
+        </div>
       </ng-container>
+      <div *ngIf="ctx.session.isAfter && ctx.game.isPracticeMode" class="text-center">
+        <a class="btn btn-info btn-sm" [routerLink]="['/prac', ctx.gameId]">
+          New Session
+        </a>
+      </div>
     </div>
   </div>
 

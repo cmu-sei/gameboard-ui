@@ -40,6 +40,7 @@ import { ImagestackComponent } from './components/imagestack/imagestack.componen
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { NAVIGATOR } from './services/navigator.service';
+import { PagerComponent } from './components/pager/pager.component';
 
 const components = [
   ClipspanComponent,
@@ -69,7 +70,8 @@ const components = [
   MatchesTermPipe,
   TextToColorPipe,
   ImagestackComponent,
-  MorphingTextComponent
+  MorphingTextComponent,
+  PagerComponent
 ]
 
 @NgModule({
