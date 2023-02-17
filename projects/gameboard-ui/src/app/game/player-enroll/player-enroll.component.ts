@@ -1,44 +1,54 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { HubConnectionState } from '@microsoft/signalr';
-import { Observable, of, Subscription, timer } from 'rxjs';
-import { finalize, map, tap, delay, first, take, takeUntil } from 'rxjs/operators';
+import { Observable, Subscription, timer } from 'rxjs';
+import { finalize, map, tap, delay, first } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
-import { NewPlayer, Player, PlayerEnlistment, TeamInvitation, TimeWindow } from '../../api/player-models';
+import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
-import { HubEventAction, NotificationService } from '../../utility/notification.service';
+import { NotificationService } from '../../services/notification.service';
+import { UserService } from '../../utility/user.service';
 
 @Component({
   selector: 'app-player-enroll',
   templateUrl: './player-enroll.component.html',
   styleUrls: ['./player-enroll.component.scss']
 })
-export class PlayerEnrollComponent {
+export class PlayerEnrollComponent implements OnInit, OnDestroy {
   @Input() ctx!: GameContext;
+  @Input() playerIsManager$!: Observable<boolean>;
+  @Output() onEnroll = new EventEmitter<Player>();
+  @Output() onUnenroll = new EventEmitter<Player>();
+
   errors: any[] = [];
   code = '';
   invitation = '';
+  token = '';
+  delayMs = 2000;
+
+  ctx$: Observable<GameContext>;
+  ctxDelayed$: Observable<GameContext>;
+
+  disallowedName: string | null = null;
+  disallowedReason: string | null = null;
+  protected managerRole = PlayerRole.manager;
+  protected unenrollTooltip?: string;
+  private hubSub?: Subscription;
+
   faUser = faUser;
   faEdit = faEdit;
   faCopy = faCopy;
   faPaste = faPaste;
   faTrash = faTrash;
-  token = '';
-  ctx$: Observable<GameContext>;
-  delayMs: number = 2000;
-  ctxDelayed$: Observable<GameContext>;
-
-  disallowedName: string | null = null;
-  disallowedReason: string | null = null;
 
   constructor(
     private api: PlayerService,
     private config: ConfigService,
-    private notificationService: NotificationService
+    private hubService: NotificationService,
+    private localUser: UserService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
       map(i => this.ctx),
@@ -54,8 +64,6 @@ export class PlayerEnrollComponent {
             this.disallowedReason = gc.player.nameStatus;
           }
         }
-
-        this.ctx.player$.next(gc.player);
       })
     );
 
@@ -65,31 +73,20 @@ export class PlayerEnrollComponent {
     );
   }
 
-  enroll(uid: string, gid: string): void {
-    const model = { userId: uid, gameId: gid } as NewPlayer;
-
-    const sub: Subscription = this.api.create(model).pipe(
-      finalize(() => sub.unsubscribe())
-    ).subscribe(
-      p => this.enrolled(p),
-      err => this.errors.push(err)
-    );
-
+  ngOnInit(): void {
+    this.manageUnenrollAvailability(this.hubService.actors$.getValue());
+    this.hubSub = this.hubService.actors$.subscribe(a => this.manageUnenrollAvailability(a));
   }
 
   async invite(p: Player) {
-    this.notificationService.state$.subscribe(async state => {
-      this.code = ""
-      this.invitation = "";
+    this.code = ""
+    this.invitation = "";
 
-      this.api.invite(p.id).pipe(first())
-        .subscribe((m: TeamInvitation) => {
-          this.code = m.code;
-          this.invitation = `${this.config.absoluteUrl}game/teamup/${m.code}`;
-
-          this.enrolled(p);
-        });
-    });
+    this.api.invite(p.id).pipe(first())
+      .subscribe((m: TeamInvitation) => {
+        this.code = m.code;
+        this.invitation = `${this.config.absoluteUrl}game/teamup/${m.code}`;
+      });
   }
 
   redeem(p: Player): void {
@@ -102,9 +99,7 @@ export class PlayerEnrollComponent {
       tap(p => this.token = ''),
       finalize(() => sub.unsubscribe())
     ).subscribe(
-      async p => {
-        this.enrolled(p);
-      },
+      p => this.enrolled(p),
       err => this.errors.push(err)
     );
   }
@@ -120,51 +115,68 @@ export class PlayerEnrollComponent {
     // Otherwise, if there is a disallowed reason as well, mark it as that reason
     else if (this.disallowedReason) p.nameStatus = this.disallowedReason;
 
-    const sub: Subscription = this.api.update(p).pipe(
-      finalize(() => sub.unsubscribe())
-    ).subscribe(
-      () => {
-        const updatedPlayer = this.api.transform(this.ctx.player);
-        this.ctx.player$.next(updatedPlayer);
-      }
+    this.api.update(p).pipe(first()).subscribe(
+      p => this.api.transform(p)
     );
   }
 
-  delete(p: Player): void {
-    this.api.delete(p.id).pipe(first()).subscribe(() =>
-      // note that `enrolled` updates the context
-      this.enrolled(null)
-    );
+  protected handleEnroll(userId: string, gameId: string): void {
+    const model = { userId, gameId } as NewPlayer;
+    this.api.create(model).pipe(first()).subscribe(p => {
+      this.enrolled(p);
+    });
   }
 
-  async enrolled(p: Player | null): Promise<void> {
-    if (!p) {
+  protected handleUnenroll(p: Player): void {
+    this.api.unenroll(p.id).pipe(first()).subscribe(_ => {
+      this.onUnenroll.emit(p);
+    });
+  }
+
+  private enrolled(p: Player): void {
+    this.onEnroll.emit(p);
+  }
+
+  private manageUnenrollAvailability(actors: HubPlayer[]) {
+    console.log("actors changed", actors);
+
+    // you can unenroll if you're the only one left
+    if (!actors.length || actors.length == 1 && actors[0].userId === this.ctx.user.id) {
+      this.setCanUnenroll(true);
       return;
     }
 
-    this.ctx.player$.next(p);
+    console.log("i am", this.ctx.user.id);
+    console.log("manager is", actors.find(a => a.isManager));
+    const managerPlayer = actors.find(a => a.isManager)!.id;
+    const nonManagerPlayers = actors.filter(a => !a.isManager).map(a => a.id);
 
-    if (this.ctx.game.allowTeam) {
-      this.notificationService.init(p.teamId);
-
-      // connectionId is null when disconnected
-      if (this.notificationService.connection.connectionId) {
-        this.notificationService.connection.invoke("Greet");
-        this.notificationService.presenceEvents.next({ action: HubEventAction.arrived, model: p.teamId, actorUserId: p.userId });
-      }
-      else {
-        this.notificationService.state$.pipe(
-          takeUntil(of(!!this.notificationService.connection.connectionId))
-        ).subscribe();
-
-        if (this.notificationService.connection.connectionId != null) {
-          return;
-        }
-
-        if (!!this.notificationService.connection.connectionId && this.notificationService.connection.state != HubConnectionState.Connecting) {
-          await this.notificationService.connection.start();
-        }
-      }
+    // you can unenroll if you're not the manager
+    if (managerPlayer !== this.ctx.player.id) {
+      console.log("i can unenroll")
+      this.setCanUnenroll(true);
+      return;
     }
+
+    // otherwise, verify that this person is the manager and then tell them about
+    // the rules of succession
+    this.setCanUnenroll(false)
+
+    return;
+  }
+
+  private setCanUnenroll(canUnenroll: boolean): void {
+    if (!canUnenroll) {
+      this.unenrollTooltip = `
+        You're the team manager, so you can't unenroll until you promote someone else to the role of manager.
+        If you'd like to unenroll, use the "Promote" buttons next to the player names on the "Status" card to choose
+        a new manager.`;
+    } else {
+      this.unenrollTooltip = undefined;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.hubSub?.unsubscribe();
   }
 }

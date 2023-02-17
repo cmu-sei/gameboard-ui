@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { WindowService } from '../../../../services/window.service';
+import { Player } from '../../../api/player-models';
 
 export enum PlayerAvatarSize {
   Small = "small",
@@ -9,25 +9,34 @@ export enum PlayerAvatarSize {
 
 @Component({
   selector: 'app-player-avatar',
-  templateUrl: './player-avatar.component.html',
+  template: `
+    <div [class]="'d-flex position-relative align-items-center justify-content-center player-avatar-component avatar-list-size ' + sizeClass +  ' ' + avatarCountClass">
+      <div [class]="'avatar-container avatar-size ' + this.sizeClass" aria-roledescription="Player avatar icon"
+          [style.background-image]="'url(' + avatarUri + ')'"></div>
+      <!-- <app-player-status class="position-absolute status-light" *ngIf="isOnline !== undefined" [isOnline]="isOnline"></app-player-status> -->
+  </div>
+  `,
   styleUrls: ['./player-avatar.component.scss']
 })
 export class PlayerAvatarComponent implements OnInit {
-  @Input() sponsorLogoUri!: string;
+  @Input() avatarUri?: string;
   @Input() size = PlayerAvatarSize.Medium;
-  uriBase!: string;
+  @Input() isOnline?: boolean = undefined;
 
-  protected isSmall = false;
-  protected isMedium = true;
-  protected isLarge = false;
+  // this accommodates cases where we want to make sure that even though this avatar may be a single item, it
+  // may be in a list-like view with a PlayerAvatarListComponent, and we need to arrange the width such that 
+  // it's equal to the width of the list component
+  @Input() maxAvatarsInListView?: number;
 
-  constructor(private windowService: WindowService) { }
+  protected avatarCountClass = '';
+  protected sizeClass = '';
+  protected sponsorLogoUri = '';
 
   ngOnInit(): void {
-    this.uriBase = this.windowService.get()!.location.origin;
+    this.sizeClass = `avatar-size-${this.size}`;
 
-    this.isSmall = this.size == PlayerAvatarSize.Small;
-    this.isMedium = this.size == PlayerAvatarSize.Medium;
-    this.isLarge = this.size == PlayerAvatarSize.Large;
+    if (this.maxAvatarsInListView) {
+      this.avatarCountClass = `avatar-count-${this.maxAvatarsInListView}`;
+    }
   }
 }

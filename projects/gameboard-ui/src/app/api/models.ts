@@ -18,8 +18,6 @@ export interface GameContext {
   game: Game;
   player: Player;
   user: ApiUser;
-
-  player$: Subject<Player>;
 }
 
 export interface GameEnrollmentContext {

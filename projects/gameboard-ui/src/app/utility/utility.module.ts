@@ -16,7 +16,6 @@ import { ShortDatePipe } from './pipes/short-date.pipe';
 import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { GameCardComponent } from './components/game-card/game-card.component';
@@ -40,6 +39,7 @@ import { ImagestackComponent } from './components/imagestack/imagestack.componen
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { NAVIGATOR } from './services/navigator.service';
+import { CoreModule } from '../core/core.module';
 
 const components = [
   ClipspanComponent,
@@ -82,10 +82,10 @@ const components = [
     FontAwesomeModule,
     AlertModule,
     ModalModule,
-    TooltipModule,
     ButtonsModule,
     BsDropdownModule,
-    RouterModule
+    RouterModule,
+    CoreModule
   ],
 })
 export class UtilityModule { }

@@ -76,6 +76,18 @@ app-root {
   margin: 0 auto;
 }
 
+.fs-10 {
+  font-size: 1reme;
+}
+
+.fs-11 {
+  font-size: 1.1rem;
+}
+
+.fs-13 {
+  font-size: 1.3rem;
+}
+
 .fs-15 {
   font-size: 1.5em;
 }
@@ -88,7 +100,7 @@ app-root {
   height: auto;
 }
 
-fa-icon+span {
+fa-icon + span {
   margin-left: 4px;
 }
 
@@ -122,16 +134,16 @@ li {
   border-radius: .25rem;
 }
 
-.form-group>.form-control {
+.form-group > .form-control {
   font-size: .875rem !important;
   padding: .25rem .5rem !important;
 }
 
-.form-group>label {
+.form-group > label {
   font-size: .875rem !important;
 }
 
-.untack>svg {
+.untack > svg {
   transform: rotate(45deg);
 }
 

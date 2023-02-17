@@ -6,7 +6,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Announcement } from '../../../api/user-models';
-import { HubEvent, NotificationService } from '../../notification.service';
+import { HubEvent, NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-message-board',

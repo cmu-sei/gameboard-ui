@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { HubState } from '../../utility/notification.service';
-import { PlayerStatus } from '../player-status/player-status.component';
+import { HubState } from '../../services/notification.service';
+import { PlayerStatus } from '../../core/components/player-status/player-status.component';
 
 @Pipe({ name: 'hubStateToPlayerStatus' })
 export class HubStateToPlayerStatusPipe implements PipeTransform {
 
   transform(value: HubState): unknown {
-    return value.connected ? PlayerStatus.Online : PlayerStatus.Offline;
+    return value.connectionState ? PlayerStatus.Online : PlayerStatus.Offline;
   }
 
 }

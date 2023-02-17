@@ -1,10 +1,10 @@
 $max-players-per-team: 5;
 
 $player-avatar-dimensions: (
-    "small": ("radius": 20px,
-        "addedWidthPerAvatar": 10px),
-    "medium": ("radius": 30px,
-        "addedWidthPerAvatar": 15px),
+    "small": ("radius": 24px,
+        "addedWidthPerAvatar": 12px),
+    "medium": ("radius": 36px,
+        "addedWidthPerAvatar": 18px),
     "large": ("radius": 48px,
         "addedWidthPerAvatar": 24px)
 );
@@ -48,18 +48,25 @@ $player-avatar-dimensions: (
     $width-value-lg: getAvatarListTotalWidth("large", $i);
 
     .avatar-list-size.avatar-size-small.avatar-count-#{$i} {
+        max-height: $width-value-small;
+        height: $width-value-small;
         width: $width-value-small;
         min-width: $width-value-small;
     }
 
     .avatar-list-size.avatar-size-medium.avatar-count-#{$i} {
+        max-height: $width-value-med;
+        height: $width-value-med;
         width: $width-value-med;
         min-width: $width-value-med;
+        height: $width-value-med;
     }
 
     .avatar-list-size.avatar-size-large.avatar-count-#{$i} {
+        max-height: $width-value-lg;
         width: $width-value-lg;
         min-width: $width-value-lg;
+        height: $width-value-lg;
     }
 }
 
@@ -68,16 +75,22 @@ $avatarSizeMedium: getAvatarDiameterBySize("medium");
 $avatarSizeLarge: getAvatarDiameterBySize("large");
 
 .avatar-size.avatar-size-small {
+    max-width: $avatarSizeSmall;
     width: $avatarSizeSmall;
     height: $avatarSizeSmall;
+    max-height: $avatarSizeSmall;
 }
 
 .avatar-size.avatar-size-medium {
+    max-width: $avatarSizeMedium;
     width: $avatarSizeMedium;
     height: $avatarSizeMedium;
+    max-height: $avatarSizeMedium;
 }
 
 .avatar-size.avatar-size-large {
+    max-width: $avatarSizeLarge;
     width: $avatarSizeLarge;
     height: $avatarSizeLarge;
+    max-height: $avatarSizeLarge;
 }

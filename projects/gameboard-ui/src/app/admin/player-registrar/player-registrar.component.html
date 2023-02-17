@@ -120,7 +120,7 @@
         <fa-icon [icon]="player.checked ? faChecked : faUnChecked"></fa-icon>
       </button>
     </div>
-    <app-player-avatar-list [sponsorUris]="player.sponsorList"></app-player-avatar-list>
+    <app-player-avatar-list [avatarUris]="player.sponsorList"></app-player-avatar-list>
     <div class="ml-2">
       <span *ngIf="player.advanced" class="text-success ml-2">
         <fa-icon [icon]="faStar"></fa-icon>
@@ -144,13 +144,13 @@
       <span>Disapprove</span>
     </button>
     <div class="spacer"></div>
-    <div [class.text-success]="player.session.isDuring">
+    <div [class.text-success]="player.session?.isDuring">
       {{player.rank}} |
       {{player.score}} |
       {{player.time | clock}} |
       {{player.correctCount}} |
       {{player.partialCount}} |
-      {{player.session.countdown | countdown }}
+      {{player.session?.countdown | countdown }}
     </div>
     <div class="">
       <button class="btn btn-outline-info btn-sm mx-1" (click)="view(player)">
@@ -165,7 +165,7 @@
       </ng-container>
       <app-confirm-button btnClass="btn btn-outline-danger btn-sm mx-1" (confirm)="delete(player)">
         <fa-icon [icon]="faTrash"></fa-icon>
-        <span>Delete</span>
+        <span>Unenroll</span>
       </app-confirm-button>
     </div>
     <div *ngIf="viewed === player" class="col-12">

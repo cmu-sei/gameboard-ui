@@ -86,8 +86,7 @@ export class PlayerRegistrarComponent {
       fetch$,
       interval(1000).pipe(map(() => this.source))
     ], asyncScheduler).pipe(
-      mergeAll(),
-      tap(r => r.forEach(p => p.session = new TimeWindow(p.sessionBegin, p.sessionEnd)))
+      mergeAll()
     );
 
     this.ctx$ = combineLatest([
@@ -154,7 +153,7 @@ export class PlayerRegistrarComponent {
   }
 
   delete(model: Player): void {
-    this.api.delete(model.id).subscribe(() => {
+    this.api.unenroll(model.id).subscribe(() => {
       const found = this.source.find(f => f.id === model.id);
       if (found) {
         this.source.splice(

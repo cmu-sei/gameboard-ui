@@ -3,7 +3,7 @@ import { Router, NavigationStart } from '@angular/router';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { NotificationService } from '../../utility/notification.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-support-pill',

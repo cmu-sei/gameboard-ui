@@ -23,11 +23,11 @@ export class BoardService {
   }
 
   public list(filter: any): Observable<ChallengeSummary[]> {
-    return this.http.get<ChallengeSummary[]>(this.url + '/challenges', {params: filter});
+    return this.http.get<ChallengeSummary[]>(this.url + '/challenges', { params: filter });
   }
 
   public archived(filter: any): Observable<ChallengeSummary[]> {
-    return this.http.get<ChallengeSummary[]>(this.url + '/challenges/archived', {params: filter});
+    return this.http.get<ChallengeSummary[]>(this.url + '/challenges/archived', { params: filter });
   }
   public load(id: string): Observable<BoardPlayer> {
     return this.http.get<BoardPlayer>(`${this.url}/board/${id}`).pipe(
@@ -47,16 +47,16 @@ export class BoardService {
     return this.http.put<Challenge>(`${this.url}/challenge/grade`, model);
   }
   public regrade(id: string): Observable<Challenge> {
-    return this.http.put<Challenge>(`${this.url}/challenge/regrade`, {id});
+    return this.http.put<Challenge>(`${this.url}/challenge/regrade`, { id });
   }
   public start(model: ChangedChallenge): Observable<Challenge> {
     return this.http.put<Challenge>(`${this.url}/challenge/start`, model);
   }
   public stop(model: ChangedChallenge): Observable<Challenge> {
-      return this.http.put<Challenge>(`${this.url}/challenge/stop`, model);
+    return this.http.put<Challenge>(`${this.url}/challenge/stop`, model);
   }
   public console(model: VmConsole): Observable<VmConsole> {
-      return this.http.put<VmConsole>(`${this.url}/challenge/console`, model);
+    return this.http.put<VmConsole>(`${this.url}/challenge/console`, model);
   }
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/challenge/${id}`);
@@ -65,22 +65,22 @@ export class BoardService {
     return this.http.get<any>(`${this.url}/challenge/${id}/audit`);
   }
   public consoles(gid: string): Observable<ObserveChallenge[]> {
-    return this.http.get<ObserveChallenge[]>(`${this.url}/challenge/consoles`, { params: {gid}});
+    return this.http.get<ObserveChallenge[]>(`${this.url}/challenge/consoles`, { params: { gid } });
   }
   public consoleActors(gid: string): Observable<ConsoleActor[]> {
-    return this.http.get<ConsoleActor[]>(`${this.url}/challenge/consoleactors`, { params: {gid}});
+    return this.http.get<ConsoleActor[]>(`${this.url}/challenge/consoleactors`, { params: { gid } });
   }
 
   private transform(b: BoardPlayer): BoardPlayer {
     b.game.mapUrl = b.game.background
       ? `${this.config.imagehost}/${b.game.background}`
       : `${this.config.basehref}assets/map.png`
-    ;
+      ;
 
     b.game.cardUrl = b.game.logo
       ? `${this.config.imagehost}/${b.game.logo}`
       : `${this.config.basehref}assets/card.png`
-    ;
+      ;
 
     b.game.specs.forEach(c => this.checkPrereq(c, b));
 
@@ -101,10 +101,10 @@ export class BoardService {
 
   setColor(s: BoardSpec): void {
     s.c = !!s.instance?.state.id
-        ? s.instance.state.endTime.match(/^0001/) ? 'white' : 'black'
-        : s.disabled || s.locked ? 'black' : 'blue'
-    ;
-    if (!!s.instance){
+      ? s.instance.state.endTime.match(/^0001/) ? 'white' : 'black'
+      : s.disabled || s.locked ? 'black' : 'blue'
+      ;
+    if (!!s.instance) {
       if (s.instance.result === 'success') { s.c = 'lime'; }
       if (s.instance.result === 'partial') { s.c = 'yellow'; }
     }

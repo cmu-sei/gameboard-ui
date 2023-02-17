@@ -1,28 +1,31 @@
-.light-container {
+.team-leader {
+    margin: 0;
+    padding: 0;
     display: flex;
-
-    .light-spacer {
-        flex: 1 1 auto;
-    }
-
-    app-game-hub-status {
-        position: relative;
-        width: 0;
-        height: 0;
-        right: 2rem;
-        top: 0.4rem;
-    }
+    flex-direction: row;
 }
 
-.avatar {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
+.team-leader-name {
+    flex-shrink: 1;
 }
 
-.player-list {
-    li {
-        display: flex;
-        width: 100%;
-    }
+.team-leader-name-text {
+    font-size: 1.6em;
+    line-height: 1.3rem;
+    margin: 0;
+    padding: 0;
+}
+
+.team-header {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #aaaaaa;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+}
+
+.player-tags li {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
 }

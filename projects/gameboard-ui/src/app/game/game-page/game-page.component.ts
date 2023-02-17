@@ -1,122 +1,186 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faCaretDown, faCaretRight, faExternalLinkAlt, faListOl } from '@fortawesome/free-solid-svg-icons';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, startWith, switchMap, tap, zipAll } from 'rxjs/operators';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { ApiUser, PlayerRole } from '../../api/user-models';
 import { GameService } from '../../api/game.service';
 import { GameContext } from '../../api/models';
-import { Player } from '../../api/player-models';
-import { PlayerService } from '../../api/player.service';
-import { ApiUser } from '../../api/user-models';
+import { HubEvent, HubEventAction, HubState, NotificationService } from '../../services/notification.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
-import { HubEvent, HubEventAction, NotificationService } from '../../utility/notification.service';
-import { ToastService } from '../../utility/services/toast.service';
+import { Player, TimeWindow } from '../../api/player-models';
+import { PlayerService } from '../../api/player.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
+import { HubConnectionState } from '@microsoft/signalr';
+import { WindowService } from '../../services/window.service';
 
 @Component({
   selector: 'app-game-page',
   templateUrl: './game-page.component.html',
   styleUrls: ['./game-page.component.scss']
 })
-export class GamePageComponent {
+export class GamePageComponent implements OnDestroy {
   ctx$ = new Observable<GameContext | undefined>(undefined);
   showCert = false;
   faLink = faExternalLinkAlt;
   faList = faListOl;
   faCaretDown = faCaretDown;
   faCaretRight = faCaretRight;
-  minDate = new Date(1, 1, 1, 0, 0, 0, 0);
+  minDate = new Date(0);
 
-  private playerSubject$ = new Subject<Player>();
-  private modalRef?: BsModalRef;
+  protected hubState$: Observable<HubState>;
+  protected ctxIds: { gameId: string, playerId?: string } = { gameId: '' };
+
+  private isExternalGame = false;
+  private playerSubject$ = new BehaviorSubject<Player | null>(null);
+  private hubEventsSubcription: Subscription;
+  private localUserSubscription: Subscription;
 
   constructor(
     router: Router,
     route: ActivatedRoute,
-    apiGame: GameService,
     apiPlayer: PlayerService,
-    hub: NotificationService,
-    local: LocalUserService,
-    toasts: ToastService,
+    localUser: LocalUserService,
+    private hub: NotificationService,
+    private apiGame: GameService,
     private modalService: BsModalService,
+    private windowService: WindowService
   ) {
-    const user$ = local.user$.pipe(
+    const user$ = localUser.user$.pipe(
       map(u => !!u ? u : {} as ApiUser)
     );
 
+    this.hubState$ = hub.state$.asObservable();
     const game$ = route.params.pipe(
       filter(p => !!p.id),
-      switchMap(p => apiGame.retrieve(p.id))
+      switchMap(p => apiGame.retrieve(p.id)),
+      tap(g => this.ctxIds.gameId = g.id),
+      tap(g => this.isExternalGame = apiGame.isExternalGame(g))
     );
 
-    const player$ = combineLatest([
+    this.localUserSubscription = combineLatest([
       route.params,
-      local.user$,
-      this.playerSubject$.asObservable().pipe(startWith(null)),
+      localUser.user$,
     ]).pipe(
-      map(([routeParams, localUser, player]) => ({ gid: routeParams?.id, localUser: localUser, player })),
+      map(([routeParams, localUser]) => ({ gid: routeParams?.id, localUser: localUser })),
       switchMap(z => {
-        // if we were given by another component who has access to the thing, use that instead
-        if (z.player) {
-          return of(z.player);
-        }
-
         return apiPlayer.list({ gid: z.gid, uid: z.localUser?.id }).pipe(
           map(
             p => {
               const defaultPlayer = { userId: z.localUser?.id } as unknown as Player;
-              if (!p.length || p.length > 1) {
-                return defaultPlayer;
-              }
-
-              // otherwise, all is well
-              return p[0];
+              this.playerSubject$.next(p.length !== 1 ? defaultPlayer : p[0]);
             }
           )
         )
       })
-    );
+    ).subscribe();
 
-    // this is the result of the filter$ observable, but "deleted" by this pipeline
-    // if the team has been deleted by this user or another player on their team
-    const playerTeamStateFilter$ = combineLatest([
-      player$,
-      hub
-        .teamEvents.pipe(
-          distinctUntilChanged(),
-          // we have to send something through this pipe in order to have all the observables complete at least the first time,
-          // so we start with a "started" event (which we ignore below)
-          startWith({ action: HubEventAction.started } as HubEvent),
-          filter(hubEvent => hubEvent.action == HubEventAction.started || hubEvent.action == HubEventAction.deleted)
-        )
-    ]
-    ).pipe(
-      map(([player$, hubEvent]) => ({ player: player$, teamState: hubEvent })),
-      map(playerTeamState => {
-        if (playerTeamState.teamState.action == HubEventAction.deleted && playerTeamState.teamState.model.teamId == playerTeamState.player.teamId) {
-          if (playerTeamState.teamState.model.actor.id != playerTeamState.player.userId) {
-            this.showModal(playerTeamState.teamState.model?.actor.approvedName);
-          }
-
-          return { userId: playerTeamState.player.userId } as Player;
+    // allow hub events to update the player subject
+    this.hubEventsSubcription = combineLatest([
+      localUser.user$,
+      merge(
+        hub.playerEvents,
+        hub.teamEvents
+      ).pipe(startWith({ action: HubEventAction.waiting } as HubEvent))
+    ]).pipe(
+      map(([localUser, hubEvent]) => ({ localUser, hubEvent })),
+      map(playerEvent => {
+        // this event relies on the hub, so we have to listen to it whether we generated it or not
+        const currentPlayer = this.playerSubject$.getValue();
+        if (playerEvent.hubEvent.action == HubEventAction.roleChanged && currentPlayer && playerEvent.hubEvent.model.id !== currentPlayer.id) {
+          const isPromoted = playerEvent.hubEvent.model.id == currentPlayer.id;
+          currentPlayer.role = isPromoted ? PlayerRole.manager : PlayerRole.member;
+          currentPlayer.isManager = isPromoted;
+          this.playerSubject$.next(currentPlayer);
         }
 
-        return playerTeamState.player;
+
+        // current implementation can ignore other events generated by the local user
+        if (playerEvent.hubEvent.actingUser?.id === localUser.user$.getValue()?.id) {
+          return;
+        }
+
+        if (this.playerSubject$.getValue() == null && playerEvent.hubEvent.action == HubEventAction.waiting) {
+          this.playerSubject$.next({ userId: playerEvent.localUser?.id } as Player);
+          return;
+        }
+
+        if (playerEvent.hubEvent.action == HubEventAction.departed && playerEvent.hubEvent.actingUser.id !== localUser.user$.getValue()?.id) {
+          return;
+        }
+
+        if (playerEvent.hubEvent.action == HubEventAction.deleted) {
+          this.playerSubject$.next(null);
+
+          if (playerEvent.hubEvent.actingUser.id !== localUser.user$.getValue()?.id) {
+            this.showModal(playerEvent.hubEvent.model.actor.approvedName);
+          }
+        }
+
+        if (playerEvent.hubEvent.action == HubEventAction.started) {
+          const currentPlayer = this.playerSubject$.getValue();
+
+          if (currentPlayer) {
+            currentPlayer.session = new TimeWindow(playerEvent.hubEvent.model.sessionBegin, playerEvent.hubEvent.model.sessionEnd);
+            this.playerSubject$.next(currentPlayer);
+          }
+        }
+
+        if (playerEvent.hubEvent.action == HubEventAction.roleChanged) {
+          console.log("player event", playerEvent);
+        }
+      })
+    ).subscribe();
+
+    this.ctx$ = combineLatest([user$, game$, this.playerSubject$]).pipe(
+      map(([user, game, player]) => ({ user, game, player })),
+      map(c => {
+        return {
+          user: c.user,
+          game: c.game,
+          player: c.player = c.player || { userId: c.user.id } as Player
+        };
+      }),
+      tap(c => { if (!c.game) { router.navigateByUrl("/") } }),
+      filter(c => !!c.game),
+      tap(ctx => {
+        if (ctx.player.id && ctx.player.teamId && this.hub.connection.state !== HubConnectionState.Connected) {
+          this.hub.init(ctx.player.teamId);
+        }
       })
     );
+  }
 
-    this.ctx$ = combineLatest([user$, game$, playerTeamStateFilter$]).pipe(
-      map(([user, game, player]) => ({ user, game, player })),
-      tap(c => {
-        if (!c.game) { router.navigateByUrl("/"); }
-      }),
-      filter(c => !!c.game),
-      map(c => ({ player$: this.playerSubject$, ...c })),
-    )
+  protected async onEnroll(player: Player): Promise<void> {
+    this.playerSubject$.next(player);
+    await this.hub.init(player.teamId);
+  }
+
+  protected async onUnenroll(player: Player): Promise<void> {
+    await this.hub.disconnect();
+    this.playerSubject$.next(null);
+  }
+
+  protected onSessionStarted(player: Player): void {
+    this.playerSubject$.next(player);
+  }
+
+  protected async onSessionReset(player: Player): Promise<void> {
+    await this.hub.disconnect();
+    this.playerSubject$.next(null);
+
+    if (this.isExternalGame) {
+      this.windowService.get().location.reload();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.hubEventsSubcription?.unsubscribe();
+    this.localUserSubscription?.unsubscribe();
   }
 
   private showModal(resettingPlayerName: string): void {
@@ -134,5 +198,3 @@ export class GamePageComponent {
     });
   }
 }
-
-
