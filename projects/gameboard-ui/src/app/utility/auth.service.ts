@@ -2,20 +2,20 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { UserManager, UserManagerSettings, User, WebStorageStateStore, Log } from 'oidc-client';
+import { UserManager, UserManagerSettings, User, WebStorageStateStore } from 'oidc-client';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ConfigService, Settings } from './config.service';
 
 export enum AuthTokenState {
-  unknown = 'unknown' as any,
-  valid = 'valid' as any,
-  invalid = 'invalid' as any,
-  expiring = 'expiring' as any,
-  expired = 'expired' as any
+    unknown = 'unknown' as any,
+    valid = 'valid' as any,
+    invalid = 'invalid' as any,
+    expiring = 'expiring' as any,
+    expired = 'expired' as any
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
 
     mgr!: UserManager;
@@ -28,27 +28,25 @@ export class AuthService {
     constructor(
         private config: ConfigService
     ) {
-        // Log.level = Log.DEBUG;
-        // Log.logger = console;
-
         config.settings$.pipe(
-          filter(s => !!s.oidc.authority)
+            filter(s => !!s.oidc.authority)
         ).subscribe((s: Settings) => {
 
-          this.authority = s.oidc?.authority?.
-            replace(/https?:\/\//, '').split('/').reverse().pop() || 'Identity Provider';
+            this.authority = s.oidc?.authority?.
+                replace(/https?:\/\//, '').split('/').reverse().pop() || 'Identity Provider';
 
-          if (s.oidc.useLocalStorage) {
-              (s.oidc.userStore as any) = new WebStorageStateStore({});
-          }
-          this.mgr = new UserManager(s.oidc || {} as UserManagerSettings);
-          this.mgr.events.addUserLoaded(user => this.onTokenLoaded(user));
-          this.mgr.events.addUserUnloaded(() => this.onTokenUnloaded());
-          this.mgr.events.addAccessTokenExpiring(e => this.onTokenExpiring());
-          this.mgr.events.addAccessTokenExpired(e => this.onTokenExpired());
-          this.mgr.events.addUserSessionChanged(() => this.onSessionChanged());
-          this.mgr.events.addSilentRenewError(e => this.onRenewError(e));
-          this.mgr.getUser().then(user => this.onTokenLoaded(user));
+            if (s.oidc.useLocalStorage) {
+                (s.oidc.userStore as any) = new WebStorageStateStore({});
+            }
+
+            this.mgr = new UserManager(s.oidc || {} as UserManagerSettings);
+            this.mgr.events.addUserLoaded(user => this.onTokenLoaded(user));
+            this.mgr.events.addUserUnloaded(() => this.onTokenUnloaded());
+            this.mgr.events.addAccessTokenExpiring(e => this.onTokenExpiring());
+            this.mgr.events.addAccessTokenExpired(e => this.onTokenExpired());
+            this.mgr.events.addUserSessionChanged(() => this.onSessionChanged());
+            this.mgr.events.addSilentRenewError(e => this.onRenewError(e));
+            this.mgr.getUser().then(user => this.onTokenLoaded(user));
         });
 
     }
@@ -113,15 +111,16 @@ export class AuthService {
     }
 
     externalLogin(url: string): void {
-      const currentUrl = this.config.currentPath
-      .replace(/login$/, '')
-      .replace(/forbidden$/, '');
+        const currentUrl = this.config.currentPath
+            .replace(/login$/, '')
+            .replace(/forbidden$/, '');
 
-      this.mgr.signinRedirect({ state: this.redirectUrl || currentUrl })
-          .then(() => {})
-          .catch(err => {
-              console.log(err);
-          });
+        this.expireToken();
+        this.mgr.signinRedirect({ state: this.redirectUrl || currentUrl })
+            .then(() => { })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     externalLoginCallback(url?: string): Promise<User> {
@@ -131,16 +130,15 @@ export class AuthService {
     logout(): void {
         if (this.oidcUser) {
             this.mgr.signoutRedirect()
-            .then(() => {})
-            .catch(err => {
-                console.log(err.text());
-            });
+                .then(() => { })
+                .catch(err => {
+                    console.log(err.text());
+                });
         }
     }
 
     silentLogin(): void {
         this.mgr.signinSilent();
-        // .catch(err => this.expireToken());
     }
 
     silentLoginCallback(): void {
@@ -154,5 +152,4 @@ export class AuthService {
     expireToken(): void {
         this.mgr.removeUser();
     }
-
 }

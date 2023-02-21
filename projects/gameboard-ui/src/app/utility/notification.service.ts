@@ -4,19 +4,20 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { BehaviorSubject, combineLatest, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, map, take } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { UserService } from '../api/user.service';
 import { Player } from '../api/player-models';
 import { UserService as CurrentUserService } from './user.service';
+import { LogService } from '../services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
 
   public connection: HubConnection;
-  private hubState: HubState = { id: '', initialized: false, connected: false, joined: false, actors: [] };
-  private teamId$ = new Subject<string>();
+  private hubState: HubState = { id: '', connected: false, joined: false, actors: [] };
+  private teamId$ = new BehaviorSubject<string>("");
   private userId: string | null = null;
 
   state$ = new BehaviorSubject<HubState>(this.hubState);
@@ -26,17 +27,16 @@ export class NotificationService {
   challengeEvents = new Subject<HubEvent>();
   ticketEvents = new Subject<HubEvent>();
 
-  private playersHere: string[] = [];
-
-  constructor (
+  constructor(
     private config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
-    private userSvc: CurrentUserService
+    private userSvc: CurrentUserService,
+    private log: LogService
   ) {
 
     this.connection = this.getConnection(`${config.apphost}hub`);
-    this.userSvc.user$.pipe(take(1)).subscribe(u => this.userId = u?.id || null);
+    this.userSvc.user$.pipe(first()).subscribe(u => this.userId = u?.id || null);
 
     // refresh connection on token refresh
     const authtoken$ = this.auth.tokenState$.pipe(
@@ -67,31 +67,31 @@ export class NotificationService {
     }
 
     this.teamId$.next(id);
+    return
   }
 
   async initActors(teamId: string): Promise<void> {
     const players: Player[] = await this.connection.invoke("ListTeam", teamId) as unknown as Player[];
-    this.hubState.actors = [];
+    const actors: Actor[] = [];
 
     players.forEach(p => {
-      this.addToHereIfNotPresent(p.id);
-
-      this.hubState.actors.push({
+      actors.push({
         ...p,
         userApprovedName: p.approvedName,
         userName: p.name,
         pendingName: p.userName === p.userApprovedName ? p.userName : '',
+        playerId: p.id,
         userNameStatus: p.nameStatus,
-        online: p.userId == this.userId || this.playersHere.indexOf(p.id) >= 0,
+        // TODO: this was always true previously
+        online: true,
         sponsorLogo: p.sponsor ?
           `${this.config.imagehost}/${p.sponsor}`
           : `${this.config.basehref}assets/sponsor.svg`
-      })
+      });
     });
 
-    this.postState();
+    this.postState(state => state.actors = actors);
   }
-
 
   private async joinChannel(id: string): Promise<void> {
     // prevent race if trying to join channel before connection is fully up
@@ -104,17 +104,16 @@ export class NotificationService {
       await this.leaveChannel();
       if (!!id) {
         try {
-          await this.connection.invoke('Listen', id);
+          await this.connection.invoke("Listen", id);
         }
         catch (listenErr) {
-          console.error(`Error on calling "Listen":`, listenErr)
+          this.log.logError("Error on calling \"Listen\" on the team hub: ", listenErr);
         }
 
         this.hubState.id = id;
         this.hubState.joined = true;
 
         await this.initActors(id);
-        this.postState();
       }
     } catch (e) {
       console.error(e);
@@ -127,7 +126,12 @@ export class NotificationService {
       this.hubState.id = '';
       this.hubState.joined = false;
       this.hubState.actors = [];
-      this.postState();
+
+      this.postState(state => {
+        state.id = '';
+        state.joined = false;
+        state.actors = [];
+      });
     }
   }
 
@@ -151,20 +155,8 @@ export class NotificationService {
         this.connection.invoke("Greet");
       }
 
-      if (event.action === HubEventAction.arrived || event.action === HubEventAction.greeted) {
-        if (event.model?.playerId) {
-          this.addToHereIfNotPresent(event.model?.playerId);
-        }
-      }
-      else if (event.action == HubEventAction.departed || event.action == HubEventAction.deleted) {
-        if (event.model?.playerId) {
-          this.removeFromHereIfPresent(event.model.playerId);
-        }
-      }
-
       this.initActors(this.hubState.id);
       this.presenceEvents.next(event);
-      this.postState()
     });
 
     connection.on('teamEvent', (e: HubEvent) => this.teamEvents.next(e));
@@ -201,43 +193,45 @@ export class NotificationService {
   }
 
   private async setConnected(): Promise<void> {
-    this.hubState.connected = true;
-    this.hubState.initialized = true;
-    this.postState();
+    this.postState(state => {
+      state.connected = true;
+    });
+
     if (this.hubState.id) {
       await this.joinChannel(this.hubState.id); // rejoin if was previously joined
-
     }
   }
 
   private setDisconnected(): void {
-    this.hubState.connected = false;
-    this.hubState.joined = false;
-    this.hubState.actors = [];
-    this.postState();
+    this.postState(state => {
+      state.connected = false;
+      state.joined = false;
+      state.actors = [];
+    });
   }
 
-  private postState(): void {
-    this.state$.next(this.hubState);
+  private postState(buildAction: (state: HubState) => void): void {
+    const currentState = this.state$.getValue();
+    buildAction(currentState);
+    this.state$.next(currentState);
   }
 
-  private addToHereIfNotPresent(playerId: string) {
-    if (this.playersHere.indexOf(playerId) == -1) {
-      this.playersHere.push(playerId);
-    }
-  }
+  // private addToHereIfNotPresent(playerId: string) {
+  //   if (this.playersHere.indexOf(playerId) == -1) {
+  //     this.playersHere.push(playerId);
+  //   }
+  // }
 
-  private removeFromHereIfPresent(playerId: string) {
-    const playerIndex = this.playersHere.indexOf(playerId);
-    if (playerIndex >= 0) {
-      this.playersHere.splice(playerIndex, 1);
-    }
-  }
+  // private removeFromHereIfPresent(playerId: string) {
+  //   const playerIndex = this.playersHere.indexOf(playerId);
+  //   if (playerIndex >= 0) {
+  //     this.playersHere.splice(playerIndex, 1);
+  //   }
+  // }
 }
 
 export interface HubState {
   id: string;
-  initialized: boolean;
   connected: boolean;
   joined: boolean;
   actors: Actor[];
@@ -246,10 +240,12 @@ export interface HubState {
 export interface HubEvent {
   action: HubEventAction;
   model?: any;
+  actorUserId: string;
 }
 
 export interface Actor {
   id: string;
+  playerId: string;
   userName: string;
   userApprovedName: string;
   userNameStatus: string;

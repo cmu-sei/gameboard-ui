@@ -24,7 +24,7 @@ export class UnityBoardComponent implements OnInit {
   unityClientLink: SafeResourceUrl | null = null;
   unityActiveGame: UnityActiveGame | null = null;
 
-  constructor (
+  constructor(
     private config: ConfigService,
     private sanitizer: DomSanitizer,
     public unityService: UnityService,
@@ -76,7 +76,6 @@ export class UnityBoardComponent implements OnInit {
       filter(e => e instanceof NavigationEnd)
     ).subscribe(e => {
       // reload to fix css (?)
-      console.log((e as NavigationEnd).urlAfterRedirects);
       window.location = window.location;
     });
   }

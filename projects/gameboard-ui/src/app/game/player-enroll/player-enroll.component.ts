@@ -35,7 +35,7 @@ export class PlayerEnrollComponent {
   disallowedName: string | null = null;
   disallowedReason: string | null = null;
 
-  constructor (
+  constructor(
     private api: PlayerService,
     private config: ConfigService,
     private notificationService: NotificationService
@@ -43,9 +43,9 @@ export class PlayerEnrollComponent {
     this.ctx$ = timer(0, 1000).pipe(
       map(i => this.ctx),
       tap(ctx => {
-        ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
-        ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
-        ctx.game.registration = new TimeWindow(ctx.game.registrationOpen, ctx.game.registrationClose);
+        ctx.player.session = new TimeWindow(ctx.player?.sessionBegin, ctx.player?.sessionEnd);
+        ctx.game.session = new TimeWindow(ctx.game?.gameStart, ctx.game?.gameEnd);
+        ctx.game.registration = new TimeWindow(ctx.game?.registrationOpen, ctx.game?.registrationClose);
       }),
       tap((gc) => {
         if (gc.player.nameStatus && gc.player.nameStatus != 'pending') {
@@ -54,6 +54,8 @@ export class PlayerEnrollComponent {
             this.disallowedReason = gc.player.nameStatus;
           }
         }
+
+        this.ctx.player$.next(gc.player);
       })
     );
 
@@ -63,12 +65,7 @@ export class PlayerEnrollComponent {
     );
   }
 
-
-  ngOnInit(): void {
-  }
-
   enroll(uid: string, gid: string): void {
-
     const model = { userId: uid, gameId: gid } as NewPlayer;
 
     const sub: Subscription = this.api.create(model).pipe(
@@ -127,18 +124,15 @@ export class PlayerEnrollComponent {
       finalize(() => sub.unsubscribe())
     ).subscribe(
       () => {
-        this.api.transform(this.ctx.player);
+        const updatedPlayer = this.api.transform(this.ctx.player);
+        this.ctx.player$.next(updatedPlayer);
       }
     );
   }
 
   delete(p: Player): void {
-    const sub: Subscription = this.api.delete(p.id).pipe(
-      first(),
-      tap(() => {
-        this.ctx.player.id = "";
-      })
-    ).subscribe(() =>
+    this.api.delete(p.id).pipe(first()).subscribe(() =>
+      // note that `enrolled` updates the context
       this.enrolled(null)
     );
   }
@@ -148,34 +142,27 @@ export class PlayerEnrollComponent {
       return;
     }
 
-    this.ctx.player = p;
+    this.ctx.player$.next(p);
 
     if (this.ctx.game.allowTeam) {
       this.notificationService.init(p.teamId);
 
       // connectionId is null when disconnected
       if (this.notificationService.connection.connectionId) {
-        console.log("HUBCONNECT: sending Greet event");
         this.notificationService.connection.invoke("Greet");
-        console.log("HUBCONNECT: GREET sent")
-        this.notificationService.presenceEvents.next({ action: HubEventAction.arrived, model: p.teamId });
+        this.notificationService.presenceEvents.next({ action: HubEventAction.arrived, model: p.teamId, actorUserId: p.userId });
       }
       else {
         this.notificationService.state$.pipe(
           takeUntil(of(!!this.notificationService.connection.connectionId))
-        ).subscribe(state => {
-          console.log("did it!");
-        });
+        ).subscribe();
 
         if (this.notificationService.connection.connectionId != null) {
-          console.log("HUBCONNECT: already connected");
           return;
         }
 
         if (!!this.notificationService.connection.connectionId && this.notificationService.connection.state != HubConnectionState.Connecting) {
-          console.log("starting connection", this.notificationService.connection.state);
           await this.notificationService.connection.start();
-          console.log("connection started!");
         }
       }
     }

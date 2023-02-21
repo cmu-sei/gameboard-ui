@@ -4,7 +4,7 @@
 
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
 
-  <div class="card mb-4">
+  <div *ngIf="ctx" class="card mb-4">
     <div class="card-body">
 
       <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session.isDuring)" class="text-info card-text mb-2">
@@ -22,11 +22,21 @@
             <span [class]="ctx.player.session.countdown | countdowncolor">&nbsp;{{ctx.player.session.countdown |
               countdown}}</span>
             <div class="spacer"></div>
-            <app-confirm-button *ngIf="ctx.game.allowReset" class="mx-2" btnClass="btn btn-sm pop-warning"
-              (confirm)="reset(ctx.player)">
-              <fa-icon [icon]="faTrash"></fa-icon>
-              <span>Reset Session</span>
-            </app-confirm-button>
+
+            <ng-container *ngIf="ctx.game.allowReset">
+              <app-confirm-button *ngIf="!ctx.game.allowTeam || !(hasTeammates$ | async); else teamConfirm"
+                btnClass="btn btn-sm pop-warning mx-2" (confirm)="reset(ctx.player)">
+                <fa-icon [icon]="faTrash"></fa-icon>
+                <span>Reset Session</span>
+              </app-confirm-button>
+
+              <ng-template #teamConfirm>
+                <button type="button" class="mx-2 btn btn-sm pop-warning" [appModalConfirm]="modalConfig">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                  <span>Reset Session</span>
+                </button>
+              </ng-template>
+            </ng-container>
           </div>
         </ng-container>
       </div>
@@ -91,7 +101,6 @@
         </div>
 
         <div class="card-text" *ngIf="!doublechecking">
-
           <alert type="warning">
             After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
             <span [hidden]="ctx.game.maxTeamSize < 2">
@@ -138,7 +147,6 @@
       <div class="col">
         <img [src]="ctx.game.mapUrl" alt="game map background" class="img-fluid">
       </div>
-
     </div>
   </div>
 </ng-container>

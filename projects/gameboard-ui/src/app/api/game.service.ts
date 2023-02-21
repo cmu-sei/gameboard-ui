@@ -15,6 +15,7 @@ import { Spec } from './spec-models';
 export class GameService {
   url = '';
   private cache: CachedGame[] = [];
+
   constructor(
     private http: HttpClient,
     private config: ConfigService
@@ -111,6 +112,7 @@ export class GameService {
 
   private addOrUpdateCache(game: Game): void {
     if (!game || !game.id) { return; }
+
     const item = this.cache.find(c => c.id === game.id);
     if (item) {
       item.update(game);
@@ -122,6 +124,7 @@ export class GameService {
   private removeCache(id: string): void {
     const item = this.cache.find(c => c.id === id);
     if (!item) { return; }
+
     this.cache.splice(
       this.cache.indexOf(item), 1
     );
@@ -130,21 +133,17 @@ export class GameService {
   private transform(game: Game): Game {
     game.cardUrl = game.logo
       ? `${this.config.imagehost}/${game.logo}`
-      : `${this.config.basehref}assets/card.png`
-      ;
+      : `${this.config.basehref}assets/card.png`;
 
     game.mapUrl = game.background
       ? `${this.config.imagehost}/${game.background}`
-      : `${this.config.basehref}assets/map.png`
-      ;
+      : `${this.config.basehref}assets/map.png`;
 
     game.modeUrl = game.mode
       ? `${this.config.basehref}assets/${game.mode}.png`
-      : `${this.config.basehref}assets/vm.png`
-      ;
+      : `${this.config.basehref}assets/vm.png`;
 
     game.session = new TimeWindow(game.gameStart, game.gameEnd);
-
     game.registration = new TimeWindow(game.registrationOpen, game.registrationClose);
 
     return game;
@@ -162,6 +161,7 @@ export class CachedGame {
   id: string;
   ts: number = 0;
   game: Game;
+
   constructor(
     game: Game
   ) {
@@ -169,10 +169,12 @@ export class CachedGame {
     this.id = this.game.id;
     this.ts = Date.now();
   }
+
   update(game: Game): void {
     this.game = game;
     this.ts = Date.now();
   }
+
   latest(limit: number = 10): Game | null {
     const hit = Date.now() - this.ts < (limit * 1000);
     return hit ? this.game : null;
