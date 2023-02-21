@@ -108,7 +108,7 @@
         </div>
 
         <ng-container *ngIf="ctx.game.allowTeam">
-          <div *ngIf="ctx.player.isManager" class="form-group d-flex flex-column">
+          <div *ngIf="isManager$ | async" class="form-group d-flex flex-column">
             <div class="mb-2">
               <span class="lead">Manager</span>, generate an invitation for your teammates.<br />
               <small>NOTE: generating an invitation invalidates previous invitations.</small>
@@ -123,7 +123,7 @@
           </div>
 
 
-          <div *ngIf="ctx.player.isManager" class="form-group d-flex flex-column">
+          <div *ngIf="isManager$ | async" class="form-group d-flex flex-column">
             <div class="mb-2">
               <span class="lead">Members</span>, redeem the invitation code here to team up.<br />
             </div>
