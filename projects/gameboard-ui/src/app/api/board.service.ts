@@ -29,44 +29,57 @@ export class BoardService {
   public archived(filter: any): Observable<ChallengeSummary[]> {
     return this.http.get<ChallengeSummary[]>(this.url + '/challenges/archived', { params: filter });
   }
+
   public load(id: string): Observable<BoardPlayer> {
     return this.http.get<BoardPlayer>(`${this.url}/board/${id}`).pipe(
       map(b => this.transform(b))
     );
   }
+
   public retrieve(id: string): Observable<Challenge> {
     return this.http.get<Challenge>(`${this.url}/challenge/${id}`);
   }
+
   public preview(model: NewChallenge): Observable<Challenge> {
     return this.http.post<Challenge>(`${this.url}/challenge/preview`, model);
   }
+
   public launch(model: NewChallenge): Observable<Challenge> {
     return this.http.post<Challenge>(`${this.url}/challenge`, model);
   }
+
   public grade(model: SectionSubmission): Observable<Challenge> {
     return this.http.put<Challenge>(`${this.url}/challenge/grade`, model);
   }
+
   public regrade(id: string): Observable<Challenge> {
     return this.http.put<Challenge>(`${this.url}/challenge/regrade`, { id });
   }
+
   public start(model: ChangedChallenge): Observable<Challenge> {
     return this.http.put<Challenge>(`${this.url}/challenge/start`, model);
   }
+
   public stop(model: ChangedChallenge): Observable<Challenge> {
     return this.http.put<Challenge>(`${this.url}/challenge/stop`, model);
   }
+
   public console(model: VmConsole): Observable<VmConsole> {
     return this.http.put<VmConsole>(`${this.url}/challenge/console`, model);
   }
+
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/challenge/${id}`);
   }
+
   public audit(id: string): Observable<any> {
     return this.http.get<any>(`${this.url}/challenge/${id}/audit`);
   }
+
   public consoles(gid: string): Observable<ObserveChallenge[]> {
     return this.http.get<ObserveChallenge[]>(`${this.url}/challenge/consoles`, { params: { gid } });
   }
+
   public consoleActors(gid: string): Observable<ConsoleActor[]> {
     return this.http.get<ConsoleActor[]>(`${this.url}/challenge/consoleactors`, { params: { gid } });
   }

@@ -35,6 +35,10 @@ import { SupportReportComponent } from './support-report/support-report.componen
 import { PlayerNamesComponent } from './player-names/player-names.component';
 import { ParticipationReportComponent } from './participation-report/participation-report.component';
 import { CoreModule } from '../core/core.module';
+import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -60,7 +64,8 @@ import { CoreModule } from '../core/core.module';
     FeedbackReportComponent,
     SupportReportComponent,
     PlayerNamesComponent,
-    ParticipationReportComponent
+    ParticipationReportComponent,
+    UserApiKeysComponent,
   ],
   imports: [
     CommonModule,
@@ -92,10 +97,13 @@ import { CoreModule } from '../core/core.module';
     CoreModule,
     ApiModule,
     UtilityModule,
-    FontAwesomeModule,
+    BsDatepickerModule,
+    BsDropdownModule,
     ButtonsModule,
+    AlertModule,
     ModalModule,
-    BsDropdownModule
+    TooltipModule,
+    FontAwesomeModule
   ]
 })
 export class AdminModule { }

@@ -11,6 +11,7 @@ import { PlayerAvatarListComponent } from './components/player-avatar-list/playe
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './directives/modal-confirm.directive';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 const MODULE_DECLARATIONS = [
   LinkifyHtmlPipe,
@@ -21,11 +22,14 @@ const MODULE_DECLARATIONS = [
   PlayerAvatarListComponent,
   PlayerStatusComponent,
   RelativeUrlsPipe,
+  SafeHtmlPipe,
   UrlRewritePipe,
 ];
 
 @NgModule({
-  declarations: [...MODULE_DECLARATIONS],
+  declarations: [
+    ...MODULE_DECLARATIONS
+  ],
   imports: [
     CommonModule,
   ],

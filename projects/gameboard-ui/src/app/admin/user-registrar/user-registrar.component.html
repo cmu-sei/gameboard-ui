@@ -2,120 +2,122 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <!-- <div class="container"> -->
-  <a class="btn btn-link" routerLink="../../">
-    <fa-icon [icon]="faArrowLeft"></fa-icon>
-    <span>Back</span>
-  </a>
-  <h4>Users</h4>
+<a class="btn btn-link" routerLink="../../">
+  <fa-icon [icon]="faArrowLeft"></fa-icon>
+  <span>Back</span>
+</a>
+<h4>Users</h4>
 
-  <div>
-    <div class="input-group input-group-sm">
-      <div class="input-group-prepend">
-        <span class="input-group-text">
-          <fa-icon [icon]="faSearch"></fa-icon>
-          <span>Search</span>
-        </span>
-      </div>
-      <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control" (input)="refresh$.next(true)">
+<div>
+  <div class="input-group input-group-sm">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <fa-icon [icon]="faSearch"></fa-icon>
+        <span>Search</span>
+      </span>
     </div>
-    <div>
-
-      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('roles')">
-        <fa-icon [hidden]="filter!=='roles'" [icon]="faFilter"></fa-icon>
-        <span>roles</span>
-      </button>
-      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
-        <fa-icon [hidden]="filter!=='pending'" [icon]="faFilter"></fa-icon>
-        <span>names-pending</span>
-      </button>
-      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('disallowed')">
-        <fa-icon [hidden]="filter!=='disallowed'" [icon]="faFilter"></fa-icon>
-        <span>names-disallowed</span>
-      </button>
-    </div>
+    <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control"
+      (input)="refresh$.next(true)">
   </div>
+  <div>
 
-  <small *ngIf="source.length === 100" class="text-warning">Results limited to 100. Refine search term if necessary.</small>
-  <hr/>
+    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('roles')">
+      <fa-icon [hidden]="filter!=='roles'" [icon]="faFilter"></fa-icon>
+      <span>roles</span>
+    </button>
+    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
+      <fa-icon [hidden]="filter!=='pending'" [icon]="faFilter"></fa-icon>
+      <span>names-pending</span>
+    </button>
+    <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('disallowed')">
+      <fa-icon [hidden]="filter!=='disallowed'" [icon]="faFilter"></fa-icon>
+      <span>names-disallowed</span>
+    </button>
+  </div>
+</div>
 
-  <ng-container *ngIf="source$ | async as list; else loading">
+<small *ngIf="source.length === 100" class="text-warning">Results limited to 100. Refine search term if
+  necessary.</small>
+<hr />
 
-    <small class="text-warning mx-2">count: {{list.length}}</small>
+<ng-container *ngIf="source$ | async as list; else loading">
 
-    <div *ngFor="let user of list; trackBy:trackById"
-      class="d-flex mb-1 mx-2 p-2 flex-wrap align-items-baseline bg-secondary"
-      >
-      <!-- [class.pop-secondary]="user.isDirector" -->
-      <!-- [class.pop-success]="user.isAdmin" -->
-      <!-- [class.pop-warning]="user.isRegistrar" -->
-      <div class="">
-        <span class="mr-2">{{user.approvedName}}</span>
-        <span class="text-muted">{{user.pendingName}}</span><br/>
-        <small class="text-muted">
-          <app-clipspan>{{user.id | slice:0:8}}</app-clipspan>
+  <small class="text-warning mx-2">count: {{list.length}}</small>
+
+  <div *ngFor="let user of list; trackBy:trackById"
+    class="d-flex mb-1 mx-2 p-2 flex-wrap align-items-baseline bg-secondary">
+    <div class="">
+      <span class="mr-2">{{user.approvedName}}</span>
+      <span class="text-muted">{{user.pendingName}}</span><br />
+      <small class="text-muted">
+        <app-clipspan>{{user.id | slice:0:8}}</app-clipspan>
+      </small>
+    </div>
+    <app-error-div [errors]="errors"></app-error-div>
+    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="approveName(user)">
+      <fa-icon [icon]="faCheck"></fa-icon>
+      <span>Approve</span>
+    </button>
+    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(user)">
+      <fa-icon [icon]="faCheck"></fa-icon>
+      <span>Disapprove</span>
+    </button>
+    <div class="spacer"></div>
+    <button class="btn btn-outline-warning btn-sm" *ngIf="user.role !== 'member'" (click)="view(user)">
+      <span>Role: {{user.roleTag}}</span>
+    </button>
+    <div class="">
+      <button class="btn btn-outline-info btn-sm mx-1" (click)="view(user)">
+        <fa-icon [icon]="faList"></fa-icon>
+        <span>View</span>
+      </button>
+      <app-confirm-button btnClass="btn btn-outline-danger btn-sm" (confirm)="delete(user)">
+        <fa-icon [icon]="faTrash"></fa-icon>
+        <span>Delete</span>
+      </app-confirm-button>
+    </div>
+    <div *ngIf="viewed === user" class="col-12 mt-4">
+      <h5>Name</h5>
+      <div class="form-group">
+        <label class="mb-0" for="name-input">Approved Name</label>
+        <input id="name-input" class="form-control" type="text" [(ngModel)]="user.approvedName" (change)="update(user)">
+      </div>
+      <div class="form-group">
+        <label class="mb-0" for="reason-input">Disapproved Reason</label>
+        <input id="reason-input" class="form-control" type="text" [(ngModel)]="user.nameStatus" (change)="update(user)">
+        <small>
+          <button *ngFor="let reason of reasons" class="btn btn-link btn-sm"
+            (click)="user.nameStatus = reason; update(user)">
+            {{reason}}
+          </button>
         </small>
       </div>
-      <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="approveName(user)">
-        <fa-icon [icon]="faCheck"></fa-icon>
-        <span>Approve</span>
-      </button>
-      <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(user)">
-        <fa-icon [icon]="faCheck"></fa-icon>
-        <span>Disapprove</span>
-      </button>
-      <div class="spacer"></div>
-      <button class="btn btn-outline-warning btn-sm" *ngIf="user.role !== 'member'" (click)="view(user)">
-        <span>Role: {{user.roleTag}}</span>
-      </button>
-      <div class="">
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="view(user)">
-          <fa-icon [icon]="faList"></fa-icon>
-          <span>View</span>
-        </button>
-        <app-confirm-button btnClass="btn btn-outline-danger btn-sm" (confirm)="delete(user)">
-          <fa-icon [icon]="faTrash"></fa-icon>
-          <span>Delete</span>
-        </app-confirm-button>
+
+      <h5>Roles</h5>
+      <div class="form-group">
+        <div class="btn-group" id="role-button-group">
+          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isObserver" (click)="role(user, 'observer')"
+            btnCheckbox tabindex="0" role="button">Observer</label>
+          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isSupport" (click)="role(user, 'support')"
+            btnCheckbox tabindex="0" role="button">Support</label>
+          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isTester" (click)="role(user, 'tester')"
+            btnCheckbox tabindex="0" role="button">Tester</label>
+          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDesigner" (click)="role(user, 'designer')"
+            btnCheckbox tabindex="0" role="button">Designer</label>
+          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isRegistrar" (click)="role(user, 'registrar')"
+            btnCheckbox tabindex="0" role="button">Registrar</label>
+          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDirector" (click)="role(user, 'director')"
+            btnCheckbox tabindex="0" role="button">Director</label>
+          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isAdmin" (click)="role(user, 'admin')"
+            btnCheckbox tabindex="0" role="button">Admin</label>
+        </div>
       </div>
-      <div *ngIf="viewed === user" class="col-12">
-          <div class="form-group">
-            <label class="mb-0" for="name-input">Approved Name</label>
-            <input id="name-input" class="form-control" type="text" [(ngModel)]="user.approvedName" (change)="update(user)">
-            <small></small>
-          </div>
-          <div class="form-group">
-            <label class="mb-0" for="reason-input">Disapproved Reason</label>
-            <input id="reason-input" class="form-control" type="text" [(ngModel)]="user.nameStatus" (change)="update(user)">
-            <small>
-              <button *ngFor="let reason of reasons" class="btn btn-link btn-sm" (click)="user.nameStatus = reason; update(user)">
-                {{reason}}
-              </button>
-            </small>
-          </div>
-          <div class="form-group">
-            <label for="role-button-group">Edit User Roles</label><br/>
-            <div class="btn-group" id="role-button-group">
-              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isObserver" (click)="role(user, 'observer')"
-                     btnCheckbox tabindex="0" role="button">Observer</label>
-              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isSupport" (click)="role(user, 'support')"
-                     btnCheckbox tabindex="0" role="button">Support</label>
-              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isTester" (click)="role(user, 'tester')"
-                     btnCheckbox tabindex="0" role="button">Tester</label>
-              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDesigner"  (click)="role(user, 'designer')"
-                     btnCheckbox tabindex="0" role="button">Designer</label>
-              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isRegistrar"  (click)="role(user, 'registrar')"
-                     btnCheckbox tabindex="0" role="button">Registrar</label>
-              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDirector"  (click)="role(user, 'director')"
-                     btnCheckbox tabindex="0" role="button">Director</label>
-              <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isAdmin"  (click)="role(user, 'admin')"
-                     btnCheckbox tabindex="0" role="button">Admin</label>
-            </div>
-          </div>
-          <app-error-div [errors]="errors"></app-error-div>
-          <!-- <pre>// todo: show enrollments</pre> -->
-      </div>
+
+      <h5>API Keys</h5>
+      <app-user-api-keys [user]="user"></app-user-api-keys>
     </div>
-  </ng-container>
+  </div>
+</ng-container>
 <!-- </div> -->
 
 <ng-template #loading>

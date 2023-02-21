@@ -68,7 +68,7 @@ const MODULE_DECLARATIONS = [
     ButtonsModule,
     ModalModule,
     BsDropdownModule,
-    UnityModule,
+    UnityModule
   ]
 })
 export class GameModule { }

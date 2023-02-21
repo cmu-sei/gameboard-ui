@@ -115,6 +115,7 @@ export class GameService {
     if (!entity) { this.removeCache(id); }
     return entity;
   }
+
   private addOrUpdateCache(game: Game): void {
     if (!game || !game.id) { return; }
 
@@ -125,6 +126,7 @@ export class GameService {
       this.cache.push(new CachedGame(game));
     }
   }
+
   private removeCache(id: string): void {
     const item = this.cache.find(c => c.id === id);
     if (!item) { return; }
