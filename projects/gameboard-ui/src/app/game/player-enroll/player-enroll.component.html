@@ -31,10 +31,8 @@
           <!-- team -->
           <div *ngIf="ctx.game.allowTeam">
             <p>
-              This event allows team participation.
-              After enrolling you will be able to
-              generate and accept a link-up code
-              that will associate your teammates.
+              This event allows team participation. After enrolling, you will be able to
+              generate and accept a link-up code that your teammates can use to join you.
             </p>
           </div>
           <div *ngIf="ctx.game.requireTeam">
@@ -55,17 +53,16 @@
           <!-- accept -->
           <div class="text-center">
             <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg"
-              (confirm)="enroll(ctx.user.id, ctx.game.id)">
+              (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
               <fa-icon [icon]="faEdit"></fa-icon>
               <span>Enroll</span>
             </app-confirm-button>
-
           </div>
         </ng-container>
 
         <div *ngIf="ctx.user.isRegistrar && !ctx.game.registration.isDuring" class="text-center">
           <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg"
-            (confirm)="enroll(ctx.user.id, ctx.game.id)">
+            (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
             <fa-icon [icon]="faEdit"></fa-icon>
             <span>Admin Enroll</span>
           </app-confirm-button>
@@ -75,8 +72,8 @@
       </ng-container>
 
       <!-- already enrolled -->
-      <ng-container *ngIf="!!ctx.player.id && ctx.player.session.isBefore && ctx.game.registration.isDuring">
-        <div *ngIf="ctx.player.isManager" class="form-group mb-0">
+      <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore && ctx.game.registration.isDuring">
+        <div *ngIf="isManager$ | async" class="form-group mb-0">
           <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
             <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
               <div class="alert alert-info">
@@ -86,9 +83,9 @@
             </ng-container>
             <ng-container *ngIf="ctx.player.nameStatus && ctx.player.nameStatus != 'pending'">
               <div class="alert alert-danger">
-                Your name was rejected by an administrator for the following reason:<br>
-                <strong>{{ctx.player.nameStatus}}</strong><br>
-                Please change it and try again.
+                <p>Your name was rejected by an administrator for the following reason:</p>
+                <p><strong>{{ctx.player.nameStatus}}</strong></p>
+                <p>Please change it and try again.</p>
               </div>
             </ng-container>
           </ng-container>
@@ -105,13 +102,13 @@
           </div>
           <div><small class="text-warning">{{ctx.player.nameStatus}}</small></div>
           <small>
-            This will show on the public scoreboard.
-            Your requested display name is subject to approval and a generic moniker is used until that time.
+            This will show on the public scoreboard. Your requested display name is subject to approval and a generic
+            moniker is used until that time.
           </small>
         </div>
 
         <ng-container *ngIf="ctx.game.allowTeam">
-          <div *ngIf="ctx.player.isManager" class="form-group d-flex flex-column">
+          <div *ngIf="isManager$ | async" class="form-group d-flex flex-column">
             <div class="mb-2">
               <span class="lead">Manager</span>, generate an invitation for your teammates.<br />
               <small>NOTE: generating an invitation invalidates previous invitations.</small>
@@ -126,15 +123,14 @@
           </div>
 
 
-          <div *ngIf="ctx.player.isManager" class="form-group d-flex flex-column">
+          <div *ngIf="isManager$ | async" class="form-group d-flex flex-column">
             <div class="mb-2">
-              <span class="lead">Member</span>, redeem the invitation code here to team up.<br />
-              <!-- <small>Or click on the convenience url if you were given one.</small> -->
+              <span class="lead">Members</span>, redeem the invitation code here to team up.<br />
             </div>
             <div class="input-group">
               <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64">
               <div class="input-group-append">
-                <button class="btn btn-outline-info" (click)="redeem(ctx.player)">
+                <button class="btn btn-outline-info" [disabled]="!token" (click)="redeem(ctx.player)">
                   <fa-icon [icon]="faPaste"></fa-icon>
                   <span>Redeem</span>
                 </button>
@@ -143,16 +139,22 @@
           </div>
         </ng-container>
 
-        <!-- delete -->
+        <!-- unenroll -->
         <div *ngIf="ctx.game.gameStart" class="form-group text-center">
-          <app-confirm-button btnClass="btn btn-danger btn" (confirm)="delete(ctx.player)">
-            <fa-icon [icon]="faTrash"></fa-icon>
-            <span>Unenroll</span>
-          </app-confirm-button>
-          <p class="small">
-            You can unenroll until either the enrollment period ends or your game session
-            starts.
-          </p>
+          <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
+            <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
+              [disabled]="!!unenrollTooltip">
+              <fa-icon [icon]="faTrash"></fa-icon>
+              <span>Unenroll</span>
+            </app-confirm-button>
+          </div>
+
+          <ng-template *ngIf="!unenrollTooltip">
+            <p class="small">
+              You can delete this enrollment until either the enrollment period ends or your game session
+              starts.
+            </p>
+          </ng-template>
         </div>
       </ng-container>
     </div>

@@ -102,6 +102,12 @@ export class GameService {
     return this.http.delete(`${this.url}/challengegate/${id}`);
   }
 
+  // an abstracted definition for this rule. Does this game run
+  // in Gameboard or elsewhere? (currently can only be Unity)
+  public isExternalGame(g: Game): boolean {
+    return g.mode == "unity";
+  }
+
   private tryCache(id: string, limit: number = 20): Game | null {
     const item = this.cache.find(c => c.id === id);
     const entity = !!item ? item.latest(limit) : null;
@@ -154,7 +160,6 @@ export class GameService {
       return '';
     return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][monthNum - 1];
   }
-
 }
 
 export class CachedGame {
@@ -179,5 +184,4 @@ export class CachedGame {
     const hit = Date.now() - this.ts < (limit * 1000);
     return hit ? this.game : null;
   }
-
 }

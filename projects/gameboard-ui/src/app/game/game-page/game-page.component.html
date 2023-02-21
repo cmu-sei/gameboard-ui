@@ -28,7 +28,7 @@
 
     <!-- if auth'd, enrolled, opened a session, game ended, and certificate defined -->
     <ng-container
-      *ngIf="!!ctx.user.id && !!ctx.player.id && !!ctx.player.sessionEnd && ctx.player.sessionEnd?.toString() != '-infinity' && (ctx.player.sessionEnd || minDate) > minDate && ctx.game.hasEnded && !!ctx.game.certificateTemplate">
+      *ngIf="!!ctx.user.id && !!ctx.player.id && !!ctx.player.sessionEnd && ctx.game.hasEnded && !!ctx.game.certificateTemplate">
       <div class="row justify-content-center">
         <div class="col panel">
           <div tabindex="0" (click)="showCert = !showCert">
@@ -49,23 +49,27 @@
     <div class="row justify-content-start">
       <!-- if auth'd -->
       <ng-container *ngIf="!!ctx.user.id">
+
         <!-- if enrolled -->
-        <ng-container *ngIf="!!ctx.player.id">
+        <ng-container *ngIf="!!ctx.player.id && ctx.player.session">
           <div class="col panel">
             <h2>Status</h2>
-            <app-player-session [ctx]="ctx"></app-player-session>
-          </div>
-        </ng-container>
-        <!-- if not session start -->
-        <ng-container
-          *ngIf="(ctx.user.isDesigner || !ctx.game.registration.isAfter) && (!ctx.player.id || ctx.player.session.isBefore)">
-          <div class="col panel">
-            <h2>Enrollment</h2>
-            <app-player-enroll [ctx]="ctx"></app-player-enroll>
+            <app-player-session [ctx$]="ctx$!" [hubState$]="hubState$" (onSessionStart)="onSessionStarted($event)"
+              (onSessionReset)="onSessionReset($event)"></app-player-session>
           </div>
         </ng-container>
 
+        <!-- if not session start -->
+        <ng-container
+          *ngIf="(ctx.user.isDesigner || !ctx.game.registration.isAfter) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
+          <div class="col panel">
+            <h2>Enrollment</h2>
+            <app-player-enroll [ctx]="ctx" (onEnroll)="onEnroll($event)"
+              (onUnenroll)="onUnenroll($event)"></app-player-enroll>
+          </div>
+        </ng-container>
       </ng-container>
+
       <div class="col panel max-half">
         <h2>Info</h2>
         <app-game-info [game]="ctx.game"></app-game-info>
@@ -85,9 +89,9 @@
         <app-scoreboard-table [id]="ctx.game.id" [live]="ctx.game.session.isDuring"></app-scoreboard-table>
       </div>
       <div class="col-xl-5 pr-5 my-4"
-        *ngIf="ctx.game.feedbackTemplate?.game?.length && (ctx.player.session.isDuring ||ctx.player.session.isAfter)">
-        <app-feedback-form [game]="ctx.game" [session]="ctx.player.session" [title]="ctx.game.name + ' Feedback'"
-          [type]="'game'">
+        *ngIf="ctx.game.feedbackTemplate?.game?.length && (!ctx.player.session?.isBefore)">
+        <app-feedback-form *ngIf="ctx.player.session" [game]="ctx.game" [session]="ctx.player.session"
+          [title]="ctx.game.name + ' Feedback'" [type]="'game'">
         </app-feedback-form>
       </div>
     </div>
@@ -101,8 +105,4 @@
   <div class="text-center">
     <app-spinner></app-spinner>
   </div>
-</ng-template>
-
-<ng-template>
-
 </ng-template>

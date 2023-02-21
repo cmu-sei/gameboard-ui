@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { UtilityModule } from '../utility/utility.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PlayerEnlistComponent } from './player-enlist/player-enlist.component';
 import { AuthGuard } from '../utility/auth.guard';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { GameInfoComponent } from './game-info/game-info.component';
@@ -28,34 +27,34 @@ import { CertificateComponent } from './certificate/certificate.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UnityModule } from '../unity/unity.module';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
-import { GameHubStatusComponent } from './game-hub-status/game-hub-status.component';
 import { CoreModule } from '../core/core.module';
+import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
+
+const MODULE_DECLARATIONS = [
+  PlayerEnrollComponent,
+  GameInfoComponent,
+  PlayerSessionComponent,
+  GamePageComponent,
+  GameboardPageComponent,
+  GamespaceQuizComponent,
+  SessionForecastComponent,
+  ScoreboardPageComponent,
+  ScoreboardTableComponent,
+  PlayerPresenceComponent,
+  FeedbackFormComponent,
+  CertificateComponent,
+  HubStateToPlayerStatusPipe
+];
 
 @NgModule({
   declarations: [
-    PlayerEnlistComponent,
-    PlayerEnrollComponent,
-    GameInfoComponent,
-    PlayerSessionComponent,
-    GamePageComponent,
-    GameboardPageComponent,
-    GamespaceQuizComponent,
-    SessionForecastComponent,
-    ScoreboardPageComponent,
-    ScoreboardTableComponent,
-    PlayerPresenceComponent,
-    FeedbackFormComponent,
-    CertificateComponent,
-    GameHubStatusComponent,
-  ],
-  exports: [
+    ...MODULE_DECLARATIONS
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild([
-      { path: 'teamup/:code', canActivate: [AuthGuard], component: PlayerEnlistComponent },
       { path: 'board/:id', canActivate: [AuthGuard], component: GameboardPageComponent },
       { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
@@ -69,7 +68,7 @@ import { CoreModule } from '../core/core.module';
     ButtonsModule,
     ModalModule,
     BsDropdownModule,
-    UnityModule,
+    UnityModule
   ]
 })
 export class GameModule { }

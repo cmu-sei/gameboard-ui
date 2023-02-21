@@ -10,7 +10,6 @@ import { GameDesignerComponent } from './game-designer/game-designer.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UtilityModule } from '../utility/utility.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ApiModule } from '../api/api.module';
@@ -39,6 +38,7 @@ import { CoreModule } from '../core/core.module';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -97,13 +97,13 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     CoreModule,
     ApiModule,
     UtilityModule,
-    FontAwesomeModule,
+    BsDatepickerModule,
+    BsDropdownModule,
     ButtonsModule,
+    AlertModule,
     ModalModule,
     TooltipModule,
-    AlertModule,
-    BsDatepickerModule,
-    BsDropdownModule
+    FontAwesomeModule
   ]
 })
 export class AdminModule { }

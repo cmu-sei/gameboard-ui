@@ -36,6 +36,7 @@ import { ImagestackComponent } from './components/imagestack/imagestack.componen
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { NAVIGATOR } from './services/navigator.service';
+import { CoreModule } from '../core/core.module';
 
 // external modules
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -87,11 +88,12 @@ const components = [
     FontAwesomeModule,
     AlertModule,
     ModalModule,
-    TooltipModule,
     ButtonsModule,
     BsDatepickerModule,
     BsDropdownModule,
-    RouterModule
+    TooltipModule,
+    RouterModule,
+    CoreModule
   ],
 })
 export class UtilityModule { }

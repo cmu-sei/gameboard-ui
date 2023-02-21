@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
-import { BoardSpec, Challenge, ChallengeView, GameState } from '../../api/board-models';
+import { BoardSpec } from '../../api/board-models';
 import { faCaretDown, faCaretRight, faCloudUploadAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, combineLatest, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { merge, Observable, of, Subject } from 'rxjs';
 import { FeedbackService } from '../../api/feedback.service';
 import { Feedback, QuestionType, FeedbackSubmission, FeedbackTemplate, FeedbackQuestion } from '../../api/feedback-models';
 import { BoardGame } from '../../api/board-models';
 import { catchError, combineAll, debounceTime, delay, filter, map, mergeAll, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
-import { ThisReceiver } from '@angular/compiler';
 import { TimeWindow } from '../../api/player-models';
 import { Game } from '../../api/game-models';
 
@@ -51,7 +50,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
       questions: [],
       submitted: false
     };
-   }
+  }
 
   ngOnInit(): void {
     if (this.type == "game") {
@@ -63,7 +62,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
   }
 
   gameAfterViewInit() {
-    this.api.retrieve({gameId: this.game.id}).subscribe(
+    this.api.retrieve({ gameId: this.game.id }).subscribe(
       feedback => {
         this.updateFeedback(feedback);
         if (this.session.isAfter)
@@ -71,7 +70,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
         if (feedback?.submitted)
           this.show = false;
       },
-      (err: any) => {}
+      (err: any) => { }
     )
   }
 

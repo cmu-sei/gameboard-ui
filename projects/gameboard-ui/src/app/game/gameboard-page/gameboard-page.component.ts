@@ -10,7 +10,7 @@ import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../
 import { BoardService } from '../../api/board.service';
 import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
-import { HubState, NotificationService } from '../../utility/notification.service';
+import { HubState, NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
 
 @Component({

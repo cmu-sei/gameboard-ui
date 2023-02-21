@@ -3,7 +3,7 @@
 
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, BehaviorSubject, Observable, scheduled, Subject } from 'rxjs';
+import { asyncScheduler, Observable, scheduled, Subject } from 'rxjs';
 import { debounceTime, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { ChallengeGate } from '../../api/board-models';
 import { GameService } from '../../api/game.service';

@@ -48,7 +48,6 @@ export class AuthService {
             this.mgr.events.addSilentRenewError(e => this.onRenewError(e));
             this.mgr.getUser().then(user => this.onTokenLoaded(user));
         });
-
     }
 
     isAuthenticated(): Promise<boolean> {
@@ -116,6 +115,7 @@ export class AuthService {
             .replace(/forbidden$/, '');
 
         this.expireToken();
+
         this.mgr.signinRedirect({ state: this.redirectUrl || currentUrl })
             .then(() => { })
             .catch(err => {

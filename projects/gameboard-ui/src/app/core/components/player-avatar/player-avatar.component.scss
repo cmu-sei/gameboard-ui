@@ -1,27 +1,20 @@
-$radius: 2rem;
-$width: $radius * 2;
-
-// not sure why, but using the hard radius causes clip-path to look subtly wrong
-$adjustedRadius: calc($radius + 2px);
-
-:host {
-    display: block;
-    clip-path: circle(50% at 50% 50%);
-
-    border: dashed 1px #dadada;
-    border-radius: 50%;
-}
-
-.player-avatar-component {
-    display: flex;
-}
+@use "sass:map";
+@import "../../../../scss/player-avatars";
 
 .avatar-container {
+    aspect-ratio: 1 / 1;
     background: no-repeat center center;
-    background-size: contain;
-    flex: 0 0;
-    height: $width;
-    min-width: $width;
-    width: $width;
-    object-fit: contain;
+    background-size: cover;
+    border: dashed 1px #dadada;
+    border-radius: 50%;
+    clip-path: circle(50% at 50% 50%);
+    display: inline-block;
+    object-fit: cover;
+}
+
+.avatar-size-medium .status-light {
+    border: solid 1px #888;
+    border-radius: 50%;
+    right: 6px;
+    bottom: 12px;
 }
