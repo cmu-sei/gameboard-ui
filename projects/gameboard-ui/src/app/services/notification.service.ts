@@ -13,7 +13,6 @@ import { HubPlayer, Player } from '../api/player-models';
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   public connection: HubConnection;
-  // private hubState: HubState = { id: '', connectionState: HubConnectionState.Disconnected, joined: false };
   private teamId$ = new Subject<string>();
 
   state$ = new BehaviorSubject<HubState>({ id: '', connectionState: HubConnectionState.Disconnected, joined: false });
@@ -254,7 +253,8 @@ export class NotificationService {
       action === HubEventAction.arrived ||
       action === HubEventAction.departed ||
       action === HubEventAction.created ||
-      action === HubEventAction.roleChanged) {
+      action === HubEventAction.roleChanged ||
+      action === HubEventAction.updated) {
       await this.initActors(teamId);
     }
   }

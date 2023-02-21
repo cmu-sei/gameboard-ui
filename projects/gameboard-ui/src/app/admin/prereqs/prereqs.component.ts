@@ -1,9 +1,9 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, BehaviorSubject, Observable, scheduled, Subject } from 'rxjs';
+import { asyncScheduler, Observable, scheduled, Subject } from 'rxjs';
 import { debounceTime, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { ChallengeGate } from '../../api/board-models';
 import { GameService } from '../../api/game.service';
@@ -14,7 +14,7 @@ import { Spec } from '../../api/spec-models';
   templateUrl: './prereqs.component.html',
   styleUrls: ['./prereqs.component.scss']
 })
-export class PrereqsComponent implements OnInit, AfterViewInit, OnChanges {
+export class PrereqsComponent implements OnChanges {
   @Input() gameId = '';
   @Input() specs: Spec[] = [];
   list$: Observable<ChallengeGate[]>;
@@ -52,11 +52,10 @@ export class PrereqsComponent implements OnInit, AfterViewInit, OnChanges {
       tap(r => this.list = r),
       map(r => {
         return r.map(p => {
-          console.log(this.specs);
           const t = this.specs.find(s => s.id === p.targetId);
           const d = this.specs.find(s => s.id === p.requiredId);
-          p.targetTag = t?.tag || t?.id.slice(0,8) || '';
-          p.requiredTag = d?.tag || d?.id.slice(0,8) || '';
+          p.targetTag = t?.tag || t?.id.slice(0, 8) || '';
+          p.requiredTag = d?.tag || d?.id.slice(0, 8) || '';
           return p;
         })
       })
@@ -68,31 +67,21 @@ export class PrereqsComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-    // this.refresh$.next(true);
-  }
-
-
   save(): void {
     const t = this.specs.find(s => s.tag == this.newgate.targetTag);
     const s = this.specs.find(s => s.tag == this.newgate.requiredTag);
-    if (!t || !s) { return;  }
+    if (!t || !s) { return; }
 
     this.newgate.requiredId = s.id;
     this.newgate.targetId = t.id;
     this.newgate.gameId = this.gameId;
 
-    // console.log(this.newgate);
     this.updating$.next(this.newgate);
   }
 
   delete(g: ChallengeGate): void {
     this.deleting$.next(g);
   }
-
 }
 
 export interface Prereq {

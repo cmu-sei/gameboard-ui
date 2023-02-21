@@ -129,10 +129,6 @@ export class GamePageComponent implements OnDestroy {
             this.playerSubject$.next(currentPlayer);
           }
         }
-
-        if (playerEvent.hubEvent.action == HubEventAction.roleChanged) {
-          console.log("player event", playerEvent);
-        }
       })
     ).subscribe();
 

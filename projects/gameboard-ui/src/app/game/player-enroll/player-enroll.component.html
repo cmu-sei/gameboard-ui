@@ -73,7 +73,7 @@
 
       <!-- already enrolled -->
       <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore && ctx.game.registration.isDuring">
-        <div *ngIf="ctx.player.isManager" class="form-group mb-0">
+        <div *ngIf="isManager$ | async" class="form-group mb-0">
           <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
             <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
               <div class="alert alert-info">

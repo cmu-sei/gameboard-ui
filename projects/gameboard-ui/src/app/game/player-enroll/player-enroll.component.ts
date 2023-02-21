@@ -3,7 +3,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Observable, Subscription, timer } from 'rxjs';
+import { Observable, Subject, Subscription, timer } from 'rxjs';
 import { finalize, map, tap, delay, first } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
@@ -19,7 +19,6 @@ import { UserService } from '../../utility/user.service';
 })
 export class PlayerEnrollComponent implements OnInit, OnDestroy {
   @Input() ctx!: GameContext;
-  @Input() playerIsManager$!: Observable<boolean>;
   @Output() onEnroll = new EventEmitter<Player>();
   @Output() onUnenroll = new EventEmitter<Player>();
 
@@ -35,6 +34,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   disallowedName: string | null = null;
   disallowedReason: string | null = null;
   protected managerRole = PlayerRole.manager;
+  protected isManager$ = new Subject<boolean>();
   protected unenrollTooltip?: string;
   private hubSub?: Subscription;
 
@@ -75,7 +75,14 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.manageUnenrollAvailability(this.hubService.actors$.getValue());
-    this.hubSub = this.hubService.actors$.subscribe(a => this.manageUnenrollAvailability(a));
+    this.isManager$.next(this.ctx.player.isManager);
+    this.hubSub = this.hubService.actors$.subscribe(a => {
+      this.manageUnenrollAvailability(a);
+
+      const manager = a.find(a => a.isManager);
+      if (manager)
+        this.isManager$.next(manager?.id == this.ctx.player.id);
+    });
   }
 
   async invite(p: Player) {
@@ -138,22 +145,15 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   }
 
   private manageUnenrollAvailability(actors: HubPlayer[]) {
-    console.log("actors changed", actors);
-
     // you can unenroll if you're the only one left
     if (!actors.length || actors.length == 1 && actors[0].userId === this.ctx.user.id) {
       this.setCanUnenroll(true);
       return;
     }
 
-    console.log("i am", this.ctx.user.id);
-    console.log("manager is", actors.find(a => a.isManager));
-    const managerPlayer = actors.find(a => a.isManager)!.id;
-    const nonManagerPlayers = actors.filter(a => !a.isManager).map(a => a.id);
-
     // you can unenroll if you're not the manager
+    const managerPlayer = actors.find(a => a.isManager)!.id;
     if (managerPlayer !== this.ctx.player.id) {
-      console.log("i can unenroll")
       this.setCanUnenroll(true);
       return;
     }
