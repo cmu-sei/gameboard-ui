@@ -34,9 +34,11 @@
             <tr *ngFor="let key of apiKeys || []">
                 <td [innerHTML]="key.name || '<em>Unnamed</em>' | safeHtml"></td>
                 <td>{{ key.generatedOn | shortdate }}</td>
-                <td [innerHTML]="(key.expiresOn | shortdate) || '<em>Doesn\'t expire</em>'"></td>
-                <td><button type="button" class="btn btn-danger"
-                        [appModalConfirm]="getConfirmSettings(key.id)">Delete</button>
+                <td [innerHTML]="(!!key.expiresOn ? (key.expiresOn | shortdate) : '<em>Doesn\'t expire</em>')"></td>
+                <td>
+                    <app-confirm-button btnClass="btn btn-danger" (confirm)="delete(key.id)">
+                        <span>Delete</span>
+                    </app-confirm-button>
                 </td>
             </tr>
             <tr *ngIf="apiKeys.length">
@@ -53,11 +55,18 @@
                     <span>{{dummyGeneratedOn | shortdate}} @ {{dummyGeneratedOn | friendlyTime}}</span>
                 </td>
                 <td>
-                    <input type="datetime" placeholder="Leave blank for permanent access" [minDate]="minDate"
-                        [(ngModel)]="newApiKey.expiresOn" class="form-control" bsDatepicker>
+                    <div class="input-group">
+                        <input type="datetime" placeholder="Leave blank for permanent access" [minDate]="minDate"
+                            [(ngModel)]="newApiKey.expiresOn" class="form-control" bsDatepicker>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-info" (click)="newApiKey.expiresOn = undefined">
+                                <fa-icon [icon]="clearIcon"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
                 </td>
                 <td>
-                    <button type="button" (click)="create(newApiKey)" class="btn btn-md"
+                    <button type="button" (click)="create(newApiKey)" class="btn btn-md ml-1"
                         [class.btn-success]="!!newApiKey.name" [class.btn-outline-danger]="!newApiKey.name"
                         [disabled]="!newApiKey.name">Add</button>
                 </td>
@@ -66,6 +75,8 @@
     </div>
 
     <ng-template #loading>
-        <app-spinner></app-spinner>
+        <div class="text-center">
+            <app-spinner></app-spinner>
+        </div>
     </ng-template>
 </div>

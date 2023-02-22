@@ -5,7 +5,7 @@ import { PlayerAvatarSize } from '../player-avatar/player-avatar.component';
 @Component({
   selector: 'app-player-avatar-list',
   template: `
-  <div [class]="'player-avatar-list-component avatar-list-size ' + this.sizeClass + ' ' + this.countClass">
+  <div [class]="'player-avatar-list-component d-flex align-items-center avatar-list-size ' + this.sizeClass + ' ' + this.countClass">
     <ul *ngIf="(avatarUris?.length || 0) > 0" class="m-0 p-0 d-flex align-items-center justify-content-start">
       <li *ngFor="let avatarUri of avatarUris; index as i" [class]="'m-0 avatar-position-' + i + ' ' + this.sizeClass">
           <app-player-avatar [avatarUri]="avatarUri" [size]="avatarSize"></app-player-avatar>

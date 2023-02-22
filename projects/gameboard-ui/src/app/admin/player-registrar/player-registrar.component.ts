@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faTrash, faList, faSearch, faFilter, faCheck, faArrowLeft, faLongArrowAltDown, faCheckSquare, faSquare, faClipboard, faStar, faSyncAlt, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, BehaviorSubject, combineLatest, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
-import { debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
@@ -79,6 +79,7 @@ export class PlayerRegistrarComponent {
       tap(([a, b, c]) => this.search.gid = a.id),
       switchMap(() => this.api.list(this.search)),
       tap(r => this.source = r),
+      tap(r => console.log("source", this.source)),
       tap(() => this.review())
     );
 
@@ -152,23 +153,22 @@ export class PlayerRegistrarComponent {
     })
   }
 
-  delete(model: Player): void {
-    this.api.unenroll(model.id).subscribe(() => {
-      const found = this.source.find(f => f.id === model.id);
-      if (found) {
-        this.source.splice(
-          this.source.indexOf(found),
-          1
-        );
-      }
-    });
-
-  }
-
   undeploy(model: Player): void {
     this.unityService
       .undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true })
       .subscribe(result => console.log("Undeploy result: ", result));
+  }
+
+  resetSession(model: Player): void {
+    this.api.resetSession(model).pipe(first()).subscribe(_ => {
+      this.refresh$.next(true);
+    });
+  }
+
+  unenroll(model: Player): void {
+    this.api.unenroll(model.id).pipe(first()).subscribe(_ => {
+      this.refresh$.next(true);
+    })
   }
 
   update(model: Player): void {

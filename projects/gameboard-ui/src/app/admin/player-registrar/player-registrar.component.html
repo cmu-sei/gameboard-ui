@@ -163,10 +163,20 @@
           <span>Undeploy</span>
         </app-confirm-button>
       </ng-container>
-      <app-confirm-button btnClass="btn btn-outline-danger btn-sm mx-1" (confirm)="delete(player)">
+
+      <app-confirm-button *ngIf="!game.allowTeam && !player.session else resetSessionButton"
+        btnClass="btn btn-outline-danger btn-sm mx-1" (confirm)="unenroll(player)">
         <fa-icon [icon]="faTrash"></fa-icon>
         <span>Unenroll</span>
       </app-confirm-button>
+
+      <ng-template #resetSessionButton>
+        <app-confirm-button btnClass="btn btn-danger btn-sm mx-1" (confirm)="resetSession(player)">
+          <fa-icon [icon]="faTrash"></fa-icon>
+          <span>Reset Session</span>
+        </app-confirm-button>
+      </ng-template>
+
     </div>
     <div *ngIf="viewed === player" class="col-12">
       <div class="form-group">

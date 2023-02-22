@@ -2,11 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faEraser, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { DateTime, Duration } from 'luxon';
 import { ApiKeyViewModel, NewApiKey } from '../../api/api-keys.models';
 import { ApiKeysService } from '../../api/api-keys.service';
-import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
 import { ClipboardService } from 'projects/gameboard-ui/src/app/utility/services/clipboard.service';
 import { ToastService } from '../../utility/services/toast.service';
 
@@ -25,8 +24,10 @@ export class UserApiKeysComponent implements OnInit, OnDestroy {
   protected newApiKey!: NewApiKey;
   protected visibleKey: string = '';
 
+  protected clearIcon = faEraser;
   protected copyIcon = faCopy;
   protected closeIcon = faTimes;
+  protected deleteIcon = faTrash;
 
   private apiKeysSubject$ = new Subject<ApiKeyViewModel[]>();
   private apiKeysSub?: Subscription;
@@ -73,16 +74,6 @@ export class UserApiKeysComponent implements OnInit, OnDestroy {
         this.errors = [err.message];
       }
     )
-  }
-
-  getConfirmSettings(keyId: string): ModalConfirmConfig {
-    return {
-      title: "Delete API key?",
-      bodyContent: `If you delete this API key, ${this.user.name} will no longer be able to access the API with this key.`,
-      confirmButtonText: "Yes, delete it",
-      cancelButtonText: "Don't delete it",
-      onConfirm: () => this.delete(keyId)
-    }
   }
 
   ngOnDestroy(): void {
