@@ -1,13 +1,11 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
-<ng-container *ngIf="teamEvents$ | async"></ng-container>
 
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
-
   <div class="card mb-4">
     <div class="card-body">
 
-      <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session.isDuring)" class="text-info card-text mb-2">
+      <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)" class="text-info card-text mb-2">
         <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
         <span *ngIf="ctx.game.session.isDuring">Game window closes in </span>
         <span *ngIf="ctx.game.session.isAfter">Game window is closed </span>
@@ -15,35 +13,24 @@
       </div>
 
       <div class="card-title lead">
-        <ng-container *ngIf="!ctx.player.session.isBefore">
+        <ng-container *ngIf="!ctx.player.session?.isBefore">
           <div class="d-flex text-info card-text">
-            <span *ngIf="ctx.player.session.isDuring">Time Remaining: </span>
-            <span *ngIf="ctx.player.session.isAfter">Session ended </span>
-            <span [class]="ctx.player.session.countdown | countdowncolor">&nbsp;{{ctx.player.session.countdown |
-              countdown}}</span>
+            <span *ngIf="ctx.player.session?.isAfter">Session ended </span>
+            <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
+            <span [class]="ctx.player.session?.countdown | countdowncolor">
+              {{ctx.player.session?.countdown | countdown}}
+            </span>
             <div class="spacer"></div>
             <app-confirm-button *ngIf="ctx.game.allowReset" class="mx-2" btnClass="btn btn-sm pop-warning"
-              (confirm)="reset(ctx.player)">
+              (confirm)="handleReset(ctx.player)">
               <fa-icon [icon]="faTrash"></fa-icon>
               <span>Reset Session</span>
             </app-confirm-button>
           </div>
         </ng-container>
       </div>
-      <div class="team-leader">
-        <img [src]="ctx.player.sponsorLogo" class="mr-3 team-leader-sponsor-logo">
-        <div class="mr-2 team-leader-name">
-          <p class="team-header">Team</p>
-          <p class="team-leader-name-text">{{ctx.player.approvedName}}</p>
-          <small *ngIf="!!ctx.player.pendingName" class="text-muted">({{ctx.player.pendingName}})</small>
-        </div>
-      </div>
 
-      <hr class="team-leader-divider" />
-
-      <ng-container *ngIf="ctx.game.allowTeam">
-        <app-player-presence [id]="ctx.player.teamId"></app-player-presence>
-      </ng-container>
+      <app-player-presence *ngIf="ctx.player" [player]="ctx.player"></app-player-presence>
 
       <table class="table mt-2 text-center">
         <tbody>
@@ -66,23 +53,24 @@
 
       <app-error-div [errors]="errors"></app-error-div>
 
-      <ng-container *ngIf="ctx.player.session.isBefore && ctx.game.session.isDuring">
-
+      <ng-container *ngIf="ctx.player.session && ctx.player.session.isBefore && ctx.game.session.isDuring">
         <div class="card-text my-4" *ngIf="doublechecking">
-
           <alert type="danger">
             <ul>
               <li>After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes!</li>
-              <li [hidden]="ctx.game.maxTeamSize < 2">This will start the session for the team, so be sure your
-                teammates are ready to start!</li>
-              <li [hidden]="ctx.game.maxTeamSize < 2">You cannot add or remove team members after your session has
-                started!</li>
+              <li [hidden]="ctx.game.maxTeamSize < 2">
+                This will start the session for the team, so be sure your
+                teammates are ready to start!
+              </li>
+              <li [hidden]="ctx.game.maxTeamSize < 2">
+                You cannot add or remove team members after your session has started!
+              </li>
               <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it!</li>
             </ul>
           </alert>
 
           <div class="text-center">
-            <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="start(ctx.player)"
+            <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="handleStart(ctx.player)"
               (cancel)="doublechecking=false">
               <fa-icon [icon]="faBolt"></fa-icon>
               <span>Yes, start {{ctx.game.name}}</span>
@@ -91,7 +79,6 @@
         </div>
 
         <div class="card-text" *ngIf="!doublechecking">
-
           <alert type="warning">
             After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
             <span [hidden]="ctx.game.maxTeamSize < 2">
@@ -108,7 +95,7 @@
             </div>
           </div>
 
-          <div class="text-center">
+          <div class="text-center my-4">
             <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="doublechecking=true">
               <fa-icon [icon]="faBolt"></fa-icon>
               <span>Start Session</span>
@@ -117,16 +104,16 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="ctx.user.isRegistrar && !ctx.player.session.isDuring">
+      <ng-container *ngIf="ctx.user.isRegistrar && !ctx.player.session">
         <div class="text-center my-4">
-          <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="start(ctx.player)">
+          <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="handleStart(ctx.player)">
             <fa-icon [icon]="faBolt"></fa-icon>
             <span>Admin Start</span>
           </app-confirm-button>
         </div>
       </ng-container>
 
-      <div *ngIf="!ctx.player.session.isBefore" class="text-center mb-4">
+      <div *ngIf="!ctx.player.session?.isBefore" class="text-center mb-4">
         <a *ngIf="ctx.game.mode != 'unity'" class="btn btn-primary btn-lg"
           [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
         <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
@@ -135,14 +122,13 @@
         </a>
       </div>
 
-      <div class="col">
-        <img [src]="ctx.game.mapUrl" alt="game map background" class="img-fluid">
+      <div class="col d-flex justify-content-center">
+        <img [src]=" ctx.game.mapUrl" alt="game map background" class="img-fluid">
       </div>
 
     </div>
   </div>
 </ng-container>
-
 
 <ng-template #loading>
   <div class="text-center">

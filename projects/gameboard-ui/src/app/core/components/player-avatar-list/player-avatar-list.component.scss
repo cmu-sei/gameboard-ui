@@ -1,31 +1,20 @@
-// $maxPlayers: 5;
+@use "sass:map";
+@import "../../../../scss/variables";
+@import "../../../../scss/player-avatars";
 
-.player-avatar-list-component {
-    padding: 0 0.5rem;
-}
+@for $i from 0 through $max-players-per-team - 1 {
+    li.avatar-position-#{$i}.avatar-size-small {
+        z-index: $z-index-relative + $i;
+        transform: getPlayerAvatarListTransform("small", $i);
+    }
 
-ul {
-    margin: 0;
-    padding: 0;
-    width: 6rem;
+    li.avatar-position-#{$i}.avatar-size-medium {
+        z-index: $z-index-relative + $i;
+        transform: getPlayerAvatarListTransform("medium", $i);
+    }
 
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    // TODO: literally don't have time to figure out why this isn't doing what i expect
-    // @for $i from 0 through $maxPlayers - 1 {
-    //     li.avatar-position-#{i} {
-    //         z-index: $z-index-relative + ($maxPlayers - $i);
-    //         transform: translateX(calc(-2rem - calc($i * 8px)));
-    //     }
-    // }
-}
-
-.avatar-position-1 {
-    transform: translateX(-30px);
-}
-
-.avatar-position-2 {
-    transform: translateX(-60px);
+    li.avatar-position-#{$i}.avatar-size-large {
+        z-index: $z-index-relative + $i;
+        transform: getPlayerAvatarListTransform("large", $i);
+    }
 }

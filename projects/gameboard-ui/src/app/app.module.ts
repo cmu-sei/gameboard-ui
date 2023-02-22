@@ -3,13 +3,13 @@
 
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { Observable } from 'rxjs';
@@ -19,10 +19,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './utility/auth.interceptor';
 import { ConfigService, markedOptionsFactory } from './utility/config.service';
-import { UserService } from './utility/user.service';
+import { UserService as CurrentUserService } from './utility/user.service';
 import { UtilityModule } from './utility/utility.module';
 import { SupportPillComponent } from './support/support-pill/support-pill.component';
 import { CoreModule } from './core/core.module';
+import { ModalConfirmService } from './services/modal-confirm.service';
+import { NotificationService } from './services/notification.service';
+import { AuthService } from './utility/auth.service';
+import { UserService } from './api/user.service';
 
 @NgModule({
   declarations: [
@@ -34,10 +38,10 @@ import { CoreModule } from './core/core.module';
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    CoreModule,
     AppRoutingModule,
     ApiModule,
     FontAwesomeModule,
+    CoreModule,
     UtilityModule,
     TooltipModule.forRoot(),
     ButtonsModule.forRoot(),
@@ -50,7 +54,6 @@ import { CoreModule } from './core/core.module';
         useFactory: markedOptionsFactory,
       },
     }),
-
   ],
   exports: [
     ApiModule,
@@ -77,8 +80,23 @@ import { CoreModule } from './core/core.module';
     {
       provide: APP_INITIALIZER,
       useFactory: register,
-      deps: [UserService],
+      deps: [CurrentUserService],
       multi: true
+    },
+    {
+      provide: [NotificationService],
+      useFactory: () => NotificationService,
+      deps: [
+        AuthService,
+        ConfigService,
+        CurrentUserService,
+        UserService
+      ]
+    },
+    {
+      provide: ModalConfirmService,
+      useFactory: (bsModalService: BsModalService) => new ModalConfirmService(bsModalService),
+      deps: [BsModalService]
     }
   ],
   bootstrap: [AppComponent]
@@ -93,7 +111,7 @@ export function loadSettings(
 }
 
 export function register(
-  user: UserService
+  user: CurrentUserService
 ): (() => Promise<void>) {
   return (): Promise<void> => user.register()
     ;

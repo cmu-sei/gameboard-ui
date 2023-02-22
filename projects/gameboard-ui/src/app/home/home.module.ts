@@ -12,6 +12,7 @@ import { LandingComponent } from './landing/landing.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UtilityModule } from '../utility/utility.module';
+import { CoreModule } from '../core/core.module';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { FormsModule } from '@angular/forms';
@@ -19,8 +20,6 @@ import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
 import { ProfileHistoryComponent } from './profile-history/profile-history.component';
-
-
 
 @NgModule({
   declarations: [
@@ -38,20 +37,23 @@ import { ProfileHistoryComponent } from './profile-history/profile-history.compo
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', component: HomePageComponent, children: [
-        { path: '', pathMatch: 'full', redirectTo: '/home' },
-        { path: 'login', component: LoginPageComponent },
-        { path: 'oidc', component: OidcComponent },
-        { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-        { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
-        { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
-        { path: 'doc/:id', component: TocPageComponent },
-        { path: 'forbidden', component: ForbiddenComponent },
-        { path: 'home', component: LandingComponent  }
-      ]},
+      {
+        path: '', component: HomePageComponent, children: [
+          { path: '', pathMatch: 'full', redirectTo: '/home' },
+          { path: 'login', component: LoginPageComponent },
+          { path: 'oidc', component: OidcComponent },
+          { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+          { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
+          { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
+          { path: 'doc/:id', component: TocPageComponent },
+          { path: 'forbidden', component: ForbiddenComponent },
+          { path: 'home', component: LandingComponent }
+        ]
+      },
       { path: '**', redirectTo: '/home' }
     ]),
     FormsModule,
+    CoreModule,
     UtilityModule,
     FontAwesomeModule,
     MarkdownModule

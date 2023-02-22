@@ -14,7 +14,7 @@ import { UserService } from '../../api/user.service';
 import { EditData, SuggestionOption } from '../../utility/components/inplace-editor/inplace-editor.component';
 import { ConfigService } from '../../utility/config.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
-import { NotificationService } from '../../utility/notification.service';
+import { NotificationService } from '../../services/notification.service';
 import linkifyHtml from 'linkify-html';
 import { ClipboardService } from "../../utility/services/clipboard.service";
 import { ToastService } from '../../utility/services/toast.service';
@@ -82,7 +82,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   selectedObjectUrls: SafeResourceUrl[] = this.attachmentObjectUrls;
   selectedIndex: number = 0;
 
-  constructor (
+  constructor(
     private api: SupportService,
     private clipboard: ClipboardService,
     private faService: FontAwesomeService,

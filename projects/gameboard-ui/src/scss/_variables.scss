@@ -43,16 +43,13 @@ $dark: $gray-800 !default;
 $yiq-contrasted-threshold: 175 !default;
 
 // Body
-
 $body-bg: $black !default;
 $body-color: $gray-100 !default;
 
 // Links
-
 $link-color: $success !default;
 
 // Fonts
-
 $font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
 $font-size-base: 0.9375rem !default;
@@ -62,13 +59,11 @@ $h2-font-size: 2rem !default;
 $h3-font-size: 1.5rem !default;
 
 // Tables
-
 $table-accent-bg: $gray-800 !default;
 
 $table-border-color: $gray-700 !default;
 
 // Forms
-
 $input-border-color: transparent !default;
 
 $input-group-addon-color: $gray-500 !default;
@@ -78,7 +73,6 @@ $custom-file-color: $gray-500 !default;
 $custom-file-border-color: $gray-700 !default;
 
 // Dropdowns
-
 $dropdown-bg: $gray-900 !default;
 $dropdown-border-color: $gray-700 !default;
 $dropdown-divider-bg: $gray-700 !default;
@@ -88,7 +82,6 @@ $dropdown-link-hover-color: $white !default;
 $dropdown-link-hover-bg: $primary !default;
 
 // Navs
-
 $nav-link-padding-x: 2rem !default;
 $nav-link-disabled-color: $gray-500 !default;
 
@@ -129,51 +122,41 @@ $pagination-disabled-bg: darken($success, 15%) !default;
 $pagination-disabled-border-color: transparent !default;
 
 // Jumbotron
-
 $jumbotron-bg: $gray-900 !default;
 
 // Cards
-
 $card-cap-bg: $black !default;
 $card-bg: $gray-900 !default;
 
 // Popovers
-
 $popover-bg: $gray-800 !default;
-
 $popover-header-bg: $gray-700 !default;
 
 // Modals
-
 $modal-content-bg: $gray-800 !default;
 $modal-content-border-color: $gray-700 !default;
 
 $modal-header-border-color: $gray-700 !default;
 
 // Progress bars
-
 $progress-height: 0.625rem !default;
 $progress-font-size: 0.625rem !default;
 $progress-bg: $gray-700 !default;
 
 // List group
-
 $list-group-bg: $gray-900 !default;
 $list-group-border-color: $gray-700 !default;
 
 $list-group-hover-bg: $gray-800 !default;
 
 // Breadcrumbs
-
 $breadcrumb-bg: $gray-700 !default;
 
 // Close
-
 $close-color: $white !default;
 $close-text-shadow: none !default;
 
 // Code
-
 $pre-color: inherit !default;
 
 // z-index

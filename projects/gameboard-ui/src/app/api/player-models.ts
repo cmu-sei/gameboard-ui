@@ -22,6 +22,7 @@ export interface Player {
   sessionBegin: Date;
   sessionEnd: Date;
   sessionMinutes: number;
+  session?: TimeWindow;
   rank: number;
   score: number;
   time: number;
@@ -29,12 +30,9 @@ export interface Player {
   partialCount: number;
   isManager: boolean;
   advanced: boolean;
-
   sponsorLogo: string;
   sponsorList: string[];
-
   pendingName: string;
-  session: TimeWindow;
   checked: boolean;
 }
 
@@ -68,6 +66,41 @@ export class TimeWindow {
         : 0
       ;
   }
+}
+
+// export enum TimeWindowState {
+//   Before,
+//   During,
+//   After
+// }
+
+// export class TimeWindow {
+//   now!: Date;
+//   start!: Date;
+//   end!: Date
+//   duration!: number;
+//   state!: TimeWindowState;
+//   timeUntilStart!: number;
+//   timeUntilEnd!: number;
+
+//   // convenience properties for templates
+//   readonly isBefore: boolean;
+//   readonly isDuring: boolean;
+//   readonly isAfter: boolean;
+
+//   constructor() {
+//     this.isBefore = this.state === TimeWindowState.Before;
+//     this.isDuring = this.state === TimeWindowState.During;
+//     this.isAfter = this.state === TimeWindowState.After;
+//   }
+// }
+
+export interface HubPlayer extends Player {
+  userApprovedName: string;
+  userName: string;
+  pendingName: string;
+  userNameStatus: string;
+  isOnline: boolean;
 }
 
 export interface NewPlayer {
@@ -168,6 +201,7 @@ export interface Team {
   partialCount: number;
   challenges: TeamChallenge[];
   members: TeamMember[];
+  sponsorList: string[];
 }
 export interface TeamChallenge {
   id: string;
@@ -205,6 +239,7 @@ export interface TeamState {
   approvedName: string;
   sessionBegin: Date;
   sessionEnd: Date;
+  actor: { userId: string };
 }
 
 export interface TeamSummary {

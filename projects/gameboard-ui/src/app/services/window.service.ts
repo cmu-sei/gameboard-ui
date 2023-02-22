@@ -7,7 +7,7 @@ import { Inject, Injectable } from '@angular/core';
 export class WindowService {
   constructor(@Inject(DOCUMENT) private document: Document) { }
 
-  get(): Window | null {
-    return this.document.defaultView;
+  get(): Window {
+    return this.document.defaultView!;
   }
 }

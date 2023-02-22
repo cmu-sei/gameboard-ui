@@ -1,8 +1,8 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
-import { faTrash, faList, faSearch, faFilter, faCheck, faTintSlash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Component } from '@angular/core';
+import { faTrash, faList, faSearch, faFilter, faCheck, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
@@ -14,14 +14,14 @@ import { UserService } from '../../api/user.service';
   templateUrl: './user-registrar.component.html',
   styleUrls: ['./user-registrar.component.scss']
 })
-export class UserRegistrarComponent implements OnInit {
+export class UserRegistrarComponent {
   refresh$ = new BehaviorSubject<boolean>(true);
   source$: Observable<ApiUser[]>;
   source: ApiUser[] = [];
   selected: ApiUser[] = [];
   viewed: ApiUser | undefined = undefined;
   viewChange$ = new BehaviorSubject<ApiUser | undefined>(this.viewed);
-  search: Search = { term: '', take: 0};
+  search: Search = { term: '', take: 0 };
   filter = '';
   scope = '';
   scopes: string[] = [];
@@ -47,9 +47,6 @@ export class UserRegistrarComponent implements OnInit {
       tap(r => this.source = r),
       tap(() => this.review()),
     );
-  }
-
-  ngOnInit(): void {
   }
 
   toggleFilter(role: string): void {
@@ -88,7 +85,7 @@ export class UserRegistrarComponent implements OnInit {
 
   update(model: ApiUser): void {
     this.api.update(model).subscribe(
-      () => {},
+      () => { },
       (err) => this.errors.push(err)
     );
   }
@@ -102,7 +99,6 @@ export class UserRegistrarComponent implements OnInit {
 
   role(model: ApiUser, r: string): void {
     let a = model.role.split(', ');
-
     const b = a.find(i => i === r);
 
     if (b) {
@@ -114,7 +110,7 @@ export class UserRegistrarComponent implements OnInit {
     model.role = !!a.length
       ? a.join(', ') as UserRole
       : UserRole.member
-    ;
+      ;
 
     this.update(model);
   }

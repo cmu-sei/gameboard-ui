@@ -4,10 +4,10 @@
 <div class="form-group">
   <label class="mb-0" for="input-announce">Announcement</label>
   <div class="input-group">
-    <textarea name="input-announce" id="input-announce" rows="7"
-      placeholder="broadcast message"
-      class="form-control" [(ngModel)]="message">
-    </textarea><div class="input-group-append">
+    <textarea name="input-announce" id="input-announce" rows="7" placeholder="broadcast message" class="form-control"
+      [(ngModel)]="message">
+    </textarea>
+    <div class="input-group-append">
       <button class="btn btn-outline-info" (click)="announce()">
         <fa-icon [icon]="faSend"></fa-icon>
         <span>Announce</span>

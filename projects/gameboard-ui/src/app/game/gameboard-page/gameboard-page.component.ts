@@ -12,7 +12,7 @@ import { SessionChangeRequest } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
-import { HubState, NotificationService } from '../../utility/notification.service';
+import { HubState, NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
 
 @Component({
@@ -218,7 +218,20 @@ export class GameboardPageComponent implements OnDestroy {
   }
 
   console(vm: VmState): void {
-    this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`)
+    let isUrl = false;
+
+    try {
+      let url = new URL(vm.id);
+      isUrl = true;
+    } catch (_) {
+      isUrl = false;
+    }
+
+    if (isUrl) {
+      this.config.showTab(vm.id);
+    } else {
+      this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`);
+    }
   }
 
   mouseenter(e: MouseEvent, spec: BoardSpec) {

@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { UnityBoardComponent } from './unity-board/unity-board.component';
 import { UtilityModule } from '../utility/utility.module';
 
-
-
 @NgModule({
   declarations: [
     UnityBoardComponent

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { ConfigService } from '../../utility/config.service';
-import { NotificationService } from '../../utility/notification.service';
+import { NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { UserService } from '../../utility/user.service';
 export class SupportPageComponent implements OnInit, OnDestroy {
   s: Subscription[] = [];
 
-  constructor (
+  constructor(
     private config: ConfigService,
     hub: NotificationService,
     user: UserService
@@ -21,7 +21,7 @@ export class SupportPageComponent implements OnInit, OnDestroy {
     this.s.push(
       user.user$.pipe(
         filter(u => !!u),
-        tap(u => hub.init(u!.id, true))
+        tap(u => hub.init(u!.id))
       ).subscribe()
     );
 

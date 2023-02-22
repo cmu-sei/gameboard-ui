@@ -5,6 +5,7 @@ export interface ExternalSpec {
   externalId: string;
   name: string;
   description: string;
+  gameEngineType: GameEngineType;
 }
 
 export interface SpecDetail extends ExternalSpec {
@@ -31,12 +32,16 @@ export interface ChangedSpec extends SpecDetail {
   id: string;
 }
 
-export interface SpecSummary
-{
+export interface SpecSummary {
   id: string;
   name: string;
   description: string;
   gameId: string;
   gameName: string;
   gameLogo: string;
+}
+
+export enum GameEngineType {
+  topomojo = 'topomojo',
+  crucible = 'crucible',
 }
