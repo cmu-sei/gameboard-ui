@@ -5,6 +5,9 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { GameService } from './api/game.service';
+import { PlayerMode } from './api/player-models';
 import { TocFile, TocService } from './api/toc.service';
 import { ApiUser } from './api/user-models';
 import { ConfigService } from './utility/config.service';
@@ -21,10 +24,12 @@ export class AppComponent implements OnInit {
   toc$!: Observable<TocFile[]>;
   custom_bg = "";
   env: any;
+  isPracticeModeEnabled = false;
 
   constructor(
     private usersvc: UserService,
     private config: ConfigService,
+    private gamesApi: GameService,
     public layoutService: LayoutService,
     @Inject(DOCUMENT) private document: Document,
     private toc: TocService,
@@ -40,6 +45,10 @@ export class AppComponent implements OnInit {
     if (this.custom_bg) {
       this.document.getElementsByTagName('body')[0].classList.add(this.custom_bg);
     }
+
+    this.gamesApi.list({}).pipe(first()).subscribe(games => {
+      this.isPracticeModeEnabled = games.some(g => g.playerMode == PlayerMode.practice);
+    });
   }
 
   logout(): void {

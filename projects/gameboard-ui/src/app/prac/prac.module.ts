@@ -9,6 +9,7 @@ import { CoreModule } from '../core/core.module';
 import { ApiModule } from '../api/api.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
+import { PracticeModeEnabledGuard } from './practice-mode-enabled.guard';
 
 
 
@@ -25,9 +26,9 @@ import { FormsModule } from '@angular/forms';
     ApiModule,
     FontAwesomeModule,
     RouterModule.forChild([
-      { path: ':gid/:cid', canActivate: [AuthGuard], component: PracticeSessionComponent },
-      { path: ':gid', canActivate: [AuthGuard], component: PracticeSessionComponent },
-      { path: '', component: PracticePageComponent },
+      { path: ':gid/:cid', canActivate: [AuthGuard, PracticeModeEnabledGuard], component: PracticeSessionComponent },
+      { path: ':gid', canActivate: [AuthGuard, PracticeModeEnabledGuard], component: PracticeSessionComponent },
+      { path: '', canActivate: [PracticeModeEnabledGuard], canActivateChild: [PracticeModeEnabledGuard], component: PracticePageComponent },
     ])
   ]
 })
