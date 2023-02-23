@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
@@ -38,28 +38,44 @@ export class PlayerService {
       map(p => this.transform(p) as Player)
     );
   }
+
   public update(model: ChangedPlayer): Observable<any> {
     return this.http.put<any>(`${this.url}/player`, model);
   }
-  public start(model: ChangedPlayer): Observable<Player> {
-    return this.http.put<Player>(`${this.url}/player/start`, model).pipe(
+
+  public start(player: Player): Observable<Player> {
+    return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
       map(p => this.transform(p) as Player)
     );
   }
+
+  public resetSession(p: Player): Observable<any> {
+    return this.http.delete<void>(`${this.url}/player/${p.id}/session`, {}).pipe(
+      map(r => {
+        delete p.session;
+        return;
+      })
+    );
+  }
+
   public updateSession(model: SessionChangeRequest): Observable<any> {
     return this.http.put<any>(`${this.url}/team/session`, model);
   }
-  public delete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.url}/player/${id}`);
+
+  public unenroll(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/player/${id}`);
   }
+
   public invite(id: string): Observable<TeamInvitation> {
     return this.http.post<TeamInvitation>(`${this.url}/player/${id}/invite`, null);
   }
+
   public enlist(model: PlayerEnlistment): Observable<Player> {
     return this.http.post<Player>(`${this.url}/player/enlist`, model).pipe(
       map(p => this.transform(p) as Player)
     );
   }
+
   public scores(search: any): Observable<Standing[]> {
     return this.http.get<Standing[]>(this.url + '/scores', { params: search }).pipe(
       map(r => {
@@ -68,30 +84,46 @@ export class PlayerService {
       })
     );
   }
+
   public getTeam(id: string): Observable<Team> {
-    return this.http.get<Team>(`${this.url}/team/${id}`);
+    return this.http.get<Team>(`${this.url}/team/${id}`).pipe(
+      map(t => {
+        t.sponsorList = t.sponsorList.map(s => this.transformSponsorUrl(s))
+        return t;
+      })
+    );
   }
+
   public getTeams(id: string): Observable<TeamSummary[]> {
     return this.http.get<TeamSummary[]>(`${this.url}/teams/${id}`).pipe(
       map(result => result.map(t => this.transformSponsor(t)))
     );
   }
+
   public advanceTeams(model: TeamAdvancement): Observable<any> {
     return this.http.post<any>(this.url + '/team/advance', model);
   }
+
   public observeTeams(id: string): Observable<any> {
     return this.http.get<Team>(`${this.url}/teams/observe/${id}`);
   }
+
   public getCertificate(id: string): Observable<PlayerCertificate> {
     return this.http.get<PlayerCertificate>(`${this.url}/certificate/${id}`);
   }
+
   public getUserCertificates(): Observable<PlayerCertificate[]> {
     return this.http.get<PlayerCertificate[]>(`${this.url}/certificates`);
+  }
+
+  public promoteToManager(teamId: string, playerId: string, ctx: { currentManagerPlayerId: string, asAdmin?: boolean }): Observable<void> {
+    return this.http.put<void>(`${this.url}/team/${teamId}/manager/${playerId}`, ctx);
   }
 
   public transform(p: Player, disallowedName: string | null = null): Player {
     p.sponsorLogo = this.transformSponsorUrl(p.sponsor);
     p.sponsorList = p.sponsorList.map(s => this.transformSponsorUrl(s));
+
 
     // If the user has no name status but they changed their name, it's pending approval
     if (!p.nameStatus && p.approvedName !== p.name) {
@@ -107,9 +139,15 @@ export class PlayerService {
       : ''
       ;
 
-    p.session = new TimeWindow(p.sessionBegin, p.sessionEnd);
-
     return p;
+  }
+
+  public transformSession(p: Player, sessionBegin: Date, sessionEnd: Date) {
+    this.addSession(p, new TimeWindow(sessionBegin, sessionEnd));
+  }
+
+  public addSession(p: Player, session: TimeWindow) {
+    p.session = session;
   }
 
   private transformStanding(p: Standing): Standing {

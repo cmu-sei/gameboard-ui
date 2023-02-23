@@ -13,14 +13,14 @@ import { PlayerService } from '../../api/player.service';
   templateUrl: './scoreboard-table.component.html',
   styleUrls: ['./scoreboard-table.component.scss']
 })
-export class ScoreboardTableComponent implements OnInit, OnChanges, AfterViewInit {
+export class ScoreboardTableComponent implements OnChanges, AfterViewInit {
   @Input() id = '';
   @Input() live = false;
 
   refresh$ = new Subject<boolean>();
   scores$: Observable<Standing[]>;
   scores: Standing[] = [];
-  search: PlayerSearch = { filter: ['scored']};
+  search: PlayerSearch = { filter: ['scored'] };
   faStar = faStar;
 
   constructor(
@@ -62,9 +62,6 @@ export class ScoreboardTableComponent implements OnInit, OnChanges, AfterViewIni
       this.search.gid = changes.id.currentValue;
       this.refresh$.next(true);
     }
-  }
-
-  ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {

@@ -1,56 +1,73 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { faCircle, faStar } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, Subject, Subscribable, Subscription } from 'rxjs';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
+import { HubPlayer, Player } from '../../api/player-models';
+import { PlayerService } from '../../api/player.service';
 import { ApiUser } from '../../api/user-models';
-import { HubState, NotificationService } from '../../utility/notification.service';
+import { PlayerAvatarSize } from '../../core/components/player-avatar/player-avatar.component';
+import { NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
-import { GameHubStatus } from '../game-hub-status/game-hub-status.component';
+
+interface PlayerPresenceContext {
+  hasTeammates: boolean,
+  manager: HubPlayer | undefined;
+  players: HubPlayer[];
+  playerIsManager: boolean;
+  teamAvatar: string[],
+  teamName: string;
+}
 
 @Component({
   selector: 'app-player-presence',
+  styleUrls: ['./player-presence.component.scss'],
   templateUrl: './player-presence.component.html',
-  styleUrls: ['./player-presence.component.scss']
 })
-export class PlayerPresenceComponent implements OnChanges, OnDestroy {
-  @Input() id = '';
-  refresh$ = new Subject<string>();
-  hubState$: Observable<HubState>;
-  user$: BehaviorSubject<ApiUser | null>;
-  faDot = faCircle;
-  faStar = faStar;
-  gameHubStatus = GameHubStatus.Disconnected;
-  gameStatusSubscription$: Subscription | null = null;
+export class PlayerPresenceComponent implements OnInit {
+  @Input() player!: Player;
+  @Output() onManagerPromoted = new EventEmitter<string>();
 
-  constructor (
+  protected avatarSize = PlayerAvatarSize.Medium;
+  protected promoteIcon = faChevronCircleUp;
+  protected ctx$?: Observable<PlayerPresenceContext | null>;
+
+  private hubActorsSubscription: Subscription | null = null;
+
+  constructor(
     private hub: NotificationService,
-    private userSvc: UserService
-  ) {
+    private playerApi: PlayerService,
+  ) { }
 
-    this.hubState$ = this.hub.state$;
-    this.user$ = this.userSvc.user$;
 
-    this.gameStatusSubscription$ = this.hub.state$.subscribe(state => {
-      this.gameHubStatus = state.connected ? GameHubStatus.Connected : GameHubStatus.Disconnected;
-    })
+  ngOnInit(): void {
+    this.ctx$ = this.hub.actors$.pipe(
+      map(a => {
+        const manager = a.find(a => a.isManager);
+        const typedTeammates = a || [];
+
+        return {
+          hasTeammates: !!typedTeammates.filter(a => a.id !== this.player.id).length,
+          manager: typedTeammates.find(a => a.isManager),
+          players: typedTeammates,
+          playerIsManager: !!manager && manager.id === this.player.id,
+          teamAvatar: manager?.sponsorList || this.player.sponsorList,
+          teamName: manager?.approvedName || this.player.approvedName || "",
+        }
+      })
+    );
   }
 
-  ngOnDestroy(): void {
-    if (this.gameStatusSubscription$) {
-      this.gameStatusSubscription$.unsubscribe();
-      this.gameStatusSubscription$ = null;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes.id) {
-      this.refresh$.next(changes.id.currentValue);
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.refresh$.next(this.id);
+  protected promoteToManager(playerId: string) {
+    this.hub.state$.pipe(first()).subscribe(s => {
+      if (!s.id) {
+        throw new Error("Can't promote a manager while the hub is disconnected.");
+      }
+      this.playerApi.promoteToManager(s.id, playerId, { currentManagerPlayerId: this.player.id }).pipe(first()).subscribe(_ => {
+        this.onManagerPromoted.emit(playerId);
+      });
+    });
   }
 }

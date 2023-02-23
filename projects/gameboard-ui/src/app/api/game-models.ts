@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { FeedbackTemplate } from "./feedback-models";
-import { TimeWindow } from "./player-models";
+import { PlayerMode, TimeWindow } from "./player-models";
 
 export interface GameDetail {
   name: string;
@@ -40,6 +40,7 @@ export interface GameDetail {
   requireTeam: boolean;
   allowTeam: boolean;
   allowReset: boolean;
+  playerMode: PlayerMode;
   registrationActive: boolean;
   session: TimeWindow;
   registration: TimeWindow;
@@ -55,6 +56,7 @@ export interface Game extends GameDetail {
   mapUrl: string;
   cardUrl: string;
   modeUrl: string;
+  isPracticeMode: boolean;
 }
 
 export interface NewGame extends GameDetail {

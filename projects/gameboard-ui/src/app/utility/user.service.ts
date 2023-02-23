@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { asyncScheduler, BehaviorSubject, combineLatest, interval, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, timer } from 'rxjs';
 import { catchError, debounceTime, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { NewUser, ApiUser } from '../api/user-models';
 import { UserService as ApiUserService } from '../api/user.service';
@@ -14,7 +14,6 @@ import { ConfigService } from './config.service';
   providedIn: 'root'
 })
 export class UserService {
-
   user$ = new BehaviorSubject<ApiUser | null>(null);
   init$ = new BehaviorSubject<boolean>(false);
   refresh$ = new BehaviorSubject<boolean>(false);

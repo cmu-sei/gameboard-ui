@@ -6,7 +6,7 @@ import { ReportService } from '../../api/report.service';
 import { TicketNotification, TicketSummary } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
 import { ConfigService } from '../../utility/config.service';
-import { NotificationService } from '../../utility/notification.service';
+import { NotificationService } from '../../services/notification.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { ToastService } from '../../utility/services/toast.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
@@ -45,7 +45,7 @@ export class TicketListComponent implements OnInit, OnDestroy {
   faNote = faExclamationCircle;
   faFileDownload = faFileDownload;
 
-  constructor (
+  constructor(
     private api: SupportService,
     private clipboard: ClipboardService,
     private local: LocalUserService,

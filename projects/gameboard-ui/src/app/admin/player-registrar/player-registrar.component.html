@@ -36,14 +36,29 @@
         <fa-icon [hidden]="filter!=='dismissed'" [icon]="faFilter"></fa-icon>
         <span>dismissed</span>
       </button>
-      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
+
+      <span class="text-warning"> | </span>
+
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('competition')">
+        <fa-icon [hidden]="mode!=='competition'" [icon]="faFilter"></fa-icon>
+        <span>comp</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('practice')">
+        <fa-icon [hidden]="mode!=='practice'" [icon]="faFilter"></fa-icon>
+        <span>prac</span>
+      </button>
+      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('test')">
+        <fa-icon [hidden]="mode!=='test'" [icon]="faFilter"></fa-icon>
+        <span>test</span>
+      </button>
+      <!-- <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('pending')">
         <fa-icon [hidden]="filter!=='pending'" [icon]="faFilter"></fa-icon>
         <span>names-pending</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('disallowed')">
         <fa-icon [hidden]="filter!=='disallowed'" [icon]="faFilter"></fa-icon>
         <span>names-disallowed</span>
-      </button>
+      </button> -->
       <ng-container *ngIf="ctx.game.allowTeam">
         <span class="text-warning"> | </span>
         <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleTeamView()">
@@ -120,7 +135,7 @@
         <fa-icon [icon]="player.checked ? faChecked : faUnChecked"></fa-icon>
       </button>
     </div>
-    <app-player-avatar-list [sponsorUris]="player.sponsorList"></app-player-avatar-list>
+    <app-player-avatar-list [avatarUris]="player.sponsorList"></app-player-avatar-list>
     <div class="ml-2">
       <span *ngIf="player.advanced" class="text-success ml-2">
         <fa-icon [icon]="faStar"></fa-icon>
@@ -144,13 +159,13 @@
       <span>Disapprove</span>
     </button>
     <div class="spacer"></div>
-    <div [class.text-success]="player.session.isDuring">
+    <div [class.text-success]="player.session?.isDuring">
       {{player.rank}} |
       {{player.score}} |
       {{player.time | clock}} |
       {{player.correctCount}} |
       {{player.partialCount}} |
-      {{player.session.countdown | countdown }}
+      {{player.session?.countdown | countdown }}
     </div>
     <div class="">
       <button class="btn btn-outline-info btn-sm mx-1" (click)="view(player)">
@@ -163,10 +178,20 @@
           <span>Undeploy</span>
         </app-confirm-button>
       </ng-container>
-      <app-confirm-button btnClass="btn btn-outline-danger btn-sm mx-1" (confirm)="delete(player)">
+
+      <app-confirm-button *ngIf="!game.allowTeam && !player.session else resetSessionButton"
+        btnClass="btn btn-outline-danger btn-sm mx-1" (confirm)="unenroll(player)">
         <fa-icon [icon]="faTrash"></fa-icon>
-        <span>Delete</span>
+        <span>Unenroll</span>
       </app-confirm-button>
+
+      <ng-template #resetSessionButton>
+        <app-confirm-button btnClass="btn btn-danger btn-sm mx-1" (confirm)="resetSession(player)">
+          <fa-icon [icon]="faTrash"></fa-icon>
+          <span>Reset Session</span>
+        </app-confirm-button>
+      </ng-template>
+
     </div>
     <div *ngIf="viewed === player" class="col-12">
       <div class="form-group">

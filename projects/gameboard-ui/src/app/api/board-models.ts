@@ -97,6 +97,7 @@ export interface BoardGame {
   isPublished: boolean;
   allowPreview: boolean;
   allowTeam: boolean;
+  isPracticeMode: boolean;
   specs: BoardSpec[];
   prerequisites: ChallengeGate[];
   mapUrl: string;

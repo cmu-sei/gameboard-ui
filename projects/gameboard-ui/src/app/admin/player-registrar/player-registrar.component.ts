@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faTrash, faList, faSearch, faFilter, faCheck, faArrowLeft, faLongArrowAltDown, faCheckSquare, faSquare, faClipboard, faStar, faSyncAlt, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, BehaviorSubject, combineLatest, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
-import { debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
@@ -27,10 +27,11 @@ export class PlayerRegistrarComponent {
   selected: Player[] = [];
   viewed: Player | undefined = undefined;
   viewChange$ = new BehaviorSubject<Player | undefined>(this.viewed);
-  search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time' };
+  search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time', mode: 'competition' };
   filter = '';
   teamView = 'collapse';
   scope = '';
+  mode = 'competition';
   scopes: string[] = [];
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique']
   advanceOptions = false;
@@ -79,6 +80,7 @@ export class PlayerRegistrarComponent {
       tap(([a, b, c]) => this.search.gid = a.id),
       switchMap(() => this.api.list(this.search)),
       tap(r => this.source = r),
+      tap(r => console.log("source", this.source)),
       tap(() => this.review())
     );
 
@@ -86,8 +88,7 @@ export class PlayerRegistrarComponent {
       fetch$,
       interval(1000).pipe(map(() => this.source))
     ], asyncScheduler).pipe(
-      mergeAll(),
-      tap(r => r.forEach(p => p.session = new TimeWindow(p.sessionBegin, p.sessionEnd)))
+      mergeAll()
     );
 
     this.ctx$ = combineLatest([
@@ -118,6 +119,12 @@ export class PlayerRegistrarComponent {
 
   toggleScope(scope: string): void {
     this.scope = this.scope !== scope ? scope : '';
+    this.refresh$.next(true);
+  }
+
+  toggleMode(mode: string): void {
+    this.mode = this.mode !== mode ? mode : '';
+    this.search.mode = this.mode;
     this.refresh$.next(true);
   }
 
@@ -153,23 +160,22 @@ export class PlayerRegistrarComponent {
     })
   }
 
-  delete(model: Player): void {
-    this.api.delete(model.id).subscribe(() => {
-      const found = this.source.find(f => f.id === model.id);
-      if (found) {
-        this.source.splice(
-          this.source.indexOf(found),
-          1
-        );
-      }
-    });
-
-  }
-
   undeploy(model: Player): void {
     this.unityService
       .undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true })
       .subscribe(result => console.log("Undeploy result: ", result));
+  }
+
+  resetSession(model: Player): void {
+    this.api.resetSession(model).pipe(first()).subscribe(_ => {
+      this.refresh$.next(true);
+    });
+  }
+
+  unenroll(model: Player): void {
+    this.api.unenroll(model.id).pipe(first()).subscribe(_ => {
+      this.refresh$.next(true);
+    })
   }
 
   update(model: Player): void {

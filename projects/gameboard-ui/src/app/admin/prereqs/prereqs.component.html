@@ -15,12 +15,16 @@
 </div>
 
 <div class="form-inline mt-2">
-  <input type="text" class="mr-2 form-control" [(ngModel)]="newgate.targetTag" placeholder="tag">
+  <app-error-div [errors]="errors"></app-error-div>
+  <input type="text" class="mr-2 form-control" [(ngModel)]="newgate.targetTag" (ngModelChange)="errors = []"
+    placeholder="tag">
   <span class="mr-2">requires</span>
   <input type="number" class="mr-2 form-control" [(ngModel)]="newgate.requiredScore">
   <span class="mr-2">on</span>
-  <input type="text" class="mr-2 form-control" [(ngModel)]="newgate.requiredTag" placeholder="tag">
-  <button class="btn btn-outline-info" (click)="save()">
+  <input type="text" class="mr-2 form-control" [(ngModel)]="newgate.requiredTag" placeholder="tag"
+    (ngModelChange)="errors = []">
+  <button class="btn btn-outline-info" (click)="save()"
+    [disabled]="!newgate || !newgate.targetTag || !newgate.requiredTag">
     <fa-icon [icon]="faPlus"></fa-icon>
     <span>Add</span>
   </button>

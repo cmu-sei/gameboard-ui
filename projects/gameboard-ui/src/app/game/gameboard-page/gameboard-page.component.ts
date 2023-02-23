@@ -8,9 +8,11 @@ import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription
 import { catchError, debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
+import { SessionChangeRequest } from '../../api/player-models';
+import { PlayerService } from '../../api/player.service';
 import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
-import { HubState, NotificationService } from '../../utility/notification.service';
+import { HubState, NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
 
 @Component({
@@ -26,6 +28,7 @@ export class GameboardPageComponent implements OnDestroy {
   selecting$ = new Subject<BoardSpec>();
   launching$ = new Subject<BoardSpec>();
   specs$: Observable<BoardSpec>;
+  fetch$: Subscription;
 
   etd$!: Observable<number>;
   errors: any[] = [];
@@ -39,11 +42,13 @@ export class GameboardPageComponent implements OnDestroy {
   user$: Observable<ApiUser | null>;
   hubstate$: Observable<HubState>;
   hubsub: Subscription;
+  cid = '';
 
   constructor(
     route: ActivatedRoute,
     private router: Router,
     private api: BoardService,
+    private playerApi: PlayerService,
     private config: ConfigService,
     private hub: NotificationService,
     usersvc: UserService
@@ -53,8 +58,11 @@ export class GameboardPageComponent implements OnDestroy {
     this.hubstate$ = hub.state$;
     this.hubsub = hub.challengeEvents.subscribe(ev => this.syncOne(ev.model as Challenge));
 
-    const fetch$ = merge(
-      route.params.pipe(map(p => p.id)),
+    this.fetch$ = merge(
+      route.params.pipe(
+        tap(p => this.cid = p.cid),
+        map(p => p.id)
+      ),
       this.refresh$
     ).pipe(
       filter(id => !!id),
@@ -118,6 +126,7 @@ export class GameboardPageComponent implements OnDestroy {
     if (!this.hubsub.closed) {
       this.hubsub.unsubscribe();
     }
+    if (this.fetch$) { this.fetch$.unsubscribe(); }
   }
 
   startHub(b: BoardPlayer): void {
@@ -151,10 +160,15 @@ export class GameboardPageComponent implements OnDestroy {
   }
 
   reselect(): void {
-    if (!this.selected) { return; }
-    const spec = this.ctx.game.specs.find(s => s.id === this.selected.id);
+    const id = this.selected?.id ?? this.cid;
+    console.log(id);
+    if (!id) { return; }
+    console.log(this.ctx.game.specs);
+    const spec = this.ctx.game.specs.find(s => s.id === id);
     if (!!spec) {
-      this.selecting$.next(spec);
+      timer(100).subscribe(() =>
+        this.selecting$.next(spec)
+      );
     }
   }
 
@@ -191,12 +205,33 @@ export class GameboardPageComponent implements OnDestroy {
     );
   }
 
+  extendSession(quit: boolean): void {
+    const model: SessionChangeRequest = {
+      teamId: this.ctx.teamId,
+      sessionEnd: quit ? "0001-01-01" : new Date().toISOString()
+    }
+    this.playerApi.updateSession(model).pipe(first()).subscribe();
+  }
+
   graded(): void {
     this.refresh$.next(this.ctx.id);
   }
 
   console(vm: VmState): void {
-    this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`)
+    let isUrl = false;
+
+    try {
+      let url = new URL(vm.id);
+      isUrl = true;
+    } catch (_) {
+      isUrl = false;
+    }
+
+    if (isUrl) {
+      this.config.showTab(vm.id);
+    } else {
+      this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`);
+    }
   }
 
   mouseenter(e: MouseEvent, spec: BoardSpec) {

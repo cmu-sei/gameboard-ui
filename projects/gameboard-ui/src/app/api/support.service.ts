@@ -167,9 +167,6 @@ export class SupportService {
     );
 
   private getAttachmentsMarkdown(uriBase: string, attachments: AttachmentFile[]): string {
-    console.log("attachments", attachments);
-    console.log("config", this.config);
-
     if (!attachments?.length) {
       return "";
     }

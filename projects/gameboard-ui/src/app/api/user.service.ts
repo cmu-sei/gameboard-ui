@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode } from './user-models';
 
@@ -15,7 +15,7 @@ export class UserService {
 
   url = '';
 
-  constructor (
+  constructor(
     private http: HttpClient,
     private config: ConfigService
   ) {
