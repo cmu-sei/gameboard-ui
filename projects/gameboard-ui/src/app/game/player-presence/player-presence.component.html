@@ -18,8 +18,8 @@
       <li *ngFor="let teamMember of ctx.players"
         class="d-flex justify-content-center align-items-center align-content-center">
         <div class="avatar-status-container mr-4">
-          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [isOnline]="teamMember.isOnline" [size]="avatarSize"
-            [maxAvatarsInListView]="ctx.players.length" class="mr-4"></app-player-avatar>
+          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [hasActiveSession]="teamMember.session?.isDuring"
+            [size]="avatarSize" [maxAvatarsInListView]="ctx.players.length" class="mr-4"></app-player-avatar>
         </div>
         <div class="player-name mr-auto align-middle fs-11 mb-4">
           <p class="m-0">{{teamMember.userApprovedName}}</p>

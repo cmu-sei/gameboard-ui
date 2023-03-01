@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HubState, NotificationService } from '../../../services/notification.service';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export enum PlayerStatus {
   Offline,
@@ -11,38 +11,41 @@ export enum PlayerStatus {
 @Component({
   selector: 'app-player-status',
   template: `
-    <div class="game-hub-status-component d-flex justify-content-center align-items-center" *ngIf="hubState$ | async as hubState">
+    <div class="game-hub-status-component d-flex justify-content-center align-items-center" [tooltip]="(tooltipText$ | async) || ''">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16px" height="16px">
-          <circle [attr.cx]="8" [attr.cy]="8" [attr.r]="8" [attr.fill]="statusIndicatorFill" />
+          <circle [attr.cx]="8" [attr.cy]="8" [attr.r]="8" [attr.fill]="statusIndicatorFill$ | async" />
       </svg>
     </div>
   `,
   styleUrls: ['./player-status.component.scss']
 })
 export class PlayerStatusComponent implements OnInit {
-  // @Input() userId!: string;
-  @Input() isOnline?: boolean = undefined;
+  @Input() hasActiveSession$: Observable<boolean | undefined> = of(undefined);
 
-  constructor(private notificationService: NotificationService) { }
+  private static DEFAULT_FILL = "#888888";
+  private static DEFAULT_TOOLTIP = "Determining player session status...";
 
-  protected hubState$ = this.notificationService.state$;
-  protected statusIndicatorFill = "#ff0000";
-  protected tooltipText = "Disconnected from the matchmaking hub";
+  protected statusIndicatorFill$: Observable<string> = of(PlayerStatusComponent.DEFAULT_FILL);
+  protected tooltipText$: Observable<string> = of(PlayerStatusComponent.DEFAULT_TOOLTIP);
 
-  ngOnInit(): void {
-    // this.notificationService.state$.subscribe(state => {
-    //   this.isActive = state.actors.some(a => a.id === this.userId);
-    //   this.tooltipText = this.isActive ? "Connected to the game" : "Not connected to the game";
-    //   this.statusIndicatorFill = this.isActive ? "#00ff00" : "#ff0000";
-    // });
-    this.statusIndicatorFill = this.resolveStatusIndicatorFill(this.isOnline);
+  ngOnInit() {
+    this.statusIndicatorFill$ = this.hasActiveSession$.pipe(map(sess => this.resolveStatusIndicatorFill(sess)));
+    this.tooltipText$ = this.hasActiveSession$.pipe(map(sess => this.resolveStatusIndicatorTooltip(sess)));
   }
 
-  private resolveStatusIndicatorFill(isOnline?: boolean): string {
-    if (this.isOnline === undefined) {
-      return "#888888";
+  private resolveStatusIndicatorFill(hasSession?: boolean): string {
+    if (hasSession === undefined) {
+      return PlayerStatusComponent.DEFAULT_FILL;
     }
 
-    return this.isOnline ? "#00ff00" : "ff0000";
+    return hasSession ? "#00ff00" : "ff0000";
+  }
+
+  private resolveStatusIndicatorTooltip(hasSession?: boolean): string {
+    if (hasSession === undefined) {
+      return PlayerStatusComponent.DEFAULT_TOOLTIP;
+    }
+
+    return hasSession ? "Is currently playing" : "Is not currently playing";
   }
 }
