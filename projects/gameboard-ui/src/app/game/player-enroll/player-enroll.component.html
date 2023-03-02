@@ -68,7 +68,6 @@
           </app-confirm-button>
           <app-error-div [errors]="errors"></app-error-div>
         </div>
-
       </ng-container>
 
       <!-- already enrolled -->
@@ -107,9 +106,12 @@
           </small>
         </div>
 
-        <ng-container *ngIf="ctx.game.allowTeam">
-          <div *ngIf="isManager$ | async" class="form-group d-flex flex-column">
-            <div class="mb-2">
+        <!--In team games before we start, managers can generate invitations and rename the team-->
+        <!--Non-managers can leave for different teams-->
+
+        <ng-container *ngIf="ctx.game.allowTeam && !ctx.player.session?.isDuring">
+          <div class="form-group d-flex flex-column">
+            <div class="mb-2" *ngIf="(isManager$ | async) || !(hasTeammates$ | async)">
               <span class="lead">Manager</span>, generate an invitation for your teammates.<br />
               <small>NOTE: generating an invitation invalidates previous invitations.</small>
               <button class="btn btn-outline-info mb-2" (click)="invite(ctx.player)">
@@ -122,21 +124,23 @@
             </div>
           </div>
 
-
-          <div *ngIf="isManager$ | async" class="form-group d-flex flex-column">
-            <div class="mb-2">
-              <span class="lead">Members</span>, redeem the invitation code here to team up.<br />
-            </div>
-            <div class="input-group">
-              <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64">
-              <div class="input-group-append">
-                <button class="btn btn-outline-info" [disabled]="!token" (click)="redeem(ctx.player)">
-                  <fa-icon [icon]="faPaste"></fa-icon>
-                  <span>Redeem</span>
-                </button>
+          <!--managers can't abandon their teams-->
+          <ng-container *ngIf="!(hasTeammates$ | async) || !(isManager$ | async)">
+            <div class="form-group d-flex flex-column">
+              <div class="mb-2">
+                <span class="lead">Members</span>, redeem the invitation code here to team up.<br />
+              </div>
+              <div class="input-group">
+                <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-info" [disabled]="!token" (click)="redeem(ctx.player)">
+                    <fa-icon [icon]="faPaste"></fa-icon>
+                    <span>Redeem</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </ng-container>
         </ng-container>
 
         <!-- unenroll -->

@@ -14,15 +14,16 @@ export enum PlayerAvatarSize {
     <div [class]="'d-flex position-relative align-items-center justify-content-center player-avatar-component avatar-list-size ' + sizeClass +  ' ' + avatarCountClass">
       <div [class]="'avatar-container avatar-size ' + this.sizeClass" aria-roledescription="Player avatar icon"
           [style.background-image]="'url(' + avatarUri + ')'"></div>
-      <app-player-status class="position-absolute status-light" [hasActiveSession$]="hasActiveSession$"></app-player-status>
+      <app-player-status class="position-absolute status-light" *ngIf="enableSessionStatus" [playerId]="playerId"></app-player-status>
   </div>
   `,
   styleUrls: ['./player-avatar.component.scss']
 })
 export class PlayerAvatarComponent implements OnInit {
   @Input() avatarUri?: string;
+  @Input() playerId: string | undefined;
   @Input() size = PlayerAvatarSize.Medium;
-  @Input() hasActiveSession: boolean | undefined = undefined;
+  @Input() enableSessionStatus = true;
 
   // this accommodates cases where we want to make sure that even though this avatar may be a single item, it
   // may be in a list-like view with a PlayerAvatarListComponent, and we need to arrange the width such that 
@@ -36,7 +37,6 @@ export class PlayerAvatarComponent implements OnInit {
 
   ngOnInit(): void {
     this.sizeClass = `avatar-size-${this.size}`;
-    this.hasActiveSession$ = of(this.hasActiveSession);
 
     if (this.maxAvatarsInListView) {
       this.avatarCountClass = `avatar-count-${this.maxAvatarsInListView}`;

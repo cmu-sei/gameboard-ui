@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
@@ -123,7 +123,6 @@ export class PlayerService {
   public transform(p: Player, disallowedName: string | null = null): Player {
     p.sponsorLogo = this.transformSponsorUrl(p.sponsor);
     p.sponsorList = p.sponsorList.map(s => this.transformSponsorUrl(s));
-
 
     // If the user has no name status but they changed their name, it's pending approval
     if (!p.nameStatus && p.approvedName !== p.name) {

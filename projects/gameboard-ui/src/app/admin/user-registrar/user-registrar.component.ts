@@ -63,6 +63,11 @@ export class UserRegistrarComponent {
 
   view(u: ApiUser): void {
     this.viewed = this.viewed !== u ? u : undefined;
+
+    if (this.viewed) {
+      this.updateRoleString(u);
+    }
+
     this.viewChange$.next(this.viewed);
   }
 
@@ -85,7 +90,7 @@ export class UserRegistrarComponent {
 
   update(model: ApiUser): void {
     this.api.update(model).subscribe(
-      () => { },
+      () => this.updateRoleString(model),
       (err) => this.errors.push(err)
     );
   }
@@ -108,11 +113,16 @@ export class UserRegistrarComponent {
     }
 
     model.role = !!a.length
-      ? a.join(', ') as UserRole
-      : UserRole.member
-      ;
+      ? a.join(', ') as UserRole : UserRole.member;
 
     this.update(model);
+  }
+
+  private updateRoleString(u: ApiUser) {
+    for (let role of u.role.split(",")) {
+      const roleName = role.trim();
+      (u as any)[`is${roleName.substring(0, 1).toUpperCase()}${roleName.substring(1)}`] = true;
+    }
   }
 
   trackById(index: number, model: ApiUser): string {

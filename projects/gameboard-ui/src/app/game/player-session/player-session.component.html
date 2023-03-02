@@ -30,7 +30,7 @@
         </ng-container>
       </div>
 
-      <app-player-presence *ngIf="ctx.player" [player]="ctx.player"></app-player-presence>
+      <app-player-presence *ngIf="(player$ | async)" [player$]="player$"></app-player-presence>
 
       <table class="table mt-2 text-center">
         <tbody>
@@ -50,6 +50,13 @@
           </tr>
         </tbody>
       </table>
+
+      <div class="d-flex my-4 align-items-center justify-content-center">
+        <a type="button" class="btn btn-secondary" target="_blank" [href]="'game/scores/' + ctx.game.id">View
+          Scoreboard
+          <fa-icon [icon]="faExternalLink"></fa-icon>
+        </a>
+      </div>
 
       <app-error-div [errors]="errors"></app-error-div>
 
@@ -104,7 +111,7 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="ctx.user.isRegistrar && !ctx.player.session">
+      <ng-container *ngIf="ctx.user.isRegistrar && !ctx.player.session" &&>
         <div class="text-center my-4">
           <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="handleStart(ctx.player)">
             <fa-icon [icon]="faBolt"></fa-icon>
@@ -122,7 +129,7 @@
         </a>
       </div>
 
-      <div class="col d-flex justify-content-center">
+      <div class="col d-flex justify-content-center" *ngIf="ctx.game.mapUrl">
         <img [src]=" ctx.game.mapUrl" alt="game map background" class="img-fluid">
       </div>
 

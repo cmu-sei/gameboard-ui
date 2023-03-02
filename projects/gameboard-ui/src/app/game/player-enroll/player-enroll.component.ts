@@ -3,7 +3,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Observable, Subject, Subscription, timer } from 'rxjs';
+import { Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { finalize, map, tap, delay, first } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
@@ -35,6 +35,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   disallowedReason: string | null = null;
   protected managerRole = PlayerRole.manager;
   protected isManager$ = new Subject<boolean>();
+  protected hasTeammates$: Observable<boolean> = of(false);
   protected unenrollTooltip?: string;
   private hubSub?: Subscription;
 
@@ -71,6 +72,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     this.ctxDelayed$ = this.ctx$.pipe(
       delay(this.delayMs)
     );
+
+    this.hasTeammates$ = this.hubService.actors$.pipe(map(actors => actors.length > 1));
   }
 
   ngOnInit(): void {

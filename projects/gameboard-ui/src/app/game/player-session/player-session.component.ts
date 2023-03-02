@@ -1,26 +1,25 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { faBolt, faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { faBolt, faCircle, faExternalLink, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { interval, Observable } from 'rxjs';
+import { combineLatest, interval, Observable, of, Subscription } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
-import { Player } from '../../api/player-models';
+import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
-import { HubState } from '../../services/notification.service';
 
 @Component({
   selector: 'app-player-session',
   templateUrl: './player-session.component.html',
   styleUrls: ['./player-session.component.scss']
 })
-export class PlayerSessionComponent {
+export class PlayerSessionComponent implements OnDestroy {
   @Input() ctx$!: Observable<GameContext | undefined>;
-  @Input() hubState$!: Observable<HubState>;
+  @Input() player$?: Observable<Player | undefined>;
   @Output() onSessionStart = new EventEmitter<Player>();
   @Output() onSessionReset = new EventEmitter<Player>();
 
@@ -28,13 +27,16 @@ export class PlayerSessionComponent {
   myCtx$!: Observable<GameContext | undefined>;
   doublechecking = false;
 
+  faBolt = faBolt;
+  faExternalLink = faExternalLink;
+  faTrash = faTrash;
+  faDot = faCircle;
+
+  private countdownClockSubscription?: Subscription;
+
   // sets up the modal if it's a team game that needs confirmation
   private modalRef?: BsModalRef;
   protected modalConfig?: ModalConfirmConfig;
-
-  faBolt = faBolt;
-  faTrash = faTrash;
-  faDot = faCircle;
 
   constructor(
     private api: PlayerService,
@@ -60,6 +62,18 @@ export class PlayerSessionComponent {
         }
       })
     );
+
+    this.countdownClockSubscription = combineLatest([this.ctx$, interval(1000)]).pipe(
+      map(combo => combo[0]),
+      tap(ctx => {
+        if (!ctx)
+          return;
+
+        ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
+        ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
+      }),
+      map(_ => null)
+    ).subscribe();
   }
 
   handleStart(player: Player): void {
@@ -88,5 +102,9 @@ export class PlayerSessionComponent {
     this.modalService.hide(this.modalRef?.id);
     this.modalRef = undefined;
     this.handleReset(p);
+  }
+
+  ngOnDestroy(): void {
+    this.countdownClockSubscription?.unsubscribe();
   }
 }

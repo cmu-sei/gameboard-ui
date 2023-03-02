@@ -154,7 +154,7 @@
       </div>
 
       <div *ngIf="ctx.canManage" class="col-1">
-        <button class="btn btn-secondary" (click)="copyMarkdown(ticket)">
+        <button class="btn btn-secondary" tooltip="Copy ticket to markdown" (click)="copyMarkdown(ticket)">
           <fa-icon [icon]="faService.faClipboard"></fa-icon>
         </button>
       </div>

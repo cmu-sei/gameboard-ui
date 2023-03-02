@@ -100,7 +100,7 @@ export interface HubPlayer extends Player {
   userName: string;
   pendingName: string;
   userNameStatus: string;
-  isOnline: boolean;
+  session?: TimeWindow
 }
 
 export interface NewPlayer {

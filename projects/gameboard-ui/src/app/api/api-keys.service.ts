@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, min } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ApiKeyViewModel, ApiKeyViewModelWithPlainKey, NewApiKey } from './api-keys.models';
 
@@ -34,7 +34,6 @@ export class ApiKeysService {
         const isUndefinedDate = k.expiresOn && k.expiresOn.toString() == "0001-01-01T00:00:00+00:00";
 
         k.expiresOn = isUndefinedDate ? undefined : k.expiresOn;
-        console.log("k", k);
         return k;
       }))
     );

@@ -12,14 +12,14 @@
     </div>
   </div>
 
-  <ng-container>
+  <ng-container *ngIf="ctx.hasTeammates">
     <hr class="team-leader-divider border border-secondary m-0 p-0" />
     <ul class="player-list px-0 pt-3 d-block">
-      <li *ngFor="let teamMember of ctx.players"
+      <li *ngFor="let teamMember of ctx.allPlayers"
         class="d-flex justify-content-center align-items-center align-content-center">
         <div class="avatar-status-container mr-4">
-          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [hasActiveSession]="teamMember.session?.isDuring"
-            [size]="avatarSize" [maxAvatarsInListView]="ctx.players.length" class="mr-4"></app-player-avatar>
+          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [playerId]="teamMember.id" [size]="avatarSize"
+            [maxAvatarsInListView]="ctx.allPlayers.length" class="mr-4"></app-player-avatar>
         </div>
         <div class="player-name mr-auto align-middle fs-11 mb-4">
           <p class="m-0">{{teamMember.userApprovedName}}</p>
@@ -32,7 +32,7 @@
         </div>
         <div *ngIf="ctx.playerIsManager && !teamMember.isManager" class="controls mb-3"
           [tooltip]="'Promote ' + teamMember.approvedName + ' to team manager'">
-          <app-confirm-button btnClass="btn btn-info my-2" (confirm)="promoteToManager(teamMember.id)">
+          <app-confirm-button btnClass="btn btn-info my-2" (confirm)="promoteToManager(ctx.player, teamMember.id)">
             <fa-icon [icon]="promoteIcon"></fa-icon>
             <span>Promote</span>
           </app-confirm-button>
