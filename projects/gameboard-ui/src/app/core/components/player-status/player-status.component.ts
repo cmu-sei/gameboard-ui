@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TimeWindow } from '../../../api/player-models';
+import { ShortDatePipe } from '../../../utility/pipes/short-date.pipe';
+import { ShortTimePipe } from '../../../utility/pipes/short-time.pipe';
 
 export enum PlayerStatus {
   Offline,
@@ -48,10 +50,6 @@ export class PlayerStatusComponent implements OnChanges {
     else {
       return "Playing the game";
     }
-  }
-
-  private resolveCircleClass(session?: TimeWindow) {
-    return "session-active";
   }
 
   private update(session?: TimeWindow) {

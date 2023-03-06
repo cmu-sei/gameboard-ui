@@ -34,7 +34,6 @@ export class GamePageComponent implements OnDestroy {
 
   protected ctxIds: { userId?: string, gameId: string, playerId?: string } = { userId: '', gameId: '' };
   protected playerSubject$ = new BehaviorSubject<Player | undefined>(undefined);
-  protected player$: Observable<Player | undefined> = of(undefined);
 
   private isExternalGame = false;
   private hubEventsSubcription: Subscription;
@@ -72,6 +71,7 @@ export class GamePageComponent implements OnDestroy {
             p => {
               const defaultPlayer = { userId: z.localUser?.id } as unknown as Player;
               this.playerSubject$.next(p.length !== 1 ? defaultPlayer : p[0]);
+
               this.ctxIds.playerId = this.playerSubject$.getValue()?.id;
               this.ctxIds.userId = z.localUser?.id;
             }
@@ -124,8 +124,7 @@ export class GamePageComponent implements OnDestroy {
 
           if (currentPlayer && playerEvent.hubEvent.model.sessionBegin) {
             currentPlayer.session = new TimeWindow(playerEvent.hubEvent.model.sessionBegin, playerEvent.hubEvent.model.sessionEnd);
-            console.log("so now the player's session is", currentPlayer.session);
-            this.playerSubject$.next(currentPlayer);
+            this.onSessionStarted(currentPlayer);
           }
         }
       })
@@ -149,9 +148,7 @@ export class GamePageComponent implements OnDestroy {
       })
     );
 
-    this.player$ = this.playerSubject$.pipe(
-      map(player => player || undefined),
-    );
+    // init the page
     this.playerSubject$.next(this.playerSubject$.getValue());
   }
 

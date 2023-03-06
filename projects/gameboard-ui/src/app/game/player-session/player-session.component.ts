@@ -7,7 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { combineLatest, interval, Observable, of, Subscription } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
-import { Player, TimeWindow } from '../../api/player-models';
+import { calculateCountdown, Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
@@ -69,7 +69,12 @@ export class PlayerSessionComponent implements OnDestroy {
         if (!ctx)
           return;
 
-        ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
+        if (!ctx.player.session) {
+          ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
+        }
+        else {
+          ctx.player.session.countdown = calculateCountdown(ctx.player.session.isBefore, ctx.player.session.isAfter, ctx.player.sessionBegin, ctx.player.sessionEnd);
+        }
         ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
       }),
       map(_ => null)
@@ -81,6 +86,7 @@ export class PlayerSessionComponent implements OnDestroy {
       first()
     ).subscribe(
       p => {
+        console.log("session", p);
         this.onSessionStart.emit(p)
       },
       err => this.errors.push(err),

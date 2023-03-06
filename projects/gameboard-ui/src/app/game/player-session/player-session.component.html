@@ -111,7 +111,7 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="ctx.user.isRegistrar && !ctx.player.session" &&>
+      <ng-container *ngIf="ctx.user.isRegistrar && (!ctx.player.session || ctx.player.session.isBefore)">
         <div class="text-center my-4">
           <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="handleStart(ctx.player)">
             <fa-icon [icon]="faBolt"></fa-icon>

@@ -27,7 +27,6 @@
     </div>
 
     <!-- if auth'd, enrolled, opened a session, game ended, and certificate defined -->
-    {{ctx.player.session | json}}
     <ng-container
       *ngIf="!!ctx.user.id && !!ctx.player.id && !!ctx.player.sessionEnd && ctx.game.hasEnded && !!ctx.game.certificateTemplate">
       <div class="row justify-content-center">
@@ -55,7 +54,7 @@
         <ng-container *ngIf="!!ctx.player.id && ctx.player.session">
           <div class="col panel">
             <h2>Status</h2>
-            <app-player-session [ctx$]="ctx$!" [player$]="player$" (onSessionStart)="onSessionStarted($event)"
+            <app-player-session [ctx$]="ctx$!" [player$]="playerSubject$" (onSessionStart)="onSessionStarted($event)"
               (onSessionReset)="onSessionReset($event)"></app-player-session>
           </div>
         </ng-container>
