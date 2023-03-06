@@ -1,12 +1,32 @@
+table {
+  border-top: solid 0px #fff !important;
+  width: 100%;
+
+  input[type=checkbox] {
+    display: block;
+    // margin-bottom: 0.75rem;
+    margin: 0 auto;
+  }
+}
+
+th,
+td {
+  border-bottom: solid 1px #aaa;
+  vertical-align: middle;
+}
+
 label {
   margin-bottom: 0;
 }
+
 .mapbox-hover {
   cursor: pointer;
 }
+
 .mapbox-active {
   cursor: crosshair !important;
 }
+
 .mapbox-dot {
   fill: blue;
   stroke: lime;
@@ -14,6 +34,7 @@ label {
   stroke-opacity: 1;
   stroke-width: .25;
 }
+
 .callout {
   position: absolute;
   z-index: 10;

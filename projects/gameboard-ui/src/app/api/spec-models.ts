@@ -13,6 +13,7 @@ export interface SpecDetail extends ExternalSpec {
   averageDeploySeconds: number;
   points: number;
   disabled: boolean;
+  useSharedResources: boolean;
   x: number;
   y: number;
   r: number;

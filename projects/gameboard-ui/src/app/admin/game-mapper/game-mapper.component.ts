@@ -72,6 +72,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
           extSpec => {
             // Find the one in the local list that matches this one
             var item = this.list.find(i => i.externalId === extSpec.externalId);
+
             // Compare the name and description of each; if they aren't equal, update the challenge in the GB database
             if (item) {
               var tmpName = item.name;
@@ -108,8 +109,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.game.mapUrl = this.game.background
       ? `${this.config.imagehost}/${this.game.background}`
-      : `${this.config.basehref}assets/map.png`
-      ;
+      : `${this.config.basehref}assets/map.png`;
   }
 
   ngAfterViewInit(): void {
@@ -134,7 +134,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     this.gameSvc.uploadImage(this.game.id, 'map', files[0]).subscribe(
       r => {
         this.game.background = r.filename;
-        this.game.mapUrl = `${this.config.imagehost}/${r.filename}`;
+        this.game.mapUrl = `${this.config.imagehost} /${r.filename}`;
       }
     );
   }

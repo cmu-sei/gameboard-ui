@@ -311,8 +311,9 @@
           <label class="mb-0" for="reset-toggle">Player Mode</label>
           <div class="form-control auto-h d-flex align-items-center">
             <label>Competition</label>
-            <label class="btn text-info" btnCheckbox btnCheckboxTrue="practice" btnCheckboxFalse="competition" tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
-              id="reset-toggle" name="playerMode" [(ngModel)]="game.playerMode">
+            <label class="btn text-info" btnCheckbox btnCheckboxTrue="practice" btnCheckboxFalse="competition"
+              tabindex="0" [ngModelOptions]="{updateOn: 'change'}" id="reset-toggle" name="playerMode"
+              [(ngModel)]="game.playerMode">
               <fa-icon *ngIf="game.playerMode==='competition'" [icon]="faToggleOff" size="lg"></fa-icon>
               <fa-icon *ngIf="game.playerMode==='practice'" [icon]="faToggleOn" size="lg"></fa-icon>
             </label>
@@ -400,9 +401,7 @@
           </div>
 
         </div>
-
       </div>
-
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(3)">
@@ -411,11 +410,8 @@
     </div>
 
     <div [hidden]="viewing!==3" class="mb-4">
-
       <app-game-mapper [game]="game"></app-game-mapper>
-
     </div>
-
 
   </ng-container>
 </form>
