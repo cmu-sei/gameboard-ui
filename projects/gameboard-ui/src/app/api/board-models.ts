@@ -100,6 +100,7 @@ export interface BoardGame {
   isPracticeMode: boolean;
   specs: BoardSpec[];
   prerequisites: ChallengeGate[];
+  hasNonDefaultMapUrl: boolean;
   mapUrl: string;
   cardUrl: string;
   modeUrl: string;

@@ -85,10 +85,10 @@ export class BoardService {
   }
 
   private transform(b: BoardPlayer): BoardPlayer {
+    b.game.hasNonDefaultMapUrl = !!b.game.background;
     b.game.mapUrl = b.game.background
       ? `${this.config.imagehost}/${b.game.background}`
-      : `${this.config.basehref}assets/map.png`
-      ;
+      : `${this.config.basehref}assets/map.png`;
 
     b.game.cardUrl = b.game.logo
       ? `${this.config.imagehost}/${b.game.logo}`

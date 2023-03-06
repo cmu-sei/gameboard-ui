@@ -53,6 +53,7 @@ export interface GameDetail {
 
 export interface Game extends GameDetail {
   id: string;
+  hasNonDefaultMapUrl: boolean;
   mapUrl: string;
   cardUrl: string;
   modeUrl: string;

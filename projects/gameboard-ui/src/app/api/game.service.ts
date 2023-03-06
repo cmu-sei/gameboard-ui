@@ -141,6 +141,7 @@ export class GameService {
       ? `${this.config.imagehost}/${game.logo}`
       : `${this.config.basehref}assets/card.png`;
 
+    game.hasNonDefaultMapUrl = !!game.background;
     game.mapUrl = game.background
       ? `${this.config.imagehost}/${game.background}`
       : `${this.config.basehref}assets/map.png`;
