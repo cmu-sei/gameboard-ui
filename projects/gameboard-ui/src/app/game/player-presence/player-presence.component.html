@@ -2,9 +2,12 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <ng-container *ngIf="ctx$ | async as ctx">
-  <div class="team-leader d-flex align-items-center align-content-center">
-    <app-player-avatar-list [avatarUris]="ctx.teamAvatar" class="d-inline-block mr-4 my-2"></app-player-avatar-list>
-    <div class="mr-2 pb-4 team-leader-name">
+  <div *ngIf="ctx.player" class="team-leader d-flex align-items-center align-content-center">
+    <app-player-avatar-list *ngIf="ctx.hasTeammates" [avatarUris]="avatarUris" [captainSession]="ctx.player.session"
+      class="d-inline-block mr-4 my-2"></app-player-avatar-list>
+    <app-player-avatar *ngIf="!ctx.hasTeammates" [avatarUri]="ctx.player.sponsorLogo" [enableSessionStatus]="true"
+      [session]="ctx.player.session" class="d-inline-block mr-4 my-2"></app-player-avatar>
+    <div class="mr-2 team-leader-name">
       <p class="team-header">{{ ctx.hasTeammates ? "Team" : "Player" }}</p>
       <p class="team-leader-name-text">
         <span>{{ ctx.teamName }}</span>
@@ -13,12 +16,12 @@
   </div>
 
   <ng-container *ngIf="ctx.hasTeammates">
-    <hr class="team-leader-divider border border-secondary m-0 p-0" />
+    <hr class="team-leader-divider border border-secondary mt-3 mb-2 p-0" />
     <ul class="player-list px-0 pt-3 d-block">
       <li *ngFor="let teamMember of ctx.allPlayers"
         class="d-flex justify-content-center align-items-center align-content-center">
         <div class="avatar-status-container mr-4">
-          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [playerId]="teamMember.id" [size]="avatarSize"
+          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [size]="avatarSize"
             [maxAvatarsInListView]="ctx.allPlayers.length" class="mr-4"></app-player-avatar>
         </div>
         <div class="player-name mr-auto align-middle fs-11 mb-4">

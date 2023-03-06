@@ -27,6 +27,7 @@
     </div>
 
     <!-- if auth'd, enrolled, opened a session, game ended, and certificate defined -->
+    {{ctx.player.session | json}}
     <ng-container
       *ngIf="!!ctx.user.id && !!ctx.player.id && !!ctx.player.sessionEnd && ctx.game.hasEnded && !!ctx.game.certificateTemplate">
       <div class="row justify-content-center">

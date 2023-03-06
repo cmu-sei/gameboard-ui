@@ -1,8 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { HubPlayer } from '../../../api/player-models';
-import { NotificationService } from '../../../services/notification.service';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TimeWindow } from '../../../api/player-models';
 
 export enum PlayerStatus {
   Offline,
@@ -14,60 +11,50 @@ export enum PlayerStatus {
   selector: 'app-player-status',
   template: `
     <div class="game-hub-status-component d-flex justify-content-center align-items-center" [tooltip]="tooltipText || ''">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30px" height="30px">
-        <circle [class]="hasActiveSession ? 'started' : 'not-started'" [attr.cx]="15" [attr.cy]="15" [attr.r]="8" [attr.fill]="statusIndicatorFill" />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36px" height="36px">
+        <circle
+          [class.session-indeterminate]="!session" 
+          [class.session-available]="session?.isBefore" 
+          [class.session-active]="session?.isDuring" 
+          [class.session-over]="session?.isAfter"
+          [attr.cx]="18" [attr.cy]="18" [attr.r]="11" />
       </svg>
     </div>
   `,
   styleUrls: ['./player-status.component.scss']
 })
-export class PlayerStatusComponent implements OnInit {
-  @Input() playerId: string | undefined = undefined;
+export class PlayerStatusComponent implements OnChanges {
+  @Input() session?: TimeWindow;
 
-  private static DEFAULT_FILL = "#888888";
   private static DEFAULT_TOOLTIP = "Determining player session status...";
 
-  protected hasActiveSession = false;
-  protected statusIndicatorFill = PlayerStatusComponent.DEFAULT_FILL;
   protected tooltipText = PlayerStatusComponent.DEFAULT_TOOLTIP;
 
-  constructor(private notificationService: NotificationService) { }
-
-  ngOnInit() {
-    this.notificationService.actors$.pipe(
-      tap((actors: HubPlayer[]) => this.update(actors))
-    );
-    this.update(this.notificationService.actors$.getValue());
+  ngOnChanges(changes: SimpleChanges): void {
+    this.update(this.session);
   }
 
-  private resolveStatusIndicatorFill(hasSession?: boolean): string {
-    if (hasSession === undefined) {
-      return PlayerStatusComponent.DEFAULT_FILL;
-    }
-
-    return hasSession ? "#00ff00" : "#333333";
-  }
-
-  private resolveStatusIndicatorTooltip(hasSession?: boolean): string {
-    if (hasSession === undefined) {
+  private resolveStatusIndicatorTooltip(session?: TimeWindow): string {
+    if (session === undefined) {
       return PlayerStatusComponent.DEFAULT_TOOLTIP;
     }
 
-    return hasSession ? "Is currently playing" : "Is not currently playing";
-  }
-
-  private resolveHasActiveSesssion(p: HubPlayer) {
-    return !!p.session?.isDuring;
-  }
-
-  private update(actors: HubPlayer[]) {
-    const player = actors.find(a => a.id === this.playerId);
-    if (!player) {
-      throw new Error("Couldn't resolve player for player status component");
+    if (this.session?.isBefore) {
+      return "Registered for the game, but hasn't started a session";
     }
+    else if (this.session?.isAfter) {
+      return "Session ended"
+    }
+    else {
+      return "Playing the game";
+    }
+  }
 
-    this.hasActiveSession = this.resolveHasActiveSesssion(player);
-    this.statusIndicatorFill = this.resolveStatusIndicatorFill(player.session?.isDuring);
-    this.tooltipText = this.resolveStatusIndicatorTooltip(player.session?.isDuring);
+  private resolveCircleClass(session?: TimeWindow) {
+    return "session-active";
+  }
+
+  private update(session?: TimeWindow) {
+    this.tooltipText = this.resolveStatusIndicatorTooltip(session);
   }
 }

@@ -138,6 +138,8 @@ export class PlayerService {
       : ''
       ;
 
+    this.transformSession(p, p.sessionBegin, p.sessionEnd);
+
     return p;
   }
 

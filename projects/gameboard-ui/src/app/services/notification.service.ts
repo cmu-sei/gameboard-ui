@@ -243,7 +243,7 @@ export class NotificationService {
       if (
         previous[i] != current[i]
         || previous[i].isManager != current[i].isManager
-        || !!previous[i].session?.isDuring != !!current[i].session?.isDuring) {
+        || !!previous[i].session != !!current[i].session) {
         return false;
       }
     }

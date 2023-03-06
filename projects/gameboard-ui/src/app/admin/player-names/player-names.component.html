@@ -40,7 +40,8 @@
 
   <div *ngFor="let player of players; trackBy:trackById"
     class="d-flex mb-1 mx-2 p-2 flex-wrap align-items-center rounded">
-    <app-player-avatar-list [avatarUris]="player.sponsorList"></app-player-avatar-list>
+    <app-player-avatar-list [avatarUris]="player.sponsorList" [enableCaptainSessionStatusDisplay]="true"
+      [captainSession]="player.session"></app-player-avatar-list>
     <div>
       <div class="player-info">
         <span class="mx-2">{{player.approvedName}}</span>

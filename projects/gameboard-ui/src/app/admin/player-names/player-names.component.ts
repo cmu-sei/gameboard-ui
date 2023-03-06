@@ -37,9 +37,7 @@ export class PlayerNamesComponent implements OnInit {
   faTimes = faTimes;
   faUndo = faUndo;
 
-  constructor(
-    private api: PlayerService,
-  ) {
+  constructor(private api: PlayerService) {
 
     this.players$ = combineLatest([
       this.refresh$,

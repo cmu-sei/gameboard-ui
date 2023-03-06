@@ -11,6 +11,7 @@ export interface Player {
   userId: string;
   userName: string;
   userApprovedName: string;
+  userNameStatus: string;
   gameId: string;
   gameName: string;
   name: string;

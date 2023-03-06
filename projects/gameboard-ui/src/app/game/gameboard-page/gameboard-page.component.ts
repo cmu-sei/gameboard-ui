@@ -161,9 +161,7 @@ export class GameboardPageComponent implements OnDestroy {
 
   reselect(): void {
     const id = this.selected?.id ?? this.cid;
-    console.log(id);
     if (!id) { return; }
-    console.log(this.ctx.game.specs);
     const spec = this.ctx.game.specs.find(s => s.id === id);
     if (!!spec) {
       timer(100).subscribe(() =>

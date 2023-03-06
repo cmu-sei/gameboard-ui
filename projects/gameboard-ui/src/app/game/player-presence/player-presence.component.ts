@@ -32,12 +32,12 @@ export class PlayerPresenceComponent implements OnInit {
   protected avatarSize = PlayerAvatarSize.Medium;
   protected promoteIcon = faChevronCircleUp;
   protected ctx$?: Observable<PlayerPresenceContext | null>;
+  protected avatarUris: string[] = [];
 
   constructor(
     private hub: NotificationService,
     private playerApi: PlayerService,
   ) { }
-
 
   ngOnInit(): void {
     this.ctx$ = combineLatest([
@@ -51,6 +51,7 @@ export class PlayerPresenceComponent implements OnInit {
           return null;
         }
         const actorInfo = this.findPlayerAndTeammates(context.player, context.actors);
+        this.avatarUris = actorInfo.allPlayers.map(p => p.sponsorLogo);
 
         return {
           hasTeammates: !!actorInfo.teammates.length,
@@ -61,15 +62,17 @@ export class PlayerPresenceComponent implements OnInit {
           teamAvatar: this.computeTeamAvatarList(actorInfo.allPlayers),
           teamName: actorInfo.manager?.approvedName || actorInfo.player?.approvedName || "",
         };
-      }),
+      })
     );
   }
 
   private findPlayerAndTeammates(localPlayer: HubPlayer, players: HubPlayer[]) {
     const player = players.find(p => p.id === localPlayer.id)!;
 
+    // currently, the player's representation in the hub is incorrect for some reason - taking 
+    // the object we have instead for now
     return {
-      player,
+      player: localPlayer,
       teammates: players.filter(teammates => teammates.id !== localPlayer.id),
       allPlayers: players,
       manager: players.find(p => p.isManager)

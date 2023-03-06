@@ -41,6 +41,10 @@ $player-avatar-dimensions: (
     @return $diameter + (($num-avatars - 1) * $width-per-avatar);
 }
 
+$avatarSizeSmall: getAvatarDiameterBySize("small");
+$avatarSizeMedium: getAvatarDiameterBySize("medium");
+$avatarSizeLarge: getAvatarDiameterBySize("large");
+
 // these classes are used both by player-avatar and player-avatar-list
 @for $i from 1 through $max-players-per-team {
     $width-value-small: getAvatarListTotalWidth("small", $i);
@@ -48,31 +52,27 @@ $player-avatar-dimensions: (
     $width-value-lg: getAvatarListTotalWidth("large", $i);
 
     .avatar-list-size.avatar-size-small.avatar-count-#{$i} {
-        max-height: $width-value-small;
-        height: $width-value-small;
+        max-height: $avatarSizeSmall;
+        height: $avatarSizeSmall;
         width: $width-value-small;
         min-width: $width-value-small;
     }
 
     .avatar-list-size.avatar-size-medium.avatar-count-#{$i} {
-        max-height: $width-value-med;
+        max-height: $avatarSizeMedium;
         height: $width-value-med;
         width: $width-value-med;
         min-width: $width-value-med;
-        height: $width-value-med;
+        height: $avatarSizeMedium;
     }
 
     .avatar-list-size.avatar-size-large.avatar-count-#{$i} {
-        max-height: $width-value-lg;
+        max-height: $avatarSizeLarge;
         width: $width-value-lg;
         min-width: $width-value-lg;
-        height: $width-value-lg;
+        height: $avatarSizeLarge;
     }
 }
-
-$avatarSizeSmall: getAvatarDiameterBySize("small");
-$avatarSizeMedium: getAvatarDiameterBySize("medium");
-$avatarSizeLarge: getAvatarDiameterBySize("large");
 
 .avatar-size.avatar-size-small {
     max-width: $avatarSizeSmall;
