@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HubState, NotificationService } from '../../../services/notification.service';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TimeWindow } from '../../../api/player-models';
+import { ShortDatePipe } from '../../../utility/pipes/short-date.pipe';
+import { ShortTimePipe } from '../../../utility/pipes/short-time.pipe';
 
 export enum PlayerStatus {
   Offline,
@@ -11,38 +12,47 @@ export enum PlayerStatus {
 @Component({
   selector: 'app-player-status',
   template: `
-    <div class="game-hub-status-component d-flex justify-content-center align-items-center" *ngIf="hubState$ | async as hubState">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16px" height="16px">
-          <circle [attr.cx]="8" [attr.cy]="8" [attr.r]="8" [attr.fill]="statusIndicatorFill" />
+    <div class="game-hub-status-component d-flex justify-content-center align-items-center" [tooltip]="tooltipText || ''">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36px" height="36px">
+        <circle
+          [class.session-indeterminate]="!session" 
+          [class.session-available]="session?.isBefore" 
+          [class.session-active]="session?.isDuring" 
+          [class.session-over]="session?.isAfter"
+          [attr.cx]="18" [attr.cy]="18" [attr.r]="11" />
       </svg>
     </div>
   `,
   styleUrls: ['./player-status.component.scss']
 })
-export class PlayerStatusComponent implements OnInit {
-  // @Input() userId!: string;
-  @Input() isOnline?: boolean = undefined;
+export class PlayerStatusComponent implements OnChanges {
+  @Input() session?: TimeWindow;
 
-  constructor(private notificationService: NotificationService) { }
+  private static DEFAULT_TOOLTIP = "Determining player session status...";
 
-  protected hubState$ = this.notificationService.state$;
-  protected statusIndicatorFill = "#ff0000";
-  protected tooltipText = "Disconnected from the matchmaking hub";
+  protected tooltipText = PlayerStatusComponent.DEFAULT_TOOLTIP;
 
-  ngOnInit(): void {
-    // this.notificationService.state$.subscribe(state => {
-    //   this.isActive = state.actors.some(a => a.id === this.userId);
-    //   this.tooltipText = this.isActive ? "Connected to the game" : "Not connected to the game";
-    //   this.statusIndicatorFill = this.isActive ? "#00ff00" : "#ff0000";
-    // });
-    this.statusIndicatorFill = this.resolveStatusIndicatorFill(this.isOnline);
+  ngOnChanges(changes: SimpleChanges): void {
+    this.update(this.session);
   }
 
-  private resolveStatusIndicatorFill(isOnline?: boolean): string {
-    if (this.isOnline === undefined) {
-      return "#888888";
+  private resolveStatusIndicatorTooltip(session?: TimeWindow): string {
+    if (session === undefined) {
+      return PlayerStatusComponent.DEFAULT_TOOLTIP;
     }
 
-    return this.isOnline ? "#00ff00" : "ff0000";
+    if (this.session?.isBefore) {
+      return "Registered for the game, but hasn't started a session";
+    }
+    else if (this.session?.isAfter) {
+      return "Session ended"
+    }
+    else {
+      return "Playing the game";
+    }
+  }
+
+  private update(session?: TimeWindow) {
+    this.tooltipText = this.resolveStatusIndicatorTooltip(session);
   }
 }

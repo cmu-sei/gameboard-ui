@@ -32,6 +32,7 @@ const MODULE_DECLARATIONS = [
   ],
   imports: [
     CommonModule,
+    TooltipModule
   ],
   exports: [
     ...MODULE_DECLARATIONS,

@@ -52,6 +52,8 @@ export class PlayerRegistrarComponent {
   faStar = faStar;
   faSync = faSyncAlt;
 
+  protected showSessionStatus = true;
+
   constructor(
     route: ActivatedRoute,
     private gameapi: GameService,

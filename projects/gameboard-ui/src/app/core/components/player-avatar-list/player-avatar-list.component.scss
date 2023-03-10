@@ -18,3 +18,10 @@
         transform: getPlayerAvatarListTransform("large", $i);
     }
 }
+
+app-player-status {
+    position: absolute;
+    right: -6px;
+    bottom: -8px;
+    z-index: $z-index-relative + 5;
+}

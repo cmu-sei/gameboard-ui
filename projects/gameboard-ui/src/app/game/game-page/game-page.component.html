@@ -54,7 +54,7 @@
         <ng-container *ngIf="!!ctx.player.id && ctx.player.session">
           <div class="col panel">
             <h2>Status</h2>
-            <app-player-session [ctx$]="ctx$!" [hubState$]="hubState$" (onSessionStart)="onSessionStarted($event)"
+            <app-player-session [ctx$]="ctx$!" [player$]="playerSubject$" (onSessionStart)="onSessionStarted($event)"
               (onSessionReset)="onSessionReset($event)"></app-player-session>
           </div>
         </ng-container>

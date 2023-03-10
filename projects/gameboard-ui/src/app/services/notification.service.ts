@@ -8,7 +8,7 @@ import { debounceTime, distinctUntilChanged, first, map, takeUntil } from 'rxjs/
 import { ConfigService } from '../utility/config.service';
 import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
-import { HubPlayer, Player } from '../api/player-models';
+import { HubPlayer, Player, TimeWindow } from '../api/player-models';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -72,7 +72,7 @@ export class NotificationService {
         userName: p.name,
         pendingName: p.userName === p.userApprovedName ? p.userName : '',
         userNameStatus: p.nameStatus,
-        isOnline: true,
+        session: p.sessionBegin && p.sessionEnd ? new TimeWindow(p.sessionBegin, p.sessionEnd) : undefined,
         sponsorLogo: p.sponsor ?
           `${this.config.imagehost}/${p.sponsor}`
           : `${this.config.basehref}assets/sponsor.svg`
@@ -240,7 +240,10 @@ export class NotificationService {
     }
 
     for (let i = 0; i < previousIds.length; i++) {
-      if (previous[i] != current[i] || previous[i].isManager != current[i].isManager) {
+      if (
+        previous[i] != current[i]
+        || previous[i].isManager != current[i].isManager
+        || !!previous[i].session != !!current[i].session) {
         return false;
       }
     }

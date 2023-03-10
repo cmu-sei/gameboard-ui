@@ -11,6 +11,7 @@ export interface Player {
   userId: string;
   userName: string;
   userApprovedName: string;
+  userNameStatus: string;
   gameId: string;
   gameName: string;
   name: string;
@@ -51,10 +52,17 @@ export class TimeWindow {
   window: number;
   countdown: number;
 
+  beginDate: Date;
+  endDate: Date;
+
   constructor(a: Date, b: Date) {
     const ts = new Date().valueOf();
     const start = new Date(a).valueOf();
     const end = new Date(b).valueOf();
+
+    this.beginDate = a;
+    this.endDate = b;
+
     this.window = start > 0 && ts >= start ? end > 0 && ts > end ? 1 : 0 : -1;
     this.isBefore = this.window < 0;
     this.isDuring = this.window === 0;
@@ -66,6 +74,18 @@ export class TimeWindow {
         : 0
       ;
   }
+}
+
+export const calculateCountdown = (isBefore: boolean, isDuring: boolean, start: Date, end: Date) => {
+  const valueOfStart = start.valueOf();
+  const valueOfEnd = end.valueOf();
+  const ts = new Date().valueOf();
+
+  return isBefore && valueOfStart > 0
+    ? valueOfStart - ts
+    : isDuring && valueOfEnd > 0
+      ? valueOfEnd - ts
+      : 0;
 }
 
 // export enum TimeWindowState {
@@ -100,7 +120,7 @@ export interface HubPlayer extends Player {
   userName: string;
   pendingName: string;
   userNameStatus: string;
-  isOnline: boolean;
+  session?: TimeWindow
 }
 
 export interface NewPlayer {
