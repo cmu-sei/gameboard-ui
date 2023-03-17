@@ -223,6 +223,7 @@ export interface Team {
   members: TeamMember[];
   sponsorList: string[];
 }
+
 export interface TeamChallenge {
   id: string;
   name: string;
@@ -232,6 +233,7 @@ export interface TeamChallenge {
   duration: number;
   result: ChallengeResult;
 }
+
 export interface TeamMember {
   id: string;
   approvedName: string;

@@ -3,7 +3,6 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faTrash, faList, faSearch, faFilter, faCheck, faArrowLeft, faLongArrowAltDown, faCheckSquare, faSquare, faClipboard, faStar, faSyncAlt, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, BehaviorSubject, combineLatest, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardService } from '../../api/board.service';
@@ -11,6 +10,8 @@ import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Player, PlayerSearch, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
+import { FontAwesomeService } from '../../services/font-awesome.service';
+import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { UnityService } from '../../unity/unity.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 
@@ -38,28 +39,16 @@ export class PlayerRegistrarComponent {
   advanceScores = false;
   autorefresh = true;
 
-  faTrash = faTrash;
-  faList = faList;
-  faTriangleExclamation = faTriangleExclamation;
-  faSearch = faSearch;
-  faFilter = faFilter;
-  faCheck = faCheck;
-  faArrowLeft = faArrowLeft;
-  faArrowDown = faLongArrowAltDown;
-  faChecked = faCheckSquare;
-  faUnChecked = faSquare;
-  faCopy = faClipboard;
-  faStar = faStar;
-  faSync = faSyncAlt;
-
   protected showSessionStatus = true;
 
   constructor(
     route: ActivatedRoute,
     private gameapi: GameService,
+    private modalService: ModalConfirmService,
     private api: PlayerService,
     private boardApi: BoardService,
     private clipboard: ClipboardService,
+    protected faService: FontAwesomeService,
     private unityService: UnityService
   ) {
 
@@ -82,7 +71,6 @@ export class PlayerRegistrarComponent {
       tap(([a, b, c]) => this.search.gid = a.id),
       switchMap(() => this.api.list(this.search)),
       tap(r => this.source = r),
-      tap(r => console.log("source", this.source)),
       tap(() => this.review())
     );
 
@@ -181,7 +169,7 @@ export class PlayerRegistrarComponent {
   }
 
   update(model: Player): void {
-    this.api.update(model).subscribe();
+    this.api.update(model).pipe(first()).subscribe();
   }
 
   approveName(model: Player): void {
@@ -217,7 +205,6 @@ export class PlayerRegistrarComponent {
       .subscribe(data => {
         this.clipboard.copyToClipboard(JSON.stringify(data, null, 2))
       });
-
   }
 
   advanceSelected(gid: string): void {
@@ -233,5 +220,32 @@ export class PlayerRegistrarComponent {
     this.gameapi.rerank(gid).subscribe(
       () => this.refresh$.next(true)
     );
+  }
+
+  confirmReset(player: Player) {
+    this.modalService.openConfirm({
+      bodyContent: `Are you sure you want to reset the session for ${player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?`,
+      title: `Reset ${player.approvedName}'s session?`,
+      onConfirm: () => this.resetSession(player),
+      confirmButtonText: "Yes, reset",
+      cancelButtonText: "No, don't reset"
+    })
+  }
+
+  confirmUnenroll(player: Player) {
+    this.modalService.openConfirm({
+      bodyContent: `Are you sure you want to unenroll ${player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?`,
+      title: `Unenroll ${player.approvedName}?`,
+      onConfirm: () => {
+        this.unenroll(player);
+      },
+      confirmButtonText: "Yes, unenroll",
+      cancelButtonText: "No, don't unenroll"
+    })
+  }
+
+  manageManualBonuses(player: Player) {
+    // this.api.get
+    // this.modalService.open({ challengeId: player. })
   }
 }

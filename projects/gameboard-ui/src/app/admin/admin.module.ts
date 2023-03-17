@@ -39,6 +39,8 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
+import { ManageManualChallengeBonusesComponent } from './components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     PlayerNamesComponent,
     ParticipationReportComponent,
     UserApiKeysComponent,
+    TeamAdminContextMenuComponent,
+    ManageManualChallengeBonusesComponent,
   ],
   imports: [
     CommonModule,

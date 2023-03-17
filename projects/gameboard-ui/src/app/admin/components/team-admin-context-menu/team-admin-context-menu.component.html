@@ -1,0 +1,28 @@
+<div class="btn-group" dropdown>
+    <button id="button-basic" dropdownToggle type="button" class="btn ctx-menu-button rounded-circle"
+        aria-controls="dropdown-basic">
+        <fa-icon [icon]="faService.ellipsisVertical" size="2x"></fa-icon>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="onViewRequest.emit(player)">{{ isViewing ? "Collapse" : "View"
+                }}</button>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="onBonusManageRequest.emit(player)">
+                Manage Bonus Points
+            </button>
+        </li>
+        <li class="divider dropdown-divider"></li>
+        <li role="menuitem" *ngIf="isResettingSession; else unenroll">
+            <button class="dropdown-item btn btn-danger" (click)="onSessionResetRequest.emit(player)">Reset
+                Session</button>
+        </li>
+        <ng-template #unenroll>
+            <li role="menuitem">
+                <button type="button" class="dropdown-item btn btn-danger"
+                    (click)="onSessionResetRequest.emit(player)">Unenroll</button>
+            </li>
+        </ng-template>
+    </ul>
+</div>

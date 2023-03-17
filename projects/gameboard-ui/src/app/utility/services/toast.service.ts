@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import Toastify from "toastify-js";
 import { ConfigService } from '../config.service';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeService } from './font-awesome.service';
+import { FontAwesomeService } from '../../services/font-awesome.service';
 
 export interface ToastOptions {
   text: string;
@@ -28,7 +28,7 @@ interface FixedToastOptions {
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
-  constructor (
+  constructor(
     private config: ConfigService,
     private faService: FontAwesomeService) { }
 

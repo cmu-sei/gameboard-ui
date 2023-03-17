@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Component, Injectable, OnDestroy } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { ModalConfirmComponent } from '../core/components/modal/modal-confirm.component';
@@ -12,12 +12,16 @@ export class ModalConfirmService implements OnDestroy {
 
   constructor(private bsModalService: BsModalService) { }
 
-  open<T>(config: ModalConfirmConfig): void {
+  openConfirm<T>(config: ModalConfirmConfig): void {
     this.bsModalRef = this.bsModalService.show(ModalConfirmComponent, { initialState: { config }, class: "modal-dialog-centered" });
 
     if (config.onCancel) {
       this.hiddenSub = this.bsModalRef.onHidden?.subscribe(s => this.onHidden(config.onCancel));
     }
+  }
+
+  open<TConfig, TComponent extends (new (...args: any[]) => any)>(config: TConfig, componentType: TComponent): void {
+    this.bsModalRef = this.bsModalService.show(componentType, { initialState: { config }, class: "modal-dialog-centered" });
   }
 
   hide(isCancelEvent = false): void {
@@ -42,8 +46,6 @@ export class ModalConfirmService implements OnDestroy {
   }
 
   private cleanupModalRef(): void {
-    if (this.bsModalRef) {
-      this.bsModalRef = undefined;
-    }
+    this.bsModalRef = undefined;
   }
 }
