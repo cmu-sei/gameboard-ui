@@ -86,7 +86,6 @@ export class PlayerSessionComponent implements OnDestroy {
       first()
     ).subscribe(
       p => {
-        console.log("session", p);
         this.onSessionStart.emit(p)
       },
       err => this.errors.push(err),

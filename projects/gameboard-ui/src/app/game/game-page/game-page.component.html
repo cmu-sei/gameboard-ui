@@ -90,8 +90,8 @@
       </div>
       <div class="col-xl-5 pr-5 my-4"
         *ngIf="ctx.game.feedbackTemplate?.game?.length && (!ctx.player.session?.isBefore)">
-        <app-feedback-form *ngIf="ctx.player.session" [game]="ctx.game" [session]="ctx.player.session"
-          [title]="ctx.game.name + ' Feedback'" [type]="'game'">
+        <app-feedback-form *ngIf="ctx.player.session" [title]="ctx.game.name + ' Feedback'" [type]="'game'"
+          [boardPlayer]="boardPlayer">
         </app-feedback-form>
       </div>
     </div>
