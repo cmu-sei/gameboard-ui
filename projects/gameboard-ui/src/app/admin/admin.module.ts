@@ -41,6 +41,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
 import { ManageManualChallengeBonusesComponent } from './components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
+import { ManageManualChallengeBonusesModalComponent } from './components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { ManageManualChallengeBonusesComponent } from './components/manage-manua
     UserApiKeysComponent,
     TeamAdminContextMenuComponent,
     ManageManualChallengeBonusesComponent,
+    ManageManualChallengeBonusesModalComponent
   ],
   imports: [
     CommonModule,

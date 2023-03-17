@@ -3,6 +3,7 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { asyncScheduler, BehaviorSubject, combineLatest, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardService } from '../../api/board.service';
@@ -14,6 +15,8 @@ import { FontAwesomeService } from '../../services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { UnityService } from '../../unity/unity.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
+import { ManageManualChallengeBonusesModalComponent } from '../components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
+import { ManageManualChallengeBonusesComponent } from '../components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
 
 @Component({
   selector: 'app-player-registrar',
@@ -39,12 +42,15 @@ export class PlayerRegistrarComponent {
   advanceScores = false;
   autorefresh = true;
 
+  manageTeamId?: string;
+
   protected showSessionStatus = true;
 
   constructor(
     route: ActivatedRoute,
     private gameapi: GameService,
-    private modalService: ModalConfirmService,
+    private bsModalService: BsModalService,
+    private modalConfirmService: ModalConfirmService,
     private api: PlayerService,
     private boardApi: BoardService,
     private clipboard: ClipboardService,
@@ -223,7 +229,7 @@ export class PlayerRegistrarComponent {
   }
 
   confirmReset(player: Player) {
-    this.modalService.openConfirm({
+    this.modalConfirmService.openConfirm({
       bodyContent: `Are you sure you want to reset the session for ${player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?`,
       title: `Reset ${player.approvedName}'s session?`,
       onConfirm: () => this.resetSession(player),
@@ -233,7 +239,7 @@ export class PlayerRegistrarComponent {
   }
 
   confirmUnenroll(player: Player) {
-    this.modalService.openConfirm({
+    this.modalConfirmService.openConfirm({
       bodyContent: `Are you sure you want to unenroll ${player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?`,
       title: `Unenroll ${player.approvedName}?`,
       onConfirm: () => {
@@ -245,7 +251,13 @@ export class PlayerRegistrarComponent {
   }
 
   manageManualBonuses(player: Player) {
-    // this.api.get
-    // this.modalService.open({ challengeId: player. })
+    this.bsModalService.show(ManageManualChallengeBonusesModalComponent, {
+      class: "modal-xl",
+      initialState: {
+        gameName: player.gameName,
+        playerName: player.approvedName,
+        teamId: player.teamId
+      }
+    });
   }
 }

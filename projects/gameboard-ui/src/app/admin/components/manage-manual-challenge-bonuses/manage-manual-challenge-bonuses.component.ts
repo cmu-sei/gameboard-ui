@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { TeamChallengeScoreSummary } from '../../../api/scoring-models';
+import { CreateManualChallengeBonus, TeamGameScoreSummary } from '../../../api/scoring-models';
 import { ScoringService } from '../../../services/scoring.service';
 
 @Component({
@@ -9,15 +9,40 @@ import { ScoringService } from '../../../services/scoring.service';
   styleUrls: ['./manage-manual-challenge-bonuses.component.scss']
 })
 export class ManageManualChallengeBonusesComponent implements OnInit {
-  @Input() challengeId!: string;
+  @Input() teamId!: string;
 
-  summary?: TeamChallengeScoreSummary;
+  summary?: TeamGameScoreSummary;
+  newChallengeBonusModel: CreateManualChallengeBonus = {
+    description: '',
+    challengeId: '',
+    pointValue: 1
+  }
 
   constructor(private scoresService: ScoringService) { }
 
   ngOnInit(): void {
-    this.scoresService.getTeamChallengeScore(this.challengeId)
+    this.loadSummary(this.teamId);
+  }
+
+  private loadSummary(teamId: string) {
+    this.scoresService.getTeamGameScore(teamId)
       .pipe(first())
-      .subscribe();
+      .subscribe(summary => {
+        this.summary = summary;
+        this.newChallengeBonusModel = {
+          description: '',
+          challengeId: summary.challengeScoreSummaries.length ? summary.challengeScoreSummaries[0].challenge.id : '',
+          pointValue: 1
+        }
+      });
+  }
+
+  onSubmit() {
+    this.scoresService
+      .createManualChallengeBonus(this.newChallengeBonusModel)
+      .pipe(first())
+      .subscribe(_ => {
+        this.loadSummary(this.teamId);
+      });
   }
 }

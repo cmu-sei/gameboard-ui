@@ -173,8 +173,8 @@
       </ng-container>
 
       <app-team-admin-context-menu class="ml-4" [player]="player" [isViewing]="viewed === player"
-        (onSessionResetRequest)="confirmReset(player)" (onUnenrollRequest)="confirmUnenroll($event)"
-        (onViewRequest)="view($event)">
+        (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset(player)"
+        (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
       </app-team-admin-context-menu>
 
       <!-- <app-confirm-button *ngIf="!game.allowTeam && !player.session else resetSessionButton"
