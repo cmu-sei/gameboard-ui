@@ -8,6 +8,6 @@ export class GameSessionService {
   }
 
   canUnenrollSession(session?: TimeWindow) {
-    return session?.isBefore || true;
+    return !session ? true : session.isBefore;
   }
 }
