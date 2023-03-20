@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Player, TimeWindow } from '../../../api/player-models';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
 import { GameSessionService } from '../../../services/game-session.service';
+import { ClipboardService } from '../../../utility/services/clipboard.service';
+import { ToastService } from '../../../utility/services/toast.service';
 
 @Component({
   selector: 'app-team-admin-context-menu',
@@ -20,10 +22,17 @@ export class TeamAdminContextMenuComponent implements OnInit {
   isResettingSession = false;
 
   constructor(
+    private clipboardService: ClipboardService,
     protected faService: FontAwesomeService,
-    private gameSessionService: GameSessionService) { }
+    private gameSessionService: GameSessionService,
+    private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.isResettingSession = this.gameSessionService.canUnenroll(this.player);
+  }
+
+  async copy(text: string, description: string) {
+    await this.clipboardService.copy(text);
+    this.toastService.showMessage(`Copied ${description} "${text}" to your clipboard.`)
   }
 }

@@ -165,14 +165,18 @@
       {{player.session?.countdown | countdown }}
     </div>
     <div>
-      <ng-container *ngIf="ctx.game.mode == 'unity'">
+      <!-- <ng-container *ngIf="ctx.game.mode == 'unity'">
         <app-confirm-button btnClass="btn btn-outline-warning btn-sm mx-1" (confirm)="undeploy(player)">
           <fa-icon [icon]="faService.triangleExclamation"></fa-icon>
           <span>Undeploy</span>
         </app-confirm-button>
-      </ng-container>
+      </ng-container> -->
 
-      <app-team-admin-context-menu class="ml-4" [player]="player" [isViewing]="viewed === player"
+      <button class="btn rounded-circle ml-4" (click)="view(player)">
+        <fa-icon [icon]="viewed === player ? faService.chevronUp : faService.chevronDown"></fa-icon>
+      </button>
+
+      <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
         (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset(player)"
         (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
       </app-team-admin-context-menu>

@@ -9,6 +9,12 @@
                 }}</button>
         </li>
         <li role="menuitem">
+            <button class="dropdown-item btn" (click)="copy(player.id, 'player ID')">Copy player ID</button>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="copy(player.teamId, 'team ID')">Copy team ID</button>
+        </li>
+        <li role="menuitem">
             <button class="dropdown-item btn" (click)="onBonusManageRequest.emit(player)">
                 Manage Bonus Points
             </button>
