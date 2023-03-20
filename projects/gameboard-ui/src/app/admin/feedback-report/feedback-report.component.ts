@@ -15,11 +15,11 @@ import { Spec } from '../../api/spec-models';
 })
 export class FeedbackReportComponent implements OnInit {
   errors: any[] = [];
-  
+
   showSummary: boolean = true;
   showQuestions: boolean = false;
   showTable: boolean = false;
-  
+
   games?: Game[];
   challengeSpecs?: Spec[];
   feedback?: FeedbackReportDetails[];
@@ -41,7 +41,7 @@ export class FeedbackReportComponent implements OnInit {
   faCaretLeft = faCaretLeft;
   faSync = faSync;
   faFileDownload = faFileDownload;
-  
+
   constructor(
     private gameService: GameService,
     private boardService: BoardService,
@@ -56,7 +56,7 @@ export class FeedbackReportComponent implements OnInit {
           this.gameSelected();
         }
       },
-      (error: any) => {}
+      (error: any) => { }
     );
   }
 
@@ -83,7 +83,6 @@ export class FeedbackReportComponent implements OnInit {
   }
 
   updateChallenge(id: string) {
-    console.log(id)
     if (id == "all") {
       this.currentChallengeSpec = undefined;
     } else if (this.challengeSpecs) {
@@ -124,7 +123,7 @@ export class FeedbackReportComponent implements OnInit {
       (feedback: FeedbackReportDetails[]) => {
         this.feedback = feedback;
       },
-      (error: any) => {}
+      (error: any) => { }
     );
   }
 
@@ -135,7 +134,7 @@ export class FeedbackReportComponent implements OnInit {
       (feedbackStats: FeedbackStats) => {
         this.feedbackStats = feedbackStats;
       },
-      (error: any) => {}
+      (error: any) => { }
     );
   }
 
@@ -198,7 +197,7 @@ export class FeedbackReportComponent implements OnInit {
   toggleRow(i: number) {
     if (window.getSelection()?.toString()?.length != 0)
       return;
-    let id = "row-"+i;
+    let id = "row-" + i;
     document.getElementById(id)?.classList.toggle('minimized');
   }
 

@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { faCaretDown, faCaretRight, faExternalLinkAlt, faListOl } from '@fortawesome/free-solid-svg-icons';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '../../api/user-models';
 import { GameService } from '../../api/game.service';
 import { GameContext } from '../../api/models';
@@ -17,6 +17,8 @@ import { PlayerService } from '../../api/player.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { WindowService } from '../../services/window.service';
+import { BoardPlayer } from '../../api/board-models';
+import { BoardService } from '../../api/board.service';
 
 @Component({
   selector: 'app-game-page',
@@ -32,6 +34,7 @@ export class GamePageComponent implements OnDestroy {
   faCaretRight = faCaretRight;
   minDate = new Date(0);
 
+  protected boardPlayer?: BoardPlayer;
   protected ctxIds: { userId?: string, gameId: string, playerId?: string } = { userId: '', gameId: '' };
   protected playerSubject$ = new BehaviorSubject<Player | undefined>(undefined);
 
@@ -42,6 +45,7 @@ export class GamePageComponent implements OnDestroy {
   constructor(
     router: Router,
     route: ActivatedRoute,
+    apiBoards: BoardService,
     apiPlayer: PlayerService,
     localUser: LocalUserService,
     private hub: NotificationService,
@@ -70,15 +74,26 @@ export class GamePageComponent implements OnDestroy {
           map(
             p => {
               const defaultPlayer = { userId: z.localUser?.id } as unknown as Player;
-              this.playerSubject$.next(p.length !== 1 ? defaultPlayer : p[0]);
+              const resolvedPlayer = p.length !== 1 ? defaultPlayer : p[0];
+              this.playerSubject$.next(resolvedPlayer);
 
-              this.ctxIds.playerId = this.playerSubject$.getValue()?.id;
+              this.ctxIds.playerId = resolvedPlayer.id;
               this.ctxIds.userId = z.localUser?.id;
+
+              return resolvedPlayer;
             }
           )
         )
       })
-    ).subscribe();
+    ).subscribe(done => {
+      const currentPlayer = this.playerSubject$.getValue();
+      if (!currentPlayer?.id) {
+        this.boardPlayer = undefined;
+        return;
+      }
+
+      apiBoards.load(currentPlayer!.id).pipe(first()).subscribe(b => this.boardPlayer = b);
+    });
 
     // allow hub events to update the player subject
     this.hubEventsSubcription = combineLatest([

@@ -137,6 +137,11 @@ export class GameboardPageComponent implements OnDestroy {
 
   syncOne = (c: Challenge): BoardSpec => {
     this.deploying = false;
+
+    if (!c) {
+      return {} as BoardSpec;
+    }
+
     const s = this.ctx.game.specs.find(i => i.id === c.specId);
     const isUpdated = c.score > 0 && s?.instance?.score !== c.score;
 
@@ -146,15 +151,15 @@ export class GameboardPageComponent implements OnDestroy {
       this.api.setColor(s);
     }
 
-    if (isUpdated) {
-      this.refresh$.next(this.ctx.id);
-    }
+    // if (isUpdated) {
+    //   this.refresh$.next(this.ctx.id);
+    // }
 
     return s || {} as BoardSpec;
   }
 
   select(spec: BoardSpec): void {
-    if (!spec.disabled && !spec.locked) {
+    if (!spec.disabled && !spec.locked && (!this.selected?.id || this.selected.id !== spec.id)) {
       this.selecting$.next(spec);
     }
   }
@@ -162,6 +167,11 @@ export class GameboardPageComponent implements OnDestroy {
   reselect(): void {
     const id = this.selected?.id ?? this.cid;
     if (!id) { return; }
+
+    if (id === this.selected?.id) {
+      return;
+    }
+
     const spec = this.ctx.game.specs.find(s => s.id === id);
     if (!!spec) {
       timer(100).subscribe(() =>
@@ -189,8 +199,10 @@ export class GameboardPageComponent implements OnDestroy {
 
   start(model: BoardSpec): void {
     // start gamespace
-    this.deploying = true;
     if (!model.instance) { return; }
+
+    // otherwise, start gamespace
+    this.deploying = true;
     this.api.start(model.instance).pipe(
       catchError(e => {
         this.errors.push(e);

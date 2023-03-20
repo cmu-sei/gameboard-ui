@@ -82,7 +82,6 @@ export class PlayerRegistrarComponent {
       tap(([a, b, c]) => this.search.gid = a.id),
       switchMap(() => this.api.list(this.search)),
       tap(r => this.source = r),
-      tap(r => console.log("source", this.source)),
       tap(() => this.review())
     );
 
