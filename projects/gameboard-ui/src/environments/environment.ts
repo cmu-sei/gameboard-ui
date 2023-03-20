@@ -19,8 +19,6 @@ export const environment = {
       silent_redirect_uri: 'http://localhost:4202/assets/oidc-silent.html',
       response_type: 'code',
       scope: 'openid profile gameboard-api',
-      accessTokenExpiringNotificationTime: 60,
-      monitorSession: false,
       loadUserInfo: true,
       useLocalStorage: true
     }
