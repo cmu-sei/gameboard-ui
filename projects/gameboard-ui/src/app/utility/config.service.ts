@@ -243,6 +243,9 @@ export interface Settings {
 }
 
 export interface AppUserManagerSettings extends UserManagerSettings {
+  authority: string;
+  client_id: string;
+  redirect_uri: string;
   useLocalStorage?: boolean;
   debug?: boolean;
 }
