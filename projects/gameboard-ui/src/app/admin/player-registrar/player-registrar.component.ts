@@ -16,7 +16,6 @@ import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { UnityService } from '../../unity/unity.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 import { ManageManualChallengeBonusesModalComponent } from '../components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
-import { ManageManualChallengeBonusesComponent } from '../components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
 
 @Component({
   selector: 'app-player-registrar',
@@ -37,7 +36,16 @@ export class PlayerRegistrarComponent {
   scope = '';
   mode = 'competition';
   scopes: string[] = [];
-  reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique']
+  reasons: string[] = [
+    'disallowed',
+    'disallowed_pii',
+    'disallowed_unit',
+    'disallowed_agency',
+    'disallowed_explicit',
+    'disallowed_innuendo',
+    'disallowed_excessive_emojis',
+    'not_unique'
+  ];
   advanceOptions = false;
   advanceScores = false;
   autorefresh = true;

@@ -156,7 +156,7 @@
       <span>Disapprove</span>
     </button>
     <div class="spacer"></div>
-    <div [class.text-success]="player.session?.isDuring">
+    <div class="cursor-pointer" [class.text-success]="player.session?.isDuring" (click)="view(player)">
       {{player.rank}} |
       {{player.score}} |
       {{player.time | clock}} |
@@ -165,13 +165,6 @@
       {{player.session?.countdown | countdown }}
     </div>
     <div>
-      <!-- <ng-container *ngIf="ctx.game.mode == 'unity'">
-        <app-confirm-button btnClass="btn btn-outline-warning btn-sm mx-1" (confirm)="undeploy(player)">
-          <fa-icon [icon]="faService.triangleExclamation"></fa-icon>
-          <span>Undeploy</span>
-        </app-confirm-button>
-      </ng-container> -->
-
       <button class="btn rounded-circle ml-4" (click)="view(player)">
         <fa-icon [icon]="viewed === player ? faService.chevronUp : faService.chevronDown"></fa-icon>
       </button>
@@ -180,26 +173,12 @@
         (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset(player)"
         (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
       </app-team-admin-context-menu>
-
-      <!-- <app-confirm-button *ngIf="!game.allowTeam && !player.session else resetSessionButton"
-        btnClass="btn btn-outline-danger btn-sm mx-1" (confirm)="unenroll(player)">
-        <fa-icon [icon]="faService.trash"></fa-icon>
-        <span>Unenroll</span>
-      </app-confirm-button>
-
-      <ng-template #resetSessionButton>
-        <app-confirm-button btnClass="btn btn-danger btn-sm mx-1" (confirm)="resetSession(player)">
-          <fa-icon [icon]="faService.trash"></fa-icon>
-          <span>Reset Session</span>
-        </app-confirm-button>
-      </ng-template> -->
     </div>
     <div *ngIf="viewed === player" class="col-12">
       <div class="form-group">
         <label class="mb-0" for="name-input">Approved Name</label>
         <input id="name-input" class="form-control" type="text" [(ngModel)]="player.approvedName"
           (change)="update(player)">
-        <small></small>
       </div>
       <div class="form-group">
         <label class="mb-0" for="reason-input">Disapproved Reason</label>
