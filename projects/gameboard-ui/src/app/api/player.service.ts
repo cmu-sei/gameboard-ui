@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -33,6 +33,7 @@ export class PlayerService {
       map(p => this.transform(p) as Player)
     );
   }
+
   public create(model: NewPlayer): Observable<Player> {
     return this.http.post<Player>(`${this.url}/player`, model).pipe(
       map(p => this.transform(p) as Player)
@@ -100,6 +101,9 @@ export class PlayerService {
     );
   }
 
+  public getTeamChallenges = (id: string): Observable<TeamChallenge[]> =>
+    this.http.get<TeamChallenge[]>(`${this.url}/team/${id}/challenges`);
+
   public advanceTeams(model: TeamAdvancement): Observable<any> {
     return this.http.post<any>(this.url + '/team/advance', model);
   }
@@ -135,8 +139,7 @@ export class PlayerService {
 
     p.pendingName = p.approvedName !== p.name
       ? p.name + (!!p.nameStatus ? `...${p.nameStatus}` : '...pending')
-      : ''
-      ;
+      : '';
 
     this.transformSession(p, p.sessionBegin, p.sessionEnd);
 
@@ -154,8 +157,7 @@ export class PlayerService {
   private transformStanding(p: Standing): Standing {
     p.sponsorLogo = p.sponsor
       ? `${this.config.imagehost}/${p.sponsor}`
-      : `${this.config.basehref}assets/sponsor.svg`
-      ;
+      : `${this.config.basehref}assets/sponsor.svg`;
     p.sponsorTooltip = p.sponsorList.map(s => s.split('.').reverse().pop()?.toUpperCase()).join(' | ');
     p.sponsorList.forEach((s, i, a) => a[i] = `${this.config.imagehost}/${s}`);
     p.session = new TimeWindow(p.sessionBegin, p.sessionEnd);

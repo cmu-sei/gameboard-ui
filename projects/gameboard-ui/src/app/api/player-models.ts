@@ -171,7 +171,7 @@ export interface SelfChangedPlayer {
 
 export interface SessionChangeRequest {
   teamId: string;
-  sessionEnd: string;
+  sessionEnd: Date;
 }
 
 export interface PlayerEnlistment {
@@ -212,8 +212,8 @@ export interface TeamAdvancement {
 export interface Team {
   teamId: string;
   gameId: string;
-  sessionBegin: string;
-  sessionEnd: string;
+  sessionBegin: Date;
+  sessionEnd: Date;
   rank: number;
   score: number;
   time: number;

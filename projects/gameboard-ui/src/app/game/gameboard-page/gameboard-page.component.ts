@@ -218,7 +218,7 @@ export class GameboardPageComponent implements OnDestroy {
   extendSession(quit: boolean): void {
     const model: SessionChangeRequest = {
       teamId: this.ctx.teamId,
-      sessionEnd: quit ? "0001-01-01" : new Date().toISOString()
+      sessionEnd: quit ? new Date("0001-01-01") : new Date()
     }
     this.playerApi.updateSession(model).pipe(first()).subscribe();
   }

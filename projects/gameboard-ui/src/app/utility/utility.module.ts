@@ -25,6 +25,7 @@ import { GameCardComponent } from './components/game-card/game-card.component';
 import { ImageManagerComponent } from './components/image-manager/image-manager.component';
 import { ImagestackComponent } from './components/imagestack/imagestack.component';
 import { InplaceEditorComponent } from './components/inplace-editor/inplace-editor.component';
+
 import { LoginComponent } from './components/login/login.component';
 import { MessageBoardComponent } from './components/message-board/message-board.component';
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
@@ -46,7 +47,6 @@ import { ShortTimePipe } from './pipes/short-time.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
-import { YamlPipe } from './pipes/yaml.pipe';
 
 import { NAVIGATOR } from './services/navigator.service';
 
@@ -70,7 +70,6 @@ const components = [
   ShortDatePipe,
   ShortTimePipe,
   UntagPipe,
-  YamlPipe,
   ClockPipe,
   FriendlyTimePipe,
   SafeUrlPipe,

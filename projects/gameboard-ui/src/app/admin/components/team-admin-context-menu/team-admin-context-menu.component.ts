@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Game } from '../../../api/game-models';
 import { Player, TimeWindow } from '../../../api/player-models';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
+import { GameSessionService } from '../../../services/game-session.service';
 
 @Component({
   selector: 'app-team-admin-context-menu',
@@ -19,9 +19,11 @@ export class TeamAdminContextMenuComponent implements OnInit {
 
   isResettingSession = false;
 
-  constructor(protected faService: FontAwesomeService) { }
+  constructor(
+    protected faService: FontAwesomeService,
+    private gameSessionService: GameSessionService) { }
 
   ngOnInit(): void {
-    this.isResettingSession = this.player?.session?.isBefore || true;
+    this.isResettingSession = this.gameSessionService.canUnenroll(this.player);
   }
 }
