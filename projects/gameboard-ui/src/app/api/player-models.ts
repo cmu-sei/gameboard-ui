@@ -50,7 +50,7 @@ export class TimeWindow {
   isDuring: boolean;
   isAfter: boolean;
   window: number;
-  countdown: number;
+  countdown?: number;
 
   beginDate: Date;
   endDate: Date;
@@ -67,25 +67,29 @@ export class TimeWindow {
     this.isBefore = this.window < 0;
     this.isDuring = this.window === 0;
     this.isAfter = this.window > 0;
-    this.countdown = this.isBefore && start > 0
-      ? start - ts
-      : this.isDuring && end > 0
-        ? end - ts
-        : 0
-      ;
+
+    this.countdown = calculateCountdown(this);
   }
 }
 
-export const calculateCountdown = (isBefore: boolean, isDuring: boolean, start: Date, end: Date) => {
-  const valueOfStart = start.valueOf();
-  const valueOfEnd = end.valueOf();
-  const ts = new Date().valueOf();
+export const calculateCountdown = (window: TimeWindow, now?: Date) => {
+  if (!window || !window.beginDate || !window.endDate) {
+    return undefined;
+  }
 
-  return isBefore && valueOfStart > 0
-    ? valueOfStart - ts
-    : isDuring && valueOfEnd > 0
-      ? valueOfEnd - ts
-      : 0;
+  now = now || new Date();
+  const start = window.beginDate.valueOf();
+  const end = window.endDate.valueOf();
+  const ts = now.valueOf();
+
+  const result = window.isBefore && start > 0
+    ? start - ts
+    : window.isDuring && end > 0
+      ? end - ts
+      : 0
+    ;
+
+  return result;
 }
 
 // export enum TimeWindowState {

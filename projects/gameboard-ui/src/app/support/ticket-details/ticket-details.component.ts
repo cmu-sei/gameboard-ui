@@ -470,7 +470,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     this.api.getTicketMarkdown(ticket).pipe(first()).subscribe(async md => {
       await this.clipboard.copy(md);
       this.toastsService.show({
-        faIcon: this.faService.faClipboard,
+        faIcon: this.faService.clipboard,
         text: "Ticket markdown copied"
       });
     });

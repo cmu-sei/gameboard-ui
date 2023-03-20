@@ -29,6 +29,7 @@ import { UnityModule } from '../unity/unity.module';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
 import { CoreModule } from '../core/core.module';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
+import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 
 const MODULE_DECLARATIONS = [
   PlayerEnrollComponent,
@@ -48,7 +49,8 @@ const MODULE_DECLARATIONS = [
 
 @NgModule({
   declarations: [
-    ...MODULE_DECLARATIONS
+    ...MODULE_DECLARATIONS,
+    GameboardPerformanceSummaryComponent
   ],
   imports: [
     CommonModule,
