@@ -206,8 +206,8 @@
             {{reason}}
           </button></small>
       </div>
-      <app-player-session [id]="player.teamId"
-        (onManageManualBonusesRequest)="manageManualBonuses(player)"></app-player-session>
+      <app-player-session [id]="player.teamId" (onManageManualBonusesRequest)="manageManualBonuses(player)"
+        (onResetSessionRequest)="resetSession(player)" (onUnenrollRequest)="unenroll(player)"></app-player-session>
     </div>
   </div>
 </ng-container>
