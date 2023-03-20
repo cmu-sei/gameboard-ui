@@ -22,7 +22,7 @@ export class OidcComponent {
     auth.externalLoginCallback().then(
       (user) => {
         timer(500).subscribe(() => {
-          router.navigateByUrl(user.state || '/');
+          router.navigateByUrl(""+user.state || '/');
         });
       },
       (err) => {

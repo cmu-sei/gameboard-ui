@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { UserManagerSettings } from 'oidc-client';
+import { UserManagerSettings } from 'oidc-client-ts';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Location, PlatformLocation } from '@angular/common';
@@ -243,7 +243,11 @@ export interface Settings {
 }
 
 export interface AppUserManagerSettings extends UserManagerSettings {
+  authority: string;
+  client_id: string;
+  redirect_uri: string;
   useLocalStorage?: boolean;
+  debug?: boolean;
 }
 
 export interface TabRef {
