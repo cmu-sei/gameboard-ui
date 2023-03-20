@@ -8,7 +8,6 @@ import { AdminGuard } from './utility/admin.guard';
 import { AuthGuard } from './utility/auth.guard';
 
 const routes: Routes = [
-  // { path: '', component: HomePageComponent, pathMatch: 'full'},
   {
     path: 'admin',
     canLoad: [AuthGuard, AdminGuard], canActivate: [AuthGuard, AdminGuard], canActivateChild: [AuthGuard, AdminGuard],
@@ -18,11 +17,6 @@ const routes: Routes = [
     path: 'game',
     // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
     loadChildren: () => import('./game/game.module').then(m => m.GameModule)
-  },
-  {
-    path: 'score',
-    // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
-    loadChildren: () => import('./score/score.module').then(m => m.ScoreModule)
   },
   {
     path: 'prac',
@@ -39,7 +33,7 @@ const routes: Routes = [
     // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
   },
-  { path: '', component: HomePageComponent, pathMatch: 'full'}
+  { path: '', component: HomePageComponent, pathMatch: 'full' }
 
 ];
 

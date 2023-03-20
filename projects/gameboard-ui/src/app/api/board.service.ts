@@ -3,8 +3,9 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, scheduled } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
 import { BoardPlayer, BoardSpec, Challenge, ChallengeGate, ChallengeResult, ChallengeSummary, ChallengeView, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
 import { TimeWindow } from './player-models';
@@ -17,7 +18,8 @@ export class BoardService {
 
   constructor(
     private http: HttpClient,
-    private config: ConfigService
+    private config: ConfigService,
+    private gameSessionService: GameSessionService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -102,13 +104,8 @@ export class BoardService {
       this.setColor(s);
     });
 
-    this.setTimeWindow(b);
+    this.gameSessionService.transformSession(b, b.sessionBegin, b.sessionEnd);
 
-    return b;
-  }
-
-  setTimeWindow(b: BoardPlayer): BoardPlayer {
-    b.session = new TimeWindow(b.sessionBegin, b.sessionEnd);
     return b;
   }
 

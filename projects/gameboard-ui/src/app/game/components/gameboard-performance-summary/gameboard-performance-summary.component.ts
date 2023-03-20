@@ -4,8 +4,9 @@ import { first } from 'rxjs/operators';
 import { BoardPlayer } from '../../../api/board-models';
 import { calculateCountdown, SessionChangeRequest } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
+import { FontAwesomeService } from '../../../services/font-awesome.service';
+import { GameSessionService } from '../../../services/game-session.service';
 import { HubState, NotificationService } from '../../../services/notification.service';
-import { FontAwesomeService } from '../../../utility/services/font-awesome.service';
 
 @Component({
   selector: 'app-gameboard-performance-summary',
@@ -19,16 +20,17 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
   hubState$: BehaviorSubject<HubState>;
 
   constructor(
+    hubService: NotificationService,
     public faService: FontAwesomeService,
-    private hubService: NotificationService,
+    private gameSessionService: GameSessionService,
     private playerService: PlayerService) {
     this.hubState$ = hubService.state$;
   }
 
   ngOnInit(): void {
     this.clockSubscription = interval(1000).subscribe(_ => {
-      console.log("tick", this.boardPlayer.session);
       this.boardPlayer.session.countdown = calculateCountdown(this.boardPlayer.session);
+      this.boardPlayer.time = this.gameSessionService.getCumulativeTime(this.boardPlayer.session);
     });
   }
 
@@ -39,7 +41,7 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
   extendSession(quit: boolean): void {
     const model: SessionChangeRequest = {
       teamId: this.boardPlayer.teamId,
-      sessionEnd: quit ? "0001-01-01" : new Date().toISOString()
+      sessionEnd: quit ? new Date(1, 1, 1) : new Date()
     }
     this.playerService.updateSession(model).pipe(first()).subscribe();
   }

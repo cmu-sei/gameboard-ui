@@ -1,28 +1,25 @@
-import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
-import { BoardSpec } from '../../api/board-models';
+import { BoardPlayer, BoardSpec } from '../../api/board-models';
 import { faCaretDown, faCaretRight, faCloudUploadAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { merge, Observable, of, Subject } from 'rxjs';
+import { merge, Observable, of, Subject, Subscribable, Subscription } from 'rxjs';
 import { FeedbackService } from '../../api/feedback.service';
 import { Feedback, QuestionType, FeedbackSubmission, FeedbackTemplate, FeedbackQuestion } from '../../api/feedback-models';
 import { BoardGame } from '../../api/board-models';
-import { catchError, combineAll, debounceTime, delay, filter, map, mergeAll, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { catchError, combineAll, debounceTime, delay, filter, first, map, mergeAll, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { TimeWindow } from '../../api/player-models';
 import { Game } from '../../api/game-models';
-
 
 @Component({
   selector: 'app-feedback-form',
   templateUrl: './feedback-form.component.html',
   styleUrls: ['./feedback-form.component.scss']
 })
-export class FeedbackFormComponent implements OnInit, AfterViewInit {
+export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+  @Input() boardPlayer?: BoardPlayer;
+  @Input() spec?: BoardSpec;
   @Input() title!: string;
-  @Input() session!: TimeWindow;
-  @Input() spec!: BoardSpec;
-  @Input() specs$!: Observable<BoardSpec>;
-  @Input() game!: Game | BoardGame; // these share: id, name, feedbacktemplate
-  @Input() type!: string;
+  @Input() type!: 'challenge' | 'game';
   @ViewChild(NgForm) form!: FormGroup;
 
   faSubmit = faCloudUploadAlt;
@@ -38,14 +35,15 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
   show: boolean = false;
 
   refreshSpec$ = new Subject<BoardSpec>();
-  updated$!: Observable<any>;
   status: string = "";
 
   characterLimit: number = 2000;
 
-  constructor(
-    private api: FeedbackService
-  ) {
+  private currentSpec?: BoardSpec;
+  private updated$!: Observable<any>;
+  private autoUpdateSub?: Subscription;
+
+  constructor(private api: FeedbackService) {
     this.feedbackForm = {
       questions: [],
       submitted: false
@@ -53,60 +51,19 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (this.type == "game") {
-      this.setTemplate(this.game.feedbackTemplate.game);
-    } else if (this.type == "challenge") {
-      // set template only once since all challenges of a game have same template
-      this.setTemplate(this.game.feedbackTemplate.challenge);
-    }
+    this.load(this.boardPlayer, this.spec, this.type);
   }
 
-  gameAfterViewInit() {
-    this.api.retrieve({ gameId: this.game.id }).subscribe(
-      feedback => {
-        this.updateFeedback(feedback);
-        if (this.session.isAfter)
-          this.show = true;
-        if (feedback?.submitted)
-          this.show = false;
-      },
-      (err: any) => { }
-    )
+  ngAfterViewInit(): void {
+    this.autosaveInit();
   }
 
-  challengeAfterViewInit() {
-    // start listening for challenge spec to change -> swap out feedback per spec
-    const fetch$ = merge(
-      this.specs$,
-      this.refreshSpec$
-    ).pipe(
-      tap(spec => this.spec = spec),
-      tap(s => {
-        // reset form to clear answers and set to pristine
-        this.form.reset();
-        this.status = "";
-        this.errors = [];
-      }),
-      // try fetch saved or submitted feedback, or return null if none exists
-      switchMap(spec => this.api.retrieve({
-        challengeSpecId: spec.id,
-        challengeId: spec.instance?.id,
-        gameId: this.game.id
-      })),
-    ).subscribe(feedback => {
-      this.updateFeedback(feedback)
-      // behavior for whether to hide form on load based on challenge status or already submitted
-      if (!this.spec.instance?.state.isActive) {
-        this.show = true;
-      } else {
-        this.show = false;
-      }
-      if (feedback?.submitted) {
-        this.show = false;
-      }
-    });
-    // use input spec to initially trigger above loading for first spec
-    this.refreshSpec$.next(this.spec);
+  ngOnChanges(changes: SimpleChanges): void {
+    this.load(this.boardPlayer, this.spec, this.type);
+  }
+
+  ngOnDestroy(): void {
+    this.autoUpdateSub?.unsubscribe();
   }
 
   updateFeedback(feedback: Feedback) {
@@ -130,43 +87,39 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
     template?.forEach(q => this.templateMap.set(q.id, q));
   }
 
-  ngAfterViewInit(): void {
-    if (this.type == "game") {
-      this.gameAfterViewInit();
-    } else if (this.type == "challenge") {
-      this.challengeAfterViewInit();
-    }
-    this.autosaveInit();
-  }
-
   autosaveInit() {
     // respond to changes for autosave feature
     this.updated$ = this.form.valueChanges.pipe(
+      filter(f => !!this.boardPlayer),
       filter(f => !this.form.pristine && !this.feedbackForm.submitted && !this.submitPending),
       tap(g => this.status = "Unsaved Changes"),
       debounceTime(7000),
       filter(f => !this.form.pristine && !this.feedbackForm.submitted && !this.submitPending),
       tap(g => this.status = "Autosaving..."),
-      switchMap(g =>
-        this.api.submit(this.createSubmission(false)).pipe(
-          catchError(err => {
-            this.errors.push("Error while saving");
-            this.status = "Error saving";
-            return of(); // this prevents anything below from happening
-          })
-        )
-      ),
+      tap(g => this.submit()),
+      catchError((err, caught) => {
+        this.errors.push("Error while saving");
+        this.status = "Error saving";
+        return of(); // this prevents anything below from happening
+      }),
       delay(1500),
       tap(r => {
-        this.status = "Autosaved";
-        this.errors = [];
+        if (r) {
+          this.status = "Autosaved";
+          this.errors = [];
+        }
       })
     );
-    this.updated$.subscribe();
+
+    this.autoUpdateSub = this.updated$.subscribe();
   }
 
   submit() {
     const submission = this.createSubmission(true);
+    if (!submission) {
+      throw new Error("Can't create a final submission without a player.");
+    }
+
     this.submitPending = true;
     this.api.submit(submission).subscribe(
       (feedback: Feedback) => {
@@ -180,33 +133,33 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
       () => {
         this.errors = [];
         this.submitPending = false;
-        this.toggle();
+        this.toggleShow();
       }
     );
   }
 
   createSubmission(finalSubmit: boolean) {
+    if (!this.boardPlayer) {
+      return null;
+    }
+
     let challengeId, challengeSpecId;
     if (this.type == "challenge") {
-      challengeId = this.spec.instance?.id!;
-      challengeSpecId = this.spec.id;
+      challengeId = this.currentSpec?.instance?.id!;
+      challengeSpecId = this.currentSpec?.id;
     }
     const submission: FeedbackSubmission = {
       challengeId: challengeId,
       challengeSpecId: challengeSpecId,
-      gameId: this.game.id,
+      gameId: this.boardPlayer.gameId,
       questions: this.feedbackForm.questions,
       submit: finalSubmit
     };
     return submission;
   }
 
-  toggle() {
+  toggleShow() {
     this.show = !this.show;
-  }
-
-  options(min: number, max: number) {
-    return Array.from(new Array(max), (x, i) => i + min);
   }
 
   // Used to change the answer for a question as multiple choices are selected
@@ -246,5 +199,70 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit {
 
     // If we lead with a comma, remove the comma
     if (question.answer?.charAt(0) == ",") question.answer = question.answer?.substring(1, question.answer?.length);
+  }
+
+  private load(boardPlayer?: BoardPlayer, spec?: BoardSpec, type?: "challenge" | "game") {
+    // clear form
+    this.form?.reset();
+    this.status = "";
+    this.errors = [];
+
+    if (!boardPlayer || !spec || !type)
+      return;
+
+    if (type === "challenge") {
+      this.loadChallenge(boardPlayer, spec)
+      return;
+    }
+
+    this.loadGame(boardPlayer, spec);
+  }
+
+  private loadChallenge(boardPlayer: BoardPlayer, spec: BoardSpec) {
+    this.setTemplate(boardPlayer.game.feedbackTemplate.challenge);
+
+    if (!spec) {
+      return;
+    }
+
+    this.api.retrieve({
+      challengeSpecId: spec.id,
+      challengeId: spec.instance?.id,
+      gameId: boardPlayer.gameId
+    }).pipe(
+      first(),
+      tap(feedback => {
+        if (feedback)
+          this.updateFeedback(feedback)
+
+        // behavior for whether to hide form on load based on challenge status or already submitted
+        this.show = !this.currentSpec?.instance?.state.isActive;
+
+        if (feedback?.submitted) {
+          this.show = false;
+        }
+      })
+    ).subscribe();
+  }
+
+  private loadGame(boardPlayer: BoardPlayer, spec: BoardSpec) {
+    this.setTemplate(boardPlayer.game.feedbackTemplate.game);
+
+    if (!boardPlayer) {
+      return;
+    }
+
+    this.api.retrieve({ gameId: boardPlayer.gameId })
+      .pipe(first()).subscribe(
+        feedback => {
+          this.updateFeedback(feedback);
+
+          if (boardPlayer.session.isAfter)
+            this.show = true;
+          if (feedback?.submitted)
+            this.show = false;
+        },
+        (err: any) => { }
+      )
   }
 }

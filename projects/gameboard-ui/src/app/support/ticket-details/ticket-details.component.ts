@@ -18,7 +18,7 @@ import { NotificationService } from '../../services/notification.service';
 import linkifyHtml from 'linkify-html';
 import { ClipboardService } from "../../utility/services/clipboard.service";
 import { ToastService } from '../../utility/services/toast.service';
-import { FontAwesomeService } from '../../utility/services/font-awesome.service';
+import { FontAwesomeService } from '../../services/font-awesome.service';
 
 @Component({
   selector: 'app-ticket-details',

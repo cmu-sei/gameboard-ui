@@ -175,7 +175,7 @@ export interface SelfChangedPlayer {
 
 export interface SessionChangeRequest {
   teamId: string;
-  sessionEnd: string;
+  sessionEnd: Date;
 }
 
 export interface PlayerEnlistment {
@@ -216,8 +216,8 @@ export interface TeamAdvancement {
 export interface Team {
   teamId: string;
   gameId: string;
-  sessionBegin: string;
-  sessionEnd: string;
+  sessionBegin: Date;
+  sessionEnd: Date;
   rank: number;
   score: number;
   time: number;
@@ -227,6 +227,7 @@ export interface Team {
   members: TeamMember[];
   sponsorList: string[];
 }
+
 export interface TeamChallenge {
   id: string;
   name: string;
@@ -236,6 +237,7 @@ export interface TeamChallenge {
   duration: number;
   result: ChallengeResult;
 }
+
 export interface TeamMember {
   id: string;
   approvedName: string;

@@ -2,7 +2,6 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <ng-container *ngIf="team$ | async as team; else loading">
-
   <div class="form-group">
     <label class="mb-0" for="reason-input">Extend Session</label>
     <div class="input-group">
@@ -20,11 +19,32 @@
 
   <app-announce [teamId]="team.teamId"></app-announce>
 
-  <button class="btn btn-info btn-sm" (click)="showRaw=!showRaw">
-    <fa-icon [icon]="faInfo"></fa-icon>
-    <span>Data</span>
-  </button>
-  <pre *ngIf="showRaw">{{team | yaml}}</pre>
+  <div class="other-tools-container mb-2">
+    <h4 class="mb-2">Other tools</h4>
+
+    <div class="other-tools-buttons d-flex">
+      <button class="btn btn-info btn-sm mr-2" (click)="toggleRawView(!showRaw)">
+        <fa-icon [icon]="faInfo"></fa-icon>
+        <span>{{ (showRaw ? "Hide" : "View") }} Data</span>
+      </button>
+      <button type="button" class="btn btn-sm btn-info mr-2"
+        (click)="onManageManualBonusesRequest.emit(team.teamId)">Manage Challenge Bonuses</button>
+      <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="canUnenroll"
+        (confirm)="onUnenrollRequest.emit(team.teamId)">Unenroll</app-confirm-button>
+      <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="!canUnenroll"
+        (confirm)="onResetSessionRequest.emit(team.teamId)">Reset Session</app-confirm-button>
+    </div>
+  </div>
+
+
+  <ng-template *ngIf="isLoadingChallenges">
+    <div class="yaml-container mt-4 ml-4 pb-4">
+      <div class="text-center">
+        <app-spinner></app-spinner>
+      </div>
+    </div>
+  </ng-template>
+  <app-yaml-block *ngIf="showRaw && !isLoadingChallenges" [source]="team"></app-yaml-block>
 </ng-container>
 
 <ng-template #loading>

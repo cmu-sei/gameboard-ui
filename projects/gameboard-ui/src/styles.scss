@@ -3,7 +3,6 @@
 @import './scss/variables';
 @import './scss/toastify';
 
-// @import "../../../node_modules/bootstrap/scss/bootstrap";
 @import "../../../node_modules/bootstrap/scss/functions";
 @import "../../../node_modules/bootstrap/scss/variables";
 @import "../../../node_modules/bootstrap/scss/mixins";
@@ -234,4 +233,8 @@ th[align="right"] {
 
 th[align="center"] {
   text-align: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
