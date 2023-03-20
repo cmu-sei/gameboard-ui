@@ -24,3 +24,8 @@ export interface GameEnrollmentContext {
   user: ApiUser;
   player: Player | undefined;
 }
+
+export interface SimpleEntity {
+  id: string;
+  name: string;
+}

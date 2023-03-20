@@ -4,13 +4,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as YAML from 'yaml';
 
-@Pipe({
-  name: 'yaml'
-})
+@Pipe({ name: 'yaml' })
 export class YamlPipe implements PipeTransform {
-
   transform(value: any): string {
     return YAML.stringify(value);
   }
-
 }

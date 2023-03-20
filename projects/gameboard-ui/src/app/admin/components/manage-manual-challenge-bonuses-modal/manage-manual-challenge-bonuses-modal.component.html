@@ -1,0 +1,18 @@
+<div class="manage-manual-challenge-bonuses-modal-component">
+    <div class="modal-header">
+        <h2 class="modal-title pull-left">
+            Manage Bonus Points for
+            <span class="text-info">{{ playerName }}</span> in
+            <span class="text-info">"{{ gameName }} "</span>
+        </h2>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-manage-manual-challenge-bonuses [teamId]="teamId"></app-manage-manual-challenge-bonuses>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="close()">Done</button>
+    </div>
+</div>

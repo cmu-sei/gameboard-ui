@@ -10,7 +10,7 @@ import { NotificationService } from '../../services/notification.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { ToastService } from '../../utility/services/toast.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
-import { FontAwesomeService } from '../../utility/services/font-awesome.service';
+import { FontAwesomeService } from '../../services/font-awesome.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -179,7 +179,7 @@ export class TicketListComponent implements OnInit, OnDestroy {
       switchMap(ticket => this.api.getTicketMarkdown(ticket)),
     ).subscribe(async md => {
       await this.clipboard.copy(md);
-      this.toastService.show({ text: "Copied ticket markdown", faIcon: this.faService.faClipboard })
+      this.toastService.show({ text: "Copied ticket markdown", faIcon: this.faService.clipboard })
     });
   }
 }
