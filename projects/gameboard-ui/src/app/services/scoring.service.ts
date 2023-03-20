@@ -15,6 +15,10 @@ export class ScoringService {
     this.API_ROOT = config.apphost + 'api';
   }
 
+  public deleteManualBonus(manualBonusId: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_ROOT}/bonus/manual/${manualBonusId}`);
+  }
+
   public getTeamGameScore(teamId: string): Observable<TeamGameScoreSummary> {
     return this.http.get<TeamGameScoreSummary>(`${this.API_ROOT}/team/${teamId}/score`);
   }

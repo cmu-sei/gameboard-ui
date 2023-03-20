@@ -37,6 +37,12 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
       });
   }
 
+  handleDelete(manualbonusId: string) {
+    this.scoresService.deleteManualBonus(manualbonusId)
+      .pipe(first())
+      .subscribe(() => this.loadSummary(this.teamId));
+  }
+
   onSubmit() {
     this.scoresService
       .createManualChallengeBonus(this.newChallengeBonusModel)

@@ -2,29 +2,55 @@
     <table *ngIf="summary.challengeScoreSummaries.length" class="table table-striped border-bottom border-info">
         <thead class="h5">
             <th scope="col" width="50%">Challenge</th>
-            <th scope="col" width="15%">Base score</th>
-            <th scope="col" width="15%">Bonus points</th>
+            <th scope="col" width="10%"></th>
+            <th scope="col" width="10%">Base </th>
+            <th scope="col" width="10%">Bonus</th>
             <th scope="col" width="15%">Total score</th>
         </thead>
         <tbody>
             <tr *ngFor="let challengeSummary of summary.challengeScoreSummaries">
                 <td>
                     <div class="points-breakdown">
-                        <div>{{challengeSummary.challenge.name}}</div>
+                        <h6>{{challengeSummary.challenge.name}}</h6>
 
                         <ul *ngIf="challengeSummary.manualBonuses.length" class="mt-2">
-                            <li *ngFor="let manualBonus of challengeSummary.manualBonuses">{{ manualBonus.description }}
-                                ({{manualBonus.pointValue}})
+                            <li *ngFor="let manualBonus of challengeSummary.manualBonuses">
+                                <div class="bonus-description">
+                                    {{ manualBonus.pointValue > 0 ? "+" : "-" }} {{ manualBonus.pointValue }}
+                                    for <strong>{{ manualBonus.description }}</strong>
+
+                                    <em>
+                                        ({{ manualBonus.enteredBy.name }},
+                                        {{ manualBonus.enteredOn | shortdate}} @
+                                        {{ manualBonus.enteredOn | friendlyTime }})
+                                    </em>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </td>
-                <td>{{ challengeSummary.scoreFromChallenge }}</td>
-                <td>{{ challengeSummary.scoreFromManualBonuses }}</td>
-                <td>{{ challengeSummary.totalScore }}</td>
+                <td>
+                    <div class="challenge-title-spacer" *ngIf="challengeSummary.manualBonuses.length"></div>
+
+                    <div class="delete-bonus-button-container"
+                        *ngFor="let manualBonus of challengeSummary.manualBonuses">
+                        <button class="btn btn-sm btn-danger" type="button"
+                            (click)="handleDelete(manualBonus.id)">Delete</button>
+                    </div>
+                </td>
+                <td>
+                    <h6>{{ challengeSummary.scoreFromChallenge }}</h6>
+                </td>
+                <td>
+                    <h6>{{ challengeSummary.scoreFromManualBonuses }}</h6>
+                </td>
+                <td>
+                    <h6>{{ challengeSummary.totalScore }}</h6>
+                </td>
             </tr>
 
             <tr class="table-info h6">
+                <td></td>
                 <td></td>
                 <td>{{summary.challengesScore}}</td>
                 <td>{{summary.manualBonusesScore}}</td>
@@ -40,7 +66,7 @@
     </ng-template>
 
     <div class="add-bonus-container mt-5">
-        <h4 class="my-2">Add a bonus</h4>
+        <h3 class="mt-3 mb-2">Add a bonus</h3>
         <form #newBonusForm (submit)="onSubmit()">
             <div class="form-group w-100">
                 <select class="form-select form-select-lg w-100" name="challengeId"
