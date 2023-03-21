@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import {
+  faArrowLeft,
+  faBolt,
   faCheck,
   faCheckSquare,
   faChevronDown,
   faChevronUp,
   faClipboard,
-  faArrowLeft,
-  faLongArrowAltDown,
-  faFilter,
   faCopy,
+  faExclamationTriangle,
+  faFilter,
+  faLongArrowAltDown,
   faSquare,
   faStar,
   faSyncAlt,
@@ -26,6 +28,7 @@ import {
 export class FontAwesomeService {
   arrowDown = faLongArrowAltDown;
   arrowLeft = faArrowLeft;
+  bolt = faBolt;
   check = faCheck;
   checkSquare = faCheckSquare;
   chevronDown = faChevronDown;
@@ -33,6 +36,7 @@ export class FontAwesomeService {
   clipboard = faClipboard;
   copy = faCopy;
   ellipsisVertical = faEllipsisVertical;
+  exclamationTriangle = faExclamationTriangle;
   list = faList;
   filter = faFilter;
   gear = faGear;

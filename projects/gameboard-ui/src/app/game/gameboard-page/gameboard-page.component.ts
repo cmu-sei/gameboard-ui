@@ -4,7 +4,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { asyncScheduler, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
 import { catchError, debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
@@ -213,14 +213,6 @@ export class GameboardPageComponent implements OnDestroy {
         this.syncOne(c);
       }
     );
-  }
-
-  extendSession(quit: boolean): void {
-    const model: SessionChangeRequest = {
-      teamId: this.ctx.teamId,
-      sessionEnd: quit ? new Date("0001-01-01") : new Date()
-    }
-    this.playerApi.updateSession(model).pipe(first()).subscribe();
   }
 
   graded(): void {

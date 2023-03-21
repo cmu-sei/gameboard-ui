@@ -3,8 +3,10 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
 import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
@@ -14,7 +16,8 @@ export class PlayerService {
 
   constructor(
     private http: HttpClient,
-    private config: ConfigService
+    private config: ConfigService,
+    private gameSessionService: GameSessionService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -141,23 +144,16 @@ export class PlayerService {
       ? p.name + (!!p.nameStatus ? `...${p.nameStatus}` : '...pending')
       : '';
 
-    this.transformSession(p, p.sessionBegin, p.sessionEnd);
+    this.gameSessionService.transformSession(p, p.sessionBegin, p.sessionEnd);
 
     return p;
-  }
-
-  public transformSession(p: Player, sessionBegin: Date, sessionEnd: Date) {
-    this.addSession(p, new TimeWindow(sessionBegin, sessionEnd));
-  }
-
-  public addSession(p: Player, session: TimeWindow) {
-    p.session = session;
   }
 
   private transformStanding(p: Standing): Standing {
     p.sponsorLogo = p.sponsor
       ? `${this.config.imagehost}/${p.sponsor}`
       : `${this.config.basehref}assets/sponsor.svg`;
+
     p.sponsorTooltip = p.sponsorList.map(s => s.split('.').reverse().pop()?.toUpperCase()).join(' | ');
     p.sponsorList.forEach((s, i, a) => a[i] = `${this.config.imagehost}/${s}`);
     p.session = new TimeWindow(p.sessionBegin, p.sessionEnd);

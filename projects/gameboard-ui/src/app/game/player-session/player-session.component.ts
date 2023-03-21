@@ -72,9 +72,8 @@ export class PlayerSessionComponent implements OnDestroy {
         if (!ctx.player.session) {
           ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
         }
-        else {
-          ctx.player.session.countdown = calculateCountdown(ctx.player.session.isBefore, ctx.player.session.isAfter, ctx.player.sessionBegin, ctx.player.sessionEnd);
-        }
+
+        ctx.player.session.countdown = calculateCountdown(ctx.player.session);
         ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
       }),
       map(_ => null)
@@ -85,9 +84,7 @@ export class PlayerSessionComponent implements OnDestroy {
     this.api.start(player).pipe(
       first()
     ).subscribe(
-      p => {
-        this.onSessionStart.emit(p)
-      },
+      p => this.onSessionStart.emit(p),
       err => this.errors.push(err),
       () => this.doublechecking = false
     );
