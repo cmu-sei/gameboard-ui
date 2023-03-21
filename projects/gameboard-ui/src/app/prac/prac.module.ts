@@ -10,6 +10,7 @@ import { ApiModule } from '../api/api.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { PracticeModeEnabledGuard } from './practice-mode-enabled.guard';
+import { MarkdownModule } from 'ngx-markdown';
 
 
 
@@ -24,11 +25,13 @@ import { PracticeModeEnabledGuard } from './practice-mode-enabled.guard';
     CoreModule,
     UtilityModule,
     ApiModule,
+    MarkdownModule,
     FontAwesomeModule,
     RouterModule.forChild([
-      { path: ':gid/:cid', canActivate: [AuthGuard, PracticeModeEnabledGuard], component: PracticeSessionComponent },
-      { path: ':gid', canActivate: [AuthGuard, PracticeModeEnabledGuard], component: PracticeSessionComponent },
-      { path: '', canActivate: [PracticeModeEnabledGuard], canActivateChild: [PracticeModeEnabledGuard], component: PracticePageComponent },
+      { path: ':cid', children: [
+        { path: '**', component: PracticeSessionComponent }
+      ]},
+      { path: '', pathMatch: 'full', component: PracticePageComponent }
     ])
   ]
 })

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
@@ -22,9 +23,11 @@ export class PracticePageComponent {
 
   constructor(
     api: SpecService,
-    config: ConfigService
+    config: ConfigService,
+    route: ActivatedRoute
   ){
     this.appname = config.settings.appname || "Gameboard";
+    this.search.term = route.snapshot.queryParams.term || "";
 
     this.list$ = this.search$.pipe(
       debounceTime(500),
@@ -43,4 +46,7 @@ export class PracticePageComponent {
     this.search$.next(this.search);
   }
 
+  slug(s: string) : string {
+    return s.toLowerCase().replace(/\W/g, "-").replace("--", "-");
+  }
 }

@@ -58,8 +58,8 @@
         </div>
       </ng-container>
       <div *ngIf="ctx.session.isAfter && ctx.game.isPracticeMode" class="text-center">
-        <a class="btn btn-info btn-sm" [routerLink]="['/prac', ctx.gameId]">
-          New Session
+        <a class="btn btn-info btn-sm" [routerLink]="['/prac']">
+          More Practice
         </a>
       </div>
     </div>
@@ -95,17 +95,17 @@
           <ng-container *ngIf="specs$ | async as spec">
 
             <div *ngIf="!spec.instance!.id" class="text-center mb-4">
-              <ng-container *ngIf="this.user$ | async as user">
-                <div *ngIf="user.isTester" class="form-group">
-                  <label for="variant-input">Variant</label>
-                  <input type="number" class="form-control" [(ngModel)]="variant">
-                </div>
-              </ng-container>
-              <ng-container *ngIf="!deploying">
+              <ng-container *ngIf="ctx.session.isDuring && !deploying">
+                <ng-container *ngIf="this.user$ | async as user">
+                  <div *ngIf="user.isTester" class="form-group">
+                    <label for="variant-input">Variant</label>
+                    <input type="number" class="form-control" [(ngModel)]="variant">
+                  </div>
+                </ng-container>
                 <app-confirm-button btnClass="btn btn-primary" (confirm)="launch(spec)">
                   <span>Start Challenge</span>
                 </app-confirm-button>
-                <div>
+                <div *ngIf="!ctx.isPractice">
                   This will start the challenge timer. The time it takes to
                   earn points is a factor in tie-breaking.
                 </div>

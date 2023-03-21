@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { zip } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { NewPlayer } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
+import { SpecSummary } from '../../api/spec-models';
+import { SpecService } from '../../api/spec.service';
+import { ApiUser } from '../../api/user-models';
 import { UserService } from '../../utility/user.service';
 
 @Component({
@@ -13,22 +16,35 @@ import { UserService } from '../../utility/user.service';
 })
 export class PracticeSessionComponent {
   errors: Error[] = [];
-  cid = '';
+  spec$: Observable<SpecSummary>;
+  user$: Observable<ApiUser| null>;
+  unauthed = true;
 
   constructor(
     route: ActivatedRoute,
-    router: Router,
-    api: PlayerService,
-    userSvc: UserService
+    specSvc: SpecService,
+    userSvc: UserService,
+    private router: Router,
+    private  api: PlayerService
   ){
-    zip(route.params, userSvc.user$).pipe(
-      tap(([p, u]) => this.cid = p.cid || ""),
-      map(([p, u]) => ({userId: u?.id, gameId: p.gid} as NewPlayer)),
-      filter(m => !!m.userId && !!m.gameId),
-      switchMap(m => api.create(m))
-    ).subscribe({
-      next: (p) => router.navigate(["../game/board", p.id, this.cid]),
-      error: (e) => this.errors.push(e)
-    });
+    this.spec$ = route.params.pipe(
+      filter(p => !!p.cid),
+      switchMap(p => specSvc.browse({ term: p.cid })),
+      map(r => !r.length ? ({name: "Not Found"} as SpecSummary) : r[0])
+    );
+
+    this.user$ = userSvc.user$.pipe(
+      tap(u => this.unauthed = !u)
+    );
+
+  }
+
+  play(u: ApiUser, s: SpecSummary) : void {
+    const model = {userId: u.id, gameId: s.gameId} as NewPlayer;
+    this.api.create(model).pipe(
+      first()
+    ).subscribe(p =>
+      this.router.navigate(["../game/board", p.id, s.id])
+    );
   }
 }

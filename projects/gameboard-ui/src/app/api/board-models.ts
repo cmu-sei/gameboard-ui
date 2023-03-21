@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { FeedbackTemplate } from "./feedback-models";
-import { PlayerRole, TimeWindow } from "./player-models";
+import { PlayerMode, PlayerRole, TimeWindow } from "./player-models";
 
 export interface Challenge {
   id: string;
@@ -134,6 +134,7 @@ export interface BoardPlayer {
   name: string;
   sponsor: string;
   role: PlayerRole;
+  mode: PlayerMode;
   sessionBegin: Date;
   sessionEnd: Date;
   sessionMinutes: number;
@@ -143,6 +144,7 @@ export interface BoardPlayer {
   correctCount: number;
   partialCount: number;
   isManager: boolean;
+  isPractice: boolean;
 
   session: TimeWindow;
   game: BoardGame;
