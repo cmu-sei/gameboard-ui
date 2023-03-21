@@ -69,11 +69,11 @@ export class PlayerSessionComponent implements OnDestroy {
         if (!ctx)
           return;
 
-        if (!ctx.player.session) {
+        // update the player session if they've just started 
+        if (!ctx.player.session && ctx.player.sessionBegin && ctx.player.sessionEnd) {
           ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
         }
 
-        ctx.player.session.countdown = calculateCountdown(ctx.player.session);
         ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
       }),
       map(_ => null)

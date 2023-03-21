@@ -46,29 +46,32 @@ export interface PlayerOverview {
 }
 
 export class TimeWindow {
-  isBefore: boolean;
-  isDuring: boolean;
-  isAfter: boolean;
-  window: number;
+  isBefore: boolean = false;
+  isDuring: boolean = false;
+  isAfter: boolean = false;
+  window: number = 0;
   countdown?: number;
 
   beginDate: Date;
   endDate: Date;
 
   constructor(a: Date, b: Date) {
-    const ts = new Date().valueOf();
-    const start = new Date(a).valueOf();
-    const end = new Date(b).valueOf();
+    this.beginDate = new Date(a);
+    this.endDate = new Date(b);
 
-    this.beginDate = a;
-    this.endDate = b;
+    this.updateWindow();
+    this.countdown = calculateCountdown(this);
+  }
+
+  private updateWindow() {
+    const ts = new Date().valueOf();
+    const start = this.beginDate.valueOf();
+    const end = this.endDate.valueOf();
 
     this.window = start > 0 && ts >= start ? end > 0 && ts > end ? 1 : 0 : -1;
     this.isBefore = this.window < 0;
     this.isDuring = this.window === 0;
     this.isAfter = this.window > 0;
-
-    this.countdown = calculateCountdown(this);
   }
 }
 

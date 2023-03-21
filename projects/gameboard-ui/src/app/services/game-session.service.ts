@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 import { Player, TimeWindow } from '../api/player-models';
+import { NowService } from './now.service';
 
 export interface SessionHaver {
   session?: TimeWindow;
@@ -10,6 +11,8 @@ export interface SessionHaver {
 
 @Injectable({ providedIn: 'root' })
 export class GameSessionService {
+  constructor(private nowService: NowService) { }
+
   canUnenroll(player: Player) {
     return this.canUnenrollSession(player.session);
   }
@@ -50,10 +53,12 @@ export class GameSessionService {
   }
 
   public getCumulativeTime(session: TimeWindow) {
-    if (session.isAfter) {
+    const now = this.nowService.now();
+
+    if (session.endDate < now) {
       return session.endDate.valueOf() - session.beginDate.valueOf();
     }
 
-    return new Date().valueOf() - session.beginDate.valueOf();
+    return now.valueOf() - session.beginDate.valueOf();
   }
 }

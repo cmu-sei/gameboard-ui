@@ -43,7 +43,6 @@
 
           <!-- not started, show preview -->
           <ng-container *ngIf="specs$ | async as spec">
-
             <div *ngIf="!spec.instance!.id" class="text-center mb-4">
               <ng-container *ngIf="this.user$ | async as user">
                 <div *ngIf="user.isTester" class="form-group">
@@ -127,7 +126,7 @@
             </div>
 
             <div *ngIf="spec.instance!.state.challenge && ctx.game.feedbackTemplate?.challenge?.length">
-              <app-feedback-form [boardPlayer]="ctx" [title]="'Challenge Feedback'"
+              <app-feedback-form [boardPlayer]="ctx" [title]="'Challenge Feedback'" [spec]="spec"
                 [type]="'challenge'"></app-feedback-form>
             </div>
 

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input, AfterViewInit, OnDestroy, OnChange
 import { FormGroup, NgForm } from '@angular/forms';
 import { BoardPlayer, BoardSpec } from '../../api/board-models';
 import { faCaretDown, faCaretRight, faCloudUploadAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { merge, Observable, of, Subject, Subscribable, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { FeedbackService } from '../../api/feedback.service';
 import { Feedback, QuestionType, FeedbackSubmission, FeedbackTemplate, FeedbackQuestion } from '../../api/feedback-models';
 import { BoardGame } from '../../api/board-models';
@@ -31,6 +31,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
   templateMap: Map<string, FeedbackQuestion> = new Map<string, FeedbackQuestion>();
 
   errors: any[] = [];
+  game?: BoardGame;
   submitPending: boolean = false;
   show: boolean = false;
 
@@ -39,7 +40,6 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
 
   characterLimit: number = 2000;
 
-  private currentSpec?: BoardSpec;
   private updated$!: Observable<any>;
   private autoUpdateSub?: Subscription;
 
@@ -96,7 +96,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
       debounceTime(7000),
       filter(f => !this.form.pristine && !this.feedbackForm.submitted && !this.submitPending),
       tap(g => this.status = "Autosaving..."),
-      tap(g => this.submit()),
+      tap(g => this.submit(true)),
       catchError((err, caught) => {
         this.errors.push("Error while saving");
         this.status = "Error saving";
@@ -114,8 +114,8 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
     this.autoUpdateSub = this.updated$.subscribe();
   }
 
-  submit() {
-    const submission = this.createSubmission(true);
+  submit(isAutoSave = false) {
+    const submission = this.createSubmission(!isAutoSave);
     if (!submission) {
       throw new Error("Can't create a final submission without a player.");
     }
@@ -133,7 +133,9 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
       () => {
         this.errors = [];
         this.submitPending = false;
-        this.toggleShow();
+
+        if (!isAutoSave)
+          this.toggleShow();
       }
     );
   }
@@ -145,8 +147,8 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
 
     let challengeId, challengeSpecId;
     if (this.type == "challenge") {
-      challengeId = this.currentSpec?.instance?.id!;
-      challengeSpecId = this.currentSpec?.id;
+      challengeId = this.spec?.instance?.id;
+      challengeSpecId = this.spec?.id;
     }
     const submission: FeedbackSubmission = {
       challengeId: challengeId,
@@ -201,6 +203,10 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
     if (question.answer?.charAt(0) == ",") question.answer = question.answer?.substring(1, question.answer?.length);
   }
 
+  options(min: number, max: number) {
+    return Array.from(new Array(max), (x, i) => i + min);
+  }
+
   private load(boardPlayer?: BoardPlayer, spec?: BoardSpec, type?: "challenge" | "game") {
     // clear form
     this.form?.reset();
@@ -209,6 +215,8 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
 
     if (!boardPlayer || !spec || !type)
       return;
+
+    this.game = boardPlayer.game;
 
     if (type === "challenge") {
       this.loadChallenge(boardPlayer, spec)
@@ -236,7 +244,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
           this.updateFeedback(feedback)
 
         // behavior for whether to hide form on load based on challenge status or already submitted
-        this.show = !this.currentSpec?.instance?.state.isActive;
+        this.show = !this.spec?.instance?.state.isActive;
 
         if (feedback?.submitted) {
           this.show = false;
