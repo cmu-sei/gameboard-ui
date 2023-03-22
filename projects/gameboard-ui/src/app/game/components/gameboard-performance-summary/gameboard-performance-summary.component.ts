@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, interval, Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { BehaviorSubject, Observable, timer } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { BoardPlayer } from '../../../api/board-models';
 import { calculateCountdown, SessionChangeRequest } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
@@ -12,11 +12,11 @@ import { HubState, NotificationService } from '../../../services/notification.se
   templateUrl: './gameboard-performance-summary.component.html',
   styleUrls: ['./gameboard-performance-summary.component.scss']
 })
-export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
+export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
   @Input() boardPlayer!: BoardPlayer;
   @Output() onRefreshRequest = new EventEmitter<string>();
 
-  clockSubscription?: Subscription;
+  countdown$?: Observable<number | undefined>;
   hubState$: BehaviorSubject<HubState>;
 
   constructor(
@@ -27,13 +27,11 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.clockSubscription = interval(1000).subscribe(_ => {
-      this.boardPlayer.session.countdown = calculateCountdown(this.boardPlayer.session);
-    });
+    this.updateCountdown();
   }
 
-  ngOnDestroy(): void {
-    this.clockSubscription?.unsubscribe();
+  ngOnChanges(changes: SimpleChanges): void {
+    this.updateCountdown();
   }
 
   extendSession(quit: boolean): void {
@@ -45,6 +43,12 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
       first()
     ).subscribe(_ =>
       this.onRefreshRequest.emit(this.boardPlayer.id)
+    );
+  }
+
+  private updateCountdown() {
+    this.countdown$ = timer(0, 1000).pipe(
+      map(_ => calculateCountdown(this.boardPlayer.session))
     );
   }
 }
