@@ -52,6 +52,9 @@
           <tr>
             <td>{{ctx.player.rank}}</td>
             <td>{{ctx.player.score}}</td>
+            <td>
+              <app-cumulative-time-clock [session]="ctx.player.session"></app-cumulative-time-clock>
+            </td>
             <td>{{ctx.player.time | clock}}</td>
             <td>{{ctx.player.correctCount}}</td>
             <td>{{ctx.player.partialCount}}</td>

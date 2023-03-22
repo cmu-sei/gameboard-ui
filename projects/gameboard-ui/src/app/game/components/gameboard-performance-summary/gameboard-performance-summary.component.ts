@@ -22,7 +22,6 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
   constructor(
     hubService: NotificationService,
     public faService: FontAwesomeService,
-    private gameSessionService: GameSessionService,
     private playerService: PlayerService) {
     this.hubState$ = hubService.state$;
   }
@@ -30,7 +29,6 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.clockSubscription = interval(1000).subscribe(_ => {
       this.boardPlayer.session.countdown = calculateCountdown(this.boardPlayer.session);
-      this.boardPlayer.time = this.gameSessionService.getCumulativeTime(this.boardPlayer.session);
     });
   }
 

@@ -18,7 +18,9 @@
             <tr>
                 <td>{{ctx.rank}}</td>
                 <td>{{ctx.score}}</td>
-                <td>{{ctx.time | clock}}</td>
+                <td>
+                    <app-cumulative-time-clock [session]="ctx.session"></app-cumulative-time-clock>
+                </td>
                 <td>{{ctx.correctCount}}</td>
                 <td>{{ctx.partialCount}}</td>
             </tr>
