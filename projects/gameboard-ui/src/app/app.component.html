@@ -13,14 +13,14 @@
         [routerLink]="['prac']">Practice</a>
       <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['profile']">Profile</a>
       <ng-container *ngIf="user$ | async as user">
-        <a *ngIf="!!user" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
+        <a class="btn btn-link text-success mx-1" routerLinkActive="text-info"
           [routerLink]="['support']">
           <span>Support</span>
           <app-support-pill></app-support-pill>
         </a>
-        <a *ngIf="!!user && (user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport)"
+        <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
           class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/admin']">Admin</a>
-        <a *ngIf="!!user" class="btn btn-link text-success mx-1" (click)="logout()">Logout</a>
+        <a class="btn btn-link text-success mx-1" (click)="logout()">Logout</a>
       </ng-container>
     </div>
   </nav>

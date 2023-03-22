@@ -1,11 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, interval, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { BoardPlayer } from '../../../api/board-models';
 import { calculateCountdown, SessionChangeRequest } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
-import { GameSessionService } from '../../../services/game-session.service';
 import { HubState, NotificationService } from '../../../services/notification.service';
 
 @Component({
@@ -15,6 +14,7 @@ import { HubState, NotificationService } from '../../../services/notification.se
 })
 export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
   @Input() boardPlayer!: BoardPlayer;
+  @Output() onRefreshRequest = new EventEmitter<string>();
 
   clockSubscription?: Subscription;
   hubState$: BehaviorSubject<HubState>;
@@ -39,8 +39,12 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnDestroy {
   extendSession(quit: boolean): void {
     const model: SessionChangeRequest = {
       teamId: this.boardPlayer.teamId,
-      sessionEnd: quit ? new Date(1, 1, 1) : new Date()
+      sessionEnd: quit ? new Date(Date.parse("0001-01-01T00:00:00Z")) : new Date()
     }
-    this.playerService.updateSession(model).pipe(first()).subscribe();
+    this.playerService.updateSession(model).pipe(
+      first()
+    ).subscribe(_ =>
+      this.onRefreshRequest.emit(this.boardPlayer.id)
+    );
   }
 }

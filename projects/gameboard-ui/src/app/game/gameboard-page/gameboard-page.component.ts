@@ -151,9 +151,9 @@ export class GameboardPageComponent implements OnDestroy {
       this.api.setColor(s);
     }
 
-    // if (isUpdated) {
-    //   this.refresh$.next(this.ctx.id);
-    // }
+    if (isUpdated) {
+      this.refresh$.next(this.ctx.id);
+    }
 
     return s || {} as BoardSpec;
   }
@@ -213,6 +213,10 @@ export class GameboardPageComponent implements OnDestroy {
         this.syncOne(c);
       }
     );
+  }
+
+  handleRefreshRequest(id: string) {
+    this.refresh$.next(this.ctx.id);
   }
 
   graded(): void {
