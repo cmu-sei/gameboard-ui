@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
+import { SimpleEntity } from '../../../api/models';
 import { CreateManualChallengeBonus, TeamGameScoreSummary } from '../../../api/scoring-models';
 import { ScoringService } from '../../../services/scoring.service';
 
@@ -12,6 +13,9 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
   @Input() teamId!: string;
 
   summary?: TeamGameScoreSummary;
+  startedChallenges: SimpleEntity[] = [];
+  challengesStarted = 0;
+
   newChallengeBonusModel: CreateManualChallengeBonus = {
     description: '',
     challengeId: '',
@@ -29,6 +33,8 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
       .pipe(first())
       .subscribe(summary => {
         this.summary = summary;
+        this.startedChallenges = this.summary.challengeScoreSummaries.filter(s => !!s.challenge).map(s => s.challenge);
+
         this.newChallengeBonusModel = {
           description: '',
           challengeId: summary.challengeScoreSummaries.length ? summary.challengeScoreSummaries[0].challenge.id : '',

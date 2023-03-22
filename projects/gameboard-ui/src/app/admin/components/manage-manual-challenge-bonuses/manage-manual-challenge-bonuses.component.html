@@ -11,7 +11,7 @@
             <tr *ngFor="let challengeSummary of summary.challengeScoreSummaries">
                 <td>
                     <div class="points-breakdown">
-                        <h6>{{challengeSummary.challenge.name}}</h6>
+                        <h6>{{challengeSummary.spec.name}}</h6>
 
                         <ul *ngIf="challengeSummary.manualBonuses.length" class="mt-2">
                             <li *ngFor="let manualBonus of challengeSummary.manualBonuses">
@@ -67,13 +67,12 @@
 
     <div class="add-bonus-container mt-5">
         <h3 class="mt-3 mb-2">Add a bonus</h3>
-        <form #newBonusForm (submit)="onSubmit()">
+        <form #newBonusForm (submit)="onSubmit()" *ngIf="startedChallenges.length">
             <div class="form-group w-100">
                 <select class="form-select form-select-lg w-100" name="challengeId"
                     aria-label="Select challenge for bonus" [(ngModel)]="newChallengeBonusModel.challengeId" required>
-                    <option *ngFor="let challengeSummary of summary.challengeScoreSummaries"
-                        [value]="challengeSummary.challenge.id">
-                        {{ challengeSummary.challenge.name }}
+                    <option *ngFor="let challenge of startedChallenges" [value]="challenge.id">
+                        {{ challenge.name }}
                     </option>
                 </select>
             </div>
@@ -92,5 +91,10 @@
                 Add this bonus
             </button>
         </form>
+
+        <ng-template #noChallengesStarted>
+            <div class="no-challenges-started-message">Bonuses can only be added after a challenge has begun, and this
+                player/team hasn't started any yet.</div>
+        </ng-template>
     </div>
 </div>

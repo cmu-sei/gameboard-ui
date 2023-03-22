@@ -17,6 +17,7 @@ export interface ManualChallengeBonusViewModel {
 
 export interface TeamChallengeScoreSummary {
     challenge: SimpleEntity;
+    spec: SimpleEntity;
     team: SimpleEntity;
     scoreFromChallenge: number;
     scoreFromManualBonuses: number;
