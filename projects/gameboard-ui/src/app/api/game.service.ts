@@ -59,6 +59,7 @@ export class GameService {
   }
 
   public update(model: ChangedGame): Observable<any> {
+    console.log("updating game", model);
     return this.http.put<any>(`${this.url}/game`, model).pipe(
       tap(m => this.removeCache(model.id))
     );
