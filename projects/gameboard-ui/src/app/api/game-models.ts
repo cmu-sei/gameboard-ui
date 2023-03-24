@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { FeedbackTemplate } from "./feedback-models";
-import { SimpleEntity } from "./models";
 import { PlayerMode, TimeWindow } from "./player-models";
 
 export interface GameDetail {
@@ -38,6 +37,7 @@ export interface GameDetail {
   requireSponsoredTeam: boolean;
   allowPreview: boolean;
   requireSession: boolean;
+  requireSynchronizedStart: boolean;
   requireTeam: boolean;
   allowTeam: boolean;
   allowReset: boolean;
