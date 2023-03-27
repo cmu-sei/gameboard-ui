@@ -5,8 +5,9 @@
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
         <li role="menuitem">
-            <button class="dropdown-item btn" (click)="onViewRequest.emit(player)">{{ isViewing ? "Collapse" : "View"
-                }}</button>
+            <button class="dropdown-item btn" (click)="onViewRequest.emit(player)">
+                {{ isViewing ? "Collapse" : "View" }}
+            </button>
         </li>
         <li role="menuitem">
             <button class="dropdown-item btn" (click)="copy(player.id, 'player ID')">Copy player ID</button>

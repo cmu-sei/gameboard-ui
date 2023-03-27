@@ -51,23 +51,25 @@
           </div>
 
           <!-- accept -->
-          <div class="text-center">
-            <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg"
+          <div class="d-flex align-items-center justify-content-center mt-5"
+            *ngIf="ctxDelayed$ | async as delay; else loading">
+            <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
               (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
               <fa-icon [icon]="faEdit"></fa-icon>
               <span>Enroll</span>
             </app-confirm-button>
+
+            <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
+              class="text-center">
+              <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                <fa-icon [icon]="faEdit"></fa-icon>
+                <span>Admin Enroll</span>
+              </app-confirm-button>
+              <app-error-div [errors]="errors"></app-error-div>
+            </div>
           </div>
         </ng-container>
 
-        <div *ngIf="ctx.user.isRegistrar && !ctx.game.registration.isDuring" class="text-center">
-          <app-confirm-button *ngIf="ctxDelayed$ | async as delay; else loading" btnClass="btn btn-primary btn-lg"
-            (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-            <fa-icon [icon]="faEdit"></fa-icon>
-            <span>Admin Enroll</span>
-          </app-confirm-button>
-          <app-error-div [errors]="errors"></app-error-div>
-        </div>
       </ng-container>
 
       <!-- already enrolled -->
