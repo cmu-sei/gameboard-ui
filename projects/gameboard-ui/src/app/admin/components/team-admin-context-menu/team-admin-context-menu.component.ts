@@ -28,7 +28,7 @@ export class TeamAdminContextMenuComponent implements OnInit {
     private toastService: ToastService) { }
 
   ngOnInit(): void {
-    this.isResettingSession = this.gameSessionService.canUnenroll(this.player);
+    this.isResettingSession = !this.gameSessionService.canUnenroll(this.player);
   }
 
   async copy(text: string, description: string) {

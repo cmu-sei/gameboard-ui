@@ -18,7 +18,7 @@ export class GameSessionService {
   }
 
   canUnenrollSession(session?: TimeWindow) {
-    return !session ? true : session.isBefore;
+    return session ? session.isBefore : true;
   }
 
   public transformSession(sessionHaver: SessionHaver, sessionBegin: Date, sessionEnd: Date) {
