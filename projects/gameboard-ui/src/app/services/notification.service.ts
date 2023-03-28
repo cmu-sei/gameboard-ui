@@ -9,15 +9,20 @@ import { ConfigService } from '../utility/config.service';
 import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
 import { HubPlayer, Player, TimeWindow } from '../api/player-models';
+import { GameHubEvent } from './signalR/game-hub.service';
+import { LogService } from './log.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   public connection: HubConnection;
+
   private teamId$ = new Subject<string>();
+  private _gameHubEvents$ = new Subject<GameHubEvent>();
 
   state$ = new BehaviorSubject<HubState>({ id: '', connectionState: HubConnectionState.Disconnected, joined: false });
   actors$ = new BehaviorSubject<Array<HubPlayer>>([]);
   announcements = new Subject<HubEvent>();
+  gameHubEvents$ = this._gameHubEvents$.asObservable();
   teamEvents = new Subject<HubEvent>();
   challengeEvents = new Subject<HubEvent>();
   playerEvents = new Subject<HubEvent>();
@@ -28,6 +33,7 @@ export class NotificationService {
     private config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
+    private logger: LogService,
   ) {
     this.connection = this.getConnection(`${config.apphost}hub`);
 
@@ -120,6 +126,7 @@ export class NotificationService {
     connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
     connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
     connection.on('playerEvent', e => this.onPlayerEvent(e));
+    connection.on('gameHubEvent', e => this._gameHubEvents$.next(e));
 
     return connection;
   }
@@ -178,6 +185,21 @@ export class NotificationService {
         });
       }
     } finally { }
+  }
+
+  public async joinGame(gameId: string) {
+    if (this.state$.value.connectionState !== HubConnectionState.Connected) {
+      this.logger.logError(`Can't join game hub "${gameId}" - the SignalR hub is disconnected.`);
+      return;
+    }
+
+    this.connection.invoke("joinGame", gameId);
+  }
+
+  public async leaveGame(gameId: string) {
+    if (this.state$.value.connectionState === HubConnectionState.Connected) {
+      this.connection.invoke("leaveGame", gameId);
+    }
   }
 
   private async onReconnected(): Promise<void> {

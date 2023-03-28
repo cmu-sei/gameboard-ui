@@ -19,6 +19,7 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { WindowService } from '../../services/window.service';
 import { BoardPlayer } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
+import { GameHubService } from '../../services/signalR/game-hub.service';
 
 @Component({
   selector: 'app-game-page',
@@ -50,6 +51,7 @@ export class GamePageComponent implements OnDestroy {
     localUser: LocalUserService,
     private hub: NotificationService,
     private apiGame: GameService,
+    private gameHubService: GameHubService,
     private modalService: BsModalService,
     private windowService: WindowService
   ) {
