@@ -35,6 +35,6 @@ export class GameHubService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        throw new Error('Method not implemented.');
+        this.gameHubEventsSub?.unsubscribe();
     }
 }
