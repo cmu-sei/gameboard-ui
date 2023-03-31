@@ -63,8 +63,8 @@
       </table>
 
       <div class="d-flex my-4 align-items-center justify-content-center">
-        <a type="button" class="btn btn-secondary" target="_blank" [href]="'game/scores/' + ctx.game.id">View
-          Scoreboard
+        <a type="button" class="btn btn-secondary" target="_blank" [href]="'game/scores/' + ctx.game.id">
+          View Scoreboard
           <fa-icon [icon]="faExternalLink"></fa-icon>
         </a>
       </div>
@@ -109,8 +109,8 @@
           </alert>
 
           <div class="mb-2">
-            <label class="mb-0">Session Forecast</label><br />
-            <small>Shows when sessions become available. (Green means available.)</small>
+            <h3>Session Forecast</h3>
+            <small class="d-block mb-4">Shows when sessions become available. (Green means available.)</small>
             <div class="text-center forecast">
               <app-session-forecast [game]="ctx.game"></app-session-forecast>
             </div>
