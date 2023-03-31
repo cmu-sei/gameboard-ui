@@ -31,6 +31,7 @@ import { CoreModule } from '../core/core.module';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
+import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 
 const MODULE_DECLARATIONS = [
   PlayerEnrollComponent,
@@ -52,7 +53,8 @@ const MODULE_DECLARATIONS = [
   declarations: [
     ...MODULE_DECLARATIONS,
     GameboardPerformanceSummaryComponent,
-    CumulativeTimeClockComponent
+    CumulativeTimeClockComponent,
+    SessionStartControlsComponent
   ],
   imports: [
     CommonModule,

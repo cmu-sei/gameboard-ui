@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { BehaviorSubject, combineLatest, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, first, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, map, takeUntil, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
@@ -187,19 +187,12 @@ export class NotificationService {
     } finally { }
   }
 
-  public async joinGame(gameId: string) {
-    if (this.state$.value.connectionState !== HubConnectionState.Connected) {
-      this.logger.logError(`Can't join game hub "${gameId}" - the SignalR hub is disconnected.`);
-      return;
+  public async sendMessage(message: string, ...args: any[]): Promise<void> {
+    if (this.connection.state !== HubConnectionState.Connected) {
+      this.logger.logError(`Can't invoke message ${message} - the hub is in a non-connected state (${this.connection.state})`);
     }
 
-    this.connection.invoke("joinGame", gameId);
-  }
-
-  public async leaveGame(gameId: string) {
-    if (this.state$.value.connectionState === HubConnectionState.Connected) {
-      this.connection.invoke("leaveGame", gameId);
-    }
+    await this.connection.invoke(message, ...args);
   }
 
   private async onReconnected(): Promise<void> {

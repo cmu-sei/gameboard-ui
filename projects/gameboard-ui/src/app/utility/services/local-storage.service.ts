@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 export enum StorageKey {
   Gameboard = "gameboard",
   UnityGameLink = "gameServerLink",
-  UnityOidcLink = "oidcLink"
+  UnityOidcLink = "oidcLink",
+  WantsGameHubConnections = "wantsGameHubConnections"
 }
 
 @Injectable({ providedIn: 'root' })

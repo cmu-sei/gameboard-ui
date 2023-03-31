@@ -30,6 +30,7 @@ export interface Player {
   correctCount: number;
   partialCount: number;
   isManager: boolean;
+  isReady: boolean;
   advanced: boolean;
   sponsorLogo: string;
   sponsorList: string[];

@@ -1,7 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TimeWindow } from '../../../api/player-models';
-import { ShortDatePipe } from '../../../utility/pipes/short-date.pipe';
-import { ShortTimePipe } from '../../../utility/pipes/short-time.pipe';
 
 export enum PlayerStatus {
   Offline,
@@ -37,6 +35,7 @@ export class PlayerStatusComponent implements OnChanges {
   }
 
   private resolveStatusIndicatorTooltip(session?: TimeWindow): string {
+
     if (session === undefined) {
       return PlayerStatusComponent.DEFAULT_TOOLTIP;
     }
