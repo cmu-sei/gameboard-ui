@@ -18,7 +18,6 @@
             </button>
         </ng-container>
 
-        <p>Is ready?: {{isGameSyncStartReady}}</p>
         <app-confirm-button [disabled]="ctx.game.requireSynchronizedStart && !isGameSyncStartReady"
             btnClass=" btn btn-lg btn-primary" (confirm)="handleDoubleCheckRequest(true)"
             (cancel)="handleDoubleCheckRequest(false)">

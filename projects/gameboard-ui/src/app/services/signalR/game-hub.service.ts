@@ -62,7 +62,6 @@ export class GameHubService implements OnDestroy {
         this.gameHubEventsSub = notificationService.gameHubEvents$.subscribe(ev => {
             switch (ev.eventType) {
                 case GameHubEventType.SyncStartStateChanged:
-                    console.log("hello, i am here", ev.data);
                     this._syncStartStateChanged$.next(ev.data as SyncStartState);
                     return;
                 default:
@@ -79,10 +78,8 @@ export class GameHubService implements OnDestroy {
 
         if (this.notificationService.connection.state === HubConnectionState.Connected) {
             // join the channel
-            console.log("joining game", gameId);
             const state = await this.notificationService.sendMessage<SyncStartState>("JoinGame", gameId);
             this._syncStartStateChanged$.next(state);
-            console.log("done", state);
 
             return;
         }
