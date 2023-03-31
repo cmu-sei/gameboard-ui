@@ -10,11 +10,11 @@ import { NotificationService } from '../notification.service';
 export interface GameHubEvent {
     gameId: string;
     eventType: GameHubEventType;
-    gameEventData: any;
+    data: any;
 }
 
 enum GameHubEventType {
-    SyncStartStateChanged
+    SyncStartStateChanged = "syncStartStateChanged"
 }
 
 @Injectable({ providedIn: 'root' })
@@ -60,10 +60,10 @@ export class GameHubService implements OnDestroy {
         ).subscribe();
 
         this.gameHubEventsSub = notificationService.gameHubEvents$.subscribe(ev => {
-            console.log("new game-level event", ev);
             switch (ev.eventType) {
                 case GameHubEventType.SyncStartStateChanged:
-                    this._syncStartStateChanged$.next(ev.gameEventData as SyncStartState);
+                    console.log("hello, i am here", ev.data);
+                    this._syncStartStateChanged$.next(ev.data as SyncStartState);
                     return;
                 default:
                     return;
@@ -80,11 +80,10 @@ export class GameHubService implements OnDestroy {
         if (this.notificationService.connection.state === HubConnectionState.Connected) {
             // join the channel
             console.log("joining game", gameId);
-            const state = await this.notificationService.sendMessage("JoinGame", gameId);
+            const state = await this.notificationService.sendMessage<SyncStartState>("JoinGame", gameId);
+            this._syncStartStateChanged$.next(state);
             console.log("done", state);
 
-            // if this is a game we've held as pending because of connection stuff, remove it from that list
-            // this.removeFromPendingGameHubConnections(gameId);
             return;
         }
 
@@ -97,7 +96,6 @@ export class GameHubService implements OnDestroy {
     }
 
     public leaveGame(gameId: string) {
-        console.log("trying to leave", gameId);
         if (this.notificationService.state$.getValue().connectionState === HubConnectionState.Connected)
             this.notificationService.sendMessage("LeaveGame", gameId);
 

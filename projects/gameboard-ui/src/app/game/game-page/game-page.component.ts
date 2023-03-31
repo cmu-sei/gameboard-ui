@@ -67,15 +67,12 @@ export class GamePageComponent implements OnDestroy {
       tap(g => this.ctxIds.gameId = g.id),
       tap(g => this.isExternalGame = apiGame.isExternalGame(g)),
       tap(g => {
-        if (!g.requireSynchronizedStart) {
-          this.gameHubSubscription?.unsubscribe();
-        } else {
-          if (!this.gameHubSubscription) {
-            this.gameHubSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
-              console.log("setting up sync start watch", state);
-              this.isSyncStartReady = state.isReady;
-            });
-          }
+        this.gameHubSubscription?.unsubscribe();
+
+        if (g.requireSynchronizedStart) {
+          this.gameHubSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
+            this.isSyncStartReady = state.isReady;
+          });
         }
       })
     );

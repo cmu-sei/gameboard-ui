@@ -32,7 +32,9 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameService.getIsSyncStartReady(this.ctx.game.id).pipe(first()).subscribe(this.handleNewSyncStartState);
-    this.gameHubSub = this.gameHub.syncStartChanged$.subscribe(this.handleNewSyncStartState);
+    this.gameHubSub = this.gameHub.syncStartChanged$.subscribe(stateUpdate => {
+      this.handleNewSyncStartState(stateUpdate);
+    });
   }
 
   ngOnDestroy(): void {
@@ -52,7 +54,7 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   }
 
   private handleNewSyncStartState(state: SyncStartState) {
-    console.log("new sync start state", state.isReady)
     this.isGameSyncStartReady = state.isReady;
+    console.log("new sync start state", this.isGameSyncStartReady)
   }
 }
