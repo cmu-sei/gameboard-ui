@@ -15,8 +15,8 @@ export class ConfirmButtonComponent implements OnInit {
   @Input() disabled = false;
   @Output() confirm = new EventEmitter<boolean>();
   @Output() cancel = new EventEmitter<boolean>();
-  confirming = false;
 
+  confirming = false;
   faCheck = faCheck;
   faTimes = faTimes;
 

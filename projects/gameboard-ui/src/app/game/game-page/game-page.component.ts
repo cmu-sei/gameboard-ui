@@ -40,6 +40,8 @@ export class GamePageComponent implements OnDestroy {
   protected playerSubject$ = new BehaviorSubject<Player | undefined>(undefined);
 
   private isExternalGame = false;
+  private isSyncStartReady = false;
+  private gameHubSubscription?: Subscription;
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
 
@@ -63,7 +65,19 @@ export class GamePageComponent implements OnDestroy {
       filter(p => !!p.id),
       switchMap(p => apiGame.retrieve(p.id)),
       tap(g => this.ctxIds.gameId = g.id),
-      tap(g => this.isExternalGame = apiGame.isExternalGame(g))
+      tap(g => this.isExternalGame = apiGame.isExternalGame(g)),
+      tap(g => {
+        if (!g.requireSynchronizedStart) {
+          this.gameHubSubscription?.unsubscribe();
+        } else {
+          if (!this.gameHubSubscription) {
+            this.gameHubSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
+              console.log("setting up sync start watch", state);
+              this.isSyncStartReady = state.isReady;
+            });
+          }
+        }
+      })
     );
 
     this.localUserSubscription = combineLatest([
@@ -156,6 +170,12 @@ export class GamePageComponent implements OnDestroy {
           player: c.player = c.player || { userId: c.user.id } as Player
         };
       }),
+      tap(c => {
+        if (c.player.gameId)
+          this.gameHubService.joinGame(c.player.gameId)
+        else
+          this.gameHubService.leaveGame(c.game.id)
+      }),
       tap(c => { if (!c.game) { router.navigateByUrl("/") } }),
       filter(c => !!c.game),
       tap(ctx => {
@@ -165,8 +185,11 @@ export class GamePageComponent implements OnDestroy {
       })
     );
 
-    // init the page
-    this.playerSubject$.next(this.playerSubject$.getValue());
+    // listen for game hub events to enable synchronized start stuff if needed
+    if (this)
+
+      // init the page
+      this.playerSubject$.next(this.playerSubject$.getValue());
   }
 
   protected async onEnroll(player: Player): Promise<void> {

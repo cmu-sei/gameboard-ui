@@ -98,11 +98,14 @@
 
         <div class="card-text" *ngIf="!doublechecking">
           <alert type="warning">
-            After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
-            <span [hidden]="ctx.game.maxTeamSize < 2">
-              <br />This will start the session for the team, so be sure your teammates are ready to start. You cannot
+            <p>
+              After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
+            </p>
+
+            <p [hidden]="ctx.game.maxTeamSize < 2">
+              This will start the session for the team, so be sure your teammates are ready to start. You cannot
               add or remove team members after your session has started.
-            </span>
+            </p>
           </alert>
 
           <div class="mb-2">
@@ -112,24 +115,11 @@
               <app-session-forecast [game]="ctx.game"></app-session-forecast>
             </div>
           </div>
-
-          <div class="text-center my-4">
-            <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="doublechecking=true">
-              <fa-icon [icon]="faBolt"></fa-icon>
-              <span>Start Session</span>
-            </app-confirm-button>
-          </div>
         </div>
       </ng-container>
 
-      <ng-container *ngIf="ctx.user.isRegistrar && (!ctx.player.session || ctx.player.session.isBefore)">
-        <div class="text-center my-4">
-          <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="handleStart(ctx.player)">
-            <fa-icon [icon]="faBolt"></fa-icon>
-            <span>Admin Start</span>
-          </app-confirm-button>
-        </div>
-      </ng-container>
+      <app-session-start-controls [ctx]="ctx" (onRequestDoubleCheck)="doublechecking = $event"
+        (onRequestStart)="handleStart(ctx.player)"></app-session-start-controls>
 
       <div *ngIf="!ctx.player.session?.isBefore" class="text-center mb-4">
         <a *ngIf="ctx.game.mode != 'unity'" class="btn btn-primary btn-lg"
@@ -143,7 +133,6 @@
       <div class="col d-flex justify-content-center" *ngIf="ctx.game.mapUrl">
         <img [src]=" ctx.game.mapUrl" alt="game map background" class="img-fluid">
       </div>
-
     </div>
   </div>
 </ng-container>

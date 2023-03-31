@@ -7,7 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { combineLatest, interval, Observable, of, Subscription } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
-import { calculateCountdown, Player, TimeWindow } from '../../api/player-models';
+import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';

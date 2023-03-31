@@ -47,6 +47,10 @@ export class PlayerService {
     return this.http.put<any>(`${this.url}/player`, model);
   }
 
+  public updateIsSyncStartReady(playerId: string, model: { isReady: boolean }) {
+    return this.http.put(`${this.url}/player/${playerId}/ready`, model);
+  }
+
   public start(player: Player): Observable<Player> {
     return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
       map(p => this.transform(p) as Player)
