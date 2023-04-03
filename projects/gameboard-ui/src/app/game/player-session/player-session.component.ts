@@ -4,13 +4,14 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { faBolt, faCircle, faExternalLink, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { combineLatest, interval, Observable, of, Subscription } from 'rxjs';
+import { combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
+import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
 
 @Component({
   selector: 'app-player-session',
@@ -19,24 +20,26 @@ import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directiv
 })
 export class PlayerSessionComponent implements OnDestroy {
   @Input() ctx$!: Observable<GameContext | undefined>;
-  @Input() player$?: Observable<Player | undefined>;
   @Output() onSessionStart = new EventEmitter<Player>();
   @Output() onSessionReset = new EventEmitter<Player>();
 
   errors: any[] = [];
   myCtx$!: Observable<GameContext | undefined>;
-  doublechecking = false;
 
   faBolt = faBolt;
   faExternalLink = faExternalLink;
   faTrash = faTrash;
   faDot = faCircle;
+  isDoubleChecking = false;
 
   private countdownClockSubscription?: Subscription;
+  private ctxSub?: Subscription;
 
   // sets up the modal if it's a team game that needs confirmation
   private modalRef?: BsModalRef;
   protected modalConfig?: ModalConfirmConfig;
+  protected performanceSummaryViewModel$ = new Subject<GameboardPerformanceSummaryViewModel>();
+  protected player$ = new Subject<Player>();
 
   constructor(
     private api: PlayerService,
@@ -44,7 +47,32 @@ export class PlayerSessionComponent implements OnDestroy {
   ) { }
 
   async ngOnInit() {
-    this.myCtx$ = this.ctx$.pipe(
+    this.ctxSub = this.ctx$.pipe(
+      tap(ctx => {
+        let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
+
+        if (ctx) {
+          vm = {
+            player: {
+              id: ctx.player.id,
+              teamId: ctx.player.teamId,
+              session: ctx.player.session,
+              scoring: {
+                rank: ctx.player.rank,
+                score: ctx.player.score,
+                correctCount: ctx.player.correctCount,
+                partialCount: ctx.player.partialCount
+              }
+            },
+            game: {
+              isPracticeMode: ctx.game.isPracticeMode
+            }
+          }
+        }
+
+        this.performanceSummaryViewModel$.next(vm);
+        this.player$.next(ctx?.player);
+      }),
       tap(ctx => {
         if (ctx?.game.allowTeam) {
           this.modalConfig = {
@@ -61,7 +89,7 @@ export class PlayerSessionComponent implements OnDestroy {
           };
         }
       })
-    );
+    ).subscribe();
 
     this.countdownClockSubscription = combineLatest([this.ctx$, interval(1000)]).pipe(
       map(combo => combo[0]),
@@ -80,13 +108,16 @@ export class PlayerSessionComponent implements OnDestroy {
     ).subscribe();
   }
 
+  handleDoubleCheckingChanged(isDoubleChecking: boolean) {
+    this.isDoubleChecking = isDoubleChecking;
+  }
+
   handleStart(player: Player): void {
     this.api.start(player).pipe(
       first()
     ).subscribe(
       p => this.onSessionStart.emit(p),
       err => this.errors.push(err),
-      () => this.doublechecking = false
     );
   }
 
@@ -108,5 +139,6 @@ export class PlayerSessionComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.countdownClockSubscription?.unsubscribe();
+    this.ctxSub?.unsubscribe();
   }
 }

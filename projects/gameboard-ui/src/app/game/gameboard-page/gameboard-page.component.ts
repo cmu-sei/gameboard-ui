@@ -14,6 +14,7 @@ import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
 import { HubState, NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
+import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -43,6 +44,7 @@ export class GameboardPageComponent implements OnDestroy {
   hubstate$: Observable<HubState>;
   hubsub: Subscription;
   cid = '';
+  performanceSummaryViewModel$ = new Subject<GameboardPerformanceSummaryViewModel | undefined>;
 
   constructor(
     route: ActivatedRoute,
@@ -70,7 +72,25 @@ export class GameboardPageComponent implements OnDestroy {
       switchMap(id => api.load(id).pipe(
         catchError(err => of({} as BoardPlayer))
       )),
-      tap(b => this.ctx = b),
+      tap(b => {
+        this.ctx = b;
+        this.performanceSummaryViewModel$.next({
+          player: {
+            id: b.id,
+            teamId: b.teamId,
+            session: b.session,
+            scoring: {
+              rank: b.rank,
+              score: b.score,
+              partialCount: b.partialCount,
+              correctCount: b.correctCount
+            }
+          },
+          game: {
+            isPracticeMode: b.game.isPracticeMode
+          }
+        })
+      }),
       tap(b => this.startHub(b)),
       tap(b => this.reselect())
     ).subscribe();

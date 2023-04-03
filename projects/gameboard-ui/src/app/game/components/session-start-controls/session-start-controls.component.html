@@ -1,4 +1,4 @@
-<div class="session-start-controls-component">
+<div class="session-start-controls-component my-4">
     <alert class="sync-start-message my-4" type="info" *ngIf="ctx.game.requireSynchronizedStart">
         <h3><strong>Are you ready?</strong></h3>
 
@@ -9,7 +9,18 @@
         </p>
     </alert>
 
-    <div class="d-flex align-items-center justify-content-center">
+    <alert type="warning">
+        <p>
+            After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
+        </p>
+
+        <p [hidden]="ctx.game.maxTeamSize < 2">
+            This will start the session for the team, so be sure your teammates are ready to start. You cannot
+            add or remove team members after your session has started.
+        </p>
+    </alert>
+
+    <div class="d-flex align-items-center justify-content-center" *ngIf="!isDoubleChecking">
         <ng-container *ngIf="ctx.game.requireSynchronizedStart">
             <button btnCheckbox class="btn btn-lg mr-4" [class.btn-outline-success]="!ctx.player.isReady"
                 [class.btn-danger]="ctx.player.isReady" [(ngModel)]="ctx.player.isReady"
@@ -19,19 +30,45 @@
         </ng-container>
 
         <app-confirm-button [disabled]="ctx.game.requireSynchronizedStart && !isGameSyncStartReady"
-            btnClass=" btn btn-lg btn-primary" (confirm)="handleDoubleCheckRequest(true)"
-            (cancel)="handleDoubleCheckRequest(false)">
+            [tooltip]="isGameSyncStartReady ? '' : START_DISABLED_TOOLTIP" btnClass=" btn btn-lg btn-primary"
+            (confirm)="handleDoubleCheckRequest(true)" (cancel)="handleDoubleCheckRequest(false)">
             <fa-icon [icon]="faService.bolt"></fa-icon>
             <span>Start Session</span>
         </app-confirm-button>
 
-        <ng-container *ngIf="ctx.user.isRegistrar && (!ctx.player.session || ctx.player.session.isBefore)">
-            <div class="text-center my-4 ml-4">
+        <ng-container *ngIf="ctx.user.isRegistrar || ctx.user.isAdmin">
+            <div class="text-center ml-4">
                 <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="onRequestStart.emit(ctx.player)">
                     <fa-icon [icon]="faService.bolt"></fa-icon>
                     <span>Admin Start</span>
                 </app-confirm-button>
             </div>
         </ng-container>
+    </div>
+
+    <div class="doublecheck-container">
+        <div class="card-text my-4" *ngIf="isDoubleChecking">
+            <alert type="danger">
+                <ul>
+                    <li>After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes!</li>
+                    <li [hidden]="ctx.game.maxTeamSize < 2">
+                        This will start the session for the team, so be sure your
+                        teammates are ready to start!
+                    </li>
+                    <li [hidden]="ctx.game.maxTeamSize < 2">
+                        You cannot add or remove team members after your session has started!
+                    </li>
+                    <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it!</li>
+                </ul>
+            </alert>
+
+            <div class="text-center">
+                <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="handleStartRequest(ctx.player)"
+                    (cancel)="handleDoubleCheckRequest(false)">
+                    <fa-icon [icon]="faService.bolt"></fa-icon>
+                    <span>Yes, start {{ctx.game.name}}</span>
+                </app-confirm-button>
+            </div>
+        </div>
     </div>
 </div>

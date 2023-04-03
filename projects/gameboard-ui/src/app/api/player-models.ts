@@ -76,7 +76,7 @@ export class TimeWindow {
   }
 }
 
-export const calculateCountdown = (window: TimeWindow, now?: Date) => {
+export const calculateCountdown = (window?: TimeWindow, now?: Date) => {
   if (!window || !window.beginDate || !window.endDate) {
     return undefined;
   }

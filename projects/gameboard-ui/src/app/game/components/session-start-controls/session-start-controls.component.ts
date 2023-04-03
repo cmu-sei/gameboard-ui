@@ -18,11 +18,13 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   @Input() ctx!: GameContext;
 
   // TODO: ultimately pull these into this component
-  @Output() onRequestDoubleCheck = new EventEmitter<boolean>();
+  @Output() onDoubleCheckChanged = new EventEmitter<boolean>();
   @Output() onRequestStart = new EventEmitter();
 
-  protected isGameSyncStartReady = false;
   private gameHubSub?: Subscription;
+  protected START_DISABLED_TOOLTIP = "We're still waiting for all registered players to ready up. Once they do, you can start your session.";
+  protected isDoubleChecking = false;
+  protected isGameSyncStartReady = false;
 
   constructor(
     public faService: FontAwesomeService,
@@ -42,7 +44,8 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   }
 
   protected handleDoubleCheckRequest(isDoubleChecking: boolean) {
-    this.onRequestDoubleCheck.emit(isDoubleChecking);
+    this.isDoubleChecking = isDoubleChecking;
+    this.onDoubleCheckChanged.emit(isDoubleChecking);
   }
 
   protected handleStartRequest(player: Player) {
@@ -55,6 +58,5 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
 
   private handleNewSyncStartState(state: SyncStartState) {
     this.isGameSyncStartReady = state.isReady;
-    console.log("new sync start state", this.isGameSyncStartReady)
   }
 }

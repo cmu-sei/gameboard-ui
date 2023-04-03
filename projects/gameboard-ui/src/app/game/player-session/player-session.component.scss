@@ -2,6 +2,11 @@ alert li {
   list-style-type: circle;
 }
 
+app-gameboard-performance-summary {
+  display: block;
+  width: 100%;
+}
+
 .forecast {
   max-width: 400px;
   margin: 0 auto;

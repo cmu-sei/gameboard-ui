@@ -38,7 +38,11 @@
         </ng-container>
       </div>
 
-      <app-player-presence *ngIf="(player$ | async)" [player$]="player$"></app-player-presence>
+      <app-player-presence *ngIf="ctx.player" [player$]="player$"></app-player-presence>
+
+      {{performanceSummaryViewModel$ | async }}
+      <app-gameboard-performance-summary *ngIf="performanceSummaryViewModel$ | async"
+        [ctx$]="performanceSummaryViewModel$"></app-gameboard-performance-summary>
 
       <table class="table mt-2 text-center">
         <tbody>
@@ -72,42 +76,9 @@
       <app-error-div [errors]="errors"></app-error-div>
 
       <ng-container *ngIf="ctx.player.session && ctx.player.session.isBefore && ctx.game.session.isDuring">
-        <div class="card-text my-4" *ngIf="doublechecking">
-          <alert type="danger">
-            <ul>
-              <li>After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes!</li>
-              <li [hidden]="ctx.game.maxTeamSize < 2">
-                This will start the session for the team, so be sure your
-                teammates are ready to start!
-              </li>
-              <li [hidden]="ctx.game.maxTeamSize < 2">
-                You cannot add or remove team members after your session has started!
-              </li>
-              <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it!</li>
-            </ul>
-          </alert>
+        <app-session-start-controls [ctx]="ctx" (onRequestStart)="handleStart(ctx.player)"></app-session-start-controls>
 
-          <div class="text-center">
-            <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="handleStart(ctx.player)"
-              (cancel)="doublechecking=false">
-              <fa-icon [icon]="faBolt"></fa-icon>
-              <span>Yes, start {{ctx.game.name}}</span>
-            </app-confirm-button>
-          </div>
-        </div>
-
-        <div class="card-text" *ngIf="!doublechecking">
-          <alert type="warning">
-            <p>
-              After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
-            </p>
-
-            <p [hidden]="ctx.game.maxTeamSize < 2">
-              This will start the session for the team, so be sure your teammates are ready to start. You cannot
-              add or remove team members after your session has started.
-            </p>
-          </alert>
-
+        <div class="card-text" *ngIf="!isDoubleChecking">
           <div class="mb-2">
             <h3>Session Forecast</h3>
             <small class="d-block mb-4">Shows when sessions become available. (Green means available.)</small>
@@ -118,10 +89,7 @@
         </div>
       </ng-container>
 
-      <app-session-start-controls [ctx]="ctx" (onRequestDoubleCheck)="doublechecking = $event"
-        (onRequestStart)="handleStart(ctx.player)"></app-session-start-controls>
-
-      <div *ngIf="!ctx.player.session?.isBefore" class="text-center mb-4">
+      <div *ngIf="!ctx.player.session?.isBefore" class="text-center my-4">
         <a *ngIf="ctx.game.mode != 'unity'" class="btn btn-primary btn-lg"
           [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
         <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
