@@ -44,8 +44,8 @@ export class PlayerPresenceComponent implements OnInit {
       this.hub.actors$,
       this.player$
     ]).pipe(
-      map(thing => thing as unknown as { 0: HubPlayer[], 1: HubPlayer }),
-      map(thing => ({ actors: thing[0], player: thing[1] })),
+      map(combo => combo as unknown as { 0: HubPlayer[], 1: HubPlayer }),
+      map(combo => ({ actors: combo[0], player: combo[1] })),
       map(context => {
         if (!context.player) {
           return null;

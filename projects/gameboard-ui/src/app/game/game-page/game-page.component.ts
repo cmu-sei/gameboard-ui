@@ -168,7 +168,8 @@ export class GamePageComponent implements OnDestroy {
         };
       }),
       tap(c => {
-        if (c.player.gameId)
+        // listen for game hub events to enable synchronized start stuff if needed
+        if (c.player.gameId && c.game.requireSynchronizedStart)
           this.gameHubService.joinGame(c.player.gameId)
         else
           this.gameHubService.leaveGame(c.game.id)
@@ -182,11 +183,8 @@ export class GamePageComponent implements OnDestroy {
       })
     );
 
-    // listen for game hub events to enable synchronized start stuff if needed
-    if (this)
-
-      // init the page
-      this.playerSubject$.next(this.playerSubject$.getValue());
+    // init the page
+    this.playerSubject$.next(this.playerSubject$.getValue());
   }
 
   protected async onEnroll(player: Player): Promise<void> {
