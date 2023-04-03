@@ -34,7 +34,6 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
 
   countdown$?: Observable<number | undefined>;
   hubState$: BehaviorSubject<HubState>;
-  // private ctx?: GameboardPerformanceSummaryViewModel;
 
   constructor(
     hubService: NotificationService,
