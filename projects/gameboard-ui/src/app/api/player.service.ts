@@ -57,8 +57,8 @@ export class PlayerService {
     );
   }
 
-  public resetSession(p: Player): Observable<any> {
-    return this.http.delete<void>(`${this.url}/player/${p.id}/session`, {}).pipe(
+  public resetSession(p: Player, asAdmin: boolean = false): Observable<any> {
+    return this.http.delete<void>(`${this.url}/player/${p.id}/session?asAdmin=${asAdmin}`, {}).pipe(
       map(r => {
         delete p.session;
         return;
@@ -70,8 +70,8 @@ export class PlayerService {
     return this.http.put<any>(`${this.url}/team/session`, model);
   }
 
-  public unenroll(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.url}/player/${id}`);
+  public unenroll(id: string, asAdmin: boolean = false): Observable<void> {
+    return this.http.delete<void>(`${this.url}/player/${id}?asAdmin=${asAdmin}`);
   }
 
   public invite(id: string): Observable<TeamInvitation> {

@@ -157,7 +157,6 @@ export class GameboardPageComponent implements OnDestroy {
 
   syncOne = (c: Challenge): BoardSpec => {
     this.deploying = false;
-    console.log("syncing one", c);
 
     if (!c) {
       return {} as BoardSpec;
@@ -182,7 +181,6 @@ export class GameboardPageComponent implements OnDestroy {
   select(spec: BoardSpec): void {
     if (!spec.disabled && !spec.locked && (!this.selected?.id || this.selected.id !== spec.id)) {
       this.selecting$.next(spec);
-      console.log("spec", spec);
     }
   }
 

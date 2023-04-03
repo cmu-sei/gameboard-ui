@@ -37,10 +37,10 @@ export class UnityBoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.config.settings.unityclienthost) {
-      const errorMessage = `Unity host is not set: ${this.config.settings.unityclienthost}`;
-      this.handleError(errorMessage);
-    }
+    // if (!this.config.settings.unityclienthost) {
+    //   const errorMessage = `Unity host is not set: ${this.config.settings.unityclienthost}`;
+    //   this.handleError(errorMessage);
+    // }
 
     this.unityHost = this.config.settings.unityclienthost || null;
     this.unityService.error$.subscribe(err => this.handleError(err));
@@ -56,10 +56,11 @@ export class UnityBoardComponent implements OnInit {
           gameId: params.get("gameId")!,
           teamId: params.get("teamId")!,
           playerId: params.get("playerId")!,
-          sessionExpirationTime: new Date(Date.parse(params.get("sessionExpirationTime")!))
+          sessionExpirationTime: new Date(parseInt(params.get("sessionExpirationTime") || "0"))
         }) as Observable<UnityDeployContext>;
       })
     ).subscribe(ctx => {
+      console.log("exp time", ctx);
       this.unityService.startGame(ctx);
     });
 

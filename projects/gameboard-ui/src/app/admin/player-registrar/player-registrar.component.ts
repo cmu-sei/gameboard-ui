@@ -171,13 +171,13 @@ export class PlayerRegistrarComponent {
   }
 
   resetSession(model: Player): void {
-    this.api.resetSession(model).pipe(first()).subscribe(_ => {
+    this.api.resetSession(model, true).pipe(first()).subscribe(_ => {
       this.refresh$.next(true);
     });
   }
 
   unenroll(model: Player): void {
-    this.api.unenroll(model.id).pipe(first()).subscribe(_ => {
+    this.api.unenroll(model.id, true).pipe(first()).subscribe(_ => {
       this.refresh$.next(true);
     })
   }

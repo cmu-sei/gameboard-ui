@@ -49,27 +49,31 @@
             <alert type="info">By enrolling in {{ctx.game.name}}, you are accepting the following terms.</alert>
             <markdown [data]="ctx.game.registrationMarkdown"></markdown>
           </div>
+        </ng-container>
+      </ng-container>
 
-          <!-- accept -->
-          <div class="d-flex align-items-center justify-content-center mt-5"
-            *ngIf="ctxDelayed$ | async as delay; else loading">
+      <!-- enrollment controls -->
+      <ng-container *ngIf="!ctx.player.id">
+        <div class="d-flex align-items-center justify-content-center mt-5"
+          *ngIf="ctxDelayed$ | async as delay; else loading">
+          <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
             <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
               (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
               <fa-icon [icon]="faEdit"></fa-icon>
               <span>Enroll</span>
             </app-confirm-button>
-
-            <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
-              class="text-center">
-              <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-                <fa-icon [icon]="faEdit"></fa-icon>
-                <span>Admin Enroll</span>
-              </app-confirm-button>
-              <app-error-div [errors]="errors"></app-error-div>
-            </div>
           </div>
-        </ng-container>
 
+          <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
+            class="text-center">
+            <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+              <fa-icon [icon]="faEdit"></fa-icon>
+              <span>Admin Enroll</span>
+            </app-confirm-button>
+          </div>
+
+          <app-error-div [errors]="errors"></app-error-div>
+        </div>
       </ng-container>
 
       <!-- already enrolled -->
@@ -144,29 +148,30 @@
             </div>
           </ng-container>
         </ng-container>
-
-        <!-- unenroll -->
-        <div *ngIf="ctx.game.gameStart" class="form-group text-center">
-          <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
-            <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
-              [disabled]="!!unenrollTooltip">
-              <fa-icon [icon]="faTrash"></fa-icon>
-              <span>Unenroll</span>
-            </app-confirm-button>
-          </div>
-
-          <ng-template *ngIf="!unenrollTooltip">
-            <p class="small">
-              You can delete this enrollment until either the enrollment period ends or your game session
-              starts.
-            </p>
-          </ng-template>
-        </div>
       </ng-container>
+
+      <!-- unenroll -->
+      <div
+        *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
+        class="form-group text-center">
+        <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
+          <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
+            [disabled]="!!unenrollTooltip">
+            <fa-icon [icon]="faTrash"></fa-icon>
+            <span>Unenroll</span>
+          </app-confirm-button>
+        </div>
+
+        <ng-template *ngIf="!unenrollTooltip">
+          <p class="small">
+            You can unenroll either the enrollment period ends or your game session
+            starts.
+          </p>
+        </ng-template>
+      </div>
     </div>
   </div>
 </ng-container>
-
 
 <ng-template #loading>
   <div class="text-center">
