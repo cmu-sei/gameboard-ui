@@ -11,7 +11,6 @@
     </span>
     <div class="spacer"></div>
     <div>
-      {{performanceSummaryViewModel$ | json }}
       <app-gameboard-performance-summary [ctx$]="performanceSummaryViewModel$"
         (onRefreshRequest)="handleRefreshRequest($event)"></app-gameboard-performance-summary>
     </div>

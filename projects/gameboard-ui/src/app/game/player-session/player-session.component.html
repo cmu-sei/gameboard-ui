@@ -31,45 +31,22 @@
 
             <app-confirm-button *ngIf="ctx.game.allowReset" class="mx-2" btnClass="btn btn-sm pop-warning"
               (confirm)="handleReset(ctx.player)">
-              <fa-icon [icon]="faTrash"></fa-icon>
+              <fa-icon [icon]="faService.trash"></fa-icon>
               <span>Reset Session</span>
             </app-confirm-button>
           </div>
         </ng-container>
       </div>
 
-      <app-player-presence *ngIf="ctx.player" [player$]="player$"></app-player-presence>
+      <app-player-presence *ngIf="player$ | async" [player$]=" player$"></app-player-presence>
 
-      {{performanceSummaryViewModel$ | async }}
       <app-gameboard-performance-summary *ngIf="performanceSummaryViewModel$ | async"
         [ctx$]="performanceSummaryViewModel$"></app-gameboard-performance-summary>
-
-      <table class="table mt-2 text-center">
-        <tbody>
-          <tr>
-            <th>Rank</th>
-            <th>Score</th>
-            <th>Cumulative Time</th>
-            <th>Completes</th>
-            <th>Partials</th>
-          </tr>
-          <tr>
-            <td>{{ctx.player.rank}}</td>
-            <td>{{ctx.player.score}}</td>
-            <td>
-              <app-cumulative-time-clock [session]="ctx.player.session"></app-cumulative-time-clock>
-            </td>
-            <td>{{ctx.player.time | clock}}</td>
-            <td>{{ctx.player.correctCount}}</td>
-            <td>{{ctx.player.partialCount}}</td>
-          </tr>
-        </tbody>
-      </table>
 
       <div class="d-flex my-4 align-items-center justify-content-center">
         <a type="button" class="btn btn-secondary" target="_blank" [href]="'game/scores/' + ctx.game.id">
           View Scoreboard
-          <fa-icon [icon]="faExternalLink"></fa-icon>
+          <fa-icon [icon]="faService.externalLink"></fa-icon>
         </a>
       </div>
 
@@ -106,7 +83,5 @@
 </ng-container>
 
 <ng-template #loading>
-  <div class="text-center">
-    <app-spinner></app-spinner>
-  </div>
+  <app-spinner></app-spinner>
 </ng-template>
