@@ -2,15 +2,15 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { faBolt, faCircle, faExternalLink, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
+import { FontAwesomeService } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
 
 @Component({
@@ -26,28 +26,24 @@ export class PlayerSessionComponent implements OnDestroy {
   errors: any[] = [];
   myCtx$!: Observable<GameContext | undefined>;
 
-  faBolt = faBolt;
-  faExternalLink = faExternalLink;
-  faTrash = faTrash;
-  faDot = faCircle;
-  isDoubleChecking = false;
-
-  private countdownClockSubscription?: Subscription;
   private ctxSub?: Subscription;
 
   // sets up the modal if it's a team game that needs confirmation
   private modalRef?: BsModalRef;
   protected modalConfig?: ModalConfirmConfig;
-  protected performanceSummaryViewModel$ = new Subject<GameboardPerformanceSummaryViewModel>();
-  protected player$ = new Subject<Player>();
+  protected isDoubleChecking = false;
+  protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
+  protected player$ = new BehaviorSubject<Player | undefined>(undefined);
 
   constructor(
     private api: PlayerService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    protected faService: FontAwesomeService
   ) { }
 
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
+      tap(ctx => console.log("ctx is here", ctx)),
       tap(ctx => {
         let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
 
@@ -90,22 +86,6 @@ export class PlayerSessionComponent implements OnDestroy {
         }
       })
     ).subscribe();
-
-    this.countdownClockSubscription = combineLatest([this.ctx$, interval(1000)]).pipe(
-      map(combo => combo[0]),
-      tap(ctx => {
-        if (!ctx)
-          return;
-
-        // update the player session if they've just started 
-        if (!ctx.player.session && ctx.player.sessionBegin && ctx.player.sessionEnd) {
-          ctx.player.session = new TimeWindow(ctx.player.sessionBegin, ctx.player.sessionEnd);
-        }
-
-        ctx.game.session = new TimeWindow(ctx.game.gameStart, ctx.game.gameEnd);
-      }),
-      map(_ => null)
-    ).subscribe();
   }
 
   handleDoubleCheckingChanged(isDoubleChecking: boolean) {
@@ -138,7 +118,6 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.countdownClockSubscription?.unsubscribe();
     this.ctxSub?.unsubscribe();
   }
 }

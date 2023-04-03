@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subject, timer } from 'rxjs';
+import { first, map, switchMap, tap } from 'rxjs/operators';
 import { calculateCountdown, Player, SessionChangeRequest, TimeWindow } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
@@ -29,12 +29,12 @@ export interface GameboardPerformanceSummaryViewModel {
   styleUrls: ['./gameboard-performance-summary.component.scss']
 })
 export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
-  @Input() ctx$!: Observable<GameboardPerformanceSummaryViewModel | undefined>;
+  @Input() ctx$!: Subject<GameboardPerformanceSummaryViewModel | undefined>;
   @Output() onRefreshRequest = new EventEmitter<string>();
 
   countdown$?: Observable<number | undefined>;
   hubState$: BehaviorSubject<HubState>;
-  private ctx?: GameboardPerformanceSummaryViewModel;
+  // private ctx?: GameboardPerformanceSummaryViewModel;
 
   constructor(
     hubService: NotificationService,
@@ -52,26 +52,37 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
   }
 
   extendSession(quit: boolean): void {
-    const player = this.ctx?.player;
+    const player = this.ctx$.pipe(
+      map(ctx => {
+        if (!ctx?.player) {
+          throw new Error("Can't extend the session without a Player.");
+        }
 
-    if (!player) {
-      throw new Error("Can't extend the session without a Player.");
-    }
-
-    const model: SessionChangeRequest = {
-      teamId: player.teamId,
-      sessionEnd: quit ? new Date(Date.parse("0001-01-01T00:00:00Z")) : new Date()
-    }
-    this.playerService.updateSession(model).pipe(
-      first()
-    ).subscribe(_ =>
-      this.onRefreshRequest.emit(player.id)
-    );
+        return {
+          teamId: ctx.player.teamId,
+          sessionEnd: quit ? new Date(Date.parse("0001-01-01T00:00:00Z")) : new Date()
+        } as SessionChangeRequest
+      }),
+      switchMap(request => {
+        return this.playerService.updateSession(request).pipe(
+          first()
+        )
+      }),
+      first(),
+      tap(player => {
+        console.log("this is the end", player);
+        this.onRefreshRequest.emit(player.id)
+      })
+    ).subscribe();
   }
 
   private updateCountdown() {
-    this.countdown$ = timer(0, 1000).pipe(
-      map(_ => calculateCountdown(this.ctx?.player.session))
+    this.countdown$ = combineLatest([
+      timer(0, 1000),
+      this.ctx$
+    ]).pipe(
+      map(combo => combo[1]),
+      map(ctx => calculateCountdown(ctx?.player.session))
     );
   }
 }

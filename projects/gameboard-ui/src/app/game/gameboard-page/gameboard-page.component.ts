@@ -4,7 +4,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { asyncScheduler, BehaviorSubject, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
 import { catchError, debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
@@ -44,7 +44,7 @@ export class GameboardPageComponent implements OnDestroy {
   hubstate$: Observable<HubState>;
   hubsub: Subscription;
   cid = '';
-  performanceSummaryViewModel$ = new Subject<GameboardPerformanceSummaryViewModel | undefined>;
+  performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
   constructor(
     route: ActivatedRoute,
