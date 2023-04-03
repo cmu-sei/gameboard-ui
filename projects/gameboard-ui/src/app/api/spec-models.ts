@@ -36,6 +36,7 @@ export interface SpecSummary {
   id: string;
   name: string;
   description: string;
+  text: string;
   gameId: string;
   gameName: string;
   gameLogo: string;

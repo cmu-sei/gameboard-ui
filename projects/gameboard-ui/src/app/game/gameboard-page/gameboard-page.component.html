@@ -11,57 +11,8 @@
     </span>
     <div class="spacer"></div>
     <div>
-      <div class="text-info card-text mb-2">
-        <span *ngIf="ctx.session.isAfter">Game Over </span>
-        <span *ngIf="ctx.session.isDuring">Time Remaining: </span>
-        <span class="font-weight-bold" [class]="ctx.session.countdown | countdowncolor">
-          {{ ctx.session.countdown | countdown }}
-        </span>
-      </div>
-      <table class="table mt-2 text-center">
-        <tbody>
-          <tr>
-            <td>Rank</td>
-            <td>Score</td>
-            <td>Cumulative Time</td>
-            <td>Completes</td>
-            <td>Partials</td>
-          </tr>
-          <tr>
-            <td>{{ctx.rank}}</td>
-            <td>{{ctx.score}}</td>
-            <td>{{ctx.time | clock}}</td>
-            <td>{{ctx.correctCount}}</td>
-            <td>{{ctx.partialCount}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <ng-container *ngIf="ctx.session.isDuring">
-        <div *ngIf="hubstate$ | async as hubstate" class="text-center mb-2">
-          <small *ngIf="!!hubstate.joined" class="text-success">
-            <fa-icon [icon]="faBolt"></fa-icon>
-            connected
-          </small>
-          <small *ngIf="!hubstate.joined" class="ml-2 text-danger">
-            <fa-icon [icon]="faExclamationTriangle"></fa-icon>
-            disconnected
-          </small>
-        </div>
-        <div *ngIf="ctx.game.isPracticeMode" class="text-center">
-          <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession(false)">
-            Extend Session
-          </app-confirm-button>
-          <span class="mr-2"></span>
-          <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession(true)">
-            End Session
-          </app-confirm-button>
-        </div>
-      </ng-container>
-      <div *ngIf="ctx.session.isAfter && ctx.game.isPracticeMode" class="text-center">
-        <a class="btn btn-info btn-sm" [routerLink]="['/prac', ctx.gameId]">
-          New Session
-        </a>
-      </div>
+      <app-gameboard-performance-summary [boardPlayer]="ctx"
+        (onRefreshRequest)="handleRefreshRequest($event)"></app-gameboard-performance-summary>
     </div>
   </div>
 
@@ -93,19 +44,18 @@
 
           <!-- not started, show preview -->
           <ng-container *ngIf="specs$ | async as spec">
-
             <div *ngIf="!spec.instance!.id" class="text-center mb-4">
-              <ng-container *ngIf="this.user$ | async as user">
-                <div *ngIf="user.isTester" class="form-group">
-                  <label for="variant-input">Variant</label>
-                  <input type="number" class="form-control" [(ngModel)]="variant">
-                </div>
-              </ng-container>
-              <ng-container *ngIf="!deploying">
+              <ng-container *ngIf="ctx.session.isDuring && !deploying">
+                <ng-container *ngIf="this.user$ | async as user">
+                  <div *ngIf="user.isTester" class="form-group">
+                    <label for="variant-input">Variant</label>
+                    <input type="number" class="form-control" [(ngModel)]="variant">
+                  </div>
+                </ng-container>
                 <app-confirm-button btnClass="btn btn-primary" (confirm)="launch(spec)">
                   <span>Start Challenge</span>
                 </app-confirm-button>
-                <div>
+                <div *ngIf="!ctx.isPractice">
                   This will start the challenge timer. The time it takes to
                   earn points is a factor in tie-breaking.
                 </div>
@@ -177,8 +127,8 @@
             </div>
 
             <div *ngIf="spec.instance!.state.challenge && ctx.game.feedbackTemplate?.challenge?.length">
-              <app-feedback-form [spec]="spec!" [specs$]="specs$" [game]="ctx.game" [session]="ctx.session"
-                [title]="'Challenge Feedback'" [type]="'challenge'"></app-feedback-form>
+              <app-feedback-form [boardPlayer]="ctx" [title]="'Challenge Feedback'" [spec]="spec"
+                [type]="'challenge'"></app-feedback-form>
             </div>
 
           </ng-container>

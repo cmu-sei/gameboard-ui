@@ -4,7 +4,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { asyncScheduler, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
 import { catchError, debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
@@ -137,6 +137,11 @@ export class GameboardPageComponent implements OnDestroy {
 
   syncOne = (c: Challenge): BoardSpec => {
     this.deploying = false;
+
+    if (!c) {
+      return {} as BoardSpec;
+    }
+
     const s = this.ctx.game.specs.find(i => i.id === c.specId);
     const isUpdated = c.score > 0 && s?.instance?.score !== c.score;
 
@@ -154,7 +159,7 @@ export class GameboardPageComponent implements OnDestroy {
   }
 
   select(spec: BoardSpec): void {
-    if (!spec.disabled && !spec.locked) {
+    if (!spec.disabled && !spec.locked && (!this.selected?.id || this.selected.id !== spec.id)) {
       this.selecting$.next(spec);
     }
   }
@@ -162,6 +167,11 @@ export class GameboardPageComponent implements OnDestroy {
   reselect(): void {
     const id = this.selected?.id ?? this.cid;
     if (!id) { return; }
+
+    if (id === this.selected?.id) {
+      return;
+    }
+
     const spec = this.ctx.game.specs.find(s => s.id === id);
     if (!!spec) {
       timer(100).subscribe(() =>
@@ -189,8 +199,10 @@ export class GameboardPageComponent implements OnDestroy {
 
   start(model: BoardSpec): void {
     // start gamespace
-    this.deploying = true;
     if (!model.instance) { return; }
+
+    // otherwise, start gamespace
+    this.deploying = true;
     this.api.start(model.instance).pipe(
       catchError(e => {
         this.errors.push(e);
@@ -203,12 +215,8 @@ export class GameboardPageComponent implements OnDestroy {
     );
   }
 
-  extendSession(quit: boolean): void {
-    const model: SessionChangeRequest = {
-      teamId: this.ctx.teamId,
-      sessionEnd: quit ? "0001-01-01" : new Date().toISOString()
-    }
-    this.playerApi.updateSession(model).pipe(first()).subscribe();
+  handleRefreshRequest(id: string) {
+    this.refresh$.next(this.ctx.id);
   }
 
   graded(): void {

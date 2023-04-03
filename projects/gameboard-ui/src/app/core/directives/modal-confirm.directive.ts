@@ -26,7 +26,7 @@ export class ModalConfirmDirective implements AfterViewInit {
       }
 
       if (this.config) {
-        this.modalService.open(this.config);
+        this.modalService.openConfirm(this.config);
       }
     }
   }

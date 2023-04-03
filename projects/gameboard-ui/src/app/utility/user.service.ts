@@ -25,9 +25,9 @@ export class UserService {
     router: Router
   ) {
 
-    // every half hour grab a fresh mks cookie if token still good
+    // when token updated, or every half hour grab a fresh mks cookie if token still good
     combineLatest([
-      timer(3000, 1800000),
+      timer(1000, 1800000),
       this.refresh$,
       auth.tokenState$
     ]).pipe(
@@ -36,19 +36,9 @@ export class UserService {
       switchMap(t => api.register(
         auth.oidcUser?.profile as unknown as NewUser,
         auth.auth_header()
-      ))
-    ).subscribe(p => this.user$.next(p));
-
-    auth.tokenState$.pipe(
-      filter(t => t === AuthTokenState.valid),
-      debounceTime(300),
-      map(() => auth.oidcUser?.profile),
-      switchMap(user => api.register(
-        user as unknown as NewUser,
-        auth.auth_header()).pipe(
-          catchError(err => of(null))
-        )
-      ),
+      ).pipe(
+        catchError(err => of(null))
+      )),
       tap(() => this.init$.next(true)),
     ).subscribe(p => this.user$.next(p));
 

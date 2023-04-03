@@ -3,10 +3,12 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -14,7 +16,8 @@ export class PlayerService {
 
   constructor(
     private http: HttpClient,
-    private config: ConfigService
+    private config: ConfigService,
+    private gameSessionService: GameSessionService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -33,6 +36,7 @@ export class PlayerService {
       map(p => this.transform(p) as Player)
     );
   }
+
   public create(model: NewPlayer): Observable<Player> {
     return this.http.post<Player>(`${this.url}/player`, model).pipe(
       map(p => this.transform(p) as Player)
@@ -49,8 +53,8 @@ export class PlayerService {
     );
   }
 
-  public resetSession(p: Player): Observable<any> {
-    return this.http.delete<void>(`${this.url}/player/${p.id}/session`, {}).pipe(
+  public resetSession(p: Player, asAdmin: boolean = false): Observable<any> {
+    return this.http.delete<void>(`${this.url}/player/${p.id}/session?asAdmin=${asAdmin}`, {}).pipe(
       map(r => {
         delete p.session;
         return;
@@ -62,8 +66,8 @@ export class PlayerService {
     return this.http.put<any>(`${this.url}/team/session`, model);
   }
 
-  public unenroll(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.url}/player/${id}`);
+  public unenroll(id: string, asAdmin: boolean = false): Observable<void> {
+    return this.http.delete<void>(`${this.url}/player/${id}?asAdmin=${asAdmin}`);
   }
 
   public invite(id: string): Observable<TeamInvitation> {
@@ -100,6 +104,9 @@ export class PlayerService {
     );
   }
 
+  public getTeamChallenges = (id: string): Observable<TeamChallenge[]> =>
+    this.http.get<TeamChallenge[]>(`${this.url}/team/${id}/challenges`);
+
   public advanceTeams(model: TeamAdvancement): Observable<any> {
     return this.http.post<any>(this.url + '/team/advance', model);
   }
@@ -135,27 +142,18 @@ export class PlayerService {
 
     p.pendingName = p.approvedName !== p.name
       ? p.name + (!!p.nameStatus ? `...${p.nameStatus}` : '...pending')
-      : ''
-      ;
+      : '';
 
-    this.transformSession(p, p.sessionBegin, p.sessionEnd);
+    this.gameSessionService.transformSession(p, p.sessionBegin, p.sessionEnd);
 
     return p;
-  }
-
-  public transformSession(p: Player, sessionBegin: Date, sessionEnd: Date) {
-    this.addSession(p, new TimeWindow(sessionBegin, sessionEnd));
-  }
-
-  public addSession(p: Player, session: TimeWindow) {
-    p.session = session;
   }
 
   private transformStanding(p: Standing): Standing {
     p.sponsorLogo = p.sponsor
       ? `${this.config.imagehost}/${p.sponsor}`
-      : `${this.config.basehref}assets/sponsor.svg`
-      ;
+      : `${this.config.basehref}assets/sponsor.svg`;
+
     p.sponsorTooltip = p.sponsorList.map(s => s.split('.').reverse().pop()?.toUpperCase()).join(' | ');
     p.sponsorList.forEach((s, i, a) => a[i] = `${this.config.imagehost}/${s}`);
     p.session = new TimeWindow(p.sessionBegin, p.sessionEnd);

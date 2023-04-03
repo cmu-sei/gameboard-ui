@@ -5,22 +5,30 @@
   <div class="card mb-4">
     <div class="card-body">
 
-      <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)" class="text-info card-text mb-2">
-        <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
-        <span *ngIf="ctx.game.session.isDuring">Game window closes in </span>
-        <span *ngIf="ctx.game.session.isAfter">Game window is closed </span>
-        <span>{{ctx.game.session.countdown | countdown}}</span>
+      <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)" class="text-info card-text d-flex mb-2">
+        <div>
+          <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
+          <span *ngIf="ctx.game.session.isDuring">Game window closes in </span>
+          <span *ngIf="ctx.game.session.isAfter">Game window is closed </span>
+        </div>
+        <div class="ml-2">
+          {{ctx.game.session.countdown | countdown}}
+        </div>
       </div>
 
       <div class="card-title lead">
         <ng-container *ngIf="!ctx.player.session?.isBefore">
           <div class="d-flex text-info card-text">
-            <span *ngIf="ctx.player.session?.isAfter">Session ended </span>
-            <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
-            <span [class]="ctx.player.session?.countdown | countdowncolor">
+            <div>
+              <span *ngIf="ctx.player.session?.isAfter">Session ended </span>
+              <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
+            </div>
+
+            <div [class]="'ml-2 ' + (ctx.player.session?.countdown | countdowncolor)">
               {{ctx.player.session?.countdown | countdown}}
-            </span>
+            </div>
             <div class="spacer"></div>
+
             <app-confirm-button *ngIf="ctx.game.allowReset" class="mx-2" btnClass="btn btn-sm pop-warning"
               (confirm)="handleReset(ctx.player)">
               <fa-icon [icon]="faTrash"></fa-icon>
@@ -44,6 +52,9 @@
           <tr>
             <td>{{ctx.player.rank}}</td>
             <td>{{ctx.player.score}}</td>
+            <td>
+              <app-cumulative-time-clock [session]="ctx.player.session"></app-cumulative-time-clock>
+            </td>
             <td>{{ctx.player.time | clock}}</td>
             <td>{{ctx.player.correctCount}}</td>
             <td>{{ctx.player.partialCount}}</td>
@@ -124,7 +135,7 @@
         <a *ngIf="ctx.game.mode != 'unity'" class="btn btn-primary btn-lg"
           [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
         <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
-          [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd]">
+          [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd.valueOf()]">
           Continue to Cubespace
         </a>
       </div>

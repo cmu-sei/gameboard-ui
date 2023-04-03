@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let c of list">
-          <td><a [routerLink]="[c.gameId, c.id]">{{c.name}}</a></td>
+          <td><a [routerLink]="[c.id, slug(c.gameName), slug(c.name)]">{{c.name}}</a></td>
           <td>{{c.description}}</td>
           <td>
             <img [src]="c.gameLogo" width="32px">&nbsp;

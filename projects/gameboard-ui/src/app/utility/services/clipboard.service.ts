@@ -8,12 +8,12 @@ import { DOCUMENT } from '@angular/common';
 export class ClipboardService {
   private _clipboard: Clipboard;
 
-  constructor (@Inject(DOCUMENT) private dom: Document) {
+  constructor(@Inject(DOCUMENT) private dom: Document) {
     this._clipboard = navigator.clipboard;
   }
 
   async copy(text: string) {
-    this._clipboard.writeText(text);
+    await this._clipboard.writeText(text);
   }
 
   async paste(): Promise<string> {
