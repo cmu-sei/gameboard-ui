@@ -48,6 +48,7 @@ import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
 
 import { NAVIGATOR } from './services/navigator.service';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 const components = [
   ClipspanComponent,
@@ -81,7 +82,10 @@ const components = [
 
 @NgModule({
   declarations: [...components],
-  exports: [...components],
+  exports: [
+    ...components,
+    ProgressbarModule,
+  ],
   providers: [{ provide: NAVIGATOR, useValue: navigator }],
   imports: [
     CommonModule,
@@ -92,6 +96,7 @@ const components = [
     ButtonsModule,
     BsDatepickerModule,
     BsDropdownModule,
+    ProgressbarModule,
     TooltipModule,
     RouterModule,
     CoreModule

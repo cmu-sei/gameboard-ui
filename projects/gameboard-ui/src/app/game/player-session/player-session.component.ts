@@ -43,7 +43,6 @@ export class PlayerSessionComponent implements OnDestroy {
 
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
-      tap(ctx => console.log("ctx is here", ctx)),
       tap(ctx => {
         let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
 
