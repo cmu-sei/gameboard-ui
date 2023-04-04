@@ -22,9 +22,13 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   @Output() onRequestStart = new EventEmitter();
 
   private gameHubSub?: Subscription;
+
   protected START_DISABLED_TOOLTIP = "We're still waiting for all registered players to ready up. Once they do, you can start your session.";
   protected isDoubleChecking = false;
   protected isGameSyncStartReady = false;
+  protected playerReadyCount = 0;
+  protected playerNotReadyCount = 0;
+  protected playerReadyPct = 0;
 
   constructor(
     public faService: FontAwesomeService,
@@ -58,5 +62,26 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
 
   private handleNewSyncStartState(state: SyncStartState) {
     this.isGameSyncStartReady = state.isReady;
+
+    // get player ready/notready counts
+    this.playerReadyCount = state
+      .teams
+      .map(t => t.players)
+      .reduce((p1, p2) => p1.concat(p2))
+      .filter(p => p.isReady)
+      .length;
+
+    this.playerNotReadyCount = state
+      .teams
+      .map(t => t.players)
+      .reduce((p1, p2) => p1.concat(p2))
+      .filter(p => !p.isReady)
+      .length;
+
+    if (this.playerNotReadyCount + this.playerReadyCount > 0) {
+      this.playerReadyPct = Math.round(100 * (this.playerReadyCount * 1.0) / (this.playerReadyCount + this.playerNotReadyCount));
+    } else {
+      this.playerReadyPct = 0;
+    }
   }
 }

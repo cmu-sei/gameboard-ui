@@ -1,14 +1,4 @@
 <div class="session-start-controls-component my-4">
-    <alert class="sync-start-message my-4" type="info" *ngIf="ctx.game.requireSynchronizedStart">
-        <h3><strong>Are you ready?</strong></h3>
-
-        <p class="sync-start-message">
-            This game is synchronized, so you won't be able to start it until everyone registered
-            to play has clicked "Ready" below. If you're all set to play, be sure to ready up so everyone can start
-            playing!
-        </p>
-    </alert>
-
     <alert type="warning">
         <p>
             After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
@@ -18,6 +8,27 @@
             This will start the session for the team, so be sure your teammates are ready to start. You cannot
             add or remove team members after your session has started.
         </p>
+    </alert>
+
+    <alert class="sync-start-message my-4" type="info" *ngIf="ctx.game.requireSynchronizedStart">
+        <h3><strong>Are you ready?</strong></h3>
+
+        <p class="sync-start-message">
+            This game is synchronized, so you won't be able to start it until everyone registered
+            to play has clicked "Ready" below. If you're all set to play, be sure to ready up so everyone can start
+            playing!
+        </p>
+
+        <div class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
+            <progressbar class="flex-grow-1" [animate]="true" [value]="playerReadyPct" [max]="100" [ariaValueMin]="0"
+                [ariaValueMax]="100" type="info">
+                <strong>{{playerReadyPct}}%</strong>
+            </progressbar>
+
+            <p class="ml-4">
+                {{ playerReadyCount }} / {{ playerReadyCount + playerNotReadyCount }} players ready
+            </p>
+        </div>
     </alert>
 
     <div class="d-flex align-items-center justify-content-center" *ngIf="!isDoubleChecking">

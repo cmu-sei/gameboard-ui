@@ -69,7 +69,6 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
       }),
       first(),
       tap(player => {
-        console.log("this is the end", player);
         this.onRefreshRequest.emit(player.id)
       })
     ).subscribe();
