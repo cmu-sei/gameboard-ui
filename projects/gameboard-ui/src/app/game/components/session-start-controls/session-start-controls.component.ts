@@ -7,6 +7,7 @@ import { Player } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
 import { GameHubService } from '../../../services/signalR/game-hub.service';
+import { SyncStartService } from '../../../services/sync-start.service';
 import { SyncStartState } from '../../game.models';
 
 @Component({
@@ -34,10 +35,13 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     public faService: FontAwesomeService,
     private gameHub: GameHubService,
     private gameService: GameService,
-    private playerService: PlayerService) { }
+    private playerService: PlayerService,
+    private syncStartService: SyncStartService) {
+    console.log("constructor", syncStartService);
+  }
 
   ngOnInit(): void {
-    this.gameService.getIsSyncStartReady(this.ctx.game.id).pipe(first()).subscribe(this.handleNewSyncStartState);
+    this.gameService.getSyncStartState(this.ctx.game.id).pipe(first()).subscribe(this.handleNewSyncStartState);
     this.gameHubSub = this.gameHub.syncStartChanged$.subscribe(stateUpdate => {
       this.handleNewSyncStartState(stateUpdate);
     });
@@ -61,22 +65,17 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   }
 
   private handleNewSyncStartState(state: SyncStartState) {
+    console.log("new sync start state", state);
     this.isGameSyncStartReady = state.isReady;
 
-    // get player ready/notready counts
-    this.playerReadyCount = state
-      .teams
-      .map(t => t.players)
-      .reduce((p1, p2) => p1.concat(p2))
-      .filter(p => p.isReady)
-      .length;
+    if (!state || !state.teams.length) {
+      this.playerReadyPct = 0;
+    }
 
-    this.playerNotReadyCount = state
-      .teams
-      .map(t => t.players)
-      .reduce((p1, p2) => p1.concat(p2))
-      .filter(p => !p.isReady)
-      .length;
+    // get player ready/notready counts
+    console.log("starting with", this.syncStartService, state);
+    this.playerReadyCount = this.syncStartService.getReadyPlayers(state).length;
+    this.playerNotReadyCount = this.syncStartService.getNotReadyPlayers(state).length;
 
     if (this.playerNotReadyCount + this.playerReadyCount > 0) {
       this.playerReadyPct = Math.round(100 * (this.playerReadyCount * 1.0) / (this.playerReadyCount + this.playerNotReadyCount));

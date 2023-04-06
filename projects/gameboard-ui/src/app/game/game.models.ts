@@ -18,3 +18,10 @@ export interface SyncStartState {
     teams: SyncStartTeam[];
     isReady: boolean;
 }
+
+export interface SynchronizedGameStartedState {
+    game: SimpleEntity;
+    sessionBegin: Date;
+    sessionEnd: Date;
+    teams: { teamId: string, players: SimpleEntity[] }[];
+}

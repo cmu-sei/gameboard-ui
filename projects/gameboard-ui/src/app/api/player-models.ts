@@ -220,6 +220,7 @@ export interface TeamAdvancement {
 export interface Team {
   teamId: string;
   gameId: string;
+  approvedName: string;
   sessionBegin: Date;
   sessionEnd: Date;
   rank: number;

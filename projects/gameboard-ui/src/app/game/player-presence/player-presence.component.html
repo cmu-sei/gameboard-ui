@@ -1,8 +1,6 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-{{ (ctx$ | async)?.notReadyPlayers | json }}
-
 <ng-container *ngIf="ctx$ | async as ctx">
   <div *ngIf="ctx.player" class="team-leader d-flex align-items-center align-content-center">
     <app-player-avatar-list *ngIf="ctx.hasTeammates" [avatarUris]="avatarUris" [captainSession]="ctx.player.session"
@@ -23,7 +21,7 @@
       <li *ngFor="let teamMember of ctx.allPlayers"
         class="d-flex justify-content-center align-items-center align-content-center">
         <div class="avatar-status-container mr-4">
-          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [size]="avatarSize"
+          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [size]="'medium'"
             [maxAvatarsInListView]="ctx.allPlayers.length" class="mr-4"></app-player-avatar>
         </div>
         <div class="player-name mr-auto align-middle fs-11 mb-4">

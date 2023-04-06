@@ -4,9 +4,6 @@ import { SyncStartPlayer, SyncStartState } from '../game/game.models';
 
 @Injectable({ providedIn: 'root' })
 export class SyncStartService {
-
-  constructor() { }
-
   public getReadyPlayers(state: SyncStartState): SimpleEntity[] {
     return this.getPlayersWithReadyState(state, true);
   }
@@ -16,10 +13,13 @@ export class SyncStartService {
   }
 
   public getAllPlayers(state: SyncStartState): SyncStartPlayer[] {
-    return state
-      .teams
-      .map(t => t.players)
-      .reduce((players1, players2) => players1.concat(players2))
+    var teamArrays = state.teams.map(t => t.players);
+
+    if (!teamArrays.length) {
+      return [];
+    }
+
+    return teamArrays.reduce((players1, players2) => players1.concat(players2));
   }
 
   private getPlayersWithReadyState(state: SyncStartState, readyState: boolean): SimpleEntity[] {
@@ -27,6 +27,6 @@ export class SyncStartService {
       return [];
     }
 
-    return this.getAllPlayers(state).filter(p => p.isReady == readyState);
+    return this.getAllPlayers(state).filter(p => p.isReady == readyState) || [];
   }
 }

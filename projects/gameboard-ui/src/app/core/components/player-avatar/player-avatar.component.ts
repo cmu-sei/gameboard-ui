@@ -1,12 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Player, TimeWindow } from '../../../api/player-models';
-
-export enum PlayerAvatarSize {
-  Small = "small",
-  Medium = "medium",
-  Large = "large"
-}
+import { TimeWindow } from '../../../api/player-models';
 
 @Component({
   selector: 'app-player-avatar',
@@ -22,8 +16,7 @@ export enum PlayerAvatarSize {
 export class PlayerAvatarComponent implements OnInit, OnChanges {
   @Input() avatarUri?: string;
   @Input() session?: TimeWindow;
-  @Input() playerId: string | undefined;
-  @Input() size = PlayerAvatarSize.Medium;
+  @Input() size: 'small' | 'medium' | 'large' = 'medium';
   @Input() enableSessionStatus = false;
 
   // this accommodates cases where we want to make sure that even though this avatar may be a single item, it
