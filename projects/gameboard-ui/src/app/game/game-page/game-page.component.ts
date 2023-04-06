@@ -41,7 +41,8 @@ export class GamePageComponent implements OnDestroy {
 
   private isExternalGame = false;
   private isSyncStartReady = false;
-  private gameHubSubscription?: Subscription;
+  private syncStartChangedSubscription?: Subscription;
+  private syncStartGameStartedSubscription?: Subscription;
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
 
@@ -67,11 +68,19 @@ export class GamePageComponent implements OnDestroy {
       tap(g => this.ctxIds.gameId = g.id),
       tap(g => this.isExternalGame = apiGame.isExternalGame(g)),
       tap(g => {
-        this.gameHubSubscription?.unsubscribe();
+        this.syncStartChangedSubscription?.unsubscribe();
 
         if (g.requireSynchronizedStart) {
-          this.gameHubSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
+          this.syncStartChangedSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
             this.isSyncStartReady = state.isReady;
+          });
+
+          this.syncStartGameStartedSubscription = this.gameHubService.syncStartGameStarted$.subscribe(startState => {
+            console.log("game start event", startState);
+            if (startState) {
+              console.log("nav with start state", startState);
+              router.navigateByUrl(`/game/${startState.game.id}/sync-start`);
+            }
           });
         }
       })
@@ -169,8 +178,9 @@ export class GamePageComponent implements OnDestroy {
       }),
       tap(c => {
         // listen for game hub events to enable synchronized start stuff if needed
-        if (c.player.gameId && c.game.requireSynchronizedStart)
+        if (c.player.gameId && c.game.requireSynchronizedStart) {
           this.gameHubService.joinGame(c.player.gameId)
+        }
         else
           this.gameHubService.leaveGame(c.game.id)
       }),

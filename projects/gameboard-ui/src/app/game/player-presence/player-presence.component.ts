@@ -7,7 +7,6 @@ import { first, map, tap } from 'rxjs/operators';
 import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { HubPlayer, Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { PlayerAvatarSize } from '../../core/components/player-avatar/player-avatar.component';
 import { NotificationService } from '../../services/notification.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
 import { SyncStartState } from '../game.models';
@@ -39,7 +38,6 @@ export class PlayerPresenceComponent implements OnInit {
   private syncStartState$ = new BehaviorSubject<SyncStartState | null>(null);
   private syncStartStateSubscription?: Subscription;
 
-  protected avatarSize = PlayerAvatarSize.Medium;
   protected promoteIcon = faChevronCircleUp;
   protected ctx$?: Observable<PlayerPresenceContext | null>;
   protected avatarUris: string[] = [];

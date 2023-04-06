@@ -2,10 +2,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { HubConnectionState } from '@microsoft/signalr';
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { SyncStartState } from '../../game/game.models';
-import { LocalStorageService, StorageKey } from '../../utility/services/local-storage.service';
+import { SynchronizedGameStartedState, SyncStartState } from '../../game/game.models';
+import { LocalStorageService, StorageKey } from '../local-storage.service';
 import { LogService } from '../log.service';
-import { NotificationService } from '../notification.service';
+import { HubState, NotificationService } from '../notification.service';
 
 export interface GameHubEvent {
     gameId: string;
@@ -14,6 +14,7 @@ export interface GameHubEvent {
 }
 
 enum GameHubEventType {
+    SyncStartGameStarting = "syncStartGameStarting",
     SyncStartStateChanged = "syncStartStateChanged"
 }
 
@@ -21,9 +22,13 @@ enum GameHubEventType {
 export class GameHubService implements OnDestroy {
     private gameHubEventsSub?: Subscription;
     private manageJoinGameRequestSub?: Subscription;
+
     private _syncStartStateChanged$ = new Subject<SyncStartState>();
+    private _syncStartGameStarted$ = new Subject<SynchronizedGameStartedState>()
+    private _manualRefresh$ = new Subject<void>();
 
     public syncStartChanged$ = this._syncStartStateChanged$.asObservable();
+    public syncStartGameStarted$ = this._syncStartGameStarted$.asObservable();
     public joinGameRequest$ = new BehaviorSubject<string | null>(null);
 
     // TODO: someday, refactor core connection stuff into a the signalr service and create federated services for each channel type
@@ -43,26 +48,26 @@ export class GameHubService implements OnDestroy {
         private localStorageService: LocalStorageService,
         private logger: LogService,
         private notificationService: NotificationService) {
-        this.manageJoinGameRequestSub = combineLatest([
-            notificationService.state$,
-            // this.joinGameRequest$
+
+        combineLatest([
+            this._manualRefresh$,
+            notificationService.state$
         ]).pipe(
-            // map(([hubServiceState, joinGameRequest]) => ({ hubServiceState, joinGameRequest })),
-            map(([hubServiceState]) => ({ hubServiceState })),
-            tap(async ctx => {
-                const gameIdsToJoin = this.loadGameHubConnections();
-                if (ctx.hubServiceState.connectionState === HubConnectionState.Connected && gameIdsToJoin?.length) {
-                    for (let gameId of gameIdsToJoin) {
-                        this.joinGame(gameId);
-                    }
-                }
-            })
+            map(([_, hubServiceState]) => ({ hubServiceState })),
+            tap(ctx => this.maybeJoinGames(ctx.hubServiceState))
         ).subscribe();
 
         this.gameHubEventsSub = notificationService.gameHubEvents$.subscribe(ev => {
+            console.log("event?", ev);
+            console.log("does thing equal thing?", ev.eventType == GameHubEventType.SyncStartGameStarting);
+            console.log("event's type", ev.eventType);
+            console.log("the enum", GameHubEventType.SyncStartGameStarting);
             switch (ev.eventType) {
                 case GameHubEventType.SyncStartStateChanged:
                     this._syncStartStateChanged$.next(ev.data as SyncStartState);
+                    return;
+                case GameHubEventType.SyncStartGameStarting:
+                    this._syncStartGameStarted$.next(ev.data as SynchronizedGameStartedState);
                     return;
                 default:
                     return;
@@ -70,26 +75,20 @@ export class GameHubService implements OnDestroy {
         });
     }
 
-    public async joinGame(gameId: string) {
+    public joinGame(gameId: string) {
         if (!gameId) {
             this.logger.logError("Can't join a blank GameId.");
             return;
         }
 
-        if (this.notificationService.connection.state === HubConnectionState.Connected) {
-            // join the channel
-            const state = await this.notificationService.sendMessage<SyncStartState>("JoinGame", gameId);
-            this._syncStartStateChanged$.next(state);
-
-            return;
-        }
-
-        // if we're not connected now, we need to save the game to join in local storage so that we can join it when the connection to the hub starts
+        // push the game into our local storage list to join and let our pipeline know it has work to do
         const gamesJoined = this.loadGameHubConnections();
         if (gamesJoined.indexOf(gameId) < 0) {
             gamesJoined.push(gameId);
             this.localStorageService.add(StorageKey.WantsGameHubConnections, JSON.stringify(gamesJoined))
         }
+
+        this._manualRefresh$.next();
     }
 
     public leaveGame(gameId: string) {
@@ -101,6 +100,17 @@ export class GameHubService implements OnDestroy {
 
     private loadGameHubConnections(): string[] {
         return JSON.parse(this.localStorageService.get(StorageKey.WantsGameHubConnections) || '[]');
+    }
+
+    private async maybeJoinGames(hubState: HubState) {
+        const gameIdsToJoin = this.loadGameHubConnections();
+        if (hubState.connectionState === HubConnectionState.Connected && gameIdsToJoin.length) {
+            for (let gameId of gameIdsToJoin) {
+                // join the channel
+                const state = await this.notificationService.sendMessage<SyncStartState>("JoinGame", gameId);
+                this._syncStartStateChanged$.next(state);
+            }
+        }
     }
 
     private removeFromPendingGameHubConnections(gameId: string) {

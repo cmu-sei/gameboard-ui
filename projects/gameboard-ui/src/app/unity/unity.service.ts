@@ -6,7 +6,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ConfigService } from '../utility/config.service';
 import { GamebrainActiveGame, UnityActiveGame, UnityContext, UnityDeployContext } from '../unity/unity-models';
-import { LocalStorageService, StorageKey } from '../utility/services/local-storage.service';
+import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })

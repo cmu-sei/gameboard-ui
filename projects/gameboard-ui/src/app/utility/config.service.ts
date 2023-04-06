@@ -9,7 +9,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Location, PlatformLocation } from '@angular/common';
 import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
-import { LocalStorageService, StorageKey } from './services/local-storage.service';
+import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {

@@ -65,14 +65,15 @@ export class GameService {
       tap(m => this.removeCache(model.id))
     );
   }
+
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/game/${id}`).pipe(
       tap(m => this.removeCache(id))
     );
   }
 
-  public getIsSyncStartReady(id: string): Observable<SyncStartState> {
-    return this.http.get<SyncStartState>(`${this.url}/game/${id}/ready`);
+  public getSyncStartState(gameId: string): Observable<SyncStartState> {
+    return this.http.get<SyncStartState>(`${this.url}/game/${gameId}/ready`);
   }
 
   public retrieveSpecs(id: string): Observable<Spec[]> {

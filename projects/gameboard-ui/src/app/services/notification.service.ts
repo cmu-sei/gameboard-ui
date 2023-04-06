@@ -127,6 +127,7 @@ export class NotificationService {
     connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
     connection.on('playerEvent', e => this.onPlayerEvent(e));
     connection.on('gameHubEvent', e => this._gameHubEvents$.next(e));
+    connection.on('synchronizedGameStartedEvent', e => this._gameHubEvents$.next(e));
 
     return connection;
   }
@@ -192,7 +193,14 @@ export class NotificationService {
       this.logger.logError(`Can't invoke message ${message} - the hub is in a non-connected state (${this.connection.state})`);
     }
 
-    return await this.connection.invoke(message, ...args);
+    console.log("sending", message, args, `Connection state: `, this.connection.state);
+    try {
+      return await this.connection.invoke(message, ...args);
+    }
+    catch (ex) {
+      this.logger.logError("Error on message send:", message, args);
+      throw ex;
+    }
   }
 
   private async onReconnected(): Promise<void> {
