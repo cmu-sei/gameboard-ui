@@ -193,7 +193,6 @@ export class NotificationService {
       this.logger.logError(`Can't invoke message ${message} - the hub is in a non-connected state (${this.connection.state})`);
     }
 
-    console.log("sending", message, args, `Connection state: `, this.connection.state);
     try {
       return await this.connection.invoke(message, ...args);
     }
