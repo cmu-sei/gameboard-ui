@@ -64,8 +64,8 @@ const MODULE_DECLARATIONS = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild([
-      { path: 'board/:id/:cid', canActivate: [AuthGuard], component: GameboardPageComponent },
-      { path: 'board/:id', canActivate: [AuthGuard], component: GameboardPageComponent },
+      { path: 'board/:gameId/:cid', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
+      { path: 'board/:gameId', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
       { path: ':gameId/sync-start', canActivate: [AuthGuard, SyncStartGuard], component: SyncStartPageComponent },
       { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
