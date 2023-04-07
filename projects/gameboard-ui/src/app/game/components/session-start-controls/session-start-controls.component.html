@@ -14,9 +14,9 @@
         <h3><strong>Are you ready?</strong></h3>
 
         <p class="sync-start-message">
-            This game is synchronized, so you won't be able to start it until everyone registered
-            to play has clicked "Ready" below. If you're all set to play, be sure to ready up so everyone can start
-            playing!
+            This game is synchronized, so you won't be able to start it until <strong>everyone</strong>
+            registered to play <span *ngIf="ctx.game.maxTeamSize > 1"> (across all teams)</span> has clicked
+            "Ready" below. If you're all set to play, be sure to ready up so everyone can start playing!
         </p>
 
         <div class="progress-bar-container mt-4 mb-2 d-flex align-items-center">

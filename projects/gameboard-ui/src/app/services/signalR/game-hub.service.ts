@@ -58,10 +58,6 @@ export class GameHubService implements OnDestroy {
         ).subscribe();
 
         this.gameHubEventsSub = notificationService.gameHubEvents$.subscribe(ev => {
-            console.log("event?", ev);
-            console.log("does thing equal thing?", ev.eventType == GameHubEventType.SyncStartGameStarting);
-            console.log("event's type", ev.eventType);
-            console.log("the enum", GameHubEventType.SyncStartGameStarting);
             switch (ev.eventType) {
                 case GameHubEventType.SyncStartStateChanged:
                     this._syncStartStateChanged$.next(ev.data as SyncStartState);

@@ -36,9 +36,7 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     private gameHub: GameHubService,
     private gameService: GameService,
     private playerService: PlayerService,
-    private syncStartService: SyncStartService) {
-    console.log("constructor", syncStartService);
-  }
+    private syncStartService: SyncStartService) { }
 
   ngOnInit(): void {
     this.gameService.getSyncStartState(this.ctx.game.id).pipe(first()).subscribe(this.handleNewSyncStartState);
@@ -65,7 +63,6 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   }
 
   private handleNewSyncStartState(state: SyncStartState) {
-    console.log("new sync start state", state);
     this.isGameSyncStartReady = state.isReady;
 
     if (!state || !state.teams.length) {
@@ -73,7 +70,6 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     }
 
     // get player ready/notready counts
-    console.log("starting with", this.syncStartService, state);
     this.playerReadyCount = this.syncStartService.getReadyPlayers(state).length;
     this.playerNotReadyCount = this.syncStartService.getNotReadyPlayers(state).length;
 
