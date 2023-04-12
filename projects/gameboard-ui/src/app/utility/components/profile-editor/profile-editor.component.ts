@@ -27,7 +27,7 @@ export class ProfileEditorComponent {
   disallowedName: string | null = null;
   disallowedReason: string | null = null;
 
-  constructor (
+  constructor(
     private api: ApiUserService,
     private userSvc: UserService,
     sponsorSvc: SponsorService
@@ -69,7 +69,7 @@ export class ProfileEditorComponent {
 
     // update the api
     const updatedUser = await this.api.update(u, this.disallowedName).toPromise();
-    this.updating$.next(updatedUser);
+    this.updating$.next(updatedUser!);
   }
 
   refresh(u: ApiUser): void {
