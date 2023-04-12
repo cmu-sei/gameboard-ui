@@ -2,11 +2,10 @@
 // Released under a 3 Clause BSD-style license. See LICENSE.md in the project root.
 
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { filter, finalize, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { faTrash, faArrowDown, faPaperclip, faUpload, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { SupportService } from '../../../api/support.service';
-import { NewTicket } from '../../../api/support-models';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -54,7 +53,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
           if (!this.files.has(key)) {
             if (this.combineSize + file.size < this.maxCombinedSizeMB * 1_000_000) {
               this.combineSize += file.size;
-              var data: FileData = {file: file}
+              var data: FileData = { file: file }
               if (file.type.match(/(image|application)\/(png|jpeg|gif|webp|svg)/)) {
                 const reader = new FileReader();
                 reader.onload = e => {
@@ -69,7 +68,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
           }
         });
         this.emitFiles();
-       
+
       }
     );
 
@@ -137,8 +136,11 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   }
   @HostListener('drop', ['$event'])
   onDrop(event: DragEvent): boolean {
-    this.dropzone = false;
-    this.drops.next(event.dataTransfer?.files);
+    if (event.dataTransfer?.files) {
+      this.dropzone = false;
+      this.drops.next(event.dataTransfer?.files);
+    }
+
     return false;
   }
 }

@@ -40,7 +40,7 @@ export class UnityService {
     this.log("Active game?:", gamebrainActiveGame)
 
     this.log("Checking current game for validity...");
-    if (gamebrainActiveGame.gamespaceId) {
+    if (gamebrainActiveGame?.gamespaceId) {
       this.log("It's valid. Starting up existing game.", gamebrainActiveGame);
       this.startupExistingGame(ctx, gamebrainActiveGame);
     }

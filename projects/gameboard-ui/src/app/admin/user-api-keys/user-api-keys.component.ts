@@ -29,7 +29,7 @@ export class UserApiKeysComponent implements OnInit, OnDestroy {
   protected closeIcon = faTimes;
   protected deleteIcon = faTrash;
 
-  private apiKeysSubject$ = new Subject<ApiKeyViewModel[]>();
+  private apiKeysSubject$ = new Subject<void>();
   private apiKeysSub?: Subscription;
 
   constructor(
