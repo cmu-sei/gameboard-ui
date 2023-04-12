@@ -61,6 +61,11 @@ nav {
   background-color: $body-bg;
 }
 
+ol,
+ul {
+  padding-inline-start: 0;
+}
+
 app-root {
   display: block;
   min-height: 100vh;

@@ -12,6 +12,7 @@ import { ModalConfirmComponent } from './components/modal/modal-confirm.componen
 import { ModalConfirmDirective } from './directives/modal-confirm.directive';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
 
@@ -25,6 +26,7 @@ const PUBLIC_DECLARATIONS = [
   PlayerStatusComponent,
   RelativeUrlsPipe,
   SafeHtmlPipe,
+  SpinnerComponent,
   UrlRewritePipe,
   YamlBlockComponent,
   YamlPipe

@@ -1,0 +1,14 @@
+<div class="report-dynamic-component" *ngIf="report$ | async as report; else loading">
+    <div class="header-content">
+        <h1>{{report.name}}</h1>
+        <p>{{report.description}}</p>
+    </div>
+
+    <div class="report-controls-container">
+        <app-report-parameters [reportKey]="report.key"></app-report-parameters>
+    </div>
+</div>
+
+<ng-template #loading>
+    <app-spinner></app-spinner>
+</ng-template>

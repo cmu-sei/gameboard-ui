@@ -1,0 +1,19 @@
+<div class="report-card-component cursor-hand" *ngIf="report">
+    <a class="d-block" [routerLink]="reportUrl">
+        <div class="title-container">
+            <h1>{{report.name}}</h1>
+        </div>
+
+        <p class="description">
+            {{report.description}}
+        </p>
+
+        <div class="params-container mt-4">
+            <ul class="d-flex align-items-center flex-wrap">
+                <li class="d-inline-block" *ngFor="let param of report.parameters">
+                    <span class="parameter-name badge badge-info">{{param.name}}</span>
+                </li>
+            </ul>
+        </div>
+    </a>
+</div>

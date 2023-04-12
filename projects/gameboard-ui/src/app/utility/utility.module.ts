@@ -31,7 +31,6 @@ import { MessageBoardComponent } from './components/message-board/message-board.
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
 import { PagerComponent } from './components/pager/pager.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
 
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { ClockPipe } from './pipes/clock.pipe';
@@ -54,7 +53,6 @@ const components = [
   ClipspanComponent,
   ConfirmButtonComponent,
   ErrorDivComponent,
-  SpinnerComponent,
   DropzoneComponent,
   ImageManagerComponent,
   GameCardComponent,

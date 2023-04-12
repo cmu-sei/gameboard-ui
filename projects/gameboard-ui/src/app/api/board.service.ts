@@ -24,7 +24,7 @@ export class BoardService {
     this.url = config.apphost + 'api';
   }
 
-  public list(filter: any): Observable<ChallengeSummary[]> {
+  public list(filter: any = ''): Observable<ChallengeSummary[]> {
     return this.http.get<ChallengeSummary[]>(this.url + '/challenges', { params: filter });
   }
 

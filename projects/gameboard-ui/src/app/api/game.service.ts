@@ -23,7 +23,7 @@ export class GameService {
     this.url = config.apphost + 'api';
   }
 
-  public list(filter: any): Observable<Game[]> {
+  public list(filter: any = ''): Observable<Game[]> {
     return this.http.get<Game[]>(this.url + '/games', { params: filter }).pipe(
       map(r => {
         r.forEach(g => this.transform(g));
