@@ -8,10 +8,22 @@
             {{report.description}}
         </p>
 
-        <div class="params-container mt-4">
+        <div class="notable-fields-container mt-4" *ngIf="report.notableFields?.length">
+            <h4>Information like</h4>
+
+            <ul class="d-flex align-items-center flex-wrap">
+                <li class="d-inline-block" *ngFor="let field of report.notableFields">
+                    <span class="parameter-name badge badge-info">{{field}}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="params-container mt-4" *ngIf="report.parameters">
+            <h4>Filter by</h4>
+
             <ul class="d-flex align-items-center flex-wrap">
                 <li class="d-inline-block" *ngFor="let param of report.parameters">
-                    <span class="parameter-name badge badge-info">{{param.name}}</span>
+                    <span class="parameter-name badge badge-info">{{param}}</span>
                 </li>
             </ul>
         </div>

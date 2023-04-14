@@ -1,12 +1,16 @@
 <div class="report-dynamic-component" *ngIf="report$ | async as report; else loading">
-    <div class="header-content">
+    <div class="header-content" *ngIf="reportMetaData">
         <h1>{{report.name}}</h1>
+        <h5>{{reportMetaData.runAt | shortdate }} @ {{reportMetaData.runAt | friendlyTime}}</h5>
         <p>{{report.description}}</p>
+        <!--TODO-->
+        <!--wosscalled, export-->
     </div>
+</div>
 
-    <div class="report-controls-container">
-        <app-report-parameters [reportKey]="report.key"></app-report-parameters>
-    </div>
+<!--Note: needs to be outside any ngIfs, or the viewcontainerref can't find this-->
+<div class="report-container">
+    <ng-template appDynamicReport></ng-template>
 </div>
 
 <ng-template #loading>

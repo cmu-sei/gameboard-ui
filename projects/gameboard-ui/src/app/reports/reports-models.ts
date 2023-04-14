@@ -5,7 +5,8 @@ export interface Report {
     name: string;
     key: string;
     description: string;
-    parameters: ReportParameter[]
+    parameters: string[];
+    notableFields: string[];
 }
 
 export interface ReportParameter {
@@ -28,14 +29,14 @@ export enum ReportParameterType {
 }
 
 export interface ReportDateRange {
-    dateStart: Date;
-    dateEnd: Date;
+    dateStart?: Date;
+    dateEnd?: Date;
 }
 
 export interface ReportParameters {
     challengeId?: string;
     competition?: string;
-    dateRange?: ReportDateRange;
+    dateRange: ReportDateRange;
     date?: Date;
     gameId?: string;
     playerId?: string;
@@ -52,4 +53,10 @@ export interface ReportParameterOptions {
     sponsors: SimpleEntity[];
     teams: SimpleEntity[];
     tracks: string[];
+}
+
+export interface ReportMetaData {
+    reportId: string;
+    title: string;
+    runAt: Date;
 }

@@ -36,7 +36,6 @@ import { PlayerNamesComponent } from './player-names/player-names.component';
 import { ParticipationReportComponent } from './participation-report/participation-report.component';
 import { CoreModule } from '../core/core.module';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
@@ -96,14 +95,12 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
           { path: 'report/support', component: SupportReportComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: 'support', component: ChallengeBrowserComponent }
-          // { path: '**', redirectTo: 'dashboard' }
         ]
       },
     ]),
     CoreModule,
     ApiModule,
     UtilityModule,
-    BsDatepickerModule,
     BsDropdownModule,
     ButtonsModule,
     AlertModule,

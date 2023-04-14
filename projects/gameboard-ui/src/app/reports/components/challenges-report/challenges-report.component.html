@@ -1,0 +1,11 @@
+<div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
+    <div class="report-parameter-controls">
+        <app-report-parameters [reportKey]="'challenge-report'"></app-report-parameters>
+    </div>
+
+    <div class="report-body">
+        {{ ctx | json }}
+    </div>
+</div>
+
+<ng-template #loading><app-spinner></app-spinner></ng-template>

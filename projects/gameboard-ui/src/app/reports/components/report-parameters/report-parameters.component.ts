@@ -1,13 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ReportsService } from '../../../services/reports.service';
+import { BehaviorSubject, combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { ReportsService } from '../../reports.service';
 import { ReportParameterOptions, ReportParameters } from '../../reports-models';
 
 interface ReportParametersContext {
-  hasGame: boolean;
   options: ReportParameterOptions;
-  selectedParameters: ReportParameters;
+  selections: ReportParameters;
 }
 
 @Component({
@@ -19,33 +18,37 @@ export class ReportParametersComponent implements OnChanges, OnInit {
   @Input() reportKey?: string;
   @Output() reportRunRequested = new EventEmitter<ReportParameters>();
 
-  protected parametersContext$?: Observable<ReportParametersContext>;
+  // TODO: not this
+  private static DEFAULT_NEW_PARAMETERS: ReportParameters = { dateRange: {} }
+  private reportKey$ = new BehaviorSubject<string | undefined>(undefined);
+  private selectedParameters$ = new BehaviorSubject<ReportParameters>(ReportParametersComponent.DEFAULT_NEW_PARAMETERS);
+  protected parametersContext$?: Observable<ReportParametersContext | null>;
 
   constructor(private reportsService: ReportsService) { }
 
   ngOnInit(): void {
-    this.handleReportKeyChanged(this.reportKey);
+    this.parametersContext$ = combineLatest([
+      this.reportKey$,
+      this.selectedParameters$
+    ]).pipe(
+      switchMap(([reportKey, selectedParameters]) => !reportKey ? of(null) : forkJoin({
+        selections: of(selectedParameters),
+        options: this.reportsService.getParameterOptions(reportKey, selectedParameters)
+      }))
+    );
+
+    this.reportKey$.next(this.reportKey);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.handleReportKeyChanged(this.reportKey);
+    this.reportKey$.next(this.reportKey);
   }
 
-  private handleReportKeyChanged(key?: string) {
-    this.parametersContext$ = this.reportKey ? this.buildParametersContextPipe(this.reportKey) : undefined;
-
-    if (key) {
-      this.reportsService.getParameterOptions(key).subscribe(thing => console.log(thing));
-    }
+  handleClearSelections(): void {
+    this.selectedParameters$.next(ReportParametersComponent.DEFAULT_NEW_PARAMETERS);
   }
 
-  private buildParametersContextPipe(key: string): Observable<ReportParametersContext> {
-    return this.reportsService.getParameterOptions(key).pipe(
-      map(opts => ({
-        hasGame: false,
-        options: opts,
-        selectedParameters: {}
-      } as ReportParametersContext))
-    )
+  handleModelChange(thing: any): void {
+    console.log(this.selectedParameters$.value);
   }
 }

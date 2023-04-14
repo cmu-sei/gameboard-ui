@@ -8,6 +8,10 @@ import { ReportCardComponent } from './components/report-card/report-card.compon
 import { ReportsLayoutComponent } from './components/reports-layout/reports-layout.component';
 import { ReportParametersComponent } from './components/report-parameters/report-parameters.component';
 import { ReportDynamicComponent } from './components/report-dynamic/report-dynamic.component';
+import { DateRangeComponent } from './components/date-range/date-range.component';
+import { ChallengesReportComponent } from './components/challenges-report/challenges-report.component';
+import { DynamicReportDirective } from './directives/dynamic-report.directive';
+import { UtilityModule } from '../utility/utility.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,10 @@ import { ReportDynamicComponent } from './components/report-dynamic/report-dynam
     ReportCardComponent,
     ReportsLayoutComponent,
     ReportParametersComponent,
-    ReportDynamicComponent
+    ReportDynamicComponent,
+    DateRangeComponent,
+    ChallengesReportComponent,
+    DynamicReportDirective
   ],
   imports: [
     CommonModule,
@@ -30,7 +37,11 @@ import { ReportDynamicComponent } from './components/report-dynamic/report-dynam
         ]
       }
     ]),
-    CoreModule
+    CoreModule,
+    UtilityModule
+  ],
+  exports: [
+    DynamicReportDirective
   ]
 })
 export class ReportsModule { }

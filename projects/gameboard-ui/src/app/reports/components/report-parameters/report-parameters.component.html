@@ -1,35 +1,82 @@
 <div class="report-parameters-component" *ngIf="parametersContext$ | async as ctx; else loading">
     <hr />
-    <div class="parameters-container d-flex">
+    <div class="parameters-container d-flex flex-wrap">
         <div class="parameter-container">
-            <select class="form-control form-select" aria-label="Competition select">
-                <option selected>[any competition]</option>
-                <option *ngFor="let competition of ctx.options.competitions" [value]="competition">{{competition}}
+            <label for="competition">Competition</label>
+            <select class="form-control form-select" name="competition" aria-label="Competition select"
+                [disabled]="!!ctx.options.competitions.length" [(ngModel)]="ctx.selections.competition"
+                (ngModelChange)="handleModelChange($event)">
+                <option [value]="undefined" selected>[any competition]</option>
+                <option *ngFor="let competition of ctx.options.competitions" [ngValue]="competition">{{competition}}
                 </option>
             </select>
         </div>
         <div class="parameter-container">
-            <select class="form-control form-select" aria-label="Track select">
-                <option selected>[any track]</option>
+            <label for="track">Track</label>
+            <select class="form-control form-select" name="track" aria-label="Track select"
+                [(ngModel)]="ctx.selections.track" (ngModelChange)="handleModelChange">
+                <option [value]="undefined" selected>[any track]</option>
                 <option *ngFor="let track of ctx.options.tracks" [value]="track">{{track}}</option>
             </select>
         </div>
         <div class="parameter-container">
-            <select class="form-control form-select" aria-label="Game select">
-                <option selected>[any game]</option>
+            <label for="game">Game</label>
+            <select class="form-control form-select" name="game" aria-label="Game select"
+                [(ngModel)]="ctx.selections.gameId" (ngModelChange)="handleModelChange($event)">
+                <option [value]="undefined" selected>[any game]</option>
                 <option *ngFor="let game of ctx.options.games" [value]="game.id">{{game.name}}</option>
             </select>
         </div>
         <div class="parameter-container">
-            <select class="form-control form-select" aria-label="Challenge select">
-                <option selected>[any game]</option>
-                <option *ngFor="let game of ctx.options.games" [value]="game.id">{{game.name}}</option>
+            <label for="challenge">Challenge</label>
+            <select class="form-control form-select" name="challenge" aria-label="Challenge select"
+                [(ngModel)]="ctx.selections.challengeId" (ngModelChange)="handleModelChange($event)">
+                <option [value]="undefined" selected>[any challenge]</option>
+                <option *ngFor="let challenge of ctx.options.challenges" [value]="challenge.id">
+                    {{challenge.name}}
+                </option>
             </select>
         </div>
+        <!-- <div class="parameter-container">
+            <label for="team">Sponsor</label>
+            <select class="form-control form-select" name="sponsor" aria-label="Sponsor select"
+                [(ngModel)]="ctx.selections.sponsorId" (ngModelChange)="handleModelChange">
+                <option [value]="undefined" selected>[any team]</option>
+                <option *ngFor="let sponsor of ctx.options.sponsors" [value]="sponsor.id">
+                    {{sponsor.name}}
+                </option>
+            </select>
+        </div>
+        <div class="parameter-container">
+            <label for="team">Team</label>
+            <select class="form-control form-select" name="team" aria-label="Team select"
+                [(ngModel)]="ctx.selections.teamId" (ngModelChange)="handleModelChange($event)">
+                <option [value]="undefined" selected>[any team]</option>
+                <option *ngFor="let team of ctx.options.teams" [value]="team.id">
+                    {{team.name}}
+                </option>
+            </select>
+        </div>
+        <div class="parameter-container">
+            <label for="player">Player</label>
+            <select class="form-control form-select" name="player" aria-label="Player select"
+                [(ngModel)]="ctx.selections.playerId" (ngModelChange)="handleModelChange($event)">
+                <option [value]="undefined" selected>[any player]</option>
+                <option *ngFor="let player of ctx.options.players" [value]="player.id">
+                    {{player.name}}
+                </option>
+            </select>
+        </div>
+        <div class="parameter-container flex-container">
+            <label for="date-range">Date range</label>
+            <app-date-range [ngModel]="ctx.selections.dateRange" name="date-range"></app-date-range>
+        </div> -->
     </div>
     <hr />
     <div class="buttons-container d-flex justify-content-end">
-        <button type="button" class="btn btn-outline btn-lg btn-warning mr-2">Clear all settings</button>
+        <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleClearSelections()">
+            Clear all settings
+        </button>
         <button type="button" class="btn btn-lg btn-success">Run Report</button>
     </div>
     <hr />

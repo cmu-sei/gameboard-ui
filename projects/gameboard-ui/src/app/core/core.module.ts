@@ -15,6 +15,8 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { FormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 const PUBLIC_DECLARATIONS = [
   LinkifyHtmlPipe,
@@ -32,17 +34,23 @@ const PUBLIC_DECLARATIONS = [
   YamlPipe
 ];
 
+const RELAYED_MODULES = [
+  FormsModule,
+  BsDatepickerModule,
+  TooltipModule,
+]
+
 @NgModule({
   declarations: [
     ...PUBLIC_DECLARATIONS
   ],
   imports: [
     CommonModule,
-    TooltipModule
+    ...RELAYED_MODULES
   ],
   exports: [
+    ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
-    TooltipModule
   ]
 })
 export class CoreModule { }
