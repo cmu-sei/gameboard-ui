@@ -40,7 +40,7 @@
                     <td>Fastest</td>
                     <td>Avg. Complete Solve Time</td>
                     <td>Max Possible</td>
-                    <td>Average</td>
+                    <td>Avg.</td>
                 </tr>
 
                 <tr class="data-row" *ngFor="let record of ctx.records">
@@ -64,8 +64,16 @@
                 </tr>
             </tbody>
         </table>
-    </div>
 
+        <div class="chart-container full-width flex-container mt-5 justify-content-center align-items-center"
+            *ngIf="chartConfig">
+            <div class="doughnut-chart">
+                <canvas baseChart [labels]="chartConfig.labels" [datasets]="chartConfig.dataSets"
+                    [options]="chartConfig.options" [legend]="true" [type]="'doughnut'">
+                </canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
 <ng-template #loading><app-spinner></app-spinner></ng-template>

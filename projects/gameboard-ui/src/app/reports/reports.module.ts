@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ParticipationReportComponent } from './components/participation-report/participation-report.component';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
 import { RouterModule } from '@angular/router';
+import { NgChartsModule } from 'ng2-charts';
 import { CoreModule } from '../core/core.module';
 import { ReportCardComponent } from './components/report-card/report-card.component';
 import { ReportsLayoutComponent } from './components/reports-layout/reports-layout.component';
@@ -41,6 +42,7 @@ import { CompetitionSelectComponent } from './components/competition-select/comp
         ]
       }
     ]),
+    NgChartsModule,
     CoreModule,
     UtilityModule
   ],

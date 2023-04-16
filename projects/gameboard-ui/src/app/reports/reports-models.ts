@@ -60,3 +60,9 @@ export interface ReportMetaData {
     title: string;
     runAt: Date;
 }
+
+export interface DoughnutChartConfig {
+    labels: string[];
+    dataSets: { label: string; data: number[]; backgroundColor: string[]; hoverOffset: number; }[];
+    options: { responsive: boolean; };
+}

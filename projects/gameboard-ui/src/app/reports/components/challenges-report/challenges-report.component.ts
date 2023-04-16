@@ -4,7 +4,7 @@ import { map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { LogService } from '../../../services/log.service';
 import { PdfService } from '../../../services/pdf.service';
 import { UriService } from '../../../services/uri.service';
-import { ReportMetaData, ReportParameters } from '../../reports-models';
+import { DoughnutChartConfig, ReportMetaData, ReportParameters } from '../../reports-models';
 import { ReportsService } from '../../reports.service';
 import { IReportComponent } from '../report-component';
 import { ChallengesReportArgs, ChallengesReportModel } from './challenges-report.models';
@@ -23,6 +23,7 @@ export class ChallengesReportComponent implements IReportComponent, OnDestroy {
   private viewContainerRefsSub?: Subscription;
 
   protected ctx$: Observable<ChallengesReportModel>;
+  protected chartConfig?: DoughnutChartConfig;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,7 +36,8 @@ export class ChallengesReportComponent implements IReportComponent, OnDestroy {
     this.ctx$ = this.route.queryParams.pipe(
       map(params => ({ ...params } as ChallengesReportArgs)),
       switchMap(args => reportsService.getChallengesReport(args)),
-      tap(results => this.onResultsLoaded(results.metaData))
+      tap(results => this.onResultsLoaded(results.metaData)),
+      tap(results => this.chartConfig = this.buildDoughnutChart(results))
     );
   }
 
@@ -61,6 +63,41 @@ export class ChallengesReportComponent implements IReportComponent, OnDestroy {
     const finalParams = { ...parameters, dateRange: undefined };
 
     this.router.navigateByUrl(`/reports/${reportKey}?${this.uriService.toQueryString(finalParams)}`);
+  }
+
+  private buildDoughnutChart(results: ChallengesReportModel): DoughnutChartConfig {
+    const allPartial = results.records.map(r => r.playersWithPartialSolve).reduce((a, b) => a + b, 0);
+    const allComplete = results.records.map(r => r.playersWithCompleteSolve).reduce((a, b) => a + b, 0);
+    const allStarted = results.records.map(r => r.playersStarted).reduce((a, b) => a + b, 0);
+    const allEligible = results.records.map(r => r.playersEligible).reduce((a, b) => a + b, 0);
+
+    return {
+      labels: [
+        'Complete',
+        'Partial',
+        'Started (Unsolved)',
+        'Didn\'t start'
+      ],
+      dataSets: [{
+        label: 'Solves',
+        data: [
+          allComplete,
+          allPartial,
+          (allStarted - allPartial - allComplete),
+          (allEligible - allStarted - allPartial - allComplete)
+        ],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)',
+          'rgb(3, 182, 252)'
+        ],
+        hoverOffset: 4
+      }],
+      options: {
+        responsive: true
+      }
+    };
   }
 
   ngOnDestroy(): void {
