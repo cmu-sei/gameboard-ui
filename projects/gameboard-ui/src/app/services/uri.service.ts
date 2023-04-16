@@ -9,4 +9,25 @@ export class UriService {
 
     return new URLSearchParams(target).toString();
   }
+
+  toQueryString<TObject extends { [key: string]: any }>(target: TObject): string {
+    const finalParams: string[] = [];
+    for (const key of Object.keys(target)) {
+      const value = target[key];
+
+      if (
+        value !== null &&
+        value !== undefined &&
+        value !== '' &&
+        Object.keys(value)?.length !== 0 &&
+        // TODO: see if i can bind better so i don't have to screen this here
+        value !== 'undefined'
+
+      ) {
+        finalParams.push(`${key}=${value}`);
+      }
+    }
+
+    return finalParams.join("&");
+  }
 }

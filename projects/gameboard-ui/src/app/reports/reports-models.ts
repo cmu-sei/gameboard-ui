@@ -36,7 +36,7 @@ export interface ReportDateRange {
 export interface ReportParameters {
     challengeId?: string;
     competition?: string;
-    dateRange: ReportDateRange;
+    dateRange?: ReportDateRange;
     date?: Date;
     gameId?: string;
     playerId?: string;

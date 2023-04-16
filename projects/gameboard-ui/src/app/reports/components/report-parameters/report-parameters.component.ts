@@ -16,7 +16,7 @@ interface ReportParametersContext {
 })
 export class ReportParametersComponent implements OnChanges, OnInit {
   @Input() reportKey?: string;
-  @Output() reportRunRequested = new EventEmitter<ReportParameters>();
+  @Output() parametersChanged = new EventEmitter<ReportParameters>();
 
   // TODO: not this
   private static DEFAULT_NEW_PARAMETERS: ReportParameters = { dateRange: {} }
@@ -46,9 +46,14 @@ export class ReportParametersComponent implements OnChanges, OnInit {
 
   handleClearSelections(): void {
     this.selectedParameters$.next(ReportParametersComponent.DEFAULT_NEW_PARAMETERS);
+    this.parametersChanged.emit(this.selectedParameters$.value);
   }
 
   handleModelChange(thing: any): void {
     console.log(this.selectedParameters$.value);
+  }
+
+  handleRunClick() {
+    this.parametersChanged.emit(this.selectedParameters$.value);
   }
 }

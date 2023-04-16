@@ -1,11 +1,71 @@
 <div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
     <div class="report-parameter-controls">
-        <app-report-parameters [reportKey]="'challenge-report'"></app-report-parameters>
+        <app-report-parameters [reportKey]="'challenge-report'"
+            (parametersChanged)="handleReportParametersChanged($event)"></app-report-parameters>
     </div>
 
-    <div class="report-body">
-        {{ ctx | json }}
+    <div class="report-export d-flex justify-content-end mt-4">
+        <button type="button" class="btn btn-info mr-2">
+            Export to CSV
+        </button>
+        <button type="button" class="btn btn-info" (click)="exportToPdf()">Export to PDF</button>
     </div>
+
+    <div class="report-body mt-4" *ngIf="ctx.records.length" #challengesReport>
+        <table class="report-table table-hover">
+            <col>
+            <col>
+            <colgroup span="4"></colgroup>
+            <colgroup span="2"></colgroup>
+            <colgroup span="2"></colgroup>
+
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" colSpan="4" class="group-header">Player Engagement</th>
+                    <th scope="col" colspan="2" class="group-header">Solve Times</th>
+                    <th scope="col" colspan="2" class="group-header">Scores</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Challenge</td>
+                    <td>Game</td>
+                    <td>Eligible</td>
+                    <td>Started</td>
+                    <td>Partial Solve</td>
+                    <td>Complete Solve</td>
+                    <td>Fastest</td>
+                    <td>Avg. Complete Solve Time</td>
+                    <td>Max Possible</td>
+                    <td>Average</td>
+                </tr>
+
+                <tr class="data-row" *ngFor="let record of ctx.records">
+                    <td>{{record.challengeSpec.name}}</td>
+                    <td>{{record.game.name}}</td>
+                    <td class="text-center">{{record.playersEligible}}</td>
+                    <td class="text-center">{{record.playersStarted}}</td>
+                    <td class="text-center">{{record.playersWithPartialSolve}}</td>
+                    <td class="text-center">{{record.playersWithCompleteSolve}}</td>
+                    <td>
+                        <div *ngIf="record.fastestSolve; else noSolve" class="fastest-solve-cell">
+                            <p>{{record.fastestSolve.solveTimeMs}}</p>
+                            <p><em>({{record.fastestSolve.player.name}})</em></p>
+                        </div>
+
+                        <ng-template #noSolve>--</ng-template>
+                    </td>
+                    <td>{{record.meanCompleteSolveTimeMs || '--'}}</td>
+                    <td>{{record.maxPossibleScore}}</td>
+                    <td>{{record.meanScore || '--'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <ng-template #loading><app-spinner></app-spinner></ng-template>

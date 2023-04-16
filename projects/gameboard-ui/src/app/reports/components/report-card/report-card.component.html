@@ -9,7 +9,7 @@
         </p>
 
         <div class="notable-fields-container mt-4" *ngIf="report.notableFields?.length">
-            <h4>Information like</h4>
+            <h4>Fields</h4>
 
             <ul class="d-flex align-items-center flex-wrap">
                 <li class="d-inline-block" *ngFor="let field of report.notableFields">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="params-container mt-4" *ngIf="report.parameters">
-            <h4>Filter by</h4>
+            <h4>Filters</h4>
 
             <ul class="d-flex align-items-center flex-wrap">
                 <li class="d-inline-block" *ngFor="let param of report.parameters">

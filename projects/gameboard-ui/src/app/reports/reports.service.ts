@@ -27,10 +27,9 @@ export class ReportsService {
         key: "challenges-report",
         description: "Understand the role a challenge played in its games and competitions, how attainable a full solve was, and more.",
         notableFields: [
-          "Avg. Solve Time",
-          "Avg. Score",
-          "Number of deploys",
-          "Number of complete solves"
+          "Solve Times",
+          "Scores",
+          "Deploy vs. solve counts"
         ],
         parameters: [
           "Competition",
@@ -45,7 +44,7 @@ export class ReportsService {
         key: "users-report",
         description: "Get a better view of your registered users, their playing habits, and their profile information.",
         notableFields: [
-          "Avg. Challenges Launched Per Month",
+          "Challenges Per Month",
           "Sponsor",
           "Lifetime Score"
         ],

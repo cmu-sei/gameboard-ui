@@ -12,6 +12,8 @@ import { DateRangeComponent } from './components/date-range/date-range.component
 import { ChallengesReportComponent } from './components/challenges-report/challenges-report.component';
 import { DynamicReportDirective } from './directives/dynamic-report.directive';
 import { UtilityModule } from '../utility/utility.module';
+import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
+import { CompetitionSelectComponent } from './components/competition-select/competition-select.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { UtilityModule } from '../utility/utility.module';
     ReportDynamicComponent,
     DateRangeComponent,
     ChallengesReportComponent,
-    DynamicReportDirective
+    DynamicReportDirective,
+    MsToDurationPipe,
+    CompetitionSelectComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +37,7 @@ import { UtilityModule } from '../utility/utility.module';
         component: ReportsLayoutComponent,
         children: [
           { path: ':reportSlug', component: ReportDynamicComponent },
-          { path: '', pathMatch: 'full', component: ReportsHomeComponent }
+          { path: '', pathMatch: 'full', component: ReportsHomeComponent, title: "Reports" }
         ]
       }
     ]),

@@ -31,7 +31,7 @@
             <label for="challenge">Challenge</label>
             <select class="form-control form-select" name="challenge" aria-label="Challenge select"
                 [(ngModel)]="ctx.selections.challengeId" (ngModelChange)="handleModelChange($event)">
-                <option [value]="undefined" selected>[any challenge]</option>
+                <option [value]="undefined" sesslected>[any challenge]</option>
                 <option *ngFor="let challenge of ctx.options.challenges" [value]="challenge.id">
                     {{challenge.name}}
                 </option>
@@ -66,18 +66,19 @@
                     {{player.name}}
                 </option>
             </select>
-        </div>
-        <div class="parameter-container flex-container">
-            <label for="date-range">Date range</label>
-            <app-date-range [ngModel]="ctx.selections.dateRange" name="date-range"></app-date-range>
         </div> -->
+        <div class="parameter-container flex-container">
+            <label for="date-range">Game Start Date Range</label>
+            <!-- don't bind this for now, we're demoing -->
+            <app-date-range [ngModel]="ctx.selections.dateRange" name="date-range"></app-date-range>
+        </div>
     </div>
     <hr />
     <div class="buttons-container d-flex justify-content-end">
         <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleClearSelections()">
             Clear all settings
         </button>
-        <button type="button" class="btn btn-lg btn-success">Run Report</button>
+        <button type="button" class="btn btn-lg btn-success" (click)="handleRunClick()">Run Report</button>
     </div>
     <hr />
 </div>

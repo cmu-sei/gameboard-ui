@@ -17,7 +17,7 @@ export interface ChallengesReportModel {
         playersStarted: number;
         playersWithPartialSolve: number;
         playersWithCompleteSolve: number;
-        fastestSolve: {
+        fastestSolve?: {
             player: SimpleEntity;
             solveTimeMs: number;
         },
