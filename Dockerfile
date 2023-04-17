@@ -1,6 +1,6 @@
 # multi-stage target: dev
 
-FROM node:18.12-alpine as dev
+FROM node:18-alpine as dev
 ARG commit
 WORKDIR /app
 COPY package.json package-lock.json tools/ ./
@@ -8,17 +8,14 @@ RUN npm install && \
   sh fixup-wmks.sh
 COPY . .
 RUN if [ -e "wmks.tar" ]; then tar xf wmks.tar -C node_modules/vmware-wmks; fi
-RUN $(npm bin)/ng build gameboard-ui --output-path /app/dist && \
-  sed -i s/##COMMIT##/"$commit"/ /app/dist/index.html &&  \
-  $(npm bin)/ng build gameboard-mks --base-href=/mks/ --output-path /app/dist/mks && \
-  sed -i s/##COMMIT##/"$commit"/ /app/dist/mks/index.html &&  \
-  echo $commit > /app/dist/commit.txt
+RUN $(npm root)/.bin/ng build gameboard-ui --output-path /app/dist && \
+    $(npm root)/.bin/ng build gameboard-mks --base-href=/mks/ --output-path /app/dist/mks
 CMD ["npm", "start"]
-
 
 # multi-stage target: prod
 FROM nginx:alpine
 WORKDIR /var/www
+ENV COMMIT=$commit
 COPY --from=dev /app/dist .
 COPY --from=dev /app/dist/assets/oidc-silent.html .
 COPY --from=dev /app/LICENSE.md ./LICENSE.md
