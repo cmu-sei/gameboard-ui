@@ -40,9 +40,8 @@
             </button>
         </ng-container>
 
-        <app-confirm-button [disabled]="ctx.game.requireSynchronizedStart && !isGameSyncStartReady"
-            [tooltip]="isGameSyncStartReady ? '' : START_DISABLED_TOOLTIP" btnClass=" btn btn-lg btn-primary"
-            (confirm)="handleDoubleCheckRequest(true)" (cancel)="handleDoubleCheckRequest(false)">
+        <app-confirm-button *ngIf="!ctx.game.requireSynchronizedStart" (confirm)="handleDoubleCheckRequest(true)"
+            (cancel)="handleDoubleCheckRequest(false)">
             <fa-icon [icon]="faService.bolt"></fa-icon>
             <span>Start Session</span>
         </app-confirm-button>

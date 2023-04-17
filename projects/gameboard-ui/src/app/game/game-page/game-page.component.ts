@@ -76,9 +76,7 @@ export class GamePageComponent implements OnDestroy {
           });
 
           this.syncStartGameStartedSubscription = this.gameHubService.syncStartGameStarted$.subscribe(startState => {
-            console.log("game start event", startState);
             if (startState) {
-              console.log("nav with start state", startState);
               router.navigateByUrl(`/game/${startState.game.id}/sync-start`);
             }
           });

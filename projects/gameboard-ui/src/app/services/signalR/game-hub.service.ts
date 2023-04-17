@@ -89,7 +89,7 @@ export class GameHubService implements OnDestroy {
 
     public leaveGame(gameId: string) {
         if (this.notificationService.state$.getValue().connectionState === HubConnectionState.Connected)
-            this.notificationService.sendMessage("LeaveGame", gameId);
+            this.notificationService.sendMessage("LeaveChannel", gameId);
 
         this.removeFromPendingGameHubConnections(gameId);
     }
