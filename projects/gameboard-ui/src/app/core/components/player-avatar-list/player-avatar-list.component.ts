@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TimeWindow } from '../../../api/player-models';
-import { PlayerAvatarSize } from '../player-avatar/player-avatar.component';
 
 @Component({
   selector: 'app-player-avatar-list',
@@ -18,7 +17,7 @@ import { PlayerAvatarSize } from '../player-avatar/player-avatar.component';
 })
 export class PlayerAvatarListComponent implements OnInit {
   @Input() avatarUris: string[] = [];
-  @Input() avatarSize = PlayerAvatarSize.Medium;
+  @Input() avatarSize: 'small' | 'medium' | 'large' = 'medium';
   @Input() enableCaptainSessionStatusDisplay: boolean = true;
   @Input() captainSession?: TimeWindow;
 

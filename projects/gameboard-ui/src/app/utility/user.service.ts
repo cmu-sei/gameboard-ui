@@ -10,9 +10,7 @@ import { UserService as ApiUserService } from '../api/user.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { ConfigService } from './config.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
   user$ = new BehaviorSubject<ApiUser | null>(null);
   init$ = new BehaviorSubject<boolean>(false);

@@ -8,5 +8,4 @@ export class HubStateToPlayerStatusPipe implements PipeTransform {
   transform(value: HubState): unknown {
     return value.connectionState ? PlayerStatus.Online : PlayerStatus.Offline;
   }
-
 }

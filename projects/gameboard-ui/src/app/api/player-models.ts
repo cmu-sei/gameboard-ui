@@ -30,6 +30,7 @@ export interface Player {
   correctCount: number;
   partialCount: number;
   isManager: boolean;
+  isReady: boolean;
   advanced: boolean;
   sponsorLogo: string;
   sponsorList: string[];
@@ -75,7 +76,7 @@ export class TimeWindow {
   }
 }
 
-export const calculateCountdown = (window: TimeWindow, now?: Date) => {
+export const calculateCountdown = (window?: TimeWindow, now?: Date) => {
   if (!window || !window.beginDate || !window.endDate) {
     return undefined;
   }
@@ -219,6 +220,7 @@ export interface TeamAdvancement {
 export interface Team {
   teamId: string;
   gameId: string;
+  approvedName: string;
   sessionBegin: Date;
   sessionEnd: Date;
   rank: number;
