@@ -19,9 +19,8 @@ export class ReportParametersComponent implements OnChanges, OnInit {
   @Output() parametersChanged = new EventEmitter<ReportParameters>();
 
   // TODO: not this
-  private static DEFAULT_NEW_PARAMETERS: ReportParameters = { dateRange: {} }
   private reportKey$ = new BehaviorSubject<string | undefined>(undefined);
-  private selectedParameters$ = new BehaviorSubject<ReportParameters>(ReportParametersComponent.DEFAULT_NEW_PARAMETERS);
+  private selectedParameters$ = new BehaviorSubject<ReportParameters>({});
   protected parametersContext$?: Observable<ReportParametersContext | null>;
 
   constructor(private reportsService: ReportsService) { }
@@ -45,7 +44,7 @@ export class ReportParametersComponent implements OnChanges, OnInit {
   }
 
   handleClearSelections(): void {
-    this.selectedParameters$.next(ReportParametersComponent.DEFAULT_NEW_PARAMETERS);
+    this.selectedParameters$.next({});
     this.parametersChanged.emit(this.selectedParameters$.value);
   }
 

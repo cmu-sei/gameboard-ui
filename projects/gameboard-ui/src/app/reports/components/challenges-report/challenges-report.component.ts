@@ -35,6 +35,7 @@ export class ChallengesReportComponent implements IReportComponent, OnDestroy {
 
     this.ctx$ = this.route.queryParams.pipe(
       map(params => ({ ...params } as ChallengesReportArgs)),
+      tap(params => console.log("params to load", params)),
       switchMap(args => reportsService.getChallengesReport(args)),
       tap(results => this.onResultsLoaded(results.metaData)),
       tap(results => this.chartConfig = this.buildDoughnutChart(results))
@@ -60,7 +61,8 @@ export class ChallengesReportComponent implements IReportComponent, OnDestroy {
     const reportKey = this.route.snapshot.params['reportSlug'];
 
     // TODO: daterange requires additional handling because it's an object
-    const finalParams = { ...parameters, dateRange: undefined };
+    let finalParams = { ...parameters };
+    delete finalParams.dateRange;
 
     this.router.navigateByUrl(`/reports/${reportKey}?${this.uriService.toQueryString(finalParams)}`);
   }

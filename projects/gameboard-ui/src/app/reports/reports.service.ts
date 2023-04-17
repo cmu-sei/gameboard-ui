@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { Report, ReportParameterOptions, ReportParameters, ReportParameterType } from './reports-models';
+import { map } from 'rxjs/operators';
+import { Report, ReportParameterOptions, ReportParameters } from './reports-models';
 import { ConfigService } from '../utility/config.service';
 import { UriService } from '../services/uri.service';
 import { ChallengesReportArgs, ChallengesReportModel } from './components/challenges-report/challenges-report.models';
@@ -32,6 +32,7 @@ export class ReportsService {
           "Deploy vs. solve counts"
         ],
         parameters: [
+          "Session Date Range",
           "Competition",
           "Track",
           "Game",
@@ -40,17 +41,18 @@ export class ReportsService {
       },
       {
         id: "dd2a257f-1bbc-4f33-bf07-a6ae36bfad37",
-        name: "Users Report",
-        key: "users-report",
-        description: "Get a better view of your registered users, their playing habits, and their profile information.",
+        name: "Players Report",
+        key: "players-report",
+        description: "Get a better view of your players - how often they play, how they perform when they do, and which events they compete in",
         notableFields: [
           "Challenges Per Month",
           "Sponsor",
           "Lifetime Score"
         ],
         parameters: [
-          "Session date range",
           "Sponsor",
+          "Competition",
+          "Track",
           "Game",
           "Challenge"
         ],

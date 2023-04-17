@@ -15,19 +15,23 @@ export class UriService {
     for (const key of Object.keys(target)) {
       const value = target[key];
 
+      console.log("value", value);
       if (
-        value !== null &&
-        value !== undefined &&
-        value !== '' &&
-        Object.keys(value)?.length !== 0 &&
+        value === null ||
+        value === undefined ||
+        value === '' ||
+        Object.keys(value)?.length === 0 ||
         // TODO: see if i can bind better so i don't have to screen this here
-        value !== 'undefined'
-
+        value === 'undefined'
       ) {
-        finalParams.push(`${key}=${value}`);
+        continue;
       }
+
+      console.log("added");
+      finalParams.push(`${key}=${value}`);
     }
 
+    console.log("final params", finalParams);
     return finalParams.join("&");
   }
 }

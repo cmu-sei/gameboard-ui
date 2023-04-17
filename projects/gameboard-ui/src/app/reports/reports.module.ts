@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ParticipationReportComponent } from './components/participation-report/participation-report.component';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
 import { RouterModule } from '@angular/router';
 import { NgChartsModule } from 'ng2-charts';
@@ -15,10 +14,10 @@ import { DynamicReportDirective } from './directives/dynamic-report.directive';
 import { UtilityModule } from '../utility/utility.module';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { CompetitionSelectComponent } from './components/competition-select/competition-select.component';
+import { PlayersReportComponent } from './components/players-report/players-report.component';
 
 @NgModule({
   declarations: [
-    ParticipationReportComponent,
     ReportsHomeComponent,
     ReportCardComponent,
     ReportsLayoutComponent,
@@ -28,7 +27,8 @@ import { CompetitionSelectComponent } from './components/competition-select/comp
     ChallengesReportComponent,
     DynamicReportDirective,
     MsToDurationPipe,
-    CompetitionSelectComponent
+    CompetitionSelectComponent,
+    PlayersReportComponent
   ],
   imports: [
     CommonModule,
