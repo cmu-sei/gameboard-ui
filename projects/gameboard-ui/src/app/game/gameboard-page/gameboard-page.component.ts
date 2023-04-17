@@ -63,7 +63,7 @@ export class GameboardPageComponent implements OnDestroy {
     this.fetch$ = merge(
       route.params.pipe(
         tap(p => this.cid = p.cid),
-        map(p => p.gameId)
+        map(p => p.playerId)
       ),
       this.refresh$
     ).pipe(
