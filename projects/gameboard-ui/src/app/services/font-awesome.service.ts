@@ -10,6 +10,7 @@ import {
   faClipboard,
   faCopy,
   faExclamationTriangle,
+  faExternalLink,
   faFilter,
   faLongArrowAltDown,
   faSquare,
@@ -37,6 +38,7 @@ export class FontAwesomeService {
   copy = faCopy;
   ellipsisVertical = faEllipsisVertical;
   exclamationTriangle = faExclamationTriangle;
+  externalLink = faExternalLink;
   list = faList;
   filter = faFilter;
   gear = faGear;

@@ -2,13 +2,16 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { HubPlayer, Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { PlayerAvatarSize } from '../../core/components/player-avatar/player-avatar.component';
 import { NotificationService } from '../../services/notification.service';
+import { GameHubService } from '../../services/signalR/game-hub.service';
+import { SyncStartState } from '../game.models';
+import { SyncStartService } from '../../services/sync-start.service';
+import { SimpleEntity } from '../../api/models';
 
 interface PlayerPresenceContext {
   hasTeammates: boolean;
@@ -16,6 +19,8 @@ interface PlayerPresenceContext {
   allPlayers: HubPlayer[];
   player: HubPlayer;
   playerIsManager: boolean;
+  readyPlayers: SimpleEntity[];
+  notReadyPlayers: SimpleEntity[];
   teamAvatar: string[],
   teamName: string;
 }
@@ -27,31 +32,49 @@ interface PlayerPresenceContext {
 })
 export class PlayerPresenceComponent implements OnInit {
   @Input() player$?: Observable<Player | undefined>;
+  @Input() isSyncStartGame: boolean = false;
   @Output() onManagerPromoted = new EventEmitter<string>();
 
-  protected avatarSize = PlayerAvatarSize.Medium;
+  private syncStartState$ = new BehaviorSubject<SyncStartState | null>(null);
+  private syncStartStateSubscription?: Subscription;
+
   protected promoteIcon = faChevronCircleUp;
   protected ctx$?: Observable<PlayerPresenceContext | null>;
   protected avatarUris: string[] = [];
 
   constructor(
+    private gameHub: GameHubService,
     private hub: NotificationService,
     private playerApi: PlayerService,
+    private syncStartService: SyncStartService,
   ) { }
 
   ngOnInit(): void {
     this.ctx$ = combineLatest([
       this.hub.actors$,
-      this.player$
+      this.player$,
+      this.gameHub.syncStartChanged$
     ]).pipe(
-      map(thing => thing as unknown as { 0: HubPlayer[], 1: HubPlayer }),
-      map(thing => ({ actors: thing[0], player: thing[1] })),
+      map(combo => combo as unknown as { 0: HubPlayer[], 1: HubPlayer, 2: SyncStartState }),
+      map(combo => ({ actors: combo[0], player: combo[1], syncStartState: combo[2] })),
       map(context => {
         if (!context.player) {
           return null;
         }
+
         const actorInfo = this.findPlayerAndTeammates(context.player, context.actors);
         this.avatarUris = actorInfo.allPlayers.map(p => p.sponsorLogo);
+
+        // grab team members on this screen and show their ready/not ready flag 
+        // (read it into the player objects coming from the hub - should think about streamlining this later)
+        const playerReadyStates = this.syncStartService.getAllPlayers(context.syncStartState);
+        for (let player of actorInfo.allPlayers) {
+          const playerReadyState = playerReadyStates.find(p => p.id === player.id);
+
+          if (playerReadyState) {
+            player.isReady = playerReadyState.isReady;
+          }
+        }
 
         return {
           hasTeammates: !!actorInfo.teammates.length,
@@ -59,6 +82,8 @@ export class PlayerPresenceComponent implements OnInit {
           allPlayers: actorInfo.allPlayers,
           player: actorInfo.player,
           playerIsManager: !!actorInfo.manager && actorInfo.manager.id === actorInfo.player?.id,
+          readyPlayers: this.syncStartService.getAllPlayers(context.syncStartState),
+          notReadyPlayers: this.syncStartService.getNotReadyPlayers(context.syncStartState),
           teamAvatar: this.computeTeamAvatarList(actorInfo.allPlayers),
           teamName: actorInfo.manager?.approvedName || actorInfo.player?.approvedName || "",
         };

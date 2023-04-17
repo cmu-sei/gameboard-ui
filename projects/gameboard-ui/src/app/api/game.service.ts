@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { SyncStartState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
 import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
@@ -63,11 +64,17 @@ export class GameService {
       tap(m => this.removeCache(model.id))
     );
   }
+
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/game/${id}`).pipe(
       tap(m => this.removeCache(id))
     );
   }
+
+  public getSyncStartState(gameId: string): Observable<SyncStartState> {
+    return this.http.get<SyncStartState>(`${this.url}/game/${gameId}/ready`);
+  }
+
   public retrieveSpecs(id: string): Observable<Spec[]> {
     return this.http.get<Spec[]>(`${this.url}/game/${id}/specs`);
   }

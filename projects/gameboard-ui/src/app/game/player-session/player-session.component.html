@@ -31,107 +31,43 @@
 
             <app-confirm-button *ngIf="ctx.game.allowReset" class="mx-2" btnClass="btn btn-sm pop-warning"
               (confirm)="handleReset(ctx.player)">
-              <fa-icon [icon]="faTrash"></fa-icon>
+              <fa-icon [icon]="faService.trash"></fa-icon>
               <span>Reset Session</span>
             </app-confirm-button>
           </div>
         </ng-container>
       </div>
 
-      <app-player-presence *ngIf="(player$ | async)" [player$]="player$"></app-player-presence>
+      <app-player-presence *ngIf="player$ | async" [player$]=" player$"
+        [isSyncStartGame]="ctx.game.requireSynchronizedStart"></app-player-presence>
 
-      <table class="table mt-2 text-center">
-        <tbody>
-          <tr>
-            <th>Rank</th>
-            <th>Score</th>
-            <th>Cumulative Time</th>
-            <th>Completes</th>
-            <th>Partials</th>
-          </tr>
-          <tr>
-            <td>{{ctx.player.rank}}</td>
-            <td>{{ctx.player.score}}</td>
-            <td>
-              <app-cumulative-time-clock [session]="ctx.player.session"></app-cumulative-time-clock>
-            </td>
-            <td>{{ctx.player.time | clock}}</td>
-            <td>{{ctx.player.correctCount}}</td>
-            <td>{{ctx.player.partialCount}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <app-gameboard-performance-summary *ngIf="performanceSummaryViewModel$ | async"
+        [ctx$]="performanceSummaryViewModel$"></app-gameboard-performance-summary>
 
       <div class="d-flex my-4 align-items-center justify-content-center">
-        <a type="button" class="btn btn-secondary" target="_blank" [href]="'game/scores/' + ctx.game.id">View
-          Scoreboard
-          <fa-icon [icon]="faExternalLink"></fa-icon>
+        <a type="button" class="btn btn-secondary" target="_blank" [href]="'game/scores/' + ctx.game.id">
+          View Scoreboard
+          <fa-icon [icon]="faService.externalLink"></fa-icon>
         </a>
       </div>
 
       <app-error-div [errors]="errors"></app-error-div>
 
       <ng-container *ngIf="ctx.player.session && ctx.player.session.isBefore && ctx.game.session.isDuring">
-        <div class="card-text my-4" *ngIf="doublechecking">
-          <alert type="danger">
-            <ul>
-              <li>After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes!</li>
-              <li [hidden]="ctx.game.maxTeamSize < 2">
-                This will start the session for the team, so be sure your
-                teammates are ready to start!
-              </li>
-              <li [hidden]="ctx.game.maxTeamSize < 2">
-                You cannot add or remove team members after your session has started!
-              </li>
-              <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it!</li>
-            </ul>
-          </alert>
+        <app-session-start-controls [ctx]="ctx" (onRequestStart)="handleStart(ctx.player)"></app-session-start-controls>
 
-          <div class="text-center">
-            <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="handleStart(ctx.player)"
-              (cancel)="doublechecking=false">
-              <fa-icon [icon]="faBolt"></fa-icon>
-              <span>Yes, start {{ctx.game.name}}</span>
-            </app-confirm-button>
-          </div>
-        </div>
-
-        <div class="card-text" *ngIf="!doublechecking">
-          <alert type="warning">
-            After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
-            <span [hidden]="ctx.game.maxTeamSize < 2">
-              <br />This will start the session for the team, so be sure your teammates are ready to start. You cannot
-              add or remove team members after your session has started.
-            </span>
-          </alert>
-
+        <div class="card-text" *ngIf="!isDoubleChecking && !ctx.game.requireSynchronizedStart">
           <div class="mb-2">
-            <label class="mb-0">Session Forecast</label><br />
-            <small>Shows when sessions become available. (Green means available.)</small>
+            <h3>Session Forecast</h3>
+            <small class="d-block mb-4">Shows when sessions become available. (Green means available.)</small>
             <div class="text-center forecast">
               <app-session-forecast [game]="ctx.game"></app-session-forecast>
             </div>
           </div>
-
-          <div class="text-center my-4">
-            <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="doublechecking=true">
-              <fa-icon [icon]="faBolt"></fa-icon>
-              <span>Start Session</span>
-            </app-confirm-button>
-          </div>
         </div>
       </ng-container>
 
-      <ng-container *ngIf="ctx.user.isRegistrar && (!ctx.player.session || ctx.player.session.isBefore)">
-        <div class="text-center my-4">
-          <app-confirm-button btnClass="btn btn-lg btn-primary" (confirm)="handleStart(ctx.player)">
-            <fa-icon [icon]="faBolt"></fa-icon>
-            <span>Admin Start</span>
-          </app-confirm-button>
-        </div>
-      </ng-container>
-
-      <div *ngIf="!ctx.player.session?.isBefore" class="text-center mb-4">
+      <div *ngIf="!ctx.player.session?.isBefore" class="text-center my-4">
         <a *ngIf="ctx.game.mode != 'unity'" class="btn btn-primary btn-lg"
           [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
         <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
@@ -143,13 +79,10 @@
       <div class="col d-flex justify-content-center" *ngIf="ctx.game.mapUrl">
         <img [src]=" ctx.game.mapUrl" alt="game map background" class="img-fluid">
       </div>
-
     </div>
   </div>
 </ng-container>
 
 <ng-template #loading>
-  <div class="text-center">
-    <app-spinner></app-spinner>
-  </div>
+  <app-spinner></app-spinner>
 </ng-template>

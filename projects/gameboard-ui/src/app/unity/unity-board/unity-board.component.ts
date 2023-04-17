@@ -60,7 +60,6 @@ export class UnityBoardComponent implements OnInit {
         }) as Observable<UnityDeployContext>;
       })
     ).subscribe(ctx => {
-      console.log("exp time", ctx);
       this.unityService.startGame(ctx);
     });
 

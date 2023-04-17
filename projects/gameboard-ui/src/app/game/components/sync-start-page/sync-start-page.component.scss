@@ -1,0 +1,48 @@
+.sync-start-page-component {
+    width: 100%;
+    min-height: 80vh;
+}
+
+h2 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+hr {
+    height: 2px;
+    border: none;
+    background-color: #ccc;
+    margin: 0;
+}
+
+ul {
+    padding-inline-start: 0;
+
+    li {
+        font-size: 0.9rem;
+        margin-right: 8px;
+        text-transform: uppercase;
+        padding: 6px;
+    }
+}
+
+$countdown-border: solid 1px #eeeeee;
+
+.countdown-container {
+    border-right: $countdown-border;
+    border-left: $countdown-border;
+    border-bottom: $countdown-border;
+    padding: 0 1rem;
+    margin-right: 1rem;
+}
+
+.countdown-seconds {
+    display: block;
+    font-size: 6rem;
+}
+
+.countdown-seconds-label {
+    font-size: 1rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}

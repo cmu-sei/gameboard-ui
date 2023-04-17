@@ -19,6 +19,7 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { WindowService } from '../../services/window.service';
 import { BoardPlayer } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
+import { GameHubService } from '../../services/signalR/game-hub.service';
 
 @Component({
   selector: 'app-game-page',
@@ -39,6 +40,9 @@ export class GamePageComponent implements OnDestroy {
   protected playerSubject$ = new BehaviorSubject<Player | undefined>(undefined);
 
   private isExternalGame = false;
+  private isSyncStartReady = false;
+  private syncStartChangedSubscription?: Subscription;
+  private syncStartGameStartedSubscription?: Subscription;
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
 
@@ -50,6 +54,7 @@ export class GamePageComponent implements OnDestroy {
     localUser: LocalUserService,
     private hub: NotificationService,
     private apiGame: GameService,
+    private gameHubService: GameHubService,
     private modalService: BsModalService,
     private windowService: WindowService
   ) {
@@ -61,7 +66,22 @@ export class GamePageComponent implements OnDestroy {
       filter(p => !!p.id),
       switchMap(p => apiGame.retrieve(p.id)),
       tap(g => this.ctxIds.gameId = g.id),
-      tap(g => this.isExternalGame = apiGame.isExternalGame(g))
+      tap(g => this.isExternalGame = apiGame.isExternalGame(g)),
+      tap(g => {
+        this.syncStartChangedSubscription?.unsubscribe();
+
+        if (g.requireSynchronizedStart) {
+          this.syncStartChangedSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
+            this.isSyncStartReady = state.isReady;
+          });
+
+          this.syncStartGameStartedSubscription = this.gameHubService.syncStartGameStarted$.subscribe(startState => {
+            if (startState) {
+              router.navigateByUrl(`/game/${startState.game.id}/sync-start`);
+            }
+          });
+        }
+      })
     );
 
     this.localUserSubscription = combineLatest([
@@ -153,6 +173,14 @@ export class GamePageComponent implements OnDestroy {
           game: c.game,
           player: c.player = c.player || { userId: c.user.id } as Player
         };
+      }),
+      tap(c => {
+        // listen for game hub events to enable synchronized start stuff if needed
+        if (c.player.gameId && c.game.requireSynchronizedStart) {
+          this.gameHubService.joinGame(c.player.gameId)
+        }
+        else
+          this.gameHubService.leaveGame(c.game.id)
       }),
       tap(c => { if (!c.game) { router.navigateByUrl("/") } }),
       filter(c => !!c.game),
