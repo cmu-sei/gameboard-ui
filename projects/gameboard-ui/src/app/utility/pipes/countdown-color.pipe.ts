@@ -5,9 +5,7 @@ import { ConfigService } from '.././config.service';
 export class CountdownColorPipe implements PipeTransform {
   startSecondsAtMinute: number = 5; // default to 5 minutes
 
-  constructor(
-    private config?: ConfigService
-  ) {
+  constructor(config?: ConfigService) {
     if ((config?.settings.countdownStartSecondsAtMinute ?? 0) > 0) // lowest allowed setting is 1 min
       this.startSecondsAtMinute = config?.settings.countdownStartSecondsAtMinute!;
   }

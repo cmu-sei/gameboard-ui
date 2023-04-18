@@ -14,7 +14,7 @@ export class CountdownPipe implements PipeTransform {
   }
 
   transform(value?: number, ...args: unknown[]): string {
-    if (!value) {
+    if (!value || value < 0) {
       return "";
     }
 
