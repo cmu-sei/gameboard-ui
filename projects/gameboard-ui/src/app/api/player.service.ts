@@ -58,7 +58,7 @@ export class PlayerService {
   }
 
   public resetSession(request: { player: Player, unenrollTeam: boolean }): Observable<any> {
-    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { body: { isManualReset: true, unenrollTeam: request.unenrollTeam } }).pipe(
+    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { isManualReset: true, unenrollTeam: request.unenrollTeam }).pipe(
       map(r => {
         delete request.player.session;
         return;
