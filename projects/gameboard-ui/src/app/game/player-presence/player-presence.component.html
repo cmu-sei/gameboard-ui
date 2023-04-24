@@ -21,13 +21,15 @@
       <li *ngFor="let teamMember of ctx.allPlayers"
         class="d-flex justify-content-center align-items-center align-content-center">
         <div class="avatar-status-container mr-4">
-          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [size]="avatarSize"
+          <app-player-avatar [avatarUri]="teamMember.sponsorLogo" [size]="'medium'"
             [maxAvatarsInListView]="ctx.allPlayers.length" class="mr-4"></app-player-avatar>
         </div>
         <div class="player-name mr-auto align-middle fs-11 mb-4">
           <p class="m-0">{{teamMember.userApprovedName}}</p>
           <ul class="player-tags p-0">
             <li *ngIf="teamMember.isManager" class="badge badge-info mr-4">Manager</li>
+            <li *ngIf="isSyncStartGame && teamMember.isReady" class="badge badge-success mr-4">Ready</li>
+            <li *ngIf="isSyncStartGame && !teamMember.isReady" class="badge badge-danger mr-4">Not Ready</li>
             <li *ngIf="teamMember.nameStatus == 'pending'" class="badge badge-secondary">
               pending name: "{{ teamMember.name }}"
             </li>

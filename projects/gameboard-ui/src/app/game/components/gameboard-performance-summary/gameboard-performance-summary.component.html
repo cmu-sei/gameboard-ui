@@ -1,7 +1,7 @@
-<div class="gameboard-performance-summary-component" *ngIf="boardPlayer as ctx; else loading">
+<div class="gameboard-performance-summary-component" *ngIf="ctx$ | async as ctx; else loading">
     <div class="text-info card-text mb-2">
-        <span *ngIf="ctx.session.isAfter">Game Over </span>
-        <span *ngIf="ctx.session.isDuring">Time Remaining: </span>
+        <span *ngIf="ctx.player.session?.isAfter || ((countdown$ | async) || 0 ) <= 0">Game Over </span>
+        <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
         <span class="font-weight-bold" [class]="(countdown$ | async) || 0 | countdowncolor">
             {{ (countdown$ | async) || 0 | countdown }}
         </span>
@@ -16,17 +16,17 @@
                 <td>Partials</td>
             </tr>
             <tr>
-                <td>{{ctx.rank}}</td>
-                <td>{{ctx.score}}</td>
+                <td>{{ctx.player.scoring.rank}}</td>
+                <td>{{ctx.player.scoring.score}}</td>
                 <td>
-                    <app-cumulative-time-clock [session]="ctx.session"></app-cumulative-time-clock>
+                    <app-cumulative-time-clock [session]="ctx.player.session"></app-cumulative-time-clock>
                 </td>
-                <td>{{ctx.correctCount}}</td>
-                <td>{{ctx.partialCount}}</td>
+                <td>{{ctx.player.scoring.correctCount}}</td>
+                <td>{{ctx.player.scoring.partialCount}}</td>
             </tr>
         </tbody>
     </table>
-    <ng-container *ngIf="ctx.session.isDuring">
+    <ng-container *ngIf="ctx.player.session?.isDuring">
         <div *ngIf="hubState$ | async as hubstate" class="text-center mb-2">
             <small *ngIf="!!hubstate.joined" class="text-success">
                 <fa-icon [icon]="faService.bolt"></fa-icon>
@@ -47,7 +47,8 @@
             </app-confirm-button>
         </div>
     </ng-container>
-    <div *ngIf="ctx.session.isAfter && ctx.game.isPracticeMode" class="text-center">
+
+    <div *ngIf="ctx.player.session?.isAfter && ctx.game.isPracticeMode" class="text-center">
         <a class="btn btn-info btn-sm" [routerLink]="['/prac']">
             More Practice
         </a>

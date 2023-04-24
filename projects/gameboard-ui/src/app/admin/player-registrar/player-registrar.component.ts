@@ -171,7 +171,7 @@ export class PlayerRegistrarComponent {
   }
 
   resetSession(model: Player): void {
-    this.api.resetSession(model, true).pipe(first()).subscribe(_ => {
+    this.api.resetSession({ player: model, unenrollTeam: true }).pipe(first()).subscribe(_ => {
       this.refresh$.next(true);
     });
   }

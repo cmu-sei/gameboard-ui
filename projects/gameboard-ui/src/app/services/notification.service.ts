@@ -4,20 +4,25 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { BehaviorSubject, combineLatest, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, first, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
 import { HubPlayer, Player, TimeWindow } from '../api/player-models';
+import { GameHubEvent } from './signalR/game-hub.service';
+import { LogService } from './log.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   public connection: HubConnection;
+
   private teamId$ = new Subject<string>();
+  private _gameHubEvents$ = new Subject<GameHubEvent>();
 
   state$ = new BehaviorSubject<HubState>({ id: '', connectionState: HubConnectionState.Disconnected, joined: false });
   actors$ = new BehaviorSubject<Array<HubPlayer>>([]);
   announcements = new Subject<HubEvent>();
+  gameHubEvents$ = this._gameHubEvents$.asObservable();
   teamEvents = new Subject<HubEvent>();
   challengeEvents = new Subject<HubEvent>();
   playerEvents = new Subject<HubEvent>();
@@ -28,6 +33,7 @@ export class NotificationService {
     private config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
+    private logger: LogService,
   ) {
     this.connection = this.getConnection(`${config.apphost}hub`);
 
@@ -120,6 +126,8 @@ export class NotificationService {
     connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
     connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
     connection.on('playerEvent', e => this.onPlayerEvent(e));
+    connection.on('gameHubEvent', e => this._gameHubEvents$.next(e));
+    connection.on('synchronizedGameStartedEvent', e => this._gameHubEvents$.next(e));
 
     return connection;
   }
@@ -178,6 +186,20 @@ export class NotificationService {
         });
       }
     } finally { }
+  }
+
+  public async sendMessage<T>(message: string, ...args: any[]): Promise<T> {
+    if (this.connection.state !== HubConnectionState.Connected) {
+      this.logger.logError(`Can't invoke message ${message} - the hub is in a non-connected state (${this.connection.state})`);
+    }
+
+    try {
+      return await this.connection.invoke(message, ...args);
+    }
+    catch (ex) {
+      this.logger.logError("Error on message send:", message, args);
+      throw ex;
+    }
   }
 
   private async onReconnected(): Promise<void> {

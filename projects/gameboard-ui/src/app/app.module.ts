@@ -11,6 +11,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { Observable } from 'rxjs';
 import { ApiModule } from './api/api.module';
@@ -47,6 +48,7 @@ import { UserService } from './api/user.service';
     ButtonsModule.forRoot(),
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
+    ProgressbarModule.forRoot(),
     MarkdownModule.forRoot({
       loader: HttpClient,
       markedOptions: {

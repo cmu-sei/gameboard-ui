@@ -32,7 +32,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   refresh$ = new Subject<string>();
   updating$ = new Subject<Spec>();
   deleting$ = new Subject<Spec>();
-  recentExternals$ = new Subject<ExternalSpec>();
+  recentExternals$ = new Subject<void>();
   updated$: Observable<Spec>;
   created$: Observable<Spec>;
   deleted$: Observable<any>;

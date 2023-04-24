@@ -12,7 +12,6 @@ import { SupportService } from '../../api/support.service';
 import { ApiUser, UserSummary } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { EditData, SuggestionOption } from '../../utility/components/inplace-editor/inplace-editor.component';
-import { ConfigService } from '../../utility/config.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { NotificationService } from '../../services/notification.service';
 import linkifyHtml from 'linkify-html';
@@ -88,13 +87,12 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     private faService: FontAwesomeService,
     private playerApi: PlayerService,
     private userApi: UserService,
-    private route: ActivatedRoute,
-    private config: ConfigService,
     private sanitizer: DomSanitizer,
-    private local: LocalUserService,
     private http: HttpClient,
-    private hub: NotificationService,
-    private toastsService: ToastService
+    private toastsService: ToastService,
+    hub: NotificationService,
+    local: LocalUserService,
+    route: ActivatedRoute,
   ) {
 
     const canManage$ = local.user$.pipe(
@@ -251,8 +249,10 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   }
 
   saveEditedTicket() {
-    this.savingContent = true;
-    this.changed$.next(this.changedTicket);
+    if (this.changedTicket) {
+      this.savingContent = true;
+      this.changed$.next(this.changedTicket);
+    }
   }
 
   startEditAssignee() {
@@ -346,7 +346,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   selectAssignee(option: SuggestionOption) {
     this.changedTicket!.assignee = option.data;
     this.changedTicket!.assigneeId = option.data.id;
-    this.changed$.next(this.changedTicket);
+    this.changed$.next(this.changedTicket!);
     this.assignees.isEditing = false;
     this.assignees.filteredOptions = this.assignees.allOptions;
   }
@@ -355,7 +355,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     if (!!this.currentUser) {
       this.changedTicket!.assignee = { id: this.currentUser.id, approvedName: this.currentUser.approvedName } as UserSummary;
       this.changedTicket!.assigneeId = this.currentUser.id;
-      this.changed$.next(this.changedTicket)
+      this.changed$.next(this.changedTicket!)
     }
   }
 
@@ -363,7 +363,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     if (!this.currentLabels.has(option.name)) {
       this.currentLabels.add(option.name)
       this.changedTicket!.label = Array.from(this.currentLabels.values()).join(" ")
-      this.changed$.next(this.changedTicket);
+      this.changed$.next(this.changedTicket!);
     }
     this.labels.isEditing = false;
     this.labels.filtering$.next("")
@@ -373,7 +373,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   selectChallenge(option: SuggestionOption) {
     this.changedTicket!.challenge = option.data;
     this.changedTicket!.challengeId = option.data.id;
-    this.changed$.next(this.changedTicket);
+    this.changed$.next(this.changedTicket!);
     this.challenges.isEditing = false;
     this.challenges.filteredOptions = this.challenges.allOptions;
   }
@@ -381,7 +381,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   selectSession(option: SuggestionOption) {
     this.changedTicket!.player = option.data;
     this.changedTicket!.playerId = option.data.id;
-    this.changed$.next(this.changedTicket);
+    this.changed$.next(this.changedTicket!);
     this.sessions.isEditing = false;
     this.sessions.filteredOptions = this.sessions.allOptions;
   }
@@ -389,7 +389,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   selectRequester(option: SuggestionOption) {
     this.changedTicket!.requester = option.data;
     this.changedTicket!.requesterId = option.data.id;
-    this.changed$.next(this.changedTicket);
+    this.changed$.next(this.changedTicket!);
     this.requesters.isEditing = false;
     this.requesters.filteredOptions = this.requesters.allOptions;
   }
@@ -397,7 +397,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   deleteLabel(label: string): void {
     this.currentLabels.delete(label);
     this.changedTicket!.label = Array.from(this.currentLabels.values()).join(" ")
-    this.changed$.next(this.changedTicket);
+    this.changed$.next(this.changedTicket!);
   }
 
   initFiltering() {

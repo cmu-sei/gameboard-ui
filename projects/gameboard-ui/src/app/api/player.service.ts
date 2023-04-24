@@ -47,16 +47,20 @@ export class PlayerService {
     return this.http.put<any>(`${this.url}/player`, model);
   }
 
+  public updateIsSyncStartReady(playerId: string, model: { isReady: boolean }) {
+    return this.http.put(`${this.url}/player/${playerId}/ready`, model);
+  }
+
   public start(player: Player): Observable<Player> {
     return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
       map(p => this.transform(p) as Player)
     );
   }
 
-  public resetSession(p: Player, asAdmin: boolean = false): Observable<any> {
-    return this.http.delete<void>(`${this.url}/player/${p.id}/session?asAdmin=${asAdmin}`, {}).pipe(
+  public resetSession(request: { player: Player, unenrollTeam: boolean }): Observable<any> {
+    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { isManualReset: true, unenrollTeam: request.unenrollTeam }).pipe(
       map(r => {
-        delete p.session;
+        delete request.player.session;
         return;
       })
     );
