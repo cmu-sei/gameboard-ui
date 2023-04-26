@@ -1,9 +1,9 @@
 <div class="reports-home-component p-5">
     <h1>Reports</h1>
 
-    <div class="reports-list-container mt-5" *ngIf="reports$ | async as reports; else loading">
+    <div class="reports-list-container mt-5" *ngIf="reports; else loading">
         <ul class="reports-list mt-2 d-flex flex-wrap align-items-start justify-content-start">
-            <li *ngFor="let report of reports$ | async" class="d-block mr-5">
+            <li *ngFor="let report of reports" class="d-block mr-5">
                 <app-report-card [report]="report"></app-report-card>
             </li>
         </ul>

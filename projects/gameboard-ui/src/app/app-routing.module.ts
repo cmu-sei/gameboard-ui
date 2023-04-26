@@ -2,10 +2,11 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 import { HomePageComponent } from './home/home-page/home-page.component';
 import { AdminGuard } from './utility/admin.guard';
 import { AuthGuard } from './utility/auth.guard';
+import { GbTitleStrategy } from './services/gb-title-strategy';
 
 const routes: Routes = [
   {
@@ -44,6 +45,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    {
+      provide: TitleStrategy,
+      useClass: GbTitleStrategy,
+    }
+  ]
 })
 export class AppRoutingModule { }

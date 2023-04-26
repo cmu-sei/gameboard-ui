@@ -175,10 +175,10 @@ export class GameEditorComponent implements AfterViewInit {
     // order DESC by occurrence count
     if (a.value < b.value) return 1;
     if (a.value > b.value) return -1;
+
     // order ASC alphabetically by name for occurrence tie
     if (a.key < b.key) return -1;
     if (a.key > b.key) return 1;
     return 0;
   }
-
 }

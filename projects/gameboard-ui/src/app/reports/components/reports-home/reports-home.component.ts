@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ReportsService } from '../../reports.service';
 import { Report } from '../../reports-models';
 
@@ -9,11 +8,11 @@ import { Report } from '../../reports-models';
   styleUrls: ['./reports-home.component.scss']
 })
 export class ReportsHomeComponent implements OnInit {
-  reports$?: Observable<Report[]>;
+  reports?: Report[];
 
   constructor(private reportsService: ReportsService) { }
 
-  ngOnInit(): void {
-    this.reports$ = this.reportsService.list();
+  async ngOnInit(): Promise<void> {
+    this.reports = await this.reportsService.list();
   }
 }
