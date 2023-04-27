@@ -1,1 +1,73 @@
-<p>players-report works!</p>
+<div class="players-report-component" *ngIf="ctx$ | async as ctx; else loading">
+    <div class="report-parameters">
+        <app-report-parameters-container>
+            <app-parameter-competition name="competition" ngDefaultControl [(ngModel)]="selectedParameters.competition"
+                (ngModelChange)="handleParametersChanged($event)"></app-parameter-competition>
+            <app-parameter-track name="track" ngDefaultControl [(ngModel)]="selectedParameters.track"
+                (ngModelChange)="handleParametersChanged($event)"></app-parameter-track>
+            <app-parameter-game name="gameId" ngDefaultControl [(ngModel)]="selectedParameters.gameId"
+                (ngModelChange)="handleParametersChanged($event)"></app-parameter-game>
+        </app-report-parameters-container>
+    </div>
+
+    <div class="report-body mt-4" *ngIf="ctx.records.length" #playersReport>
+        <table class="report-table table-hover gameboard-report">
+            <col>
+            <col>
+            <col>
+            <colgroup span="4"></colgroup>
+            <colgroup span="4"></colgroup>
+
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" colSpan="4" class="group-header">Games</th>
+                    <th scope="col" colspan="4" class="group-header">Challenges</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Player</td>
+                    <td>Competitions</td>
+                    <td>Tracks</td>
+                    <td>Enrolled</td>
+                    <td>Deployed</td>
+                    <td>Scored Partial</td>
+                    <td>Scored Complete</td>
+                    <td>Enrolled</td>
+                    <td>Deployed</td>
+                    <td>Scored Partial</td>
+                    <td>Scored Complete</td>
+                </tr>
+
+                <tr class="data-row" *ngFor="let record of ctx.records">
+                    <td>{{record.user.name}}</td>
+                    <td class="count">
+                        <span [ngClass]="record.competitionsPlayed | countFieldToClass"
+                            [tooltip]="record.competitionsPlayed | stringsToTooltip:record.user.name + '\'s Competitions Played'">
+                            {{record.competitionsPlayed.length}}
+                        </span>
+                    </td>
+                    <td class="count" [tooltip]="(record.tracksPlayed | stringsToTooltip:'things')">
+                        <span [ngClass]="record.tracksPlayed | countFieldToClass">
+                            {{record.tracksPlayed.length}}
+                        </span>
+                    </td>
+                    <td class="count">{{record.games.countEnrolled}}</td>
+                    <td class="count">{{record.games.countDeployed}}</td>
+                    <td class="count">{{record.games.countScoredPartial}}</td>
+                    <td class="count">{{record.games.countScoredComplete}}</td>
+                    <td class="count">{{record.challenges.countEnrolled}}</td>
+                    <td class="count">{{record.challenges.countDeployed}}</td>
+                    <td class="count">{{record.challenges.countScoredPartial}}</td>
+                    <td class="count">{{record.challenges.countScoredComplete}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #loading><app-spinner></app-spinner></ng-template>

@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Report, ReportParameterOptions, ReportParameters } from './reports-models';
+import { ReportViewModel, ReportParameterOptions, ReportParameters } from './reports-models';
 import { ConfigService } from '../utility/config.service';
 import { UriService } from '../services/uri.service';
 import { ChallengesReportArgs, ChallengesReportModel } from './components/challenges-report/challenges-report.models';
+import { PlayersReportParameters, PlayersReportResults } from './components/players-report/players-report.models';
+import { SimpleEntity } from '../api/models';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
@@ -17,51 +18,17 @@ export class ReportsService {
     private config: ConfigService
   ) { }
 
-  async list(): Promise<Report[]> {
-    return await firstValueFrom(this.http.get<Report[]>("/reports"));
-    // return of([
-    //   {
-    //     id: "febd2574-8789-4eea-8466-00686b71706b",
-    //     name: "Challenges Report",
-    //     key: "challenges-report",
-    //     description: "Understand the role a challenge played in its games and competitions, how attainable a full solve was, and more.",
-    //     notableFields: [
-    //       "Solve Times",
-    //       "Scores",
-    //       "Deploy vs. solve counts"
-    //     ],
-    //     parameters: [
-    //       "Session Date Range",
-    //       "Competition",
-    //       "Track",
-    //       "Game",
-    //       "Challenge"
-    //     ]
-    //   },
-    //   {
-    //     id: "dd2a257f-1bbc-4f33-bf07-a6ae36bfad37",
-    //     name: "Players Report",
-    //     key: "players-report",
-    //     description: "Get a better view of your players - how often they play, how they perform when they do, and which events they compete in",
-    //     notableFields: [
-    //       "Challenges Per Month",
-    //       "Sponsor",
-    //       "Lifetime Score"
-    //     ],
-    //     parameters: [
-    //       "Sponsor",
-    //       "Competition",
-    //       "Track",
-    //       "Game",
-    //       "Challenge"
-    //     ],
-    //   },
-    // ]);
+  async list(): Promise<ReportViewModel[]> {
+    return await firstValueFrom(this.http.get<ReportViewModel[]>(`${this.API_ROOT}/reports`));
   }
 
-  async get(key: string): Promise<Report | null> {
+  async get(key: string): Promise<ReportViewModel | null> {
     const reports = await this.list();
     return reports.find(r => r.key === key) || null;
+  }
+
+  getCompetitionOptions(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.API_ROOT}/reports/parameter/competitions`);
   }
 
   getParameterOptions(reportKey: string, selectedParameters: ReportParameters): Observable<ReportParameterOptions> {
@@ -74,5 +41,23 @@ export class ReportsService {
     const query = this.uriService.uriEncode(args);
 
     return this.http.get<ChallengesReportModel>(`${this.API_ROOT}/reports/challenges-report${query ? `?${query}` : ''}`);
+  }
+
+  getPlayersReport(args: PlayersReportParameters): Observable<PlayersReportResults> {
+    const query = this.uriService.uriEncode(args);
+
+    return this.http.get<PlayersReportResults>(`${this.API_ROOT}/reports/players-report?${query ? `?${query}` : ''}`);
+  }
+
+  getChallengeSpecOptions(gameId?: string): Observable<SimpleEntity[]> {
+    return this.http.get<SimpleEntity[]>(`${this.API_ROOT}/reports/parameter/challenges/${gameId || ''}`);
+  }
+
+  getGameOptions(): Observable<SimpleEntity[]> {
+    return this.http.get<SimpleEntity[]>(`${this.API_ROOT}/reports/parameter/games`);
+  }
+
+  getTrackOptions(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.API_ROOT}/reports/parameter/tracks`);
   }
 }

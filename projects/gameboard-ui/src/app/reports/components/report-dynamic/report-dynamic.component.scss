@@ -1,0 +1,54 @@
+@import "../../../../scss/variables";
+
+nav li {
+    margin-right: 0.25rem;
+}
+
+::ng-deep table.gameboard-report {
+    width: 100%;
+
+    th,
+    td {
+        padding: 4px 8px;
+    }
+
+    .data-row {
+        border-bottom: dotted 1px #000000;
+        font-size: 1.1rem;
+    }
+
+    td.count {
+        text-align: right;
+    }
+
+    .headers-row {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: solid 1px #ffffff;
+
+        td:not(:first-of-type) {
+            border-left: solid 1px #ffffff;
+        }
+    }
+
+    .super-headers-row {
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: solid 1px #ffffff;
+        border-top: solid 1px #ffffff;
+        text-transform: uppercase;
+
+        th.group-header {
+            border-left: solid 1px #ffffff;
+        }
+    }
+
+    .tooltipped-value {
+        border-bottom: dotted 1px $info;
+        color: $info;
+        cursor: pointer;
+        font-weight: bold;
+    }
+}

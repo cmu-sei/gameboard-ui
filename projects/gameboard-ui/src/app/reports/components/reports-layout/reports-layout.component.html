@@ -1,11 +1,3 @@
 <div class="reports-layout-component">
-    <nav aria-label="breadcrumb" *ngIf="!isAtReportsRoot" class="d-flex">
-        <ol class="d-flex">
-            <li><a [routerLink]="'/reports'">Reports Home</a></li>
-            <li>&gt;</li>
-            <li>Report</li>
-        </ol>
-    </nav>
-
     <router-outlet></router-outlet>
 </div>

@@ -8,21 +8,21 @@
             {{report.description}}
         </p>
 
-        <div class="notable-fields-container mt-4" *ngIf="report.notableFields?.length">
+        <div class="notable-fields-container mt-4" *ngIf="report.exampleFields?.length">
             <h4>Fields</h4>
 
             <ul class="d-flex align-items-center flex-wrap">
-                <li class="d-inline-block" *ngFor="let field of report.notableFields">
+                <li class="d-inline-block" *ngFor="let field of report.exampleFields">
                     <span class="parameter-name badge badge-info">{{field}}</span>
                 </li>
             </ul>
         </div>
 
-        <div class="params-container mt-4" *ngIf="report.parameters">
+        <div class="params-container mt-4" *ngIf="report.exampleParameters">
             <h4>Filters</h4>
 
             <ul class="d-flex align-items-center flex-wrap">
-                <li class="d-inline-block" *ngFor="let param of report.parameters">
+                <li class="d-inline-block" *ngFor="let param of report.exampleParameters">
                     <span class="parameter-name badge badge-info">{{param}}</span>
                 </li>
             </ul>

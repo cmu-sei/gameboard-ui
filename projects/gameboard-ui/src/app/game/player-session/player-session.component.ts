@@ -4,9 +4,9 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { first, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
-import { Player, TimeWindow } from '../../api/player-models';
+import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';

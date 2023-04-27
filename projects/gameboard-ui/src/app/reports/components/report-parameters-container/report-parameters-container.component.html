@@ -1,0 +1,16 @@
+<div class="report-parameters-component">
+    <hr />
+    <div class="parameters-container d-flex flex-wrap">
+        <ng-content></ng-content>
+    </div>
+    <hr />
+    <div class="buttons-container d-flex justify-content-end">
+        <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleClearSelections()">
+            Clear all settings
+        </button>
+        <button type="button" class="btn btn-lg btn-success" (click)="handleRunClick()">Run Report</button>
+    </div>
+    <hr />
+</div>
+
+<ng-template #loading><app-spinner></app-spinner></ng-template>

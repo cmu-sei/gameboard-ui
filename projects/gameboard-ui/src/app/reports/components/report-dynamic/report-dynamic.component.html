@@ -1,11 +1,29 @@
 <div class="report-dynamic-component" *ngIf="report$ | async as report; else loading">
+    <nav aria-label="breadcrumb" *ngIf="!isAtReportsRoot" class="d-flex">
+        <ol class="d-flex">
+            <li><a [routerLink]="'/reports'">Reports</a></li>
+            <li>&gt;</li>
+            <li>{{report.name}}</li>
+        </ol>
+    </nav>
+
     <div class="header-content" *ngIf="reportMetaData">
         <h1>{{report.name}}</h1>
         <h5>{{reportMetaData.runAt | shortdate }} @ {{reportMetaData.runAt | friendlyTime}}</h5>
         <p>{{report.description}}</p>
-        <!--TODO-->
-        <!--wosscalled, export-->
     </div>
+</div>
+
+<div class="report-export d-flex justify-content-end align-content-center mt-4">
+    <span>Export to:</span>
+    <div class="btn-group mr-2">
+        <button class="btn btn-info btn-lg" (click)="handleExportToCsv" tabindex="0" role="button">CSV</button>
+        <button class="btn btn-info btn-lg" (click)="handleExportToPdf" tabindex="0" role="button">PDF</button>
+    </div>
+    <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleResetParameters()">
+        Clear all settings
+    </button>
+    <button type="button" class="btn btn-lg btn-success" (click)="handleRunReport()">Run Report</button>
 </div>
 
 <!--Note: needs to be outside any ngIfs, or the viewcontainerref can't find this-->

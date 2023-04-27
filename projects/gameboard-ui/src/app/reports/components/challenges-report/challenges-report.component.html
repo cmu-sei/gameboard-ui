@@ -1,18 +1,13 @@
 <div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
-    <div class="report-parameter-controls">
-        <app-report-parameters [reportKey]="'challenge-report'"
-            (parametersChanged)="handleReportParametersChanged($event)"></app-report-parameters>
-    </div>
-
-    <div class="report-export d-flex justify-content-end mt-4">
-        <button type="button" class="btn btn-info mr-2">
-            Export to CSV
-        </button>
-        <button type="button" class="btn btn-info" (click)="exportToPdf()">Export to PDF</button>
-    </div>
+    <app-report-parameters-container>
+        <app-parameter-competition [(ngModel)]="selectedParameters.competition"></app-parameter-competition>
+        <app-parameter-game [(ngModel)]="selectedParameters.gameId" name="gameId"></app-parameter-game>
+        <app-parameter-challenge-spec [(ngModel)]="selectedParameters.challengeSpecId"
+            name="challengeSpecId"></app-parameter-challenge-spec>
+    </app-report-parameters-container>
 
     <div class="report-body mt-4" *ngIf="ctx.records.length" #challengesReport>
-        <table class="report-table table-hover">
+        <table class="report-table table-hover gameboard-report">
             <col>
             <col>
             <colgroup span="4"></colgroup>

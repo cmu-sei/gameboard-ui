@@ -13,9 +13,16 @@ import { ChallengesReportComponent } from './components/challenges-report/challe
 import { DynamicReportDirective } from './directives/dynamic-report.directive';
 import { UtilityModule } from '../utility/utility.module';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
-import { CompetitionSelectComponent } from './components/competition-select/competition-select.component';
 import { PlayersReportComponent } from './components/players-report/players-report.component';
-import { ReportTitleResolver } from './report-title-resolver';
+import { UsersReportComponent } from './components/users-report/users-report.component';
+import { ReportParametersContainerComponent } from './components/report-parameters-container/report-parameters-container.component';
+import { ParameterCompetitionComponent } from './components/parameter-competition/parameter-competition.component';
+import { ParameterTrackComponent } from './components/parameter-track/parameter-track.component';
+import { ParameterGameComponent } from './components/parameter-game/parameter-game.component';
+import { ReportsTitleResolver } from './resolvers/reports-title.resolver';
+import { CountFieldToClassPipe } from './pipes/count-field-to-class.pipe';
+import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
+import { ParameterChallengeSpecComponent } from './components/parameter-challenge-spec/parameter-challenge-spec.component';
 
 @NgModule({
   declarations: [
@@ -28,8 +35,15 @@ import { ReportTitleResolver } from './report-title-resolver';
     ChallengesReportComponent,
     DynamicReportDirective,
     MsToDurationPipe,
-    CompetitionSelectComponent,
-    PlayersReportComponent
+    PlayersReportComponent,
+    UsersReportComponent,
+    ReportParametersContainerComponent,
+    ParameterCompetitionComponent,
+    ParameterTrackComponent,
+    ParameterGameComponent,
+    CountFieldToClassPipe,
+    StringsToTooltipPipe,
+    ParameterChallengeSpecComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +52,7 @@ import { ReportTitleResolver } from './report-title-resolver';
         path: '',
         component: ReportsLayoutComponent,
         children: [
-          { path: ':reportKey', component: ReportDynamicComponent, title: ReportTitleResolver },
+          { path: ':reportKey', component: ReportDynamicComponent, title: ReportsTitleResolver },
           { path: '', pathMatch: 'full', component: ReportsHomeComponent, title: "Reports" }
         ]
       }

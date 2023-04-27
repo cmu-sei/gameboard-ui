@@ -1,12 +1,19 @@
 import { SimpleEntity } from "../api/models";
 
-export interface Report {
+export interface DoughnutChartConfig {
+    labels: string[];
+    dataSets: { label: string; data: number[]; backgroundColor: string[]; hoverOffset: number; }[];
+    options: { responsive: boolean; };
+}
+
+
+export interface ReportViewModel {
     id: string;
     name: string;
     key: string;
     description: string;
-    parameters: string[];
-    notableFields: string[];
+    exampleFields: string[];
+    exampleParameters: string[];
 }
 
 export interface ReportParameter {
@@ -61,8 +68,24 @@ export interface ReportMetaData {
     runAt: Date;
 }
 
-export interface DoughnutChartConfig {
-    labels: string[];
-    dataSets: { label: string; data: number[]; backgroundColor: string[]; hoverOffset: number; }[];
-    options: { responsive: boolean; };
+export enum ReportKey {
+    ChallengesReport = "challenges-report",
+    PlayersReport = "players-report"
+}
+
+export interface ReportSponsor {
+    id: string;
+    name: string;
+    logoUri: string;
+}
+
+export enum ReportTrackParameterModifier {
+    CompetedInThisTrack = "include",
+    CompetedInOnlyThisTrack = "include-only",
+    DidntCompeteInThisTrack = "exclude"
+}
+
+export interface ReportTrackParameter {
+    track: string;
+    modifier: ReportTrackParameterModifier;
 }

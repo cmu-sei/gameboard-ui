@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { LogService } from '../../../services/log.service';
 import { SlugService } from '../../../services/slug.service';
-import { Report } from '../../reports-models';
+import { ReportViewModel } from '../../reports-models';
 
 @Component({
   selector: 'app-report-card',
@@ -9,7 +9,7 @@ import { Report } from '../../reports-models';
   styleUrls: ['./report-card.component.scss']
 })
 export class ReportCardComponent implements OnChanges {
-  @Input() report?: Report;
+  @Input() report?: ReportViewModel;
 
   protected reportUrl?: string;
 

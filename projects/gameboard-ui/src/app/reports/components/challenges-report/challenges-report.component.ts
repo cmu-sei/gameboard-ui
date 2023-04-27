@@ -1,10 +1,8 @@
-import { Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren, ViewContainerRef } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
-import { LogService } from '../../../services/log.service';
-import { PdfService } from '../../../services/pdf.service';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren, ViewContainerRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { UriService } from '../../../services/uri.service';
-import { DoughnutChartConfig, ReportMetaData, ReportParameters } from '../../reports-models';
+import { DoughnutChartConfig, ReportKey, ReportMetaData, ReportParameters } from '../../reports-models';
 import { ReportsService } from '../../reports.service';
 import { IReportComponent } from '../report-component';
 import { ChallengesReportArgs, ChallengesReportModel } from './challenges-report.models';
@@ -14,7 +12,7 @@ import { ChallengesReportArgs, ChallengesReportModel } from './challenges-report
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent implements IReportComponent, OnDestroy {
+export class ChallengesReportComponent implements IReportComponent, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
@@ -24,18 +22,16 @@ export class ChallengesReportComponent implements IReportComponent, OnDestroy {
 
   protected ctx$: Observable<ChallengesReportModel>;
   protected chartConfig?: DoughnutChartConfig;
+  protected selectedParameters: ChallengesReportArgs = {};
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private logService: LogService,
-    private pdfService: PdfService,
     private uriService: UriService,
     reportsService: ReportsService) {
 
     this.ctx$ = this.route.queryParams.pipe(
       map(params => ({ ...params } as ChallengesReportArgs)),
-      tap(params => console.log("params to load", params)),
       switchMap(args => reportsService.getChallengesReport(args)),
       tap(results => this.onResultsLoaded(results.metaData)),
       tap(results => this.chartConfig = this.buildDoughnutChart(results))
@@ -48,23 +44,31 @@ export class ChallengesReportComponent implements IReportComponent, OnDestroy {
     })
   }
 
-  exportToPdf() {
-    if (!this.reportElementRef?.nativeElement) {
-      this.logService.logError("Couldn't isolate element ref for the challenges report.");
-      return;
-    }
+  getPdfExportElement(): ElementRef<HTMLDivElement> {
+    return this.reportElementRef!;
+  }
 
-    this.pdfService.exportHtmlToPdf("Challenges Report", this.reportElementRef);
+  getReportKey(): ReportKey {
+    return ReportKey.ChallengesReport;
+  }
+
+  getParametersQuery(): string {
+    return this.uriService.toQueryString(this.selectedParameters);
   }
 
   handleReportParametersChanged(parameters: ReportParameters) {
-    const reportKey = this.route.snapshot.params['reportSlug'];
+    const reportKey = this.route.snapshot.params['reportKey'];
 
     // TODO: daterange requires additional handling because it's an object
     let finalParams = { ...parameters };
     delete finalParams.dateRange;
 
+    // TODO: use reportkey enum, have the parent component nav
     this.router.navigateByUrl(`/reports/${reportKey}?${this.uriService.toQueryString(finalParams)}`);
+  }
+
+  resetParameters(): void {
+    this.selectedParameters = {};
   }
 
   private buildDoughnutChart(results: ChallengesReportModel): DoughnutChartConfig {
