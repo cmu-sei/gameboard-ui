@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HubConnectionState } from '@microsoft/signalr';
-import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Subject, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { SynchronizedGameStartedState, SyncStartState } from '../../game/game.models';
 import { LocalStorageService, StorageKey } from '../local-storage.service';
 import { LogService } from '../log.service';
 import { HubState, NotificationService } from '../notification.service';
+import { GameService } from '../../api/game.service';
 
 export interface GameHubEvent {
     gameId: string;
@@ -45,6 +46,7 @@ export class GameHubService implements OnDestroy {
     // }
 
     constructor(
+        private gameService: GameService,
         private localStorageService: LocalStorageService,
         private logger: LogService,
         private notificationService: NotificationService) {
@@ -103,8 +105,12 @@ export class GameHubService implements OnDestroy {
         if (hubState.connectionState === HubConnectionState.Connected && gameIdsToJoin.length) {
             for (let gameId of gameIdsToJoin) {
                 // join the channel
-                const state = await this.notificationService.sendMessage<SyncStartState>("JoinGame", gameId);
-                this._syncStartStateChanged$.next(state);
+                const game = await firstValueFrom(this.gameService.retrieve(gameId));
+
+                if (game.requireSynchronizedStart) {
+                    const state = await this.notificationService.sendMessage<SyncStartState>("JoinGame", gameId);
+                    this._syncStartStateChanged$.next(state);
+                }
             }
         }
     }
