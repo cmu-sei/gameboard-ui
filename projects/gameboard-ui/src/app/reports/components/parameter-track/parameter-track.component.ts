@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReportParameterComponent } from '../report-parameter-component';
 import { Observable } from 'rxjs';
 import { ReportsService } from '../../reports.service';
@@ -10,6 +10,7 @@ import { ReportTrackParameter, ReportTrackParameterModifier } from '../../report
   styleUrls: ['./parameter-track.component.scss']
 })
 export class ParameterTrackComponent extends ReportParameterComponent {
+  @Input() hideModifierSelect = false;
   tracks$: Observable<string[]>
   selectedTrack?: string;
   selectedModifier?: ReportTrackParameterModifier = ReportTrackParameterModifier.CompetedInThisTrack;
@@ -33,7 +34,7 @@ export class ParameterTrackComponent extends ReportParameterComponent {
   handleSelectionChanged(event: any) {
     this.selectedValue = {
       track: this.selectedTrack,
-      modifier: this.selectedModifier
+      modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
     } as ReportTrackParameter;
   }
 

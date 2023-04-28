@@ -6,7 +6,6 @@ import { NgChartsModule } from 'ng2-charts';
 import { CoreModule } from '../core/core.module';
 import { ReportCardComponent } from './components/report-card/report-card.component';
 import { ReportsLayoutComponent } from './components/reports-layout/reports-layout.component';
-import { ReportParametersComponent } from './components/report-parameters/report-parameters.component';
 import { ReportDynamicComponent } from './components/report-dynamic/report-dynamic.component';
 import { DateRangeComponent } from './components/date-range/date-range.component';
 import { ChallengesReportComponent } from './components/challenges-report/challenges-report.component';
@@ -29,7 +28,6 @@ import { ParameterChallengeSpecComponent } from './components/parameter-challeng
     ReportsHomeComponent,
     ReportCardComponent,
     ReportsLayoutComponent,
-    ReportParametersComponent,
     ReportDynamicComponent,
     DateRangeComponent,
     ChallengesReportComponent,
@@ -43,7 +41,7 @@ import { ParameterChallengeSpecComponent } from './components/parameter-challeng
     ParameterGameComponent,
     CountFieldToClassPipe,
     StringsToTooltipPipe,
-    ParameterChallengeSpecComponent
+    ParameterChallengeSpecComponent,
   ],
   imports: [
     CommonModule,

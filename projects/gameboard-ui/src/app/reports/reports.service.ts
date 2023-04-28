@@ -50,7 +50,7 @@ export class ReportsService {
   }
 
   getChallengeSpecOptions(gameId?: string): Observable<SimpleEntity[]> {
-    return this.http.get<SimpleEntity[]>(`${this.API_ROOT}/reports/parameter/challenges/${gameId || ''}`);
+    return this.http.get<SimpleEntity[]>(`${this.API_ROOT}/reports/parameter/challenge-specs/${gameId || ''}`);
   }
 
   getGameOptions(): Observable<SimpleEntity[]> {

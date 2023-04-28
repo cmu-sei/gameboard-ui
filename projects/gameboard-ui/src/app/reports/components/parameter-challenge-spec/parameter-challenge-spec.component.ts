@@ -11,7 +11,8 @@ import { ReportsService } from '../../reports.service';
 })
 export class ParameterChallengeSpecComponent extends ReportParameterComponent implements OnChanges, OnInit {
   @Input() gameId?: string;
-  challengeSpecs?: Observable<SimpleEntity>;
+  specs$?: Observable<SimpleEntity[]>;
+  selectedSpec?: SimpleEntity;
 
   constructor(private reportsService: ReportsService) {
     super();
@@ -30,6 +31,6 @@ export class ParameterChallengeSpecComponent extends ReportParameterComponent im
   }
 
   private loadChallengeSpecs(gameId?: string) {
-    return this.reportsService.getChallengeSpecOptions()
+    this.specs$ = this.reportsService.getChallengeSpecOptions(this.gameId);
   }
 }

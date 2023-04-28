@@ -21,7 +21,7 @@ export class ParameterCompetitionComponent extends ReportParameterComponent {
     return undefined;
   }
 
-  handleSelectionChanged(event: any) {
-    this.selectedValue = event;
-  }
+  // handleSelectionChanged(event: any) {
+  //   this.selectedValue = event;
+  // }
 }

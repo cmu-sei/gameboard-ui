@@ -1,8 +1,11 @@
 <div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
     <app-report-parameters-container>
-        <app-parameter-competition [(ngModel)]="selectedParameters.competition"></app-parameter-competition>
-        <app-parameter-game [(ngModel)]="selectedParameters.gameId" name="gameId"></app-parameter-game>
-        <app-parameter-challenge-spec [(ngModel)]="selectedParameters.challengeSpecId"
+        <app-parameter-competition [(ngModel)]="selectedParameters.competition" ngDefaultControl
+            name="competition"></app-parameter-competition>
+        <app-parameter-track [(ngModel)]="selectedParameters.track" [hideModifierSelect]="true" ngDefaultControl
+            name="track"></app-parameter-track>
+        <app-parameter-game [(ngModel)]="selectedParameters.gameId" name="gameId" ngDefaultControl></app-parameter-game>
+        <app-parameter-challenge-spec [(ngModel)]="selectedParameters.challengeSpecId" ngDefaultControl
             name="challengeSpecId"></app-parameter-challenge-spec>
     </app-report-parameters-container>
 
