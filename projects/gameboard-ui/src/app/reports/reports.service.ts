@@ -1,21 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, of } from 'rxjs';
-import { ReportViewModel, ReportParameterOptions, ReportParameters } from './reports-models';
+import { ReportViewModel, ReportParameterOptions, ReportParameters, ReportKey } from './reports-models';
 import { ConfigService } from '../utility/config.service';
 import { UriService } from '../services/uri.service';
 import { ChallengesReportArgs, ChallengesReportModel } from './components/challenges-report/challenges-report.models';
 import { PlayersReportParameters, PlayersReportResults } from './components/players-report/players-report.models';
 import { SimpleEntity } from '../api/models';
+import { WindowService } from '../services/window.service';
+import { FilesService } from '../services/files.service';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
   private readonly API_ROOT = `${this.config.apphost}api`;
 
   constructor(
+    private filesService: FilesService,
     private http: HttpClient,
     private uriService: UriService,
-    private config: ConfigService
+    private config: ConfigService,
+    private windowService: WindowService,
   ) { }
 
   async list(): Promise<ReportViewModel[]> {
@@ -29,12 +33,6 @@ export class ReportsService {
 
   getCompetitionOptions(): Observable<string[]> {
     return this.http.get<string[]>(`${this.API_ROOT}/reports/parameter/competitions`);
-  }
-
-  getParameterOptions(reportKey: string, selectedParameters: ReportParameters): Observable<ReportParameterOptions> {
-    const query = this.uriService.uriEncode(selectedParameters);
-
-    return this.http.get<ReportParameterOptions>(`${this.API_ROOT}/reports/${reportKey}/parameter-options${query ? `?${query}` : ''}`);
   }
 
   getChallengesReport(args: ChallengesReportArgs): Observable<ChallengesReportModel> {
@@ -59,5 +57,11 @@ export class ReportsService {
 
   getTrackOptions(): Observable<string[]> {
     return this.http.get<string[]>(`${this.API_ROOT}/reports/parameter/tracks`);
+  }
+
+  async openExport(reportKey: ReportKey, parameters: any) {
+    const queryString = this.uriService.toQueryString(parameters);
+    console.log(`${this.API_ROOT}/reports/export/${reportKey.toString()}${queryString ? `?${queryString}` : ''}`);
+    await this.filesService.downloadFileFrom(`${this.API_ROOT}/reports/export/${reportKey.toString()}${queryString ? `?${queryString}` : ''}`, reportKey.toString(), "csv", "text/csv")
   }
 }

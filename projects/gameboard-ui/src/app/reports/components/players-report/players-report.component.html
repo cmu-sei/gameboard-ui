@@ -7,6 +7,9 @@
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-track>
             <app-parameter-game name="gameId" ngDefaultControl [(ngModel)]="selectedParameters.gameId"
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-game>
+            <app-parameter-challenge-spec name="challengeSpecId" ngDefaultControl
+                [(ngModel)]="selectedParameters.challengeSpecId" (ngModelChange)="handleParametersChanged($event)">
+            </app-parameter-challenge-spec>
         </app-report-parameters-container>
     </div>
 

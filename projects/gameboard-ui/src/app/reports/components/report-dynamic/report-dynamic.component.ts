@@ -1,15 +1,16 @@
 import { AfterViewInit, Component, ComponentRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Observable, Subscription, from, } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { Observable, Subscription, combineLatest, forkJoin, from, } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { ReportsService } from '../../reports.service';
-import { ReportViewModel, ReportMetaData } from '../../reports-models';
+import { ReportViewModel, ReportMetaData, ReportKey } from '../../reports-models';
 import { DynamicReportDirective } from '../../directives/dynamic-report.directive';
 import { ChallengesReportComponent } from '../challenges-report/challenges-report.component';
 import { IReportComponent } from '../report-component';
 import { LogService } from '../../../services/log.service';
 import { PdfService } from '../../../services/pdf.service';
 import { PlayersReportComponent } from '../players-report/players-report.component';
+import { UriService } from '../../../services/uri.service';
 
 @Component({
   selector: 'app-report-dynamic',
@@ -18,7 +19,7 @@ import { PlayersReportComponent } from '../players-report/players-report.compone
 })
 export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicReportDirective, { read: DynamicReportDirective }) dynamicReportHost!: DynamicReportDirective;
-  private loadedReportComponent?: ComponentRef<IReportComponent>
+  private loadedReportComponent?: ComponentRef<IReportComponent<any>>
   private routerEventsSub?: Subscription;
   protected isAtReportsRoot = false;
   reportMetaData?: ReportMetaData;
@@ -35,7 +36,8 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     private pdfService: PdfService,
     private reportsService: ReportsService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private uriService: UriService) {
     this.routerEventsSub = router.events.subscribe(ev => {
       if (ev instanceof NavigationEnd) {
         const typedEvent = ev as NavigationEnd;
@@ -45,23 +47,37 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.report$ = this.route.params.pipe(
-      switchMap(params => from(this.reportsService.get(params.reportKey))),
-      tap(report => {
-        const viewContainerRef = this.dynamicReportHost.viewContainerRef;
-        viewContainerRef.clear();
+    this.report$ =
+      combineLatest([
+        this.route.params,
+        this.route.queryParams
+      ]).pipe(
+        map(([params, queryParams]) => ({ params, queryParams })),
+        switchMap(route => from(this.reportsService.get(route.params.reportKey))),
+        tap((report: ReportViewModel | null) => {
+          // unload any prior component
+          const viewContainerRef = this.dynamicReportHost.viewContainerRef;
+          viewContainerRef.clear();
 
-        if (report) {
-          const componentRef = viewContainerRef.createComponent<IReportComponent>(ReportDynamicComponent.reportComponentMap[report.key]);
-          componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
-          this.loadedReportComponent = componentRef;
-        }
-      })
-    );
+          // load the new report and set its properties/parameters
+          if (report) {
+            const componentRef = viewContainerRef.createComponent<IReportComponent<any>>(ReportDynamicComponent.reportComponentMap[report.key]);
+            // have to deep-clone the query parameters because they're made inextensible by angular
+            componentRef.instance.selectedParameters = { ...this.route.snapshot.queryParams };
+            componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
+            this.loadedReportComponent = componentRef;
+          }
+        })
+      );
   }
 
   handleResetParameters() {
+    if (!this.loadedReportComponent?.instance) {
+      throw new Error("Can't run without a loaded report.");
+    }
 
+    const key = this.loadedReportComponent.instance.getReportKey();
+    this.router.navigateByUrl(`reports/${key}`);
   }
 
   handleRunReport() {
@@ -70,13 +86,18 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     }
 
     const key = this.loadedReportComponent.instance.getReportKey();
-    const query = this.loadedReportComponent.instance.getParametersQuery();
+    const query = this.loadedReportComponent.instance.selectedParameters;
 
-    this.router.navigateByUrl(`reports/${key}?${query}`);
+    this.displayReport(key, query);
   }
 
   handleExportToCsv() {
-    this.logService.logWarning("PDF to CSV NYI.");
+    console.log("exporting...")
+    if (!this.loadedReportComponent?.instance) {
+      throw new Error("Can't export without a loaded report.");
+    }
+
+    this.reportsService.openExport(this.loadedReportComponent.instance.getReportKey(), this.loadedReportComponent.instance.selectedParameters);
   }
 
   handleExportToPdf() {
@@ -88,6 +109,11 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     }
 
     this.pdfService.exportHtmlToPdf(this.reportMetaData?.title || "Report", exportElement);
+  }
+
+  private displayReport(reportKey: string, selectedParameters: any) {
+    const query = this.uriService.toQueryString(selectedParameters);
+    this.router.navigateByUrl(`reports/${reportKey}?${query}`);
   }
 
   ngOnDestroy(): void {

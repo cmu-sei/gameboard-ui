@@ -1,7 +1,7 @@
 <div class="parameter-competition-component report-parameter" *ngIf="competitions$ | async as competitions">
     <label for="competition">Competition</label>
     <select class="form-control form-select" name="competition" aria-label="Competition select"
-        [disabled]="!competitions.length" [(ngModel)]="selectedCompetition">
+        [disabled]="!competitions.length" [(ngModel)]="selectedValue">
         <option [value]="undefined" selected>[any competition]</option>
         <option *ngFor="let competition of competitions" [ngValue]="competition">{{competition}}
         </option>

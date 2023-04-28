@@ -8,6 +8,10 @@ nav li {
     font-size: 1.25rem;
 }
 
+.csv-export-button {
+    border-right: solid 1px #ffffff;
+}
+
 ::ng-deep table.gameboard-report {
     width: 100%;
 

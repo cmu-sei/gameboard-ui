@@ -12,8 +12,9 @@ import { ChallengesReportArgs, ChallengesReportModel } from './challenges-report
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent implements IReportComponent, AfterViewInit, OnDestroy {
+export class ChallengesReportComponent implements IReportComponent<ChallengesReportArgs>, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
+  selectedParameters: ChallengesReportArgs = {};
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
@@ -22,7 +23,6 @@ export class ChallengesReportComponent implements IReportComponent, AfterViewIni
 
   protected ctx$: Observable<ChallengesReportModel>;
   protected chartConfig?: DoughnutChartConfig;
-  protected selectedParameters: ChallengesReportArgs = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -50,10 +50,6 @@ export class ChallengesReportComponent implements IReportComponent, AfterViewIni
 
   getReportKey(): ReportKey {
     return ReportKey.ChallengesReport;
-  }
-
-  getParametersQuery(): string {
-    return this.uriService.toQueryString(this.selectedParameters);
   }
 
   handleReportParametersChanged(parameters: ReportParameters) {

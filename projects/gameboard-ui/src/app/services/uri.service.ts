@@ -10,12 +10,23 @@ export class UriService {
     return new URLSearchParams(target).toString();
   }
 
+  toObject(query: string): any {
+    const stripStart = (query.startsWith('?') ? query.substring(1) : query);
+    const retVal: any = {};
+
+    for (let pair of stripStart.split("&")) {
+      const keyValue = pair.split("=");
+      retVal[keyValue[0]] = keyValue[1];
+    }
+
+    return retVal;
+  }
+
   toQueryString<TObject extends { [key: string]: any }>(target: TObject): string {
     const finalParams: string[] = [];
     for (const key of Object.keys(target)) {
       const value = target[key];
 
-      console.log("value", value);
       if (
         value === null ||
         value === undefined ||
@@ -27,11 +38,9 @@ export class UriService {
         continue;
       }
 
-      console.log("added");
       finalParams.push(`${key}=${value}`);
     }
 
-    console.log("final params", finalParams);
     return finalParams.join("&");
   }
 }

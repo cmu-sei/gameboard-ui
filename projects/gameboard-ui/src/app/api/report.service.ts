@@ -4,15 +4,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { Challenge } from './board-models';
 import { FeedbackStats } from './feedback-models';
 import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeReport, ChallengeDetailReport, ParticipationReport, CorrelationReport } from './report-models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ReportService {
 
   url = '';
@@ -83,8 +79,8 @@ export class ReportService {
   public exportChallengeStats(id: string): void {
     this.http.get(`${this.url}/report/exportchallengestats/${id}`, { responseType: 'arraybuffer' })
       .subscribe(response => {
-          const name: string = 'challenge-statistics-report-' + this.timestamp() + '.csv';
-          this.downloadFile(response, name, 'application/ms-excel');
+        const name: string = 'challenge-statistics-report-' + this.timestamp() + '.csv';
+        this.downloadFile(response, name, 'application/ms-excel');
       });
   }
 
@@ -103,7 +99,7 @@ export class ReportService {
         this.downloadFile(response, name, 'application/ms-excel');
       });
   }
-  
+
   public exportFeedbackStats(params: any, exportName: string): void {
     this.http.get(`${this.url}/report/exportfeedbackstats`, { responseType: 'arraybuffer', params: params })
       .subscribe(response => {
@@ -211,13 +207,5 @@ export class ReportService {
     const seconds: number = date.getUTCSeconds();
 
     return year + '-' + month + '-' + day + '-' + hours + minutes + seconds;
-  }
-
-  public getSponsorLogoUrl(logo: string): string {
-    const logoUrl = logo
-      ? `${this.config.imagehost}/${logo}`
-      : `${this.config.basehref}assets/sponsor.svg`
-      ;
-    return logoUrl;
   }
 }

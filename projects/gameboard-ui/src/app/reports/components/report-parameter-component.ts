@@ -1,6 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
+export function createCustomInputControlValueAccessor(extendedInputComponent: any) {
+    return {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => extendedInputComponent),
+        multi: true
+    };
+}
+
 @Component({ template: '' })
 export abstract class ReportParameterComponent implements ControlValueAccessor {
     @Input() ngModel: any;
@@ -10,10 +18,6 @@ export abstract class ReportParameterComponent implements ControlValueAccessor {
     protected onChange = () => { };
     protected onTouched = () => { };
 
-    constructor() {
-        this._selectedValue = this.getDefaultValue();
-    }
-
     public get selectedValue(): any { return this._selectedValue };
     public set selectedValue(value: any) {
         if (this._selectedValue !== value) {
@@ -21,8 +25,6 @@ export abstract class ReportParameterComponent implements ControlValueAccessor {
             this.ngModelChange.emit(this._selectedValue);
         }
     }
-
-    abstract getDefaultValue(): any;
 
     writeValue(obj: any): void {
         this.selectedValue = obj;

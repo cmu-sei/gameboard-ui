@@ -29,8 +29,8 @@
 
             <tbody>
                 <tr class="headers headers-row">
-                    <td>Challenge</td>
                     <td>Game</td>
+                    <td>Challenge</td>
                     <td>Eligible</td>
                     <td>Started</td>
                     <td>Partial Solve</td>
@@ -42,16 +42,21 @@
                 </tr>
 
                 <tr class="data-row" *ngFor="let record of ctx.records">
-                    <td>{{record.challengeSpec.name}}</td>
                     <td>{{record.game.name}}</td>
-                    <td class="text-center">{{record.playersEligible}}</td>
+                    <td>{{record.challengeSpec.name}}</td>
+                    <td class="text-center">
+                        <a [routerLink]="['/reports/players-report']"
+                            [queryParams]="{ 'challengeSpecId': record.challengeSpec.id }">
+                            {{record.playersEligible}}
+                        </a>
+                    </td>
                     <td class="text-center">{{record.playersStarted}}</td>
                     <td class="text-center">{{record.playersWithPartialSolve}}</td>
                     <td class="text-center">{{record.playersWithCompleteSolve}}</td>
                     <td>
                         <div *ngIf="record.fastestSolve; else noSolve" class="fastest-solve-cell">
-                            <p>{{record.fastestSolve.solveTimeMs}}</p>
-                            <p><em>({{record.fastestSolve.player.name}})</em></p>
+                            <span class="tooltipped-value" [tooltip]="'Solved by ' + record.fastestSolve.player.name">
+                                {{record.fastestSolve.solveTimeMs}}</span>
                         </div>
 
                         <ng-template #noSolve>--</ng-template>

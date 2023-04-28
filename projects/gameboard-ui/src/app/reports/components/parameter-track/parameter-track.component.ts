@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ReportParameterComponent } from '../report-parameter-component';
+import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { Observable } from 'rxjs';
 import { ReportsService } from '../../reports.service';
 import { ReportTrackParameter, ReportTrackParameterModifier } from '../../reports-models';
@@ -7,7 +7,8 @@ import { ReportTrackParameter, ReportTrackParameterModifier } from '../../report
 @Component({
   selector: 'app-parameter-track',
   templateUrl: './parameter-track.component.html',
-  styleUrls: ['./parameter-track.component.scss']
+  styleUrls: ['./parameter-track.component.scss'],
+  providers: [createCustomInputControlValueAccessor(ParameterTrackComponent)]
 })
 export class ParameterTrackComponent extends ReportParameterComponent {
   @Input() hideModifierSelect = false;
@@ -24,14 +25,7 @@ export class ParameterTrackComponent extends ReportParameterComponent {
     this.tracks$ = this.reportsService.getTrackOptions();
   }
 
-  getDefaultValue() {
-    return {
-      track: undefined,
-      modifier: ReportTrackParameterModifier.CompetedInThisTrack
-    } as unknown as ReportTrackParameter;
-  }
-
-  handleSelectionChanged(event: any) {
+  handleSelectionChanged(event?: any) {
     this.selectedValue = {
       track: this.selectedTrack,
       modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
@@ -42,5 +36,6 @@ export class ParameterTrackComponent extends ReportParameterComponent {
     const typedValue = obj as ReportTrackParameter;
     this.selectedTrack = typedValue.track;
     this.selectedModifier = typedValue.modifier;
+    this.handleSelectionChanged();
   }
 }

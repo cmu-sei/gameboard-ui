@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Observable, Subscription, map, switchMap, tap } from 'rxjs';
 import { PlayersReportParameters, PlayersReportResults } from './players-report.models';
 import { ReportsService } from '../../reports.service';
@@ -17,7 +17,7 @@ interface PlayersReportContext {
   templateUrl: './players-report.component.html',
   styleUrls: ['./players-report.component.scss']
 })
-export class PlayersReportComponent implements IReportComponent {
+export class PlayersReportComponent implements IReportComponent<PlayersReportParameters>, OnInit {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   ctx$?: Observable<PlayersReportResults>;
   selectedParameters: PlayersReportParameters = {};
@@ -36,6 +36,10 @@ export class PlayersReportComponent implements IReportComponent {
       switchMap(args => reportsService.getPlayersReport(args)),
       tap(results => this.onResultsLoaded(results.metaData)),
     );
+  }
+
+  ngOnInit(): void {
+    console.log("selected params are", this.selectedParameters);
   }
 
   getPdfExportElement(): ElementRef<HTMLDivElement> {

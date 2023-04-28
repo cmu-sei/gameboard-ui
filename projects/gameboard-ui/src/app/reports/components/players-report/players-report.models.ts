@@ -2,7 +2,7 @@ import { SimpleEntity } from "../../../api/models";
 import { ReportMetaData, ReportTrackParameter } from "../../reports-models";
 
 export class PlayersReportParameters {
-    challengeId?: string;
+    challengeSpecId?: string;
     competition?: string;
     gameId?: string;
     sponsorId?: string;
