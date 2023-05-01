@@ -16,7 +16,7 @@
         <p class="sync-start-message">
             This game is synchronized, so you won't be able to start it until <strong>everyone</strong>
             registered to play <span *ngIf="ctx.game.maxTeamSize > 1"> (across all teams)</span> has clicked
-            "Ready" below. If you're all set to play, be sure to ready up so everyone can start playing!
+            "I'm ready" below. If you're all set to play, be sure to ready up so everyone can start playing!
         </p>
 
         <div class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
@@ -40,8 +40,8 @@
             </button>
         </ng-container>
 
-        <app-confirm-button *ngIf="!ctx.game.requireSynchronizedStart" (confirm)="handleDoubleCheckRequest(true)"
-            (cancel)="handleDoubleCheckRequest(false)">
+        <app-confirm-button btnClass="btn btn-lg btn-info" *ngIf="!ctx.game.requireSynchronizedStart"
+            (confirm)="handleDoubleCheckRequest(true)" (cancel)="handleDoubleCheckRequest(false)">
             <fa-icon [icon]="faService.bolt"></fa-icon>
             <span>Start Session</span>
         </app-confirm-button>

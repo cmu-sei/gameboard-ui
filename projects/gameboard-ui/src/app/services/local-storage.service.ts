@@ -87,6 +87,8 @@ export class LocalStorageService {
     //   // return `gb:${user.id}:${key}`;
     //   return `gb:${key}`;
 
-    return `gb:${key}`;
+    // for now, don't prepend because of incompatibility with how auth service changed/works
+    // return `gb:${key}`;
+    return key;
   }
 }

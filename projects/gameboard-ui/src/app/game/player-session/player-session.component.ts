@@ -101,7 +101,7 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   handleReset(p: Player): void {
-    this.api.resetSession(p).pipe(first()).subscribe(_ => {
+    this.api.resetSession({ player: p, unenrollTeam: true }).pipe(first()).subscribe(_ => {
       this.onSessionReset.emit(p);
     });
   }

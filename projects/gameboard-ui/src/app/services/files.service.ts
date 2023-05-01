@@ -22,13 +22,11 @@ export class FilesService {
 
   public async downloadFileFrom(url: string, name: string, extension: string, type: string, addTimestamp = true) {
     const finalName = `${name}${addTimestamp ? this.buildTimestamp() : ''}.${extension}`;
-    console.log("finale name", finalName);
     const response = await firstValueFrom(this.http.get(url, { responseType: 'arraybuffer' }));
     this.downloadFile(response, finalName, type);
   }
 
   public downloadFile(data: any, name: string, type: string) {
-    console.log("downloading", name, type);
     const blob = new Blob([data], { type });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');

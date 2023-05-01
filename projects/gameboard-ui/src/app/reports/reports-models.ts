@@ -63,7 +63,7 @@ export interface ReportParameterOptions {
 }
 
 export interface ReportMetaData {
-    reportId: string;
+    key: string;
     title: string;
     runAt: Date;
 }

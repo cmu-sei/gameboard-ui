@@ -57,10 +57,10 @@ export class PlayerService {
     );
   }
 
-  public resetSession(p: Player, asAdmin: boolean = false): Observable<any> {
-    return this.http.delete<void>(`${this.url}/player/${p.id}/session?asAdmin=${asAdmin}`, {}).pipe(
+  public resetSession(request: { player: Player, unenrollTeam: boolean }): Observable<any> {
+    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { isManualReset: true, unenrollTeam: request.unenrollTeam }).pipe(
       map(r => {
-        delete p.session;
+        delete request.player.session;
         return;
       })
     );

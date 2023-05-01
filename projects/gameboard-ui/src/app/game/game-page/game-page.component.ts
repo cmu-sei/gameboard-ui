@@ -221,6 +221,8 @@ export class GamePageComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.hubEventsSubcription?.unsubscribe();
     this.localUserSubscription?.unsubscribe();
+    this.syncStartChangedSubscription?.unsubscribe();
+    this.syncStartGameStartedSubscription?.unsubscribe();
   }
 
   private showModal(resettingPlayerName: string): void {
