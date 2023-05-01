@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Observable, Subscription, map, switchMap, tap } from 'rxjs';
-import { PlayersReportParameters, PlayersReportResults } from './players-report.models';
+import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportResults } from './players-report.models';
 import { ReportsService } from '../../reports.service';
 import { ActivatedRoute } from '@angular/router';
 import { ReportKey, ReportMetaData } from '../../reports-models';
@@ -39,7 +39,6 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportPar
   }
 
   ngOnInit(): void {
-    console.log("selected params are", this.selectedParameters);
   }
 
   getPdfExportElement(): ElementRef<HTMLDivElement> {
@@ -47,7 +46,12 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportPar
   }
 
   getParametersQuery(): string {
-    return this.uriService.toQueryString(this.selectedParameters);
+    const flatParameters: PlayersReportFlatParameters = {
+      trackModifier: this.selectedParameters.track?.modifier,
+      trackName: this.selectedParameters.track?.track,
+      ... this.selectedParameters
+    }
+    return this.uriService.toQueryString(flatParameters);
   }
 
   getReportKey(): ReportKey {

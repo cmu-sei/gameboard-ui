@@ -14,13 +14,14 @@
     </div>
 </div>
 
-<div class="report-export d-flex justify-content-end align-items-baseline mt-4">
+<div class="report-export d-flex justify-content-end align-items-center mt-4">
     <div class="export-label mr-2">Export to:</div>
     <div class="btn-group mr-2">
         <button class="btn btn-info btn-lg csv-export-button" (click)="handleExportToCsv()" tabindex="0"
             role="button">CSV</button>
         <button class="btn btn-info btn-lg" (click)="handleExportToPdf()" tabindex="0" role="button">PDF</button>
     </div>
+    <app-share-button class="d-block mr-2"></app-share-button>
     <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleResetParameters()">
         Clear all settings
     </button>

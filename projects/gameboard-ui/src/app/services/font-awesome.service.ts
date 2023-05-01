@@ -21,8 +21,10 @@ import {
   faList,
   faTriangleExclamation,
   faSearch,
+  faShare,
   faTrash,
   IconDefinition,
+  faShareAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
 @Injectable({ providedIn: 'root' })
@@ -43,6 +45,8 @@ export class FontAwesomeService {
   filter = faFilter;
   gear = faGear;
   search = faSearch;
+  share = faShare;
+  shareAlt = faShareAlt;
   star = faStar;
   square = faSquare;
   sync = faSyncAlt;

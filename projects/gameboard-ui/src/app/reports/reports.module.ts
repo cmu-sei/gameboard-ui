@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
 import { RouterModule, TitleStrategy } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgChartsModule } from 'ng2-charts';
 import { CoreModule } from '../core/core.module';
 import { ReportCardComponent } from './components/report-card/report-card.component';
@@ -22,6 +23,7 @@ import { ReportsTitleResolver } from './resolvers/reports-title.resolver';
 import { CountFieldToClassPipe } from './pipes/count-field-to-class.pipe';
 import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
 import { ParameterChallengeSpecComponent } from './components/parameter-challenge-spec/parameter-challenge-spec.component';
+import { ShareButtonComponent } from './components/share-button/share-button.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { ParameterChallengeSpecComponent } from './components/parameter-challeng
     CountFieldToClassPipe,
     StringsToTooltipPipe,
     ParameterChallengeSpecComponent,
+    ShareButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -55,6 +58,7 @@ import { ParameterChallengeSpecComponent } from './components/parameter-challeng
         ]
       }
     ]),
+    FontAwesomeModule,
     NgChartsModule,
     CoreModule,
     UtilityModule
