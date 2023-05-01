@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { Observable } from 'rxjs';
 import { ReportsService } from '../../reports.service';
@@ -10,11 +10,9 @@ import { ReportTrackParameter, ReportTrackParameterModifier } from '../../report
   styleUrls: ['./parameter-track.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTrackComponent)]
 })
-export class ParameterTrackComponent extends ReportParameterComponent {
+export class ParameterTrackComponent extends ReportParameterComponent implements OnInit {
   @Input() hideModifierSelect = false;
   tracks$: Observable<string[]>
-  selectedTrack?: string;
-  selectedModifier?: ReportTrackParameterModifier = ReportTrackParameterModifier.CompetedInThisTrack;
 
   competedIn = ReportTrackParameterModifier.CompetedInThisTrack;
   competedOnlyIn = ReportTrackParameterModifier.CompetedInOnlyThisTrack;
@@ -25,17 +23,36 @@ export class ParameterTrackComponent extends ReportParameterComponent {
     this.tracks$ = this.reportsService.getTrackOptions();
   }
 
-  handleSelectionChanged(event?: any) {
+  ngOnInit(): void {
     this.selectedValue = {
-      track: this.selectedTrack,
-      modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
-    } as ReportTrackParameter;
+      track: this.selectedValue?.track,
+      modifier: this.competedIn
+    };
+    console.log("set default value", this.selectedValue);
+  }
+
+  override getDefaultValue() {
+    this.selectedValue = {
+      track: this.selectedValue?.track,
+      modifier: this.competedIn
+    };
+  }
+
+  handleSelectionChanged(event?: any) {
+    // console.log("Writing", {
+    //   track: this.selectedTrack,
+    //   modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
+    // });
+
+    // this.selectedValue = {
+    //   track: this.selectedTrack,
+    //   modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
+    // } as ReportTrackParameter;
   }
 
   writeValue(obj: any): void {
     const typedValue = obj as ReportTrackParameter;
-    this.selectedTrack = typedValue.track;
-    this.selectedModifier = typedValue.modifier;
+    this.selectedValue = typedValue;
     this.handleSelectionChanged();
   }
 }

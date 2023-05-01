@@ -1,14 +1,13 @@
 import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Observable, Subscription, map, switchMap, tap } from 'rxjs';
+import { Observable, Subscription, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportResults } from './players-report.models';
 import { ReportsService } from '../../reports.service';
-import { ActivatedRoute } from '@angular/router';
 import { ReportKey, ReportMetaData } from '../../reports-models';
 import { IReportComponent } from '../report-component';
 import { UriService } from '../../../services/uri.service';
 
 interface PlayersReportContext {
-  results$: PlayersReportResults;
+  results: PlayersReportResults;
   selectedParameters: PlayersReportParameters;
 }
 
@@ -19,8 +18,15 @@ interface PlayersReportContext {
 })
 export class PlayersReportComponent implements IReportComponent<PlayersReportParameters>, OnInit {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
-  ctx$?: Observable<PlayersReportResults>;
-  selectedParameters: PlayersReportParameters = {};
+  ctx: PlayersReportContext | null = null;
+  // selectedParameters: PlayersReportParameters = {};
+
+  private _selectedParameters?: PlayersReportParameters;
+  public get selectedParameters(): PlayersReportParameters | undefined { return this._selectedParameters };
+  public set selectedParameters(value: PlayersReportParameters | undefined) {
+    this._selectedParameters = value;
+    this.updateView(value);
+  };
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('playersReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
@@ -28,14 +34,8 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportPar
   private viewContainerRefsSub?: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
     private uriService: UriService,
-    reportsService: ReportsService) {
-    this.ctx$ = this.route.queryParams.pipe(
-      map(params => ({ ...params } as PlayersReportParameters)),
-      switchMap(args => reportsService.getPlayersReport(args)),
-      tap(results => this.onResultsLoaded(results.metaData)),
-    );
+    private reportsService: ReportsService) {
   }
 
   ngOnInit(): void {
@@ -46,11 +46,18 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportPar
   }
 
   getParametersQuery(): string {
+    if (!this.selectedParameters) {
+      return "";
+    }
+
     const flatParameters: PlayersReportFlatParameters = {
       trackModifier: this.selectedParameters.track?.modifier,
       trackName: this.selectedParameters.track?.track,
       ... this.selectedParameters
     }
+
+    delete (flatParameters as any)['track'];
+
     return this.uriService.toQueryString(flatParameters);
   }
 
@@ -64,5 +71,15 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportPar
 
   resetParameters(): void {
     this.selectedParameters = {};
+  }
+
+  private async updateView(params?: PlayersReportParameters) {
+    const results = await firstValueFrom(this.reportsService.getPlayersReport(params));
+    this.ctx = {
+      results,
+      selectedParameters: params || {}
+    };
+
+    this.onResultsLoaded(results.metaData);
   }
 }

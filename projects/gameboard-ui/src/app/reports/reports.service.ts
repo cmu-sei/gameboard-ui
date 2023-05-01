@@ -41,7 +41,7 @@ export class ReportsService {
     return this.http.get<ChallengesReportModel>(`${this.API_ROOT}/reports/challenges-report${query ? `?${query}` : ''}`);
   }
 
-  getPlayersReport(args: PlayersReportParameters): Observable<PlayersReportResults> {
+  getPlayersReport(args?: PlayersReportParameters): Observable<PlayersReportResults> {
     const query = this.uriService.uriEncode(args);
 
     return this.http.get<PlayersReportResults>(`${this.API_ROOT}/reports/players-report?${query ? `?${query}` : ''}`);

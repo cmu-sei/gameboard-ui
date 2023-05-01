@@ -18,12 +18,21 @@ export abstract class ReportParameterComponent implements ControlValueAccessor {
     protected onChange = () => { };
     protected onTouched = () => { };
 
+    constructor() {
+        console.log("default value is", this.getDefaultValue());
+        this._selectedValue = this.getDefaultValue();
+    }
+
     public get selectedValue(): any { return this._selectedValue };
     public set selectedValue(value: any) {
         if (this._selectedValue !== value) {
             this._selectedValue = value;
             this.ngModelChange.emit(this._selectedValue);
         }
+    }
+
+    getDefaultValue(): any {
+        return null;
     }
 
     writeValue(obj: any): void {

@@ -44,6 +44,10 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
     })
   }
 
+  getParametersQuery(): string {
+    return this.uriService.uriEncode(this.selectedParameters);
+  }
+
   getPdfExportElement(): ElementRef<HTMLDivElement> {
     return this.reportElementRef!;
   }

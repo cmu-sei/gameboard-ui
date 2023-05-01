@@ -1,19 +1,20 @@
-<div class="players-report-component" *ngIf="ctx$ | async as ctx; else loading">
+<div class="players-report-component" *ngIf="ctx; else loading">
     <div class="report-parameters">
         <app-report-parameters-container>
-            <app-parameter-competition name="competition" ngDefaultControl [(ngModel)]="selectedParameters.competition"
+            <app-parameter-competition name="competition" ngDefaultControl
+                [(ngModel)]="ctx.selectedParameters.competition"
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-competition>
-            <app-parameter-track name="track" ngDefaultControl [(ngModel)]="selectedParameters.track"
+            <app-parameter-track name="track" ngDefaultControl [(ngModel)]="ctx.selectedParameters.track"
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-track>
-            <app-parameter-game name="gameId" ngDefaultControl [(ngModel)]="selectedParameters.gameId"
+            <app-parameter-game name="gameId" ngDefaultControl [(ngModel)]="ctx.selectedParameters.gameId"
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-game>
             <app-parameter-challenge-spec name="challengeSpecId" ngDefaultControl
-                [(ngModel)]="selectedParameters.challengeSpecId" (ngModelChange)="handleParametersChanged($event)">
+                [(ngModel)]="ctx.selectedParameters.challengeSpecId" (ngModelChange)="handleParametersChanged($event)">
             </app-parameter-challenge-spec>
         </app-report-parameters-container>
     </div>
 
-    <div class="report-body mt-4" *ngIf="ctx.records.length" #playersReport>
+    <div class="report-body mt-4" *ngIf="ctx.results.records.length" #playersReport>
         <table class="report-table table-hover gameboard-report">
             <col>
             <col>
@@ -46,7 +47,7 @@
                     <td>Scored Complete</td>
                 </tr>
 
-                <tr class="data-row" *ngFor="let record of ctx.records">
+                <tr class="data-row" *ngFor="let record of ctx.results.records">
                     <td>{{record.user.name}}</td>
                     <td class="count">
                         <span [ngClass]="record.competitionsPlayed | countFieldToClass"

@@ -3,8 +3,9 @@ import { ReportKey, ReportMetaData } from "../reports-models";
 
 export interface IReportComponent<T> {
     getPdfExportElement: () => ElementRef<HTMLDivElement>;
+    getParametersQuery(): string;
     getReportKey(): ReportKey;
     resetParameters(): void;
-    selectedParameters: T;
+    selectedParameters?: T;
     onResultsLoaded: (metadata: ReportMetaData) => void;
 }

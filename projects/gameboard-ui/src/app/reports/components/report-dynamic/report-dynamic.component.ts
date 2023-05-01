@@ -86,7 +86,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     }
 
     const key = this.loadedReportComponent.instance.getReportKey();
-    const query = this.loadedReportComponent.instance.selectedParameters;
+    const query = this.loadedReportComponent.instance.getParametersQuery();
 
     this.displayReport(key, query);
   }
@@ -111,9 +111,8 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     this.pdfService.exportHtmlToPdf(this.reportMetaData?.title || "Report", exportElement);
   }
 
-  private displayReport(reportKey: string, selectedParameters: any) {
-    const query = this.uriService.toQueryString(selectedParameters);
-    this.router.navigateByUrl(`reports/${reportKey}?${query}`);
+  private displayReport(reportKey: string, query: string | null) {
+    this.router.navigateByUrl(`reports/${reportKey}?${query || ''}`);
   }
 
   ngOnDestroy(): void {
