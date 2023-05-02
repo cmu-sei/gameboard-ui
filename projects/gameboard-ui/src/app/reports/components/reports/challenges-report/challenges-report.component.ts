@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, Subscription, switchMap, tap } from 'rxjs';
-import { UriService } from '../../../services/uri.service';
-import { DoughnutChartConfig, ReportKey, ReportMetaData, ReportParameters } from '../../reports-models';
-import { ReportsService } from '../../reports.service';
-import { IReportComponent } from '../report-component';
+import { UriService } from '../../../../services/uri.service';
+import { DoughnutChartConfig, ReportKey, ReportMetaData } from '../../../reports-models';
+import { ReportsService } from '../../../reports.service';
+import { IReportComponent } from '../../report-component';
 import { ChallengesReportArgs, ChallengesReportModel } from './challenges-report.models';
 
 @Component({
@@ -12,7 +12,7 @@ import { ChallengesReportArgs, ChallengesReportModel } from './challenges-report
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent implements IReportComponent<ChallengesReportArgs>, AfterViewInit, OnDestroy {
+export class ChallengesReportComponent implements IReportComponent<ChallengesReportArgs, ChallengesReportArgs>, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   selectedParameters: ChallengesReportArgs = {};
 
@@ -44,6 +44,14 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
     })
   }
 
+  buildParameters(query: ChallengesReportArgs): ChallengesReportArgs {
+    return query;
+  }
+
+  flattenParameters(parameters: ChallengesReportArgs): ChallengesReportArgs {
+    return parameters;
+  }
+
   getParametersQuery(): string {
     return this.uriService.uriEncode(this.selectedParameters);
   }
@@ -54,21 +62,6 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
 
   getReportKey(): ReportKey {
     return ReportKey.ChallengesReport;
-  }
-
-  handleReportParametersChanged(parameters: ReportParameters) {
-    const reportKey = this.route.snapshot.params['reportKey'];
-
-    // TODO: daterange requires additional handling because it's an object
-    let finalParams = { ...parameters };
-    delete finalParams.dateRange;
-
-    // TODO: use reportkey enum, have the parent component nav
-    this.router.navigateByUrl(`/reports/${reportKey}?${this.uriService.toQueryString(finalParams)}`);
-  }
-
-  resetParameters(): void {
-    this.selectedParameters = {};
   }
 
   private buildDoughnutChart(results: ChallengesReportModel): DoughnutChartConfig {

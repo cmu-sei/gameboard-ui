@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
-import { SimpleEntity } from '../../../api/models';
+import { SimpleEntity } from '../../../../api/models';
 import { Observable } from 'rxjs';
-import { ReportsService } from '../../reports.service';
+import { ReportsService } from '../../../reports.service';
 
 @Component({
   selector: 'app-parameter-challenge-spec',

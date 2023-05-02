@@ -1,0 +1,17 @@
+<div class="support-report-component">
+    <app-report-parameters-container>
+        <app-parameter-game ngDefaultControl [(ngModel)]="selectedParameters.gameId"></app-parameter-game>
+        <app-parameter-challenge-spec ngDefaultControl
+            [(ngModel)]="selectedParameters.challengeSpecId"></app-parameter-challenge-spec>
+        <app-parameter-date-range ngDefaultControl [(ngModel)]="selectedParameters.openedDateRange"
+            name="openedDateRange"></app-parameter-date-range>
+        <app-parameter-number ngDefaultControl [(ngModel)]="selectedParameters.hoursSinceOpen" [min]="0"
+            name="hoursSinceOpen" label="Hours since opened" placeholder="Enter a number greater than 0 to filter">
+        </app-parameter-number>
+        <app-parameter-number ngDefaultControl [(ngModel)]="selectedParameters.hoursSinceStatusChange" [min]="0"
+            name="hoursSinceStatusChange" label="Hours since status changed"
+            placeholder="Enter a number greater than 0 to filter"></app-parameter-number>
+    </app-report-parameters-container>
+
+    <div class="report-body mt-4" *ngIf="ctx?.records?.length" #supportReport></div>
+</div>

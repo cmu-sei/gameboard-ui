@@ -2,9 +2,9 @@
     <h1>Reports</h1>
 
     <div class="reports-list-container mt-5" *ngIf="reports; else loading">
-        <ul class="reports-list mt-2 d-flex flex-wrap align-items-start justify-content-start">
+        <ul class="reports-list mt-2 d-flex flex-wrap align-items-stretch">
             <li *ngFor="let report of reports" class="d-block mr-5">
-                <app-report-card [report]="report"></app-report-card>
+                <app-report-card class="d-block" [report]="report"></app-report-card>
             </li>
         </ul>
     </div>

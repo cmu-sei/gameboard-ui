@@ -1,5 +1,5 @@
-import { SimpleEntity } from "../../../api/models";
-import { ReportMetaData } from "../../reports-models";
+import { SimpleEntity } from "../../../../api/models";
+import { ReportMetaData } from "../../../reports-models";
 
 export interface ChallengesReportArgs {
     challengeSpecId?: string;

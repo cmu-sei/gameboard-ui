@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ReportsService } from '../../reports.service';
+import { ReportsService } from '../../../reports.service';
 import { Observable } from 'rxjs';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 

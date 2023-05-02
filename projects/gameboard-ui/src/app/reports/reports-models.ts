@@ -6,7 +6,6 @@ export interface DoughnutChartConfig {
     options: { responsive: boolean; };
 }
 
-
 export interface ReportViewModel {
     id: string;
     name: string;
@@ -16,40 +15,14 @@ export interface ReportViewModel {
     exampleParameters: string[];
 }
 
-export interface ReportParameter {
-    id: string;
-    name: string;
-    description?: string;
-    type: ReportParameterType
-}
-
-export enum ReportParameterType {
-    Challenge,
-    Competition,
-    DateRange,
-    DateSingle,
-    Game,
-    Player,
-    Sponsor,
-    Team,
-    Track
+export interface ReportResults<T> {
+    metaData: ReportMetaData,
+    records: T[]
 }
 
 export interface ReportDateRange {
     dateStart?: Date;
     dateEnd?: Date;
-}
-
-export interface ReportParameters {
-    challengeId?: string;
-    competition?: string;
-    dateRange?: ReportDateRange;
-    date?: Date;
-    gameId?: string;
-    playerId?: string;
-    sponsorId?: string;
-    teamId?: string;
-    track?: string;
 }
 
 export interface ReportParameterOptions {
@@ -70,7 +43,8 @@ export interface ReportMetaData {
 
 export enum ReportKey {
     ChallengesReport = "challenges-report",
-    PlayersReport = "players-report"
+    PlayersReport = "players-report",
+    SupportReport = "support-report"
 }
 
 export interface ReportSponsor {
@@ -86,6 +60,6 @@ export enum ReportTrackParameterModifier {
 }
 
 export interface ReportTrackParameter {
-    track: string;
-    modifier: ReportTrackParameterModifier;
+    track?: string;
+    modifier?: ReportTrackParameterModifier;
 }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SimpleEntity } from '../../../api/models';
-import { ReportsService } from '../../reports.service';
+import { SimpleEntity } from '../../../../api/models';
+import { ReportsService } from '../../../reports.service';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 

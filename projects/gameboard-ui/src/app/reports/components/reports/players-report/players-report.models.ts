@@ -1,12 +1,12 @@
-import { SimpleEntity } from "../../../api/models";
-import { ReportMetaData, ReportTrackParameter, ReportTrackParameterModifier } from "../../reports-models";
+import { SimpleEntity } from "../../../../api/models";
+import { ReportDateRange, ReportMetaData, ReportTrackParameter, ReportTrackParameterModifier } from "../../../reports-models";
 
 export class PlayersReportParameters {
     challengeSpecId?: string;
     competition?: string;
     gameId?: string;
     sponsorId?: string;
-    // sessionStartWindow: 
+    sessionStartWindow?: ReportDateRange;
     track?: ReportTrackParameter;
 }
 

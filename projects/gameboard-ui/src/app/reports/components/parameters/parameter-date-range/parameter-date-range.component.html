@@ -1,0 +1,16 @@
+<div *ngIf="ngModel">
+    <label>Date ticket opened</label>
+    <div class="date-range-component d-flex form-control-group">
+        <div class="date-input-container">
+            <input type="datetime" name="dateStart" placeholder="Start date" autocomplete="off"
+                [(ngModel)]="selectedValue.dateStart" (ngModelChange)="handleModelChanged($event)" class="form-control"
+                bsDatepicker>
+        </div>
+        <div class="arrow-symbol"> → </div>
+        <div class="date-input-container">
+            <input type="datetime" name="dateEnd" placeholder="End date" autocomplete="off"
+                [(ngModel)]="selectedValue.dateEnd" (ngModelChange)="handleModelChanged($event)" class="form-control"
+                bsDatepicker>
+        </div>
+    </div>
+</div>

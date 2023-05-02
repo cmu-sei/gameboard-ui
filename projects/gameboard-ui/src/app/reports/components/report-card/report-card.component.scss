@@ -31,11 +31,6 @@ li {
     margin: 0 0.5rem 0.5rem 0;
 }
 
-/* hard constraining height to standardize compnent-heights. means we have to be careful about desc length */
-.description {
-    height: 5rem;
-}
-
 .parameter-name {
     font-size: 0.9rem;
     text-transform: uppercase;

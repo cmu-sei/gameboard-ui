@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { Observable } from 'rxjs';
-import { ReportsService } from '../../reports.service';
-import { ReportTrackParameter, ReportTrackParameterModifier } from '../../reports-models';
+import { ReportsService } from '../../../reports.service';
+import { ReportTrackParameter, ReportTrackParameterModifier } from '../../../reports-models';
 
 @Component({
   selector: 'app-parameter-track',
@@ -24,14 +24,6 @@ export class ParameterTrackComponent extends ReportParameterComponent implements
   }
 
   ngOnInit(): void {
-    this.selectedValue = {
-      track: this.selectedValue?.track,
-      modifier: this.competedIn
-    };
-    console.log("set default value", this.selectedValue);
-  }
-
-  override getDefaultValue() {
     this.selectedValue = {
       track: this.selectedValue?.track,
       modifier: this.competedIn
