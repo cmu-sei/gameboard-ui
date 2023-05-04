@@ -25,6 +25,7 @@ import { ShareButtonComponent } from './components/share-button/share-button.com
 import { SupportReportComponent } from './components/reports/support-report/support-report.component';
 import { ParameterNumberComponent } from './components/parameters/parameter-number/parameter-number.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
+import { SupportModule } from '../support/support.module';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,7 @@ import { ParameterDateRangeComponent } from './components/parameters/parameter-d
     FontAwesomeModule,
     NgChartsModule,
     CoreModule,
-    UtilityModule
+    UtilityModule,
   ],
   exports: [
     DynamicReportDirective

@@ -11,23 +11,22 @@ export function createCustomInputControlValueAccessor(extendedInputComponent: an
 
 @Component({ template: '' })
 export abstract class ReportParameterComponent implements ControlValueAccessor {
-    @Input() ngModel: any;
     @Output() ngModelChange = new EventEmitter<any>;
-    private _selectedValue?: any;
     protected isDisabled = false;
     protected onChange = () => { };
     protected onTouched = () => { };
 
-    public get selectedValue(): any { return this._selectedValue };
-    public set selectedValue(value: any) {
-        if (this._selectedValue !== value) {
-            this._selectedValue = value;
-            this.ngModelChange.emit(this._selectedValue);
+    private _ngModel: any;
+    public get ngModel(): any { return this._ngModel };
+    @Input() public set ngModel(value: any) {
+        if (this._ngModel !== value) {
+            this._ngModel = value;
+            this.ngModelChange.emit(this._ngModel);
         }
     }
 
     writeValue(obj: any): void {
-        this.selectedValue = obj;
+        this.ngModel = obj;
     }
 
     registerOnChange(fn: any): void {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, of } from 'rxjs';
-import { ReportViewModel, ReportKey } from './reports-models';
+import { ReportViewModel, ReportKey, ReportResults } from './reports-models';
 import { ConfigService } from '../utility/config.service';
 import { UriService } from '../services/uri.service';
 import { ChallengesReportArgs, ChallengesReportModel } from './components/reports/challenges-report/challenges-report.models';
@@ -12,6 +12,7 @@ import { ChallengesReportComponent } from './components/reports/challenges-repor
 import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { LogService } from '../services/log.service';
 import { SupportReportComponent } from './components/reports/support-report/support-report.component';
+import { SupportReportParameters, SupportReportRecord } from './components/reports/support-report/support-report.models';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
@@ -53,15 +54,19 @@ export class ReportsService {
   }
 
   getChallengesReport(args: ChallengesReportArgs): Observable<ChallengesReportModel> {
-    const query = this.uriService.uriEncode(args);
+    const query = this.uriService.toQueryString(args);
 
-    return this.http.get<ChallengesReportModel>(`${this.API_ROOT}/reports/challenges-report${query ? `?${query}` : ''}`);
+    return this.http.get<ChallengesReportModel>(`${this.API_ROOT}/reports/challenges-report${query}`);
   }
 
   getPlayersReport(args?: PlayersReportParameters): Observable<PlayersReportResults> {
-    const query = this.uriService.uriEncode(args);
+    const query = this.uriService.toQueryString(args);
+    return this.http.get<PlayersReportResults>(`${this.API_ROOT}/reports/players-report?${query}`);
+  }
 
-    return this.http.get<PlayersReportResults>(`${this.API_ROOT}/reports/players-report?${query ? `?${query}` : ''}`);
+  getSupportReport(args: SupportReportParameters): Observable<ReportResults<SupportReportRecord>> {
+    const query = this.uriService.toQueryString(args);
+    return this.http.get<ReportResults<SupportReportRecord>>(`${this.API_ROOT}/reports/support-report${query}`);
   }
 
   getChallengeSpecOptions(gameId?: string): Observable<SimpleEntity[]> {
@@ -78,7 +83,6 @@ export class ReportsService {
 
   async openExport(reportKey: ReportKey, parameters: any) {
     const queryString = this.uriService.toQueryString(parameters);
-    console.log(`${this.API_ROOT}/reports/export/${reportKey.toString()}${queryString ? `?${queryString}` : ''}`);
     await this.filesService.downloadFileFrom(`${this.API_ROOT}/reports/export/${reportKey.toString()}${queryString ? `?${queryString}` : ''}`, reportKey.toString(), "csv", "text/csv")
   }
 }

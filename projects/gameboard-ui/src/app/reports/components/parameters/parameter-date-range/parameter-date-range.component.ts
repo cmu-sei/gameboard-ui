@@ -10,6 +10,6 @@ import { ReportDateRange } from '../../../reports-models';
 })
 export class ParameterDateRangeComponent extends ReportParameterComponent {
   handleModelChanged(event?: any) {
-    console.log("model changed", event, this.selectedValue);
+    console.log("model changed", event, this.ngModel);
   }
 }

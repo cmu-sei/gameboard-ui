@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faArrowLeft, faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ReportService } from '../../api/report.service';
@@ -35,7 +35,7 @@ export class SupportReportComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private api: ReportService,
-  ) { 
+  ) {
 
     this.gameService.list({}).subscribe(
       (games: Game[]) => {
@@ -52,7 +52,7 @@ export class SupportReportComponent implements OnInit {
     this.challengeStats$ = this.refresh$.pipe(
       switchMap(() => this.api.supportChallenges(this.search))
     )
-  
+
   }
 
   ngOnInit(): void {

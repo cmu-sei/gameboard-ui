@@ -4,7 +4,7 @@
             <app-parameter-competition name="competition" ngDefaultControl
                 [(ngModel)]="ctx.selectedParameters.competition"
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-competition>
-            <app-parameter-track name="track" ngDefaultControl [(ngModel)]="track"
+            <app-parameter-track name="track" ngDefaultControl [(ngModel)]="ctx.selectedParameters.track"
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-track>
             <app-parameter-game name="gameId" ngDefaultControl [(ngModel)]="ctx.selectedParameters.gameId"
                 (ngModelChange)="handleParametersChanged($event)"></app-parameter-game>
@@ -12,6 +12,7 @@
                 [(ngModel)]="ctx.selectedParameters.challengeSpecId" (ngModelChange)="handleParametersChanged($event)">
             </app-parameter-challenge-spec>
         </app-report-parameters-container>
+        <hr />
     </div>
 
     <div class="report-body mt-4" *ngIf="ctx.results.records.length" #playersReport>

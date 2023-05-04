@@ -17,6 +17,7 @@ import { YamlBlockComponent } from './components/yaml-block/yaml-block.component
 import { YamlPipe } from './pipes/yaml.pipe';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 
 const PUBLIC_DECLARATIONS = [
   LinkifyHtmlPipe,
@@ -29,6 +30,7 @@ const PUBLIC_DECLARATIONS = [
   RelativeUrlsPipe,
   SafeHtmlPipe,
   SpinnerComponent,
+  TicketStatusBadgePipe,
   UrlRewritePipe,
   YamlBlockComponent,
   YamlPipe

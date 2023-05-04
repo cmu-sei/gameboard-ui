@@ -1,15 +1,14 @@
 <div class="parameter-track-component report-parameter" *ngIf="tracks$ | async as tracks">
     <label for="competition">Track</label>
-    <div class="d-flex" *ngIf="selectedValue">
+    <div class="d-flex" *ngIf="ngModel">
         <select *ngIf="!hideModifierSelect" class="form-control form-select modifier-select" name="modifier"
-            [(ngModel)]="selectedValue.modifier" aria-label="track modifier"
-            (ngModelChange)="handleSelectionChanged($event)">
+            [(ngModel)]="ngModel.modifier" aria-label="track modifier" (ngModelChange)="handleSelectionChanged($event)">
             <option [value]="competedIn" selected>Played in</option>
             <option [value]="competedOnlyIn">Played ONLY in</option>
             <option [value]="didntCompeteIn">Did not play in</option>
         </select>
         <select class="form-control form-select" name="track" aria-label="track select" [disabled]="!tracks.length"
-            [(ngModel)]="selectedValue.track" (ngModelChange)="handleSelectionChanged($event)">
+            [(ngModel)]="ngModel.track" (ngModelChange)="handleSelectionChanged($event)">
             <option [value]="undefined" selected>[any track]</option>
             <option *ngFor="let track of tracks" [value]="track">{{track}}
             </option>

@@ -65,6 +65,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
             componentRef.instance.selectedParameters = reportComponentParameters;
             componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
             this.loadedReportComponent = componentRef;
+            this.handleRunReport();
           }
         })
       );
@@ -114,8 +115,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   }
 
   private displayReport(reportKey: string, query: Object | null) {
-    const parametersQuery = query ? `?${this.uriService.uriEncode(query)}` : '';
-    this.router.navigateByUrl(`reports/${reportKey}${parametersQuery}`);
+    this.router.navigateByUrl(`reports/${reportKey}${this.uriService.toQueryString(query)}`);
   }
 
   ngOnDestroy(): void {

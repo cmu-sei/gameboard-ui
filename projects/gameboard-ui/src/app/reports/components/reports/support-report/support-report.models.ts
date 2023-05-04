@@ -1,3 +1,4 @@
+import { SimpleEntity } from "projects/gameboard-ui/src/app/api/models";
 import { ReportDateRange, ReportMetaData, ReportResults } from "../../../reports-models";
 
 export interface SupportReportParameters {
@@ -6,7 +7,7 @@ export interface SupportReportParameters {
     hoursSinceOpen?: number;
     hoursSinceStatusChange?: number;
     openedDateRange: ReportDateRange;
-    openedTimeWindow?: TicketTimeWindow;
+    openedTimeWindow?: SupportReportTicketWindow;
     status?: string;
 }
 
@@ -17,16 +18,32 @@ export interface SupportReportFlatParameters {
     hoursSinceStatusChange?: number;
     openedDateStart?: string;
     openedDateEnd?: string;
-    openedTimeWindow?: TicketTimeWindow;
+    openedTimeWindow?: SupportReportTicketWindow;
     status?: string;
 }
 
 export interface SupportReportRecord {
-
+    key: string;
+    prefixedKey: string;
+    // ticket info
+    attachmentUris: string[];
+    labels: string[];
+    summary: string;
+    status: string;
+    activityCount: number;
+    // game context
+    challenge?: SimpleEntity,
+    player?: SimpleEntity;
+    // creation/assignment
+    createdOn: Date,
+    updatedOn: Date,
+    assignedTo?: SimpleEntity,
+    createdBy: SimpleEntity,
+    requestedBy?: SimpleEntity,
 }
 
-export enum TicketTimeWindow {
+export enum SupportReportTicketWindow {
     BusinessHours,
-    Evening,
+    EveningHours,
     OffHours
 }

@@ -24,13 +24,15 @@ export class ParameterTrackComponent extends ReportParameterComponent implements
   }
 
   ngOnInit(): void {
-    this.selectedValue = {
-      track: this.selectedValue?.track,
+    this.ngModel = {
+      track: undefined,
       modifier: this.competedIn
     };
   }
 
   handleSelectionChanged(event?: any) {
+    console.log("track model is", this.ngModel);
+    this.ngModelChange.emit(this.ngModel);
     // console.log("Writing", {
     //   track: this.selectedTrack,
     //   modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
@@ -42,9 +44,9 @@ export class ParameterTrackComponent extends ReportParameterComponent implements
     // } as ReportTrackParameter;
   }
 
-  writeValue(obj: any): void {
-    const typedValue = obj as ReportTrackParameter;
-    this.selectedValue = typedValue;
-    this.handleSelectionChanged();
-  }
+  // writeValue(obj: any): void {
+  //   const typedValue = obj as ReportTrackParameter;
+  //   this.selectedValue = typedValue;
+  //   this.handleSelectionChanged();
+  // }
 }

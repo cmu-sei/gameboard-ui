@@ -2,14 +2,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class UriService {
-  uriEncode(target: any): string {
-    if (!target) {
-      return "";
-    }
-
-    return new URLSearchParams(target).toString();
-  }
-
   toObject(query: string): any {
     const stripStart = (query.startsWith('?') ? query.substring(1) : query);
     const retVal: any = {};
@@ -22,7 +14,11 @@ export class UriService {
     return retVal;
   }
 
-  toQueryString<TObject extends { [key: string]: any }>(target: TObject): string {
+  toQueryString<TObject extends { [key: string]: any }>(target: TObject | null | undefined, prependWithQuestionMark = true): string {
+    if (!target) {
+      return '';
+    }
+
     const finalParams: string[] = [];
     for (const key of Object.keys(target)) {
       const value = target[key];
@@ -31,7 +27,7 @@ export class UriService {
         value === null ||
         value === undefined ||
         value === '' ||
-        Object.keys(value)?.length === 0 ||
+        Object.keys(key)?.length === 0 ||
         // TODO: see if i can bind better so i don't have to screen this here
         value === 'undefined'
       ) {
@@ -41,6 +37,18 @@ export class UriService {
       finalParams.push(`${key}=${value}`);
     }
 
-    return finalParams.join("&");
+    console.log("final params", finalParams);
+
+    if (finalParams.length) {
+      const queryString = finalParams.join("&");
+      if (prependWithQuestionMark) {
+        return `?${queryString}`;
+      }
+      else {
+        return queryString;
+      }
+    }
+
+    return '';
   }
 }

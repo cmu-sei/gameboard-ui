@@ -1,9 +1,11 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { IReportComponent } from '../../report-component';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
 import { ReportDateRange, ReportKey, ReportMetaData, ReportResults } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
 import { ObjectService } from 'projects/gameboard-ui/src/app/services/object.service';
+import { ReportsService } from '../../../reports.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-support-report',
@@ -11,14 +13,18 @@ import { ObjectService } from 'projects/gameboard-ui/src/app/services/object.ser
   styleUrls: ['./support-report.component.scss'],
   providers: [createCustomInputControlValueAccessor(SupportReportComponent)]
 })
-export class SupportReportComponent implements IReportComponent<SupportReportFlatParameters, SupportReportParameters> {
+export class SupportReportComponent implements OnInit, IReportComponent<SupportReportFlatParameters, SupportReportParameters> {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   selectedParameters: SupportReportParameters = { openedDateRange: {} };
   ctx?: ReportResults<SupportReportRecord>;
 
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
 
-  constructor(private objectService: ObjectService) { }
+  constructor(private objectService: ObjectService, private reportsService: ReportsService) { }
+
+  async ngOnInit() {
+    this.ctx = await firstValueFrom(this.reportsService.getSupportReport(this.selectedParameters));
+  }
 
   getPdfExportElement() {
     return this.reportElementRef!;
@@ -50,7 +56,6 @@ export class SupportReportComponent implements IReportComponent<SupportReportFla
     };
 
     this.objectService.deleteKeys(flattened, "openedDateRange");
-
     return flattened;
   }
 }

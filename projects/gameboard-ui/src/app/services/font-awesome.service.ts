@@ -13,6 +13,7 @@ import {
   faExternalLink,
   faFilter,
   faLongArrowAltDown,
+  faPaperclip,
   faSquare,
   faStar,
   faSyncAlt,
@@ -44,6 +45,7 @@ export class FontAwesomeService {
   list = faList;
   filter = faFilter;
   gear = faGear;
+  paperclip = faPaperclip;
   search = faSearch;
   share = faShare;
   shareAlt = faShareAlt;

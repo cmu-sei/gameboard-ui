@@ -13,5 +13,51 @@
             placeholder="Enter a number greater than 0 to filter"></app-parameter-number>
     </app-report-parameters-container>
 
-    <div class="report-body mt-4" *ngIf="ctx?.records?.length" #supportReport></div>
+    <div class="report-body mt-4" *ngIf="ctx?.records?.length" #supportReport>
+        <table class="report-table table-hover gameboard-report">
+            <col>
+            <colgroup span="4"></colgroup>
+            <colgroup span="2"></colgroup>
+            <colgroup span="4"></colgroup>
+
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col"></th>
+                    <th scope="col" colspan="4" class="group-header">About the ticket</th>
+                    <th scope="col" colspan="2" class="group-header">Game Context</th>
+                    <th scope="col" colspan="4" class="group-header">Creation &amp; Assignment</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Ticket</td>
+                    <td>Summary</td>
+                    <td>Status</td>
+                    <td>Labels</td>
+                    <td># Activities</td>
+                    <td>Challenge</td>
+                    <td>Player</td>
+                    <td>Created on</td>
+                    <td>Updated on</td>
+                    <td>Assigned to</td>
+                    <td>Created by</td>
+                </tr>
+
+                <tr class="data-row" *ngFor="let record of ctx?.records">
+                    <td><a [routerLink]="['/support/tickets/' + record.key.toString()]">{{record.prefixedKey}}</a></td>
+                    <td class="overflow-to-ellipsis">{{record.summary}}</td>
+                    <td [innerHTML]="record.status | ticketStatusBadge"></td>
+                    <td>{{record.labels || []}}</td>
+                    <td>{{record.activityCount}}</td>
+                    <td>{{record.challenge?.name || '--'}}</td>
+                    <td>{{record.player?.name || '--'}}</td>
+                    <td>{{record.createdOn | shortdate}}, {{record.createdOn | friendlyTime}}</td>
+                    <td>{{record.updatedOn | shortdate}}, {{record.updatedOn | friendlyTime}}</td>
+                    <td>{{record.assignedTo?.name}}</td>
+                    <td>{{record.createdBy.name}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -1,10 +1,9 @@
 import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Observable, Subscription, firstValueFrom, map, switchMap, tap } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportResults } from './players-report.models';
 import { ReportsService } from '../../../reports.service';
 import { ReportKey, ReportMetaData, ReportTrackParameter, ReportTrackParameterModifier } from '../../../reports-models';
 import { IReportComponent } from '../../report-component';
-import { UriService } from '../../../../services/uri.service';
 import { ObjectService } from 'projects/gameboard-ui/src/app/services/object.service';
 
 interface PlayersReportContext {
@@ -20,9 +19,6 @@ interface PlayersReportContext {
 export class PlayersReportComponent implements IReportComponent<PlayersReportFlatParameters, PlayersReportParameters>, OnInit {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   ctx: PlayersReportContext | null = null;
-  track: ReportTrackParameter = {
-    modifier: ReportTrackParameterModifier.CompetedInThisTrack
-  };
 
   private _selectedParameters?: PlayersReportFlatParameters;
   public get selectedParameters(): PlayersReportFlatParameters | undefined { return this._selectedParameters };
@@ -53,7 +49,6 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
   }
 
   handleParametersChanged(event: any) {
-    console.log("selected params:", this.selectedParameters)
   }
 
   buildParameters(params?: PlayersReportFlatParameters): PlayersReportParameters {
@@ -66,7 +61,6 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
     const sessionStartBeginDate = params.playerSessionStartBeginDate;
     const sessionStartEndDate = params.playerSessionStartEndDate;
 
-
     this.objectService.deleteKeys(params, "trackModifier", "trackName", "playerSessionStartBeginDate", "playerSessionStartEndDate");
 
     return {
@@ -76,7 +70,7 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
       } : undefined,
       track: {
         track: trackName,
-        modifier: trackModifier,
+        modifier: trackModifier || ReportTrackParameterModifier.CompetedInThisTrack,
       },
       ...params
     };
@@ -97,7 +91,7 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
   }
 
   private async updateView(params?: PlayersReportParameters) {
-    const apiParams = this.buildParameters(params);
+    const apiParams = params ? this.flattenParameters(params) : undefined;
     const results = await firstValueFrom(this.reportsService.getPlayersReport(apiParams));
 
     this.ctx = {
@@ -108,3 +102,4 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
     this.onResultsLoaded(results.metaData);
   }
 }
+

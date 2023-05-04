@@ -23,9 +23,7 @@ import { CoreModule } from '../core/core.module';
     TicketFormComponent,
     TicketDetailsComponent,
     TicketListComponent,
-    SupportPageComponent
-  ],
-  exports: [
+    SupportPageComponent,
   ],
   imports: [
     CommonModule,
