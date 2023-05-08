@@ -1,11 +1,5 @@
 import { SimpleEntity } from "../api/models";
 
-export interface DoughnutChartConfig {
-    labels: string[];
-    dataSets: { label: string; data: number[]; backgroundColor: string[]; hoverOffset: number; }[];
-    options: { responsive: boolean; };
-}
-
 export interface ReportViewModel {
     id: string;
     name: string;

@@ -10,14 +10,14 @@ export function createCustomInputControlValueAccessor(extendedInputComponent: an
 }
 
 @Component({ template: '' })
-export abstract class ReportParameterComponent implements ControlValueAccessor {
-    @Output() ngModelChange = new EventEmitter<any>;
+export abstract class ReportParameterComponent<T> implements ControlValueAccessor {
+    @Output() ngModelChange = new EventEmitter<T>;
     protected isDisabled = false;
     protected onChange = () => { };
     protected onTouched = () => { };
 
-    private _ngModel: any;
-    public get ngModel(): any { return this._ngModel };
+    private _ngModel?: T;
+    public get ngModel(): T | undefined { return this._ngModel };
     @Input() public set ngModel(value: any) {
         if (this._ngModel !== value) {
             this._ngModel = value;

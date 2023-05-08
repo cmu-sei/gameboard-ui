@@ -1,20 +1,21 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, Subscription, switchMap, tap } from 'rxjs';
-import { UriService } from '../../../../services/uri.service';
-import { DoughnutChartConfig, ReportKey, ReportMetaData } from '../../../reports-models';
-import { ReportsService } from '../../../reports.service';
+import { ReportKey, ReportMetaData } from '../../../reports-models';
 import { IReportComponent } from '../../report-component';
-import { ChallengesReportArgs, ChallengesReportModel } from './challenges-report.models';
+import { ChallengesReportParameters, ChallengesReportModel, ChallengesReportRecord } from './challenges-report.models';
+import { ChallengesReportService } from '../../../services/challenges-report-service';
+import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 
 @Component({
   selector: 'app-challenge-report',
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent implements IReportComponent<ChallengesReportArgs, ChallengesReportArgs>, AfterViewInit, OnDestroy {
+export class ChallengesReportComponent implements IReportComponent<ChallengesReportParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
-  selectedParameters: ChallengesReportArgs = {};
+
+  selectedParameters: ChallengesReportParameters = {};
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
@@ -26,13 +27,11 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private uriService: UriService,
-    reportsService: ReportsService) {
+    public reportService: ChallengesReportService) {
 
     this.ctx$ = this.route.queryParams.pipe(
-      map(params => ({ ...params } as ChallengesReportArgs)),
-      switchMap(args => reportsService.getChallengesReport(args)),
+      map(params => ({ ...params } as ChallengesReportParameters)),
+      switchMap(args => this.reportService.getReportData(args)),
       tap(results => this.onResultsLoaded(results.metaData)),
       tap(results => this.chartConfig = this.buildDoughnutChart(results))
     );
@@ -44,11 +43,11 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
     })
   }
 
-  buildParameters(query: ChallengesReportArgs): ChallengesReportArgs {
+  buildParameters(query: ChallengesReportParameters): ChallengesReportParameters {
     return query;
   }
 
-  flattenParameters(parameters: ChallengesReportArgs): ChallengesReportArgs {
+  flattenParameters(parameters: ChallengesReportParameters): ChallengesReportParameters {
     return parameters;
   }
 

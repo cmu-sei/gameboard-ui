@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
 import { RouterModule, TitleStrategy } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgChartsModule } from 'ng2-charts';
 import { CoreModule } from '../core/core.module';
 import { ReportCardComponent } from './components/report-card/report-card.component';
 import { ReportsLayoutComponent } from './components/reports-layout/reports-layout.component';
@@ -25,7 +24,7 @@ import { ShareButtonComponent } from './components/share-button/share-button.com
 import { SupportReportComponent } from './components/reports/support-report/support-report.component';
 import { ParameterNumberComponent } from './components/parameters/parameter-number/parameter-number.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
-import { SupportModule } from '../support/support.module';
+import { ParameterTicketLabelsComponent } from './components/parameters/parameter-ticket-labels/parameter-ticket-labels.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +47,7 @@ import { SupportModule } from '../support/support.module';
     SupportReportComponent,
     ParameterNumberComponent,
     ParameterDateRangeComponent,
+    ParameterTicketLabelsComponent,
   ],
   imports: [
     CommonModule,
@@ -62,7 +62,6 @@ import { SupportModule } from '../support/support.module';
       }
     ]),
     FontAwesomeModule,
-    NgChartsModule,
     CoreModule,
     UtilityModule,
   ],

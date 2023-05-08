@@ -10,6 +10,7 @@ import { ChallengeOverview } from './board-models';
 import { PlayerService } from './player.service';
 import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, Ticket, TicketActivity, TicketSummary } from './support-models';
 import { UserSummary } from './user-models';
+import { Search } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class SupportService {
@@ -89,8 +90,8 @@ export class SupportService {
     return this.http.get<UserSummary[]>(`${this.url}/users/support`, { params: search });
   }
 
-  public listLabels(search: any): Observable<string[]> {
-    return this.http.get<string[]>(`${this.url}/ticket/labels`, { params: search });
+  public listLabels(search: Search | null = null): Observable<string[]> {
+    return this.http.get<string[]>(`${this.url}/ticket/labels`, { params: search as any });
   }
 
   public listUserChallenges(search: any): Observable<ChallengeOverview[]> {

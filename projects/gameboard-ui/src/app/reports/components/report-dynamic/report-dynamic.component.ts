@@ -18,7 +18,7 @@ import { ObjectService } from '../../../services/object.service';
 })
 export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicReportDirective, { read: DynamicReportDirective }) dynamicReportHost!: DynamicReportDirective;
-  private loadedReportComponent?: ComponentRef<IReportComponent<any, any>>
+  private loadedReportComponent?: ComponentRef<IReportComponent<any, any, any>>
   private routerEventsSub?: Subscription;
   protected isAtReportsRoot = false;
   reportMetaData?: ReportMetaData;
@@ -58,10 +58,10 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
           // load the new report and set its properties/parameters
           if (report) {
             const reportComponentType = this.reportsService.getComponentForReport(report.key as ReportKey);
-            const componentRef = viewContainerRef.createComponent<IReportComponent<any, any>>(reportComponentType);
+            const componentRef = viewContainerRef.createComponent<IReportComponent<any, any, any>>(reportComponentType);
 
             // have to deep-clone the query parameters because they're made inextensible by angular
-            const reportComponentParameters = componentRef.instance.buildParameters({ ...this.route.snapshot.queryParams });
+            const reportComponentParameters = componentRef.instance.reportService.unflattenParameters({ ...this.route.snapshot.queryParams });
             componentRef.instance.selectedParameters = reportComponentParameters;
             componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
             this.loadedReportComponent = componentRef;
@@ -86,7 +86,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     }
 
     const key = this.loadedReportComponent.instance.getReportKey();
-    const query = this.loadedReportComponent.instance.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
+    const query = this.loadedReportComponent.instance.reportService.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
     const cleanQuery = this.objectService.cloneTruthyKeys(query);
 
     this.displayReport(key, cleanQuery);

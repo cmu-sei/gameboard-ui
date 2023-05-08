@@ -10,7 +10,7 @@ import { ReportTrackParameter, ReportTrackParameterModifier } from '../../../rep
   styleUrls: ['./parameter-track.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTrackComponent)]
 })
-export class ParameterTrackComponent extends ReportParameterComponent implements OnInit {
+export class ParameterTrackComponent extends ReportParameterComponent<ReportTrackParameter> implements OnInit {
   @Input() hideModifierSelect = false;
   tracks$: Observable<string[]>
 
@@ -31,22 +31,6 @@ export class ParameterTrackComponent extends ReportParameterComponent implements
   }
 
   handleSelectionChanged(event?: any) {
-    console.log("track model is", this.ngModel);
     this.ngModelChange.emit(this.ngModel);
-    // console.log("Writing", {
-    //   track: this.selectedTrack,
-    //   modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
-    // });
-
-    // this.selectedValue = {
-    //   track: this.selectedTrack,
-    //   modifier: this.hideModifierSelect ? this.competedIn : this.selectedModifier
-    // } as ReportTrackParameter;
   }
-
-  // writeValue(obj: any): void {
-  //   const typedValue = obj as ReportTrackParameter;
-  //   this.selectedValue = typedValue;
-  //   this.handleSelectionChanged();
-  // }
 }

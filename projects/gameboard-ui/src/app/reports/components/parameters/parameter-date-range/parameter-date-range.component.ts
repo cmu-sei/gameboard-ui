@@ -8,8 +8,7 @@ import { ReportDateRange } from '../../../reports-models';
   styleUrls: ['./parameter-date-range.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterDateRangeComponent)]
 })
-export class ParameterDateRangeComponent extends ReportParameterComponent {
+export class ParameterDateRangeComponent extends ReportParameterComponent<ReportDateRange> {
   handleModelChanged(event?: any) {
-    console.log("model changed", event, this.ngModel);
   }
 }

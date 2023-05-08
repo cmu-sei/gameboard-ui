@@ -4,9 +4,9 @@ import { LocaleService } from '../services/locale.service';
 @Pipe({ name: 'friendlyTime' })
 export class FriendlyTimePipe implements PipeTransform {
 
-  constructor (private localeService: LocaleService) { }
+  constructor(private localeService: LocaleService) { }
 
-  transform(value: Date): string {
+  transform(value?: Date): string {
     if (!value) {
       return "";
     }

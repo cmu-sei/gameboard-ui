@@ -120,7 +120,7 @@
                 "No summary"}}</span></a>
             <ng-container *ngIf="ctx.canManage">
               <span class="badge badge-pill text-black mr-2" *ngFor="let label of ticket.labelsList"
-                [ngStyle]="label | textcolor">{{label}}</span>
+                [ngStyle]="label | textToColor">{{label}}</span>
             </ng-container>
           </div>
           <div class="text-muted">

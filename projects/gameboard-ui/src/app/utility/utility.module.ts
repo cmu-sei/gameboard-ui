@@ -43,7 +43,6 @@ import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ShortDatePipe } from './pipes/short-date.pipe';
 import { ShortTimePipe } from './pipes/short-time.pipe';
-import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
 
@@ -74,7 +73,6 @@ const components = [
   SafeUrlPipe,
   ObserveOrderPipe,
   MatchesTermPipe,
-  TextToColorPipe,
   ImagestackComponent,
   MorphingTextComponent,
   PagerComponent

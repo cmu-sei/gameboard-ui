@@ -10,10 +10,10 @@ export class TicketStatusBadgePipe implements PipeTransform {
 
     switch (value.toLowerCase()) {
       case "open":
-        cssClass = "badge-info";
+        cssClass = "badge-success";
         break;
       case "in progress":
-        cssClass = "badge-success";
+        cssClass = "badge-info";
         break;
     }
 

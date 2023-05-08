@@ -1,13 +1,13 @@
 import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Subscription, firstValueFrom } from 'rxjs';
-import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportResults } from './players-report.models';
-import { ReportsService } from '../../../reports.service';
-import { ReportKey, ReportMetaData, ReportTrackParameter, ReportTrackParameterModifier } from '../../../reports-models';
+import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from './players-report.models';
+import { ReportKey, ReportMetaData, ReportResults, ReportTrackParameter, ReportTrackParameterModifier } from '../../../reports-models';
 import { IReportComponent } from '../../report-component';
 import { ObjectService } from 'projects/gameboard-ui/src/app/services/object.service';
+import { PlayersReportService } from '@/reports/services/players-report.service';
 
 interface PlayersReportContext {
-  results: PlayersReportResults;
+  results: ReportResults<PlayersReportRecord>;
   selectedParameters: PlayersReportParameters;
 }
 
@@ -16,7 +16,7 @@ interface PlayersReportContext {
   templateUrl: './players-report.component.html',
   styleUrls: ['./players-report.component.scss']
 })
-export class PlayersReportComponent implements IReportComponent<PlayersReportFlatParameters, PlayersReportParameters>, OnInit {
+export class PlayersReportComponent implements IReportComponent<PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord>, OnInit {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   ctx: PlayersReportContext | null = null;
 
@@ -34,7 +34,7 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
 
   constructor(
     private objectService: ObjectService,
-    private reportsService: ReportsService) {
+    public reportService: PlayersReportService) {
   }
 
   ngOnInit(): void {
@@ -51,48 +51,9 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
   handleParametersChanged(event: any) {
   }
 
-  buildParameters(params?: PlayersReportFlatParameters): PlayersReportParameters {
-    if (!params) {
-      return {};
-    }
-
-    const trackName = params.trackName;
-    const trackModifier = params.trackModifier;
-    const sessionStartBeginDate = params.playerSessionStartBeginDate;
-    const sessionStartEndDate = params.playerSessionStartEndDate;
-
-    this.objectService.deleteKeys(params, "trackModifier", "trackName", "playerSessionStartBeginDate", "playerSessionStartEndDate");
-
-    return {
-      sessionStartWindow: sessionStartBeginDate || sessionStartEndDate ? {
-        dateStart: sessionStartBeginDate,
-        dateEnd: sessionStartEndDate
-      } : undefined,
-      track: {
-        track: trackName,
-        modifier: trackModifier || ReportTrackParameterModifier.CompetedInThisTrack,
-      },
-      ...params
-    };
-  }
-
-  flattenParameters(parameters: PlayersReportParameters): PlayersReportFlatParameters {
-    const flattened: PlayersReportFlatParameters = {
-      playerSessionStartBeginDate: parameters.sessionStartWindow?.dateStart,
-      playerSessionStartEndDate: parameters.sessionStartWindow?.dateEnd,
-      trackModifier: parameters.track?.modifier,
-      trackName: parameters.track?.track,
-      ...parameters
-    };
-
-    this.objectService.deleteKeys(flattened, "track", "sessionStartWindow");
-
-    return flattened;
-  }
-
   private async updateView(params?: PlayersReportParameters) {
-    const apiParams = params ? this.flattenParameters(params) : undefined;
-    const results = await firstValueFrom(this.reportsService.getPlayersReport(apiParams));
+    const apiParams = params ? this.reportService.flattenParameters(params) : undefined;
+    const results = await firstValueFrom(this.reportService.getReportData(apiParams));
 
     this.ctx = {
       results,

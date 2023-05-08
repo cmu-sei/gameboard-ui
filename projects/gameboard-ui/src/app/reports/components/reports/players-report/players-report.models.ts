@@ -28,13 +28,10 @@ export interface PlayersReportGamesAndChallengesSummary {
     countScoredComplete: number;
 }
 
-export interface PlayersReportResults {
-    metaData: ReportMetaData,
-    records: {
-        user: SimpleEntity;
-        challenges: PlayersReportGamesAndChallengesSummary,
-        games: PlayersReportGamesAndChallengesSummary,
-        tracksPlayed: string[],
-        competitionsPlayed: string[]
-    }[];
+export interface PlayersReportRecord {
+    user: SimpleEntity;
+    challenges: PlayersReportGamesAndChallengesSummary,
+    games: PlayersReportGamesAndChallengesSummary,
+    tracksPlayed: string[],
+    competitionsPlayed: string[]
 }

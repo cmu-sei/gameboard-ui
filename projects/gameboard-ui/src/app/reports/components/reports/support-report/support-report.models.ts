@@ -32,14 +32,16 @@ export interface SupportReportRecord {
     status: string;
     activityCount: number;
     // game context
+    game?: SimpleEntity,
     challenge?: SimpleEntity,
     player?: SimpleEntity;
     // creation/assignment
     createdOn: Date,
-    updatedOn: Date,
+    updatedOn?: Date,
     assignedTo?: SimpleEntity,
     createdBy: SimpleEntity,
     requestedBy?: SimpleEntity,
+    updatedBy?: SimpleEntity,
 }
 
 export enum SupportReportTicketWindow {

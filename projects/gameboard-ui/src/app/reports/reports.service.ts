@@ -4,8 +4,6 @@ import { Observable, firstValueFrom, of } from 'rxjs';
 import { ReportViewModel, ReportKey, ReportResults } from './reports-models';
 import { ConfigService } from '../utility/config.service';
 import { UriService } from '../services/uri.service';
-import { ChallengesReportArgs, ChallengesReportModel } from './components/reports/challenges-report/challenges-report.models';
-import { PlayersReportParameters, PlayersReportResults } from './components/reports/players-report/players-report.models';
 import { SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
 import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
@@ -51,22 +49,6 @@ export class ReportsService {
 
   getCompetitionOptions(): Observable<string[]> {
     return this.http.get<string[]>(`${this.API_ROOT}/reports/parameter/competitions`);
-  }
-
-  getChallengesReport(args: ChallengesReportArgs): Observable<ChallengesReportModel> {
-    const query = this.uriService.toQueryString(args);
-
-    return this.http.get<ChallengesReportModel>(`${this.API_ROOT}/reports/challenges-report${query}`);
-  }
-
-  getPlayersReport(args?: PlayersReportParameters): Observable<PlayersReportResults> {
-    const query = this.uriService.toQueryString(args);
-    return this.http.get<PlayersReportResults>(`${this.API_ROOT}/reports/players-report?${query}`);
-  }
-
-  getSupportReport(args: SupportReportParameters): Observable<ReportResults<SupportReportRecord>> {
-    const query = this.uriService.toQueryString(args);
-    return this.http.get<ReportResults<SupportReportRecord>>(`${this.API_ROOT}/reports/support-report${query}`);
   }
 
   getChallengeSpecOptions(gameId?: string): Observable<SimpleEntity[]> {

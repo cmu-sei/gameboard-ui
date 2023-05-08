@@ -20,6 +20,7 @@ import {
   faEllipsisVertical,
   faGear,
   faList,
+  faTimes,
   faTriangleExclamation,
   faSearch,
   faShare,
@@ -52,6 +53,7 @@ export class FontAwesomeService {
   star = faStar;
   square = faSquare;
   sync = faSyncAlt;
+  times = faTimes;
   trash = faTrash;
   triangleExclamation = faTriangleExclamation;
 

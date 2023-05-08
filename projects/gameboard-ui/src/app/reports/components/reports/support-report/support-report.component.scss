@@ -1,0 +1,38 @@
+.super-column-ticket-key {
+    width: 3%;
+}
+
+.super-column-about {
+    width: 40%;
+}
+
+.super-column-creation-assignment {
+    width: 40%;
+}
+
+.column-summary {
+    width: 5%;
+}
+
+td {
+    padding: 2px;
+}
+
+td p {
+    margin: 0;
+}
+
+.game-challenge-spacer {
+    margin: 0 4px;
+}
+
+.secondary-info-text {
+    color: #cccccc;
+    font-size: 0.85rem;
+    font-weight: bolder;
+    line-height: 0.95rem;
+}
+
+app-doughnut-chart {
+    width: 60rem;
+}

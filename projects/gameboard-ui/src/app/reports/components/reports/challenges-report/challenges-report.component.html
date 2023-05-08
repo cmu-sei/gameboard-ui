@@ -16,6 +16,7 @@
             <colgroup span="4"></colgroup>
             <colgroup span="2"></colgroup>
             <colgroup span="2"></colgroup>
+            <col>
 
             <thead class="thead-light">
                 <tr class="headers super-headers-row">
@@ -24,6 +25,7 @@
                     <th scope="col" colSpan="4" class="group-header">Player Engagement</th>
                     <th scope="col" colspan="2" class="group-header">Solve Times</th>
                     <th scope="col" colspan="2" class="group-header">Scores</th>
+                    <th scope="col" class="group-header">Support</th>
                 </tr>
             </thead>
 
@@ -39,6 +41,7 @@
                     <td>Avg. Complete Solve Time</td>
                     <td>Max Possible</td>
                     <td>Avg.</td>
+                    <td>Tickets</td>
                 </tr>
 
                 <tr class="data-row" *ngFor="let record of ctx.records">
@@ -61,20 +64,25 @@
 
                         <ng-template #noSolve>--</ng-template>
                     </td>
-                    <td>{{record.meanCompleteSolveTimeMs || '--'}}</td>
-                    <td>{{record.maxPossibleScore}}</td>
-                    <td>{{record.meanScore || '--'}}</td>
+                    <td class="text-center">{{record.meanCompleteSolveTimeMs || '--'}}</td>
+                    <td class="text-center">{{record.maxPossibleScore}}</td>
+                    <td class="text-center">{{record.meanScore || '--'}}</td>
+                    <td class="text-center">
+                        <a *ngIf="record.ticketCount && record.challenge?.id; else cantLink"
+                            [routerLink]="['/reports/support-report']"
+                            [queryParams]="{ challengeId: record.challenge?.id }">{{record.ticketCount}}</a>
+
+                        <ng-template #cantLink>
+                            {{record.ticketCount || 0}}
+                        </ng-template>
+                    </td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="chart-container full-width flex-container mt-5 justify-content-center align-items-center"
+        <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center"
             *ngIf="chartConfig">
-            <div class="doughnut-chart">
-                <canvas baseChart [labels]="chartConfig.labels" [datasets]="chartConfig.dataSets"
-                    [options]="chartConfig.options" [legend]="true" [type]="'doughnut'">
-                </canvas>
-            </div>
+            <app-doughnut-chart [config]="chartConfig"></app-doughnut-chart>
         </div>
     </div>
 </div>

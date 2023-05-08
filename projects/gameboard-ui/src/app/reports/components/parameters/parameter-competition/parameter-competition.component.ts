@@ -9,7 +9,7 @@ import { ReportParameterComponent, createCustomInputControlValueAccessor } from 
   styleUrls: ['./parameter-competition.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterCompetitionComponent)]
 })
-export class ParameterCompetitionComponent extends ReportParameterComponent {
+export class ParameterCompetitionComponent extends ReportParameterComponent<string> {
   competitions$: Observable<string[]>
 
   constructor(private reportsService: ReportsService) {

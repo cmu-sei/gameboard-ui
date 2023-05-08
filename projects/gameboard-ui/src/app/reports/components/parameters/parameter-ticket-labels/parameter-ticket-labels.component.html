@@ -1,0 +1,10 @@
+<div class="parameter-ticket-labels-component report-parameter">
+    <ul class="selected-labels">
+        <span *ngFor="let label of ngModel" class="badge badge-info"></span>
+    </ul>
+
+    <div class="add-label-input">
+        <input type="text" minlength="2" class="form-control" name="addLabel" [(ngModel)]="addLabel"
+            [typeahead]="(labels$ | async) || []" [isAnimated]="true" placeholder="Add a label">
+    </div>
+</div>

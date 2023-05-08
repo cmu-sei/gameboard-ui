@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SimpleEntity } from '../../../../api/models';
 import { ReportsService } from '../../../reports.service';
@@ -11,7 +11,7 @@ import { ReportParameterComponent, createCustomInputControlValueAccessor } from 
   styleUrls: ['./parameter-game.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterGameComponent)]
 })
-export class ParameterGameComponent extends ReportParameterComponent {
+export class ParameterGameComponent extends ReportParameterComponent<string> {
   games$: Observable<SimpleEntity[]>
 
   constructor(private reportsService: ReportsService) {

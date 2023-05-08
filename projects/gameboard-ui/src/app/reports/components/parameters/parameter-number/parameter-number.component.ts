@@ -7,7 +7,7 @@ import { ReportParameterComponent, createCustomInputControlValueAccessor } from 
   styleUrls: ['./parameter-number.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterNumberComponent)]
 })
-export class ParameterNumberComponent extends ReportParameterComponent {
+export class ParameterNumberComponent extends ReportParameterComponent<number | undefined> {
   @Input() label?: string;
   @Input() min: string | number | null = null;
   @Input() max: string | number | null = null;

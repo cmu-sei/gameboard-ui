@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { BoardSpec, Challenge, ChallengeView, GameState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
@@ -12,7 +12,7 @@ import { TimeWindow } from '../../api/player-models';
   templateUrl: './gamespace-quiz.component.html',
   styleUrls: ['./gamespace-quiz.component.scss']
 })
-export class GamespaceQuizComponent implements OnInit {
+export class GamespaceQuizComponent {
   @Input() spec!: BoardSpec;
   @Input() session!: TimeWindow;
   @Output() graded = new EventEmitter<boolean>();
@@ -23,12 +23,7 @@ export class GamespaceQuizComponent implements OnInit {
 
   constructor(
     private api: BoardService
-  ) {
-  }
-
-  ngOnInit(): void {
-    console.log("spec", this.spec);
-  }
+  ) { }
 
   submit(): void {
     this.pending = true;

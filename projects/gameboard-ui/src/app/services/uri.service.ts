@@ -37,10 +37,9 @@ export class UriService {
       finalParams.push(`${key}=${value}`);
     }
 
-    console.log("final params", finalParams);
-
     if (finalParams.length) {
       const queryString = finalParams.join("&");
+
       if (prependWithQuestionMark) {
         return `?${queryString}`;
       }

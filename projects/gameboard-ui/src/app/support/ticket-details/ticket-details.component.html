@@ -236,7 +236,7 @@
                 <label class="font-weight-bold" for="__-input">Labels</label><br />
                 <div class="d-flex flex-wrap">
                   <span *ngFor="let label of currentLabels" class="badge badge-pill mr-2 py-0 mb-2"
-                    [ngStyle]="label | textcolor">
+                    [ngStyle]="label | textToColor">
                     <span class="">{{label}}</span>&nbsp;
                     <button class="btn p-0 m-0 border-0" (click)="deleteLabel(label)" style="color: inherit">
                       <fa-icon class="p-0 m-0" [icon]="faTimes" style="color: inherit"></fa-icon>

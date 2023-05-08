@@ -1,11 +1,11 @@
 import { ElementRef } from "@angular/core";
 import { ReportKey, ReportMetaData } from "../reports-models";
+import { IReportService } from "../services/ireport.service";
 
-export interface IReportComponent<TFlat, TStructured> {
-    buildParameters(query: TFlat): TStructured;
-    flattenParameters(parameters: TStructured): TFlat;
+export interface IReportComponent<TFlat, TStructured, TReportData> {
     getPdfExportElement: () => ElementRef<HTMLDivElement>;
     getReportKey(): ReportKey;
-    selectedParameters?: TStructured;
     onResultsLoaded: (metadata: ReportMetaData) => void;
+    reportService: IReportService<TFlat, TStructured, TReportData>;
+    selectedParameters?: TStructured;
 }

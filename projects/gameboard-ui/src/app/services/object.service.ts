@@ -9,7 +9,7 @@ export class ObjectService {
       delete untyped[key];
     }
 
-    return input;
+    return untyped;
   }
 
   cloneTruthyKeys<T extends object>(input: T) {

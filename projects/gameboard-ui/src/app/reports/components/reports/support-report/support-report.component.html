@@ -13,51 +13,93 @@
             placeholder="Enter a number greater than 0 to filter"></app-parameter-number>
     </app-report-parameters-container>
 
-    <div class="report-body mt-4" *ngIf="ctx?.records?.length" #supportReport>
-        <table class="report-table table-hover gameboard-report">
-            <col>
-            <colgroup span="4"></colgroup>
-            <colgroup span="2"></colgroup>
-            <colgroup span="4"></colgroup>
+    <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else loading">
+        <tab heading="Summary Table" id="tab-summary-table">
+            <div class="report-body mt-4" #supportReport>
+                <table class="report-table table-hover gameboard-report">
+                    <col>
+                    <colgroup span="4"></colgroup>
+                    <colgroup span="2"></colgroup>
+                    <colgroup span="3"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
-                    <th scope="col"></th>
-                    <th scope="col" colspan="4" class="group-header">About the ticket</th>
-                    <th scope="col" colspan="2" class="group-header">Game Context</th>
-                    <th scope="col" colspan="4" class="group-header">Creation &amp; Assignment</th>
-                </tr>
-            </thead>
+                    <thead class="thead-light">
+                        <tr class="headers super-headers-row">
+                            <th scope="col" class="super-column-ticket-key"></th>
+                            <th scope="col" colspan="4" class="group-header super-column-about">About the ticket</th>
+                            <th scope="col" colspan="3" class="group-header super-column-creation-assignment">
+                                Creation &amp; Assignment
+                            </th>
+                        </tr>
+                    </thead>
 
-            <tbody>
-                <tr class="headers headers-row">
-                    <td>Ticket</td>
-                    <td>Summary</td>
-                    <td>Status</td>
-                    <td>Labels</td>
-                    <td># Activities</td>
-                    <td>Challenge</td>
-                    <td>Player</td>
-                    <td>Created on</td>
-                    <td>Updated on</td>
-                    <td>Assigned to</td>
-                    <td>Created by</td>
-                </tr>
+                    <tbody>
+                        <tr class="headers headers-row">
+                            <td>Ticket</td>
+                            <td>Summary</td>
+                            <td>Status</td>
+                            <td>Labels</td>
+                            <td># Activities</td>
+                            <td>Assigned to</td>
+                            <td>Created</td>
+                            <td>Updated</td>
+                        </tr>
 
-                <tr class="data-row" *ngFor="let record of ctx?.records">
-                    <td><a [routerLink]="['/support/tickets/' + record.key.toString()]">{{record.prefixedKey}}</a></td>
-                    <td class="overflow-to-ellipsis">{{record.summary}}</td>
-                    <td [innerHTML]="record.status | ticketStatusBadge"></td>
-                    <td>{{record.labels || []}}</td>
-                    <td>{{record.activityCount}}</td>
-                    <td>{{record.challenge?.name || '--'}}</td>
-                    <td>{{record.player?.name || '--'}}</td>
-                    <td>{{record.createdOn | shortdate}}, {{record.createdOn | friendlyTime}}</td>
-                    <td>{{record.updatedOn | shortdate}}, {{record.updatedOn | friendlyTime}}</td>
-                    <td>{{record.assignedTo?.name}}</td>
-                    <td>{{record.createdBy.name}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                        <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
+                            <td><a [routerLink]="['/support/tickets/' + record.key.toString()]"
+                                    target="_blank">{{record.prefixedKey}}</a></td>
+                            <td class="cell-summary">
+                                <p class="overflow-to-ellipsis">{{record.summary}}</p>
+
+                                <p class="secondary-info-text mt-1" *ngIf="record.game || record.challenge">
+                                    <a *ngIf="record.game" [routerLink]="['/game/' + record.game.id]"
+                                        target="_blank">{{record.game.name}}</a>
+                                    <span class="game-challenge-spacer"
+                                        *ngIf="record.game && record.challenge">//</span>
+                                    {{record.challenge?.name}}
+                                </p>
+                            </td>
+                            <td [innerHTML]="record.status | ticketStatusBadge"></td>
+                            <td>
+                                <app-colored-text-chip *ngFor="let label of (record.labels || [])"
+                                    [text]="label"></app-colored-text-chip>
+                                <span *ngIf="!record.labels?.length">--</span>
+                            </td>
+                            <td class="text-center">{{record.activityCount}}</td>
+                            <td class="text-center">{{record.assignedTo?.name}}</td>
+                            <td class="text-center">
+                                <p>{{record.createdOn | shortdate}} @ {{record.createdOn | friendlyTime}}</p>
+                                <p class="secondary-info-text">{{record.createdBy.name}}</p>
+                            </td>
+                            <td class="text-center">
+                                <div *ngIf="record.updatedOn; else noValue">
+                                    {{record.updatedOn | shortdate}} @ {{record.updatedOn |
+                                    friendlyTime}}
+                                    <p class="secondary-info-text">{{record.updatedBy?.name}}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </tab>
+        <tab heading="Tickets by Status" id="tab-proportion-graphs" *ngIf="ctx">
+            <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center">
+                <app-doughnut-chart [config]="ctx.statusChartConfig"></app-doughnut-chart>
+            </div>
+        </tab>
+        <tab heading="Tickets by Game & Challenge" *ngIf="ctx">
+            <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center">
+                <app-doughnut-chart [config]="ctx.challengesChartConfig"></app-doughnut-chart>
+            </div>
+        </tab>
+        <tab heading="Tickets by Label" *ngIf="ctx">
+            <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center">
+                <app-doughnut-chart *ngFor="let config of ctx.labelsChartConfigs" class="label-doughnut-chart"
+                    [config]="config"></app-doughnut-chart>
+            </div>
+        </tab>
+    </tabset>
 </div>
+
+<ng-template #noValue>--</ng-template>
+<ng-template #loading><app-spinner></app-spinner></ng-template>

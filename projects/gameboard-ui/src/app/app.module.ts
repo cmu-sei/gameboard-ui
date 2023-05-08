@@ -28,6 +28,7 @@ import { ModalConfirmService } from './services/modal-confirm.service';
 import { NotificationService } from './services/notification.service';
 import { AuthService } from './utility/auth.service';
 import { UserService } from './api/user.service';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { UserService } from './api/user.service';
     CoreModule,
     UtilityModule,
     TooltipModule.forRoot(),
+    TypeaheadModule.forRoot(),
     ButtonsModule.forRoot(),
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
