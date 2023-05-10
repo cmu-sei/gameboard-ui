@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Player, TimeWindow } from '../../../api/player-models';
+import { Player } from '../../../api/player-models';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
 import { GameSessionService } from '../../../services/game-session.service';
 import { ClipboardService } from '../../../utility/services/clipboard.service';

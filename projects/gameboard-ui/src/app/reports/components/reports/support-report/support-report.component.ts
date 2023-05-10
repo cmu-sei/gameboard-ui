@@ -25,7 +25,12 @@ interface SupportReportContext {
 })
 export class SupportReportComponent implements OnInit, IReportComponent<SupportReportFlatParameters, SupportReportParameters, SupportReportRecord> {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
-  selectedParameters: SupportReportParameters = { openedDateRange: {} };
+  selectedParameters: SupportReportParameters = {
+    gameChallengeSpec: {},
+    openedDateRange: {},
+    timeSinceOpen: {},
+    timeSinceUpdate: {},
+  };
   ctx?: SupportReportContext;
 
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;

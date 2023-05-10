@@ -3,7 +3,7 @@
 
 <div class="app-container">
   <nav [class]="custom_bg" [class.nonsticky]="!(layoutService.stickyMenu$ | async)">
-    <div class="text-right">
+    <div class="nav-items d-flex align-items-center justify-content-end">
       <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/home']">Home</a>
       <ng-container *ngFor="let t of toc$ | async">
         <a class="btn btn-link text-success mx-1" routerLinkActive="text-info"
@@ -17,12 +17,14 @@
           <span>Support</span>
           <app-support-pill></app-support-pill>
         </a>
-        <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
-          class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
-          Reports
+        <div class="d-flex align-items-center">
+          <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
+            class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
+            Reports
+          </a>
 
           <span class="badge badge-info">[BETA]</span>
-        </a>
+        </div>
         <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
           class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/admin']">Admin</a>
         <a class="btn btn-link text-success mx-1" (click)="logout()">Logout</a>

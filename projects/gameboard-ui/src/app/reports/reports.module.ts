@@ -13,7 +13,7 @@ import { UtilityModule } from '../utility/utility.module';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { ReportParametersContainerComponent } from './components/report-parameters-container/report-parameters-container.component';
-import { ParameterCompetitionComponent } from './components/parameters/parameter-competition/parameter-competition.component';
+import { ParameterSeriesComponent } from './components/parameters/parameter-series/parameter-series.component';
 import { ParameterTrackComponent } from './components/parameters/parameter-track/parameter-track.component';
 import { ParameterGameComponent } from './components/parameters/parameter-game/parameter-game.component';
 import { ReportsTitleResolver } from './resolvers/reports-title.resolver';
@@ -25,6 +25,10 @@ import { SupportReportComponent } from './components/reports/support-report/supp
 import { ParameterNumberComponent } from './components/parameters/parameter-number/parameter-number.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
 import { ParameterTicketLabelsComponent } from './components/parameters/parameter-ticket-labels/parameter-ticket-labels.component';
+import { ParameterTimespanPickerComponent } from './components/parameters/parameter-timespan-picker/parameter-timespan-picker.component';
+import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
+import { ReportSelectComponent } from './components/report-select/report-select.component';
+import { ParameterGameChallengespecComponent } from './components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
 
 @NgModule({
   declarations: [
@@ -37,17 +41,21 @@ import { ParameterTicketLabelsComponent } from './components/parameters/paramete
     MsToDurationPipe,
     PlayersReportComponent,
     ReportParametersContainerComponent,
-    ParameterCompetitionComponent,
-    ParameterTrackComponent,
-    ParameterGameComponent,
     CountFieldToClassPipe,
     StringsToTooltipPipe,
     ParameterChallengeSpecComponent,
     ShareButtonComponent,
     SupportReportComponent,
+    ParameterGameComponent,
+    ParameterGameChallengespecComponent,
     ParameterNumberComponent,
     ParameterDateRangeComponent,
+    ParameterSeriesComponent,
     ParameterTicketLabelsComponent,
+    ParameterTicketStatusComponent,
+    ParameterTimespanPickerComponent,
+    ParameterTrackComponent,
+    ReportSelectComponent,
   ],
   imports: [
     CommonModule,

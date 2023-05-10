@@ -14,9 +14,21 @@ export interface ReportResults<T> {
     records: T[]
 }
 
+export interface ReportMetaData {
+    key: string;
+    title: string;
+    runAt: Date;
+}
+
 export interface ReportDateRange {
     dateStart?: Date;
     dateEnd?: Date;
+}
+
+export interface ReportTimeSpan {
+    days?: number;
+    hours?: number;
+    minutes?: number;
 }
 
 export interface ReportParameterOptions {
@@ -27,12 +39,6 @@ export interface ReportParameterOptions {
     sponsors: SimpleEntity[];
     teams: SimpleEntity[];
     tracks: string[];
-}
-
-export interface ReportMetaData {
-    key: string;
-    title: string;
-    runAt: Date;
 }
 
 export enum ReportKey {

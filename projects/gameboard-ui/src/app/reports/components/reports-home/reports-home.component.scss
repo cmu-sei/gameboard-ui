@@ -2,8 +2,13 @@ h1 {
     font-size: 4rem;
 }
 
+ul {
+    gap: 3rem;
+}
+
 li {
     display: block;
-    width: 30%;
+    flex-basis: 1 1 200px;
     min-width: 200px;
+    max-width: 30%;
 }

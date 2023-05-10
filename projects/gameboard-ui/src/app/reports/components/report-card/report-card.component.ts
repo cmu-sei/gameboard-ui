@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { LogService } from '../../../services/log.service';
-import { SlugService } from '../../../services/slug.service';
 import { ReportViewModel } from '../../reports-models';
 
 @Component({
@@ -13,16 +12,13 @@ export class ReportCardComponent implements OnChanges {
 
   protected reportUrl?: string;
 
-  constructor(
-    private logService: LogService,
-    private slugService: SlugService) { }
+  constructor(private logService: LogService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.report) {
       this.logService.logError(`Couldn't set up navigation to report, as it's a falsey thing: ${this.report}`)
     }
 
-    const report = this.report!;
-    this.reportUrl = `/reports/${this.slugService.slugify(report.name)}`;
+    this.reportUrl = `/reports/${this.report!.key}`;
   }
 }

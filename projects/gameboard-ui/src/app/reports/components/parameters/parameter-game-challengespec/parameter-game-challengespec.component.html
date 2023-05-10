@@ -1,0 +1,14 @@
+<div *ngIf="ngModel" class="parameter-game-challengespec-component">
+    <label>Game &amp; Challenge</label>
+    <div class="d-flex">
+        <select name="game" [(ngModel)]="ngModel.gameId" class="form-control mr-1" (change)="handleGameChanged($event)">
+            <option [ngValue]="undefined" selected>[any game]</option>
+            <option *ngFor="let game of games$ | async" [ngValue]="game.id">{{game.name}}</option>
+        </select>
+
+        <select name="challengeSpec" [(ngModel)]="ngModel.challengeSpecId" class="form-control ml-1">
+            <option [ngValue]="undefined" selected>[any challenge]</option>
+            <option *ngFor="let spec of challengeSpecs$ | async" [ngValue]="spec.id">{{spec.name}}</option>
+        </select>
+    </div>
+</div>

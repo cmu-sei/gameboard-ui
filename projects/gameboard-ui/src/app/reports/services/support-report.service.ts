@@ -7,6 +7,7 @@ import { UriService } from '../../services/uri.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '../../services/api-url.service';
 import { IReportService } from './ireport.service';
+import { ReportsService } from '../reports.service';
 
 @Injectable({ providedIn: 'root' })
 export class SupportReportService implements IReportService<SupportReportFlatParameters, SupportReportParameters, SupportReportRecord> {
@@ -15,29 +16,46 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
     private apiRoot: ApiUrlService,
     private http: HttpClient,
     private objectService: ObjectService,
+    private reportsService: ReportsService,
     private uriService: UriService) { }
 
   public flattenParameters(parameters: SupportReportParameters) {
     let flattened: SupportReportFlatParameters = {
+      ...parameters,
+      challengeSpecId: parameters.gameChallengeSpec.challengeSpecId,
+      gameId: parameters.gameChallengeSpec.gameId,
       openedDateStart: parameters.openedDateRange?.dateStart?.toLocaleDateString(),
       openedDateEnd: parameters.openedDateRange?.dateEnd?.toLocaleDateString(),
-      ...parameters
+      minutesSinceOpen: this.reportsService.timespanToMinutes(parameters.timeSinceOpen),
+      minutesSinceUpdate: this.reportsService.timespanToMinutes(parameters.timeSinceUpdate),
     };
 
-    flattened = this.objectService.deleteKeys(flattened, "openedDateRange");
+    flattened = this.objectService.deleteKeys(
+      flattened,
+      "gameChallengeSpec",
+      "openedDateRange",
+      "timeSinceOpen",
+      "timeSinceUpdate"
+    );
     return flattened;
   }
 
   public unflattenParameters(parameters: SupportReportFlatParameters) {
     const structured: SupportReportParameters = {
+      ...parameters,
+      gameChallengeSpec: {
+        gameId: parameters.gameId,
+        challengeSpecId: parameters.challengeSpecId
+      },
       openedDateRange: {
         dateStart: parameters.openedDateStart ? new Date(parameters.openedDateStart) : undefined,
-        dateEnd: parameters.openedDateEnd ? new Date(parameters.openedDateEnd) : undefined
+        dateEnd: parameters.openedDateEnd ? new Date(parameters.openedDateEnd) : undefined,
       },
-      ...parameters
+      timeSinceOpen: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceOpen as any)),
+      timeSinceUpdate: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceUpdate as any)),
     };
 
-    this.objectService.deleteKeys(structured, "openedDateStart", "openedDateEnd");
+    this.objectService.deleteKeys(structured, "gameId", "challengeId", "openedDateStart", "openedDateEnd");
     return structured;
   }
 

@@ -20,6 +20,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicReportDirective, { read: DynamicReportDirective }) dynamicReportHost!: DynamicReportDirective;
   private loadedReportComponent?: ComponentRef<IReportComponent<any, any, any>>
   private routerEventsSub?: Subscription;
+  protected selectedReportKey?: ReportKey;
   protected isAtReportsRoot = false;
   reportMetaData?: ReportMetaData;
 
@@ -62,7 +63,8 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
 
             // have to deep-clone the query parameters because they're made inextensible by angular
             const reportComponentParameters = componentRef.instance.reportService.unflattenParameters({ ...this.route.snapshot.queryParams });
-            componentRef.instance.selectedParameters = reportComponentParameters;
+            componentRef.instance.selectedParameters = { ...componentRef.instance.selectedParameters, ...reportComponentParameters };
+            console.log("selected parameters set to", componentRef.instance.selectedParameters);
             componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
             this.loadedReportComponent = componentRef;
             this.handleRunReport();
@@ -77,7 +79,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     }
 
     const key = this.loadedReportComponent.instance.getReportKey();
-    this.router.navigateByUrl(`reports/${key}`);
+    this.displayReport(key);
   }
 
   handleRunReport() {
@@ -87,9 +89,15 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
 
     const key = this.loadedReportComponent.instance.getReportKey();
     const query = this.loadedReportComponent.instance.reportService.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
+    console.log("flattened parameters", query);
     const cleanQuery = this.objectService.cloneTruthyKeys(query);
 
     this.displayReport(key, cleanQuery);
+  }
+
+  handleReportSelect(key?: ReportKey) {
+    if (key)
+      this.displayReport(key?.toString());
   }
 
   handleExportToCsv() {
@@ -114,7 +122,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     this.pdfService.exportHtmlToPdf(this.reportMetaData?.title || "Report", exportElement);
   }
 
-  private displayReport(reportKey: string, query: Object | null) {
+  private displayReport(reportKey: string, query: Object | null = null) {
     this.router.navigateByUrl(`reports/${reportKey}${this.uriService.toQueryString(query)}`);
   }
 

@@ -1,0 +1,8 @@
+<div class="parameter-series-component report-parameter" *ngIf="series$ | async as series">
+    <label for="series">Series</label>
+    <select class="form-control form-select" name="series" aria-label="Series select" [(ngModel)]="ngModel">
+        <option [value]="undefined" selected>[any series]</option>
+        <option *ngFor="let series of series$ | async" [ngValue]="series">{{series}}
+        </option>
+    </select>
+</div>

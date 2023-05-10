@@ -1,19 +1,18 @@
 <div class="support-report-component">
     <app-report-parameters-container>
-        <app-parameter-game ngDefaultControl [(ngModel)]="selectedParameters.gameId"></app-parameter-game>
-        <app-parameter-challenge-spec ngDefaultControl
-            [(ngModel)]="selectedParameters.challengeSpecId"></app-parameter-challenge-spec>
+        <app-parameter-game-challengespec ngDefaultControl
+            [(ngModel)]="selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
+        <app-parameter-ticket-status ngDefaultControl
+            [(ngModel)]="selectedParameters.status"></app-parameter-ticket-status>
         <app-parameter-date-range ngDefaultControl [(ngModel)]="selectedParameters.openedDateRange"
             name="openedDateRange"></app-parameter-date-range>
-        <app-parameter-number ngDefaultControl [(ngModel)]="selectedParameters.hoursSinceOpen" [min]="0"
-            name="hoursSinceOpen" label="Hours since opened" placeholder="Enter a number greater than 0 to filter">
-        </app-parameter-number>
-        <app-parameter-number ngDefaultControl [(ngModel)]="selectedParameters.hoursSinceStatusChange" [min]="0"
-            name="hoursSinceStatusChange" label="Hours since status changed"
-            placeholder="Enter a number greater than 0 to filter"></app-parameter-number>
+        <app-parameter-timespan-picker ngDefaultControl [(ngModel)]="selectedParameters.timeSinceOpen"
+            label="Time since ticket was opened"></app-parameter-timespan-picker>
+        <app-parameter-timespan-picker ngDefaultControl [(ngModel)]="selectedParameters.timeSinceUpdate"
+            label="Time since ticket was updated"></app-parameter-timespan-picker>
     </app-report-parameters-container>
 
-    <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else loading">
+    <tabset class="mt-5" *ngIf="ctx; else loading">
         <tab heading="Summary Table" id="tab-summary-table">
             <div class="report-body mt-4" #supportReport>
                 <table class="report-table table-hover gameboard-report">

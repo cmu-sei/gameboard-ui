@@ -3,7 +3,8 @@
         <ol class="d-flex">
             <li><a [routerLink]="'/reports'">Reports</a></li>
             <li>&gt;</li>
-            <li>{{report.name}}</li>
+            <li><app-report-select [selectedReportKey]="selectedReportKey"
+                    (reportSelect)="handleReportSelect($event)"></app-report-select></li>
         </ol>
     </nav>
 
