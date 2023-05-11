@@ -8,9 +8,7 @@ import { ApiUrlService } from '@/services/api-url.service';
 import { UriService } from '@/services/uri.service';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PlayersReportService implements IReportService<PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord> {
 
   constructor(
@@ -46,6 +44,7 @@ export class PlayersReportService implements IReportService<PlayersReportFlatPar
     this.objectService.deleteKeys(parameters, "trackModifier", "trackName", "playerSessionStartBeginDate", "playerSessionStartEndDate");
 
     return {
+      ...parameters,
       sessionStartWindow: sessionStartBeginDate || sessionStartEndDate ? {
         dateStart: sessionStartBeginDate,
         dateEnd: sessionStartEndDate
@@ -54,7 +53,6 @@ export class PlayersReportService implements IReportService<PlayersReportFlatPar
         track: trackName,
         modifier: trackModifier || ReportTrackParameterModifier.CompetedInThisTrack,
       },
-      ...parameters
     };
   }
 

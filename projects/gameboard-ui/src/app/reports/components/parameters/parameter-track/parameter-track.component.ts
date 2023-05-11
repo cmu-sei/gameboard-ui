@@ -10,7 +10,7 @@ import { ReportTrackParameter, ReportTrackParameterModifier } from '../../../rep
   styleUrls: ['./parameter-track.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTrackComponent)]
 })
-export class ParameterTrackComponent extends ReportParameterComponent<ReportTrackParameter> implements OnInit {
+export class ParameterTrackComponent extends ReportParameterComponent<ReportTrackParameter> {
   @Input() hideModifierSelect = false;
   tracks$: Observable<string[]>
 
@@ -20,10 +20,8 @@ export class ParameterTrackComponent extends ReportParameterComponent<ReportTrac
 
   constructor(private reportsService: ReportsService) {
     super();
-    this.tracks$ = this.reportsService.getTrackOptions();
-  }
 
-  ngOnInit(): void {
+    this.tracks$ = this.reportsService.getTrackOptions();
     this.ngModel = {
       track: undefined,
       modifier: this.competedIn

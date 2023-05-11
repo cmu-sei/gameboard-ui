@@ -18,7 +18,7 @@ export abstract class ReportParameterComponent<T> implements ControlValueAccesso
 
     private _ngModel?: T;
     public get ngModel(): T | undefined { return this._ngModel };
-    @Input() public set ngModel(value: any) {
+    @Input() public set ngModel(value: T | undefined) {
         if (this._ngModel !== value) {
             this._ngModel = value;
             this.ngModelChange.emit(this._ngModel);

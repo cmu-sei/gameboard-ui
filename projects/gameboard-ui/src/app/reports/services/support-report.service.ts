@@ -24,6 +24,7 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
       ...parameters,
       challengeSpecId: parameters.gameChallengeSpec.challengeSpecId,
       gameId: parameters.gameChallengeSpec.gameId,
+      labels: parameters.labels?.join(',') || '',
       openedDateStart: parameters.openedDateRange?.dateStart?.toLocaleDateString(),
       openedDateEnd: parameters.openedDateRange?.dateEnd?.toLocaleDateString(),
       minutesSinceOpen: this.reportsService.timespanToMinutes(parameters.timeSinceOpen),
@@ -37,6 +38,7 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
       "timeSinceOpen",
       "timeSinceUpdate"
     );
+
     return flattened;
   }
 
@@ -47,6 +49,7 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
         gameId: parameters.gameId,
         challengeSpecId: parameters.challengeSpecId
       },
+      labels: parameters.labels?.split(',') || [],
       openedDateRange: {
         dateStart: parameters.openedDateStart ? new Date(parameters.openedDateStart) : undefined,
         dateEnd: parameters.openedDateEnd ? new Date(parameters.openedDateEnd) : undefined,

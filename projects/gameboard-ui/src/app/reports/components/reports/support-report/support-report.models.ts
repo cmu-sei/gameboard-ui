@@ -6,6 +6,7 @@ export interface SupportReportParameters {
     gameChallengeSpec: ReportGameChallengeSpec;
     challengeSpecId?: string;
     gameId?: string;
+    labels: string[];
     timeSinceOpen?: ReportTimeSpan,
     timeSinceUpdate?: ReportTimeSpan,
     openedDateRange: ReportDateRange;
@@ -16,6 +17,7 @@ export interface SupportReportParameters {
 export interface SupportReportFlatParameters {
     challengeSpecId?: string;
     gameId?: string;
+    labels: string;
     minutesSinceOpen?: number;
     minutesSinceUpdate?: number;
     openedDateStart?: string;

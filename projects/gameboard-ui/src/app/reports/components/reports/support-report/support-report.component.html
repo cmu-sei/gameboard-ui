@@ -6,6 +6,8 @@
             [(ngModel)]="selectedParameters.status"></app-parameter-ticket-status>
         <app-parameter-date-range ngDefaultControl [(ngModel)]="selectedParameters.openedDateRange"
             name="openedDateRange"></app-parameter-date-range>
+        <app-parameter-ticket-labels ngDefaultControl
+            [ngModel]="selectedParameters.labels"></app-parameter-ticket-labels>
         <app-parameter-timespan-picker ngDefaultControl [(ngModel)]="selectedParameters.timeSinceOpen"
             label="Time since ticket was opened"></app-parameter-timespan-picker>
         <app-parameter-timespan-picker ngDefaultControl [(ngModel)]="selectedParameters.timeSinceUpdate"

@@ -27,6 +27,7 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   selectedParameters: SupportReportParameters = {
     gameChallengeSpec: {},
+    labels: [],
     openedDateRange: {},
     timeSinceOpen: {},
     timeSinceUpdate: {},

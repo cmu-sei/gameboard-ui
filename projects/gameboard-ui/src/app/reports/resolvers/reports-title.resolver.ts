@@ -12,6 +12,6 @@ export class ReportsTitleResolver {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<string> {
     return from(this.reportsService.get(route.params['reportKey']))
-      .pipe(map(report => `${report?.name || 'Report'} | Gameboard`));
+      .pipe(map(report => `${report?.name + ' Report' || 'Report'}`));
   }
 }

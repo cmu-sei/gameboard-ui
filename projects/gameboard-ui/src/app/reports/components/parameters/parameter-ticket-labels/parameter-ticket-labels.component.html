@@ -1,10 +1,18 @@
 <div class="parameter-ticket-labels-component report-parameter">
-    <ul class="selected-labels">
-        <span *ngFor="let label of ngModel" class="badge badge-info"></span>
-    </ul>
+    <label for="addLabel">Labels</label>
+    <div class="d-flex align-items-center">
+        <div class="add-label-input flex-grow-1 m-0">
+            <input type="text" minlength="2" class="form-control" name="addLabel" [(ngModel)]="addLabel"
+                [typeahead]="(labels$ | async) || []" (typeaheadOnSelect)="handleSelect($event)" [isAnimated]="true"
+                placeholder="Add a label">
+        </div>
 
-    <div class="add-label-input">
-        <input type="text" minlength="2" class="form-control" name="addLabel" [(ngModel)]="addLabel"
-            [typeahead]="(labels$ | async) || []" [isAnimated]="true" placeholder="Add a label">
+        <ul class="selected-labels d-flex align-items-center m-0">
+            <li>
+                <app-colored-text-chip class="ml-2" *ngFor="let label of ngModel" [text]="label"
+                    [enableSecondaryAction]="true"
+                    (secondaryActionClick)="handleChipRemoveClick($event)"></app-colored-text-chip>
+            </li>
+        </ul>
     </div>
 </div>
