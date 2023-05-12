@@ -1,4 +1,4 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
+import { Component, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { faArrowLeft, faAward, faPrint, faMedal, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
@@ -10,12 +10,12 @@ import { PlayerService } from '../../api/player.service';
   templateUrl: './certificate-list.component.html',
   styleUrls: ['./certificate-list.component.scss']
 })
-export class CertificateListComponent implements OnInit {
+export class CertificateListComponent {
   faArrowLeft = faArrowLeft;
   faAward = faAward;
   faMedal = faMedal;
   faPrint = faPrint;
-  faUser = faUser;
+  faUser = faUser
   faUsers = faUsers;
   certs$: Observable<PlayerCertificate[]>;
 
@@ -24,9 +24,6 @@ export class CertificateListComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {
     this.certs$ = apiPlayer.getUserCertificates();
-  }
-
-  ngOnInit(): void {
   }
 
   print(cert: PlayerCertificate): void {
