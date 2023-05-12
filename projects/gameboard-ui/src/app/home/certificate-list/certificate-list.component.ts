@@ -17,6 +17,7 @@ export class CertificateListComponent implements OnInit {
   faPrint = faPrint;
   faUser = faUser;
   faUsers = faUsers;
+
   certs$: Observable<PlayerCertificate[]>;
 
   constructor(
