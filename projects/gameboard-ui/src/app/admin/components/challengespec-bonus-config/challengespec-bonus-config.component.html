@@ -1,0 +1,31 @@
+<div class="challengespec-bonus-config-component">
+    <div class="spec-select-container">
+        <label for="specSelect">Choose a challenge spec to configure bonuses:</label>
+        <select name="specSelect" class="form-control">
+            <option *ngFor="let spec of specs$ | async" [ngValue]="spec.id">{{spec.name}}</option>
+        </select>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Point Value</th>
+                <th>Awarded to Rank</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<ng-template>
+    <div class="text-center">
+        No bonuses have been configured for this challenge yet. Add one below!
+    </div>
+</ng-template>

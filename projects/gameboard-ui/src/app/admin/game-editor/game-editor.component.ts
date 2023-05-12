@@ -180,5 +180,4 @@ export class GameEditorComponent implements AfterViewInit {
     if (a.key > b.key) return 1;
     return 0;
   }
-
 }

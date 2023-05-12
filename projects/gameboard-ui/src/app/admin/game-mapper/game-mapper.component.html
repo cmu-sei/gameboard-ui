@@ -10,13 +10,17 @@
   <div class="col-2">
     <div class="d-flex flex-column">
       <button class="mb-1 btn btn-secondary" (click)="view('search')">
-        <fa-icon [icon]="faSearch"></fa-icon>
+        <fa-icon [icon]="faService.search"></fa-icon>
         <span>Search</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('edit')">
-        <fa-icon [icon]="faEdit"></fa-icon>
+        <fa-icon [icon]="faService.edit"></fa-icon>
         <span>Edit</span>
         <span *ngIf="!!addedCount" class="ml-2 px-2 badge badge-info">{{addedCount}}</span>
+      </button>
+      <button class="mb-1 btn btn-secondary" (click)="view('bonuses')">
+        <fa-icon [icon]="faService.award"></fa-icon>
+        <span>Bonuses</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('map')">
         <fa-icon [icon]="faMapMarker"></fa-icon>
@@ -28,12 +32,11 @@
         </button>
         <app-dropzone inputId="map-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event)">
           <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
-            <fa-icon [icon]="faTrash"></fa-icon>
+            <fa-icon [icon]="faService.trash"></fa-icon>
             <span>Reset</span>
           </button>
         </app-dropzone>
         <div class="form-group pb-1 pt-1">
-          <!-- <label for="logo-input">Map Image</label> -->
         </div>
         <div>Alt-Drag to resize hotspots</div>
       </ng-container>
@@ -47,7 +50,7 @@
       <h4>Challenge Specs</h4>
 
       <button class="mb-1 btn btn-sm btn-outline-info" (click)="sync()">
-        <fa-icon [icon]="faSync"></fa-icon>
+        <fa-icon [icon]="faService.sync"></fa-icon>
         <span>Sync with Source</span>
       </button>
 
@@ -81,7 +84,7 @@
           </div>
           <div class="col-3">
             <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="deleting$.next(item)">
-              <fa-icon [icon]="faTrash"></fa-icon>
+              <fa-icon [icon]="faService.trash"></fa-icon>
               <span>Delete</span>
             </app-confirm-button>
           </div>
@@ -94,6 +97,8 @@
     <!-- search external specs -->
     <app-spec-browser [hidden]="viewing!=='search'"></app-spec-browser>
 
+
+    <app-challengespec-bonus-config [hidden]="viewing !== 'bonuses'"></app-challengespec-bonus-config>
 
     <!-- edit spec map locations -->
     <div [hidden]="viewing!=='map'">

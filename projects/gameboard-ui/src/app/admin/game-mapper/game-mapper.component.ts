@@ -10,6 +10,7 @@ import { GameService } from '../../api/game.service';
 import { ExternalSpec, NewSpec, Spec } from '../../api/spec-models';
 import { SpecService } from '../../api/spec.service';
 import { ConfigService } from '../../utility/config.service';
+import { FontAwesomeService } from '../../services/font-awesome.service';
 
 @Component({
   selector: 'app-game-mapper',
@@ -39,9 +40,6 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   list$: Observable<Spec[]>;
   recentExternalSpecList$: Observable<ExternalSpec[]>;
   list: Spec[] = [];
-  faSearch = faSearch;
-  faTrash = faTrash;
-  faEdit = faEdit;
   faMapMarker = faMapMarker;
   faPlus = faPlus;
   faSync = faSyncAlt;
@@ -54,7 +52,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     private api: SpecService,
     private gameSvc: GameService,
     private renderer: Renderer2,
-    private config: ConfigService
+    private config: ConfigService,
+    public faService: FontAwesomeService
   ) {
     this.list$ = this.refresh$.pipe(
       debounceTime(500),

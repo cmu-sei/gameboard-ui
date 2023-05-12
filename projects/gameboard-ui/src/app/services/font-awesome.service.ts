@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import {
   faArrowLeft,
+  faAward,
   faBolt,
   faCheck,
   faCheckSquare,
@@ -9,6 +10,7 @@ import {
   faChevronUp,
   faClipboard,
   faCopy,
+  faEdit,
   faExclamationTriangle,
   faExternalLink,
   faFilter,
@@ -29,6 +31,7 @@ import {
 export class FontAwesomeService {
   arrowDown = faLongArrowAltDown;
   arrowLeft = faArrowLeft;
+  award = faAward;
   bolt = faBolt;
   check = faCheck;
   checkSquare = faCheckSquare;
@@ -36,6 +39,7 @@ export class FontAwesomeService {
   chevronUp = faChevronUp;
   clipboard = faClipboard;
   copy = faCopy;
+  edit = faEdit;
   ellipsisVertical = faEllipsisVertical;
   exclamationTriangle = faExclamationTriangle;
   externalLink = faExternalLink;

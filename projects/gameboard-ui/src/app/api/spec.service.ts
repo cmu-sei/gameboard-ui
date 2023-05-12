@@ -3,10 +3,10 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { ChangedSpec, ExternalSpec, NewSpec, Spec, SpecSummary } from './spec-models';
+import { ChallengeSpecBonusViewModel, ChangedSpec, ExternalSpec, NewSpec, Spec, SpecSummary } from './spec-models';
 
 @Injectable({ providedIn: 'root' })
 export class SpecService {
@@ -30,6 +30,12 @@ export class SpecService {
 
   public create(model: NewSpec): Observable<Spec> {
     return this.http.post<Spec>(`${this.url}/challengespec`, model);
+  }
+
+  public getBonuses(specId?: string): Observable<ChallengeSpecBonusViewModel[]> {
+    if (!specId) return of([]);
+
+    return this.http.get<ChallengeSpecBonusViewModel[]>(`${this.url}/challengespec/${specId}/bonuses`);
   }
 
   public update(model: ChangedSpec): Observable<any> {

@@ -423,13 +423,11 @@
 
     <div class="section-header" tabindex="0" (click)="show(3)">
       <fa-icon [icon]="viewing===3 ? faCaretDown : faCaretRight"></fa-icon>
-      <span class="lead text-light"> Map </span>
+      <span class="lead text-light"> Challenges </span>
     </div>
 
     <div [hidden]="viewing!==3" class="mb-4">
-
       <app-game-mapper [game]="game"></app-game-mapper>
-
     </div>
 
 
