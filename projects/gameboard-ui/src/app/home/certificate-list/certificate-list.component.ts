@@ -41,5 +41,4 @@ export class CertificateListComponent implements OnInit {
     printWindow?.addEventListener('load', printWindow?.print, true); // wait until all content loads before printing
     // don't close new tab automatically in case want to keep open for some reason [ printWindow?.close(); ]
   }
-
 }
