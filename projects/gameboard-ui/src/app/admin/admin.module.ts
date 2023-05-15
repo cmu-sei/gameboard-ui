@@ -101,7 +101,6 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
     CoreModule,
     ApiModule,
     UtilityModule,
-    BsDropdownModule,
     ButtonsModule,
     AlertModule,
     ModalModule,

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { ReportKey, ReportMetaData } from '../../../reports-models';
 import { IReportComponent } from '../../report-component';
-import { ChallengesReportParameters, ChallengesReportModel, ChallengesReportRecord } from './challenges-report.models';
+import { ChallengesReportParameters, ChallengesReportModel, ChallengesReportRecord, ChallengesReportFlatParameters } from './challenges-report.models';
 import { ChallengesReportService } from '../../../services/challenges-report-service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 
@@ -12,10 +12,10 @@ import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-c
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent implements IReportComponent<ChallengesReportParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
+export class ChallengesReportComponent implements IReportComponent<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
 
-  selectedParameters: ChallengesReportParameters = {};
+  selectedParameters: ChallengesReportParameters = { gameChallengeSpec: {}, track: {} };
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;

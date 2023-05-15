@@ -1,10 +1,11 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from './players-report.models';
 import { ReportKey, ReportMetaData, ReportResults, ReportTrackParameter, ReportTrackParameterModifier } from '../../../reports-models';
 import { IReportComponent } from '../../report-component';
-import { ObjectService } from 'projects/gameboard-ui/src/app/services/object.service';
 import { PlayersReportService } from '@/reports/services/players-report.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { SimpleEntity } from '@/api/models';
 
 interface PlayersReportContext {
   results: ReportResults<PlayersReportRecord>;
@@ -16,13 +17,13 @@ interface PlayersReportContext {
   templateUrl: './players-report.component.html',
   styleUrls: ['./players-report.component.scss']
 })
-export class PlayersReportComponent implements IReportComponent<PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord>, OnInit {
+export class PlayersReportComponent implements AfterViewInit, IReportComponent<PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord> {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   ctx: PlayersReportContext | null = null;
 
-  private _selectedParameters?: PlayersReportFlatParameters;
-  public get selectedParameters(): PlayersReportFlatParameters | undefined { return this._selectedParameters };
-  public set selectedParameters(value: PlayersReportFlatParameters | undefined) {
+  private _selectedParameters?: PlayersReportParameters;
+  public get selectedParameters(): PlayersReportParameters | undefined { return this._selectedParameters };
+  public set selectedParameters(value: PlayersReportParameters | undefined) {
     this._selectedParameters = value;
     this.updateView(value);
   };
@@ -33,11 +34,14 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
   private viewContainerRefsSub?: Subscription;
 
   constructor(
-    private objectService: ObjectService,
+    public modalService: ModalConfirmService,
     public reportService: PlayersReportService) {
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.viewContainerRefs!.changes.subscribe(item => {
+      this.reportElementRef = this.viewContainerRefs ? this.viewContainerRefs.get(0) : undefined;
+    })
   }
 
   getPdfExportElement(): ElementRef<HTMLDivElement> {
@@ -48,7 +52,20 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
     return ReportKey.PlayersReport;
   }
 
-  handleParametersChanged(event: any) {
+  simpleEntitiesToStrings(entities: SimpleEntity[]): string[] {
+    return entities.map(e => e.name);
+  }
+
+  handleModalRequest(title: string, items: string[], itemTypeName?: string) {
+    const unspecifiedEntry = itemTypeName ? `[Unspecified ${itemTypeName}]` : "[Unspecified]";
+
+    this.modalService.openConfirm({
+      title,
+      bodyContent: items
+        .map(i => `- ${i || unspecifiedEntry}`).join("\n"),
+      hideCancel: true,
+      renderBodyAsMarkdown: true
+    })
   }
 
   private async updateView(params?: PlayersReportParameters) {
@@ -57,7 +74,7 @@ export class PlayersReportComponent implements IReportComponent<PlayersReportFla
 
     this.ctx = {
       results,
-      selectedParameters: params || {}
+      selectedParameters: params || { gameChallengeSpec: {} }
     };
 
     this.onResultsLoaded(results.metaData);

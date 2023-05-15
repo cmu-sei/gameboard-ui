@@ -9,6 +9,7 @@ export interface ModalConfirmConfig {
   onCancel?: Function;
   onConfirm?: Function;
   hideCancel?: boolean;
+  renderBodyAsMarkdown?: boolean;
 }
 
 @Directive({ selector: '[appModalConfirm]' })

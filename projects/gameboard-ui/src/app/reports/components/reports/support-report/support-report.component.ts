@@ -9,6 +9,7 @@ import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-c
 import { groupBy } from 'projects/gameboard-ui/src/tools';
 import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { SupportService } from '@/api/support.service';
+import { FontAwesomeService } from '@/services/font-awesome.service';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -37,6 +38,7 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
 
   constructor(
+    public faService: FontAwesomeService,
     public reportService: SupportReportService,
     private rgbService: TextToRgbService,
     private supportService: SupportService) { }
@@ -147,7 +149,7 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
           label: "Tickets",
           data: [
             labelCounts[label],
-            totalRecords
+            totalRecords - labelCounts[label]
           ],
           backgroundColor: [
             "rgb(0, 0, 256)",

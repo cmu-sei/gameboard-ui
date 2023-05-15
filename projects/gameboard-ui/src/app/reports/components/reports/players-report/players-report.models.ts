@@ -1,12 +1,12 @@
 import { SimpleEntity } from "../../../../api/models";
 import { ReportDateRange, ReportTrackParameter, ReportTrackParameterModifier } from "../../../reports-models";
+import { ReportGameChallengeSpec } from "../../parameters/parameter-game-challengespec/parameter-game-challengespec.component";
 
 export class PlayersReportParameters {
-    challengeSpecId?: string;
+    gameChallengeSpec: ReportGameChallengeSpec = {};
     series?: string;
-    gameId?: string;
-    sponsorId?: string;
     sessionStartWindow?: ReportDateRange;
+    sponsorId?: string;
     track?: ReportTrackParameter;
 }
 
@@ -14,18 +14,18 @@ export class PlayersReportFlatParameters {
     challengeSpecId?: string;
     series?: string;
     gameId?: string;
-    sponsorId?: string;
     playerSessionStartBeginDate?: Date;
     playerSessionStartEndDate?: Date;
+    sponsorId?: string;
     trackModifier?: ReportTrackParameterModifier;
     trackName?: string;
 }
 
 export interface PlayersReportGamesAndChallengesSummary {
-    countEnrolled: number;
-    countDeployed: number;
-    countScoredPartial: number;
-    countScoredComplete: number;
+    enrolled: SimpleEntity[];
+    deployed: SimpleEntity[];
+    scoredPartial: SimpleEntity[];
+    scoredComplete: SimpleEntity[];
 }
 
 export interface PlayersReportRecord {

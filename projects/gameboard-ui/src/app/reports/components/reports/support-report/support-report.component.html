@@ -20,8 +20,8 @@
                 <table class="report-table table-hover gameboard-report">
                     <col>
                     <colgroup span="4"></colgroup>
-                    <colgroup span="2"></colgroup>
                     <colgroup span="3"></colgroup>
+                    <col>
 
                     <thead class="thead-light">
                         <tr class="headers super-headers-row">
@@ -30,6 +30,7 @@
                             <th scope="col" colspan="3" class="group-header super-column-creation-assignment">
                                 Creation &amp; Assignment
                             </th>
+                            <th scope="col super-column-actions"></th>
                         </tr>
                     </thead>
 
@@ -43,6 +44,7 @@
                             <td>Assigned to</td>
                             <td>Created</td>
                             <td>Updated</td>
+                            <td></td>
                         </tr>
 
                         <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
@@ -77,6 +79,9 @@
                                     friendlyTime}}
                                     <p class="secondary-info-text">{{record.updatedBy?.name}}</p>
                                 </div>
+                            </td>
+                            <td>
+                                <app-support-report-context-menu [record]="record"></app-support-report-context-menu>
                             </td>
                         </tr>
                     </tbody>

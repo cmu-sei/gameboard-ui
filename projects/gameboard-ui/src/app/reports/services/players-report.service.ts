@@ -19,6 +19,8 @@ export class PlayersReportService implements IReportService<PlayersReportFlatPar
 
   flattenParameters(parameters: PlayersReportParameters): PlayersReportFlatParameters {
     const flattened: PlayersReportFlatParameters = {
+      challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
+      gameId: parameters.gameChallengeSpec?.gameId,
       playerSessionStartBeginDate: parameters.sessionStartWindow?.dateStart,
       playerSessionStartEndDate: parameters.sessionStartWindow?.dateEnd,
       trackModifier: parameters.track?.modifier,
@@ -26,25 +28,41 @@ export class PlayersReportService implements IReportService<PlayersReportFlatPar
       ...parameters
     };
 
-    this.objectService.deleteKeys(flattened, "track", "sessionStartWindow");
+    this.objectService.deleteKeys(flattened, "gameChallengeSpec", "track", "sessionStartWindow");
 
     return flattened;
   }
 
-  unflattenParameters(parameters: PlayersReportFlatParameters): PlayersReportParameters {
+  unflattenParameters(parameters?: PlayersReportFlatParameters): PlayersReportParameters {
     if (!parameters) {
-      return {};
+      return {
+        gameChallengeSpec: {}
+      };
     }
 
+    const gameId = parameters.gameId;
+    const challengeSpecId = parameters.challengeSpecId;
     const trackName = parameters.trackName;
     const trackModifier = parameters.trackModifier;
     const sessionStartBeginDate = parameters.playerSessionStartBeginDate;
     const sessionStartEndDate = parameters.playerSessionStartEndDate;
 
-    this.objectService.deleteKeys(parameters, "trackModifier", "trackName", "playerSessionStartBeginDate", "playerSessionStartEndDate");
+    this.objectService.deleteKeys(
+      parameters,
+      "challengeSpecId",
+      "gameId",
+      "trackModifier",
+      "trackName",
+      "playerSessionStartBeginDate",
+      "playerSessionStartEndDate"
+    );
 
     return {
       ...parameters,
+      gameChallengeSpec: {
+        gameId,
+        challengeSpecId
+      },
       sessionStartWindow: sessionStartBeginDate || sessionStartEndDate ? {
         dateStart: sessionStartBeginDate,
         dateEnd: sessionStartEndDate
@@ -58,6 +76,6 @@ export class PlayersReportService implements IReportService<PlayersReportFlatPar
 
   getReportData(parameters?: PlayersReportFlatParameters): Observable<ReportResults<PlayersReportRecord>> {
     const query = this.uriService.toQueryString(parameters);
-    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUrlService.build(`/reports/players-report?${query}`));
+    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUrlService.build(`/reports/players-report${query}`));
   }
 }

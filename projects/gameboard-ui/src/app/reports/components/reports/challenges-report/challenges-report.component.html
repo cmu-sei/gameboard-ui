@@ -4,9 +4,8 @@
             name="competition"></app-parameter-series>
         <app-parameter-track [(ngModel)]="selectedParameters.track" [hideModifierSelect]="true" ngDefaultControl
             name="track"></app-parameter-track>
-        <app-parameter-game [(ngModel)]="selectedParameters.gameId" name="gameId" ngDefaultControl></app-parameter-game>
-        <app-parameter-challenge-spec [(ngModel)]="selectedParameters.challengeSpecId" ngDefaultControl
-            name="challengeSpecId"></app-parameter-challenge-spec>
+        <app-parameter-game-challengespec ngDefaultControl
+            [(ngModel)]="selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
     </app-report-parameters-container>
 
     <div class="report-body mt-4" *ngIf="ctx.records.length" #challengesReport>
@@ -59,18 +58,18 @@
                     <td>
                         <div *ngIf="record.fastestSolve; else noSolve" class="fastest-solve-cell">
                             <span class="tooltipped-value" [tooltip]="'Solved by ' + record.fastestSolve.player.name">
-                                {{record.fastestSolve.solveTimeMs}}</span>
+                                {{record.fastestSolve.solveTimeMs | msToDuration}}</span>
                         </div>
 
                         <ng-template #noSolve>--</ng-template>
                     </td>
-                    <td class="text-center">{{record.meanCompleteSolveTimeMs || '--'}}</td>
+                    <td class="text-center">{{(record.meanCompleteSolveTimeMs | msToDuration) || '--'}}</td>
                     <td class="text-center">{{record.maxPossibleScore}}</td>
                     <td class="text-center">{{record.meanScore || '--'}}</td>
                     <td class="text-center">
-                        <a *ngIf="record.ticketCount && record.challenge?.id; else cantLink"
+                        <a *ngIf="record.ticketCount && record.challengeSpec; else cantLink"
                             [routerLink]="['/reports/support-report']"
-                            [queryParams]="{ challengeId: record.challenge?.id }">{{record.ticketCount}}</a>
+                            [queryParams]="{ challengeSpecId: record.challengeSpec.id }">{{record.ticketCount}}</a>
 
                         <ng-template #cantLink>
                             {{record.ticketCount || 0}}

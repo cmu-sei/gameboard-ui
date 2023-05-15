@@ -19,7 +19,7 @@ export class SponsorService {
     this.url = config.apphost + 'api';
   }
 
-  public list(search: any): Observable<Sponsor[]> {
+  public list(search?: any): Observable<Sponsor[]> {
     return this.http.get<Sponsor[]>(this.url + '/sponsors', { params: search }).pipe(
       map(r => {
         r.forEach(g => this.transform(g));

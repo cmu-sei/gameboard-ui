@@ -1,11 +1,18 @@
 import { SimpleEntity } from "../../../../api/models";
 import { ReportMetaData, ReportTrackParameter } from "../../../reports-models";
+import { ReportGameChallengeSpec } from "../../parameters/parameter-game-challengespec/parameter-game-challengespec.component";
 
 export interface ChallengesReportParameters {
-    challengeSpecId?: string;
     competition?: string;
+    gameChallengeSpec: ReportGameChallengeSpec;
+    track: ReportTrackParameter;
+}
+
+export interface ChallengesReportFlatParameters {
+    challengeSpecId?: string;
     gameId?: string;
-    track?: ReportTrackParameter;
+    competition?: string;
+    trackName?: string;
 }
 
 export interface ChallengesReportRecord {

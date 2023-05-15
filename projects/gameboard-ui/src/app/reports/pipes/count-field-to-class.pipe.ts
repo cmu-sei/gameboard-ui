@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CountFieldToClassPipe implements PipeTransform {
 
-  transform(value: string[]): string | null {
+  transform(value: any[]): string | null {
     if (value?.length) {
       return "tooltipped-value";
     }

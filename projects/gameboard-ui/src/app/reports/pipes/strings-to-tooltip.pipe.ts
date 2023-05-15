@@ -1,18 +1,24 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, SecurityContext } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
   name: 'stringsToTooltip'
 })
 export class StringsToTooltipPipe implements PipeTransform {
 
-  transform(value: string[], tooltipTitle: string): string {
+  constructor(private domSanitizer: DomSanitizer) { }
+
+  transform(value: string[], itemType: string): string {
     let retVal = "";
+    const mappedValues = value.map(v => v ?? `[Unspecified ${itemType}]`)
 
     // if (tooltipTitle) {
     //   retVal += `<h2>${tooltipTitle}</h2>`;
     // }
 
-    return retVal + '\n' + value.join("\n");
+    retVal = (retVal + '\n' + mappedValues.join("<br/>")) || "";
+
+    return this.domSanitizer.sanitize(SecurityContext.HTML, retVal) || "";
   }
 
 }

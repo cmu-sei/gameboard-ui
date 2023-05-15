@@ -27,6 +27,10 @@ import { YamlPipe } from './pipes/yaml.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
+import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+import { HttpClient } from '@angular/common/http';
+import { markedOptionsFactory } from './config/marked.config';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 const PUBLIC_DECLARATIONS = [
   ColoredTextChipComponent,
@@ -49,6 +53,7 @@ const PUBLIC_DECLARATIONS = [
 ];
 
 const RELAYED_MODULES = [
+  BsDropdownModule,
   FontAwesomeModule,
   FormsModule,
   BsDatepickerModule,
@@ -64,11 +69,19 @@ const RELAYED_MODULES = [
   ],
   imports: [
     CommonModule,
+    MarkdownModule.forRoot({
+      loader: HttpClient,
+      markedOptions: {
+        provide: MarkedOptions,
+        useFactory: markedOptionsFactory,
+      },
+    }),
     ...RELAYED_MODULES
   ],
   exports: [
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
+    MarkdownModule
   ]
 })
 export class CoreModule { }

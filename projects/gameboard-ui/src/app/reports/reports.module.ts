@@ -29,6 +29,8 @@ import { ParameterTimespanPickerComponent } from './components/parameters/parame
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
 import { ReportSelectComponent } from './components/report-select/report-select.component';
 import { ParameterGameChallengespecComponent } from './components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
+import { SupportReportContextMenuComponent } from './components/reports/support-report-context-menu/support-report-context-menu.component';
+import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,8 @@ import { ParameterGameChallengespecComponent } from './components/parameters/par
     ParameterTimespanPickerComponent,
     ParameterTrackComponent,
     ReportSelectComponent,
+    SupportReportContextMenuComponent,
+    ParameterSponsorComponent,
   ],
   imports: [
     CommonModule,

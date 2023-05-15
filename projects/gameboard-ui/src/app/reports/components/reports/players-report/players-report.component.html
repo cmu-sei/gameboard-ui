@@ -1,15 +1,14 @@
 <div class="players-report-component" *ngIf="ctx; else loading">
     <div class="report-parameters">
         <app-report-parameters-container>
-            <app-parameter-series name="series" ngDefaultControl [(ngModel)]="ctx.selectedParameters.series"
-                (ngModelChange)="handleParametersChanged($event)"></app-parameter-series>
-            <app-parameter-track name="track" ngDefaultControl [(ngModel)]="ctx.selectedParameters.track"
-                (ngModelChange)="handleParametersChanged($event)"></app-parameter-track>
-            <app-parameter-game name="gameId" ngDefaultControl [(ngModel)]="ctx.selectedParameters.gameId"
-                (ngModelChange)="handleParametersChanged($event)"></app-parameter-game>
-            <app-parameter-challenge-spec name="challengeSpecId" ngDefaultControl
-                [(ngModel)]="ctx.selectedParameters.challengeSpecId" (ngModelChange)="handleParametersChanged($event)">
-            </app-parameter-challenge-spec>
+            <app-parameter-series name="series" ngDefaultControl
+                [(ngModel)]="ctx.selectedParameters.series"></app-parameter-series>
+            <app-parameter-track name="track" ngDefaultControl
+                [(ngModel)]="ctx.selectedParameters.track"></app-parameter-track>
+            <app-parameter-game-challengespec ngDefaultControl
+                [(ngModel)]="ctx.selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
+            <app-parameter-sponsor ngDefaultControl
+                [(ngModel)]="ctx.selectedParameters.sponsorId"></app-parameter-sponsor>
         </app-report-parameters-container>
         <hr />
     </div>
@@ -50,24 +49,33 @@
                 <tr class="data-row" *ngFor="let record of ctx.results.records">
                     <td>{{record.user.name}}</td>
                     <td class="count">
-                        <span [ngClass]="record.competitionsPlayed | countFieldToClass"
-                            [tooltip]="record.competitionsPlayed | stringsToTooltip:record.user.name + '\'s Competitions Played'">
+                        <span
+                            (click)="handleModalRequest(record.user.name + ' - Series Played', record.competitionsPlayed, 'series')"
+                            [ngClass]="record.competitionsPlayed | countFieldToClass">
                             {{record.competitionsPlayed.length}}
                         </span>
                     </td>
-                    <td class="count" [tooltip]="(record.tracksPlayed | stringsToTooltip:'things')">
-                        <span [ngClass]="record.tracksPlayed | countFieldToClass">
+                    <td class="count">
+                        <span
+                            (click)="handleModalRequest(record.user.name + ' - Tracks Played', record.tracksPlayed, 'track')"
+                            [ngClass]="record.tracksPlayed | countFieldToClass">
                             {{record.tracksPlayed.length}}
                         </span>
                     </td>
-                    <td class="count">{{record.games.countEnrolled}}</td>
-                    <td class="count">{{record.games.countDeployed}}</td>
-                    <td class="count">{{record.games.countScoredPartial}}</td>
-                    <td class="count">{{record.games.countScoredComplete}}</td>
-                    <td class="count">{{record.challenges.countEnrolled}}</td>
-                    <td class="count">{{record.challenges.countDeployed}}</td>
-                    <td class="count">{{record.challenges.countScoredPartial}}</td>
-                    <td class="count">{{record.challenges.countScoredComplete}}</td>
+                    <td class="count">
+                        <span
+                            (click)="handleModalRequest(record.user.name + ' - Games Enrolled', simpleEntitiesToStrings(record.games.enrolled))"
+                            [ngClass]="record.games.enrolled | countFieldToClass">
+                            {{record.games.enrolled.length}}
+                        </span>
+                    </td>
+                    <td class="count">{{record.games.deployed.length}}</td>
+                    <td class="count">{{record.games.scoredPartial.length}}</td>
+                    <td class="count">{{record.games.scoredComplete.length}}</td>
+                    <td class="count">{{record.challenges.enrolled.length}}</td>
+                    <td class="count">{{record.challenges.deployed.length}}</td>
+                    <td class="count">{{record.challenges.scoredPartial.length}}</td>
+                    <td class="count">{{record.challenges.scoredComplete.length}}</td>
                 </tr>
             </tbody>
         </table>
