@@ -31,13 +31,16 @@ export class GameEditorComponent implements AfterViewInit {
   viewing = 1;
   showCertificateInfo = false;
 
+  // the first time we flip the mode to external, suggest the gamebrainhost endpoint as the external startup
+  // url
+  private defaultExternalGameStartUrlSuggested = false;
+
   // store unique values of each game field with their frequencies for ordered suggestion lists
   suggestions = {
     competition: new Map<string, number>(),
     track: new Map<string, number>(),
     season: new Map<string, number>(),
     division: new Map<string, number>(),
-    mode: new Map<string, number>(),
     cardText1: new Map<string, number>(),
     cardText2: new Map<string, number>(),
     cardText3: new Map<string, number>()
@@ -55,10 +58,10 @@ export class GameEditorComponent implements AfterViewInit {
   faInfoCircle = faInfoCircle;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
+    // private router: Router,
     private api: GameService,
-    private config: ConfigService
+    private config: ConfigService,
+    route: ActivatedRoute
   ) {
 
     // one-time get list of all games for field suggestions
@@ -82,6 +85,14 @@ export class GameEditorComponent implements AfterViewInit {
     this.updated$ = this.form.valueChanges.pipe(
       filter(f => !this.form.pristine && (this.form.valid || false)),
       tap(g => this.dirty = true),
+      tap(r => {
+        // the first time we flip to "External" mode, if the external game start url isn't specified,
+        // default it to gamebrain's url in settings
+        if (this.config.gamebrainhost && !this.game.externalGameStartupUrl && !this.defaultExternalGameStartUrlSuggested) {
+          this.game.externalGameStartupUrl = `${this.config.gamebrainhost}admin/deploy`;
+          this.defaultExternalGameStartUrlSuggested = true;
+        }
+      }),
       debounceTime(500),
       switchMap(g => this.api.update(this.game)),
       tap(r => this.dirty = false),
@@ -132,7 +143,6 @@ export class GameEditorComponent implements AfterViewInit {
       this.countGameField(this.suggestions.track, game.track);
       this.countGameField(this.suggestions.season, game.season);
       this.countGameField(this.suggestions.division, game.division);
-      this.countGameField(this.suggestions.mode, game.mode);
       this.countGameField(this.suggestions.cardText1, game.cardText1);
       this.countGameField(this.suggestions.cardText1, game.cardText1);
       this.countGameField(this.suggestions.cardText1, game.cardText1);

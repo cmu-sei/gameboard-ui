@@ -100,13 +100,20 @@
 
         <div class="form-group pb-0 pt-1">
           <label for="mode-input">Mode</label>
-          <input type="text" list="mode-list" class="form-control" id="mode-input" name="mode" [(ngModel)]="game.mode">
-          <datalist id="mode-list">
-            <option *ngFor="let o of suggestions.mode | keyvalue: sortByCount;" [value]="o.key">
-          </datalist>
-          <small>specify the game mode (i.e. vm, unity, offline) </small>
+          <select id="mode-input" name="mode-input" class="form-control" [(ngModel)]="game.mode">
+            <option [ngValue]="'vm'">Standard (VMs only)</option>
+            <option [ngValue]="'external'">External</option>
+            <option [ngValue]="'unity'">Cubespace</option>
+          </select>
         </div>
 
+        <div class="form-group pb-0 pt-1" *ngIf="game.mode == 'external'">
+          <label for="external-startup-url">External Startup URL</label>
+          <input name="external-startup-url" type="text" class="form-control" [(ngModel)]="game.externalGameStartupUrl">
+          <small>
+            When Gameboard boots an external game, it'll post game metadata to this URL to facilitate startup.
+          </small>
+        </div>
       </div>
 
       <div class="col-md-6 col-sm-12">
@@ -414,11 +421,8 @@
               name="registrationMarkdown" [(ngModel)]="game.registrationMarkdown"></textarea>
             <small>presented and approved when registering for this game</small>
           </div>
-
         </div>
-
       </div>
-
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(3)">

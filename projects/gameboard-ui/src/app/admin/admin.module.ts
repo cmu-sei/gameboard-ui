@@ -75,7 +75,7 @@ import { ChallengeSpecBonusParameterPipe } from './pipes/challenge-spec-bonus-pa
     ManageManualChallengeBonusesComponent,
     ManageManualChallengeBonusesModalComponent,
     ChallengespecBonusConfigComponent,
-    ChallengeSpecBonusParameterPipe
+    ChallengeSpecBonusParameterPipe,
   ],
   imports: [
     CommonModule,
