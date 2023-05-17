@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { switchMap, map, tap, delay, catchError } from 'rxjs/operators';
+import { switchMap, tap, catchError } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { LogService } from '../services/log.service';
 
@@ -69,6 +69,7 @@ export class TocService {
       ).pipe(
         catchError(err => {
           // don't report - ops will know 404
+          this.log.logInfo(`Couldn't load toc from "${tocFileUrl}".`);
           return '';
         }),
         tap(t => tocfile.text = t)
