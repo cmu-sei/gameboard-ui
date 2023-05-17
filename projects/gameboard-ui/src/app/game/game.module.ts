@@ -34,6 +34,7 @@ import { CumulativeTimeClockComponent } from './components/cumulative-time-clock
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 import { SyncStartPageComponent } from './components/sync-start-page/sync-start-page.component';
 import { SyncStartGuard } from '../guards/sync-start.guard';
+import { GameStartPageComponent } from './components/game-start-page/game-start-page.component';
 
 const MODULE_DECLARATIONS = [
   PlayerEnrollComponent,
@@ -57,7 +58,8 @@ const MODULE_DECLARATIONS = [
     GameboardPerformanceSummaryComponent,
     CumulativeTimeClockComponent,
     SessionStartControlsComponent,
-    SyncStartPageComponent
+    SyncStartPageComponent,
+    GameStartPageComponent
   ],
   imports: [
     CommonModule,
@@ -66,6 +68,7 @@ const MODULE_DECLARATIONS = [
     RouterModule.forChild([
       { path: 'board/:playerId/:cid', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
       { path: 'board/:playerId', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
+      { path: ':gameId/start/:playerId', canActivate: [AuthGuard], component: GameStartPageComponent },
       { path: ':gameId/sync-start', canActivate: [AuthGuard, SyncStartGuard], component: SyncStartPageComponent },
       { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },

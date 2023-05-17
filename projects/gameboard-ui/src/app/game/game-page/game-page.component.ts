@@ -9,7 +9,7 @@ import { BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscri
 import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '../../api/user-models';
 import { GameService } from '../../api/game.service';
-import { GameContext } from '../../api/models';
+import { GameContext } from '../../api/game-models';
 import { HubEvent, HubEventAction, HubState, NotificationService } from '../../services/notification.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { Player, TimeWindow } from '../../api/player-models';

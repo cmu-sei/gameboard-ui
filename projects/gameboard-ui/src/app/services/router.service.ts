@@ -19,4 +19,12 @@ export class RouterService {
       this.router.navigateByUrl("/");
     }
   }
+
+  public goToGamePage(gameId: string) {
+    this.router.navigateByUrl(`/game/${gameId}`);
+  }
+
+  public goToGameLaunchPage(gameId: string, playerId: string) {
+    this.router.navigateByUrl(`/game/${gameId}/start/${playerId}`);
+  }
 }

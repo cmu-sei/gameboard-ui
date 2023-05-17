@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { finalize, map, tap, delay, first } from 'rxjs/operators';
-import { GameContext } from '../../api/models';
+import { GameContext } from '../../api/game-models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';

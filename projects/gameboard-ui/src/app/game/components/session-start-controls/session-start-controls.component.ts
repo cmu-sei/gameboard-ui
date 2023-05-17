@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { GameService } from '../../../api/game.service';
-import { GameContext } from '../../../api/models';
+import { GameContext } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { FontAwesomeService } from '../../../services/font-awesome.service';

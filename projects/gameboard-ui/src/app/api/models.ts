@@ -13,18 +13,6 @@ export interface Search {
   filter?: string[];
 }
 
-export interface GameContext {
-  game: Game;
-  player: Player;
-  user: ApiUser;
-}
-
-export interface GameEnrollmentContext {
-  game: Game;
-  user: ApiUser;
-  player: Player | undefined;
-}
-
 export interface SimpleEntity {
   id: string;
   name: string;

@@ -2,7 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { FeedbackTemplate } from "./feedback-models";
-import { PlayerMode, TimeWindow } from "./player-models";
+import { Player, PlayerMode, TimeWindow } from "./player-models";
+import { ApiUser } from "./user-models";
 
 export interface GameDetail {
   name: string;
@@ -68,6 +69,12 @@ export interface NewGame extends GameDetail {
 export interface ChangedGame extends Game {
 }
 
+export enum GameMode {
+  Cubespace = "unity",
+  External = "external",
+  Standard = "vm"
+}
+
 export enum GameRegistrationType {
   none = 'none',
   open = 'open',
@@ -91,4 +98,16 @@ export interface SessionForecast {
   reserved: number;
   text: string;
   percent: number;
+}
+
+export interface GameContext {
+  game: Game;
+  player: Player;
+  user: ApiUser;
+}
+
+export interface GameEnrollmentContext {
+  game: Game;
+  user: ApiUser;
+  player: Player | undefined;
 }
