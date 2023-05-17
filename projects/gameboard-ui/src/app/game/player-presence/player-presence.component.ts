@@ -1,26 +1,26 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { combineLatest, Observable, of } from 'rxjs';
+import { first, map, startWith, tap } from 'rxjs/operators';
 import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { HubPlayer, Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { NotificationService } from '../../services/notification.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
-import { SyncStartState } from '../game.models';
 import { SyncStartService } from '../../services/sync-start.service';
 import { SimpleEntity } from '../../api/models';
+import { HubConnectionState } from '@microsoft/signalr';
+import { LogService } from '../../services/log.service';
 
 interface PlayerPresenceContext {
+  avatarUris: string[];
   hasTeammates: boolean;
   manager: HubPlayer | undefined;
   allPlayers: HubPlayer[];
   player: HubPlayer;
   playerIsManager: boolean;
-  readyPlayers: SimpleEntity[];
-  notReadyPlayers: SimpleEntity[];
   teamAvatar: string[],
   teamName: string;
 }
@@ -31,62 +31,67 @@ interface PlayerPresenceContext {
   templateUrl: './player-presence.component.html',
 })
 export class PlayerPresenceComponent implements OnInit {
-  @Input() player$?: Observable<Player | undefined>;
+  @Input() player$: Observable<Player | undefined> = of(undefined);
   @Input() isSyncStartGame: boolean = false;
   @Output() onManagerPromoted = new EventEmitter<string>();
 
-  private syncStartState$ = new BehaviorSubject<SyncStartState | null>(null);
-  private syncStartStateSubscription?: Subscription;
-
   protected promoteIcon = faChevronCircleUp;
   protected ctx$?: Observable<PlayerPresenceContext | null>;
-  protected avatarUris: string[] = [];
 
   constructor(
     private gameHub: GameHubService,
     private hub: NotificationService,
+    private log: LogService,
     private playerApi: PlayerService,
     private syncStartService: SyncStartService,
   ) { }
 
   ngOnInit(): void {
     this.ctx$ = combineLatest([
+      this.hub.state$,
       this.hub.actors$,
       this.player$,
-      this.gameHub.syncStartChanged$
+      this.gameHub.syncStartChanged$.pipe(startWith(null))
     ]).pipe(
-      map(combo => combo as unknown as { 0: HubPlayer[], 1: HubPlayer, 2: SyncStartState }),
-      map(combo => ({ actors: combo[0], player: combo[1], syncStartState: combo[2] })),
+      // map(combo => combo as unknown as { 0: HubPlayer[], 1: HubPlayer, 2: SyncStartState }),
+      map(combo => ({ hubState: combo[0], actors: combo[1], player: combo[2], syncStartState: combo[3] })),
       map(context => {
+        if (!context.hubState || context.hubState.connectionState == HubConnectionState.Disconnected) {
+          this.log.logWarning("Can't render player presence component: SignalR hub is disconnected.");
+          return null;
+        }
+
         if (!context.player) {
+          this.log.logWarning("Can't render player presence component: the context has no Player object.");
           return null;
         }
 
         const actorInfo = this.findPlayerAndTeammates(context.player, context.actors);
-        this.avatarUris = actorInfo.allPlayers.map(p => p.sponsorLogo);
-
-        // grab team members on this screen and show their ready/not ready flag 
-        // (read it into the player objects coming from the hub - should think about streamlining this later)
-        const playerReadyStates = this.syncStartService.getAllPlayers(context.syncStartState);
-        for (let player of actorInfo.allPlayers) {
-          const playerReadyState = playerReadyStates.find(p => p.id === player.id);
-
-          if (playerReadyState) {
-            player.isReady = playerReadyState.isReady;
-          }
-        }
-
-        return {
+        const ctx: PlayerPresenceContext = {
+          avatarUris: actorInfo.allPlayers.map(p => p.sponsorLogo),
           hasTeammates: !!actorInfo.teammates.length,
           manager: actorInfo.manager,
           allPlayers: actorInfo.allPlayers,
           player: actorInfo.player,
           playerIsManager: !!actorInfo.manager && actorInfo.manager.id === actorInfo.player?.id,
-          readyPlayers: this.syncStartService.getAllPlayers(context.syncStartState),
-          notReadyPlayers: this.syncStartService.getNotReadyPlayers(context.syncStartState),
           teamAvatar: this.computeTeamAvatarList(actorInfo.allPlayers),
           teamName: actorInfo.manager?.approvedName || actorInfo.player?.approvedName || "",
         };
+
+        if (this.isSyncStartGame && context.syncStartState) {
+          // grab team members on this screen and show their ready/not ready flag 
+          // (read it into the player objects coming from the hub - should think about streamlining this later)
+          const playerReadyStates = this.syncStartService.getAllPlayers(context.syncStartState);
+          for (let player of actorInfo.allPlayers) {
+            const playerReadyState = playerReadyStates.find(p => p.id === player.id);
+
+            if (playerReadyState) {
+              player.isReady = playerReadyState.isReady;
+            }
+          }
+        }
+
+        return ctx;
       })
     );
   }
@@ -116,6 +121,7 @@ export class PlayerPresenceComponent implements OnInit {
       if (!s.id) {
         throw new Error("Can't promote a manager while the hub is disconnected.");
       }
+
       if (!localPlayer) {
         throw new Error("Can't resolve the current player to promote manager.");
       }
