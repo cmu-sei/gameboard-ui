@@ -3,8 +3,8 @@
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { first, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -25,6 +25,8 @@ export class PlayerSessionComponent implements OnDestroy {
 
   errors: any[] = [];
   myCtx$!: Observable<GameContext | undefined>;
+  player$ = new BehaviorSubject<Player | undefined>(undefined);
+  playerObservable$ = this.player$.asObservable();
 
   private ctxSub?: Subscription;
 
@@ -33,7 +35,6 @@ export class PlayerSessionComponent implements OnDestroy {
   protected modalConfig?: ModalConfirmConfig;
   protected isDoubleChecking = false;
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
-  protected player$ = new BehaviorSubject<Player | undefined>(undefined);
 
   constructor(
     private api: PlayerService,
@@ -91,13 +92,9 @@ export class PlayerSessionComponent implements OnDestroy {
     this.isDoubleChecking = isDoubleChecking;
   }
 
-  handleStart(player: Player): void {
-    this.api.start(player).pipe(
-      first()
-    ).subscribe(
-      p => this.onSessionStart.emit(p),
-      err => this.errors.push(err),
-    );
+  async handleStart(player: Player): Promise<void> {
+    const startedPlayer = await firstValueFrom(this.api.start(player));
+    this.onSessionStart.emit(startedPlayer);
   }
 
   handleReset(p: Player): void {

@@ -19,17 +19,17 @@ export class LogService {
 
   logInfo(...params: any[]) {
     if (this._logLevel == LogLevel.Info)
-      console.info(params);
+      console.info(...params);
   }
 
   logWarning(...params: any[]) {
     if (this._logLevel <= LogLevel.Warning)
-      console.warn(params);
+      console.warn(...params);
   }
 
   logError(...params: any[]) {
     if (this._logLevel <= LogLevel.Error) {
-      console.error(params);
+      console.error(...params);
     }
   }
 }

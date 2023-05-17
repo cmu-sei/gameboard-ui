@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  settingsJson: null,
   settings: {
     appname: 'Gameboard',
     apphost: 'http://localhost:5002',
@@ -9,7 +10,7 @@ export const environment = {
     supporthost: 'http://localhost:5002/supportfiles',
     gamebrainhost: '',
     unityhost: '',
-    tocfile: 'toc.json',
+    tocfile: '',
     countdownStartSecondsAtMinute: 5,
     isProduction: false,
     oidc: {
