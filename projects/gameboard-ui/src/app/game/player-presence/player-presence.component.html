@@ -3,7 +3,7 @@
 
 <ng-container *ngIf="ctx$ | async as ctx">
   <div *ngIf="ctx.player" class="team-leader d-flex align-items-center align-content-center">
-    <app-player-avatar-list *ngIf="ctx.hasTeammates" [avatarUris]="avatarUris" [captainSession]="ctx.player.session"
+    <app-player-avatar-list *ngIf="ctx.hasTeammates" [avatarUris]="ctx.avatarUris" [captainSession]="ctx.player.session"
       class="d-inline-block mr-4 my-2"></app-player-avatar-list>
     <app-player-avatar *ngIf="!ctx.hasTeammates" [avatarUri]="ctx.player.sponsorLogo" [enableSessionStatus]="true"
       [session]="ctx.player.session" class="d-inline-block mr-4 my-2"></app-player-avatar>

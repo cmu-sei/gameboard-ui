@@ -27,7 +27,6 @@ export class GamespaceQuizComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("spec", this.spec);
   }
 
   submit(): void {
