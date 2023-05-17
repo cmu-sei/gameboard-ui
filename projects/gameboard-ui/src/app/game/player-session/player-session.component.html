@@ -38,8 +38,10 @@
         </ng-container>
       </div>
 
-      <app-player-presence *ngIf="player$ | async" [player$]=" player$"
-        [isSyncStartGame]="ctx.game.requireSynchronizedStart"></app-player-presence>
+      <ng-container *ngIf="playerObservable$ && (playerObservable$ | async)">
+        <app-player-presence [player$]="playerObservable$"
+          [isSyncStartGame]="ctx.game.requireSynchronizedStart"></app-player-presence>
+      </ng-container>
 
       <app-gameboard-performance-summary *ngIf="performanceSummaryViewModel$ | async"
         [ctx$]="performanceSummaryViewModel$"></app-gameboard-performance-summary>
