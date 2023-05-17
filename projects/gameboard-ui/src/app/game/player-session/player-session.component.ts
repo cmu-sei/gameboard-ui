@@ -11,7 +11,7 @@ import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
 import { FontAwesomeService } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
-import { GameContext } from '../../api/game-models';
+import { GameContext } from '@/api/game-models';
 
 @Component({
   selector: 'app-player-session',
