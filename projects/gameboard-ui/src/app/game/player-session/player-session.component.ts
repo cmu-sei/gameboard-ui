@@ -5,13 +5,13 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
+import { GameContext } from '@/api/game-models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
 import { FontAwesomeService } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
-import { GameContext } from '@/api/game-models';
 
 @Component({
   selector: 'app-player-session',
