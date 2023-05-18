@@ -133,7 +133,7 @@ export class TicketListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
-    this.config.updateLocal({ lastSeenSupport: Date.now() })
+    this.config.updateLocal({ lastSeenSupport: Date.now() });
   }
 
   next() {
@@ -179,7 +179,7 @@ export class TicketListComponent implements OnInit, OnDestroy {
       switchMap(ticket => this.api.getTicketMarkdown(ticket)),
     ).subscribe(async md => {
       await this.clipboard.copy(md);
-      this.toastService.show({ text: "Copied ticket markdown", faIcon: this.faService.clipboard })
+      this.toastService.show({ text: "Copied ticket markdown", faIcon: this.faService.clipboard });
     });
   }
 }

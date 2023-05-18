@@ -10,18 +10,15 @@ import { AuthService } from '../../auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   authority: string | undefined;
   faOpenid = faOpenid;
   working = false;
 
-  constructor (
+  constructor(
     private auth: AuthService,
   ) {
     this.authority = auth.authority;
-  }
-
-  ngOnInit(): void {
   }
 
   login(): void {

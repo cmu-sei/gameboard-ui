@@ -4,11 +4,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, of, timer } from 'rxjs';
-import { catchError, debounceTime, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { NewUser, ApiUser } from '../api/user-models';
 import { UserService as ApiUserService } from '../api/user.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { ConfigService } from './config.service';
+import { LogService } from '../services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -18,6 +19,7 @@ export class UserService {
 
   constructor(
     private auth: AuthService,
+    private log: LogService,
     api: ApiUserService,
     config: ConfigService,
     router: Router
@@ -49,7 +51,7 @@ export class UserService {
       filter(t => t === AuthTokenState.expired),
       tap(() => auth.redirectUrl = config.currentPath),
       switchMap(() => api.logout()),
-      tap(() => console.log('token expired'))
+      tap(() => this.log.logInfo("token expired"))
     ).subscribe(() => {
       this.user$.next(null);
       router.navigate(['/login']);

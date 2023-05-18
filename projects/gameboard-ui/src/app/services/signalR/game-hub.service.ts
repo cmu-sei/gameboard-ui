@@ -25,7 +25,7 @@ export class GameHubService implements OnDestroy {
     private manageJoinGameRequestSub?: Subscription;
 
     private _syncStartStateChanged$ = new Subject<SyncStartState>();
-    private _syncStartGameStarted$ = new Subject<SynchronizedGameStartedState>()
+    private _syncStartGameStarted$ = new Subject<SynchronizedGameStartedState>();
     private _manualRefresh$ = new Subject<void>();
 
     public syncStartChanged$ = this._syncStartStateChanged$.asObservable();
@@ -83,7 +83,7 @@ export class GameHubService implements OnDestroy {
         const gamesJoined = this.loadGameHubConnections();
         if (gamesJoined.indexOf(gameId) < 0) {
             gamesJoined.push(gameId);
-            this.localStorageService.add(StorageKey.WantsGameHubConnections, JSON.stringify(gamesJoined))
+            this.localStorageService.add(StorageKey.WantsGameHubConnections, JSON.stringify(gamesJoined));
         }
 
         this._manualRefresh$.next();

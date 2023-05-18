@@ -86,11 +86,11 @@ export class TicketFormComponent implements OnInit {
     this.api.upload(this.ticket).subscribe(
       (ticket) => {
         if (!!ticket.id) { // success
-          this.router.navigate(['/support/tickets', ticket.key])
+          this.router.navigate(['/support/tickets', ticket.key]);
         }
       },
       (err) => this.errors.push(err)
-    )
+    );
   }
 
   attachments(files: File[]) {

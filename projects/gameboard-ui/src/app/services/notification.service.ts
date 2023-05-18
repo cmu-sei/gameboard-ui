@@ -33,7 +33,7 @@ export class NotificationService {
     private config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
-    private logger: LogService,
+    private log: LogService,
   ) {
     this.connection = this.getConnection(`${config.apphost}hub`);
 
@@ -82,7 +82,7 @@ export class NotificationService {
         sponsorLogo: p.sponsor ?
           `${this.config.imagehost}/${p.sponsor}`
           : `${this.config.basehref}assets/sponsor.svg`
-      })
+      });
     });
 
     // sort managers to the top for niceness
@@ -168,7 +168,7 @@ export class NotificationService {
       }
     } catch (e) {
       if (this.connection.state !== HubConnectionState.Connected) {
-        console.warn(`Couldn't connect to the hub on group ${groupId}. State → `, this.state$.getValue());
+        this.log.logWarning(`Couldn't connect to the hub on group ${groupId}. State → `, this.state$.getValue());
       }
     }
   }
@@ -185,19 +185,22 @@ export class NotificationService {
           joined: false
         });
       }
-    } finally { }
+    }
+    catch (err) {
+      this.log.logError("Error on SignalR disconnect:", err);
+    }
   }
 
   public async sendMessage<T>(message: string, ...args: any[]): Promise<T> {
     if (this.connection.state !== HubConnectionState.Connected) {
-      this.logger.logError(`Can't invoke message ${message} - the hub is in a non-connected state (${this.connection.state})`);
+      this.log.logError(`Can't invoke message ${message} - the hub is in a non-connected state (${this.connection.state})`);
     }
 
     try {
       return await this.connection.invoke(message, ...args);
     }
     catch (ex) {
-      this.logger.logError("Error on message send:", message, args);
+      this.log.logError("Error on message send:", message, args);
       throw ex;
     }
   }
@@ -206,7 +209,7 @@ export class NotificationService {
     const currentState = this.state$.getValue();
 
     if (currentState.id) {
-      await this.maybeConnect(currentState.id)
+      await this.maybeConnect(currentState.id);
     }
 
     this.postState({

@@ -193,7 +193,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
         this.selectedAttachmentList = undefined;
         this.selectedIndex = 0;
       }
-    )
+    );
   }
 
   ngOnDestroy(): void {
@@ -216,7 +216,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
           this.resetAttachments$.next(true);
         },
         (err) => {
-          alert(err)
+          alert(err);
         }
       );
     }
@@ -356,18 +356,18 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     if (!!this.currentUser) {
       this.changedTicket!.assignee = { id: this.currentUser.id, approvedName: this.currentUser.approvedName } as UserSummary;
       this.changedTicket!.assigneeId = this.currentUser.id;
-      this.changed$.next(this.changedTicket!)
+      this.changed$.next(this.changedTicket!);
     }
   }
 
   selectLabel(option: SuggestionOption) {
     if (!this.currentLabels.has(option.name)) {
-      this.currentLabels.add(option.name)
-      this.changedTicket!.label = Array.from(this.currentLabels.values()).join(" ")
+      this.currentLabels.add(option.name);
+      this.changedTicket!.label = Array.from(this.currentLabels.values()).join(" ");
       this.changed$.next(this.changedTicket!);
     }
     this.labels.isEditing = false;
-    this.labels.filtering$.next("")
+    this.labels.filtering$.next("");
 
   }
 
@@ -397,7 +397,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
 
   deleteLabel(label: string): void {
     this.currentLabels.delete(label);
-    this.changedTicket!.label = Array.from(this.currentLabels.values()).join(" ")
+    this.changedTicket!.label = Array.from(this.currentLabels.values()).join(" ");
     this.changed$.next(this.changedTicket!);
   }
 
@@ -435,7 +435,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
       a => {
         this.challenges.filteredOptions = this.challenges.allOptions?.filter(l => {
           return l.name.toLowerCase().includes(a) || l.data.id?.toLowerCase()?.startsWith(a) ||
-            l.data.tag?.toLowerCase().includes(a)
+            l.data.tag?.toLowerCase().includes(a);
         });
         if (!!this.changedTicket?.player) {
           this.challenges.filteredOptions = this.challenges.filteredOptions.filter(l => !l.data.gameId || l.data.gameId == this.changedTicket?.player?.gameId);
@@ -450,7 +450,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
       a => {
         this.sessions.filteredOptions = this.sessions.allOptions?.filter(l => {
           return l.name.toLowerCase().includes(a) || l.data.id?.toLowerCase()?.startsWith(a) ||
-            l.data.approvedName?.toLowerCase().includes(a)
+            l.data.approvedName?.toLowerCase().includes(a);
         });
       }
     );
@@ -461,7 +461,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     ).subscribe(
       a => {
         this.requesters.filteredOptions = this.requesters.allOptions?.filter(l => {
-          return l.name.toLowerCase().includes(a) || l.data.id?.toLowerCase()?.startsWith(a)
+          return l.name.toLowerCase().includes(a) || l.data.id?.toLowerCase()?.startsWith(a);
         });
       }
     );

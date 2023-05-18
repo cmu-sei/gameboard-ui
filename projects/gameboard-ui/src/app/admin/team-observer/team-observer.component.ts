@@ -35,14 +35,14 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
   faTv = faTv;
   faSync = faSyncAlt;
   faGrid = faThLarge;
-  faExternalLinkAlt = faExternalLinkAlt
-  faExpandAlt = faExpandAlt
+  faExternalLinkAlt = faExternalLinkAlt;
+  faExpandAlt = faExpandAlt;
   faCompressAlt = faCompressAlt;
-  faUser = faUser
-  faUsers = faUsers
+  faUser = faUser;
+  faUsers = faUsers;
   faMinusSquare = faMinusSquare;
   faPlusSquare = faPlusSquare;
-  faSortAmountDown = faSortAmountDownAlt
+  faSortAmountDown = faSortAmountDownAlt;
   faSortAlphaDown = faSortAlphaDown;
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
@@ -78,14 +78,14 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
       debounceTime(500),
       tap(([a, b, c]) => this.gid = a.id),
       switchMap(() => this.api.consoleActors(this.gid)),
-      map(data => new Map(data.map(i => [i.userId, i]))) 
+      map(data => new Map(data.map(i => [i.userId, i])))
     );
     this.term$ = this.typing$.pipe(
       debounceTime(500)
-    )
+    );
   }
 
-  updateTable(data: Team[]) { 
+  updateTable(data: Team[]) {
     for (let updatedTeam of data) {
       if (this.table.has(updatedTeam.teamId)) {
         // modify fields with updates values without resetting the entire challenge object
@@ -94,7 +94,7 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
         team.score = updatedTeam.score;
         team.time = updatedTeam.time;
       } else {
-        this.table.set(updatedTeam.teamId, {...updatedTeam} as unknown as ObserveTeam);
+        this.table.set(updatedTeam.teamId, { ...updatedTeam } as unknown as ObserveTeam);
       }
       if (updatedTeam.rank > this.maxRank)
         this.maxRank = updatedTeam.rank;
@@ -116,7 +116,7 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
   toggleShowConsole(player: ObserveTeam) {
     player.expanded = !player.expanded;
   }
-  
+
   togglePinRow(player: ObserveTeam) {
     player.pinned = !player.pinned;
   }
@@ -130,9 +130,9 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
   }
 
   minimizeAllOthers(user: ObserveTeamMember, team: ObserveTeam): void {
-      for (let member of team?.members) {
-        if (member.id != user.id)
-          member.minimized = true;
+    for (let member of team?.members || []) {
+      if (member.id != user.id)
+        member.minimized = true;
     }
   }
 

@@ -22,11 +22,11 @@ export class MorphingTextComponent implements AfterViewInit {
     "ALL SYSTEMS: **GREEN**.",
     "Dauntless, you are **cleared for departure**."
   ];
-  @Input() emphasisExpression = /[A-Z]/g
+  @Input() emphasisExpression = /[A-Z]/g;
   @Input() isRandom = false;
 
-  public text1Content = "";
-  public text2Content = ""
+  public text1Content: SafeHtml = "";
+  public text2Content: SafeHtml = "";
 
   @ViewChild("text1") text1!: ElementRef<HTMLSpanElement>;
   @ViewChild("text2") text2!: ElementRef<HTMLSpanElement>;

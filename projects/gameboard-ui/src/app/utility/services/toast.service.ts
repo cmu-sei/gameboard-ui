@@ -43,7 +43,7 @@ export class ToastService {
       background: "var(--dark)",
       border: `solid 1px ${this.config.settings.custom_background || "var(--light)"}`
     },
-  }
+  };
 
   showMessage(text: string) {
     this.show({ text });

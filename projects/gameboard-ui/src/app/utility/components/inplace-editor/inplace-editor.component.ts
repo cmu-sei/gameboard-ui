@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
   templateUrl: './inplace-editor.component.html',
   styleUrls: ['./inplace-editor.component.scss']
 })
-export class InplaceEditorComponent implements OnInit {
+export class InplaceEditorComponent {
   @ViewChild('input') input!: ElementRef;
 
   @Input() editData!: EditData;
@@ -17,13 +17,7 @@ export class InplaceEditorComponent implements OnInit {
   @Output() selectOptionFunc = new EventEmitter<SuggestionOption>();
   faPlusSquare = faPlusSquare;
   faTimes = faTimes;
-  faPen = faPen; 
-
-  constructor() {
-   }
-
-  ngOnInit(): void {
-  }
+  faPen = faPen;
 
   startEditing() {
     if (!this.noEdit) {
@@ -38,7 +32,6 @@ export class InplaceEditorComponent implements OnInit {
     if (!this.noEdit)
       this.selectOptionFunc.emit(option);
   }
-
 }
 
 
