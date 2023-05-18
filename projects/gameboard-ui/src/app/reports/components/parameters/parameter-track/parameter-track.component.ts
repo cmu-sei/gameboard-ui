@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { Observable } from 'rxjs';
 import { ReportsService } from '../../../reports.service';
