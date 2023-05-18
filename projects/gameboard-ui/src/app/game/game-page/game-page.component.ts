@@ -103,7 +103,7 @@ export class GamePageComponent implements OnDestroy {
               return resolvedPlayer;
             }
           )
-        )
+        );
       })
     ).subscribe(done => {
       const currentPlayer = this.playerSubject$.getValue();
@@ -177,12 +177,12 @@ export class GamePageComponent implements OnDestroy {
       tap(c => {
         // listen for game hub events to enable synchronized start stuff if needed
         if (c.player.gameId && c.game.requireSynchronizedStart) {
-          this.gameHubService.joinGame(c.player.gameId)
+          this.gameHubService.joinGame(c.player.gameId);
         }
         else
-          this.gameHubService.leaveGame(c.game.id)
+          this.gameHubService.leaveGame(c.game.id);
       }),
-      tap(c => { if (!c.game) { router.navigateByUrl("/") } }),
+      tap(c => { if (!c.game) { router.navigateByUrl("/"); } }),
       filter(c => !!c.game),
       tap(ctx => {
         if (ctx.player.id && ctx.player.teamId && this.hub.connection.state !== HubConnectionState.Connected) {

@@ -94,7 +94,7 @@ export const calculateCountdown = (window?: TimeWindow, now?: Date) => {
     ;
 
   return result;
-}
+};
 
 // export enum TimeWindowState {
 //   Before,

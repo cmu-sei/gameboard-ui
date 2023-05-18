@@ -56,7 +56,7 @@ export class PrereqsComponent implements OnChanges {
           p.targetTag = t?.tag || t?.id.slice(0, 8) || '';
           p.requiredTag = d?.tag || d?.id.slice(0, 8) || '';
           return p;
-        })
+        });
       })
     );
   }

@@ -89,7 +89,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   }
 
   async invite(p: Player) {
-    this.code = ""
+    this.code = "";
     this.invitation = "";
 
     this.api.invite(p.id).pipe(first())
@@ -163,7 +163,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
 
     // otherwise, verify that this person is the manager and then tell them about
     // the rules of succession
-    this.setCanUnenroll(false)
+    this.setCanUnenroll(false);
 
     return;
   }

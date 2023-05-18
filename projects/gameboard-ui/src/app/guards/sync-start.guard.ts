@@ -46,7 +46,7 @@ export class SyncStartGuard implements CanActivate {
           return of(true);
         }
 
-        return this.gameService.getSyncStartState(game.id)
+        return this.gameService.getSyncStartState(game.id);
       }),
       map(syncStartStateOrTrue => {
         if (syncStartStateOrTrue === true) {

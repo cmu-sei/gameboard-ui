@@ -12,7 +12,7 @@ export class LongContentHiderComponent implements AfterViewInit {
 
   protected isExpandEnabled = true;
   protected isExpanded = false;
-  private nativeElement!: HTMLParagraphElement
+  private nativeElement!: HTMLParagraphElement;
 
   public ngAfterViewInit(): void {
     this.nativeElement = this.contentContainer.nativeElement as HTMLParagraphElement;

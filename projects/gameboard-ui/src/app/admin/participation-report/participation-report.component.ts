@@ -66,7 +66,7 @@ export class ParticipationReportComponent implements OnInit {
       r => {
         this.correlations = r;
       }
-    )
+    );
   }
 
   ngOnInit(): void {

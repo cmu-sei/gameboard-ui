@@ -66,8 +66,7 @@ export interface NewGame extends GameDetail {
   isClone?: boolean;
 }
 
-export interface ChangedGame extends Game {
-}
+export type ChangedGame = Game
 
 export enum GameMode {
   Cubespace = "unity",

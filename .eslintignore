@@ -1,0 +1,4 @@
+dist/*
+node_modules/*
+projects/gameboard-mks/*
+karma.conf.js

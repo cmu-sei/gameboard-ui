@@ -14,8 +14,6 @@ export class ImagestackComponent implements OnInit {
   @Input() imagelist: string[] = [];
   @Input() tooltip = "";
 
-  constructor() { }
-
   ngOnInit(): void {
     this.images$ = of(this.imagelist).pipe(
       map(l => l.filter(this.distinct).slice(0, 5))
