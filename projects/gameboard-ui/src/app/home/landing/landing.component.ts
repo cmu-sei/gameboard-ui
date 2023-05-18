@@ -49,7 +49,7 @@ export class LandingComponent implements OnInit {
     this.future$ = this.refresh$.pipe(
       debounceTime(300),
       switchMap(() => api.listGrouped({ filter: ['future'], term: this.searchText })),
-      tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
+      tap(g => { if (g.length > 0) { this.showSearchBar = true } })
     );
   }
 
