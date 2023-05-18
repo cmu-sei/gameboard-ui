@@ -3,13 +3,12 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject, iif, Subject } from 'rxjs';
-import { switchMap, map, tap, delay } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { switchMap, map, tap, delay, catchError } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
+import { LogService } from '../services/log.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TocService {
   toc$: Observable<TocFile[]>;
   tocfile$: (id: string) => Observable<string>;
@@ -17,8 +16,9 @@ export class TocService {
   private cache: TocFile[] = [];
 
   constructor(
+    config: ConfigService,
     private http: HttpClient,
-    private config: ConfigService
+    private log: LogService
   ) {
     const tag = `?t=${new Date().valueOf()}`;
     const tocUrl = `${config.tochost}/${config.settings.tocfile + ''}${tag}`;
@@ -30,32 +30,47 @@ export class TocService {
       url += `/${config.settings.tocfile?.substring(0, i)}`;
     }
 
-    this.toc$ = iif(
-      () => !!config.settings.tocfile,
-      http.get<string[]>(tocUrl).pipe(
+    if (!!config.settings.tocfile) {
+      this.toc$ = http.get<string[]>(tocUrl).pipe(
+        catchError(err => {
+          // don't report error here - ops will know what the 404 means
+          this.cache = [];
+          return [];
+        }),
         switchMap((list) => this.mapTocFromList(list)),
         tap(list => this.cache = list),
-      ),
-      of([])
-    ).pipe(
-      tap(() => this.loaded$.next(true))
-    );
+      );
+    }
+    else {
+      this.log.logInfo("No toc file configured. Skipped loading.");
+      this.toc$ = of([]);
+    }
+
+    this.toc$ = this.toc$.pipe(tap(toc => this.loaded$.next(true)));
 
     this.tocfile$ = (id: string) => {
       const tocfile = this.cache.find(f =>
         f.filename === id ||
         f.link === id
       );
+
       if (!tocfile) {
         return of('not found');
       }
+
       if (!!tocfile.text) {
         return of(tocfile.text);
       }
+
+      const tocFileUrl = `${url}/${tocfile?.filename}${tag}`;
       return this.http.get(
-        `${url}/${tocfile?.filename}${tag}`,
-        { responseType: 'text'}
+        tocFileUrl,
+        { responseType: 'text' }
       ).pipe(
+        catchError(err => {
+          // don't report - ops will know 404
+          return '';
+        }),
         tap(t => tocfile.text = t)
       );
     };

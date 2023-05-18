@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  settingsJson: 'assets/settings.json',
   settings: {
     appname: 'Gameboard',
     apphost: '',
