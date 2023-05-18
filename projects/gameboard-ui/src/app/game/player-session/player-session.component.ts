@@ -63,7 +63,7 @@ export class PlayerSessionComponent implements OnDestroy {
             game: {
               isPracticeMode: ctx.game.isPracticeMode
             }
-          }
+          };
         }
 
         this.performanceSummaryViewModel$.next(vm);

@@ -45,13 +45,13 @@ export class SupportReportComponent implements OnInit {
 
     this.dayStats$ = this.refresh$.pipe(
       switchMap(() => this.api.supportDays(this.search))
-    )
+    );
     this.labelStats$ = this.refresh$.pipe(
       switchMap(() => this.api.supportLabels(this.search))
-    )
+    );
     this.challengeStats$ = this.refresh$.pipe(
       switchMap(() => this.api.supportChallenges(this.search))
-    )
+    );
   
   }
 

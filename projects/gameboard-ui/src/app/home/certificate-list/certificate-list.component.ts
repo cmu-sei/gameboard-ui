@@ -16,8 +16,8 @@ export class CertificateListComponent implements OnInit {
   faAward = faAward;
   faMedal = faMedal;
   faPrint = faPrint;
-  faUser = faUser
-  faUsers = faUsers
+  faUser = faUser;
+  faUsers = faUsers;
   certs$: Observable<PlayerCertificate[]>;
   constructor(
     private apiPlayer: PlayerService,
@@ -34,7 +34,7 @@ export class CertificateListComponent implements OnInit {
   print(html: string): void {
     let printWindow = window.open('', '', '');
     // make sure background is always there and no margins to print to pdf as is
-    printWindow?.document?.write(`<style type="text/css">* {-webkit-print-color-adjust: exact !important; color-adjust: exact !important; }</style>`)
+    printWindow?.document?.write(`<style type="text/css">* {-webkit-print-color-adjust: exact !important; color-adjust: exact !important; }</style>`);
     printWindow?.document?.write(`<style type="text/css">@media print { body { margin: 0mm!important;} @page{ margin: 0mm!important; }}</style>`);
     printWindow?.document?.write(`<style type="text/css" media="print"> @page { size: landscape; } </style>`);
     printWindow?.document.write(html);

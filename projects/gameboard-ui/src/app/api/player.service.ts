@@ -96,7 +96,7 @@ export class PlayerService {
   public getTeam(id: string): Observable<Team> {
     return this.http.get<Team>(`${this.url}/team/${id}`).pipe(
       map(t => {
-        t.sponsorList = t.sponsorList.map(s => this.transformSponsorUrl(s))
+        t.sponsorList = t.sponsorList.map(s => this.transformSponsorUrl(s));
         return t;
       })
     );

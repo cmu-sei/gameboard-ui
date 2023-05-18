@@ -10,7 +10,7 @@ import { GameSessionService } from '../../../services/game-session.service';
   styleUrls: ['./cumulative-time-clock.component.scss']
 })
 export class CumulativeTimeClockComponent implements OnInit, OnChanges {
-  @Input() session?: TimeWindow
+  @Input() session?: TimeWindow;
 
   time$?: Observable<number>;
 

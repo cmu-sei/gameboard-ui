@@ -53,17 +53,17 @@ export class ImageManagerComponent implements OnInit, OnChanges {
           if (!this.files.has(key)) {
             if (this.combineSize + file.size < this.maxCombinedSizeMB * 1_000_000) {
               this.combineSize += file.size;
-              var data: FileData = { file: file }
+              var data: FileData = { file: file };
               if (file.type.match(/(image|application)\/(png|jpeg|gif|webp|svg)/)) {
                 const reader = new FileReader();
                 reader.onload = e => {
                   var result = reader.result as string;
                   if (!!result)
                     data.encoded = sanitizer.bypassSecurityTrustResourceUrl(result);
-                }
+                };
                 reader.readAsDataURL(file);
               }
-              this.files.set(key, data)
+              this.files.set(key, data);
             }
           }
         });
@@ -94,7 +94,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   }
 
   delete(imgKey: string): void {
-    this.combineSize -= (this.files.get(imgKey)?.file.size ?? 0)
+    this.combineSize -= (this.files.get(imgKey)?.file.size ?? 0);
     this.files.delete(imgKey);
     this.emitFiles();
   }
