@@ -165,6 +165,16 @@ export class GamePageComponent implements OnDestroy {
           player: c.player = c.player || { userId: c.user.id } as Player
         };
       }),
+      tap(c => {
+        // listen for game hub events to enable synchronized start stuff if needed
+        if (c.player.gameId && c.game.requireSynchronizedStart) {
+          this.gameHubService.joinGame(c.player.gameId);
+        }
+        else
+          this.gameHubService.leaveGame(c.game.id);
+      }),
+      tap(c => { if (!c.game) { router.navigateByUrl("/"); } }),
+      filter(c => !!c.game),
       tap(ctx => {
         const isEnrolled = !!ctx.player.gameId;
         this.ctxIds.playerId = ctx.player.id;

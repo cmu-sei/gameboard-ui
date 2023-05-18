@@ -38,7 +38,6 @@ export class LandingComponent implements OnInit {
     api: GameService
   ) {
     this.past$ = this.refresh$.pipe(
-      debounceTime(400),
       switchMap(() => api.listGrouped({ filter: ['past'], term: this.searchText })),
       tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
     );
