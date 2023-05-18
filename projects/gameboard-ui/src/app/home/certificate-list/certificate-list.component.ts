@@ -15,7 +15,7 @@ export class CertificateListComponent {
   faAward = faAward;
   faMedal = faMedal;
   faPrint = faPrint;
-  faUser = faUser
+  faUser = faUser;
   faUsers = faUsers;
   certs$: Observable<PlayerCertificate[]>;
 
