@@ -1,7 +1,6 @@
-import { Component, Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
-import { ManageManualChallengeBonusesComponent } from '../admin/components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
 import { ModalConfirmComponent } from '../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../core/directives/modal-confirm.directive';
 
@@ -25,7 +24,7 @@ export class ModalConfirmService implements OnDestroy {
       this.hiddenSub = this.bsModalRef.onHidden?.subscribe(s => this.onHidden(config.onCancel));
     }
   }
-
+  
   hide(isCancelEvent = false): void {
     if (!isCancelEvent) {
       this.hiddenSub?.unsubscribe();

@@ -21,9 +21,7 @@ export class GamespaceQuizComponent {
   errors: Error[] = [];
   faSubmit = faCloudUploadAlt;
 
-  constructor(
-    private api: BoardService
-  ) { }
+  constructor(private api: BoardService) { }
 
   submit(): void {
     this.pending = true;

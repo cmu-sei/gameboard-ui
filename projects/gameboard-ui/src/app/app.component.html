@@ -5,8 +5,8 @@
   <nav [class]="custom_bg" [class.nonsticky]="!(layoutService.stickyMenu$ | async)">
     <div class="nav-items d-flex align-items-center justify-content-end">
       <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/home']">Home</a>
-      <ng-container *ngFor="let t of toc$ | async">
-        <a class="btn btn-link text-success mx-1" routerLinkActive="text-info"
+      <ng-container *ngIf="(toc$ | async)?.length">
+        <a *ngFor="let t of toc$ | async" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
           [routerLink]="['doc', t.link]">{{t.display}}</a>
       </ng-container>
       <a *ngIf="isPracticeModeEnabled" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
