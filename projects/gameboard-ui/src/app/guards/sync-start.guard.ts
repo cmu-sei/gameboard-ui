@@ -50,17 +50,14 @@ export class SyncStartGuard implements CanActivate {
       }),
       map(syncStartStateOrTrue => {
         if (syncStartStateOrTrue === true) {
-          console.log("can proceed because no sync required");
           return true;
         }
 
         const typedState = syncStartStateOrTrue as SyncStartState;
         if (typedState.isReady) {
-          console.log("can proceed because sync is ready");
           return true;
         }
 
-        console.log("can't, have to go back to game");
         return this.router.parseUrl(`/game/{gameId}`);
       })
     );

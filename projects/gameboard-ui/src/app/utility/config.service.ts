@@ -10,11 +10,12 @@ import { environment } from '../../environments/environment';
 import { Location, PlatformLocation } from '@angular/common';
 import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
+import { LogService } from '../services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
 
-  private url = 'assets/settings.json';
+  private url = environment.settingsJson;
   private restorationComplete = false;
   basehref = '';
   settings: Settings = environment.settings;
@@ -88,6 +89,7 @@ export class ConfigService {
   constructor(
     private http: HttpClient,
     private location: Location,
+    private log: LogService,
     private storage: LocalStorageService,
     platform: PlatformLocation
   ) {
@@ -159,16 +161,25 @@ export class ConfigService {
     return new Date(this.local.lastSeenSupport!);
   }
 
-  load(): Observable<any> {
+  load(): Observable<Settings> {
+    if (!environment.settingsJson) {
+      return of({} as Settings);
+    }
+
     return this.http.get<Settings>(this.basehref + this.url)
       .pipe(
         catchError((err: Error) => {
           return of({} as Settings);
         }),
         tap(s => {
-          this.settings = { ...this.settings, ...s };
-          this.settings.oidc = { ...this.settings.oidc, ...s.oidc };
-          this.settings$.next(this.settings);
+          if (!s || Object.keys(s).length == 0) {
+            this.log.logWarning(`Unable to load settings file from url ${this.basehref + this.url}`);
+          }
+          if (s) {
+            this.settings = { ...this.settings, ...s };
+            this.settings.oidc = { ...this.settings.oidc, ...s.oidc };
+            this.settings$.next(this.settings);
+          }
         })
       );
   }
@@ -204,6 +215,7 @@ export class ConfigService {
     } catch (e) {
     }
   }
+
   getLocal(): LocalAppSettings {
     try {
       return JSON.parse(this.storage.get(StorageKey.Gameboard)!) || {};
@@ -211,6 +223,7 @@ export class ConfigService {
       return {};
     }
   }
+
   clearStorage(): void {
     this.storage.clear(StorageKey.Gameboard);
   }

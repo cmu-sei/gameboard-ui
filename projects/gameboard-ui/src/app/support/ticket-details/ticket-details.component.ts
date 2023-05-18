@@ -18,6 +18,7 @@ import linkifyHtml from 'linkify-html';
 import { ClipboardService } from "../../utility/services/clipboard.service";
 import { ToastService } from '../../utility/services/toast.service';
 import { FontAwesomeService } from '../../services/font-awesome.service';
+import { LogService } from '../../services/log.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -85,6 +86,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     private api: SupportService,
     private clipboard: ClipboardService,
     private faService: FontAwesomeService,
+    private logService: LogService,
     private playerApi: PlayerService,
     private userApi: UserService,
     private sanitizer: DomSanitizer,
@@ -180,8 +182,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
         else this.attachmentObjectUrls[imgId] = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       }, async (error) => {
         // In case of an error, print it
-        console.log("Error encountered while retrieving image.");
-        console.log(error);
+        this.logService.logError("Error encountered while retrieving image:", error);
       }
     );
   }

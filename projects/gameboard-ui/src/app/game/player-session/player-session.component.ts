@@ -3,15 +3,15 @@
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, firstValueFrom } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
-import { GameContext } from '../../api/game-models';
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
 import { FontAwesomeService } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { GameContext } from '../../api/game-models';
 
 @Component({
   selector: 'app-player-session',
@@ -92,13 +92,9 @@ export class PlayerSessionComponent implements OnDestroy {
     this.isDoubleChecking = isDoubleChecking;
   }
 
-  handleStart(player: Player): void {
-    this.api.start(player).pipe(
-      first()
-    ).subscribe({
-      complete: this.onSessionStart.emit,
-      error: this.errors.push,
-    });
+  async handleStart(player: Player): Promise<void> {
+    const startedPlayer = await firstValueFrom(this.api.start(player));
+    this.onSessionStart.emit(startedPlayer);
   }
 
   handleReset(p: Player): void {

@@ -27,12 +27,10 @@ export class ModalConfirmService implements OnDestroy {
   }
 
   // open<TComponent extends IModalReady<TComponent>>(componentType: TComponent, config?: Partial<TComponent>): void {
-  //   console.log("config", config);
   //   this.bsModalRef = this.bsModalService.show(componentType, { initialState: { config }, class: "modal-dialog-centered" });
   // }
 
   // open<TConfig>(config?: { teamId: string}): void {
-  //   console.log("config", config);
   //   this.bsModalRef = this.bsModalService.show(ManageManualChallengeBonusesComponent, { initialState: { config }, class: "modal-dialog-centered" });
   // }
 
