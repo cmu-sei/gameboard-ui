@@ -63,12 +63,12 @@ export class GameStartPageComponent implements OnInit {
   }
 
   private async launchGame(ctx: GameLaunchContext): Promise<void> {
-    // if the game 
     // if the game is non-sync-start and is standard-vm mode, just redirect to the game page
     if (!ctx.game.requireSynchronizedStart && ctx.game.mode == GameMode.Standard) {
       this.routerService.goToGamePage(ctx.game.id);
       return;
     }
 
+    // if the game is either sync-start or is an external game, we have work to do here
   }
 }

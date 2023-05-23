@@ -17,7 +17,7 @@ export class NotificationService {
   public connection: HubConnection;
 
   private teamId$ = new Subject<string>();
-  private _gameHubEvents$ = new Subject<GameHubEvent>();
+  private _gameHubEvents$ = new Subject<GameHubEvent<any>>();
 
   state$ = new BehaviorSubject<HubState>({ id: '', connectionState: HubConnectionState.Disconnected, joined: false });
   actors$ = new BehaviorSubject<Array<HubPlayer>>([]);

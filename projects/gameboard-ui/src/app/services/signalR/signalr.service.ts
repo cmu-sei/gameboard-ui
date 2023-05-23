@@ -23,7 +23,7 @@ interface SignalRHubStateUpdate {
 @Injectable({ providedIn: 'root' })
 export class SignalrService {
   private signalRConnection: HubConnection;
-  private _gameHubEvents$ = new Subject<SignalRHubEvent<GameHubEvent>>;
+  private _gameHubEvents$ = new Subject<SignalRHubEvent<GameHubEvent<any>>>;
   private _state$ = new BehaviorSubject<SignalRHubState>({ connectionState: HubConnectionState.Disconnected });
 
   public gameHubEvents$ = this._gameHubEvents$.asObservable();
@@ -51,7 +51,7 @@ export class SignalrService {
     connection.onreconnected(cid => this.handleConnected);
 
     // federate specific event types to their respective services
-    connection.on('gameHubEvent', (ev: SignalRHubEvent<GameHubEvent>) => this._gameHubEvents$.next(ev));
+    connection.on('gameHubEvent', (ev: SignalRHubEvent<GameHubEvent<any>>) => this._gameHubEvents$.next(ev));
 
     return connection;
   }

@@ -39,7 +39,6 @@
       </div>
 
       <ng-container *ngIf="playerObservable$ && (playerObservable$ | async)">
-        poop?
         <app-player-presence [player$]="playerObservable$"
           [isSyncStartGame]="ctx.game.requireSynchronizedStart"></app-player-presence>
       </ng-container>

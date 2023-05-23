@@ -8,10 +8,10 @@ import { LogService } from '../log.service';
 import { HubState, NotificationService } from '../notification.service';
 import { GameService } from '../../api/game.service';
 
-export interface GameHubEvent {
+export interface GameHubEvent<T> {
     gameId: string;
     eventType: GameHubEventType;
-    data: any;
+    data: T;
 }
 
 enum GameHubEventType {
