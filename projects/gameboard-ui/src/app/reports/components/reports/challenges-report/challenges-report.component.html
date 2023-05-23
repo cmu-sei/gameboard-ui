@@ -6,6 +6,8 @@
             name="track"></app-parameter-track>
         <app-parameter-game-challengespec ngDefaultControl
             [(ngModel)]="selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
+        <app-parameter-date-range ngDefaultControl
+            [(ngModel)]="selectedParameters.dateRange"></app-parameter-date-range>
     </app-report-parameters-container>
 
     <div class="report-body mt-4" *ngIf="ctx.records.length" #challengesReport>
@@ -47,8 +49,10 @@
                     <td>{{record.game.name}}</td>
                     <td>{{record.challengeSpec.name}}</td>
                     <td class="text-center">
-                        <a [routerLink]="['/reports/players-report']"
-                            [queryParams]="{ 'challengeSpecId': record.challengeSpec.id }">
+                        <a [routerLink]="['/reports/players-report']" [queryParams]="{ 
+                                challengeSpecId: record.challengeSpec.id,
+                                gameId: record.game.id
+                            }">
                             {{record.playersEligible}}
                         </a>
                     </td>

@@ -68,7 +68,7 @@ export class ReportsService {
 
   minutesToTimeSpan(minutes?: number): ReportTimeSpan {
     if (!minutes)
-      return { days: 0, hours: 0, minutes: 0 };
+      return { days: undefined, hours: undefined, minutes: undefined };
 
     const minutesInDay = 24 * 60;
 
@@ -80,8 +80,8 @@ export class ReportsService {
     remainingMinutes = remainingMinutes % 60;
 
     return {
-      days: days,
-      hours: hours,
+      days: days || undefined,
+      hours: hours || undefined,
       minutes: remainingMinutes
     };
   }

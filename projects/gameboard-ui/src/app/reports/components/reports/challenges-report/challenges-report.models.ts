@@ -1,17 +1,20 @@
 import { SimpleEntity } from "../../../../api/models";
-import { ReportMetaData, ReportTrackParameter } from "../../../reports-models";
+import { ReportDateRange, ReportMetaData, ReportTrackParameter } from "../../../reports-models";
 import { ReportGameChallengeSpec } from "../../parameters/parameter-game-challengespec/parameter-game-challengespec.component";
 
 export interface ChallengesReportParameters {
     competition?: string;
+    dateRange: ReportDateRange,
     gameChallengeSpec: ReportGameChallengeSpec;
     track: ReportTrackParameter;
 }
 
 export interface ChallengesReportFlatParameters {
     challengeSpecId?: string;
-    gameId?: string;
     competition?: string;
+    dateStart?: Date,
+    dateEnd?: Date,
+    gameId?: string;
     trackName?: string;
 }
 

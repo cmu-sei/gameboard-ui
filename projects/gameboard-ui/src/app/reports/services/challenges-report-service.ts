@@ -21,16 +21,22 @@ export class ChallengesReportService implements IReportService<ChallengesReportF
     const retVal = {
       ...parameters,
       challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
+      dateStart: parameters.dateRange?.dateStart,
+      dateEnd: parameters.dateRange?.dateEnd,
       gameId: parameters.gameChallengeSpec?.gameId,
       trackName: parameters.track?.track
     };
 
-    return this.objectService.deleteKeys(retVal, "gameChallengeSpec", "track");
+    return this.objectService.deleteKeys(retVal, "dateRange", "gameChallengeSpec", "track");
   }
 
   unflattenParameters(parameters: ChallengesReportFlatParameters) {
     const retVal: ChallengesReportParameters = {
       ...parameters,
+      dateRange: {
+        dateStart: parameters.dateStart,
+        dateEnd: parameters.dateEnd
+      },
       gameChallengeSpec: {
         challengeSpecId: parameters.challengeSpecId,
         gameId: parameters.gameId

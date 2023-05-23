@@ -9,6 +9,8 @@ import { ReportDateRange } from '../../../reports-models';
   providers: [createCustomInputControlValueAccessor(ParameterDateRangeComponent)]
 })
 export class ParameterDateRangeComponent extends ReportParameterComponent<ReportDateRange> {
+  @Input() label = "Date range";
+
   handleModelChanged(event?: any) {
   }
 }

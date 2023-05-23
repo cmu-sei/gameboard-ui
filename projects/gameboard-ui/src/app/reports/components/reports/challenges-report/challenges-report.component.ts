@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { map, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { ReportKey, ReportMetaData } from '../../../reports-models';
 import { IReportComponent } from '../../report-component';
@@ -15,7 +15,7 @@ import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-c
 export class ChallengesReportComponent implements IReportComponent<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
 
-  selectedParameters: ChallengesReportParameters = { gameChallengeSpec: {}, track: {} };
+  selectedParameters: ChallengesReportParameters = { dateRange: {}, gameChallengeSpec: {}, track: {} };
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;

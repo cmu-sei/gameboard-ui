@@ -5,7 +5,7 @@
         <app-parameter-ticket-status ngDefaultControl
             [(ngModel)]="selectedParameters.status"></app-parameter-ticket-status>
         <app-parameter-date-range ngDefaultControl [(ngModel)]="selectedParameters.openedDateRange"
-            name="openedDateRange"></app-parameter-date-range>
+            name="openedDateRange" label="Date ticket opened"></app-parameter-date-range>
         <app-parameter-ticket-labels ngDefaultControl
             [ngModel]="selectedParameters.labels"></app-parameter-ticket-labels>
         <app-parameter-timespan-picker ngDefaultControl [(ngModel)]="selectedParameters.timeSinceOpen"
@@ -40,7 +40,7 @@
                             <td>Summary</td>
                             <td>Status</td>
                             <td>Labels</td>
-                            <td># Activities</td>
+                            <td>Act. Count</td>
                             <td>Assigned to</td>
                             <td>Created</td>
                             <td>Updated</td>
