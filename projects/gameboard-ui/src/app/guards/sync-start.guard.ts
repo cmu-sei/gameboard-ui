@@ -20,7 +20,6 @@ export class SyncStartGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const playerId = route.paramMap.get("playerId");
     const gameId = route.paramMap.get("gameId");
-    console.log("sync start guard", playerId, gameId);
 
     // can't make a decision without a playerId or a gameId, sorry/not sorry
     if (!playerId && !gameId) {
@@ -51,17 +50,14 @@ export class SyncStartGuard implements CanActivate {
       }),
       map(syncStartStateOrTrue => {
         if (syncStartStateOrTrue === true) {
-          console.log("can proceed because no sync required");
           return true;
         }
 
         const typedState = syncStartStateOrTrue as SyncStartState;
         if (typedState.isReady) {
-          console.log("can proceed because sync is ready");
           return true;
         }
 
-        console.log("can't, have to go back to game");
         return this.router.parseUrl(`/game/{gameId}`);
       })
     );
