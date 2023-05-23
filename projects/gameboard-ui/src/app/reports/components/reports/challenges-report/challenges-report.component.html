@@ -69,7 +69,9 @@
                     <td class="text-center">
                         <a *ngIf="record.ticketCount && record.challengeSpec; else cantLink"
                             [routerLink]="['/reports/support-report']"
-                            [queryParams]="{ challengeSpecId: record.challengeSpec.id }">{{record.ticketCount}}</a>
+                            [queryParams]="{ gameId: record.game.id, challengeSpecId: record.challengeSpec.id }">
+                            {{record.ticketCount}}
+                        </a>
 
                         <ng-template #cantLink>
                             {{record.ticketCount || 0}}
