@@ -21,21 +21,21 @@ export class ChallengesReportService implements IReportService<ChallengesReportF
     const retVal = {
       ...parameters,
       challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
-      dateStart: parameters.dateRange?.dateStart,
-      dateEnd: parameters.dateRange?.dateEnd,
+      dateStart: parameters.registrationDateRange?.dateStart,
+      dateEnd: parameters.registrationDateRange?.dateEnd,
       gameId: parameters.gameChallengeSpec?.gameId,
       trackName: parameters.track?.track
     };
 
-    return this.objectService.deleteKeys(retVal, "dateRange", "gameChallengeSpec", "track");
+    return this.objectService.deleteKeys(retVal, "registrationDateRange", "gameChallengeSpec", "track");
   }
 
   unflattenParameters(parameters: ChallengesReportFlatParameters) {
     const retVal: ChallengesReportParameters = {
       ...parameters,
-      dateRange: {
-        dateStart: parameters.dateStart,
-        dateEnd: parameters.dateEnd
+      registrationDateRange: {
+        dateStart: parameters.registrationStart,
+        dateEnd: parameters.registrationEnd
       },
       gameChallengeSpec: {
         challengeSpecId: parameters.challengeSpecId,
@@ -46,7 +46,7 @@ export class ChallengesReportService implements IReportService<ChallengesReportF
       }
     };
 
-    return this.objectService.deleteKeys(retVal, "challengeSpecId", "gameId", "trackName");
+    return this.objectService.deleteKeys(retVal, "challengeSpecId", "gameId", "registrationStart", "registrationEnd", "trackName");
   }
 
   getReportData(parameters: ChallengesReportParameters): Observable<ReportResults<ChallengesReportRecord>> {

@@ -6,8 +6,8 @@
             name="track"></app-parameter-track>
         <app-parameter-game-challengespec ngDefaultControl
             [(ngModel)]="selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
-        <app-parameter-date-range ngDefaultControl
-            [(ngModel)]="selectedParameters.dateRange"></app-parameter-date-range>
+        <app-parameter-date-range ngDefaultControl label="Registration date range"
+            [(ngModel)]="selectedParameters.registrationDateRange"></app-parameter-date-range>
     </app-report-parameters-container>
 
     <div class="report-body mt-4" *ngIf="ctx.records.length" #challengesReport>

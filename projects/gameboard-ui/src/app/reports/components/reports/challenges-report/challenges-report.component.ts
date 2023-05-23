@@ -15,7 +15,7 @@ import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-c
 export class ChallengesReportComponent implements IReportComponent<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
 
-  selectedParameters: ChallengesReportParameters = { dateRange: {}, gameChallengeSpec: {}, track: {} };
+  selectedParameters: ChallengesReportParameters = { registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;

@@ -4,7 +4,7 @@ import { ReportGameChallengeSpec } from "../../parameters/parameter-game-challen
 
 export interface ChallengesReportParameters {
     competition?: string;
-    dateRange: ReportDateRange,
+    registrationDateRange: ReportDateRange,
     gameChallengeSpec: ReportGameChallengeSpec;
     track: ReportTrackParameter;
 }
@@ -12,8 +12,8 @@ export interface ChallengesReportParameters {
 export interface ChallengesReportFlatParameters {
     challengeSpecId?: string;
     competition?: string;
-    dateStart?: Date,
-    dateEnd?: Date,
+    registrationStart?: Date,
+    registrationEnd?: Date,
     gameId?: string;
     trackName?: string;
 }
