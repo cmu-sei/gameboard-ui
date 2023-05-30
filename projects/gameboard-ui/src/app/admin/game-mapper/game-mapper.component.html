@@ -18,10 +18,6 @@
         <span>Edit</span>
         <span *ngIf="!!addedCount" class="ml-2 px-2 badge badge-info">{{addedCount}}</span>
       </button>
-      <button class="mb-1 btn btn-secondary" (click)="view('bonuses')">
-        <fa-icon [icon]="faService.award"></fa-icon>
-        <span>Bonuses</span>
-      </button>
       <button class="mb-1 btn btn-secondary" (click)="view('map')">
         <fa-icon [icon]="faMapMarker"></fa-icon>
         <span>Map</span>
@@ -90,20 +86,23 @@
           </div>
         </div>
       </div>
+
       <!-- pre reqs -->
-      <app-prereqs [gameId]="game.id" [specs]="list"></app-prereqs>
+      <div class="prereqs-container mt-4">
+        <app-prereqs [gameId]="game.id" [specs]="list"></app-prereqs>
+      </div>
+
+      <div class="bonus-config mt-4">
+        <h3>Automatic Bonuses</h3>
+        <app-game-bonuses-config [game]="game"></app-game-bonuses-config>
+      </div>
     </div>
 
     <!-- search external specs -->
     <app-spec-browser [hidden]="viewing!=='search'"></app-spec-browser>
 
-
-    <app-challengespec-bonus-config [hidden]="viewing !== 'bonuses'"></app-challengespec-bonus-config>
-
     <!-- edit spec map locations -->
     <div [hidden]="viewing!=='map'">
-
-
       <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.mapbox-hover]="!!specHover">
         <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
           <span>{{this.specHover?.name}}</span><br />

@@ -33,3 +33,22 @@ export interface TeamGameScoreSummary {
     manualBonusesScore: number;
     challengeScoreSummaries: TeamChallengeScoreSummary[];
 }
+
+export interface AutoChallengeBonus {
+    description?: string;
+    pointValue: number;
+    solveRank: number;
+}
+
+export interface GameLevelAutoChallengeBonus extends AutoChallengeBonus {
+    gameId: string;
+}
+
+export interface ChallengeLevelAutoChallengeBonus extends AutoChallengeBonus {
+    challengeSpecSupportKey: string;
+}
+
+export interface UpdateGameAutoChallengeBonusConfig {
+    allChallengeBonuses: AutoChallengeBonus[];
+    specificChallengeBonuses: ChallengeLevelAutoChallengeBonus[];
+}
