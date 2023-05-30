@@ -2,7 +2,8 @@
     <label for="series">Series</label>
     <select class="form-control form-select" name="series" aria-label="Series select" [(ngModel)]="ngModel">
         <option [value]="undefined" selected>[any series]</option>
-        <option *ngFor="let series of series$ | async" [ngValue]="series">{{series}}
+        <option *ngFor="let series of series$ | async" [value]="series">
+            {{series}}
         </option>
     </select>
 </div>

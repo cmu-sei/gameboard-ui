@@ -67,6 +67,8 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
             componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
             this.loadedReportComponent = componentRef;
             this.handleRunReport();
+
+            this.selectedReportKey = ReportKey[report.key as keyof typeof ReportKey];
           }
         })
       );

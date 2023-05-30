@@ -1,5 +1,5 @@
-<ng-container class="report-select">
-    <select name="reports-select" class="form-control" [(ngModel)]="selectedReportKey" (change)="handleChange($event)">
-        <option *ngFor="let report of reports$ | async" [ngValue]="report.key">{{report.name}}</option>
+<ng-container class="report-select-component">
+    <select name="reports-select" class="form-control" [(ngModel)]="selectedReportKey" (change)="handleChange($event)" required>
+        <option *ngFor="let report of reports$ | async" [value]="report.key">{{ report.name }}</option>
     </select>
 </ng-container>

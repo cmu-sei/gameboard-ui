@@ -9,7 +9,7 @@ export const environment = {
     supporthost: 'http://localhost:5002/supportfiles',
     gamebrainhost: '',
     unityhost: '',
-    tocfile: 'toc.json',
+    tocfile: '',
     countdownStartSecondsAtMinute: 5,
     isProduction: false,
     oidc: {

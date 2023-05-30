@@ -10,15 +10,11 @@ import { Sponsor } from '@/api/sponsor-models';
   styleUrls: ['./parameter-sponsor.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterSponsorComponent)]
 })
-export class ParameterSponsorComponent extends ReportParameterComponent<string> implements OnInit {
+export class ParameterSponsorComponent extends ReportParameterComponent<string> {
   sponsors$: Observable<Sponsor[]>;
 
   constructor(private sponsorService: SponsorService) {
     super();
     this.sponsors$ = sponsorService.list();
-  }
-
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
   }
 }

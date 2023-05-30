@@ -4,7 +4,7 @@ import { map, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { ReportKey, ReportMetaData } from '../../../reports-models';
 import { IReportComponent } from '../../report-component';
 import { ChallengesReportParameters, ChallengesReportModel, ChallengesReportRecord, ChallengesReportFlatParameters } from './challenges-report.models';
-import { ChallengesReportService } from '../../../services/challenges-report-service';
+import { ChallengesReportService } from '@/reports/services/challenges-report-service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 
 @Component({
@@ -15,7 +15,7 @@ import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-c
 export class ChallengesReportComponent implements IReportComponent<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
   @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
 
-  selectedParameters: ChallengesReportParameters = { registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
+  selectedParameters: ChallengesReportParameters = { competition: undefined, registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;

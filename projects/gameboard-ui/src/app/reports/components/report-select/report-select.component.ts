@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Observable, from } from 'rxjs';
+import { Observable, from, map } from 'rxjs';
 import { ReportKey } from '@/reports/reports-models';
-import { ReportViewModel } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
 
 @Component({
@@ -10,12 +9,16 @@ import { ReportsService } from '@/reports/reports.service';
   styleUrls: ['./report-select.component.scss']
 })
 export class ReportSelectComponent {
-  @Input() selectedReportKey?: ReportKey;
+  @Input() selectedReportKey?: ReportKey = ReportKey.ChallengesReport;
   @Output() reportSelect = new EventEmitter<ReportKey>();
-  reports$: Observable<ReportViewModel[]>;
+  reports$: Observable<{ key: string, name: string }[]>;
 
   constructor(private reportsService: ReportsService) {
-    this.reports$ = from(reportsService.list());
+    this.reports$ = from(reportsService.list())
+      .pipe(map(reports => reports.map(r => ({ 
+        key: r.key,
+        name: r.name
+       }))));
   }
 
   handleChange(event$: Event) {
