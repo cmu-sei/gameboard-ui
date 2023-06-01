@@ -1,0 +1,7 @@
+<div class="game-bonuses-component my-4" *ngIf="scoringConfig$ | async">
+    <button type="button" class="full-width btn btn-info form-control">Upload new bonuses configuration</button>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-spinner></app-spinner>
+</ng-container>

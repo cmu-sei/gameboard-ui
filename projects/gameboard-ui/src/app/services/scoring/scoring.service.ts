@@ -20,6 +20,10 @@ export class ScoringService {
     return this.http.delete<void>(`${this.API_ROOT}/bonus/manual/${manualBonusId}`);
   }
 
+  public getGameScoringConfig(gameId: string): Observable<GameScoringConfig> {
+    return this.http.get<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/score/config`);
+  }
+
   public getTeamGameScore(teamId: string): Observable<TeamGameScoreSummary> {
     return this.http.get<TeamGameScoreSummary>(`${this.API_ROOT}/team/${teamId}/score`);
   }
@@ -31,7 +35,7 @@ export class ScoringService {
     });
   }
 
-  public async updateGameAutoChallengeBonuses(gameId: string, model: UpdateGameAutoChallengeBonusConfig) {
-    return await firstValueFrom(this.http.put<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/bonus/config`, { model }));
+  public async updateGameAutoChallengeBonuses(gameId: string, config: UpdateGameAutoChallengeBonusConfig) {
+    return await firstValueFrom(this.http.put<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/bonus/config`, config));
   }
 }

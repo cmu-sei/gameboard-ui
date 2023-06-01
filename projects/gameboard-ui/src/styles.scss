@@ -198,6 +198,11 @@ app-spinner svg {
   color: black;
 }
 
+// handle HRs in bootstrap cards
+.card hr {
+  border-color: #dddddd;
+}
+
 .custom-bg-red {
   background-color: #422;
 }

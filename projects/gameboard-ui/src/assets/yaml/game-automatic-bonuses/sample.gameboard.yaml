@@ -10,6 +10,7 @@ allChallengesBonuses:
     description: "Earned for finishing the challenge second"
     solveRank: 2
 specificChallengesBonuses:
-  - aChallengeSupportKey:
-      description: "Earned for placing third on the Magical Mystery Tour challenge"
-      solveRank: 3
+  - supportKey: "aChallengeSupportKey"
+    description: "Earned for placing third on the Magical Mystery Tour challenge"
+    solveRank: 3
+    pointValue: 30

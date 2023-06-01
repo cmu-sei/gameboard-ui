@@ -13,6 +13,7 @@ import { ToastService } from '../../../utility/services/toast.service';
 })
 export class GameBonusesConfigComponent implements OnInit {
   @Input() game?: Game;
+  @Input() hasConfiguredBonuses = false;
   textPlaceholder: string | null = null;
   textPlaceholderRows = 8;
   yamlIn?: string;
@@ -29,8 +30,16 @@ export class GameBonusesConfigComponent implements OnInit {
       return;
     }
 
-    this.textPlaceholder = await this.yaml.loadSample("game-automatic-bonuses");
-    this.textPlaceholderRows = !this.textPlaceholder ? 8 : this.textPlaceholder?.split("\n").length + 4;
+    const yamlKey = "game-automatic-bonuses";
+    const sample = await this.yaml.loadSample(yamlKey);
+
+    if (sample) {
+      this.textPlaceholder = sample;
+      this.textPlaceholderRows = !this.textPlaceholder ? 8 : this.textPlaceholder?.split("\n").length + 4;
+    }
+    else {
+      this.log.logError(`Couldn't load sample YAML for "${yamlKey}".`);
+    }
   }
 
   handlePasteExampleConfigClick() {

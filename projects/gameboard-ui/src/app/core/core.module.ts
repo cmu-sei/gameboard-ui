@@ -14,6 +14,7 @@ import { PlayerStatusComponent } from './components/player-status/player-status.
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.component';
 
 const PUBLIC_DECLARATIONS = [
   LinkifyHtmlPipe,
@@ -32,7 +33,8 @@ const PUBLIC_DECLARATIONS = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
+    ToggleSwitchComponent
   ],
   imports: [
     CommonModule,

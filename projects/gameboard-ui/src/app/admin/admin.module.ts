@@ -44,6 +44,8 @@ import { ManageManualChallengeBonusesComponent } from './components/manage-manua
 import { ManageManualChallengeBonusesModalComponent } from './components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { ChallengeSpecBonusParameterPipe } from './pipes/challenge-spec-bonus-parameter.pipe';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
+import { GameBonusesComponent } from './components/game-bonuses/game-bonuses.component';
+import { GameEditorChallengeSpecConfigComponent } from './components/game-challenge-spec-config/game-challenge-spec-config.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +78,8 @@ import { GameBonusesConfigComponent } from './components/game-bonuses-config/gam
     ManageManualChallengeBonusesModalComponent,
     ChallengeSpecBonusParameterPipe,
     GameBonusesConfigComponent,
+    GameBonusesComponent,
+    GameEditorChallengeSpecConfigComponent,
   ],
   imports: [
     CommonModule,

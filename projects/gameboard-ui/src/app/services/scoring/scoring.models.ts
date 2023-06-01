@@ -2,10 +2,10 @@ import { SimpleEntity } from "../../api/models";
 
 export interface GameScoringConfig {
     game: SimpleEntity;
-    challengeSpecScoringConfigs: GameScoringConfigChallengeSpec[];    
+    challengeSpecScoringConfigs: ChallengeSpecScoringConfig[];    
 }
 
-export interface GameScoringConfigChallengeSpec {
+export interface ChallengeSpecScoringConfig {
     challengeSpec: SimpleEntity;
     completionScore: number;
     possibleBonuses: GameScoringConfigChallengeBonus[];

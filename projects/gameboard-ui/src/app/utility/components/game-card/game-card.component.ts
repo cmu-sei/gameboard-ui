@@ -33,8 +33,8 @@ export class GameCardComponent implements OnInit {
       ;
 
       this.game.modeUrl = this.game.mode
-        ? `${this.config.basehref}assets/${this.game.mode}.png`
-        : `${this.config.basehref}assets/vm.png`
+        ? `${this.config.basehref}assets/img/${this.game.mode}.png`
+        : `${this.config.basehref}assets/img/vm.png`
       ;
     }
   }

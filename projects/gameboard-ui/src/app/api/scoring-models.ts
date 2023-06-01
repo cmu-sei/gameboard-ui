@@ -41,14 +41,13 @@ export interface AutoChallengeBonus {
 }
 
 export interface GameLevelAutoChallengeBonus extends AutoChallengeBonus {
-    gameId: string;
 }
 
 export interface ChallengeLevelAutoChallengeBonus extends AutoChallengeBonus {
-    challengeSpecSupportKey: string;
+    supportKey: string;
 }
 
 export interface UpdateGameAutoChallengeBonusConfig {
-    allChallengeBonuses: AutoChallengeBonus[];
-    specificChallengeBonuses: ChallengeLevelAutoChallengeBonus[];
+    allChallengesBonuses: AutoChallengeBonus[];
+    specificChallengesBonuses: ChallengeLevelAutoChallengeBonus[];
 }

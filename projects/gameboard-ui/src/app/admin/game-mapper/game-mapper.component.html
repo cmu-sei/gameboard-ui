@@ -4,6 +4,7 @@
 <ng-container *ngIf="created$ | async"></ng-container>
 <ng-container *ngIf="updated$ | async"></ng-container>
 <ng-container *ngIf="deleted$ | async"></ng-container>
+<ng-container *ngIf="gameBonusesConfig$ | async"></ng-container>
 
 <div class="row">
   <!-- search external specs -->
@@ -19,7 +20,7 @@
         <span *ngIf="!!addedCount" class="ml-2 px-2 badge badge-info">{{addedCount}}</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('map')">
-        <fa-icon [icon]="faMapMarker"></fa-icon>
+        <fa-icon [icon]="faService.mapMarker"></fa-icon>
         <span>Map</span>
       </button>
       <ng-container *ngIf="viewing==='map'">
@@ -51,40 +52,7 @@
       </button>
 
       <div *ngFor="let item of list$ | async; trackBy:trackById">
-        <div class="row align-items-center bg-secondary mb-2">
-          <div class="col-4">
-            {{item.name}}
-          </div>
-          <div class="col-1">
-            <div class="form-group form-check pb-0 pt-1">
-              <input type="checkbox" class="form-check-input" id="disabled-input-{{item.id}}" name="disabled"
-                [(ngModel)]="item.disabled" (ngModelChange)="updating$.next(item)">
-              <label for="disabled-input-{{item.id}}">Disabled</label>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group pb-0 pt-1">
-              <label for="slug-input-{{item.id}}">Support Key</label>
-              <input type="text" class="form-control" id="slug-input-{{item.id}}" name="slug" [(ngModel)]="item.tag"
-                (ngModelChange)="updating$.next(item)">
-              <small></small>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group pb-0 pt-1">
-              <label for="points-input-{{item.id}}">Points</label>
-              <input type="number" class="form-control" id="points-input-{{item.id}}" name="points"
-                [(ngModel)]="item.points" (ngModelChange)="updating$.next(item)">
-              <small></small>
-            </div>
-          </div>
-          <div class="col-3">
-            <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="deleting$.next(item)">
-              <fa-icon [icon]="faService.trash"></fa-icon>
-              <span>Delete</span>
-            </app-confirm-button>
-          </div>
-        </div>
+        <app-game-challenge-spec-config [spec]="item" [scoringConfig]="specConfigMap[item.id]"></app-game-challenge-spec-config>
       </div>
 
       <!-- pre reqs -->
@@ -94,7 +62,8 @@
 
       <div class="bonus-config mt-4">
         <h3>Automatic Bonuses</h3>
-        <app-game-bonuses-config [game]="game"></app-game-bonuses-config>
+        <app-game-bonuses [game]="game" *ngIf="game" ></app-game-bonuses>
+        <app-game-bonuses-config [game]="game" *ngIf="game"></app-game-bonuses-config>
       </div>
     </div>
 

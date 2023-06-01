@@ -11,6 +11,7 @@ import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyValue } from '@angular/common';
+import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -61,6 +62,7 @@ export class GameEditorComponent implements AfterViewInit {
     // private router: Router,
     private api: GameService,
     private config: ConfigService,
+    private title: AppTitleService,
     route: ActivatedRoute
   ) {
 
@@ -75,6 +77,7 @@ export class GameEditorComponent implements AfterViewInit {
       switchMap(id => api.retrieve(id)),
       tap(g => {
         this.game = g;
+        this.title.set(`Edit "${g.name}"`)
         this.updateFeedbackMessage();
       })
     );

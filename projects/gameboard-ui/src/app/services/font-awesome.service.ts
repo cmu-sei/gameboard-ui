@@ -15,6 +15,7 @@ import {
   faExternalLink,
   faFilter,
   faLongArrowAltDown,
+  faMapMarker,
   faSquare,
   faStar,
   faSyncAlt,
@@ -46,6 +47,7 @@ export class FontAwesomeService {
   list = faList;
   filter = faFilter;
   gear = faGear;
+  mapMarker = faMapMarker;
   search = faSearch;
   star = faStar;
   square = faSquare;
