@@ -20,6 +20,7 @@ import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { CustomInputComponent } from './components/custom-input/custom-input.component';
 
 const PUBLIC_DECLARATIONS = [
   LinkifyHtmlPipe,
