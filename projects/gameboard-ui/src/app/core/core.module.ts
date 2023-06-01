@@ -14,6 +14,7 @@ import { PlayerStatusComponent } from './components/player-status/player-status.
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { CustomInputComponent } from './components/custom-input/custom-input.component';
 
 const PUBLIC_DECLARATIONS = [
   LinkifyHtmlPipe,
