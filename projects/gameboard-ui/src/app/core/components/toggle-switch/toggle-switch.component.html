@@ -1,6 +1,8 @@
-<ng-container class="toggle-switch-component">
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="toggleSwitch">
-        <label class="form-check-label" for="toggleSwitch">{{label}}</label>
-    </div>
-</ng-container>
+<div class="toggle-switch-component d-flex align-items-center align-content-center">
+    <label class="switch d-block">
+        <input type="checkbox" role="switch" id="toggle-switch" [(ngModel)]="ngModel">
+        <span class="slider round"></span>
+    </label>
+    <div *ngIf="label" class="ml-2 pb-2">{{ label }}</div>
+</div>
+    

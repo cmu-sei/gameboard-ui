@@ -1,28 +1,18 @@
-<div class="game-editor-challenge-spec-config-component container" *ngIf="spec && scoringConfig">
+<div class="game-editor-challenge-spec-config-component" *ngIf="spec && scoringConfig">
     <div class="card full-width">
         <div class="card-body">
-            <h5 class="card-title">{{spec.name}}</h5>
+            <h4 class="card-title">{{spec.name}}</h4>
             <div class="card-text">
                 <hr />
-                <div class="form-group form-check pb-0 pt-1">
-                    <input type="checkbox" class="form-check-input" id="disabled-input-{{spec.id}}" name="disabled"
-                        [(ngModel)]="spec.disabled" (ngModelChange)="handleModelUpdated(spec)">
-                    <label for="disabled-input-{{spec.id}}">Disabled</label>
+                <div class="form-group form-check p-0 m-0">
+                    <app-toggle-switch label="Challenge enabled" [(ngModel)]="spec.disabled" (ngModelChange)="handleModelUpdated(spec)"></app-toggle-switch>
                 </div>
             </div>
             
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <h4>{{spec.name}}</h4>
-            <hr />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            
+            <app-confirm-button btnClass="btn btn-danger" (confirm)="handleDeleteClick(spec)">
+                <fa-icon [icon]="faService.trash"></fa-icon>
+                <span>Delete</span>
+            </app-confirm-button>
         </div>
     </div>
     <!-- <div class="col-1">
@@ -44,10 +34,5 @@
             <small></small>
         </div>
     </div> -->
-    <div class="col-3">
-        <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="handleDeleteClick(spec)">
-            <fa-icon [icon]="faService.trash"></fa-icon>
-            <span>Delete</span>
-        </app-confirm-button>
-    </div>
 </div>
+

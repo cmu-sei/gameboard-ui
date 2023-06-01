@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
@@ -38,6 +39,7 @@ const PUBLIC_DECLARATIONS = [
   ],
   imports: [
     CommonModule,
+    FormsModule,
     TooltipModule
   ],
   exports: [

@@ -35,7 +35,7 @@
         </app-dropzone>
         <div class="form-group pb-1 pt-1">
         </div>
-        <div>Alt-Drag to resize hotspots</div>
+        <div>Alt-Drag (Option-Drag on Mac) to resize hotspots</div>
       </ng-container>
     </div>
   </div>
@@ -44,15 +44,15 @@
 
     <!-- edit game specs -->
     <div [hidden]="viewing!=='edit'">
-      <h4>Challenge Specs</h4>
+      <h3>Specs</h3>
 
-      <button class="mb-1 btn btn-sm btn-outline-info" (click)="sync()">
+      <button class="mt-2 mb-4 btn btn-sm btn-outline-info" (click)="sync()">
         <fa-icon [icon]="faService.sync"></fa-icon>
         <span>Sync with Source</span>
       </button>
 
       <div *ngFor="let item of list$ | async; trackBy:trackById">
-        <app-game-challenge-spec-config [spec]="item" [scoringConfig]="specConfigMap[item.id]"></app-game-challenge-spec-config>
+        <app-game-challenge-spec-config class="d-block mb-4" [spec]="item" [scoringConfig]="specConfigMap[item.id]"></app-game-challenge-spec-config>
       </div>
 
       <!-- pre reqs -->
