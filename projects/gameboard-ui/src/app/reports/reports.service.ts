@@ -66,6 +66,11 @@ export class ReportsService {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/tracks"));
   }
 
+  dateToQueryStringEncoded(date?: Date) {
+    if (!date) return "";
+    return `${(date.getMonth() + 1) % 12}-${date.getDate()}-${date.getFullYear()}`;
+  }
+
   minutesToTimeSpan(minutes?: number): ReportTimeSpan {
     if (!minutes)
       return { days: undefined, hours: undefined, minutes: undefined };

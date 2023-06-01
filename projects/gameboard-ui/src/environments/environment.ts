@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  settingsJson: null,
   settings: {
     appname: 'Gameboard',
     apphost: 'http://localhost:5002',

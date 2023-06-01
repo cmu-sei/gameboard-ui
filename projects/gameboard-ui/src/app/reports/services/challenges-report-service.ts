@@ -7,6 +7,7 @@ import { UriService } from '../../services/uri.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '../../services/api-url.service';
 import { ObjectService } from '@/services/object.service';
+import { ReportsService } from '../reports.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesReportService implements IReportService<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord> {
@@ -15,27 +16,29 @@ export class ChallengesReportService implements IReportService<ChallengesReportF
     private apiRootService: ApiUrlService,
     private http: HttpClient,
     private objectService: ObjectService,
+    private reportsService: ReportsService,
     private uriService: UriService) { }
 
   flattenParameters(parameters: ChallengesReportParameters): ChallengesReportFlatParameters {
     const retVal = {
       ...parameters,
       challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
-      dateStart: parameters.registrationDateRange?.dateStart,
-      dateEnd: parameters.registrationDateRange?.dateEnd,
+      registrationDateStart: this.reportsService.dateToQueryStringEncoded(parameters.registrationDateRange?.dateStart),
+      registrationDateEnd: this.reportsService.dateToQueryStringEncoded(parameters.registrationDateRange?.dateEnd),
       gameId: parameters.gameChallengeSpec?.gameId,
       trackName: parameters.track?.track
     };
 
-    return this.objectService.deleteKeys(retVal, "registrationDateRange", "gameChallengeSpec", "track");
+    const cleanedRetVal = this.objectService.deleteKeys<ChallengesReportFlatParameters>(retVal, "registrationDateRange", "gameChallengeSpec", "track");
+    return cleanedRetVal;
   }
 
   unflattenParameters(parameters: ChallengesReportFlatParameters) {
     const retVal: ChallengesReportParameters = {
       ...parameters,
       registrationDateRange: {
-        dateStart: parameters.registrationStart,
-        dateEnd: parameters.registrationEnd
+        dateStart: parameters.registrationDateStart ? new Date(parameters.registrationDateStart) : undefined,
+        dateEnd: parameters.registrationDateEnd ? new Date(parameters.registrationDateEnd) : undefined
       },
       gameChallengeSpec: {
         challengeSpecId: parameters.challengeSpecId,

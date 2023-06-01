@@ -12,8 +12,8 @@ export interface ChallengesReportParameters {
 export interface ChallengesReportFlatParameters {
     challengeSpecId?: string;
     competition?: string;
-    registrationStart?: Date,
-    registrationEnd?: Date,
+    registrationDateStart?: string,
+    registrationDateEnd?: string,
     gameId?: string;
     trackName?: string;
 }

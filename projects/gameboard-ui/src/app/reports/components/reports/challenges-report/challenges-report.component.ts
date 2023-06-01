@@ -43,14 +43,6 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
     })
   }
 
-  buildParameters(query: ChallengesReportParameters): ChallengesReportParameters {
-    return query;
-  }
-
-  flattenParameters(parameters: ChallengesReportParameters): ChallengesReportParameters {
-    return parameters;
-  }
-
   getPdfExportElement(): ElementRef<HTMLDivElement> {
     return this.reportElementRef!;
   }

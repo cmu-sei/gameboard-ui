@@ -63,10 +63,11 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
 
             // have to deep-clone the query parameters because they're made inextensible by angular
             const reportComponentParameters = componentRef.instance.reportService.unflattenParameters({ ...this.route.snapshot.queryParams });
+            console.log("loading params", reportComponentParameters);
             componentRef.instance.selectedParameters = { ...componentRef.instance.selectedParameters, ...reportComponentParameters };
             componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
             this.loadedReportComponent = componentRef;
-            this.handleRunReport();
+            // this.handleRunReport();
 
             this.selectedReportKey = ReportKey[report.key as keyof typeof ReportKey];
           }
