@@ -35,6 +35,10 @@ export class ScoringService {
     });
   }
 
+  public async deleteGameAutoChallengeBonuses(gameId: string) {
+    return await firstValueFrom(this.http.delete<void>(`${this.API_ROOT}/game/${gameId}/bonus/config`));
+  }
+
   public async updateGameAutoChallengeBonuses(gameId: string, config: UpdateGameAutoChallengeBonusConfig) {
     return await firstValueFrom(this.http.put<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/bonus/config`, config));
   }

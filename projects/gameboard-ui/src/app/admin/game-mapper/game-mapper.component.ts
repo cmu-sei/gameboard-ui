@@ -28,7 +28,6 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   specDrag: Spec | null = null;
   specHover: Spec | null = null;
   altkey = false;
-  hasBonusesLoaded = false;
   showGrid = false;
   showCallout = false;
   specConfigMap: { [specId: string]: ChallengeSpecScoringConfig } = {};
@@ -71,7 +70,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
         if (!config)
           return;
-        
+
         for (let specConfig of config.challengeSpecScoringConfigs) {
           this.specConfigMap[specConfig.challengeSpec.id] = specConfig;
         }
@@ -164,6 +163,10 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     );
   }
 
+  handleBonusesChanged() {
+    this.refresh();
+  }
+
   sync(): void {
     this.api.sync(this.game.id).subscribe(
       () => this.refresh()
@@ -172,10 +175,6 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
   trackById(index: number, g: Spec): string {
     return g.id;
-  }
-
-  bonusesLoaded() {
-    this.hasBonusesLoaded = true;
   }
 
   mousemove(e: MouseEvent) {

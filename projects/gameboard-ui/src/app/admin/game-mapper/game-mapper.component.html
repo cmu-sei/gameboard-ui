@@ -52,18 +52,20 @@
       </button>
 
       <div *ngFor="let item of list$ | async; trackBy:trackById">
-        <app-game-challenge-spec-config class="d-block mb-4" [spec]="item" [scoringConfig]="specConfigMap[item.id]"></app-game-challenge-spec-config>
+        <app-game-challenge-spec-config class="d-block mb-2" [spec]="item"
+          [scoringConfig]="specConfigMap[item.id]"></app-game-challenge-spec-config>
       </div>
 
       <!-- pre reqs -->
-      <div class="prereqs-container mt-4">
+      <div class="prereqs-container my-5">
+        <h3>Prereqs</h3>
         <app-prereqs [gameId]="game.id" [specs]="list"></app-prereqs>
       </div>
 
-      <div class="bonus-config mt-4">
+      <div class="bonus-config my-5">
         <h3>Automatic Bonuses</h3>
-        <app-game-bonuses [game]="game" *ngIf="game" ></app-game-bonuses>
-        <app-game-bonuses-config [game]="game" *ngIf="game"></app-game-bonuses-config>
+        <app-game-bonuses-config [game]="game" *ngIf="game" [gameScoringConfig]="(gameBonusesConfig$ | async)"
+          (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"></app-game-bonuses-config>
       </div>
     </div>
 
