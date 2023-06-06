@@ -9,7 +9,6 @@ import { ConfigService } from '../utility/config.service';
 import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
 import { HubPlayer, Player, TimeWindow } from '../api/player-models';
-import { GameHubEvent } from './signalR/game-hub.service';
 import { LogService } from './log.service';
 
 @Injectable({ providedIn: 'root' })
@@ -17,12 +16,10 @@ export class NotificationService {
   public connection: HubConnection;
 
   private teamId$ = new Subject<string>();
-  private _gameHubEvents$ = new Subject<GameHubEvent<any>>();
 
   state$ = new BehaviorSubject<HubState>({ id: '', connectionState: HubConnectionState.Disconnected, joined: false });
   actors$ = new BehaviorSubject<Array<HubPlayer>>([]);
   announcements = new Subject<HubEvent>();
-  gameHubEvents$ = this._gameHubEvents$.asObservable();
   teamEvents = new Subject<HubEvent>();
   challengeEvents = new Subject<HubEvent>();
   playerEvents = new Subject<HubEvent>();
@@ -126,8 +123,6 @@ export class NotificationService {
     connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
     connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
     connection.on('playerEvent', e => this.onPlayerEvent(e));
-    connection.on('gameHubEvent', e => this._gameHubEvents$.next(e));
-    connection.on('synchronizedGameStartedEvent', e => this._gameHubEvents$.next(e));
 
     return connection;
   }

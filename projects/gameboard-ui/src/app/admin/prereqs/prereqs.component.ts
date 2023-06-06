@@ -105,7 +105,6 @@ export class PrereqsComponent implements OnChanges {
   }
 
   delete(g: ChallengeGate): void {
-    console.log("deleting?", g);
     this.deleting$.next(g);
   }
 }

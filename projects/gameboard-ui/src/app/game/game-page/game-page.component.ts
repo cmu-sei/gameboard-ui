@@ -3,10 +3,9 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faCaretDown, faCaretRight, faExternalLinkAlt, faListOl } from '@fortawesome/free-solid-svg-icons';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, merge, Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '../../api/user-models';
 import { GameService } from '../../api/game.service';
 import { GameContext } from '../../api/game-models';
@@ -15,11 +14,13 @@ import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
-import { HubConnectionState } from '@microsoft/signalr';
 import { WindowService } from '../../services/window.service';
 import { BoardPlayer } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
-import { GameHubService } from '../../services/signalR/game-hub.service';
+import { FontAwesomeService } from '@/services/font-awesome.service';
+import { GameHubService } from '@/services/signalR/game-hub.service';
+import { LogService } from '@/services/log.service';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-game-page',
@@ -29,31 +30,31 @@ import { GameHubService } from '../../services/signalR/game-hub.service';
 export class GamePageComponent implements OnDestroy {
   ctx$ = new Observable<GameContext | undefined>(undefined);
   showCert = false;
-  faLink = faExternalLinkAlt;
-  faList = faListOl;
-  faCaretDown = faCaretDown;
-  faCaretRight = faCaretRight;
   minDate = new Date(0);
+  hubState$: Observable<HubConnectionState> = this.gameHubService.hubState$;
 
   protected boardPlayer?: BoardPlayer;
   protected ctxIds: { userId?: string, gameId: string, playerId?: string } = { userId: '', gameId: '' };
   protected playerSubject$ = new BehaviorSubject<Player | undefined>(undefined);
 
   private isExternalGame = false;
-  private isSyncStartReady = false;
+  private isEnrolled$ = new BehaviorSubject<boolean>(false);
   private syncStartChangedSubscription?: Subscription;
   private syncStartGameStartedSubscription?: Subscription;
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
+  private playerSubscription: Subscription;
 
   constructor(
     router: Router,
     route: ActivatedRoute,
     apiBoards: BoardService,
+    apiGame: GameService,
     apiPlayer: PlayerService,
     localUser: LocalUserService,
+    public faService: FontAwesomeService,
     private hub: NotificationService,
-    private apiGame: GameService,
+    private logService: LogService,
     private gameHubService: GameHubService,
     private modalService: BsModalService,
     private windowService: WindowService
@@ -67,21 +68,6 @@ export class GamePageComponent implements OnDestroy {
       switchMap(p => apiGame.retrieve(p.id)),
       tap(g => this.ctxIds.gameId = g.id),
       tap(g => this.isExternalGame = apiGame.isExternalGame(g)),
-      tap(g => {
-        this.syncStartChangedSubscription?.unsubscribe();
-
-        if (g.requireSynchronizedStart) {
-          this.syncStartChangedSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
-            this.isSyncStartReady = state.isReady;
-          });
-
-          this.syncStartGameStartedSubscription = this.gameHubService.syncStartGameStarted$.subscribe(startState => {
-            if (startState) {
-              router.navigateByUrl(`/game/${startState.game.id}/sync-start`);
-            }
-          });
-        }
-      })
     );
 
     this.localUserSubscription = combineLatest([
@@ -174,34 +160,48 @@ export class GamePageComponent implements OnDestroy {
           player: c.player = c.player || { userId: c.user.id } as Player
         };
       }),
-      tap(c => {
-        // listen for game hub events to enable synchronized start stuff if needed
-        if (c.player.gameId && c.game.requireSynchronizedStart) {
-          this.gameHubService.joinGame(c.player.gameId);
-        }
-        else
-          this.gameHubService.leaveGame(c.game.id);
-      }),
-      tap(c => { if (!c.game) { router.navigateByUrl("/"); } }),
-      filter(c => !!c.game),
       tap(ctx => {
-        if (ctx.player.id && ctx.player.teamId && this.hub.connection.state !== HubConnectionState.Connected) {
-          this.hub.init(ctx.player.teamId);
+        const isEnrolled = !!ctx.player.gameId;
+
+        if (isEnrolled != this.isEnrolled$.value) {
+          this.isEnrolled$.next(isEnrolled);
         }
-      })
+      }),
+      tap(c => { if (!c.game) { router.navigateByUrl("/"); } })
     );
 
-    // init the page
-    this.playerSubject$.next(this.playerSubject$.getValue());
+    this.playerSubscription = combineLatest([game$, this.isEnrolled$]).pipe(
+      map(([game, isEnrolled]) => ({ game, isEnrolled })),
+      distinctUntilChanged()
+    ).subscribe(async gameEnrollmentContext => {
+      if (gameEnrollmentContext.isEnrolled && !!gameEnrollmentContext.game.id) {
+        if (gameEnrollmentContext.game.requireSynchronizedStart) {
+          await this.gameHubService.joinGame(gameEnrollmentContext.game.id);
+
+          this.syncStartGameStartedSubscription = this.gameHubService.syncStartGameStarted$.subscribe(startState => {
+            if (startState) {
+              router.navigateByUrl(`/game/${startState.game.id}/sync-start`);
+            }
+          });
+        }
+        else {
+          this.logService.logInfo(`Not joining the hub for game ${gameEnrollmentContext.game.id} - it doesn't require sync start.`);
+        }
+      }
+      else {
+        await this.gameHubService.leaveGame(this.ctxIds.gameId);
+        this.syncStartGameStartedSubscription?.unsubscribe();
+      }
+    });
   }
 
   protected async onEnroll(player: Player): Promise<void> {
     this.playerSubject$.next(player);
-    await this.hub.init(player.teamId);
   }
 
   protected async onUnenroll(player: Player): Promise<void> {
     await this.hub.disconnect();
+    await this.gameHubService.leaveGame(player.gameId);
     this.playerSubject$.next(undefined);
   }
 
@@ -221,6 +221,7 @@ export class GamePageComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.hubEventsSubcription?.unsubscribe();
     this.localUserSubscription?.unsubscribe();
+    this.playerSubscription?.unsubscribe();
     this.syncStartChangedSubscription?.unsubscribe();
     this.syncStartGameStartedSubscription?.unsubscribe();
   }

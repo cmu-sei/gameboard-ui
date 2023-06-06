@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { GameService } from '../api/game.service';
 import { PlayerService } from '../api/player.service';
-import { SyncStartState } from '../game/game.models';
+import { SyncStartGameState } from '../game/game.models';
 import { UserService } from '../utility/user.service';
 
 @Injectable({ providedIn: 'root' })
@@ -53,7 +53,7 @@ export class SyncStartGuard implements CanActivate {
           return true;
         }
 
-        const typedState = syncStartStateOrTrue as SyncStartState;
+        const typedState = syncStartStateOrTrue as SyncStartGameState;
         if (typedState.isReady) {
           return true;
         }

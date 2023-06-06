@@ -4,6 +4,9 @@ import {
   faArrowLeft,
   faAward,
   faBolt,
+  faCaretDown,
+  faCaretRight,
+  faCaretUp,
   faCheck,
   faCheckSquare,
   faChevronDown,
@@ -13,7 +16,9 @@ import {
   faEdit,
   faExclamationTriangle,
   faExternalLink,
+  faExternalLinkAlt,
   faFilter,
+  faListOl,
   faLongArrowAltDown,
   faMapMarker,
   faSquare,
@@ -34,6 +39,9 @@ export class FontAwesomeService {
   arrowLeft = faArrowLeft;
   award = faAward;
   bolt = faBolt;
+  caretDown = faCaretDown;
+  caretRight = faCaretRight;
+  caretUp = faCaretUp;
   check = faCheck;
   checkSquare = faCheckSquare;
   chevronDown = faChevronDown;
@@ -44,7 +52,9 @@ export class FontAwesomeService {
   ellipsisVertical = faEllipsisVertical;
   exclamationTriangle = faExclamationTriangle;
   externalLink = faExternalLink;
+  externalLinkAlt = faExternalLinkAlt;
   list = faList;
+  listOl = faListOl;
   filter = faFilter;
   gear = faGear;
   mapMarker = faMapMarker;

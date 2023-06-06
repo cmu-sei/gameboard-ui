@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DateTime } from 'luxon';
-import { combineLatest, Observable, of, Subscribable, Subscription, timer } from 'rxjs';
+import { combineLatest, Observable, of, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Game } from '../../../api/game-models';
 import { GameService } from '../../../api/game.service';
