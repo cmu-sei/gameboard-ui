@@ -87,6 +87,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
           extSpec => {
             // Find the one in the local list that matches this one
             var item = this.list.find(i => i.externalId === extSpec.externalId);
+
             // Compare the name and description of each; if they aren't equal, update the challenge in the GB database
             if (item) {
               var tmpName = item.name;

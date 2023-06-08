@@ -76,6 +76,7 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
       this.isLoading = true;
       var gameConfig = await this.scoringService.updateGameAutoChallengeBonuses(this.game.id, config);
       this.update.emit(this.game.id);
+      this.yamlIn = undefined;
       this.isLoading = false;
       this.toastsService.showMessage(`Configured ${gameConfig.challengeSpecScoringConfigs.length} challenges with ${gameConfig.challengeSpecScoringConfigs.map(c => c.possibleBonuses.length).reduce((prev, current) => prev + current)} total bonuses 👍`);
     }
