@@ -20,11 +20,15 @@ export class RouterService {
     }
   }
 
+  public goToExternalGamePage(gameId: string) {
+    this.router.navigateByUrl(`/game/external/${gameId}`);
+  }
+
   public goToGamePage(gameId: string) {
     this.router.navigateByUrl(`/game/${gameId}`);
   }
 
-  public goToGameLaunchPage(gameId: string, playerId: string) {
-    this.router.navigateByUrl(`/game/${gameId}/start/${playerId}`);
+  public goToGameStartPage(ctx: { gameId: string, playerId: string }) {
+    this.router.navigateByUrl(`/game/${ctx.gameId}/start/${ctx.playerId}`);
   }
 }

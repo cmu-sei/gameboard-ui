@@ -1,0 +1,33 @@
+<div class="game-start-page-component full-width d-flex align-items-center justify-content-center"
+    *ngIf="gameLaunchCtx">
+    <div class="page-container page-width mt-5 d-flex flex-column align-items-center justify-content-center">
+        <ng-container *ngIf="state; else loading">
+            <h1 *ngIf="!launchCompleted">Launching {{gameLaunchCtx.game.name}}</h1>
+            <ng-container *ngIf="!launchCompleted; else countdown">
+                <div class="step-container full-width my-4">
+                    <h2>Building challenges...</h2>
+                    <app-progress-bar
+                        [percentage]="state.challengesCreated | numbersToPercentage:state.challengesTotal"></app-progress-bar>
+                </div>
+
+                <div class="step-container full-width my-4">
+                    <h2>Deploying gamespaces...</h2>
+                    <app-progress-bar
+                        [percentage]="state.gamespacesDeployed | numbersToPercentage:state.gamespacesTotal"></app-progress-bar>
+                </div>
+            </ng-container>
+
+            <ng-template #countdown>
+                <app-session-start-countdown [game]="gameLaunchCtx.game"
+                    (countdownElapsed)="handleGameReady(gameLaunchCtx)"></app-session-start-countdown>
+            </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+            <div>
+                <h1 class="d-block">Loading the game...</h1>
+                <app-spinner></app-spinner>
+            </div>
+        </ng-template>
+    </div>
+</div>

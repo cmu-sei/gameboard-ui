@@ -1,0 +1,20 @@
+@import "../../../../scss/variables";
+
+::ng-deep {
+    .progress-bar-container bar.bg-info {
+        background-color: $white !important;
+        color: $cyan !important;
+
+        strong {
+            font-size: 1rem;
+        }
+    }
+
+    .progress {
+        height: 2rem;
+    }
+}
+
+.player-ready-count-text {
+    white-space: nowrap;
+}

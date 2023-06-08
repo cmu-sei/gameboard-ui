@@ -4,22 +4,16 @@ import { HttpTransportType, HubConnection, HubConnectionBuilder, HubConnectionSt
 import { UserService } from '../../api/user.service';
 import { ConfigService } from '../../utility/config.service';
 import { LogService } from '../log.service';
-
-export interface SignalRHubEventHandler<T> {
-  eventName: string;
-  handler: (data: T) => void;
-}
+import { SignalRHubEventHandler, SignalRHubEventType } from './signalr-hub.models';
 
 @Injectable({ providedIn: 'root' })
-export class SignalRService<T> {
+export class SignalRService<TEvent extends SignalRHubEventType> {
   private _connection?: HubConnection;
   private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
-  private _events$ = new BehaviorSubject<SignalRHubEventHandler<T> | null>(null);
-  private _eventHandlers: { [eventName: string]: SignalRHubEventHandler<T> } = {};
+  private _events$ = new BehaviorSubject<SignalRHubEventHandler<any> | null>(null);
+  private _eventHandlers: { [eventType: string]: SignalRHubEventHandler<any> } = {};
   public events$ = this._events$.asObservable();
   public state$ = this._connectionState$.asObservable();
-
-  private _connectedGroups: string[] = [];
 
   constructor(
     private config: ConfigService,
@@ -31,7 +25,7 @@ export class SignalRService<T> {
     return this._connection?.state || HubConnectionState.Disconnected;
   }
 
-  public async connect(hubUrl: string, eventHandlers: SignalRHubEventHandler<T>[]) {
+  public async connect(hubUrl: string, eventHandlers: SignalRHubEventHandler<any>[]) {
     const connectToUrl = `${this.config.apphost}${hubUrl}`;
     this.logger.logInfo(`Connecting to SignalR hub at ${connectToUrl}...`);
 
@@ -61,7 +55,7 @@ export class SignalRService<T> {
     }
   }
 
-  private buildConnection(url: string, eventHandlers: SignalRHubEventHandler<T>[]): HubConnection {
+  private buildConnection(url: string, eventHandlers: SignalRHubEventHandler<any>[]): HubConnection {
     const connection = new HubConnectionBuilder()
       .withUrl(url, {
         accessTokenFactory: () => firstValueFrom(this.userService.ticket().pipe(map(r => r?.ticket))),
@@ -73,14 +67,14 @@ export class SignalRService<T> {
       .configureLogging(this.logger)
       .build();
 
-    connection.onclose(this.handleClose);
+    connection.onclose(err => this.handleClose.bind(this)(err));
     connection.onreconnected(cid => this.handleConnected.bind(this)(cid));
 
     // federate specific event types to their respective services
     this._eventHandlers = {};
     for (let handler of eventHandlers) {
-      this._eventHandlers[handler.eventName] = handler;
-      connection.on(handler.eventName, ev => handler.handler(ev));
+      this._eventHandlers[handler.eventType.toString()] = handler;
+      connection.on(handler.eventType.toString(), ev => handler.handler(ev));
     }
 
     return connection;
@@ -104,8 +98,7 @@ export class SignalRService<T> {
   }
 
   private handleConnected(channelId?: string) {
-    this.logger.logInfo(`SignalR Service | Connected`);
-    this.logger.logInfo("Reconnected channel:", channelId);
+    this.logger.logInfo(`SignalR Service | Connected ${(channelId ? `channel id "${channelId}"` : "")}`);
     this.updateState();
   }
 

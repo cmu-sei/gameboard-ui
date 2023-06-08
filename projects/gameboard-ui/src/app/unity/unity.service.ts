@@ -1,9 +1,8 @@
 
 
-import { HttpClient, HttpClientXsrfModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { ConfigService } from '../utility/config.service';
 import { GamebrainActiveGame, UnityActiveGame, UnityContext, UnityDeployContext } from '../unity/unity-models';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';

@@ -243,6 +243,15 @@ th[align="center"] {
   cursor: pointer;
 }
 
+.page-width {
+  width: 1380px;
+  max-width: 100%;
+}
+
+.page-min-height {
+  min-height: 85vh;
+}
+
 .full-width {
   width: 100%;
 }
