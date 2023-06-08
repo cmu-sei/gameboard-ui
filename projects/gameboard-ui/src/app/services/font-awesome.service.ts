@@ -12,12 +12,14 @@ import {
   faChevronDown,
   faChevronUp,
   faClipboard,
+  faCloudUploadAlt,
   faCopy,
   faEdit,
   faExclamationTriangle,
   faExternalLink,
   faExternalLinkAlt,
   faFilter,
+  faGamepad,
   faListOl,
   faLongArrowAltDown,
   faMapMarker,
@@ -26,9 +28,12 @@ import {
   faSyncAlt,
   faEllipsisVertical,
   faGear,
+  faInfoCircle,
   faList,
   faTriangleExclamation,
   faSearch,
+  faToggleOff,
+  faToggleOn,
   faTrash,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
@@ -47,6 +52,7 @@ export class FontAwesomeService {
   chevronDown = faChevronDown;
   chevronUp = faChevronUp;
   clipboard = faClipboard;
+  cloudUploadAlt = faCloudUploadAlt;
   copy = faCopy;
   edit = faEdit;
   ellipsisVertical = faEllipsisVertical;
@@ -56,12 +62,16 @@ export class FontAwesomeService {
   list = faList;
   listOl = faListOl;
   filter = faFilter;
+  gamepad = faGamepad;
   gear = faGear;
+  infoCircle = faInfoCircle;
   mapMarker = faMapMarker;
   search = faSearch;
   star = faStar;
   square = faSquare;
   sync = faSyncAlt;
+  toggleOff = faToggleOff;
+  toggleOn = faToggleOn;
   trash = faTrash;
   triangleExclamation = faTriangleExclamation;
 

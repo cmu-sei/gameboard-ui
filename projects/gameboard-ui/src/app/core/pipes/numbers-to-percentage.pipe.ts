@@ -7,9 +7,7 @@ export class NumbersToPercentage implements PipeTransform {
     if (total <= 0)
       return 0;
 
-    const rawPct = (count * 1.0) / total; // forces decimal division;
-    const roundedToOne = (rawPct * 10) / 10.0;
-    const mathed = roundedToOne * 100;
-    return mathed;
+    const rawPct = (count * 1.0) / total; // forces decimal division
+    return rawPct * 100;
   }
 }

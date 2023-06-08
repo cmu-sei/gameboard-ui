@@ -1,7 +1,7 @@
 <div class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
     <progressbar class="flex-grow-1" [animate]="true" [value]="percentage" [max]="100" [ariaValueMin]="0"
         [ariaValueMax]="100" type="info">
-        <strong>{{percentage}}%</strong>
+        <strong>{{percentage.toFixed(1)}}%</strong>
     </progressbar>
 
     <p class="player-ready-count-text ml-4 flex-shrink-1" *ngIf="total > 0">

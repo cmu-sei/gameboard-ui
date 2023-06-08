@@ -12,6 +12,7 @@ import { ConfigService } from '../../utility/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyValue } from '@angular/common';
 import { AppTitleService } from '@/services/app-title.service';
+import { FontAwesomeService } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -31,6 +32,7 @@ export class GameEditorComponent implements AfterViewInit {
   feedbackWarning: boolean = false;
   viewing = 1;
   showCertificateInfo = false;
+  showExternalGameFields = false;
 
   // the first time we flip the mode to external, suggest the gamebrainhost endpoint as the external startup
   // url
@@ -47,22 +49,12 @@ export class GameEditorComponent implements AfterViewInit {
     cardText3: new Map<string, number>()
   };
 
-  faCaretDown = faCaretDown;
-  faCaretRight = faCaretRight;
-  faToggleOn = faToggleOn;
-  faToggleOff = faToggleOff;
-  faCopy = faCopy;
-  faTrash = faTrash;
-  faSave = faCloudUploadAlt;
-  faGo = faGamepad;
-  faArrowLeft = faArrowLeft;
-  faInfoCircle = faInfoCircle;
-
   constructor(
     // private router: Router,
     private api: GameService,
     private config: ConfigService,
     private title: AppTitleService,
+    public fa: FontAwesomeService,
     route: ActivatedRoute
   ) {
 
@@ -77,14 +69,14 @@ export class GameEditorComponent implements AfterViewInit {
       switchMap(id => api.retrieve(id)),
       tap(g => {
         this.game = g;
-        this.title.set(`Edit "${g.name}"`)
+        this.setExternalGameFieldsVisibility(g.mode);
+        this.title.set(`Edit "${g.name}"`);
         this.updateFeedbackMessage();
       })
     );
   }
 
   ngAfterViewInit(): void {
-
     this.updated$ = this.form.valueChanges.pipe(
       filter(f => !this.form.pristine && (this.form.valid || false)),
       tap(g => this.dirty = true),
@@ -103,6 +95,7 @@ export class GameEditorComponent implements AfterViewInit {
       switchMap(g => this.api.retrieve(this.game.id).pipe(
         tap(game => {
           this.game.feedbackTemplate = game.feedbackTemplate;
+          this.setExternalGameFieldsVisibility(game.mode);
           this.updateFeedbackMessage();
           this.refreshFeedback = false;
         }))
@@ -137,7 +130,6 @@ export class GameEditorComponent implements AfterViewInit {
       }
     );
   }
-
 
   addSuggestions(games: Game[]) {
     // add properties of each game into respective map to record distinct values and maintain counts
@@ -182,6 +174,19 @@ export class GameEditorComponent implements AfterViewInit {
       return false;
     }
     return true;
+  }
+
+  updateGameMode(value: string) {
+    this.game.mode = value;
+    this.setExternalGameFieldsVisibility(value);
+  }
+
+  handleModeChange(e: Event) {
+    this.setExternalGameFieldsVisibility((e.target as any).value);
+  }
+
+  setExternalGameFieldsVisibility(value: string) {
+    this.showExternalGameFields = (value === 'external');
   }
 
   sortByCount(a: KeyValue<string, number>, b: KeyValue<string, number>) {

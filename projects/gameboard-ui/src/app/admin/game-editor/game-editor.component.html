@@ -4,13 +4,13 @@
 <form #form="ngForm" [ngFormOptions]="{updateOn: 'blur'}" autocomplete="off">
   <ng-container *ngIf="game$ | async as game; else loading">
     <a class="btn btn-link" routerLink="../../">
-      <fa-icon [icon]="faArrowLeft"></fa-icon>
+      <fa-icon [icon]="fa.arrowLeft"></fa-icon>
       <span>Back</span>
     </a>
     <h1 class="mb-0">
       {{game.name}}
       <span class="mr-2 f-2" [ngClass]="dirty ? 'text-warning' : 'text-success'">
-        <fa-icon [icon]="faSave"></fa-icon>
+        <fa-icon [icon]="fa.cloudUploadAlt"></fa-icon>
       </span>
       <span *ngIf="(updated$ | async) as saved">
         monitoring
@@ -18,12 +18,12 @@
     </h1>
     <app-clipspan class="text-muted text-sm">{{game.id}}</app-clipspan>
     <a class="btn btn-link" [routerLink]="['/game', game.id]">
-      <fa-icon [icon]="faGo"></fa-icon>
+      <fa-icon [icon]="fa.gamepad"></fa-icon>
       <span>Lobby</span>
     </a>
 
     <div class="section-header" tabindex="0" (click)="show(1)">
-      <fa-icon [icon]="viewing===1 ? faCaretDown : faCaretRight"></fa-icon>
+      <fa-icon [icon]="viewing===1 ? fa.caretDown : fa.caretRight"></fa-icon>
       <span class="lead text-light"> Metadata </span>
     </div>
 
@@ -38,8 +38,8 @@
             <label>Hidden</label>
             <label class="btn text-info" btnCheckbox [ngModelOptions]="{updateOn: 'change'}" id="isPublished-input"
               name="isPublished" [(ngModel)]="game.isPublished">
-              <fa-icon *ngIf="!game.isPublished" [icon]="faToggleOff" size="lg"></fa-icon>
-              <fa-icon *ngIf="game.isPublished" [icon]="faToggleOn" size="lg"></fa-icon>
+              <fa-icon *ngIf="!game.isPublished" [icon]="fa.toggleOff" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.isPublished" [icon]="fa.toggleOn" size="lg"></fa-icon>
             </label>
             <label>Visible</label>
           </div>
@@ -100,19 +100,12 @@
 
         <div class="form-group pb-0 pt-1">
           <label for="mode-input">Mode</label>
-          <select id="mode-input" name="mode-input" class="form-control" [(ngModel)]="game.mode">
-            <option [ngValue]="'vm'">Standard (VMs only)</option>
-            <option [ngValue]="'external'">External</option>
-            <option [ngValue]="'unity'">Cubespace</option>
+          <select id="mode-input" name="mode-input" class="form-control" [(ngModel)]="game.mode"
+            (change)="handleModeChange($event)">
+            <option [value]="'vm'">Standard (VMs only)</option>
+            <option [value]="'external'">External</option>
+            <option [value]="'unity'">Cubespace</option>
           </select>
-        </div>
-
-        <div class="form-group pb-0 pt-1" *ngIf="game.mode == 'external'">
-          <label for="external-startup-url">External Startup URL</label>
-          <input name="external-startup-url" type="text" class="form-control" [(ngModel)]="game.externalGameStartupUrl">
-          <small>
-            When Gameboard boots an external game, it'll post game metadata to this URL.
-          </small>
         </div>
       </div>
 
@@ -125,7 +118,7 @@
           </p>
           <app-dropzone inputId="logo-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event, 'card')">
             <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
-              <fa-icon [icon]="faTrash"></fa-icon>
+              <fa-icon [icon]="fa.trash"></fa-icon>
               <span>Reset</span>
             </button>
             <app-game-card [game]="game"></app-game-card>
@@ -163,6 +156,34 @@
         </div>
       </div>
 
+      <ng-container *ngIf="game.mode === 'external'">
+        <div class="col-12 mt-4">
+          <h2 class="pl-4">External Game Settings</h2>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group">
+            <label for="external-game-launch-url">Launch Metadata URL</label>
+            <input type="text" class="form-control" id="external-game-launch-url" name="external-game-launch-url"
+              [(ngModel)]="game.externalGameStartupUrl">
+            <small>
+              When Gameboard boots an external game, it'll post game metadata to this URL.
+            </small>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group">
+            <label for="external-game-launch-url">Game Client URL</label>
+            <input type="text" class="form-control" id="external-game-client-url" name="external-game-client-url"
+              [(ngModel)]="game.externalGameClientUrl">
+            <small>
+              The URL from which Gameboard will attempt to serve the game client
+            </small>
+          </div>
+        </div>
+      </ng-container>
+
       <div class="col-12">
         <div class="form-group pb-0 pt-1">
           <label for="gameMarkdown-input">Lobby Markdown</label>
@@ -194,7 +215,7 @@
           <small>design with HTML and inline/internal CSS; use a 11:8.5 aspect ratio</small>
           <button class="btn btn-sm btn-link-white" [(ngModel)]="showCertificateInfo"
             [ngModelOptions]="{standalone: true}" btnCheckbox>
-            <fa-icon [icon]="faInfoCircle"></fa-icon>
+            <fa-icon [icon]="fa.infoCircle"></fa-icon>
           </button>
           <div class="ml-4 px-2" *ngIf="showCertificateInfo">
             <p class="cert-info mb-2">
@@ -229,7 +250,7 @@
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(2)">
-      <fa-icon [icon]="viewing===2 ? faCaretDown : faCaretRight"></fa-icon>
+      <fa-icon [icon]="viewing===2 ? fa.caretDown : fa.caretRight"></fa-icon>
       <span class="lead text-light"> Settings </span>
     </div>
 
@@ -290,8 +311,8 @@
             <label>Hidden</label>
             <label class="btn text-info" btnCheckbox tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
               id="preview-toggle" name="allowPreview" [(ngModel)]="game.allowPreview">
-              <fa-icon *ngIf="!game.allowPreview" [icon]="faToggleOff" size="lg"></fa-icon>
-              <fa-icon *ngIf="game.allowPreview" [icon]="faToggleOn" size="lg"></fa-icon>
+              <fa-icon *ngIf="!game.allowPreview" [icon]="fa.toggleOff" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.allowPreview" [icon]="fa.toggleOn" size="lg"></fa-icon>
             </label>
             <label>Visible</label>
           </div>
@@ -304,8 +325,8 @@
             <label>Forbidden</label>
             <label class="btn text-info" btnCheckbox tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
               id="reset-toggle" name="allowReset" [(ngModel)]="game.allowReset">
-              <fa-icon *ngIf="!game.allowReset" [icon]="faToggleOff" size="lg"></fa-icon>
-              <fa-icon *ngIf="game.allowReset" [icon]="faToggleOn" size="lg"></fa-icon>
+              <fa-icon *ngIf="!game.allowReset" [icon]="fa.toggleOff" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.allowReset" [icon]="fa.toggleOn" size="lg"></fa-icon>
             </label>
             <label>Allowed</label>
           </div>
@@ -319,8 +340,8 @@
             <label class="btn text-info" btnCheckbox btnCheckboxTrue="practice" btnCheckboxFalse="competition"
               tabindex="0" [ngModelOptions]="{updateOn: 'change'}" id="reset-toggle" name="playerMode"
               [(ngModel)]="game.playerMode">
-              <fa-icon *ngIf="game.playerMode==='competition'" [icon]="faToggleOff" size="lg"></fa-icon>
-              <fa-icon *ngIf="game.playerMode==='practice'" [icon]="faToggleOn" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.playerMode==='competition'" [icon]="fa.toggleOff" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.playerMode==='practice'" [icon]="fa.toggleOn" size="lg"></fa-icon>
             </label>
             <label>Practice</label>
           </div>
@@ -334,8 +355,8 @@
             <label class="btn text-info" btnCheckbox [btnCheckboxTrue]="true" [btnCheckboxFalse]="false" tabindex="0"
               [ngModelOptions]="{updateOn: 'change'}" id="sync-start-toggle" name="syncStartToggle"
               [(ngModel)]="game.requireSynchronizedStart">
-              <fa-icon *ngIf="!game.requireSynchronizedStart" [icon]="faToggleOff" size="lg"></fa-icon>
-              <fa-icon *ngIf="game.requireSynchronizedStart" [icon]="faToggleOn" size="lg"></fa-icon>
+              <fa-icon *ngIf="!game.requireSynchronizedStart" [icon]="fa.toggleOff" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.requireSynchronizedStart" [icon]="fa.toggleOn" size="lg"></fa-icon>
             </label>
             <label>Yes</label>
           </div>
@@ -405,8 +426,8 @@
               <label>Open</label>
               <label class="btn text-info" btnCheckbox [ngModelOptions]="{updateOn: 'change'}" tabindex="0"
                 id="requireSponsoredTeam-input" name="requireSponsoredTeam" [(ngModel)]="game.requireSponsoredTeam">
-                <fa-icon *ngIf="!game.requireSponsoredTeam" [icon]="faToggleOff" size="lg"></fa-icon>
-                <fa-icon *ngIf="game.requireSponsoredTeam" [icon]="faToggleOn" size="lg"></fa-icon>
+                <fa-icon *ngIf="!game.requireSponsoredTeam" [icon]="fa.toggleOff" size="lg"></fa-icon>
+                <fa-icon *ngIf="game.requireSponsoredTeam" [icon]="fa.toggleOn" size="lg"></fa-icon>
               </label>
               <label>Required</label>
             </div>
@@ -424,15 +445,13 @@
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(3)">
-      <fa-icon [icon]="viewing===3 ? faCaretDown : faCaretRight"></fa-icon>
+      <fa-icon [icon]="viewing===3 ? fa.caretDown : fa.caretRight"></fa-icon>
       <span class="lead text-light"> Challenges </span>
     </div>
 
     <div [hidden]="viewing!==3" class="mb-4">
       <app-game-mapper [game]="game"></app-game-mapper>
     </div>
-
-
   </ng-container>
 </form>
 
