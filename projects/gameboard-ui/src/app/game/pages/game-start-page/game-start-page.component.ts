@@ -9,7 +9,7 @@ import { Game, GameMode } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { RouterService } from '../../../services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
-import { ExternalGameCreationState } from '@/services/signalR/game-hub.models';
+import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
 
 interface GameLaunchContext {
@@ -29,10 +29,12 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
 
   private externalGameLaunchProgressChangedSub?: Subscription;
   private externalGameLaunchEndedSub?: Subscription;
+  private gameStartFailureSub?: Subscription;
 
+  errors: string[] = [];
   launchCompleted = false;
   gameLaunchCtx?: GameLaunchContext;
-  state?: ExternalGameCreationState;
+  state?: GameStartState;
 
   constructor(
     route: ActivatedRoute,
@@ -78,6 +80,7 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.externalGameLaunchEndedSub?.unsubscribe();
     this.externalGameLaunchProgressChangedSub?.unsubscribe();
+    this.gameStartFailureSub?.unsubscribe();
   }
 
   handleGameReady(ctx: GameLaunchContext) {
@@ -119,6 +122,7 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
     }
 
     if (ctx.game.mode == GameMode.External) {
+      this.gameStartFailureSub = this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error));
       this.externalGameLaunchProgressChangedSub = this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state);
       this.externalGameLaunchEndedSub = this.gameHub.externalGameLaunchEnded$.subscribe(state => {
         this.state = state;

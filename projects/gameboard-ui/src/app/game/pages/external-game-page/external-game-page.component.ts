@@ -6,6 +6,7 @@ import { GameService } from '@/api/game.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { LayoutService } from '@/utility/layout.service';
 import { ExternalGameActive } from '@/services/external-game.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-external-game-page',
@@ -22,13 +23,18 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
   constructor(
     private gameService: GameService,
     private layoutService: LayoutService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private routerService: RouterService) { }
 
   async ngOnInit(): Promise<void> {
     this.isProduction = environment.production;
     this.game = await this.resolveGame(this.route.snapshot.paramMap);
     this.iframeWindowTitle = `${this.game.name} (External Gameboard Game)`;
     this.layoutService.stickyMenu$.next(false);
+
+    // we still don't know why, but we have to reload after hitting an iframe page
+    // in order to prevent weird css bugs
+    this.routerService.reloadOnNextNavigateEnd();
   }
 
   ngOnDestroy(): void {

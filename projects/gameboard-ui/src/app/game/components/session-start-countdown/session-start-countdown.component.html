@@ -4,7 +4,7 @@
         <app-game-card [game]="ctx.game"></app-game-card>
     </div>
     <div class="game-detail-panel">
-        <h2>Your game is starting...</h2>
+        <h2 class="gray-text fw-bold">Your game is starting...</h2>
         <h1>{{ctx.game.name}}</h1>
         <div class="detail-badges">
             <ul>
@@ -21,7 +21,7 @@
         <div class="bottom-panel d-flex">
             <div class="countdown-container text-center">
                 <strong class="countdown-seconds">{{ctx.secondsRemaining}}</strong>
-                <label class="countdown-seconds-label">seconds</label>
+                <label class="countdown-seconds-label">second{{ ctx.secondsRemaining == 1 ? "" : "s"}}</label>
             </div>
 
             <div class="player-info d-flex mt-2 justify-content-center align-items-center">

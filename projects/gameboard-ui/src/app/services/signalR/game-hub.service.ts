@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { SignalRService } from './signalr.service';
-import { ExternalGameCreationState, GameHubEvent, GameHubEventType, PlayerJoinedEvent } from './game-hub.models';
+import { GameStartState, GameHubEvent, GameHubEventType, PlayerJoinedEvent } from './game-hub.models';
 import { LogService } from '../log.service';
 import { Subject } from 'rxjs';
 import { SyncStartGameState, SyncStartGameStartedState } from '@/game/game.models';
 
 @Injectable({ providedIn: 'root' })
 export class GameHubService {
-  private _externalGameLaunchStarted$ = new Subject<ExternalGameCreationState>();
-  private _externalGameLaunchEnded$ = new Subject<ExternalGameCreationState>();
-  private _externalGameLaunchFailure$ = new Subject<ExternalGameCreationState>();
-  private _externalGameLaunchProgressChanged$ = new Subject<ExternalGameCreationState>();
+  private _externalGameLaunchStarted$ = new Subject<GameStartState>();
+  private _externalGameLaunchEnded$ = new Subject<GameStartState>();
+  private _externalGameLaunchFailure$ = new Subject<GameStartState>();
+  private _externalGameLaunchProgressChanged$ = new Subject<GameStartState>();
   private _syncStartGameStateChanged$ = new Subject<SyncStartGameState>();
   private _syncStartGameStarted$ = new Subject<SyncStartGameStartedState>();
   private _joinedGameIds: string[] = [];
@@ -31,19 +31,19 @@ export class GameHubService {
     await this.signalRService.connect(
       "hub/games",
       [
-        { eventType: GameHubEventType.PlayerJoined, handler: ev => this.handleGameJoined.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameChallengesDeployStart, handler: ev => this.handleExternalGameLaunchProgressChanged.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameChallengesDeployProgressChange, handler: ev => this.handleExternalGameLaunchProgressChanged.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameChallengesDeployEnd, handler: ev => this.handleExternalGameLaunchProgressChanged.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameGamespacesDeployStart, handler: ev => this.handleExternalGameLaunchProgressChanged.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameGamespacesDeployProgressChange, handler: ev => this.handleExternalGameLaunchProgressChanged.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameGamespacesDeployEnd, handler: ev => this.handleExternalGameLaunchProgressChanged.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameLaunchStart, handler: ev => this.handleExternalGameLaunchStarted.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameLaunchFailure, handler: ev => this.handleExternalGameLaunchFailure.bind(this)(ev) },
-        { eventType: GameHubEventType.ExternalGameLaunchEnd, handler: ev => this.handleExternalGameLaunchEnded.bind(this)(ev) },
-        { eventType: GameHubEventType.SyncStartGameStateChanged, handler: ev => this.handleSyncStartStateChanged.bind(this)(ev) },
-        { eventType: GameHubEventType.SyncStartGameStarting, handler: ev => this.handleSyncStartGameStarting.bind(this)(ev) },
-        { eventType: GameHubEventType.YouJoined, handler: ev => this.logService.logInfo("joined!", ev) }
+        { eventType: GameHubEventType.PlayerJoined, handler: this.handleGameJoined.bind(this) },
+        { eventType: GameHubEventType.ExternalGameChallengesDeployStart, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameChallengesDeployProgressChange, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameChallengesDeployEnd, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameGamespacesDeployStart, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameGamespacesDeployProgressChange, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameGamespacesDeployEnd, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameLaunchStart, handler: this.handleExternalGameLaunchStarted.bind(this) },
+        { eventType: GameHubEventType.ExternalGameLaunchFailure, handler: this.handleExternalGameLaunchFailure.bind(this) },
+        { eventType: GameHubEventType.ExternalGameLaunchEnd, handler: this.handleExternalGameLaunchEnded.bind(this) },
+        { eventType: GameHubEventType.SyncStartGameStateChanged, handler: this.handleSyncStartStateChanged.bind(this) },
+        { eventType: GameHubEventType.SyncStartGameStarting, handler: this.handleSyncStartGameStarting.bind(this) },
+        { eventType: GameHubEventType.YouJoined, handler: ev => this.logService.logInfo("You joined the game", ev) }
       ]);
 
     this.signalRService.sendMessage("JoinGame", { gameId });
@@ -64,22 +64,22 @@ export class GameHubService {
     this._joinedGameIds.indexOf(gameId) >= 0;
 
   private handleGameJoined(ev: GameHubEvent<PlayerJoinedEvent>) {
-    this.logService.logInfo("Joined (From the new game hub service)", ev);
+    this.logService.logInfo("Joined the game", ev);
   }
 
-  private handleExternalGameLaunchStarted(ev: GameHubEvent<ExternalGameCreationState>) {
+  private handleExternalGameLaunchStarted(ev: GameHubEvent<GameStartState>) {
     this._externalGameLaunchStarted$.next(ev.data);
   }
 
-  private handleExternalGameLaunchEnded(ev: GameHubEvent<ExternalGameCreationState>) {
+  private handleExternalGameLaunchEnded(ev: GameHubEvent<GameStartState>) {
     this._externalGameLaunchEnded$.next(ev.data);
   }
 
-  private handleExternalGameLaunchFailure(ev: GameHubEvent<ExternalGameCreationState>) {
+  private handleExternalGameLaunchFailure(ev: GameHubEvent<GameStartState>) {
     this._externalGameLaunchFailure$.next(ev.data);
   }
 
-  private handleExternalGameLaunchProgressChanged(ev: GameHubEvent<ExternalGameCreationState>) {
+  private handleExternalGameLaunchProgressChanged(ev: GameHubEvent<GameStartState>) {
     this.logService.logInfo("progress updated", ev.data);
     this._externalGameLaunchProgressChanged$.next(ev.data);
   }

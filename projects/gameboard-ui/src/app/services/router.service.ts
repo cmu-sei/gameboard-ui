@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, OnDestroy } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription, filter } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class RouterService {
+export class RouterService implements OnDestroy {
+  private _navEndSub?: Subscription;
 
   constructor(public router: Router) { }
 
@@ -30,5 +32,17 @@ export class RouterService {
 
   public goToGameStartPage(ctx: { gameId: string, playerId: string }) {
     this.router.navigateByUrl(`/game/${ctx.gameId}/start/${ctx.playerId}`);
+  }
+
+  public reloadOnNextNavigateEnd() {
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(e => {
+      window.location = window.location;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._navEndSub?.unsubscribe();
   }
 }

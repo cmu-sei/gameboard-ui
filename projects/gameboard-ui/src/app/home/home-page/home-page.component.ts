@@ -9,17 +9,10 @@ import { ConfigService } from '../../utility/config.service';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss']
 })
-export class HomePageComponent implements OnInit {
-
+export class HomePageComponent {
   appname = '';
 
-  constructor(
-    config: ConfigService
-  ) {
+  constructor(config: ConfigService) {
     this.appname = config.settings.appname || 'Gameboard';
   }
-
-  ngOnInit(): void {
-  }
-
 }

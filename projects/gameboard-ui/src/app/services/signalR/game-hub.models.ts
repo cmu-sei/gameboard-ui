@@ -1,5 +1,7 @@
 import { SimpleEntity } from "@/api/models";
 import { SignalRHubEventType } from "./signalr-hub.models";
+import { GameEngineType } from "@/api/spec-models";
+import { GameState } from "@/api/board-models";
 
 export interface GameHubEvent<T> {
     gameId: string;
@@ -36,18 +38,39 @@ export interface YouJoinedEvent {
     userId: string;
 }
 
-export interface ExternalGameCreationState {
+export interface GameStartState {
     game: SimpleEntity;
-    challengesCreated: number;
+    challengesCreated: GameStartStateChallenge[];
     challengesTotal: number;
-    gamespacesDeployed: number;
+    gamespacesDeployed: GameState[];
     gamespacesTotal: number;
-    playersTotal: number;
-    teamsTotal: number;
+    players: GameStartStatePlayer[];
+    teamsTotal: GameStartStateTeam[];
     overallProgress: number;
 
     startTime: Date,
     now: Date,
 
     error: string;
+}
+
+export interface GameStartStateChallenge {
+    challenge: SimpleEntity;
+    gameEngineType: GameEngineType;
+    teamId: string;
+}
+
+export interface GameStartStatePlayer {
+    player: SimpleEntity;
+    teamId: string;
+}
+
+export interface GameStartStateTeam {
+    team: SimpleEntity;
+    captain: GameStartStateCaptain;
+}
+
+export interface GameStartStateCaptain {
+    player: SimpleEntity;
+    userId: string;
 }
