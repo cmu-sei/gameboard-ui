@@ -111,3 +111,10 @@ export interface GameEnrollmentContext {
   user: ApiUser;
   player: Player | undefined;
 }
+
+export enum GameStartPhase {
+  NotStarted,
+  Starting,
+  Started,
+  GameOver
+}

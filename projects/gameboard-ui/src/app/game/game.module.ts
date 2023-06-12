@@ -33,9 +33,11 @@ import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.p
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
-import { SyncStartGuard } from '../guards/sync-start.guard';
 import { GameStartPageComponent } from './pages/game-start-page/game-start-page.component';
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
+import { ExternalSyncGameGuard } from '@/guards/external-sync-game.guard';
+import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
+import { GameIsStarted } from '@/guards/game-is-started.guard';
 
 const MODULE_DECLARATIONS = [
   PlayerEnrollComponent,
@@ -54,6 +56,7 @@ const MODULE_DECLARATIONS = [
   GameboardPerformanceSummaryComponent,
   CumulativeTimeClockComponent,
   SessionStartControlsComponent,
+  SessionStartCountdownComponent,
   GameStartPageComponent,
   ExternalGamePageComponent
 ];
@@ -61,18 +64,17 @@ const MODULE_DECLARATIONS = [
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
-    SessionStartCountdownComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild([
-      { path: 'board/:playerId/:cid', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
-      { path: 'board/:playerId', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
-      { path: ':gameId/start/:playerId', canActivate: [AuthGuard], component: GameStartPageComponent },
-      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
-      { path: 'external/:gameId', canActivate: [AuthGuard], component: ExternalGamePageComponent },
+      { path: 'board/:playerId/:cid', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
+      { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
+      { path: ':gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: GameStartPageComponent },
+      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard, UserIsPlayingGuard], component: UnityBoardComponent },
+      { path: 'external/:gameId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalSyncGameGuard], component: ExternalGamePageComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),

@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GameService } from '../../../api/game.service';
-import { LogService } from '../../../services/log.service';
-import { PlayerService } from '../../../api/player.service';
-import { UserService } from '../../../utility/user.service';
+import { GameService } from '@/api/game.service';
+import { LogService } from '@/services/log.service';
+import { PlayerService } from '@/api/player.service';
+import { UserService } from '@/utility/user.service';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { Game, GameMode } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
-import { RouterService } from '../../../services/router.service';
+import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';

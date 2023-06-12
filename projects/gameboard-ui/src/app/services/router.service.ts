@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, UrlTree } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -26,12 +26,20 @@ export class RouterService implements OnDestroy {
     this.router.navigateByUrl(`/game/external/${gameId}`);
   }
 
+  public getGamePageUrlTree(gameId: string): UrlTree {
+    return this.router.parseUrl(`/game/${gameId}`);
+  }
+
   public goToGamePage(gameId: string) {
-    this.router.navigateByUrl(`/game/${gameId}`);
+    this.router.navigateByUrl(this.getGamePageUrlTree(gameId));
+  }
+
+  public getGameStartPageUrlTree(ctx: { gameId: string, playerId: string }) {
+    return this.router.parseUrl(`/game/${ctx.gameId}/start/${ctx.playerId}`);
   }
 
   public goToGameStartPage(ctx: { gameId: string, playerId: string }) {
-    this.router.navigateByUrl(`/game/${ctx.gameId}/start/${ctx.playerId}`);
+    this.router.navigateByUrl(this.getGameStartPageUrlTree(ctx));
   }
 
   public reloadOnNextNavigateEnd() {

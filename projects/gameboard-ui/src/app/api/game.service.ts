@@ -8,7 +8,7 @@ import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, Game, GameGroup, GameStartPhase, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 
@@ -69,6 +69,10 @@ export class GameService {
     return this.http.delete<any>(`${this.url}/game/${id}`).pipe(
       tap(m => this.removeCache(id))
     );
+  }
+
+  public getStartPhase(gameId: string): Observable<GameStartPhase> {
+    return this.http.get<GameStartPhase>(`${this.url}/game/${gameId}/start-phase`);
   }
 
   public getSyncStartState(gameId: string): Observable<SyncStartGameState> {
