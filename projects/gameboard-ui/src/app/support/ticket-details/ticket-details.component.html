@@ -70,9 +70,12 @@
           </div>
           <div class="card-body">
             <app-long-content-hider>
-              <p class="card-text">
+              <<<<<<< HEAD <p class="card-text">
                 <app-render-links-in-text [text]="ctx.ticket.description"></app-render-links-in-text>
-              </p>
+                </p>
+                =======
+                <p class="card-text" [innerHtml]="ctx.ticket.description"></p>
+                >>>>>>> da67afe (Improved error handling for illegal mime types. Support area formatting updates.)
             </app-long-content-hider>
             <ng-container *ngIf="editingContent && changedTicket && !!changedTicket?.id">
               <textarea type="text" class="form-control w-100 text-white" rows=8 autocomplete="off"
