@@ -32,7 +32,6 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   faUpload = faUpload;
   faFileAlt = faFileAlt;
   errors: string[] = [];
-
   private static ALLOWED_MIME_TYPES = [
     "image/bmp",
     "image/jpeg",
