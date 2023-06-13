@@ -32,9 +32,15 @@
                 <th></th>
             </tr>
             <tr *ngFor="let key of apiKeys || []">
-                <td [innerHTML]="key.name || '<em>Unnamed</em>' | safeHtml"></td>
+                <td>
+                    <span *ngIf="key.name else unnamedKey">{{key.name}}</span>
+                    <ng-template #unnamedKey><em>Unnamed</em></ng-template>
+                </td>
                 <td>{{ key.generatedOn | shortdate }}</td>
-                <td [innerHTML]="(!!key.expiresOn ? (key.expiresOn | shortdate) : '<em>Doesn\'t expire</em>')"></td>
+                <td>
+                    <span *ngIf="!!key.expiresOn">{{key.expiresOn | shortdate}}</span>
+                    <ng-template #noExpiresKey><em>Doesn't expire</em></ng-template>
+                </td>
                 <td>
                     <app-confirm-button btnClass="btn btn-danger" (confirm)="delete(key.id)">
                         <span>Delete</span>

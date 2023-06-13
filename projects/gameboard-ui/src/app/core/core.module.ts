@@ -11,7 +11,7 @@ import { PlayerAvatarListComponent } from './components/player-avatar-list/playe
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './directives/modal-confirm.directive';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
-import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { SanitizeHtmlPipe } from './pipes/sanitize-html.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
 import { CustomInputComponent } from './components/custom-input/custom-input.component';
@@ -25,7 +25,7 @@ const PUBLIC_DECLARATIONS = [
   PlayerAvatarListComponent,
   PlayerStatusComponent,
   RelativeUrlsPipe,
-  SafeHtmlPipe,
+  SanitizeHtmlPipe,
   UrlRewritePipe,
   YamlBlockComponent,
   YamlPipe

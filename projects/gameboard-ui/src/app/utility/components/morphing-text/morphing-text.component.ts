@@ -114,11 +114,12 @@ export class MorphingTextComponent implements AfterViewInit {
     }
   }
 
-  private renderTextContent(text: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(
+  private renderTextContent(text: string): string {
+    return this.sanitizer.sanitize(
+      SecurityContext.HTML,
       this.markdown.parse(
         this.sanitizer.sanitize(SecurityContext.HTML, text) || ""
       )
-    );
+    ) || '';
   }
 }

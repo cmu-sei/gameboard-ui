@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
@@ -13,7 +13,7 @@ import { PlayerService } from '../../api/player.service';
 })
 export class CertificateComponent implements OnInit {
   @Input() ctx!: GameContext;
-  cert$!: Observable<SafeHtml>;
+  cert$!: Observable<string>;
   toPrint: string = "";
   faPrint = faPrint;
 
@@ -26,7 +26,7 @@ export class CertificateComponent implements OnInit {
     this.cert$ = this.apiPlayer.getCertificate(this.ctx.player.id).pipe(
       tap(g => this.toPrint = g.html),
       // sanitize html to render in iframe binding and add wrapper div to center certificate
-      map(g => this.sanitizer.bypassSecurityTrustHtml(`<div style="max-width: max-content; margin: auto;">${g.html}</div>`)),
+      map(g => this.sanitizer.sanitize(SecurityContext.HTML, `<div style="max-width: max-content; margin: auto;">${g.html}</div>`) || ''),
     );
   }
 
