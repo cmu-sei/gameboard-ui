@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, Subject, firstValueFrom } from 'rxjs';
-import { debounceTime, switchMap, tap, mergeMap, filter, map, defaultIfEmpty } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
+import { debounceTime, switchMap, tap, filter, map } from 'rxjs/operators';
 import { ChallengeOverview } from '../../api/board-models';
 import { NewTicket } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
@@ -17,10 +17,9 @@ import { BoardService } from '@/api/board.service';
   templateUrl: './ticket-form.component.html',
   styleUrls: ['./ticket-form.component.scss']
 })
-export class TicketFormComponent {
+export class TicketFormComponent implements OnDestroy {
 
   summaryLimit = 128;
-
   requesters: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
 
   ticket: NewTicket = {
@@ -30,8 +29,6 @@ export class TicketFormComponent {
     uploads: []
   } as any;
 
-  // challenge$: Observable<Challenge>;
-
   challengeRefresh: BehaviorSubject<any> = new BehaviorSubject({});
   challengeOptions: ChallengeOverview[] = [];
 
@@ -39,6 +36,10 @@ export class TicketFormComponent {
 
   errors: any[] = [];
   canManage$: Observable<boolean>;
+
+  private challengeRefreshSub?: Subscription;
+  private requestersFilteringSub?: Subscription;
+  private routeSub?: Subscription;
 
   constructor(
     private api: SupportService,
@@ -48,9 +49,9 @@ export class TicketFormComponent {
     route: ActivatedRoute,
     localUserService: LocalUserService
   ) {
+    this.canManage$ = localUserService.user$.pipe(map(u => !!u?.isSupport));
 
-    // todo, could remove this and just set the challenge id since it is also fetching list of challenge options
-    const paramChallenge$ = route.queryParams.pipe(
+    this.routeSub = route.queryParams.pipe(
       filter(p => !!p.cid),
       switchMap(p => boardApi.retrieve(p.cid)),
       tap(c => {
@@ -59,14 +60,11 @@ export class TicketFormComponent {
       })
     ).subscribe();
 
-    const challenges$ = this.challengeRefresh.pipe(
+    this.challengeRefreshSub = this.challengeRefresh.pipe(
       switchMap(search => this.api.listUserChallenges(search))
-    )
-      .subscribe((a) => this.challengeOptions = a);
+    ).subscribe((a) => this.challengeOptions = a);
 
-    this.canManage$ = localUserService.user$.pipe(map(u => !!u?.isSupport));
-
-    this.requesters.filtering$.pipe(
+    this.requestersFilteringSub = this.requesters.filtering$.pipe(
       debounceTime(200),
       switchMap((term) => this.userApi.list({ term: term, take: 25 })),
     ).subscribe(
@@ -101,5 +99,11 @@ export class TicketFormComponent {
       this.ticket.challengeId = "";
       this.challengeRefresh.next({ uid: this.ticket.requesterId });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.challengeRefreshSub?.unsubscribe();
+    this.requestersFilteringSub?.unsubscribe();
+    this.routeSub?.unsubscribe();
   }
 }

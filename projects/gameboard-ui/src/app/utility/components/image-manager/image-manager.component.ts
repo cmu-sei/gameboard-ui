@@ -4,7 +4,7 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SecurityContext, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { faTrash, faArrowDown, faPaperclip, faUpload, faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPaperclip, faUpload, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { SupportService } from '../../../api/support.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -33,40 +33,44 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   faFileAlt = faFileAlt;
   errors: string[] = [];
 
+  private static ALLOWED_MIME_TYPES = [
+    "image/bmp",
+    "image/jpeg",
+    "image/x-png",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml",
+    "text/plain"
+  ];
+
   combineSize = 0;
 
   files = new Map<string, FileData>();
 
-  constructor(
-    api: SupportService,
-    private sanitizer: DomSanitizer
-  ) {
-
+  constructor(api: SupportService) {
     this.drops.pipe(
       map(a => Array.from(a)),
     ).subscribe(
       files => {
-        this.errors = [];
+        if (!this.validateFiles(files))
+          return;
+
         files.forEach(file => {
-          if (this.isLegalFile(file)) {
-            const data: FileData = { file: file };
-            const reader = new FileReader();
-            reader.onload = e => {
-              var result = reader.result as string;
-              if (!!result) {
-                data.encoded = sanitizer.sanitize(SecurityContext.RESOURCE_URL, result) || '';
-                this.files.set(this.getFileKey(file), data);
-                this.emitFiles();
-              }
-            };
-            reader.readAsDataURL(file);
-          } else {
-            this.errors.push("This file's type is not permitted. Accepted types are .png, .jpeg, .jpg, .gif, .webp, .svg, and .txt.");
-          }
+          const data: FileData = { file: file };
+          const reader = new FileReader();
+          reader.onload = e => {
+            var result = reader.result as string;
+            if (!!result) {
+              data.encoded = result;
+              this.files.set(this.getFileKey(file), data);
+              this.emitFiles();
+            }
+          };
+          reader.readAsDataURL(file);
         });
       }
     );
-
   }
 
   emitFiles() {
@@ -78,6 +82,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
     this.reset$?.subscribe(
       () => {
         this.files.clear();
+        this.errors = [];
       }
     );
   }
@@ -116,11 +121,27 @@ export class ImageManagerComponent implements OnInit, OnChanges {
 
   private getFileKey = (file: File) => (file.name + file.lastModified);
 
-  private isLegalFile = (file: File) =>
-    !this.files.has(this.getFileKey(file)) &&
-    this.combineSize + file.size < (this.combineSize * 1_000_000) &&
-    file.type.match(/(image|application)\/(png|jpeg|gif|webp|svg)/);
+  private validateFiles = (files: File[]) => {
+    this.errors = [];
 
+    for (const file of files) {
+      const fileDescription = files.length > 1 ? `File "${file.name}"` : "This file";
+
+      if (this.files.has(this.getFileKey(file))) {
+        this.errors.push(`${fileDescription} has already been uploaded.`);
+      }
+
+      if (this.combineSize + file.size > (this.maxCombinedSizeMB * 1_000_000)) {
+        this.errors.push(`${fileDescription} would cause your total uploads to exceed the maximum allowable size.`);
+      }
+
+      if (ImageManagerComponent.ALLOWED_MIME_TYPES.indexOf(file.type.toLowerCase()) < 0) {
+        this.errors.push(`${fileDescription}'s type is not permitted. Accepted types are .png, .jpeg, .jpg, .gif, .webp, .svg, and .txt.`);
+      }
+    }
+
+    return !this.errors.length;
+  };
 
   //
   // Handle drag/drop events
@@ -147,7 +168,6 @@ export class ImageManagerComponent implements OnInit, OnChanges {
     return false;
   }
 }
-
 
 export interface FileData {
   file: File;
