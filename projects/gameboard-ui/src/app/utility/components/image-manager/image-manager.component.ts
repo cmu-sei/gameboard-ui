@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University.
 // Released under a 3 Clause BSD-style license. See LICENSE.md in the project root.
 
-import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SecurityContext, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { faTrash, faPaperclip, faUpload, faFileAlt } from '@fortawesome/free-solid-svg-icons';
