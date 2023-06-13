@@ -5,6 +5,7 @@ import { Subscription, filter } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class RouterService implements OnDestroy {
   private _navEndSub?: Subscription;
+
   constructor(public router: Router) { }
 
   public goHome(): void {
