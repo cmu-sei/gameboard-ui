@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom } from 'rxjs';
 import { debounceTime, switchMap, tap, mergeMap, filter, map, defaultIfEmpty } from 'rxjs/operators';
-import { Challenge, ChallengeOverview } from '../../api/board-models';
-import { BoardService } from '../../api/board.service';
+import { ChallengeOverview } from '../../api/board-models';
 import { NewTicket } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
 import { UserService } from '../../api/user.service';
 import { EditData, SuggestionOption } from '../../utility/components/inplace-editor/inplace-editor.component';
 import { UserService as LocalUserService } from '../../utility/user.service';
+import { RouterService } from '@/services/router.service';
+import { ActivatedRoute } from '@angular/router';
+import { BoardService } from '@/api/board.service';
 
 @Component({
   selector: 'app-ticket-form',
   templateUrl: './ticket-form.component.html',
   styleUrls: ['./ticket-form.component.scss']
 })
-export class TicketFormComponent implements OnInit {
+export class TicketFormComponent {
 
   summaryLimit = 128;
 
@@ -41,11 +42,11 @@ export class TicketFormComponent implements OnInit {
 
   constructor(
     private api: SupportService,
-    private boardApi: BoardService,
+    private routerService: RouterService,
     private userApi: UserService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private local: LocalUserService
+    boardApi: BoardService,
+    route: ActivatedRoute,
+    localUserService: LocalUserService
   ) {
 
     // todo, could remove this and just set the challenge id since it is also fetching list of challenge options
@@ -59,38 +60,27 @@ export class TicketFormComponent implements OnInit {
     ).subscribe();
 
     const challenges$ = this.challengeRefresh.pipe(
-        switchMap(search => this.api.listUserChallenges(search))
-      )
+      switchMap(search => this.api.listUserChallenges(search))
+    )
       .subscribe((a) => this.challengeOptions = a);
 
-    this.canManage$ = local.user$.pipe(
-      map(u => !!u?.isSupport)
-    );
+    this.canManage$ = localUserService.user$.pipe(map(u => !!u?.isSupport));
 
     this.requesters.filtering$.pipe(
       debounceTime(200),
-      switchMap((term) => this.userApi.list({term: term, take: 25})),
+      switchMap((term) => this.userApi.list({ term: term, take: 25 })),
     ).subscribe(
       (result) => {
-        this.requesters.filteredOptions = result.map(u => ({name:u.approvedName, secondary: u.id.slice(0,8), data:u})).slice(0, 20);
+        this.requesters.filteredOptions = result.map(u => ({ name: u.approvedName, secondary: u.id.slice(0, 8), data: u })).slice(0, 20);
       }
     );
-
   }
 
-  ngOnInit(): void {
-
-  }
-
-  submit() {
-    this.api.upload(this.ticket).subscribe(
-      (ticket) => {
-        if (!!ticket.id) { // success
-          this.router.navigate(['/support/tickets', ticket.key]);
-        }
-      },
-      (err) => this.errors.push(err)
-    );
+  async submit() {
+    const ticket = await firstValueFrom(this.api.upload(this.ticket));
+    if (!!ticket.id) {
+      this.routerService.toSupportTickets(ticket.key.toString());
+    }
   }
 
   attachments(files: File[]) {
@@ -109,9 +99,7 @@ export class TicketFormComponent implements OnInit {
     this.requesters.isEditing = false;
     if (prevId != this.ticket.requesterId) {
       this.ticket.challengeId = "";
-      this.challengeRefresh.next({uid: this.ticket.requesterId});
+      this.challengeRefresh.next({ uid: this.ticket.requesterId });
     }
   }
-
-
 }
