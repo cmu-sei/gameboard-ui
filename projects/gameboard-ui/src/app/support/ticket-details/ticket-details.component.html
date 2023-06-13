@@ -152,7 +152,10 @@
               </div>
               <div class="card-body">
                 <app-long-content-hider>
-                  <p class="card-text">{{ activity.message }}</p>
+                  <<<<<<< HEAD <p class="card-text">{{ activity.message }}</p>
+                    =======
+                    <p class="card-text" [innerHtml]="activity.message"></p>
+                    >>>>>>> da67afe (Improved error handling for illegal mime types. Support area formatting updates.)
                 </app-long-content-hider>
                 <div *ngIf="activity.attachmentFiles?.length" class="d-flex overflow-auto my-auto">
                   <ng-container *ngFor="let file of activity.attachmentFiles; let j = index;">
