@@ -100,6 +100,7 @@ export class TicketFormComponent implements OnDestroy {
       this.challengeRefresh.next({ uid: this.ticket.requesterId });
     }
   }
+
   ngOnDestroy(): void {
     this.challengeRefreshSub?.unsubscribe();
     this.requestersFilteringSub?.unsubscribe();

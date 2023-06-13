@@ -43,6 +43,17 @@ export class ImageManagerComponent implements OnInit, OnChanges {
     "text/plain"
   ];
 
+  private static ALLOWED_MIME_TYPES = [
+    "image/bmp",
+    "image/jpeg",
+    "image/x-png",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml",
+    "text/plain"
+  ];
+
   combineSize = 0;
 
   files = new Map<string, FileData>();
