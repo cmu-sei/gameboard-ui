@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University.
 // Released under a 3 Clause BSD-style license. See LICENSE.md in the project root.
 
-import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SecurityContext, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { faTrash, faArrowDown, faPaperclip, faUpload, faFileAlt } from '@fortawesome/free-solid-svg-icons';
@@ -15,14 +15,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class ImageManagerComponent implements OnInit, OnChanges {
   @Input() maxCombinedSizeMB = 30;
-
   @Input() showIcon = true;
   @Input() defaultHeight = 200;
   @Input() browseButtonStyle = "btn-outline-secondary";
+  @Input() reset$?: Subject<boolean>;
 
   @Output() added = new EventEmitter<File[]>(); // emit files to parent component when changed
-
-  @Input() reset$?: Subject<boolean>;
 
   dropzone = false;
   drops = new Subject<FileList>();
@@ -33,6 +31,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   faPaperclip = faPaperclip;
   faUpload = faUpload;
   faFileAlt = faFileAlt;
+  errors: string[] = [];
 
   combineSize = 0;
 
@@ -47,28 +46,24 @@ export class ImageManagerComponent implements OnInit, OnChanges {
       map(a => Array.from(a)),
     ).subscribe(
       files => {
-
+        this.errors = [];
         files.forEach(file => {
-          var key = file.name + file.lastModified;
-          if (!this.files.has(key)) {
-            if (this.combineSize + file.size < this.maxCombinedSizeMB * 1_000_000) {
-              this.combineSize += file.size;
-              var data: FileData = { file: file };
-              if (file.type.match(/(image|application)\/(png|jpeg|gif|webp|svg)/)) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                  var result = reader.result as string;
-                  if (!!result)
-                    data.encoded = sanitizer.bypassSecurityTrustResourceUrl(result);
-                };
-                reader.readAsDataURL(file);
+          if (this.isLegalFile(file)) {
+            const data: FileData = { file: file };
+            const reader = new FileReader();
+            reader.onload = e => {
+              var result = reader.result as string;
+              if (!!result) {
+                data.encoded = sanitizer.sanitize(SecurityContext.RESOURCE_URL, result) || '';
+                this.files.set(this.getFileKey(file), data);
+                this.emitFiles();
               }
-              this.files.set(key, data);
-            }
+            };
+            reader.readAsDataURL(file);
+          } else {
+            this.errors.push("This file's type is not permitted. Accepted types are .png, .jpeg, .jpg, .gif, .webp, .svg, and .txt.");
           }
         });
-        this.emitFiles();
-
       }
     );
 
@@ -118,6 +113,14 @@ export class ImageManagerComponent implements OnInit, OnChanges {
   insertOrder() {
     return 0;
   }
+
+  private getFileKey = (file: File) => (file.name + file.lastModified);
+
+  private isLegalFile = (file: File) =>
+    !this.files.has(this.getFileKey(file)) &&
+    this.combineSize + file.size < (this.combineSize * 1_000_000) &&
+    file.type.match(/(image|application)\/(png|jpeg|gif|webp|svg)/);
+
 
   //
   // Handle drag/drop events

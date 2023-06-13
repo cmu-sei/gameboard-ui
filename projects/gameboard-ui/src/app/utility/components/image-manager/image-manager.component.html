@@ -2,16 +2,20 @@
 <!-- Released under a 3 Clause BSD-style license. See LICENSE.md in the project root. -->
 
 <div class="dropzone d-flex flex-column my-0" [class.dropzone-active]="dropzone" [style.min-height.px]="defaultHeight">
+  <app-error-div [errors]="errors"></app-error-div>
   <div>
     <label for="fileSelector">
       <input id="fileSelector" type="file" style="display:none;" multiple (change)="filesSelected($event)">
       <span class="btn btn-sm" [class]="browseButtonStyle">Browse</span>
     </label>
-    <small> or drag files here. {{maxCombinedSizeMB}}MB limit. Acceptable file types: .png, .jpeg, .jpg, .gif, .webp, .svg, .txt</small>
+    <small> or drag files here. {{maxCombinedSizeMB}}MB limit. Accepted file types: .png, .jpeg, .jpg, .gif, .webp,
+      .svg, .txt</small>
   </div>
   <div class="d-flex overflow-auto my-auto">
-    <fa-icon *ngIf="showIcon && !files.size" class="background-icon mx-auto align-middle" [icon]="faUpload" size="lg"></fa-icon> 
-    <div class="p-2 position-relative d-flex flex-column" *ngFor="let img of files | keyvalue:insertOrder" (focus)="focus(img.key)" (mouseenter)="focus(img.key)" (mouseleave)="blur(img.key)">
+    <fa-icon *ngIf="showIcon && !files.size" class="background-icon mx-auto align-middle" [icon]="faUpload"
+      size="lg"></fa-icon>
+    <div class="p-2 position-relative d-flex flex-column" *ngFor="let img of files | keyvalue:insertOrder"
+      (focus)="focus(img.key)" (mouseenter)="focus(img.key)" (mouseleave)="blur(img.key)">
       <img *ngIf="!!img.value.encoded" [src]="img.value.encoded" class="rounded">
       <div *ngIf="!img.value.encoded" class="p-2 rounded no-preview text-center d-flex flex-column">
         <fa-icon class="mt-0 mb-auto no-preview-icon" [icon]="faFileAlt" size="lg"></fa-icon>
