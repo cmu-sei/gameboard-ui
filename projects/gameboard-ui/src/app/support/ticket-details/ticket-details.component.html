@@ -154,12 +154,9 @@
               </div>
               <div class="card-body">
                 <app-long-content-hider>
-                  <<<<<<< HEAD <p class="card-text">
+                  <p class="card-text">{{ activity.message }}
                     <app-render-links-in-text [text]="activity.message"></app-render-links-in-text>
-                    </p>
-                    =======
-                    <p class="card-text">{{ activity.message }}</p>
-                    >>>>>>> 3656244 (Allow escaped html to render in support tickets.)
+                  </p>
                 </app-long-content-hider>
                 <div *ngIf="activity.attachmentFiles?.length" class="d-flex overflow-auto my-auto">
                   <ng-container *ngFor="let file of activity.attachmentFiles; let j = index;">
