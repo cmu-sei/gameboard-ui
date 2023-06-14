@@ -89,7 +89,7 @@ export class GameboardPageComponent implements OnDestroy {
           game: {
             isPracticeMode: b.game.isPracticeMode
           }
-        })
+        });
       }),
       tap(b => this.startHub(b)),
       tap(b => this.reselect())
@@ -99,7 +99,7 @@ export class GameboardPageComponent implements OnDestroy {
       switchMap(s => api.launch({ playerId: this.ctx.id, specId: s.id, variant: this.variant })),
       catchError(err => {
         this.errors.push(err);
-        return of(null as unknown as Challenge)
+        return of(null as unknown as Challenge);
       }),
       tap(c => this.deploying = false),
       filter(c => !!c),
@@ -116,7 +116,7 @@ export class GameboardPageComponent implements OnDestroy {
         ).pipe(
           catchError(err => {
             this.errors.push(err);
-            return of(null as unknown as Challenge)
+            return of(null as unknown as Challenge);
           }),
           filter(c => !!c),
           map(c => this.syncOne({ ...c, specId: s.id }))
@@ -167,7 +167,7 @@ export class GameboardPageComponent implements OnDestroy {
 
     if (!!s) {
       s.instance = c;
-      this.api.checkPrereq(s, this.ctx)
+      this.api.checkPrereq(s, this.ctx);
       this.api.setColor(s);
     }
 
@@ -176,7 +176,7 @@ export class GameboardPageComponent implements OnDestroy {
     }
 
     return s || {} as BoardSpec;
-  }
+  };
 
   select(spec: BoardSpec): void {
     if (!spec.disabled && !spec.locked && (!this.selected?.id || this.selected.id !== spec.id)) {

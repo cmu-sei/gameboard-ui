@@ -184,14 +184,14 @@ export class FeedbackReportComponent implements OnInit {
 
   next() {
     this.skip = this.skip + this.tablePageSize;
-    this.fetchFeedback()
+    this.fetchFeedback();
   }
 
   prev() {
     this.skip = this.skip - this.tablePageSize;
     if (this.skip < 0)
       this.skip = 0;
-    this.fetchFeedback()
+    this.fetchFeedback();
   }
 
   toggleRow(i: number) {

@@ -44,7 +44,7 @@ export class PlayerStatusComponent implements OnChanges {
       return "Registered to play (session not started)";
     }
     else if (this.session?.isAfter) {
-      return "Session ended"
+      return "Session ended";
     }
     else {
       return "Playing now";

@@ -98,7 +98,6 @@
     <!-- edit spec map locations -->
     <div [hidden]="viewing!=='map'">
 
-
       <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.mapbox-hover]="!!specHover">
         <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
           <span>{{this.specHover?.name}}</span><br />
@@ -125,9 +124,6 @@
           </ng-container>
         </svg>
       </div>
-
     </div>
-
   </div>
-
 </div>

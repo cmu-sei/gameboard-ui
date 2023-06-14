@@ -25,15 +25,15 @@
   </div>
   <div class="input-group mt-2 mb-0 ml-auto col-5">
     <div id="feedbackType-input" #selectType class="btn-group mb-2 ml-auto" btnRadioGroup name="sortType" tabindex="0"
-    [(ngModel)]="sort" [ngModelOptions]="{updateOn: 'change'}">
-    <label class="btn btn-outline-dark btn-md text-white" btnRadio="byName">
-      <fa-icon [icon]="faSortAlphaDown"></fa-icon>
-      Name
-    </label>
-    <label class="btn btn-outline-dark btn-md text-white" btnRadio="byRank">
-      <fa-icon [icon]="faSortAmountDown"></fa-icon>
-      Rank
-    </label>
+      [(ngModel)]="sort" [ngModelOptions]="{updateOn: 'change'}">
+      <label class="btn btn-outline-dark btn-md text-white" btnRadio="byName">
+        <fa-icon [icon]="faSortAlphaDown"></fa-icon>
+        Name
+      </label>
+      <label class="btn btn-outline-dark btn-md text-white" btnRadio="byRank">
+        <fa-icon [icon]="faSortAmountDown"></fa-icon>
+        Rank
+      </label>
     </div>
   </div>
 </div> <!-- end row for search and filtering -->
@@ -49,24 +49,31 @@
     <h4 class="col-2 text-right">Consoles</h4>
   </div>
   <div class="d-flex flex-column">
-    <ng-container *ngIf="(!!table.size || !isLoading) && {actors: fetchActors$ | async, term : (term$ | async) ?? ''} as updates; else loading">
-      <div *ngFor="let row of table | keyvalue:sortByName; trackBy:trackByChallengeId;" [class]="row.value.pinned ? 'pinned' : ''"
-        [ngStyle]="{'order': row.value.gameRank | observeorder:row.value.pinned:sort:maxRank }"> 
+    <ng-container
+      *ngIf="(!!table.size || !isLoading) && {actors: fetchActors$ | async, term : (term$ | async) ?? ''} as updates; else loading">
+      <div *ngFor="let row of table | keyvalue:sortByName; trackBy:trackByChallengeId;"
+        [class]="row.value.pinned ? 'pinned' : ''"
+        [ngStyle]="{'order': row.value.gameRank | observeorder:row.value.pinned:sort:maxRank }">
         <ng-container *ngIf="row.value | matchesterm:updates.term:'playerName':'name':'tag':'id'">
           <div class="row mx-0 border-top border-light py-2">
             <div class="col-2 align-self-center pl-1 text-left">
-              <button class="mr-1 btn btn-sm border-0" [class]="row.value.pinned ?  'btn-outline-success' : 'btn-outline-light'" 
+              <button class="mr-1 btn btn-sm border-0"
+                [class]="row.value.pinned ?  'btn-outline-success' : 'btn-outline-light'"
                 (click)="togglePinRow(row.value)">
-                <fa-icon class="pin-icon" [icon]="faAngleDoubleUp" [rotate]="row.value.pinned ? 90 : undefined"></fa-icon>
+                <fa-icon class="pin-icon" [icon]="faAngleDoubleUp"
+                  [rotate]="row.value.pinned ? 90 : undefined"></fa-icon>
               </button>
               <span>{{row.value.playerName}}</span>
             </div>
             <div class="col-2 align-self-center text-right">{{row.value.gameScore | number}} {{""}}</div>
-            <div class="col-2 align-self-center text-left">{{row.value.name}}<span class="badge badge-light text-black ml-2">{{row.value.id | slice:0:8}} {{row.value.tag}}</span></div>
+            <div class="col-2 align-self-center text-left">{{row.value.name}}<span
+                class="badge badge-light text-black ml-2">{{row.value.id | slice:0:8}} {{row.value.tag}}</span></div>
             <div class="col-2 align-self-center text-right">{{row.value.duration | clock }}</div>
             <div class="col-2 align-self-center text-right">{{row.value.challengeScore | number}}</div>
             <div class="col-2 align-self-center text-right">
-              <button *ngIf="row.value.consoles?.length" class="btn btn-sm" [class]="row.value.expanded ? 'btn-success' : 'btn-outline-success' "(click)="toggleShowConsoles(row.value)">
+              <button *ngIf="row.value.consoles?.length" class="btn btn-sm"
+                [class]="row.value.expanded ? 'btn-success' : 'btn-outline-success' "
+                (click)="toggleShowConsoles(row.value)">
                 <fa-icon [icon]="faGrid"></fa-icon>
               </button>
             </div>
@@ -84,22 +91,26 @@
                         </button>
                       </div>
                       <div class="mx-0 px-0 text-right">
-                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1" (click)="minimizeAllOthers(vm, row.value)">
+                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1"
+                          (click)="minimizeAllOthers(vm, row.value)">
                           <fa-icon [icon]="faWindowRestore"></fa-icon>
                         </button>
-                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1" (click)="toggleMinimize(vm)">
+                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1"
+                          (click)="toggleMinimize(vm)">
                           <fa-icon [icon]="faMinusSquare"></fa-icon>
                         </button>
-                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 mr-1" (click)="toggleFullWidth(vm)">
+                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 mr-1"
+                          (click)="toggleFullWidth(vm)">
                           <fa-icon [icon]="vm.fullWidth ? faCompressAlt : faExpandAlt"></fa-icon>
                         </button>
                       </div>
                     </div> <!-- end console header -->
-                    <div *ngIf="updates.actors?.get(row.value.id+'#'+vm.name) as activeUsers" class="mx-1 mb-1 p-0 text-left" >
-                        <span *ngFor="let user of activeUsers" class="badge badge-success m-1 text-break text-dark">
-                          <fa-icon class="pr-1" [icon]="faUser"></fa-icon>
-                          {{user.userName}}
-                        </span>
+                    <div *ngIf="updates.actors?.get(row.value.id+'#'+vm.name) as activeUsers"
+                      class="mx-1 mb-1 p-0 text-left">
+                      <span *ngFor="let user of activeUsers" class="badge badge-success m-1 text-break text-dark">
+                        <fa-icon class="pr-1" [icon]="faUser"></fa-icon>
+                        {{user.userName}}
+                      </span>
                     </div> <!-- end users list header -->
                     <div class="iframe-wrapper mt-auto" style="padding: 0px;">
                       <iframe class="rounded-bottom w-100 h-100" frameborder="0"
@@ -115,7 +126,7 @@
                 <div *ngIf="vm.minimized" class="m-0 p-2">
                   <button class="btn btn-outline-success btn-sm p-2 w-100" (click)="toggleMinimize(vm)">
                     <div *ngIf="updates.actors?.get(row.value.id+'#'+vm.name)?.length as userCount" class="float-left">
-                      <fa-icon [icon]="faUser" ></fa-icon>
+                      <fa-icon [icon]="faUser"></fa-icon>
                       <span>{{userCount}}</span>
                     </div>
                     <span class="mx-3">{{vm.name}}</span>

@@ -170,7 +170,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
     if (!question.answer) question.answer = "";
 
     // If we're asking for specific information, we have to add on the info entered in the specific info box by looking up its ID
-    let addition: string = ""
+    let addition: string = "";
     if (question.specify && question.specify.key == answerChunk) addition = " (" + (<HTMLInputElement>document.getElementById(`input-${question.id}-${answerChunk}`)).value + ")";
 
     // If this is a radio button, we can just set the answer
@@ -219,7 +219,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
     this.game = boardPlayer.game;
 
     if (type === "challenge") {
-      this.loadChallenge(boardPlayer, spec)
+      this.loadChallenge(boardPlayer, spec);
       return;
     }
 
@@ -241,7 +241,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
       first(),
       tap(feedback => {
         if (feedback)
-          this.updateFeedback(feedback)
+          this.updateFeedback(feedback);
 
         // behavior for whether to hide form on load based on challenge status or already submitted
         this.show = !this.spec?.instance?.state.isActive;
@@ -271,6 +271,6 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
             this.show = false;
         },
         (err: any) => { }
-      )
+      );
   }
 }

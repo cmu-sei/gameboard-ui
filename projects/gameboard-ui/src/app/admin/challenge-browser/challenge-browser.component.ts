@@ -44,7 +44,7 @@ export class ChallengeBrowserComponent implements OnInit {
       tap(p => this.search.term = p.search || "")
     ).subscribe(
       () => this.refresh$.next(true)
-    )
+    );
 
     this.challenges$ = merge(
       this.refresh$,
@@ -57,7 +57,7 @@ export class ChallengeBrowserComponent implements OnInit {
       tap(r => this.challenges = r),
       tap(result => {
         if (result.length == 1)
-          this.select(result[0])
+          this.select(result[0]);
       })
     );
     this.archived$ = merge(
@@ -75,7 +75,7 @@ export class ChallengeBrowserComponent implements OnInit {
           let {submissions, gameId, ...rest} = i as any;
           rest.archived = true;
           return rest;
-        })
+        });
       }),
     );
 

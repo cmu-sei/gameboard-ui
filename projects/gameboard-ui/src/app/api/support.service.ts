@@ -36,9 +36,9 @@ export class SupportService {
       tap(r => this.seen(r.key)),
       tap(ticket => {
         // fix up attachments properties
-        ticket.attachmentFiles = this.attachmentsToAttachmentFiles(ticket.attachments, ticket.id)
+        ticket.attachmentFiles = this.attachmentsToAttachmentFiles(ticket.attachments, ticket.id);
 
-        for (let activity of ticket.activity || []) {
+        for (const activity of ticket.activity || []) {
           activity.attachmentFiles = this.attachmentsToAttachmentFiles(activity.attachments || [], `${ticket.id}/${activity.id}`);
         }
       })
@@ -62,7 +62,7 @@ export class SupportService {
     if (model.uploads && model.uploads.length) {
       model.uploads.forEach(file => {
         payload.append('uploads', file, file.name);
-      })
+      });
     }
     return this.http.post<TicketActivity>(`${this.url}/ticket/comment`, payload);
   }
@@ -76,7 +76,7 @@ export class SupportService {
     if (model.uploads && model.uploads.length) {
       model.uploads.forEach(file => {
         payload.append('uploads', file, file.name);
-      })
+      });
     }
     return this.http.post<Ticket>(`${this.url}/ticket`, payload);
   }
@@ -116,7 +116,7 @@ export class SupportService {
   getTicketMarkdown = (ticket: Ticket): Observable<string> =>
     this.playerService.getTeam(ticket.teamId).pipe(
       catchError(err => {
-        return of(null)
+        return of(null);
       }),
       first(),
       map(t => {
@@ -204,7 +204,7 @@ export class SupportService {
       t.lastUpdated = new Date(t.lastUpdated);
     });
     return list;
-  }
+  };
 }
 
 class Seen {

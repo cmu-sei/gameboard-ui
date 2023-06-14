@@ -17,7 +17,7 @@ import { SpecService } from '../../api/spec.service';
 export class SpecBrowserComponent implements OnInit {
   refresh$ = new BehaviorSubject<boolean>(true);
   list$: Observable<ExternalSpec[]>;
-  search: Search = {term: '', filter: ['play']}
+  search: Search = {term: '', filter: ['play']};
   faSearch = faSearch;
 
   constructor(
@@ -26,7 +26,7 @@ export class SpecBrowserComponent implements OnInit {
     this.list$ = this.refresh$.pipe(
       debounceTime(250),
       switchMap(() => api.list(this.search))
-    )
+    );
   }
 
   ngOnInit(): void {

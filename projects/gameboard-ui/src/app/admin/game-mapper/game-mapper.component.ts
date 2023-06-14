@@ -80,7 +80,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
               item.description = extSpec.description;
               if (tmpName != extSpec.name || tmpDesc != extSpec.description) api.update(item).subscribe();
             }
-          })
+          });
       })
     );
     this.recentExternalSpecList$.subscribe();
