@@ -70,7 +70,9 @@
           </div>
           <div class="card-body">
             <app-long-content-hider>
-              <p class="card-text">{{ ctx.ticket.description }}</p>
+              <p class="card-text">
+                <app-render-links-in-text [text]="ctx.ticket.description"></app-render-links-in-text>
+              </p>
             </app-long-content-hider>
             <ng-container *ngIf="editingContent && changedTicket && !!changedTicket?.id">
               <textarea type="text" class="form-control w-100 text-white" rows=8 autocomplete="off"
@@ -142,7 +144,7 @@
                 <div>
                   <span class="">
                     <div>
-                      <span class="font-weight-bold">{{activity.user.approvedName}}</span>&nbsp;&middot;&nbsp;<div
+                      <span class="font-weight-bold">{{ activity.user.approvedName }}</span>&nbsp;&middot;&nbsp;<div
                         style="display: inline-block" [tooltip]="activity.timestamp | shorttime: true : true"
                         containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
                         {{activity.timestamp | ago}}</div>
@@ -152,7 +154,9 @@
               </div>
               <div class="card-body">
                 <app-long-content-hider>
-                  <p class="card-text">{{ activity.message }}</p>
+                  <p class="card-text">
+                    <app-render-links-in-text [text]="activity.message"></app-render-links-in-text>
+                  </p>
                 </app-long-content-hider>
                 <div *ngIf="activity.attachmentFiles?.length" class="d-flex overflow-auto my-auto">
                   <ng-container *ngFor="let file of activity.attachmentFiles; let j = index;">
