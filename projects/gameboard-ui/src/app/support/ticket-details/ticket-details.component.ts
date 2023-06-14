@@ -236,6 +236,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   enlarge(attachmentList: AttachmentFile[], index: number, objectUrls: SafeResourceUrl[] | undefined) {
     // Abort if the list of URLs we reference isn't initialized yet
     if (objectUrls == undefined) return;
+
     // Otherwise, set the currently selected object URLs to be the given ones
     this.selectedObjectUrls = objectUrls;
     this.selectedAttachmentList = attachmentList;
