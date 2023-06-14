@@ -24,7 +24,6 @@ export class SupportPageComponent implements OnInit, OnDestroy {
         tap(u => hub.init(u!.id))
       ).subscribe()
     );
-
   }
 
   ngOnInit(): void {
