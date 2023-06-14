@@ -70,7 +70,7 @@
           </div>
           <div class="card-body">
             <app-long-content-hider>
-              <p class="card-text" [innerHtml]="ctx.ticket.description"></p>
+              <p class="card-text">{{ ctx.ticket.description }}</p>
             </app-long-content-hider>
             <ng-container *ngIf="editingContent && changedTicket && !!changedTicket?.id">
               <textarea type="text" class="form-control w-100 text-white" rows=8 autocomplete="off"
@@ -152,7 +152,7 @@
               </div>
               <div class="card-body">
                 <app-long-content-hider>
-                  <p class="card-text" [innerHtml]="activity.message"></p>
+                  <p class="card-text">{{ activity.message }}</p>
                 </app-long-content-hider>
                 <div *ngIf="activity.attachmentFiles?.length" class="d-flex overflow-auto my-auto">
                   <ng-container *ngFor="let file of activity.attachmentFiles; let j = index;">
