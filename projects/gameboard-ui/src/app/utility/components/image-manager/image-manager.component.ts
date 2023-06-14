@@ -125,7 +125,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
     this.errors = [];
 
     for (const file of files) {
-      const fileDescription = files.length > 1 ? `File "${file.name}"` : "This file";
+      const fileDescription = files.length > 1 ? `File "${file.name}"'s` : "This file";
 
       if (this.files.has(this.getFileKey(file))) {
         this.errors.push(`${fileDescription} has already been uploaded.`);
@@ -136,7 +136,7 @@ export class ImageManagerComponent implements OnInit, OnChanges {
       }
 
       if (ImageManagerComponent.ALLOWED_MIME_TYPES.indexOf(file.type.toLowerCase()) < 0) {
-        this.errors.push(`${fileDescription}'s type is not permitted. Accepted types are .png, .jpeg, .jpg, .gif, .webp, .svg, and .txt.`);
+        this.errors.push(`${fileDescription} type is not permitted. Permitted file types are .png, .jpeg, .jpg, .gif, .webp, .svg, and .txt.`);
       }
     }
 
