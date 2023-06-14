@@ -18,7 +18,6 @@ import { BoardService } from '@/api/board.service';
   styleUrls: ['./ticket-form.component.scss']
 })
 export class TicketFormComponent implements OnDestroy {
-
   summaryLimit = 128;
   requesters: EditData = { isEditing: false, loaded: false, allOptions: [], filteredOptions: [], filtering$: new Subject<string>() };
 
