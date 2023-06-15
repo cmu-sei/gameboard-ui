@@ -3,7 +3,6 @@
 
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
-import { faArrowLeft, faCaretDown, faCaretRight, faCloudUploadAlt, faCopy, faGamepad, faToggleOff, faToggleOn, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
@@ -102,7 +101,6 @@ export class GameEditorComponent implements AfterViewInit {
       ),
       map(g => false)
     );
-
   }
 
   yamlChanged() {
