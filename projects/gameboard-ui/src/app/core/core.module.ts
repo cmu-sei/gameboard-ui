@@ -20,6 +20,7 @@ import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { WhitespacePipe } from './pipes/whitespace.pipe';
 
 const PUBLIC_DECLARATIONS = [
   GbProgressBarComponent,
@@ -36,6 +37,7 @@ const PUBLIC_DECLARATIONS = [
   SpinnerComponent,
   UrlRewritePipe,
   ToggleSwitchComponent,
+  WhitespacePipe,
   YamlBlockComponent,
   YamlPipe
 ];
