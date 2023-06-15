@@ -5,13 +5,15 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Game } from '../../api/game-models';
+import { Game, GameMode } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyValue } from '@angular/common';
 import { AppTitleService } from '@/services/app-title.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
+import { PlayerMode } from '@/api/player-models';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -53,6 +55,7 @@ export class GameEditorComponent implements AfterViewInit {
     private api: GameService,
     private config: ConfigService,
     private title: AppTitleService,
+    private toast: ToastService,
     public fa: FontAwesomeService,
     route: ActivatedRoute
   ) {
@@ -68,7 +71,6 @@ export class GameEditorComponent implements AfterViewInit {
       switchMap(id => api.retrieve(id)),
       tap(g => {
         this.game = g;
-        this.setExternalGameFieldsVisibility(g.mode);
         this.title.set(`Edit "${g.name}"`);
         this.updateFeedbackMessage();
       })
@@ -94,7 +96,6 @@ export class GameEditorComponent implements AfterViewInit {
       switchMap(g => this.api.retrieve(this.game.id).pipe(
         tap(game => {
           this.game.feedbackTemplate = game.feedbackTemplate;
-          this.setExternalGameFieldsVisibility(game.mode);
           this.updateFeedbackMessage();
           this.refreshFeedback = false;
         }))
@@ -105,6 +106,29 @@ export class GameEditorComponent implements AfterViewInit {
 
   yamlChanged() {
     this.refreshFeedback = true;
+  }
+
+  handleNonGameModeControlClicked(isDisabled: boolean) {
+    if (isDisabled)
+      this.showExternalModeToast(true);
+  }
+
+  handleModeChange(event: Event) {
+    const gameMode = ((event?.target as any).value as GameMode);
+    this.game.mode = gameMode;
+
+    if (gameMode == GameMode.External) {
+      this.showExternalModeToast();
+    }
+  }
+
+  showExternalModeToast(reduceDuration?: boolean) {
+    this.game.playerMode = PlayerMode.competition;
+    this.game.requireSynchronizedStart = true;
+    this.toast.show({
+      text: `Because this game is now in Exernal mode, "Player Mode" is locked to "Competition" and "Require Synchronized Start" is locked to on.`,
+      duration: reduceDuration ? 5000 : 8000
+    });
   }
 
   show(i: number): void {
@@ -172,19 +196,6 @@ export class GameEditorComponent implements AfterViewInit {
       return false;
     }
     return true;
-  }
-
-  updateGameMode(value: string) {
-    this.game.mode = value;
-    this.setExternalGameFieldsVisibility(value);
-  }
-
-  handleModeChange(e: Event) {
-    this.setExternalGameFieldsVisibility((e.target as any).value);
-  }
-
-  setExternalGameFieldsVisibility(value: string) {
-    this.showExternalGameFields = (value === 'external');
   }
 
   sortByCount(a: KeyValue<string, number>, b: KeyValue<string, number>) {
