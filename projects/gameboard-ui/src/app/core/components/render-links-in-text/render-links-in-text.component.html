@@ -1,8 +1,10 @@
-<span *ngFor="let token of text | linkRenderer">
-    <ng-container *ngIf="token.isUrl; else notEscaped">
-        <a [href]="token.text" target="_blank" rel="noopener noreferrer" [innerHtml]="token.text"></a>
-    </ng-container>
-    <ng-template #notEscaped>
-        {{ token.text }}
-    </ng-template>
-</span>
+<p *ngFor="let line of text | whitespace">
+    <span *ngFor="let token of line | linkRenderer">
+        <ng-container *ngIf="token.isUrl; else notEscaped">
+            <a [href]="token.text" target="_blank" rel="noopener noreferrer" [innerHtml]="token.text"></a>
+        </ng-container>
+        <ng-template #notEscaped>
+            {{ token.text }}
+        </ng-template>
+    </span>
+</p>

@@ -14,6 +14,7 @@ import { ModalConfirmDirective } from './directives/modal-confirm.directive';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { WhitespacePipe } from './pipes/whitespace.pipe';
 
 const PUBLIC_DECLARATIONS = [
   LinkRendererPipe,
@@ -32,7 +33,8 @@ const PUBLIC_DECLARATIONS = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
+    WhitespacePipe
   ],
   imports: [
     CommonModule,
