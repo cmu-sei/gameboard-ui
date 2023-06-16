@@ -61,16 +61,16 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
         return {
           teamId: ctx.player.teamId,
           sessionEnd: quit ? new Date(Date.parse("0001-01-01T00:00:00Z")) : new Date()
-        } as SessionChangeRequest
+        } as SessionChangeRequest;
       }),
       switchMap(request => {
         return this.playerService.updateSession(request).pipe(
           first()
-        )
+        );
       }),
       first(),
       tap(player => {
-        this.onRefreshRequest.emit(player.id)
+        this.onRefreshRequest.emit(player.id);
       })
     ).subscribe();
   }

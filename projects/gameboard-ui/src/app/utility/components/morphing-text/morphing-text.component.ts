@@ -22,11 +22,11 @@ export class MorphingTextComponent implements AfterViewInit {
     "ALL SYSTEMS: **GREEN**.",
     "Dauntless, you are **cleared for departure**."
   ];
-  @Input() emphasisExpression = /[A-Z]/g
+  @Input() emphasisExpression = /[A-Z]/g;
   @Input() isRandom = false;
 
   public text1Content: SafeHtml = "";
-  public text2Content: SafeHtml = ""
+  public text2Content: SafeHtml = "";
 
   @ViewChild("text1") text1!: ElementRef<HTMLSpanElement>;
   @ViewChild("text2") text2!: ElementRef<HTMLSpanElement>;
@@ -114,11 +114,12 @@ export class MorphingTextComponent implements AfterViewInit {
     }
   }
 
-  private renderTextContent(text: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(
+  private renderTextContent(text: string): string {
+    return this.sanitizer.sanitize(
+      SecurityContext.HTML,
       this.markdown.parse(
         this.sanitizer.sanitize(SecurityContext.HTML, text) || ""
       )
-    );
+    ) || '';
   }
 }

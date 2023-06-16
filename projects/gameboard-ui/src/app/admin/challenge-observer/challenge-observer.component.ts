@@ -35,13 +35,13 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
   faTv = faTv;
   faSync = faSyncAlt;
   faGrid = faThLarge;
-  faExternalLinkAlt = faExternalLinkAlt
-  faExpandAlt = faExpandAlt
+  faExternalLinkAlt = faExternalLinkAlt;
+  faExpandAlt = faExpandAlt;
   faCompressAlt = faCompressAlt;
-  faUser = faUser
+  faUser = faUser;
   faMinusSquare = faMinusSquare;
   faPlusSquare = faPlusSquare;
-  faSortAmountDown = faSortAmountDownAlt
+  faSortAmountDown = faSortAmountDownAlt;
   faSortAlphaDown = faSortAlphaDown;
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
@@ -64,7 +64,7 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
       tap(([a, b, c]) => this.gid = a.id),
       tap(() => this.isLoading = true),
       switchMap(() => this.api.consoles(this.gid)),
-    ).subscribe(data =>{
+    ).subscribe(data => {
       this.updateTable(data);
       this.isLoading = false;
     });
@@ -79,19 +79,19 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
       map(data => data.reduce((map, item) => {
         const key = `${item.challengeId}#${item.vmName}`;
         if (map.has(key)) {
-          map.get(key)!.push(item)
+          map.get(key)!.push(item);
         } else {
-          map.set(key, [item])
+          map.set(key, [item]);
         }
         return map;
       }, new Map<string, ConsoleActor[]>()))
     );
     this.term$ = this.typing$.pipe(
       debounceTime(500)
-    )
+    );
   }
 
-  updateTable(data: ObserveChallenge[]) { 
+  updateTable(data: ObserveChallenge[]) {
     for (let updatedChallenge of data) {
       if (this.table.has(updatedChallenge.id)) {
         // modify fields with updates values without resetting the entire challenge object
@@ -123,7 +123,7 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
   toggleShowConsoles(challenge: ObserveChallenge) {
     challenge.expanded = !challenge.expanded;
   }
-  
+
   togglePinRow(challenge: ObserveChallenge) {
     challenge.pinned = !challenge.pinned;
   }
@@ -137,7 +137,7 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
   }
 
   minimizeAllOthers(vm: ObserveVM, challenge: ObserveChallenge): void {
-    for (let console of challenge?.consoles) {
+    for (let console of challenge?.consoles || []) {
       if (console.id != vm.id)
         console.minimized = true;
     }

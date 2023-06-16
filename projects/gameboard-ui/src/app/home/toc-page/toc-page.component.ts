@@ -26,7 +26,7 @@ export class TocPageComponent implements OnInit {
       map(([p, ready]) => ({p, ready})),
       filter(ctx => !!ctx.ready),
       switchMap(ctx => api.tocfile$(ctx.p.id))
-    )
+    );
   }
 
   ngOnInit(): void {

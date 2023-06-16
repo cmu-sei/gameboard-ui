@@ -12,15 +12,15 @@ import { NgChartsModule } from 'ng2-charts';
 
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
-import { LinkifyHtmlPipe } from './pipes/linkify-html.pipe';
-import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
 import { PlayerAvatarComponent } from './components/player-avatar/player-avatar.component';
+import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { PlayerAvatarListComponent } from './components/player-avatar-list/player-avatar-list.component';
+import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './directives/modal-confirm.directive';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
-import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { RenderLinksInTextComponent } from './components/render-links-in-text/render-links-in-text.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
@@ -35,15 +35,15 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 const PUBLIC_DECLARATIONS = [
   ColoredTextChipComponent,
   DoughnutChartComponent,
-  LinkifyHtmlPipe,
+  LinkRendererPipe,
   LongContentHiderComponent,
   ModalConfirmComponent,
   ModalConfirmDirective,
   PlayerAvatarComponent,
   PlayerAvatarListComponent,
   PlayerStatusComponent,
+  RenderLinksInTextComponent,
   RelativeUrlsPipe,
-  SafeHtmlPipe,
   SpinnerComponent,
   TextToColorPipe,
   TicketStatusBadgePipe,

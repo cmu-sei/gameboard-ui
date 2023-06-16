@@ -18,7 +18,7 @@ export class RelativeUrlsPipe implements PipeTransform {
 
     // identify all markdown images with relative urls. Format:
     // ![the text displayed for the image](https://the.url.ofthe.img)
-    const regex = /\!\[([\s\S]+)\]\((\S+)\)/gm;
+    const regex = /!\[([\s\S]+)\]\((\S+)\)/gm;
 
     return value.replace(regex, (match, text, url) => {
       // if the url is relative, a new doc relative to the current origin will have the same origin

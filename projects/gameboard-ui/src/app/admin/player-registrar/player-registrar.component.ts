@@ -4,7 +4,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { asyncScheduler, BehaviorSubject, combineLatest, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
+import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
@@ -161,13 +161,11 @@ export class PlayerRegistrarComponent {
     this.selected.forEach(s => {
       const t = this.source.find(g => g.id === s.id);
       if (!!t) { t.checked = true; }
-    })
+    });
   }
 
-  undeploy(model: Player): void {
-    this.unityService
-      .undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true })
-      .subscribe(result => console.log("Undeploy result: ", result));
+  async undeploy(model: Player): Promise<void> {
+    await firstValueFrom(this.unityService.undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true }));
   }
 
   resetSession(model: Player): void {
@@ -179,7 +177,7 @@ export class PlayerRegistrarComponent {
   unenroll(model: Player): void {
     this.api.unenroll(model.id, true).pipe(first()).subscribe(_ => {
       this.refresh$.next(true);
-    })
+    });
   }
 
   update(model: Player): void {
@@ -199,7 +197,7 @@ export class PlayerRegistrarComponent {
 
   exportCsv(list: Player[]): void {
     const a = (this.selected.length ? this.selected : list)
-      .map(p => this.asCsv(p))
+      .map(p => this.asCsv(p));
     const hdr = 'GameId,TeamId,TeamName,PlayerId,UserId,UserName,Rank,Score,Time,Correct,Partial,SessionBegin,SessionEnd\n';
     this.clipboard.copyToClipboard(hdr + a.join('\n'));
   }
@@ -217,7 +215,7 @@ export class PlayerRegistrarComponent {
         map(r => r.filter(s => ids.find(i => s.id === i)))
       )
       .subscribe(data => {
-        this.clipboard.copyToClipboard(JSON.stringify(data, null, 2))
+        this.clipboard.copyToClipboard(JSON.stringify(data, null, 2));
       });
   }
 
@@ -243,7 +241,7 @@ export class PlayerRegistrarComponent {
       onConfirm: () => this.resetSession(player),
       confirmButtonText: "Yes, reset",
       cancelButtonText: "No, don't reset"
-    })
+    });
   }
 
   confirmUnenroll(player: Player) {
@@ -255,7 +253,7 @@ export class PlayerRegistrarComponent {
       },
       confirmButtonText: "Yes, unenroll",
       cancelButtonText: "No, don't unenroll"
-    })
+    });
   }
 
   manageManualBonuses(player: Player) {

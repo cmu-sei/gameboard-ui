@@ -20,7 +20,7 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
     description: '',
     challengeId: '',
     pointValue: 1
-  }
+  };
 
   constructor(private scoresService: ScoringService) { }
 
@@ -39,7 +39,7 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
           description: '',
           challengeId: summary.challengeScoreSummaries.length ? summary.challengeScoreSummaries[0].challenge.id : '',
           pointValue: 1
-        }
+        };
       });
   }
 

@@ -33,6 +33,6 @@ export class TeamAdminContextMenuComponent implements OnInit {
 
   async copy(text: string, description: string) {
     await this.clipboardService.copy(text);
-    this.toastService.showMessage(`Copied ${description} "${text}" to your clipboard.`)
+    this.toastService.showMessage(`Copied ${description} "${text}" to your clipboard.`);
   }
 }

@@ -24,7 +24,7 @@ export class PlayerSessionComponent implements OnInit {
   team!: Team;
   canUnenroll = false;
   showRaw = false;
-  statusText = "Loading your session..."
+  statusText = "Loading your session...";
   faInfo = faInfoCircle;
   errors: any[] = [];
 

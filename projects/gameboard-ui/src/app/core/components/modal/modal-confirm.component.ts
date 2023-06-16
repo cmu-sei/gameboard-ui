@@ -36,7 +36,7 @@ export class ModalConfirmComponent {
 
   confirm() {
     if (this.config.onConfirm) {
-      this.config.onConfirm()
+      this.config.onConfirm();
     }
 
     this.modalRef.hide();

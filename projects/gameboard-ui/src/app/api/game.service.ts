@@ -38,7 +38,7 @@ export class GameService {
       map(r => {
         r.forEach(c => {
           c.monthName = this.monthName(c.month);
-          c.games.forEach(g => this.transform(g))
+          c.games.forEach(g => this.transform(g));
         });
         return r;
       })

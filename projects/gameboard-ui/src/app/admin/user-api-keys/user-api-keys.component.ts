@@ -73,7 +73,7 @@ export class UserApiKeysComponent implements OnInit, OnDestroy {
       (err: HttpErrorResponse) => {
         this.errors = [err.message];
       }
-    )
+    );
   }
 
   ngOnDestroy(): void {

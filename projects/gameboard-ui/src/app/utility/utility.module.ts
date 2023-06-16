@@ -76,7 +76,7 @@ const components = [
   ImagestackComponent,
   MorphingTextComponent,
   PagerComponent
-]
+];
 
 @NgModule({
   declarations: [...components],

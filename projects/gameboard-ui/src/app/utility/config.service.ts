@@ -112,7 +112,7 @@ export class ConfigService {
   get gamebrainhost(): string {
     let path = this.settings.gamebrainhost || this.basehref;
     if (!path.endsWith('/')) {
-      path += '/'
+      path += '/';
     }
     return path;
   }
@@ -120,7 +120,7 @@ export class ConfigService {
   get unityHost(): string {
     let path = this.settings.unityclienthost || this.basehref;
     if (!path.endsWith('/')) {
-      path += '/'
+      path += '/';
     }
     return path;
   }
@@ -213,6 +213,7 @@ export class ConfigService {
     try {
       this.storage.add(StorageKey.Gameboard, JSON.stringify(model));
     } catch (e) {
+      this.log.logError("Couldn't save app settings to local storage", model);
     }
   }
 

@@ -68,7 +68,7 @@ export class SyncStartPageComponent implements OnInit {
         return combineLatest([
           of(game),
           this.playerService.list({ gid: game.id, uid: userId })
-        ])
+        ]);
       }),
       map(([game, players]) => ({ game, players })),
       switchMap(ctx => {

@@ -8,12 +8,12 @@ import { ConfigService } from '../utility/config.service';
 import { GamebrainActiveGame, UnityActiveGame, UnityContext, UnityDeployContext } from '../unity/unity-models';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { catchError, first, map, switchMap, tap } from 'rxjs/operators';
+import { LogService } from '../services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class UnityService {
   private API_ROOT = `${this.config.apphost}api`;
   private LOG_PREFIX = "[UnityService]:";
-  private VERBOSE = false;
 
   activeGame$ = new Subject<UnityActiveGame>();
   gameOver$ = new Observable();
@@ -22,36 +22,36 @@ export class UnityService {
   constructor(
     private config: ConfigService,
     private http: HttpClient,
+    private log: LogService,
     private storage: LocalStorageService) {
-    this.VERBOSE = !environment.production;
   }
 
   public endGame(ctx: UnityDeployContext): void {
     this.activeGame$.complete();
-    this.undeployGame({ ctx }).subscribe(m => this.log("Undeploy result:", m))
+    this.undeployGame({ ctx }).subscribe(m => this.log.logInfo("Undeploy result:", m));
   }
 
   public async startGame(ctx: UnityDeployContext) {
-    this.log("Validating context for the game...", ctx);
+    this.log.logInfo("Validating context for the game...", ctx);
     this.validateDeployContext(ctx);
 
-    this.log("Checking for an active game for the context:", ctx);
+    this.log.logInfo("Checking for an active game for the context:", ctx);
     const gamebrainActiveGame = await this.getGamebrainActiveGame(ctx).toPromise();
-    this.log("Active game?:", gamebrainActiveGame)
+    this.log.logInfo("Active game?:", gamebrainActiveGame);
 
-    this.log("Checking current game for validity...");
+    this.log.logInfo("Checking current game for validity...");
     if (gamebrainActiveGame?.gamespaceId) {
-      this.log("It's valid. Starting up existing game.", gamebrainActiveGame);
+      this.log.logInfo("It's valid. Starting up existing game.", gamebrainActiveGame);
       this.startupExistingGame(ctx, gamebrainActiveGame);
     }
     else {
-      this.log("They don't have a current game. Let's fire one up!")
+      this.log.logInfo("They don't have a current game. Let's fire one up!");
       this.launchGame(ctx);
     }
   }
 
   public undeployGame(args: { ctx: UnityContext, retainLocalStorage?: boolean }): Observable<string | void> {
-    this.log("Undeploying with context", args.ctx);
+    this.log.logInfo("Undeploying with context", args.ctx);
 
     if (!args.retainLocalStorage) {
       this.clearLocalStorageKeys(args.ctx.teamId);
@@ -59,25 +59,25 @@ export class UnityService {
 
     return this.getGamebrainActiveGame({ ...args.ctx }).pipe(
       first(),
-      tap(activeGame => this.log("Found this as the active game:", activeGame)),
+      tap(activeGame => this.log.logInfo("Found this as the active game:", activeGame)),
       map(game => {
         if (!(game?.gamespaceId)) {
-          this.log("No active game.", game);
+          this.log.logInfo("No active game.", game);
           return "Nothing to undeploy";
         }
 
         const undeployEndpoint = `${this.API_ROOT}/unity/undeploy/${args.ctx.gameId}/${args.ctx.teamId}`;
-        this.log("Undeploying game from", undeployEndpoint);
+        this.log.logInfo("Undeploying game from", undeployEndpoint);
         return this.http.post<string>(undeployEndpoint, {});
       }),
-      catchError(err => of(this.log("Undeploy error:", err))),
+      catchError(err => of(this.log.logInfo("Undeploy error:", err))),
       switchMap(result => result || "Nothing to undeploy"),
-      tap(result => this.log("Undeploy complete.", result))
+      tap(result => this.log.logInfo("Undeploy complete.", result))
     );
   }
 
   private createLocalStorageKeys(game: UnityActiveGame) {
-    this.log("Resolving OIDC storage keys...");
+    this.log.logInfo("Resolving OIDC storage keys...");
     const storageKey = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
     const oidcUserToken = this.storage.getArbitrary(storageKey);
 
@@ -85,13 +85,13 @@ export class UnityService {
       this.reportError("You don't seem to have an OIDC token. (If this is a playtest, try relogging. Sorry 🙁)", game.teamId);
     }
 
-    this.log("User OIDC resolved.");
+    this.log.logInfo("User OIDC resolved.");
     const unityOidcLinkValue = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
     this.storage.add(StorageKey.UnityOidcLink, unityOidcLinkValue);
-    this.log("Added OIDC linking storage key for the Unity client.");
+    this.log.logInfo("Added OIDC linking storage key for the Unity client.");
 
     this.storage.add(StorageKey.UnityGameLink, game.headlessUrl);
-    this.log("Added the Unity game link to local storage:", game.headlessUrl);
+    this.log.logInfo("Added the Unity game link to local storage:", game.headlessUrl);
 
     // in this implementation, we store keys in two places: one to support the existing unity
     // implementation, and one to support our future direction.
@@ -111,34 +111,34 @@ export class UnityService {
       keysToRemove.push(this.computeNamespaceKey(teamId));
     }
 
-    this.log("Clearing local storage keys...", keysToRemove);
+    this.log.logInfo("Clearing local storage keys...", keysToRemove);
     this.storage.removeArbitrary(false, ...keysToRemove);
-    this.log("Local storage keys cleared.");
+    this.log.logInfo("Local storage keys cleared.");
   }
 
   private computeNamespaceKey = (teamId: string): string => `unityChallenge:${teamId}`;
 
   private launchGame(ctx: UnityDeployContext) {
     const deployUrl = `${this.API_ROOT}/unity/deploy/${ctx.gameId}/${ctx.teamId}`;
-    this.log("Launching a new game at", deployUrl);
+    this.log.logInfo("Launching a new game at", deployUrl);
 
     this.http.post<GamebrainActiveGame>(deployUrl, {}).subscribe(gamebrainActiveGame => {
-      this.log("Deployed this ->", gamebrainActiveGame, "Starting up game for new team...");
-      this.log("Starting up game for new team...", gamebrainActiveGame)
+      this.log.logInfo("Deployed this ->", gamebrainActiveGame, "Starting up game for new team...");
+      this.log.logInfo("Starting up game for new team...", gamebrainActiveGame);
       this.startupExistingGame(ctx, gamebrainActiveGame);
     });
   }
 
   private startupExistingGame(deployContext: UnityDeployContext, gamebrainActiveGame: GamebrainActiveGame) {
     try {
-      this.log("Starting pre-launch validation for an existing game. The active game to run in the client is ->", deployContext, gamebrainActiveGame);
+      this.log.logInfo("Starting pre-launch validation for an existing game. The active game to run in the client is ->", deployContext, gamebrainActiveGame);
 
       // validation - did we make it?
       if (!this.isValidActiveGame(gamebrainActiveGame)) {
         this.reportError(`Couldn't resolve the deploy result for team ${deployContext.teamId}. No gamespaces available.`);
       }
 
-      this.log("Merging data from the deploy context and from Gamebrain.");
+      this.log.logInfo("Merging data from the deploy context and from Gamebrain.");
       const unityActiveGame = {
         gamespaceId: gamebrainActiveGame.gamespaceId,
         headlessUrl: gamebrainActiveGame.headlessUrl,
@@ -149,7 +149,7 @@ export class UnityService {
         teamId: deployContext.teamId,
         sessionExpirationTime: deployContext.sessionExpirationTime
       };
-      this.log("Final merged data", unityActiveGame);
+      this.log.logInfo("Final merged data", unityActiveGame);
 
       // we have to do this every time the unity client is booted, even if the player already has
       // challenge data at the other end. here's why:
@@ -160,7 +160,7 @@ export class UnityService {
       // they'll get a gamespaceId when they look for a new game, so it looks like they're joining an existing game, resulting
       // in them not getting challenge data created. so we call every time here, but on the back end, we ensure that they get one
       // challenge per unity game.
-      this.log(`Calling in challenge data for player ${unityActiveGame.playerId} on team ${unityActiveGame.teamId}. (They'll only ever get one challenge created for this game.)`);
+      this.log.logInfo(`Calling in challenge data for player ${unityActiveGame.playerId} on team ${unityActiveGame.teamId}. (They'll only ever get one challenge created for this game.)`);
       this.http.post(`${this.API_ROOT}/unity/challenge`, {
         gameId: unityActiveGame.gameId,
         playerId: unityActiveGame.playerId,
@@ -175,7 +175,7 @@ export class UnityService {
 
       // emit the result
       this.activeGame$.next(unityActiveGame);
-      this.log("Game is active. Booting Unity client!", unityActiveGame);
+      this.log.logInfo("Game is active. Booting Unity client!", unityActiveGame);
     }
     catch (err: any) {
       this.reportError(err, deployContext.teamId);
@@ -194,16 +194,10 @@ export class UnityService {
 
   private isValidActiveGame = (game: GamebrainActiveGame) => game.gamespaceId;
 
-  private log(...messages: (string | any)[]) {
-    if (this.VERBOSE) {
-      console.log(this.LOG_PREFIX, ...messages);
-    }
-  }
-
   private reportError(error: string, teamId?: string) {
-    console.error("Error raised -", error);
+    this.log.logError("Error raised -> ", error);
     this.clearLocalStorageKeys(teamId);
-    console.log(this.LOG_PREFIX, "Cleared Unity-related storage keys.");
+    this.log.logInfo(this.LOG_PREFIX, "Cleared Unity-related storage keys.");
     this.error$.next(error);
     throw new Error(error);
   }

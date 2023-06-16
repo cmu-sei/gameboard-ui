@@ -28,10 +28,6 @@ export class SupportReportComponent implements OnInit {
   labelStats$: Observable<TicketLabelGroup[]>;
   challengeStats$: Observable<TicketChallengeGroup[]>;
 
-  faArrowLeft = faArrowLeft;
-  faCaretDown = faCaretDown;
-  faCaretRight = faCaretRight;
-
   constructor(
     private gameService: GameService,
     private api: ReportService,
@@ -45,14 +41,13 @@ export class SupportReportComponent implements OnInit {
 
     this.dayStats$ = this.refresh$.pipe(
       switchMap(() => this.api.supportDays(this.search))
-    )
+    );
     this.labelStats$ = this.refresh$.pipe(
       switchMap(() => this.api.supportLabels(this.search))
-    )
+    );
     this.challengeStats$ = this.refresh$.pipe(
       switchMap(() => this.api.supportChallenges(this.search))
-    )
-
+    );
   }
 
   ngOnInit(): void {

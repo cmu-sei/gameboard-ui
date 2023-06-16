@@ -8,6 +8,7 @@ import { UnityService } from '../unity.service';
 import { LayoutService } from '../../utility/layout.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, first, switchMap } from 'rxjs/operators';
+import { LogService } from '../../services/log.service';
 
 @Component({
   selector: 'app-unity-board',
@@ -26,6 +27,7 @@ export class UnityBoardComponent implements OnInit {
 
   constructor(
     private config: ConfigService,
+    private log: LogService,
     private sanitizer: DomSanitizer,
     public unityService: UnityService,
     public layoutService: LayoutService,
@@ -37,11 +39,6 @@ export class UnityBoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // if (!this.config.settings.unityclienthost) {
-    //   const errorMessage = `Unity host is not set: ${this.config.settings.unityclienthost}`;
-    //   this.handleError(errorMessage);
-    // }
-
     this.unityHost = this.config.settings.unityclienthost || null;
     this.unityService.error$.subscribe(err => this.handleError(err));
 
@@ -68,7 +65,7 @@ export class UnityBoardComponent implements OnInit {
       this.unityService.gameOver$,
     ]).subscribe(([tick, isGameOver]) => {
       if (isGameOver) {
-        console.log("Game over. What now?");
+        this.log.logInfo("Game over. What now?");
       }
     });
 

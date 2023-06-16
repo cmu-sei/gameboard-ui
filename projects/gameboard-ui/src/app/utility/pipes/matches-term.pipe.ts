@@ -12,7 +12,7 @@ export class MatchesTermPipe implements PipeTransform {
     for (let property of properties) {
       let val = challenge[property];
       if (!!val && val.toString().toLowerCase().includes(term))
-        return true
+        return true;
     }
     return false;
   }

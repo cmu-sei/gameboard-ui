@@ -107,11 +107,11 @@ export class GameDesignerComponent implements OnInit {
       fr.onload = ev => {
         const model = YAML.parse(fr.result as string) as Game[];
         model.forEach(m => this.creating$.next({ ...m, isClone: true }));
-      }
+      };
       if (file.size < 8192) {
         fr.readAsText(file);
       }
-    })
+    });
   }
 
 }

@@ -6,6 +6,7 @@ import { UserManager, UserManagerSettings, User, WebStorageStateStore, Log } fro
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ConfigService, Settings } from './config.service';
+import { LogService } from '../services/log.service';
 
 export enum AuthTokenState {
   unknown = 'unknown' as any,
@@ -27,7 +28,8 @@ export class AuthService {
   public tokenState$: BehaviorSubject<AuthTokenState> = new BehaviorSubject<AuthTokenState>(AuthTokenState.unknown);
 
   constructor(
-    private config: ConfigService
+    private config: ConfigService,
+    private log: LogService
   ) {
     config.settings$.pipe(
       filter(s => !!s.oidc.authority)
@@ -103,7 +105,7 @@ export class AuthService {
   }
 
   private onSessionChanged(): void {
-    console.log('sessionChanged');
+    this.log.logInfo("session changed");
   }
 
   private onRenewError(err: Error): void {
@@ -114,16 +116,13 @@ export class AuthService {
     const currentUrl = this.config.currentPath
       .replace(/login$/, '')
       .replace(/forbidden$/, '')
-    ;
+      ;
 
     this.expireToken();
 
     this.mgr.signinRedirect({ state: this.redirectUrl || currentUrl })
       .then(() => { })
-      .catch(err => {
-        console.log(err);
-      }
-    );
+      .catch(err => this.log.logError(err));
   }
 
   externalLoginCallback(url?: string): Promise<User> {
@@ -135,7 +134,7 @@ export class AuthService {
       this.mgr.signoutRedirect()
         .then(() => { })
         .catch(err => {
-          console.log(err.text());
+          this.log.logError(`Error on logout: ${err.text()}`);
         });
     }
   }

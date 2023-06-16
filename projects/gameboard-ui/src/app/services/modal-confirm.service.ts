@@ -24,7 +24,7 @@ export class ModalConfirmService implements OnDestroy {
       this.hiddenSub = this.bsModalRef.onHidden?.subscribe(s => this.onHidden(config.onCancel));
     }
   }
-  
+
   hide(isCancelEvent = false): void {
     if (!isCancelEvent) {
       this.hiddenSub?.unsubscribe();
