@@ -16,6 +16,6 @@ export class ParameterGameComponent extends ReportParameterComponent<string> {
 
   constructor(private reportsService: ReportsService) {
     super();
-    this.games$ = this.reportsService.getGameOptions();
+    this.games$ = this.reportsService.getGames();
   }
 }

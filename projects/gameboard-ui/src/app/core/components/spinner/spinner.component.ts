@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
   selector: 'app-spinner',
   template: `
     <div class="spinner-component">
+      <h1><ng-content></ng-content></h1>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
         y="0px" width="108px" height="132px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;"
         xml:space="preserve">
@@ -41,4 +42,5 @@ import { Component } from '@angular/core';
     ".spinner-component { width: 100%; text-align: center; }"
   ]
 })
-export class SpinnerComponent { }
+export class SpinnerComponent {
+}

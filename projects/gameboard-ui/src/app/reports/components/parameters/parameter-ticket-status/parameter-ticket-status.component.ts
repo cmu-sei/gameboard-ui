@@ -14,6 +14,6 @@ export class ParameterTicketStatusComponent extends ReportParameterComponent<str
 
   constructor(private reportsService: ReportsService) {
     super();
-    this.statuses$ = this.reportsService.getTicketStatusOptions();
+    this.statuses$ = this.reportsService.getTicketStatuses();
   }
 }

@@ -1,8 +1,8 @@
-<span class="badge badge-pill mr-2 px-2 py-1 mb-2" [class.click-target]="isClickable" [ngStyle]="text | textToColor"
-    (click)="handleClick(text, id)">
-    <span>{{text}}</span>&nbsp;
+<span [class]="'badge badge-pill mr-2 px-2 py-1 mb-2 colored-text-chip-' + size" [class.click-target]="isClickable"
+    [ngStyle]="text | textToColor" (click)="handleClick(text, id)">
+    <span class="text-container">{{text}}</span>&nbsp;
     <span *ngIf="enableSecondaryAction" class="btn p-0 m-0 border-0" (click)="handleSecondaryActionClick(text, id)"
-        class="cursor-pointer" style="color: inherit">
-        <fa-icon class="p-0 m-0" [icon]="secondaryActionIcon" style="color: inherit"></fa-icon>
+        class="secondary-action cursor-pointer" style="color: inherit">
+        <fa-icon class="p-0 m-0" [icon]="secondaryActionIcon"></fa-icon>
     </span>
 </span>

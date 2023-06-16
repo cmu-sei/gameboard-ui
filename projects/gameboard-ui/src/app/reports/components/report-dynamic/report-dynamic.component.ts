@@ -6,10 +6,10 @@ import { ReportsService } from '../../reports.service';
 import { ReportViewModel, ReportMetaData, ReportKey } from '../../reports-models';
 import { DynamicReportDirective } from '../../directives/dynamic-report.directive';
 import { IReportComponent } from '../report-component';
-import { LogService } from '../../../services/log.service';
-import { PdfService } from '../../../services/pdf.service';
-import { UriService } from '../../../services/uri.service';
-import { ObjectService } from '../../../services/object.service';
+import { LogService } from '@/services/log.service';
+import { PdfService } from '@/services/pdf.service';
+import { UriService } from '@/services/uri.service';
+import { ObjectService } from '@/services/object.service';
 
 @Component({
   selector: 'app-report-dynamic',
@@ -63,9 +63,8 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
 
             // have to deep-clone the query parameters because they're made inextensible by angular
             const reportComponentParameters = componentRef.instance.reportService.unflattenParameters({ ...this.route.snapshot.queryParams });
-            console.log("loading params", reportComponentParameters);
+            this.logService.logInfo("Loading report params:", reportComponentParameters);
             componentRef.instance.selectedParameters = { ...componentRef.instance.selectedParameters, ...reportComponentParameters };
-            componentRef.instance.onResultsLoaded = (metaData: ReportMetaData) => { this.reportMetaData = metaData };
             this.loadedReportComponent = componentRef;
             // this.handleRunReport();
 

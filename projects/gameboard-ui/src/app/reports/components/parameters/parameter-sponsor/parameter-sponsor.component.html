@@ -1,5 +1,5 @@
 <div class="report-control parameter-sponsor-component">
-    <label for="sponsor">Sponsor</label>
+    <label for="sponsor" class="report-component-label">Sponsor</label>
     <select class="form-control" [(ngModel)]="ngModel">
         <option [ngValue]="undefined">[any sponsor]</option>
         <option *ngFor="let sponsor of sponsors$ | async" [ngValue]="sponsor.id">{{sponsor.name}}</option>

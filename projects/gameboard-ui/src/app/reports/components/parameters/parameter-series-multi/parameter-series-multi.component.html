@@ -1,0 +1,5 @@
+<div class="parameter-series-multi-component report-parameter" *ngIf="series$ | async as series">
+    <label for="series-multi" class="report-component-label">Series</label>
+    <app-multi-select ngDefaultControl name="series-multi" [options]="series" [(ngModel)]="ngModel"
+        (ngModelChange)="handleModelChange($event)"></app-multi-select>
+</div>

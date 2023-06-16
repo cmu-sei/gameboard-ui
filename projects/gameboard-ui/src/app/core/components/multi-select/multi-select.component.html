@@ -1,0 +1,24 @@
+<div class="multi-select-component">
+    <label class="report-component-label">{{ label }}</label>
+    <div class="search-scroll-container d-flex flex-column">
+        <div class="search-container flex-grow-0 flex-shrink-0"
+            *ngIf="(options?.length || 0) > showValueSelectHelpThreshold">
+            <input type="text" class="form-control full-width" [placeholder]="searchPlaceholder"
+                [(ngModel)]="searchValue" (ngModelChange)="handleSearchValueChanged(searchValue)">
+        </div>
+        <div class="form-control scroll-container flex-grow-1">
+            <div *ngFor="let option of displayedOptions; let i = index" class="form-check">
+                <input class="form-check-input" type="checkbox" [value]="option"
+                    [id]="'multi-select-' + uniqueId + '-' + i" (change)="handleCheckedChanged(option, $event)">
+                <label class="form-check-label" [for]="'multi-select-' + uniqueId + '-' + i">
+                    {{ display(option) }}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <p *ngIf="ngModel?.length && (options?.length || 0) > showValueSelectHelpThreshold">
+        <strong>Selected: </strong>
+        {{ buildSelectionSummary(ngModel!) }}
+    </p>
+</div>

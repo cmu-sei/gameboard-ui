@@ -13,8 +13,6 @@ import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-c
   styleUrls: ['./challenges-report.component.scss']
 })
 export class ChallengesReportComponent implements IReportComponent<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
-  @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
-
   selectedParameters: ChallengesReportParameters = { competition: undefined, registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
@@ -32,7 +30,6 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
     this.ctx$ = this.route.queryParams.pipe(
       map(params => ({ ...params } as ChallengesReportParameters)),
       switchMap(args => this.reportService.getReportData(args)),
-      tap(results => this.onResultsLoaded(results.metaData)),
       tap(results => this.chartConfig = this.buildDoughnutChart(results))
     );
   }

@@ -22,7 +22,7 @@ export class ParameterGameChallengespecComponent
 
   constructor(private reportsService: ReportsService) {
     super();
-    this.games$ = this.reportsService.getGameOptions();
+    this.games$ = this.reportsService.getGames();
     this.loadChallengeSpecs();
   }
 
@@ -31,7 +31,7 @@ export class ParameterGameChallengespecComponent
   }
 
   private loadChallengeSpecs(gameId?: string) {
-    this.challengeSpecs$ = this.reportsService.getChallengeSpecOptions(gameId);
+    this.challengeSpecs$ = this.reportsService.getChallengeSpecs(gameId);
 
     if (this.ngModel)
       this.ngModel.challengeSpecId = undefined;

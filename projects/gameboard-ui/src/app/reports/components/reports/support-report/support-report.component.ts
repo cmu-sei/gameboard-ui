@@ -25,7 +25,6 @@ interface SupportReportContext {
   providers: [createCustomInputControlValueAccessor(SupportReportComponent)]
 })
 export class SupportReportComponent implements OnInit, IReportComponent<SupportReportFlatParameters, SupportReportParameters, SupportReportRecord> {
-  @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   selectedParameters: SupportReportParameters = {
     gameChallengeSpec: {},
     labels: [],

@@ -21,7 +21,7 @@ export class ParameterTrackComponent extends ReportParameterComponent<ReportTrac
   constructor(private reportsService: ReportsService) {
     super();
 
-    this.tracks$ = this.reportsService.getTrackOptions();
+    this.tracks$ = this.reportsService.getTracks();
     this.ngModel = {
       track: undefined,
       modifier: this.competedIn

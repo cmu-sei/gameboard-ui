@@ -3,6 +3,8 @@ import { SafeHtml } from '@angular/platform-browser';
 import {
   faArrowLeft,
   faBolt,
+  faCaretDown,
+  faCaretRight,
   faCheck,
   faCheckSquare,
   faChevronDown,
@@ -34,6 +36,8 @@ export class FontAwesomeService {
   arrowDown = faLongArrowAltDown;
   arrowLeft = faArrowLeft;
   bolt = faBolt;
+  caretDown = faCaretDown;
+  caretRight = faCaretRight;
   check = faCheck;
   checkSquare = faCheckSquare;
   chevronDown = faChevronDown;

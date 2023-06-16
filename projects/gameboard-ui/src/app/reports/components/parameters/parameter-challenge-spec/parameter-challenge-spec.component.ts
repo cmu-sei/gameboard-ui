@@ -27,6 +27,6 @@ export class ParameterChallengeSpecComponent extends ReportParameterComponent<st
   }
 
   private loadChallengeSpecs(gameId?: string) {
-    this.specs$ = this.reportsService.getChallengeSpecOptions(this.gameId);
+    this.specs$ = this.reportsService.getChallengeSpecs(this.gameId);
   }
 }

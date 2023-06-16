@@ -1,5 +1,5 @@
 <div class="parameter-ticket-labels-component report-parameter">
-    <label for="addLabel">Labels</label>
+    <label for="addLabel" class="report-component-label">Labels</label>
     <div class="d-flex align-items-center">
         <div class="add-label-input flex-grow-1 m-0">
             <input type="text" minlength="2" class="form-control" name="addLabel" [(ngModel)]="addLabel"
@@ -7,10 +7,10 @@
                 placeholder="Add a label">
         </div>
 
-        <ul class="selected-labels d-flex align-items-center m-0">
+        <ul class="selected-values d-flex align-items-center m-0">
             <li>
                 <app-colored-text-chip class="ml-2" *ngFor="let label of ngModel" [text]="label"
-                    [enableSecondaryAction]="true"
+                    [enableSecondaryAction]="true" [size]="'medium'"
                     (secondaryActionClick)="handleChipRemoveClick($event)"></app-colored-text-chip>
             </li>
         </ul>

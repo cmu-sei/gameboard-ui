@@ -1,0 +1,27 @@
+<div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
+    <app-report-parameters-container>
+        <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
+            [(ngModel)]="selectedParameters.series"></app-multi-select>
+        <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
+            [(ngModel)]="selectedParameters.tracks"></app-multi-select>
+        <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
+            [(ngModel)]="selectedParameters.seasons"></app-multi-select>
+        <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
+            [(ngModel)]="selectedParameters.sponsors" [display]="displaySponsorName"
+            [value]="getSponsorValue"></app-multi-select>
+        <app-parameter-date-range label="Date of enrollment" [(ngModel)]="selectedParameters.enrollDate"
+            ngDefaultControl></app-parameter-date-range>
+    </app-report-parameters-container>
+</div>
+
+<div class="report-body mt-4" *ngIf="ctx$ | async as ctx" #enrollmentReport>
+    <div *ngIf="ctx.results.records.length" class="results">
+
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <app-spinner>Loading the report...</app-spinner>
+    </div>
+</ng-template>

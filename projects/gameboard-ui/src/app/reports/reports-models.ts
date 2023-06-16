@@ -43,6 +43,7 @@ export interface ReportParameterOptions {
 
 export enum ReportKey {
     ChallengesReport = "challenges-report",
+    EnrollmentReport = "enrollment",
     PlayersReport = "players-report",
     SupportReport = "support-report"
 }

@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output, forwardRef, } from '@angular/core';
+import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { v4 as uuid4 } from 'uuid';
 
 export function createCustomInputControlValueAccessor(extendedInputComponent: any) {
   return {
@@ -11,6 +12,7 @@ export function createCustomInputControlValueAccessor(extendedInputComponent: an
 
 @Component({ template: '' })
 export abstract class CustomInputComponent<T> implements ControlValueAccessor {
+  // required by ControlValueAcessor
   @Output() ngModelChange = new EventEmitter<T>();
   protected isDisabled = false;
   protected onChange = () => { };
@@ -26,6 +28,11 @@ export abstract class CustomInputComponent<T> implements ControlValueAccessor {
       this.ngModelChange.emit(this._ngModel);
     }
   }
+
+  // generate a uniqueId so if the custom component needs to generate
+  // say, a list of things, it can use the unique id of the component
+  // to ensure page ids/names are unique
+  protected uniqueId = uuid4();
 
   writeValue(obj: any): void {
     this.ngModel = obj;

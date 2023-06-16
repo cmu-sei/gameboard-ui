@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { faArrowLeft, faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ReportService } from '../../api/report.service';
 import { TicketChallengeGroup, TicketDayGroup, TicketDayReport, TicketLabelGroup } from '../../api/support-models';
+import { FontAwesomeService } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-support-report',
@@ -29,6 +29,7 @@ export class SupportReportComponent implements OnInit {
   challengeStats$: Observable<TicketChallengeGroup[]>;
 
   constructor(
+    public fa: FontAwesomeService,
     private gameService: GameService,
     private api: ReportService,
   ) {

@@ -18,15 +18,14 @@ interface PlayersReportContext {
   styleUrls: ['./players-report.component.scss']
 })
 export class PlayersReportComponent implements AfterViewInit, IReportComponent<PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord> {
-  @Input() onResultsLoaded!: (metadata: ReportMetaData) => void;
   ctx: PlayersReportContext | null = null;
 
   private _selectedParameters?: PlayersReportParameters;
-  public get selectedParameters(): PlayersReportParameters | undefined { return this._selectedParameters };
+  public get selectedParameters(): PlayersReportParameters | undefined { return this._selectedParameters; }
   public set selectedParameters(value: PlayersReportParameters | undefined) {
     this._selectedParameters = value;
     this.updateView(value);
-  };
+  }
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('playersReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
@@ -41,7 +40,7 @@ export class PlayersReportComponent implements AfterViewInit, IReportComponent<P
   ngAfterViewInit(): void {
     this.viewContainerRefs!.changes.subscribe(item => {
       this.reportElementRef = this.viewContainerRefs ? this.viewContainerRefs.get(0) : undefined;
-    })
+    });
   }
 
   getPdfExportElement(): ElementRef<HTMLDivElement> {
@@ -65,7 +64,7 @@ export class PlayersReportComponent implements AfterViewInit, IReportComponent<P
         .map(i => `- ${i || unspecifiedEntry}`).join("\n"),
       hideCancel: true,
       renderBodyAsMarkdown: true
-    })
+    });
   }
 
   private async updateView(params?: PlayersReportParameters) {
@@ -76,8 +75,6 @@ export class PlayersReportComponent implements AfterViewInit, IReportComponent<P
       results,
       selectedParameters: params || { gameChallengeSpec: {} }
     };
-
-    this.onResultsLoaded(results.metaData);
   }
 }
 

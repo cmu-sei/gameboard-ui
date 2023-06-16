@@ -31,6 +31,8 @@ import { ReportSelectComponent } from './components/report-select/report-select.
 import { ParameterGameChallengespecComponent } from './components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
 import { SupportReportContextMenuComponent } from './components/reports/support-report-context-menu/support-report-context-menu.component';
 import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
+import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
+import { ParameterSeriesMultiComponent } from './components/parameters/parameter-series-multi/parameter-series-multi.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ import { ParameterSponsorComponent } from './components/parameters/parameter-spo
     ReportSelectComponent,
     SupportReportContextMenuComponent,
     ParameterSponsorComponent,
+    EnrollmentReportComponent,
+    ParameterSeriesMultiComponent,
   ],
   imports: [
     CommonModule,

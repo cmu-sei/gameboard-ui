@@ -19,6 +19,7 @@ import { PlayerAvatarListComponent } from './components/player-avatar-list/playe
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './directives/modal-confirm.directive';
+import { MultiSelectComponent } from './components/multi-select/multi-select.component';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
 import { RenderLinksInTextComponent } from './components/render-links-in-text/render-links-in-text.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
@@ -39,6 +40,7 @@ const PUBLIC_DECLARATIONS = [
   LongContentHiderComponent,
   ModalConfirmComponent,
   ModalConfirmDirective,
+  MultiSelectComponent,
   PlayerAvatarComponent,
   PlayerAvatarListComponent,
   PlayerStatusComponent,
@@ -61,7 +63,7 @@ const RELAYED_MODULES = [
   TabsModule,
   TooltipModule,
   TypeaheadModule,
-]
+];
 
 @NgModule({
   declarations: [

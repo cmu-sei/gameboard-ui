@@ -1,3 +1,27 @@
 .click-target {
     cursor: pointer;
 }
+
+.colored-text-chip-small {
+    font-size: 0.8rem !important;
+    line-height: 0.85rem !important;
+}
+
+.colored-text-chip-medium {
+    font-size: 1rem !important; 
+    line-height: 1.1rem !important;
+}
+
+.text-container {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.secondary-action {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+fa-icon {
+    color: inherit;
+}

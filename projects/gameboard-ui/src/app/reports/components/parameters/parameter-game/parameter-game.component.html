@@ -1,5 +1,5 @@
 <div class="parameter-game-component report-parameter" *ngIf="games$ | async as games">
-    <label for="competition">Game</label>
+    <label for="competition" class="report-component-label">Game</label>
     <select class="form-control form-select" name="game" aria-label="game select" [disabled]="!games.length"
         [(ngModel)]="ngModel">
         <option [value]="undefined" selected>[any game]</option>

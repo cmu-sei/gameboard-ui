@@ -1,5 +1,5 @@
 <div class="parameter-track-component report-parameter" *ngIf="tracks$ | async as tracks">
-    <label for="competition">Track</label>
+    <label class="report-component-label" for="competition">Track</label>
     <div class="d-flex" *ngIf="ngModel">
         <select *ngIf="!hideModifierSelect" class="form-control form-select modifier-select" name="modifier"
             [(ngModel)]="ngModel.modifier" aria-label="track modifier" (ngModelChange)="handleSelectionChanged($event)">

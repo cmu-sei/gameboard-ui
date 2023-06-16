@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, map, of } from 'rxjs';
 import { ReportViewModel, ReportKey, ReportResults, ReportTimeSpan } from './reports-models';
-import { ConfigService } from '../utility/config.service';
 import { UriService } from '../services/uri.service';
 import { SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
@@ -10,13 +9,14 @@ import { ChallengesReportComponent } from './components/reports/challenges-repor
 import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { LogService } from '../services/log.service';
 import { SupportReportComponent } from './components/reports/support-report/support-report.component';
-import { SupportReportParameters, SupportReportRecord } from './components/reports/support-report/support-report.models';
 import { ApiUrlService } from '@/services/api-url.service';
+import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
   private static reportComponentMap: { [reportKey: string]: any } = {
     'challenges-report': ChallengesReportComponent,
+    'enrollment': EnrollmentReportComponent,
     'players-report': PlayersReportComponent,
     'support-report': SupportReportComponent
   };
@@ -43,26 +43,34 @@ export class ReportsService {
       return ReportsService.reportComponentMap[key];
     }
 
-    this.logService.logError(`Can't resolve a component for report key "${key.toString()}".`)
+    this.logService.logError(`Can't resolve a component for report key "${key.toString()}".`);
   }
 
-  getCompetitionOptions(): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/competitions"));
-  }
-
-  getChallengeSpecOptions(gameId?: string): Observable<SimpleEntity[]> {
+  getChallengeSpecs(gameId?: string): Observable<SimpleEntity[]> {
     return this.http.get<SimpleEntity[]>(this.apiUrlService.build(`/reports/parameter/challenge-specs/${gameId || ''}`));
   }
 
-  getGameOptions(): Observable<SimpleEntity[]> {
+  getGames(): Observable<SimpleEntity[]> {
     return this.http.get<SimpleEntity[]>(this.apiUrlService.build("/reports/parameter/games"));
   }
 
-  getTicketStatusOptions(): Observable<string[]> {
+  getSeasons(): Observable<string[]> {
+    return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/seasons"));
+  }
+
+  getSeries(): Observable<string[]> {
+    return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/series"));
+  }
+
+  getSponsors(): Observable<SimpleEntity[]> {
+    return this.http.get<SimpleEntity[]>(this.apiUrlService.build("/reports/parameter/sponsors"));
+  }
+
+  getTicketStatuses(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/ticket-statuses")).pipe(map(statuses => statuses.sort()));
   }
 
-  getTrackOptions(): Observable<string[]> {
+  getTracks(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/tracks"));
   }
 
