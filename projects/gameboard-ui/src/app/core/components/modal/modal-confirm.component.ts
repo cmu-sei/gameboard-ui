@@ -12,7 +12,7 @@ import { ModalConfirmConfig } from '../../directives/modal-confirm.directive';
               <span aria-hidden="true" class="visually-hidden">&times;</span>
           </button>
       </div>
-      <div class="modal-body" *ngIf="!config.renderBodyAsMarkdown; else markdownBodyContent" [innerHTML]="config.bodyContent"></div>
+      <div class="modal-body" *ngIf="!config.renderBodyAsMarkdown; else markdownBodyContent" [innerHTML]="config.bodyContent.trim()"></div>
       <div class="modal-footer">
           <button type="button" *ngIf="config.hideCancel !== true" class="btn btn-default" (click)="cancel()">{{ config.cancelButtonText || "Cancel" }}</button>
           <button type="button" class="btn btn-danger" (click)="confirm()">{{ config.confirmButtonText || 'OK' }}</button>

@@ -79,6 +79,13 @@ export class ReportsService {
     return `${(date.getMonth() + 1) % 12}-${date.getDate()}-${date.getFullYear()}`;
   }
 
+  queryStringEncodedDateToDate(dateString?: string): Date | undefined {
+    if (!dateString)
+      return undefined;
+
+    return new Date(Date.parse(dateString));
+  }
+
   minutesToTimeSpan(minutes?: number): ReportTimeSpan {
     if (!minutes)
       return { days: undefined, hours: undefined, minutes: undefined };
@@ -104,6 +111,20 @@ export class ReportsService {
       return 0;
 
     return (timespan.days || 0) * 24 * 60 + (timespan.hours || 0) * 60 + (timespan.minutes || 0);
+  }
+
+  flattenMultiSelectValues(input: string[]): string {
+    if (!input)
+      return "";
+
+    return input.join(",");
+  }
+
+  unflattenMultiSelectValues(input: string): string[] {
+    if (!input)
+      return [];
+
+    return input.split(",");
   }
 
   async openExport(reportKey: ReportKey, parameters: any) {

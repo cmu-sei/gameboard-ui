@@ -1,14 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '../custom-input/custom-input.component';
-
-// I tried to make this work with generics instead, but Angular had a 
-// hard time with it.
-// 
-// See here if you're curious: https://dev.to/angular/does-angular-support-generic-component-types-4fkm
-export interface MultiSelectOption {
-  display: string;
-  value: string;
-}
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
   selector: 'app-multi-select',
@@ -20,24 +12,42 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
   @Input() label?: string;
   @Input() searchPlaceholder?: string = "Search items";
   @Input() options: T[] | null = [];
-  @Input() showValueSelectHelpThreshold = 5;
+  @Input() showSearchBoxThreshold = 6;
+  @Input() showSelectionSummaryThreshold = 0;
   @Input() display: (option: T) => string = (option) => `${option}`;
   @Input() value: (option: T) => any = (option) => `${option}`;
 
-  private static selectedItemsDisplayedThreshold = 3;
-  protected displayedOptions = this.options;
+  private static selectedItemsDisplayedThreshold = 4;
   protected searchValue = "";
+  protected countSelectedOverDisplayThreshold = 0;
+
+  constructor(private modalService: ModalConfirmService) {
+    super();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes.options.currentValue) {
-      this.options = [];
-      this.displayedOptions = [];
-
-      return;
+    // force options not to be empty and to be an array if it isn't
+    if (changes.options) {
+      if (!changes.options.currentValue) {
+        this.options = [];
+      } else if (!Array.isArray(changes.options.currentValue)) {
+        this.options = [changes.options.currentValue];
+      }
     }
 
-    if (this.options?.length) {
-      this.displayedOptions = [...this.options];
+    // coerce ngmodel to be an array if it isn't
+    if (changes.ngModel) {
+      this._coerceNgModelToArray();
+    }
+  }
+
+  private _coerceNgModelToArray() {
+    if (!this.ngModel) {
+      this.ngModel = [];
+    } else {
+      if (!Array.isArray(this.ngModel)) {
+        this.ngModel = [this.ngModel];
+      }
     }
   }
 
@@ -46,23 +56,19 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
       return "";
     }
 
-    let summary = "";
-
-    summary = selectedItems
+    let summary = selectedItems
       .map(i => this.display(i))
       .slice(0, MultiSelectComponent.selectedItemsDisplayedThreshold).join(", ");
 
-    if (selectedItems.length > MultiSelectComponent.selectedItemsDisplayedThreshold)
-      summary = `${summary} and ${selectedItems.length - MultiSelectComponent.selectedItemsDisplayedThreshold} other item${(selectedItems.length - MultiSelectComponent.selectedItemsDisplayedThreshold) != 1 ? "s" : ""}`;
+    this.countSelectedOverDisplayThreshold = Math.max(selectedItems.length - MultiSelectComponent.selectedItemsDisplayedThreshold, 0);
 
     return summary;
   }
 
   handleCheckedChanged(option: T, event: any) {
+    const isChecked = (event.target as any).checked;
     if (!this.ngModel)
       this.ngModel = [];
-
-    const isChecked = (event.target as any).checked;
 
     // if the box isn't checked, we must be removing an item
     if (!isChecked) {
@@ -77,20 +83,43 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
     this.ngModel.push(option);
   }
 
-  handleSearchValueChanged(searchValue: string) {
-    if (searchValue)
-      this.displayedOptions = (this.options || []).filter(i => this.display(i).toLowerCase().indexOf(searchValue.toLowerCase()) >= 0);
-    else {
-      this.resetDisplayedOptions();
-    }
+  getOptionIsChecked(option: T) {
+    // HACK
+    // i don't know how ngModel is ever anything but an array since we're handling it in 
+    // ngOnChanges, but coerce it here again as a workaround for now
+    this._coerceNgModelToArray();
+    const optionValue = this.value(option);
+    return this.ngModel && this.ngModel.some(o => this.value(o) === optionValue);
   }
 
-  private resetDisplayedOptions(): void {
-    if (!this.options?.length) {
-      this.displayedOptions = [];
-      return;
+  getOptionVisibility(option: T) {
+    if (!this.searchValue) {
+      return true;
     }
 
-    this.displayedOptions = [...this.options];
+    const optionText = this.display(option).toLowerCase();
+    return optionText.indexOf(this.searchValue.toLowerCase()) >= 0;
+  }
+
+  handleClearSelectionsClicked() {
+    this.ngModel = [];
+  }
+
+  handleSelectedOverDisplayThresholdClicked() {
+    const displaySelectedOptions = this.ngModel!
+      .map(o => this.display(o));
+
+    // sort works in place, so we have to do this separately
+    displaySelectedOptions.sort();
+
+    // then transform to markdown so we can render as a bulleted list
+    this.modalService.openConfirm({
+      title: `Selected ${this.label}`,
+      hideCancel: true,
+      renderBodyAsMarkdown: true,
+      bodyContent: displaySelectedOptions
+        .map(labeledOption => `\n- ${labeledOption}`)
+        .join("")
+    });
   }
 }

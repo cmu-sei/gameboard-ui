@@ -2,12 +2,12 @@ import { SimpleEntity } from "@/api/models";
 import { ReportDateRange } from "@/reports/reports-models";
 
 export interface EnrollmentReportFlatParameters {
-    enrollDateStart?: Date;
-    enrollDateEnd?: Date;
-    seasons: string[]
-    series: string[];
-    sponsors: SimpleEntity[];
-    tracks: string[];
+    enrollDateStart?: string;
+    enrollDateEnd?: string;
+    seasons: string
+    series: string;
+    sponsors: string;
+    tracks: string;
 }
 
 export interface EnrollmentReportParameters {

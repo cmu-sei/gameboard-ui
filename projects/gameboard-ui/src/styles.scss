@@ -166,7 +166,6 @@ alert {
 }
 
 app-spinner svg {
-
   rect,
   path {
     fill: theme-color("success");
@@ -241,5 +240,10 @@ th[align="center"] {
 }
 
 .cursor-pointer {
+  cursor: pointer;
+}
+
+.link-button {
+  color: theme-color("info");
   cursor: pointer;
 }
