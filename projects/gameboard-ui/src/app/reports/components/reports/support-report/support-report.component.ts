@@ -38,12 +38,12 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
 
   constructor(
     public faService: FontAwesomeService,
-    public reportService: SupportReportService,
+    public enrollmentReportService: SupportReportService,
     private rgbService: TextToRgbService,
     private supportService: SupportService) { }
 
   async ngOnInit() {
-    const results = await firstValueFrom(this.reportService.getReportData(this.selectedParameters));
+    const results = await firstValueFrom(this.enrollmentReportService.getReportData(this.selectedParameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
 
     this.ctx = {

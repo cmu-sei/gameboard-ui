@@ -33,6 +33,7 @@ import { SupportReportContextMenuComponent } from './components/reports/support-
 import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
 import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
 import { ParameterSeriesMultiComponent } from './components/parameters/parameter-series-multi/parameter-series-multi.component';
+import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { ParameterSeriesMultiComponent } from './components/parameters/parameter
     ParameterSponsorComponent,
     EnrollmentReportComponent,
     ParameterSeriesMultiComponent,
+    ArrayToCountPipe,
   ],
   imports: [
     CommonModule,

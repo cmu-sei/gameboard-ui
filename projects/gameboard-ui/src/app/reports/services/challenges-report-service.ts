@@ -3,7 +3,6 @@ import { IReportService } from './ireport.service';
 import { ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord } from '../components/reports/challenges-report/challenges-report.models';
 import { Observable } from 'rxjs';
 import { ReportResults } from '../reports-models';
-import { UriService } from '../../services/uri.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '../../services/api-url.service';
 import { ObjectService } from '@/services/object.service';
@@ -16,8 +15,7 @@ export class ChallengesReportService implements IReportService<ChallengesReportF
     private apiRootService: ApiUrlService,
     private http: HttpClient,
     private objectService: ObjectService,
-    private reportsService: ReportsService,
-    private uriService: UriService) { }
+    private reportsService: ReportsService) { }
 
   flattenParameters(parameters: ChallengesReportParameters): ChallengesReportFlatParameters {
     const retVal = {
@@ -53,8 +51,6 @@ export class ChallengesReportService implements IReportService<ChallengesReportF
   }
 
   getReportData(parameters: ChallengesReportParameters): Observable<ReportResults<ChallengesReportRecord>> {
-    const query = this.uriService.toQueryString(parameters);
-
-    return this.http.get<ReportResults<ChallengesReportRecord>>(this.apiRootService.build(`/reports/challenges-report${query}`));
+    return this.http.get<ReportResults<ChallengesReportRecord>>(this.apiRootService.build("/reports/challenges-report", parameters));
   }
 }

@@ -9,14 +9,106 @@
         <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
             [(ngModel)]="selectedParameters.sponsors" [display]="displaySponsorName"
             [value]="getSponsorValue"></app-multi-select>
-        <app-parameter-date-range label="Date of enrollment" [(ngModel)]="selectedParameters.enrollDate"
+        <app-parameter-date-range label="Enrollment Date" [(ngModel)]="selectedParameters.enrollDate"
             ngDefaultControl></app-parameter-date-range>
     </app-report-parameters-container>
 </div>
 
 <div class="report-body mt-4" *ngIf="ctx$ | async as ctx" #enrollmentReport>
     <div *ngIf="ctx.results.records.length" class="results">
+        <table class="report-table table-hover gameboard-report">
+            <colgroup span="3"></colgroup>
+            <col>
+            <colgroup span="4"></colgroup>
 
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col" colSpan="3" class="group-header">Enrollment</th>
+                    <th scope="col" class="group-header">Session</th>
+                    <th scope="col" colSpan="4" class="group-header">Performance</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Player</td>
+                    <td>Enroll Date</td>
+                    <td>Game</td>
+                    <td>Duration</td>
+                    <td>Deployed</td>
+                    <td>Partially Solved</td>
+                    <td>Completely Solved</td>
+                    <td>Score</td>
+                </tr>
+
+                <tr class="data-row" *ngFor="let record of ctx.results.records">
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <app-player-avatar class="d-block mr-2"
+                                [avatarUri]="record.player.sponsor.logoFileName | relativeImage"
+                                size="small"></app-player-avatar>
+
+                            <div class="player-info flex-grow-1">
+                                <p class="player-name m-0">{{record.player.name}}</p>
+                                <p class="team-name" *ngIf="record.game.isTeamGame">
+                                    Team: <span class="subtle-info">{{ record.team.name }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="report-field date">
+                        <p *ngIf="record.enrollDate else noValue">
+                            {{ record.enrollDate }}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="game-name m-0">{{ record.game.name }}</p>
+                        <p class="game-info subtle-info">
+                            <span *ngIf="record.game.series">
+                                <a [href]="buildParameterChangeUrl({ series: [record.game.series] })">
+                                    {{ record.game.series }}
+                                </a>
+                                ::
+                            </span>
+                            <span *ngIf="record.game.season">
+                                <a [href]="buildParameterChangeUrl({ seasons: [record.game.season] })">
+                                    {{ record.game.season }}
+                                </a>
+                                ::
+                            </span>
+                            <span *ngIf="record.game.track; else noValue">
+                                <a [href]="buildParameterChangeUrl({ tracks: [record.game.track] })">
+                                    {{ record.game.track }}
+                                </a>
+                            </span>
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p class="sessionDuration" *ngIf="record.session.durationMs; else noValue">
+                            {{ record.session.durationMs | msToDuration }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p class="challenges-deployed">
+                            {{ record.challenges | arrayToCount }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p class="count challenges-partial">
+                            {{ record.challengesPartiallySolvedCount }}
+                        </p>
+                    </td>
+                    <td class="numerical">
+                        <p class="count challenges-complete">
+                            {{ record.challengesCompletelySolvedCount }}
+                        </p>
+                    </td>
+                    <td class="numerical">
+                        <p>{{ record.score }}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -24,4 +116,8 @@
     <div class="page-height d-flex flex-column align-items-center justify-content-center">
         <app-spinner>Loading the report...</app-spinner>
     </div>
+</ng-template>
+
+<ng-template #noValue>
+    <span class="no-value">--</span>
 </ng-template>

@@ -3,7 +3,6 @@ import { SupportReportFlatParameters, SupportReportParameters, SupportReportReco
 import { ObjectService } from '../../services/object.service';
 import { Observable } from 'rxjs';
 import { ReportResults } from '../reports-models';
-import { UriService } from '../../services/uri.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '../../services/api-url.service';
 import { IReportService } from './ireport.service';
@@ -13,11 +12,10 @@ import { ReportsService } from '../reports.service';
 export class SupportReportService implements IReportService<SupportReportFlatParameters, SupportReportParameters, SupportReportRecord> {
 
   constructor(
-    private apiRoot: ApiUrlService,
+    private apiUri: ApiUrlService,
     private http: HttpClient,
     private objectService: ObjectService,
-    private reportsService: ReportsService,
-    private uriService: UriService) { }
+    private reportsService: ReportsService,) { }
 
   public flattenParameters(parameters: SupportReportParameters) {
     let flattened: SupportReportFlatParameters = {
@@ -64,7 +62,6 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
 
   getReportData(args: SupportReportParameters): Observable<ReportResults<SupportReportRecord>> {
     const flattened = this.flattenParameters(args);
-    const query = this.uriService.toQueryString(flattened);
-    return this.http.get<ReportResults<SupportReportRecord>>(`${this.apiRoot.build(`/reports/support-report${query}`)}`);
+    return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support-report", flattened));
   }
 }

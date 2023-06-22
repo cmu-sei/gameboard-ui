@@ -1,11 +1,12 @@
-import { Component, ElementRef, SimpleChange, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { IReportComponent } from '../../report-component';
-import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord } from './enrollment-report.models';
+import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportParametersUpdate, EnrollmentReportRecord } from './enrollment-report.models';
 import { ReportKey, ReportResults } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
-import { Observable, of } from 'rxjs';
+import { Observable, firstValueFrom, of } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
 import { SimpleEntity } from '@/api/models';
+import { RouterService } from '@/services/router.service';
 
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
@@ -43,11 +44,19 @@ export class EnrollmentReportComponent
   getPdfExportElement = () => this.reportContainer;
   getReportKey = () => ReportKey.EnrollmentReport;
 
-  constructor(public reportService: EnrollmentReportService, private reportsService: ReportsService) { }
+  constructor(
+    public enrollmentReportService: EnrollmentReportService,
+    private reportsService: ReportsService,
+    private routerService: RouterService) { }
 
   ngOnInit() {
     this.series$ = this.reportsService.getSeries();
     this.tracks$ = this.reportsService.getTracks();
+  }
+
+  protected buildParameterChangeUrl(parameterBuilder: EnrollmentReportParametersUpdate) {
+    const updatedSelectedParameters: EnrollmentReportFlatParameters = this.enrollmentReportService.flattenParameters({ ...this.selectedParameters, ...parameterBuilder });
+    return this.routerService.getReportRoute(ReportKey.EnrollmentReport, updatedSelectedParameters);
   }
 
   protected displaySponsorName(s: SimpleEntity) {
@@ -58,17 +67,10 @@ export class EnrollmentReportComponent
     return s.id;
   }
 
-  private updateView(params: EnrollmentReportParameters) {
+  private async updateView(params: EnrollmentReportParameters) {
     // get data
     this.ctx$ = of({
-      results: {
-        metaData: {
-          key: ReportKey.EnrollmentReport.toString(),
-          title: "Enrollment Report",
-          runAt: new Date()
-        },
-        records: []
-      },
+      results: await firstValueFrom(this.enrollmentReportService.getReportData(this.selectedParameters)),
       selectedParameters: params
     });
   }

@@ -5,17 +5,15 @@ import { Observable } from 'rxjs';
 import { ReportResults, ReportTrackParameterModifier } from '../reports-models';
 import { ObjectService } from '../../services/object.service';
 import { ApiUrlService } from '@/services/api-url.service';
-import { UriService } from '@/services/uri.service';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class PlayersReportService implements IReportService<PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord> {
 
   constructor(
-    private apiUrlService: ApiUrlService,
+    private apiUri: ApiUrlService,
     private http: HttpClient,
-    private objectService: ObjectService,
-    private uriService: UriService) { }
+    private objectService: ObjectService) { }
 
   flattenParameters(parameters: PlayersReportParameters): PlayersReportFlatParameters {
     const flattened: PlayersReportFlatParameters = {
@@ -75,7 +73,6 @@ export class PlayersReportService implements IReportService<PlayersReportFlatPar
   }
 
   getReportData(parameters?: PlayersReportFlatParameters): Observable<ReportResults<PlayersReportRecord>> {
-    const query = this.uriService.toQueryString(parameters);
-    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUrlService.build(`/reports/players-report${query}`));
+    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUri.build("/reports/players-report", parameters));
   }
 }

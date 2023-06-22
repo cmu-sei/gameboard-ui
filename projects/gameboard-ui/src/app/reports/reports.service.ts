@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, firstValueFrom, map, of } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { ReportViewModel, ReportKey, ReportResults, ReportTimeSpan } from './reports-models';
-import { UriService } from '../services/uri.service';
 import { SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
 import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
@@ -25,8 +24,7 @@ export class ReportsService {
     private apiUrlService: ApiUrlService,
     private filesService: FilesService,
     private http: HttpClient,
-    private logService: LogService,
-    private uriService: UriService
+    private logService: LogService
   ) { }
 
   async list(): Promise<ReportViewModel[]> {
@@ -127,8 +125,7 @@ export class ReportsService {
     return input.split(",");
   }
 
-  async openExport(reportKey: ReportKey, parameters: any) {
-    const queryString = this.uriService.toQueryString(parameters);
-    await this.filesService.downloadFileFrom(this.apiUrlService.build(`/reports/export/${reportKey.toString()}${queryString ? `?${queryString}` : ''}`), reportKey.toString(), "csv", "text/csv");
+  async openExport<T>(reportKey: ReportKey, parameters: T) {
+    await this.filesService.downloadFileFrom(this.apiUrlService.build(`/reports/export/${reportKey.toString()}`, parameters), reportKey.toString(), "csv", "text/csv");
   }
 }

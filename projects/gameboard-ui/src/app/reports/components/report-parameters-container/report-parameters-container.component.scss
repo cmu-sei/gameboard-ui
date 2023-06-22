@@ -14,6 +14,7 @@ hr {
 ::ng-deep .parameters-container {
     > * {
         flex: 1 1 48%;
+        min-width: 48%;
         max-width: 48%;
         margin-right: 1rem;
         margin-bottom: 1rem;

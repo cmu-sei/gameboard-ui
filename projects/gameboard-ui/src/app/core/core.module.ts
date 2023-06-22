@@ -32,6 +32,7 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { HttpClient } from '@angular/common/http';
 import { markedOptionsFactory } from './config/marked.config';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { RelativeImagePipe } from './pipes/relative-image.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ColoredTextChipComponent,
@@ -45,6 +46,7 @@ const PUBLIC_DECLARATIONS = [
   PlayerAvatarListComponent,
   PlayerStatusComponent,
   RenderLinksInTextComponent,
+  RelativeImagePipe,
   RelativeUrlsPipe,
   SpinnerComponent,
   TextToColorPipe,

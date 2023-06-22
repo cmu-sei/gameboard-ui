@@ -5,12 +5,17 @@ import { Observable } from 'rxjs';
 import { ReportResults } from '../reports-models';
 import { ReportsService } from '../reports.service';
 import { SimpleEntity } from '@/api/models';
+import { HttpClient } from '@angular/common/http';
+import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class EnrollmentReportService
   implements IReportService<EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord> {
 
-  constructor(private reportsService: ReportsService) { }
+  constructor(
+    private apiUrl: ApiUrlService,
+    private http: HttpClient,
+    private reportsService: ReportsService) { }
 
   flattenParameters(parameters: EnrollmentReportParameters): EnrollmentReportFlatParameters {
     return {
@@ -18,7 +23,7 @@ export class EnrollmentReportService
       enrollDateStart: this.reportsService.dateToQueryStringEncoded(parameters.enrollDate?.dateStart),
       seasons: this.reportsService.flattenMultiSelectValues(parameters.seasons),
       series: this.reportsService.flattenMultiSelectValues(parameters.series),
-      sponsors: this.reportsService.flattenMultiSelectValues(parameters.sponsors.map(s => s.id)),
+      sponsors: this.reportsService.flattenMultiSelectValues(parameters.sponsors?.map(s => s.id) || []),
       tracks: this.reportsService.flattenMultiSelectValues(parameters.tracks)
     };
   }
@@ -39,6 +44,6 @@ export class EnrollmentReportService
   }
 
   getReportData(parameters: EnrollmentReportParameters): Observable<ReportResults<EnrollmentReportRecord>> {
-    throw new Error('Method not implemented.');
+    return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", parameters));
   }
 }

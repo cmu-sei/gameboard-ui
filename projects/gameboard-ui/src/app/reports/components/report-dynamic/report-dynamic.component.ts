@@ -8,9 +8,9 @@ import { DynamicReportDirective } from '../../directives/dynamic-report.directiv
 import { IReportComponent } from '../report-component';
 import { LogService } from '@/services/log.service';
 import { PdfService } from '@/services/pdf.service';
-import { UriService } from '@/services/uri.service';
 import { ObjectService } from '@/services/object.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { ApiUrlService } from '@/services/api-url.service';
 
 @Component({
   selector: 'app-report-dynamic',
@@ -28,14 +28,14 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   protected report$?: Observable<ReportViewModel | null>;
 
   constructor(
+    private apiUrl: ApiUrlService,
     private modalService: ModalConfirmService,
     private logService: LogService,
     private objectService: ObjectService,
     private pdfService: PdfService,
     private reportsService: ReportsService,
     private route: ActivatedRoute,
-    private router: Router,
-    private uriService: UriService) {
+    private router: Router) {
     this.routerEventsSub = router.events
       .pipe(
         filter(ev => ev instanceof NavigationEnd),
@@ -64,7 +64,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
             const componentRef = viewContainerRef.createComponent<IReportComponent<any, any, any>>(reportComponentType);
 
             // have to deep-clone the query parameters because they're made inextensible by angular
-            const reportComponentParameters = componentRef.instance.reportService.unflattenParameters({ ...this.route.snapshot.queryParams });
+            const reportComponentParameters = componentRef.instance.enrollmentReportService.unflattenParameters({ ...this.route.snapshot.queryParams });
             this.logService.logInfo("Loading report params:", reportComponentParameters);
             componentRef.instance.selectedParameters = { ...componentRef.instance.selectedParameters, ...reportComponentParameters };
             this.loadedReportComponent = componentRef;
@@ -106,7 +106,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     }
 
     const key = this.loadedReportComponent.instance.getReportKey();
-    const query = this.loadedReportComponent.instance.reportService.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
+    const query = this.loadedReportComponent.instance.enrollmentReportService.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
     const cleanQuery = this.objectService.cloneTruthyKeys(query);
 
     this.displayReport(key, cleanQuery);
@@ -140,7 +140,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   }
 
   private displayReport(reportKey: string, query: Object | null = null) {
-    this.router.navigateByUrl(`reports/${reportKey}${this.uriService.toQueryString(query)}`);
+    this.router.navigateByUrl(`reports/${reportKey}${this.apiUrl.objectToQuery(query)}`);
   }
 
   ngOnDestroy(): void {
