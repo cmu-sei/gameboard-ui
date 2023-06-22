@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { IReportComponent } from '../../report-component';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
-import { ReportKey, ReportMetaData, ReportResults } from '../../../reports-models';
+import { ReportKey, ReportResults } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
 import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '../../../services/support-report.service';
@@ -38,12 +38,12 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
 
   constructor(
     public faService: FontAwesomeService,
-    public enrollmentReportService: SupportReportService,
+    public reportService: SupportReportService,
     private rgbService: TextToRgbService,
     private supportService: SupportService) { }
 
   async ngOnInit() {
-    const results = await firstValueFrom(this.enrollmentReportService.getReportData(this.selectedParameters));
+    const results = await firstValueFrom(this.reportService.getReportData(this.selectedParameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
 
     this.ctx = {
@@ -51,7 +51,7 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
       challengesChartConfig: this.buildTicketsByGameAndChallenge(results.records),
       labelsChartConfigs: this.buildTicketsByLabel(results.records, labels),
       statusChartConfig: this.buildTicketsByStatus(results.records)
-    }
+    };
   }
 
   getPdfExportElement() {
@@ -94,7 +94,7 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
       options: {
         responsive: true
       }
-    }
+    };
   }
 
   private buildTicketsByGameAndChallenge(records: SupportReportRecord[]): DoughnutChartConfig {
@@ -120,7 +120,7 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
       options: {
         responsive: true
       }
-    }
+    };
   }
 
   private buildTicketsByLabel(records: SupportReportRecord[], labels: string[]): DoughnutChartConfig[] {

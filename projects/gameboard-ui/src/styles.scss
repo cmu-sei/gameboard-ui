@@ -231,6 +231,13 @@ th[align="left"] {
   text-align: left;
 }
 
+// _reboot.scss does weird stuff to checkboxes apparently for the sake of IE10, so... just don't
+.form-control input[type="checkbox"] {
+  position: static;
+  padding: 0;
+  margin: 0;
+}
+
 th[align="right"] {
   text-align: right;
 }

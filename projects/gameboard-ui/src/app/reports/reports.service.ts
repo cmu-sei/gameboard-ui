@@ -74,7 +74,9 @@ export class ReportsService {
 
   dateToQueryStringEncoded(date?: Date) {
     if (!date) return "";
-    return `${(date.getMonth() + 1) % 12}-${date.getDate()}-${date.getFullYear()}`;
+    // this is prettier, but the default API-side modelbinder can't bind it to a date
+    // return `${(date.getMonth() + 1) % 12}-${date.getDate()}-${date.getFullYear()}`;
+    return date.toLocaleDateString();
   }
 
   queryStringEncodedDateToDate(dateString?: string): Date | undefined {

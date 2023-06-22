@@ -75,8 +75,8 @@
                             </td>
                             <td class="text-center">
                                 <div *ngIf="record.updatedOn; else noValue">
-                                    {{record.updatedOn | shortdate}} @ {{record.updatedOn |
-                                    friendlyTime}}
+                                    {{record.updatedOn | shortdate}} @
+                                    {{record.updatedOn | friendlyTime}}
                                     <p class="secondary-info-text">{{record.updatedBy?.name}}</p>
                                 </div>
                             </td>

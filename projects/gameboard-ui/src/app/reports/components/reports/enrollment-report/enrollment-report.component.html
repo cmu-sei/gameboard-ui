@@ -44,9 +44,11 @@
                 <tr class="data-row" *ngFor="let record of ctx.results.records">
                     <td>
                         <div class="d-flex align-items-center">
-                            <app-player-avatar class="d-block mr-2"
-                                [avatarUri]="record.player.sponsor.logoFileName | relativeImage"
-                                size="small"></app-player-avatar>
+                            <a [href]="buildParameterChangeUrl({ sponsors: [record.player.sponsor] })">
+                                <app-player-avatar class="d-block mr-2"
+                                    [avatarUri]="record.player.sponsor.logoFileName | relativeImage"
+                                    size="small"></app-player-avatar>
+                            </a>
 
                             <div class="player-info flex-grow-1">
                                 <p class="player-name m-0">{{record.player.name}}</p>
@@ -57,8 +59,9 @@
                         </div>
                     </td>
                     <td class="report-field date">
-                        <p *ngIf="record.enrollDate else noValue">
-                            {{ record.enrollDate }}
+                        <p *ngIf="record.player.enrollDate else noValue">
+                            {{ record.player.enrollDate | shortdate }} @
+                            {{ record.player.enrollDate | friendlyTime }}
                         </p>
                     </td>
                     <td>

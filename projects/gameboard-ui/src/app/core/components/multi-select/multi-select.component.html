@@ -7,12 +7,12 @@
                 [(ngModel)]="searchValue">
         </div>
         <div class="form-control scroll-container flex-grow-1">
-            <div *ngFor="let option of options; let i = index" class="form-check">
+            <div *ngFor="let option of options; let i = index">
                 <ng-container *ngIf="getOptionVisibility(option)">
-                    <input class="form-check-input" type="checkbox" [value]="option"
+                    <input class="checkbox-input" type="checkbox" [value]="option"
                         [checked]="getOptionIsChecked(option)" [id]="'multi-select-' + uniqueId + '-' + i"
                         (change)="handleCheckedChanged(option, $event)">
-                    <label class="form-check-label" [for]="'multi-select-' + uniqueId + '-' + i">
+                    <label class="checkbox-label pl-2" [for]="'multi-select-' + uniqueId + '-' + i">
                         {{ display(option) }}
                     </label>
                 </ng-container>
@@ -21,10 +21,10 @@
     </div>
 
     <div *ngIf="ngModel?.length && (options?.length || 0) > showSelectionSummaryThreshold"
-        class="d-flex align-items-start full-width mt-1">
-        <p class="flex-grow-1">
+        class="d-flex align-items-center full-width mt-1">
+        <p class="flex-grow-1 m-0">
             <strong>Selected: </strong>
-            {{ buildSelectionSummary(ngModel!) }}
+            {{ selectionSummary }}
             <span class="over-threshold-note link-button" (click)="handleSelectedOverDisplayThresholdClicked()"
                 *ngIf="countSelectedOverDisplayThreshold > 0">
                 and {{countSelectedOverDisplayThreshold}} other

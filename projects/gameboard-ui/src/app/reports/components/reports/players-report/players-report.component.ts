@@ -34,7 +34,7 @@ export class PlayersReportComponent implements AfterViewInit, IReportComponent<P
 
   constructor(
     public modalService: ModalConfirmService,
-    public enrollmentReportService: PlayersReportService) {
+    public reportService: PlayersReportService) {
   }
 
   ngAfterViewInit(): void {
@@ -68,8 +68,8 @@ export class PlayersReportComponent implements AfterViewInit, IReportComponent<P
   }
 
   private async updateView(params?: PlayersReportParameters) {
-    const apiParams = params ? this.enrollmentReportService.flattenParameters(params) : undefined;
-    const results = await firstValueFrom(this.enrollmentReportService.getReportData(apiParams));
+    const apiParams = params ? this.reportService.flattenParameters(params) : undefined;
+    const results = await firstValueFrom(this.reportService.getReportData(apiParams));
 
     this.ctx = {
       results,

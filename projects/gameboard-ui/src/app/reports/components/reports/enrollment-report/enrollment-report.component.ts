@@ -45,17 +45,12 @@ export class EnrollmentReportComponent
   getReportKey = () => ReportKey.EnrollmentReport;
 
   constructor(
-    public enrollmentReportService: EnrollmentReportService,
+    public reportService: EnrollmentReportService,
     private reportsService: ReportsService,
     private routerService: RouterService) { }
 
-  ngOnInit() {
-    this.series$ = this.reportsService.getSeries();
-    this.tracks$ = this.reportsService.getTracks();
-  }
-
   protected buildParameterChangeUrl(parameterBuilder: EnrollmentReportParametersUpdate) {
-    const updatedSelectedParameters: EnrollmentReportFlatParameters = this.enrollmentReportService.flattenParameters({ ...this.selectedParameters, ...parameterBuilder });
+    const updatedSelectedParameters: EnrollmentReportFlatParameters = this.reportService.flattenParameters({ ...this.selectedParameters, ...parameterBuilder });
     return this.routerService.getReportRoute(ReportKey.EnrollmentReport, updatedSelectedParameters);
   }
 
@@ -70,7 +65,7 @@ export class EnrollmentReportComponent
   private async updateView(params: EnrollmentReportParameters) {
     // get data
     this.ctx$ = of({
-      results: await firstValueFrom(this.enrollmentReportService.getReportData(this.selectedParameters)),
+      results: await firstValueFrom(this.reportService.getReportData(this.selectedParameters)),
       selectedParameters: params
     });
   }

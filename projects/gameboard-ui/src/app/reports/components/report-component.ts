@@ -5,6 +5,6 @@ import { IReportService } from "../services/ireport.service";
 export interface IReportComponent<TFlat, TStructured, TReportData> {
     getPdfExportElement: () => ElementRef<HTMLDivElement>;
     getReportKey(): ReportKey;
-    enrollmentReportService: IReportService<TFlat, TStructured, TReportData>;
+    reportService: IReportService<TFlat, TStructured, TReportData>;
     selectedParameters?: TStructured;
 }

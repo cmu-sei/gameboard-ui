@@ -12,7 +12,11 @@ export class ObjectService {
     return untyped;
   }
 
-  cloneTruthyKeys<T extends object>(input: T) {
+  cloneTruthyKeys<T extends object>(input: T | undefined | null) {
+    if (!input) {
+      return {} as T;
+    }
+
     const untyped = { ...input } as any;
     const output: any = {};
 

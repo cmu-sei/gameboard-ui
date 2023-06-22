@@ -36,6 +36,7 @@ export interface EnrollmentReportRecord {
     player: {
         id: string;
         name: string;
+        enrollDate?: Date;
         sponsor: EnrollmentReportSponsorViewModel
     },
     game: {

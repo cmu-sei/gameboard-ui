@@ -25,11 +25,11 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
 
   constructor(
     private route: ActivatedRoute,
-    public enrollmentReportService: ChallengesReportService) {
+    public reportService: ChallengesReportService) {
 
     this.ctx$ = this.route.queryParams.pipe(
       map(params => ({ ...params } as ChallengesReportParameters)),
-      switchMap(args => this.enrollmentReportService.getReportData(args)),
+      switchMap(args => this.reportService.getReportData(args)),
       tap(results => this.chartConfig = this.buildDoughnutChart(results))
     );
   }

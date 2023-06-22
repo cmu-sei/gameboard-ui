@@ -30,8 +30,14 @@ nav li {
         padding: 4px 8px;
     }
 
+    /* override reboot.scss */
+    td p {
+        margin: 0;
+    }
+
     .data-row {
-        border-bottom: dotted 1px #000000;
+        border-spacing: 0 8px;
+        border-bottom: dotted 1px #dddddd;
         font-size: 1.1rem;
     }
 

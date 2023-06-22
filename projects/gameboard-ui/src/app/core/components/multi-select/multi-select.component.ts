@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '../custom-input/custom-input.component';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-multi-select',
@@ -8,7 +9,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
   styleUrls: ['./multi-select.component.scss'],
   providers: [createCustomInputControlValueAccessor(MultiSelectComponent)]
 })
-export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implements OnChanges {
+export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implements OnInit, OnChanges, OnDestroy {
   @Input() label?: string;
   @Input() searchPlaceholder?: string = "Search items";
   @Input() options: T[] | null = [];
@@ -17,12 +18,19 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
   @Input() display: (option: T) => string = (option) => `${option}`;
   @Input() value: (option: T) => any = (option) => `${option}`;
 
-  private static selectedItemsDisplayedThreshold = 4;
-  protected searchValue = "";
   protected countSelectedOverDisplayThreshold = 0;
+  protected searchValue = "";
+  protected selectionSummary = "";
+
+  private _ngModelChangeSub?: Subscription;
+  private static selectedItemsDisplayedThreshold = 4;
 
   constructor(private modalService: ModalConfirmService) {
     super();
+  }
+
+  ngOnInit(): void {
+    this._ngModelChangeSub = this.ngModelChange.subscribe(model => this.handleNgModelChanged.bind(this)(model));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -39,6 +47,12 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
     if (changes.ngModel) {
       this._coerceNgModelToArray();
     }
+
+    this.updateSelectionSummary(this.ngModel);
+  }
+
+  ngOnDestroy(): void {
+    this._ngModelChangeSub?.unsubscribe();
   }
 
   private _coerceNgModelToArray() {
@@ -51,18 +65,21 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
     }
   }
 
-  buildSelectionSummary(selectedItems: T[]): string {
-    if (!selectedItems.length) {
-      return "";
+  updateSelectionSummary(selectedItems?: T[]): void {
+    if (!selectedItems?.length || !this.options?.length) {
+      this.selectionSummary = "";
+      this.countSelectedOverDisplayThreshold = 0;
+      return;
     }
 
-    let summary = selectedItems
+    const selectedItemValues = selectedItems.map(t => this.value(t));
+    let summary = (this.options || [])
+      .filter(o => selectedItemValues.some(s => s == this.value(o)))
       .map(i => this.display(i))
       .slice(0, MultiSelectComponent.selectedItemsDisplayedThreshold).join(", ");
 
     this.countSelectedOverDisplayThreshold = Math.max(selectedItems.length - MultiSelectComponent.selectedItemsDisplayedThreshold, 0);
-
-    return summary;
+    this.selectionSummary = summary;
   }
 
   handleCheckedChanged(option: T, event: any) {
@@ -72,15 +89,12 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
 
     // if the box isn't checked, we must be removing an item
     if (!isChecked) {
-      const indexToRemove = this.ngModel.findIndex(opt => opt === option);
-      if (indexToRemove >= 0)
-        this.ngModel.splice(indexToRemove, 1);
-
+      this.ngModel = [...this.ngModel.filter(i => i !== option)];
       return;
     }
 
     // if we're not removing, we must be adding
-    this.ngModel.push(option);
+    this.ngModel = [...this.ngModel, option];
   }
 
   getOptionIsChecked(option: T) {
@@ -103,6 +117,10 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
 
   handleClearSelectionsClicked() {
     this.ngModel = [];
+  }
+
+  handleNgModelChanged(model: T[]) {
+    this.updateSelectionSummary(model);
   }
 
   handleSelectedOverDisplayThresholdClicked() {

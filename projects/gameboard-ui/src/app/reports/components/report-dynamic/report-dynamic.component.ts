@@ -11,6 +11,7 @@ import { PdfService } from '@/services/pdf.service';
 import { ObjectService } from '@/services/object.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ApiUrlService } from '@/services/api-url.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-report-dynamic',
@@ -35,8 +36,8 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     private pdfService: PdfService,
     private reportsService: ReportsService,
     private route: ActivatedRoute,
-    private router: Router) {
-    this.routerEventsSub = router.events
+    private routerService: RouterService) {
+    this.routerEventsSub = this.routerService.router.events
       .pipe(
         filter(ev => ev instanceof NavigationEnd),
         map(ev => ev as NavigationEnd)
@@ -64,12 +65,10 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
             const componentRef = viewContainerRef.createComponent<IReportComponent<any, any, any>>(reportComponentType);
 
             // have to deep-clone the query parameters because they're made inextensible by angular
-            const reportComponentParameters = componentRef.instance.enrollmentReportService.unflattenParameters({ ...this.route.snapshot.queryParams });
+            const reportComponentParameters = componentRef.instance.reportService.unflattenParameters({ ...this.route.snapshot.queryParams });
             this.logService.logInfo("Loading report params:", reportComponentParameters);
             componentRef.instance.selectedParameters = { ...componentRef.instance.selectedParameters, ...reportComponentParameters };
             this.loadedReportComponent = componentRef;
-            // this.handleRunReport();
-
             this.selectedReportKey = ReportKey[report.key as keyof typeof ReportKey];
           }
         })
@@ -106,7 +105,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     }
 
     const key = this.loadedReportComponent.instance.getReportKey();
-    const query = this.loadedReportComponent.instance.enrollmentReportService.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
+    const query = this.loadedReportComponent.instance.reportService.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
     const cleanQuery = this.objectService.cloneTruthyKeys(query);
 
     this.displayReport(key, cleanQuery);
@@ -114,7 +113,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
 
   handleReportSelect(key?: ReportKey) {
     if (key)
-      this.displayReport(key?.toString());
+      this.displayReport(key);
   }
 
   handleExportToCsv() {
@@ -139,8 +138,8 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
     this.pdfService.exportHtmlToPdf(this.reportMetaData?.title || "Report", exportElement);
   }
 
-  private displayReport(reportKey: string, query: Object | null = null) {
-    this.router.navigateByUrl(`reports/${reportKey}${this.apiUrl.objectToQuery(query)}`);
+  private displayReport(reportKey: ReportKey, query: Object | null = null) {
+    this.routerService.toReport(reportKey, query);
   }
 
   ngOnDestroy(): void {
