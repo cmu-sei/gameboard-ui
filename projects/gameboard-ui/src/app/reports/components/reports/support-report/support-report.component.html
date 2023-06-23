@@ -63,21 +63,21 @@
                             </td>
                             <td [innerHTML]="record.status | ticketStatusBadge"></td>
                             <td>
-                                <app-colored-text-chip *ngFor="let label of (record.labels || [])"
-                                    [text]="label"></app-colored-text-chip>
+                                <app-colored-text-chip *ngFor="let label of (record.labels || [])" [text]="label"
+                                    size="small"></app-colored-text-chip>
                                 <span *ngIf="!record.labels?.length">--</span>
                             </td>
                             <td class="text-center">{{record.activityCount}}</td>
                             <td class="text-center">{{record.assignedTo?.name}}</td>
                             <td class="text-center">
                                 <p>{{record.createdOn | shortdate}} @ {{record.createdOn | friendlyTime}}</p>
-                                <p class="secondary-info-text">{{record.createdBy.name}}</p>
+                                <p class="subtle-info">{{record.createdBy.name}}</p>
                             </td>
                             <td class="text-center">
                                 <div *ngIf="record.updatedOn; else noValue">
                                     {{record.updatedOn | shortdate}} @
                                     {{record.updatedOn | friendlyTime}}
-                                    <p class="secondary-info-text">{{record.updatedBy?.name}}</p>
+                                    <p class="subtle-info">{{record.updatedBy?.name}}</p>
                                 </div>
                             </td>
                             <td>

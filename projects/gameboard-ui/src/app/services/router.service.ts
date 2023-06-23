@@ -1,7 +1,6 @@
 import { ReportKey } from '@/reports/reports-models';
 import { Injectable } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { ApiUrlService } from './api-url.service';
 import { ObjectService } from './object.service';
 
 @Injectable({ providedIn: 'root' })
@@ -15,7 +14,7 @@ export class RouterService {
   }
 
   public getReportRoute<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): UrlTree {
-    return this.router.createUrlTree(["reports", key], { queryParams: this.objectService.cloneTruthyKeys(query) });
+    return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }
 
   public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): void {

@@ -1,4 +1,4 @@
-import { SimpleEntity } from "../api/models";
+import { PagingResults, SimpleEntity } from "../api/models";
 
 export interface ReportViewModel {
     id: string;
@@ -11,6 +11,7 @@ export interface ReportViewModel {
 
 export interface ReportResults<T> {
     metaData: ReportMetaData,
+    paging: PagingResults,
     records: T[]
 }
 

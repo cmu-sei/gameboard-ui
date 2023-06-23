@@ -33,6 +33,7 @@ import { HttpClient } from '@angular/common/http';
 import { markedOptionsFactory } from './config/marked.config';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
+import { SelectPagerComponent } from './components/select-pager/select-pager.component';
 
 const PUBLIC_DECLARATIONS = [
   ColoredTextChipComponent,
@@ -48,6 +49,7 @@ const PUBLIC_DECLARATIONS = [
   RenderLinksInTextComponent,
   RelativeImagePipe,
   RelativeUrlsPipe,
+  SelectPagerComponent,
   SpinnerComponent,
   TextToColorPipe,
   TicketStatusBadgePipe,
@@ -69,7 +71,7 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS,
+    ...PUBLIC_DECLARATIONS
   ],
   imports: [
     CommonModule,

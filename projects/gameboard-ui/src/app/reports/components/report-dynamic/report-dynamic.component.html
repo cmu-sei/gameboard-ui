@@ -4,6 +4,7 @@
             <li><a [routerLink]="'/reports'">Reports</a></li>
             <li class="mx-2">&gt;</li>
             <li>
+
                 <app-report-select [selectedReportKey]="selectedReportKey" (reportSelect)="handleReportSelect($event)"
                     class="mb-2"></app-report-select>
             </li>

@@ -12,7 +12,9 @@ export class ObjectService {
     return untyped;
   }
 
-  cloneTruthyKeys<T extends object>(input: T | undefined | null) {
+  // Clones all keys of an object which have a "truthy" value or have the value 0.
+  // The 0 is for reports, and no, I don't feel great about this either.
+  cloneTruthyAndZeroKeys<T extends object>(input: T | undefined | null) {
     if (!input) {
       return {} as T;
     }
@@ -25,7 +27,7 @@ export class ObjectService {
     }
 
     for (const key in untyped) {
-      if (!!untyped[key]) {
+      if (!!untyped[key] || untyped[key] == 0) {
         output[key] = untyped[key];
       }
     }

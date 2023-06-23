@@ -10,7 +10,6 @@ import { LogService } from '@/services/log.service';
 import { PdfService } from '@/services/pdf.service';
 import { ObjectService } from '@/services/object.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { ApiUrlService } from '@/services/api-url.service';
 import { RouterService } from '@/services/router.service';
 
 @Component({
@@ -29,7 +28,6 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
   protected report$?: Observable<ReportViewModel | null>;
 
   constructor(
-    private apiUrl: ApiUrlService,
     private modalService: ModalConfirmService,
     private logService: LogService,
     private objectService: ObjectService,
@@ -41,7 +39,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
       .pipe(
         filter(ev => ev instanceof NavigationEnd),
         map(ev => ev as NavigationEnd)
-      ).subscribe(ev => {
+      ).subscribe(async (ev) => {
         this.isAtReportsRoot = ev.url.endsWith("/reports");
       });
   }
@@ -66,7 +64,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
 
             // have to deep-clone the query parameters because they're made inextensible by angular
             const reportComponentParameters = componentRef.instance.reportService.unflattenParameters({ ...this.route.snapshot.queryParams });
-            this.logService.logInfo("Loading report params:", reportComponentParameters);
+            this.logService.logInfo("Loading report params:", { ...componentRef.instance.selectedParameters, ...reportComponentParameters });
             componentRef.instance.selectedParameters = { ...componentRef.instance.selectedParameters, ...reportComponentParameters };
             this.loadedReportComponent = componentRef;
             this.selectedReportKey = ReportKey[report.key as keyof typeof ReportKey];
@@ -106,7 +104,7 @@ export class ReportDynamicComponent implements AfterViewInit, OnDestroy {
 
     const key = this.loadedReportComponent.instance.getReportKey();
     const query = this.loadedReportComponent.instance.reportService.flattenParameters(this.loadedReportComponent.instance.selectedParameters);
-    const cleanQuery = this.objectService.cloneTruthyKeys(query);
+    const cleanQuery = this.objectService.cloneTruthyAndZeroKeys(query);
 
     this.displayReport(key, cleanQuery);
   }

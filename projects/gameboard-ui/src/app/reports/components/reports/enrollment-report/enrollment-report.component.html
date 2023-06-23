@@ -52,8 +52,8 @@
 
                             <div class="player-info flex-grow-1">
                                 <p class="player-name m-0">{{record.player.name}}</p>
-                                <p class="team-name" *ngIf="record.game.isTeamGame">
-                                    Team: <span class="subtle-info">{{ record.team.name }}</span>
+                                <p class="team-name subtle-info" *ngIf="record.game.isTeamGame">
+                                    Team: <span class="color-foreground">{{ record.team.name }}</span>
                                 </p>
                             </div>
                         </div>
@@ -112,6 +112,12 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="pager-container d-flex justify-content-end mt-4">
+        <div class="flex-grow-1"></div>
+        <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
+            (change)="handlePagingChange($event)"></app-select-pager>
     </div>
 </div>
 

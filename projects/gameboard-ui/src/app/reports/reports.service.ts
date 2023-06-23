@@ -13,6 +13,8 @@ import { EnrollmentReportComponent } from './components/reports/enrollment-repor
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
+  public static DEFAULT_PAGE_SIZE = 5;
+
   private static reportComponentMap: { [reportKey: string]: any } = {
     'challenges-report': ChallengesReportComponent,
     'enrollment': EnrollmentReportComponent,
@@ -73,7 +75,7 @@ export class ReportsService {
   }
 
   dateToQueryStringEncoded(date?: Date) {
-    if (!date) return "";
+    if (!date) return undefined;
     // this is prettier, but the default API-side modelbinder can't bind it to a date
     // return `${(date.getMonth() + 1) % 12}-${date.getDate()}-${date.getFullYear()}`;
     return date.toLocaleDateString();
@@ -113,14 +115,14 @@ export class ReportsService {
     return (timespan.days || 0) * 24 * 60 + (timespan.hours || 0) * 60 + (timespan.minutes || 0);
   }
 
-  flattenMultiSelectValues(input: string[]): string {
+  flattenMultiSelectValues(input: string[]): string | undefined {
     if (!input)
-      return "";
+      return undefined;
 
-    return input.join(",");
+    return input.join(",") || undefined;
   }
 
-  unflattenMultiSelectValues(input: string): string[] {
+  unflattenMultiSelectValues(input?: string): string[] {
     if (!input)
       return [];
 

@@ -3,7 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({ name: 'ticketStatusBadge' })
 export class TicketStatusBadgePipe implements PipeTransform {
-  constructor(private safeHtmlThing: DomSanitizer) { }
+  constructor(private domSanitizer: DomSanitizer) { }
 
   transform(value: string): SafeHtml {
     let cssClass = "badge-dark";
@@ -17,6 +17,6 @@ export class TicketStatusBadgePipe implements PipeTransform {
         break;
     }
 
-    return this.safeHtmlThing.bypassSecurityTrustHtml(`<span class="badge ${cssClass}">${value}</span>`);
+    return this.domSanitizer.bypassSecurityTrustHtml(`<span class="badge ticket-status-badge ${cssClass}">${value}</span>`);
   }
 }

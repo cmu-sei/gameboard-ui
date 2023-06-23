@@ -25,6 +25,17 @@ export interface GameEnrollmentContext {
   player: Player | undefined;
 }
 
+export interface PagingArgs {
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface PagingResults {
+  itemCount: number;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
 export interface SimpleEntity {
   id: string;
   name: string;

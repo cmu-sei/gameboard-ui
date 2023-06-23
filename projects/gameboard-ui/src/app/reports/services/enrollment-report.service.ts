@@ -21,6 +21,8 @@ export class EnrollmentReportService
     return {
       enrollDateEnd: this.reportsService.dateToQueryStringEncoded(parameters.enrollDate?.dateEnd),
       enrollDateStart: this.reportsService.dateToQueryStringEncoded(parameters.enrollDate?.dateStart),
+      pageNumber: parameters.paging.pageNumber,
+      pageSize: parameters.paging.pageSize,
       seasons: this.reportsService.flattenMultiSelectValues(parameters.seasons),
       series: this.reportsService.flattenMultiSelectValues(parameters.series),
       sponsors: this.reportsService.flattenMultiSelectValues(parameters.sponsors?.map(s => s.id) || []),
@@ -34,6 +36,10 @@ export class EnrollmentReportService
         dateStart: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateStart),
         dateEnd: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateEnd)
       },
+      paging: {
+        pageNumber: parameters.pageNumber,
+        pageSize: parameters.pageSize
+      },
       seasons: this.reportsService.unflattenMultiSelectValues(parameters.seasons),
       series: this.reportsService.unflattenMultiSelectValues(parameters.series),
       sponsors: this.reportsService
@@ -44,6 +50,13 @@ export class EnrollmentReportService
   }
 
   getReportData(parameters: EnrollmentReportParameters): Observable<ReportResults<EnrollmentReportRecord>> {
+    if (!parameters.paging?.pageSize) {
+      parameters.paging = {
+        pageSize: ReportsService.DEFAULT_PAGE_SIZE,
+        pageNumber: 0
+      };
+    }
+
     return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", this.flattenParameters(parameters)));
   }
 }

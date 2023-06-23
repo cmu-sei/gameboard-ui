@@ -36,9 +36,12 @@ nav li {
     }
 
     .data-row {
-        border-spacing: 0 8px;
         border-bottom: dotted 1px #dddddd;
         font-size: 1.1rem;
+        
+        td {
+            padding: 1rem 0.5rem;
+        }
     }
 
     td.report-field.date {
@@ -68,7 +71,7 @@ nav li {
         border-top: solid 1px #ffffff;
         text-transform: uppercase;
 
-        th.group-header {
+        th.group-header:not(:first-of-type) {
             border-left: solid 1px #ffffff;
         }
     }
@@ -84,5 +87,11 @@ nav li {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .subtle-info {
+        color: #aaa;
+        font-size: 0.9rem;
+        margin: 0;
     }
 }

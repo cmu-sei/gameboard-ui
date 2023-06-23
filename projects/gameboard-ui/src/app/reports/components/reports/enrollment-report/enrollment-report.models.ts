@@ -1,18 +1,21 @@
 import { ChallengeResult } from "@/api/board-models";
-import { SimpleEntity } from "@/api/models";
+import { PagingArgs, SimpleEntity } from "@/api/models";
 import { ReportDateRange } from "@/reports/reports-models";
 
 export interface EnrollmentReportFlatParameters {
     enrollDateStart?: string;
     enrollDateEnd?: string;
-    seasons: string
-    series: string;
-    sponsors: string;
-    tracks: string;
+    pageNumber?: number;
+    pageSize?: number;
+    seasons?: string
+    series?: string;
+    sponsors?: string;
+    tracks?: string;
 }
 
 export interface EnrollmentReportParameters {
     enrollDate?: ReportDateRange;
+    paging: PagingArgs;
     seasons: string[];
     series: string[];
     sponsors: SimpleEntity[];
@@ -20,6 +23,7 @@ export interface EnrollmentReportParameters {
 }
 
 export interface EnrollmentReportParametersUpdate {
+    paging?: PagingArgs;
     seasons?: string[];
     series?: string[];
     sponsors?: SimpleEntity[];

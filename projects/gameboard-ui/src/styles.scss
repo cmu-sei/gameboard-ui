@@ -246,6 +246,10 @@ th[align="center"] {
   text-align: center;
 }
 
+.color-foreground {
+  color: $foreground;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -253,4 +257,9 @@ th[align="center"] {
 .link-button {
   color: theme-color("info");
   cursor: pointer;
+}
+
+.ticket-status-badge {
+  font-size: 0.8rem;
+  line-height: 0.85rem;
 }

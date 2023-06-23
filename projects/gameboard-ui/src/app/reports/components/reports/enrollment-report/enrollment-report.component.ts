@@ -7,6 +7,7 @@ import { Observable, firstValueFrom, of } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
 import { SimpleEntity } from '@/api/models';
 import { RouterService } from '@/services/router.service';
+import { PagingRequest } from '@/core/components/select-pager/select-pager.component';
 
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
@@ -30,6 +31,7 @@ export class EnrollmentReportComponent
 
   private _selectedParameters: EnrollmentReportParameters = {
     enrollDate: {},
+    paging: { pageSize: ReportsService.DEFAULT_PAGE_SIZE, pageNumber: 0 },
     seasons: [],
     series: [],
     sponsors: [],
@@ -62,10 +64,15 @@ export class EnrollmentReportComponent
     return s.id;
   }
 
+  protected handlePagingChange(paging: PagingRequest) {
+    const parameterChangeUrl = this.buildParameterChangeUrl({ paging: { pageNumber: paging.page, pageSize: ReportsService.DEFAULT_PAGE_SIZE } });
+    this.routerService.router.navigateByUrl(parameterChangeUrl);
+  }
+
   private async updateView(params: EnrollmentReportParameters) {
     // get data
     this.ctx$ = of({
-      results: await firstValueFrom(this.reportService.getReportData(this.selectedParameters)),
+      results: await firstValueFrom(this.reportService.getReportData(params)),
       selectedParameters: params
     });
   }
