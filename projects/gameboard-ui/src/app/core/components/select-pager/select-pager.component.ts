@@ -1,4 +1,3 @@
-import { PagingResults } from '@/api/models';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 export interface PagingRequest {
@@ -20,13 +19,23 @@ export class SelectPagerComponent implements OnChanges {
   protected pages: number[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.itemCount && this.pageSize)
-      this.calcPages({ itemCount: this.itemCount, itemsPerPage: this.pageSize });
+    const shouldCalcPages = (changes.itemCount || changes.pageSize);
+    const itemCount = changes.itemCount?.currentValue || this.itemCount;
+    const pageSize = changes.pageSize?.currentValue || this.pageSize;
+
+    if (shouldCalcPages)
+      this.calcPages({ itemCount, pageSize });
   }
 
-  private calcPages(config: { itemCount: number, itemsPerPage: number }) {
-    const remainder = config.itemCount % config.itemsPerPage;
-    const currentPages = Math.floor(config.itemCount / config.itemsPerPage) + (remainder > 0 ? 1 : 0);
+  private calcPages(config: { itemCount: number, pageSize: number }) {
+    if (!config.itemCount || !config.pageSize) {
+      this.pages = [];
+      this.setPage(0);
+      return;
+    }
+
+    const remainder = config.itemCount % config.pageSize;
+    const currentPages = Math.floor(config.itemCount / config.pageSize) + (remainder > 0 ? 1 : 0);
 
     // calc available pages
     this.pages = Array(currentPages).fill(currentPages).map((x, i) => i);
@@ -43,4 +52,3 @@ export class SelectPagerComponent implements OnChanges {
     this.change.emit({ page: this.page, pageSize: this.pageSize! });
   }
 }
-

@@ -1,0 +1,17 @@
+<div class="report-export d-flex align-items-center mt-5">
+    <div class="flex-grow-1">
+        <span class="about-filters-link link-button" (click)="handleAboutFiltersClick()">[ About report filters ]</span>
+    </div>
+    <div class="export-label mr-2">Export to:</div>
+    <div class="btn-group mr-2">
+        <button class="btn btn-info btn-lg csv-export-button" (click)="exportRequestCsv.emit()" tabindex="0"
+            role="button">CSV</button>
+        <button class="btn btn-info btn-lg pdf-export-button" (click)="exportRequestPdf.emit()" tabindex="0"
+            role="button">PDF</button>
+    </div>
+    <app-share-button class="d-block mr-2"></app-share-button>
+    <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="parameterReset.emit()">
+        Reset Filters
+    </button>
+    <button type="button" class="btn btn-lg btn-success" (click)="runRequest.emit()">Run Report</button>
+</div>

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { BoardPlayer, BoardSpec, Challenge, ChallengeGate, ChallengeResult, ChallengeSummary, ChallengeView, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
+import { BoardPlayer, BoardSpec, Challenge, ChallengeResult, ChallengeSummary, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
 import { TimeWindow } from './player-models';
 
 @Injectable({
@@ -115,8 +115,8 @@ export class BoardService {
       : s.disabled || s.locked ? 'black' : 'blue'
       ;
     if (!!s.instance) {
-      if (s.instance.result === 'success') { s.c = 'lime'; }
-      if (s.instance.result === 'partial') { s.c = 'yellow'; }
+      if (s.instance.result === ChallengeResult.Complete) { s.c = 'lime'; }
+      if (s.instance.result === ChallengeResult.Partial) { s.c = 'yellow'; }
     }
   }
 

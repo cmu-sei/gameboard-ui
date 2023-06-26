@@ -18,7 +18,7 @@ export abstract class CustomInputComponent<T> implements ControlValueAccessor {
   protected onChange = () => { };
   protected onTouched = () => { };
 
-  private _ngModel?: T;
+  protected _ngModel?: T;
   public get ngModel(): T | undefined {
     return this._ngModel;
   }

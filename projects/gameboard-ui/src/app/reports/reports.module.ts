@@ -5,10 +5,7 @@ import { RouterModule, TitleStrategy } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
 import { ReportCardComponent } from './components/report-card/report-card.component';
-import { ReportsLayoutComponent } from './components/reports-layout/reports-layout.component';
-import { ReportDynamicComponent } from './components/report-dynamic/report-dynamic.component';
 import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
-import { DynamicReportDirective } from './directives/dynamic-report.directive';
 import { UtilityModule } from '../utility/utility.module';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
@@ -16,8 +13,7 @@ import { ReportParametersContainerComponent } from './components/report-paramete
 import { ParameterSeriesComponent } from './components/parameters/parameter-series/parameter-series.component';
 import { ParameterTrackComponent } from './components/parameters/parameter-track/parameter-track.component';
 import { ParameterGameComponent } from './components/parameters/parameter-game/parameter-game.component';
-import { ReportsTitleResolver } from './resolvers/reports-title.resolver';
-import { CountFieldToClassPipe } from './pipes/count-field-to-class.pipe';
+import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
 import { ParameterChallengeSpecComponent } from './components/parameters/parameter-challenge-spec/parameter-challenge-spec.component';
 import { ShareButtonComponent } from './components/share-button/share-button.component';
@@ -32,21 +28,22 @@ import { ParameterGameChallengespecComponent } from './components/parameters/par
 import { SupportReportContextMenuComponent } from './components/reports/support-report-context-menu/support-report-context-menu.component';
 import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
 import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
-import { ParameterSeriesMultiComponent } from './components/parameters/parameter-series-multi/parameter-series-multi.component';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
+import { ReportPageComponent } from './pages/report-page/report-page.component';
+import { ReportGlobalControlsComponent } from './components/report-global-controls/report-global-controls.component';
+import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
+import { ParameterChangeLinkComponent } from './components/parameter-change-link/parameter-change-link.component';
 
 @NgModule({
   declarations: [
+    ArrayFieldToClassPipe,
     ReportsHomeComponent,
     ReportCardComponent,
-    ReportsLayoutComponent,
-    ReportDynamicComponent,
     ChallengesReportComponent,
-    DynamicReportDirective,
+    CountToTooltipClassPipe,
     MsToDurationPipe,
     PlayersReportComponent,
     ReportParametersContainerComponent,
-    CountFieldToClassPipe,
     StringsToTooltipPipe,
     ParameterChallengeSpecComponent,
     ShareButtonComponent,
@@ -64,27 +61,27 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
     SupportReportContextMenuComponent,
     ParameterSponsorComponent,
     EnrollmentReportComponent,
-    ParameterSeriesMultiComponent,
     ArrayToCountPipe,
+    ReportPageComponent,
+    ReportGlobalControlsComponent,
+    ParameterChangeLinkComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild([
+      { path: '', pathMatch: 'full', component: ReportsHomeComponent, title: "Reports" },
       {
         path: '',
-        component: ReportsLayoutComponent,
+        component: ReportPageComponent,
         children: [
-          { path: ':reportKey', component: ReportDynamicComponent, title: ReportsTitleResolver },
-          { path: '', pathMatch: 'full', component: ReportsHomeComponent, title: "Reports" }
+          { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
+          { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]
       }
     ]),
     FontAwesomeModule,
     CoreModule,
     UtilityModule,
-  ],
-  exports: [
-    DynamicReportDirective
   ]
 })
 export class ReportsModule { }

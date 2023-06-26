@@ -16,7 +16,6 @@ export class MsToDurationPipe implements PipeTransform {
     const minutes = Math.floor(remaining / MS_IN_MINUTE);
     remaining = remaining % MS_IN_MINUTE;
 
-
     const seconds = Math.floor(remaining / MS_IN_SECOND);
     remaining = Math.floor(remaining % MS_IN_SECOND);
 
@@ -28,13 +27,13 @@ export class MsToDurationPipe implements PipeTransform {
     if (minutes)
       retVals.push(`${minutes}m`);
 
+    // represent ms as a decimal value of seconds (e.g. "11.352s")
     if (seconds)
-      retVals.push(`${seconds}s`);
+      retVals.push(`${seconds}${remaining ? `.${remaining}` : ""}s`);
 
-    if (remaining)
-      retVals.push(`${remaining}ms`);
+    // if (remaining)
+    //   retVals.push(`${remaining}ms`);
 
     return retVals.join(":");
   }
-
 }

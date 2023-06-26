@@ -37,8 +37,8 @@ export class EnrollmentReportService
         dateEnd: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateEnd)
       },
       paging: {
-        pageNumber: parameters.pageNumber,
-        pageSize: parameters.pageSize
+        pageNumber: parameters.pageNumber || 0,
+        pageSize: parameters.pageSize || ReportsService.DEFAULT_PAGE_SIZE
       },
       seasons: this.reportsService.unflattenMultiSelectValues(parameters.seasons),
       series: this.reportsService.unflattenMultiSelectValues(parameters.series),

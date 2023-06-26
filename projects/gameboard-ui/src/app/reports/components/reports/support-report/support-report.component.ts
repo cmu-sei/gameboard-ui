@@ -1,15 +1,16 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { IReportComponent } from '../../report-component';
-import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { SupportReportParameters, SupportReportRecord } from './support-report.models';
 import { ReportKey, ReportResults } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { SupportReportService } from '../../../services/support-report.service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { groupBy } from 'projects/gameboard-ui/src/tools';
 import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { SupportService } from '@/api/support.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
+import { ActiveReportService } from '@/reports/services/active-report.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -24,7 +25,10 @@ interface SupportReportContext {
   styleUrls: ['./support-report.component.scss'],
   providers: [createCustomInputControlValueAccessor(SupportReportComponent)]
 })
-export class SupportReportComponent implements OnInit, IReportComponent<SupportReportFlatParameters, SupportReportParameters, SupportReportRecord> {
+export class SupportReportComponent implements OnInit, OnDestroy {
+  private queryParamsSub?: Subscription;
+  private runRequestSub?: Subscription;
+
   selectedParameters: SupportReportParameters = {
     gameChallengeSpec: {},
     labels: [],
@@ -38,11 +42,25 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
 
   constructor(
     public faService: FontAwesomeService,
-    public reportService: SupportReportService,
+    private activeReportService: ActiveReportService,
+    private reportService: SupportReportService,
     private rgbService: TextToRgbService,
+    private route: ActivatedRoute,
     private supportService: SupportService) { }
 
   async ngOnInit() {
+    await this.updateView();
+
+    this.queryParamsSub = this.route.queryParams.subscribe();
+    this.runRequestSub = this.activeReportService.runRequest$.subscribe(_ => this.updateView());
+  }
+
+  ngOnDestroy(): void {
+    this.queryParamsSub?.unsubscribe();
+    this.runRequestSub?.unsubscribe();
+  }
+
+  private async updateView() {
     const results = await firstValueFrom(this.reportService.getReportData(this.selectedParameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
 
@@ -52,14 +70,9 @@ export class SupportReportComponent implements OnInit, IReportComponent<SupportR
       labelsChartConfigs: this.buildTicketsByLabel(results.records, labels),
       statusChartConfig: this.buildTicketsByStatus(results.records)
     };
-  }
 
-  getPdfExportElement() {
-    return this.reportElementRef!;
-  }
-
-  getReportKey(): ReportKey {
-    return ReportKey.SupportReport;
+    this.activeReportService.htmlElement$.next(this.reportElementRef);
+    this.activeReportService.metaData$.next(results.metaData);
   }
 
   private buildTicketsByStatus(records: SupportReportRecord[]): DoughnutChartConfig {

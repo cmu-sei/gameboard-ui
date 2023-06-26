@@ -1,5 +1,11 @@
 @import "../../../../scss/variables";
 
+.report-page-component {
+    width: 1600px;
+    max-width: 95vw;
+    margin: 0 auto;
+}
+
 nav li {
     font-size: 1.25rem;
     margin-right: 0.25rem;
@@ -38,7 +44,7 @@ nav li {
     .data-row {
         border-bottom: dotted 1px #dddddd;
         font-size: 1.1rem;
-        
+
         td {
             padding: 1rem 0.5rem;
         }

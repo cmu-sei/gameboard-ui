@@ -17,7 +17,11 @@ export class ModalConfirmService implements OnDestroy {
 
   constructor(private bsModalService: BsModalService) { }
 
-  openConfirm<T>(config: ModalConfirmConfig): void {
+  open(config: ModalConfirmConfig): void {
+    this.openConfirm({ ...config, hideCancel: true });
+  }
+
+  openConfirm(config: ModalConfirmConfig): void {
     this.bsModalRef = this.bsModalService.show(ModalConfirmComponent, { initialState: { config }, class: "modal-dialog-centered" });
 
     if (config.onCancel) {

@@ -68,21 +68,23 @@
                         <p class="game-name m-0">{{ record.game.name }}</p>
                         <p class="game-info subtle-info">
                             <span *ngIf="record.game.series">
-                                <a [href]="buildParameterChangeUrl({ series: [record.game.series] })">
+                                <app-parameter-change-link
+                                    [config]="{ parameterChange: { series: record.game.series } }">
                                     {{ record.game.series }}
-                                </a>
+                                </app-parameter-change-link>
                                 ::
                             </span>
                             <span *ngIf="record.game.season">
-                                <a [href]="buildParameterChangeUrl({ seasons: [record.game.season] })">
+                                <app-parameter-change-link
+                                    [config]="{ parameterChange: { seasons: record.game.season }}">
                                     {{ record.game.season }}
-                                </a>
+                                </app-parameter-change-link>
                                 ::
                             </span>
                             <span *ngIf="record.game.track; else noValue">
-                                <a [href]="buildParameterChangeUrl({ tracks: [record.game.track] })">
+                                <app-parameter-change-link [config]="{ parameterChange: { tracks: record.game.track }}">
                                     {{ record.game.track }}
-                                </a>
+                                </app-parameter-change-link>
                             </span>
                         </p>
                     </td>
@@ -93,21 +95,35 @@
                     </td>
                     <td class="report-field numerical">
                         <p class="challenges-deployed">
-                            {{ record.challenges | arrayToCount }}
+                            <span [class.tooltipped-value]="record.challenges.length"
+                                (click)="record.challenges && showChallengesDetail(record, 'deployed')">
+                                {{ record.challenges | arrayToCount }}
+                            </span>
                         </p>
                     </td>
                     <td class="report-field numerical">
                         <p class="count challenges-partial">
-                            {{ record.challengesPartiallySolvedCount }}
+                            <span [class.tooltipped-value]="record.challengesPartiallySolvedCount"
+                                (click)="record.challengesPartiallySolvedCount && showChallengesDetail(record, 'partial')">
+                                {{ record.challengesPartiallySolvedCount }}
+                            </span>
                         </p>
                     </td>
-                    <td class="numerical">
+                    <td class="report-field numerical">
                         <p class="count challenges-complete">
-                            {{ record.challengesCompletelySolvedCount }}
+                            <span [class.tooltipped-value]="record.challengesCompletelySolvedCount"
+                                (click)="record.challengesCompletelySolvedCount && showChallengesDetail(record, 'complete')">
+                                {{ record.challengesCompletelySolvedCount }}
+                            </span>
                         </p>
                     </td>
-                    <td class="numerical">
-                        <p>{{ record.score }}</p>
+                    <td class="report-field numerical">
+                        <p>
+                            <span [class.tooltipped-value]="(record.score || 0) > 0"
+                                (click)="(record.score || 0) && showScoreBreakdown(record)">
+                                {{ record.score }}
+                            </span>
+                        </p>
                     </td>
                 </tr>
             </tbody>

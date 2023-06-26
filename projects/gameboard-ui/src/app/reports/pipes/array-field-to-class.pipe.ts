@@ -1,9 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'countFieldToClass'
-})
-export class CountFieldToClassPipe implements PipeTransform {
+@Pipe({ name: 'arrayFieldToClass' })
+export class ArrayFieldToClassPipe implements PipeTransform {
 
   transform(value: any[]): string | null {
     if (value?.length) {

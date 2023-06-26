@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '../custom-input/custom-input.component';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Subscription } from 'rxjs';
+import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 
 @Component({
   selector: 'app-multi-select',
@@ -18,6 +19,16 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
   @Input() display: (option: T) => string = (option) => `${option}`;
   @Input() value: (option: T) => any = (option) => `${option}`;
 
+  public get ngModel(): T[] | undefined {
+    return this._ngModel || [];
+  }
+  @Input() public set ngModel(value: T[] | undefined) {
+    if (this._ngModel !== value) {
+      this._ngModel = value || [];
+      this.ngModelChange.emit(this._ngModel);
+    }
+  }
+
   protected countSelectedOverDisplayThreshold = 0;
   protected searchValue = "";
   protected selectionSummary = "";
@@ -25,7 +36,9 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
   private _ngModelChangeSub?: Subscription;
   private static selectedItemsDisplayedThreshold = 4;
 
-  constructor(private modalService: ModalConfirmService) {
+  constructor(
+    private markdownHelpers: MarkdownHelpersService,
+    private modalService: ModalConfirmService) {
     super();
   }
 
@@ -84,6 +97,7 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
 
   handleCheckedChanged(option: T, event: any) {
     const isChecked = (event.target as any).checked;
+
     if (!this.ngModel)
       this.ngModel = [];
 
@@ -135,9 +149,7 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
       title: `Selected ${this.label}`,
       hideCancel: true,
       renderBodyAsMarkdown: true,
-      bodyContent: displaySelectedOptions
-        .map(labeledOption => `\n- ${labeledOption}`)
-        .join("")
+      bodyContent: this.markdownHelpers.arrayToBulletList(displaySelectedOptions)
     });
   }
 }

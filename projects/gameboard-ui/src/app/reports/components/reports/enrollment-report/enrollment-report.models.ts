@@ -71,6 +71,7 @@ export interface EnrollmentReportRecord {
         endDate?: Date;
         durationMs?: number;
         result: ChallengeResult;
+        manualChallengeBonuses: { description: string, points: number }[],
         maxPossiblePoints: number;
         score?: number;
     }[],

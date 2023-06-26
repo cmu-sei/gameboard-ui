@@ -16,8 +16,9 @@ export interface ReportResults<T> {
 }
 
 export interface ReportMetaData {
-    key: string;
+    key: ReportKey;
     title: string;
+    description: string;
     runAt: Date;
 }
 
@@ -43,10 +44,10 @@ export interface ReportParameterOptions {
 }
 
 export enum ReportKey {
-    ChallengesReport = "challenges-report",
+    ChallengesReport = "challenges",
     EnrollmentReport = "enrollment",
-    PlayersReport = "players-report",
-    SupportReport = "support-report"
+    PlayersReport = "players",
+    SupportReport = "support"
 }
 
 export interface ReportSponsor {

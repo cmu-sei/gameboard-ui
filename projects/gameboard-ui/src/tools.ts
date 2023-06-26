@@ -1,5 +1,7 @@
-// thank you, SO: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
+import { Observable, Subject, pipe, tap } from "rxjs";
+import { environment } from "./environments/environment";
 
+// thank you, SO: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
 /**
  * @description
  * Takes an Array<V>, and a grouping function,
@@ -27,4 +29,13 @@ export function groupBy<K, V>(list: V[], keyGetter: (item: V) => K) {
     });
 
     return map;
+}
+
+/* eslint-disable no-console */
+export function pipeTapLog<T extends Subject<any>>(obs: T, message?: string): T {
+    console.log("blarp?");
+    if (!environment.production)
+        obs.pipe(tap(obsOut => console.debug(`[PipeTapLog]:${message ? ` ${message}` : ""}`, obsOut)));
+
+    return obs;
 }

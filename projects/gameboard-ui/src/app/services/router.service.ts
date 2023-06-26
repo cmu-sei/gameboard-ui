@@ -17,8 +17,8 @@ export class RouterService {
     return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }
 
-  public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): void {
-    this.router.navigateByUrl(this.getReportRoute(key, query));
+  public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): Promise<boolean> {
+    return this.router.navigateByUrl(this.getReportRoute(key, query));
   }
 
   public toSupportTickets(highlightTicketKey: string) {

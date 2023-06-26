@@ -51,21 +51,21 @@
                     <td class="count">
                         <span
                             (click)="handleModalRequest(record.user.name + ' - Series Played', record.competitionsPlayed, 'series')"
-                            [ngClass]="record.competitionsPlayed | countFieldToClass">
+                            [ngClass]="record.competitionsPlayed | arrayFieldToClass">
                             {{record.competitionsPlayed.length}}
                         </span>
                     </td>
                     <td class="count">
                         <span
                             (click)="handleModalRequest(record.user.name + ' - Tracks Played', record.tracksPlayed, 'track')"
-                            [ngClass]="record.tracksPlayed | countFieldToClass">
+                            [ngClass]="record.tracksPlayed | arrayFieldToClass">
                             {{record.tracksPlayed.length}}
                         </span>
                     </td>
                     <td class="count">
                         <span
                             (click)="handleModalRequest(record.user.name + ' - Games Enrolled', simpleEntitiesToStrings(record.games.enrolled))"
-                            [ngClass]="record.games.enrolled | countFieldToClass">
+                            [ngClass]="record.games.enrolled | arrayFieldToClass">
                             {{record.games.enrolled.length}}
                         </span>
                     </td>
