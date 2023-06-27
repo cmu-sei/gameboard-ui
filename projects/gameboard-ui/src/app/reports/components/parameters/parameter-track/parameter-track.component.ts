@@ -12,7 +12,7 @@ import { ReportTrackParameter, ReportTrackParameterModifier } from '../../../rep
 })
 export class ParameterTrackComponent extends ReportParameterComponent<ReportTrackParameter> {
   @Input() hideModifierSelect = false;
-  tracks$: Observable<string[]>
+  tracks$: Observable<string[]>;
 
   competedIn = ReportTrackParameterModifier.CompetedInThisTrack;
   competedOnlyIn = ReportTrackParameterModifier.CompetedInOnlyThisTrack;
@@ -21,11 +21,11 @@ export class ParameterTrackComponent extends ReportParameterComponent<ReportTrac
   constructor(private reportsService: ReportsService) {
     super();
 
-    this.tracks$ = this.reportsService.getTracks();
     this.ngModel = {
       track: undefined,
       modifier: this.competedIn
     };
+    this.tracks$ = this.reportsService.getTracks();
   }
 
   handleSelectionChanged(event?: any) {

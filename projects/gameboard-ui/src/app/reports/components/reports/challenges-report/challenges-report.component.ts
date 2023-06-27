@@ -1,51 +1,61 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, Observable, Subscription, switchMap, tap } from 'rxjs';
-import { ReportKey, ReportMetaData } from '../../../reports-models';
-import { IReportComponent } from '../../report-component';
+import { firstValueFrom, map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
+import { ReportComponentBase } from '../report-base.component';
 import { ChallengesReportParameters, ChallengesReportModel, ChallengesReportRecord, ChallengesReportFlatParameters } from './challenges-report.models';
 import { ChallengesReportService } from '@/reports/services/challenges-report-service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
+import { ActiveReportService } from '@/reports/services/active-report.service';
+import { ReportViewUpdate } from '@/reports/reports-models';
 
 @Component({
   selector: 'app-challenge-report',
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent implements IReportComponent<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord>, AfterViewInit, OnDestroy {
-  selectedParameters: ChallengesReportParameters = { competition: undefined, registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
-
+export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportParameters, ChallengesReportRecord> implements AfterViewInit, OnInit, OnDestroy {
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
   private reportElementRef?: ElementRef<HTMLDivElement>;
   private viewContainerRefsSub?: Subscription;
 
-  protected ctx$: Observable<ChallengesReportModel>;
+  protected ctx$?: Observable<ChallengesReportModel>;
   protected chartConfig?: DoughnutChartConfig;
 
   constructor(
+    activeReportService: ActiveReportService,
     private route: ActivatedRoute,
     public reportService: ChallengesReportService) {
-
-    this.ctx$ = this.route.queryParams.pipe(
-      map(params => ({ ...params } as ChallengesReportParameters)),
-      switchMap(args => this.reportService.getReportData(args)),
-      tap(results => this.chartConfig = this.buildDoughnutChart(results))
-    );
+    super(activeReportService);
   }
 
-  ngAfterViewInit(): void {
+  async ngOnInit(): Promise<void> {
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    await this.updateView(this.selectedParameters);
     this.viewContainerRefs!.changes.subscribe(item => {
       this.reportElementRef = this.viewContainerRefs ? this.viewContainerRefs.get(0) : undefined;
-    })
+    });
   }
 
-  getPdfExportElement(): ElementRef<HTMLDivElement> {
-    return this.reportElementRef!;
+  ngOnDestroy(): void {
+    this.viewContainerRefsSub?.unsubscribe();
   }
 
-  getReportKey(): ReportKey {
-    return ReportKey.ChallengesReport;
+  getDefaultParameters(): ChallengesReportParameters {
+    return { competition: undefined, registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
+  }
+
+  async updateView(parameters: ChallengesReportParameters): Promise<ReportViewUpdate<ChallengesReportRecord>> {
+    const results = await firstValueFrom(this.reportService.getReportData(parameters));
+    this.chartConfig = this.buildDoughnutChart(results);
+    this.ctx$ = of(results);
+
+    return {
+      results,
+      reportContainerRef: this.reportElementRef!
+    };
   }
 
   private buildDoughnutChart(results: ChallengesReportModel): DoughnutChartConfig {
@@ -81,9 +91,5 @@ export class ChallengesReportComponent implements IReportComponent<ChallengesRep
         responsive: true
       }
     };
-  }
-
-  ngOnDestroy(): void {
-    this.viewContainerRefsSub?.unsubscribe();
   }
 }

@@ -1,3 +1,4 @@
+import { ElementRef } from "@angular/core";
 import { PagingResults, SimpleEntity } from "../api/models";
 
 export interface ReportViewModel {
@@ -65,4 +66,9 @@ export enum ReportTrackParameterModifier {
 export interface ReportTrackParameter {
     track?: string;
     modifier?: ReportTrackParameterModifier;
+}
+
+export interface ReportViewUpdate<TRecord> {
+    reportContainerRef: ElementRef<HTMLDivElement>;
+    results: ReportResults<TRecord>;
 }

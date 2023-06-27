@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportParametersUpdate, EnrollmentReportRecord } from './enrollment-report.models';
-import { ReportKey, ReportResults } from '@/reports/reports-models';
+import { ReportKey, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
 import { Observable, Subscription, firstValueFrom, of } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
@@ -13,8 +13,7 @@ import { ChallengeResult } from '@/api/board-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
-import { LocaleService } from '@/utility/services/locale.service';
-import { DateTime } from 'luxon';
+import { ReportComponentBase } from '../report-base.component';
 
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
@@ -27,7 +26,7 @@ interface EnrollmentReportContext {
   templateUrl: './enrollment-report.component.html',
   styleUrls: ['./enrollment-report.component.scss']
 })
-export class EnrollmentReportComponent implements OnDestroy {
+export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportParameters, EnrollmentReportRecord> implements OnDestroy {
   @ViewChild("enrollmentReport") reportContainer!: ElementRef<HTMLDivElement>;
 
   ctx$?: Observable<EnrollmentReportContext>;
@@ -39,41 +38,31 @@ export class EnrollmentReportComponent implements OnDestroy {
   private queryParamsSub?: Subscription;
   private runRequestSub?: Subscription;
 
-  private _selectedParameters?: EnrollmentReportParameters;
-  public get selectedParameters(): EnrollmentReportParameters {
-    if (!this._selectedParameters) {
-      return {
-        enrollDate: {},
-        paging: { pageSize: ReportsService.DEFAULT_PAGE_SIZE, pageNumber: 0 },
-        seasons: [],
-        series: [],
-        sponsors: [],
-        tracks: []
-      };
-    }
-
-    return this._selectedParameters;
-  }
-  public set selectedParameters(value: EnrollmentReportParameters) {
-    this._selectedParameters = value;
-    this.updateView(value);
-  }
-
   constructor(
+    activeReportService: ActiveReportService,
     public reportService: EnrollmentReportService,
-    private activeReportService: ActiveReportService,
-    private localeService: LocaleService,
     private markdownHelpersService: MarkdownHelpersService,
     private modalService: ModalConfirmService,
     private reportsService: ReportsService,
     private route: ActivatedRoute,
-    private routerService: RouterService) { }
+    private routerService: RouterService) {
+    super(activeReportService);
+  }
+
+  getDefaultParameters(): EnrollmentReportParameters {
+    return {
+      enrollDate: {},
+      paging: { pageSize: ReportsService.DEFAULT_PAGE_SIZE, pageNumber: 0 },
+      seasons: [],
+      series: [],
+      sponsors: [],
+      tracks: []
+    };
+  }
 
   ngOnInit(): void {
     this.queryParamsSub = this.route.queryParams.subscribe(query => {
-      console.log("query", query);
       const reportParams = this.reportService.unflattenParameters({ ...query });
-      console.log("unflattened to", reportParams);
       // this causes the report to reload
       this.selectedParameters = reportParams;
     });
@@ -86,6 +75,60 @@ export class EnrollmentReportComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.queryParamsSub?.unsubscribe();
     this.runRequestSub?.unsubscribe();
+  }
+
+  async updateView(parameters: EnrollmentReportParameters): Promise<ReportViewUpdate<EnrollmentReportRecord>> {
+    const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
+    const lineChartResults = await this.reportService.getTrendData(parameters);
+
+    this.ctx$ = of({
+      results: reportResults,
+      chartConfig: {
+        type: 'line',
+        data: {
+          labels: Array.from(lineChartResults.keys()).map(k => k as any),
+          datasets: [
+            {
+              label: "Enrolled players",
+              data: Array.from(lineChartResults.values()).map(g => g.totalCount),
+              backgroundColor: 'blue',
+              color: "blue"
+            },
+          ]
+        },
+        options: {
+          scales: {
+            x: {
+              type: 'time',
+              distribution: 'series',
+              time: {
+                displayFormats: {
+                  day: "MM/dd/yy",
+                },
+                tooltipFormat: 'DD',
+                unit: "day"
+              },
+              title: {
+                display: true,
+                text: "Enrollment Date"
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Players Enrolled"
+              }
+            }
+          }
+        }
+      },
+      selectedParameters: parameters
+    });
+
+    return {
+      results: reportResults,
+      reportContainerRef: this.reportContainer
+    };
   }
 
   protected buildParameterChangeUrl(parameterBuilder: EnrollmentReportParametersUpdate) {
@@ -118,7 +161,7 @@ export class EnrollmentReportComponent implements OnDestroy {
     this.modalService.open({
       bodyContent: this
         .markdownHelpersService
-        .arrayToBulletList(challenges.map(c => `${c.name} (${c.score || "--"}/${c.maxPossiblePoints})`)),
+        .arrayToBulletList(challenges.map(c => `${c.name} (${c.score || "--"}/${c.maxPossiblePoints}) possible points`)),
       renderBodyAsMarkdown: true,
       title: `${record.player.name}: Challenges ${challengeStatus.substring(0, 1).toUpperCase()}${challengeStatus.substring(1)}`,
     });
@@ -150,47 +193,5 @@ export class EnrollmentReportComponent implements OnDestroy {
   protected handlePagingChange(paging: PagingRequest) {
     const parameterChangeUrl = this.buildParameterChangeUrl({ paging: { pageNumber: paging.page, pageSize: ReportsService.DEFAULT_PAGE_SIZE } });
     this.routerService.router.navigateByUrl(parameterChangeUrl);
-  }
-
-  private async updateView(params: EnrollmentReportParameters) {
-    const reportResults = await firstValueFrom(this.reportService.getReportData(params));
-    const lineChartResults = await this.reportService.getTrendData(params);
-
-    this.ctx$ = of({
-      results: reportResults,
-      chartConfig: {
-        type: 'line',
-        data: {
-          labels: Array.from(lineChartResults.keys()).map(k => k as any),
-          datasets: [
-            {
-              label: "Enrolled players",
-              data: Array.from(lineChartResults.values()).map(g => g.totalCount),
-              backgroundColor: 'blue',
-              color: "blue"
-            },
-          ]
-        },
-        options: {
-          scales: {
-            x: {
-              type: 'time',
-              distribution: 'series',
-              time: {
-                displayFormats: {
-                  day: "MM/dd/yy",
-                },
-                tooltipFormat: 'DD',
-                unit: "day"
-              }
-            }
-          }
-        }
-      },
-      selectedParameters: params
-    });
-
-    this.activeReportService.metaData$.next(reportResults.metaData);
-    this.activeReportService.htmlElement$.next(this.reportContainer);
   }
 }

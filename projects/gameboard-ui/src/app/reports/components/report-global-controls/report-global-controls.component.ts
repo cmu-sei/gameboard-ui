@@ -1,18 +1,25 @@
+import { ActiveReportService } from '@/reports/services/active-report.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-report-global-controls',
   templateUrl: './report-global-controls.component.html',
   styleUrls: ['./report-global-controls.component.scss']
 })
-export class ReportGlobalControlsComponent {
+export class ReportGlobalControlsComponent implements OnInit {
   @Output() exportRequestCsv = new EventEmitter<void>();
   @Output() exportRequestPdf = new EventEmitter<void>();
   @Output() runRequest = new EventEmitter<void>();
-  @Output() parameterReset = new EventEmitter<void>();
 
-  constructor(private modal: ModalConfirmService) { }
+  protected parametersPristine$?: Observable<boolean>;
+
+  constructor(private activeReportService: ActiveReportService, private modal: ModalConfirmService) { }
+
+  ngOnInit(): void {
+    this.parametersPristine$ = this.activeReportService.parametersPristine$;
+  }
 
   handleAboutFiltersClick() {
     this.modal.openConfirm({
@@ -27,5 +34,9 @@ export class ReportGlobalControlsComponent {
       `,
       renderBodyAsMarkdown: true
     });
+  }
+
+  handleResetClick() {
+    this.activeReportService.parameterResetRequest$.next();
   }
 }

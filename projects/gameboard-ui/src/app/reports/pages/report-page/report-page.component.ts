@@ -65,13 +65,6 @@ export class ReportPageComponent implements AfterViewInit {
     this.pdfService.exportHtmlToPdf(this.reportTitle || "Report", exportElement);
   }
 
-  handleResetParameters() {
-    if (!this.metaData)
-      throw new Error("Can't reset a report with unspecified key");
-
-    this.displayReport(this.metaData.key);
-  }
-
   handleRunReport() {
     this.activeReportService.runRequest$.next();
   }

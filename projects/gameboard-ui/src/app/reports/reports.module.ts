@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
-import { RouterModule, TitleStrategy } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
 import { ReportCardComponent } from './components/report-card/report-card.component';
@@ -36,18 +36,13 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
 
 @NgModule({
   declarations: [
+    ArrayToCountPipe,
     ArrayFieldToClassPipe,
-    ReportsHomeComponent,
-    ReportCardComponent,
     ChallengesReportComponent,
     CountToTooltipClassPipe,
-    MsToDurationPipe,
-    PlayersReportComponent,
-    ReportParametersContainerComponent,
-    StringsToTooltipPipe,
+    EnrollmentReportComponent,
     ParameterChallengeSpecComponent,
-    ShareButtonComponent,
-    SupportReportComponent,
+    MsToDurationPipe,
     ParameterGameComponent,
     ParameterGameChallengespecComponent,
     ParameterNumberComponent,
@@ -57,14 +52,19 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
     ParameterTicketStatusComponent,
     ParameterTimespanPickerComponent,
     ParameterTrackComponent,
-    ReportSelectComponent,
-    SupportReportContextMenuComponent,
-    ParameterSponsorComponent,
-    EnrollmentReportComponent,
-    ArrayToCountPipe,
-    ReportPageComponent,
-    ReportGlobalControlsComponent,
+    PlayersReportComponent,
+    ReportCardComponent,
     ParameterChangeLinkComponent,
+    ReportGlobalControlsComponent,
+    ReportPageComponent,
+    ReportParametersContainerComponent,
+    ReportSelectComponent,
+    ReportsHomeComponent,
+    ParameterSponsorComponent,
+    ShareButtonComponent,
+    StringsToTooltipPipe,
+    SupportReportComponent,
+    SupportReportContextMenuComponent,
   ],
   imports: [
     CommonModule,
@@ -74,7 +74,9 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
         path: '',
         component: ReportPageComponent,
         children: [
+          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
+          { path: 'players', component: PlayersReportComponent, title: "Players Report" },
           { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]
       }
