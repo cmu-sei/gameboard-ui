@@ -12,9 +12,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ChallengeResult } from '@/api/board-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
+import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
+import { LocaleService } from '@/utility/services/locale.service';
+import { DateTime } from 'luxon';
 
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
+  chartConfig: LineChartConfig;
   selectedParameters: EnrollmentReportParameters;
 }
 
@@ -58,6 +62,7 @@ export class EnrollmentReportComponent implements OnDestroy {
   constructor(
     public reportService: EnrollmentReportService,
     private activeReportService: ActiveReportService,
+    private localeService: LocaleService,
     private markdownHelpersService: MarkdownHelpersService,
     private modalService: ModalConfirmService,
     private reportsService: ReportsService,
@@ -148,14 +153,44 @@ export class EnrollmentReportComponent implements OnDestroy {
   }
 
   private async updateView(params: EnrollmentReportParameters) {
-    const results = await firstValueFrom(this.reportService.getReportData(params));
+    const reportResults = await firstValueFrom(this.reportService.getReportData(params));
+    const lineChartResults = await this.reportService.getTrendData(params);
 
     this.ctx$ = of({
-      results,
+      results: reportResults,
+      chartConfig: {
+        type: 'line',
+        data: {
+          labels: Array.from(lineChartResults.keys()).map(k => k as any),
+          datasets: [
+            {
+              label: "Enrolled players",
+              data: Array.from(lineChartResults.values()).map(g => g.totalCount),
+              backgroundColor: 'blue',
+              color: "blue"
+            },
+          ]
+        },
+        options: {
+          scales: {
+            x: {
+              type: 'time',
+              distribution: 'series',
+              time: {
+                displayFormats: {
+                  day: "MM/dd/yy",
+                },
+                tooltipFormat: 'DD',
+                unit: "day"
+              }
+            }
+          }
+        }
+      },
       selectedParameters: params
     });
 
-    this.activeReportService.metaData$.next(results.metaData);
+    this.activeReportService.metaData$.next(reportResults.metaData);
     this.activeReportService.htmlElement$.next(this.reportContainer);
   }
 }

@@ -34,10 +34,15 @@ import { markedOptionsFactory } from './config/marked.config';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
 import { SelectPagerComponent } from './components/select-pager/select-pager.component';
+import { LineChartComponent } from './components/line-chart/line-chart.component';
+
+// import luxon adapter for chartjs
+import 'chartjs-adapter-luxon';
 
 const PUBLIC_DECLARATIONS = [
   ColoredTextChipComponent,
   DoughnutChartComponent,
+  LineChartComponent,
   LinkRendererPipe,
   LongContentHiderComponent,
   ModalConfirmComponent,

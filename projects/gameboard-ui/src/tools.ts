@@ -38,3 +38,7 @@ export function pipeTapLog<T extends Subject<any>>(obs: T, message?: string): T 
 
     return obs;
 }
+
+export function unique<T>(array: T[]): T[] {
+    return array.filter((value, index, arr) => arr.indexOf(value) === index);
+}

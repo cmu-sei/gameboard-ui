@@ -51,8 +51,7 @@ export interface EnrollmentReportRecord {
         season: string;
         track: string;
     },
-    enrollDate?: Date,
-    session: {
+    playTime: {
         start?: Date;
         end?: Date;
         durationMs?: number;
@@ -78,4 +77,14 @@ export interface EnrollmentReportRecord {
     challengesPartiallySolvedCount: number,
     challengesCompletelySolvedCount: number,
     score?: number;
+}
+
+export interface EnrollmentReportLineChartGroup {
+    totalCount: number;
+    players: {
+        id: string;
+        name: string;
+        game: SimpleEntity,
+        enrollDate: Date
+    }[];
 }

@@ -47,6 +47,7 @@ export class SelectPagerComponent implements OnChanges {
   protected setPage(pageNumber: number) {
     let clampedPageNumber = Math.max(0, pageNumber);
     clampedPageNumber = Math.min(pageNumber, this.pages.length - 1);
+    clampedPageNumber = clampedPageNumber < 0 ? 0 : clampedPageNumber;
 
     this.page = clampedPageNumber;
     this.change.emit({ page: this.page, pageSize: this.pageSize! });
