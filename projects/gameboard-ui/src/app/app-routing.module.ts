@@ -7,6 +7,7 @@ import { HomePageComponent } from './home/home-page/home-page.component';
 import { AdminGuard } from './utility/admin.guard';
 import { AuthGuard } from './utility/auth.guard';
 import { GbTitleStrategy } from './services/gb-title-strategy';
+import { practiceModeEnabledGuard } from './prac/practice-mode-enabled.guard';
 
 const routes: Routes = [
   {
@@ -20,8 +21,8 @@ const routes: Routes = [
     loadChildren: () => import('./game/game.module').then(m => m.GameModule)
   },
   {
-    path: 'prac',
-    // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
+    path: 'practice',
+    canLoad: [practiceModeEnabledGuard], canActivate: [practiceModeEnabledGuard], canActivateChild: [practiceModeEnabledGuard],
     loadChildren: () => import('./prac/prac.module').then(m => m.PracModule)
   },
   {

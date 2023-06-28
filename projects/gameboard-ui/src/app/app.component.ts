@@ -13,6 +13,7 @@ import { ApiUser } from './api/user-models';
 import { ConfigService } from './utility/config.service';
 import { LayoutService } from './utility/layout.service';
 import { UserService } from './utility/user.service';
+import { PracticeService } from './services/practice.service';
 
 @Component({
   selector: 'app-root',
@@ -32,23 +33,22 @@ export class AppComponent implements OnInit {
     private gamesApi: GameService,
     public layoutService: LayoutService,
     @Inject(DOCUMENT) private document: Document,
+    private practiceService: PracticeService,
     private toc: TocService,
     private title: Title
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.user$ = this.usersvc.user$;
     this.toc$ = this.toc.toc$;
     this.title.setTitle(this.config.settings.appname || 'Gameboard');
 
     this.custom_bg = this.config.settings.custom_background || "";
     if (this.custom_bg) {
-      this.document.getElementsByTagName('body')[0].classList.add(this.custom_bg);
+      this.document.body.classList.add(this.custom_bg);
     }
 
-    this.gamesApi.list({}).pipe(first()).subscribe(games => {
-      this.isPracticeModeEnabled = games.some(g => g.playerMode == PlayerMode.practice);
-    });
+    this.isPracticeModeEnabled = await this.practiceService.isEnabled();
   }
 
   logout(): void {

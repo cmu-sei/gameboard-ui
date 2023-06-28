@@ -10,7 +10,7 @@
           [routerLink]="['doc', t.link]">{{t.display}}</a>
       </ng-container>
       <a *ngIf="isPracticeModeEnabled" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
-        [routerLink]="['prac']">Practice</a>
+        [routerLink]="['practice']">Practice</a>
       <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['profile']">Profile</a>
       <ng-container *ngIf="user$ | async as user">
         <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['support']">
