@@ -1,7 +1,3 @@
 <div *ngIf="config" class="line-chart-component">
-    <!-- <canvas baseChart [title]="config.title" [labels]="config.labels" [datasets]="config.dataSets"
-        [options]="config.options" [legend]="true" [type]="'line'">
-    </canvas> -->
-
     <canvas #lineChartCanvas>{{ config }}</canvas>
 </div>

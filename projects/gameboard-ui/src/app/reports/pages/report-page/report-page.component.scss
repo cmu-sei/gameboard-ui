@@ -16,6 +16,10 @@ nav li {
     font-size: 1.25rem;
 }
 
+.header-content {
+    margin-top: 2rem;
+}
+
 .export-label {
     font-size: 1.25rem;
 }
@@ -26,6 +30,12 @@ nav li {
 
 .pdf-export-button {
     border-left: solid 1px #ffffff;
+}
+
+::ng-deep .no-records-text {
+    color: #888888;
+    font-size: 2rem;
+    margin-top: 2rem;
 }
 
 ::ng-deep table.gameboard-report {

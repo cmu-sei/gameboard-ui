@@ -81,6 +81,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
 
+
     this.ctx$ = of({
       results: reportResults,
       chartConfig: {

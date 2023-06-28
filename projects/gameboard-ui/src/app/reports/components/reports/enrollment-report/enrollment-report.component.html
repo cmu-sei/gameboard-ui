@@ -14,8 +14,8 @@
     </app-report-parameters-container>
 </div>
 
-<div class="report-body mt-4" *ngIf="ctx$ | async as ctx" #enrollmentReport>
-    <tabset class="mt-5" *ngIf="ctx; else loading">
+<div class="report-body mt-4" *ngIf="ctx$ | async as ctx; else loading" #enrollmentReport>
+    <tabset class="mt-5" *ngIf="ctx.results.records.length; else noRecords">
         <tab heading="Summary Table" id="tab-summary-table">
             <div *ngIf="ctx.results.records.length" class="results">
                 <table class="report-table table-hover gameboard-report">
@@ -149,6 +149,12 @@
 <ng-template #loading>
     <div class="page-height d-flex flex-column align-items-center justify-content-center">
         <app-spinner>Loading the report...</app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noRecords>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <span class="no-records-text">There aren't any enrollments which match your filtering criteria.</span>
     </div>
 </ng-template>
 
