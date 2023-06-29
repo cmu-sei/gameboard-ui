@@ -1,13 +1,26 @@
 import { ReportKey } from '@/reports/reports-models';
 import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
+import { ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { ObjectService } from './object.service';
+import { LogService } from './log.service';
 
 @Injectable({ providedIn: 'root' })
 export class RouterService {
   constructor(
+    private logService: LogService,
     public router: Router,
+    private route: ActivatedRoute,
     private objectService: ObjectService) { }
+
+  public getCurrentPathBase(): string {
+    let urlTree = this.router.parseUrl(this.router.url);
+    urlTree.queryParams = {};
+    return urlTree.toString();
+  }
+
+  public getCurrentQueryParams(): Params {
+    return this.route.queryParams;
+  }
 
   public goHome(): void {
     this.router.navigateByUrl("/");
@@ -33,5 +46,25 @@ export class RouterService {
     else {
       this.router.navigateByUrl("/");
     }
+  }
+
+  public updateQueryParams(params: Params, resetParams: string[] = []): Promise<boolean> {
+    if (this.router.getCurrentNavigation()) {
+      // router is currently performing navigation, don't mess with it
+      this.logService.logInfo("Navigation to query params flushed by the router service:", params);
+      return Promise.resolve(false);
+    }
+
+    const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...params });
+
+    // delete requested keys (for example, if we're updating the `term` query param, we might need to reset paging)
+    if (resetParams) {
+      for (const resetParam of resetParams) {
+        delete cleanParams[resetParam];
+      }
+    }
+
+    const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: cleanParams });
+    return this.router.navigateByUrl(urlTree);
   }
 }

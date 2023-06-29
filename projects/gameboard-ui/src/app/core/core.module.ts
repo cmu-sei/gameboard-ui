@@ -20,6 +20,7 @@ import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './directives/modal-confirm.directive';
 import { MultiSelectComponent } from './components/multi-select/multi-select.component';
+import { QueryParamModelDirective } from './directives/query-param-model.directive';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
 import { RenderLinksInTextComponent } from './components/render-links-in-text/render-links-in-text.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
@@ -35,9 +36,11 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
 import { SelectPagerComponent } from './components/select-pager/select-pager.component';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
+import { ShareButtonComponent } from './components/share-button/share-button.component';
 
 // import luxon adapter for chartjs
 import 'chartjs-adapter-luxon';
+import { AssetPathPipe } from './pipes/asset-path.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ColoredTextChipComponent,
@@ -48,6 +51,7 @@ const PUBLIC_DECLARATIONS = [
   ModalConfirmComponent,
   ModalConfirmDirective,
   MultiSelectComponent,
+  QueryParamModelDirective,
   PlayerAvatarComponent,
   PlayerAvatarListComponent,
   PlayerStatusComponent,
@@ -55,6 +59,7 @@ const PUBLIC_DECLARATIONS = [
   RelativeImagePipe,
   RelativeUrlsPipe,
   SelectPagerComponent,
+  ShareButtonComponent,
   SpinnerComponent,
   TextToColorPipe,
   TicketStatusBadgePipe,
@@ -76,7 +81,8 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
+    AssetPathPipe
   ],
   imports: [
     CommonModule,

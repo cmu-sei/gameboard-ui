@@ -8,9 +8,7 @@ import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode } from './user-models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
 
   url = '';

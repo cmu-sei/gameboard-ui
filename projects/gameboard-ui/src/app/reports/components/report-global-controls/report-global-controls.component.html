@@ -9,7 +9,8 @@
         <button class="btn btn-info btn-lg pdf-export-button" (click)="exportRequestPdf.emit()" tabindex="0"
             role="button">PDF</button>
     </div>
-    <app-share-button class="d-block mr-2"></app-share-button>
+    <app-share-button class="d-block mr-2"
+        message="Copied a link to this report (and its filtering settings) to your clipboard."></app-share-button>
     <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleResetClick()">
         Reset Filters
     </button>

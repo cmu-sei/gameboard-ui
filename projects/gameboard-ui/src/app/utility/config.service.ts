@@ -8,7 +8,6 @@ import { UserManagerSettings } from 'oidc-client-ts';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Location, PlatformLocation } from '@angular/common';
-import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { LogService } from '../services/log.service';
 

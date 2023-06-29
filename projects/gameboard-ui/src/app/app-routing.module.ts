@@ -23,7 +23,8 @@ const routes: Routes = [
   {
     path: 'practice',
     canLoad: [practiceModeEnabledGuard], canActivate: [practiceModeEnabledGuard], canActivateChild: [practiceModeEnabledGuard],
-    loadChildren: () => import('./prac/prac.module').then(m => m.PracModule)
+    loadChildren: () => import('./prac/prac.module').then(m => m.PracModule),
+    title: "Practice"
   },
   {
     path: 'support',

@@ -27,7 +27,7 @@ export class ObjectService {
     }
 
     for (const key in untyped) {
-      if (!!untyped[key] || untyped[key] == 0) {
+      if (!!untyped[key] || untyped[key] === 0) {
         output[key] = untyped[key];
       }
     }

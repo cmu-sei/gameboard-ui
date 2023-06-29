@@ -36,6 +36,11 @@ export interface PagingResults {
   pageSize?: number;
 }
 
+export interface PagedArray<T> {
+  items: T[];
+  paging: PagingResults;
+}
+
 export interface SimpleEntity {
   id: string;
   name: string;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
 import { WindowService } from '../../../services/window.service';
 import { ClipboardService } from '../../../utility/services/clipboard.service';
@@ -10,6 +10,10 @@ import { ToastService } from '../../../utility/services/toast.service';
   styleUrls: ['./share-button.component.scss']
 })
 export class ShareButtonComponent {
+  @Input() message?: string;
+  @Input() textSelector?: () => string;
+  @Input() size: "small" | "medium" | "large" = "large";
+
   constructor(
     public faService: FontAwesomeService,
     private clipboardService: ClipboardService,
@@ -17,7 +21,9 @@ export class ShareButtonComponent {
     private windowService: WindowService) { }
 
   async handleShareClick() {
-    await this.clipboardService.copy(this.windowService.get().location.href);
-    this.toastService.showMessage("Copied a link to this report (and its filtering settings) to your clipboard.");
+    const text = this.textSelector ? this.textSelector() : await this.clipboardService.copy(this.windowService.get().location.href);
+
+    if (this.message)
+      this.toastService.showMessage(this.message);
   }
 }

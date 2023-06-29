@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { debounceTime, switchMap, tap } from 'rxjs/operators';
-import { Search } from '../../api/models';
-import { SpecSummary } from '../../api/spec-models';
-import { SpecService } from '../../api/spec.service';
-import { ConfigService } from '../../utility/config.service';
+import { BehaviorSubject, Observable, Subscription, map, switchMap, tap } from 'rxjs';
+import { Search } from '@/api/models';
+import { SpecSummary } from '@/api/spec-models';
+import { ConfigService } from '@/utility/config.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { QueryParamModelConfig } from '@/core/directives/query-param-model.directive';
+import { RouterService } from '@/services/router.service';
+import { PracticeService } from '@/services/practice.service';
 
 @Component({
   selector: 'app-practice-page',
@@ -15,38 +17,61 @@ import { ConfigService } from '../../utility/config.service';
 })
 export class PracticePageComponent {
   list$: Observable<SpecSummary[]>;
-  search: Search = { take: 100 };
-  search$ = new BehaviorSubject<Search>(this.search);
-  count = 0;
+  search$ = new BehaviorSubject<Search>({});
   appname = '';
   faSearch = faSearch;
 
+  oneWayTerm = "";
+  count = 0;
+  skip = 0;
+  take = 1;
+
+  termQueryParamModel: QueryParamModelConfig<string> = {
+    name: "term",
+    debounce: 500,
+    resetQueryParams: ["skip", "take"]
+  };
+
+  private queryParamsSub: Subscription;
+  private static readonly DEFAULT_PAGE_SIZE = 100;
+
   constructor(
-    api: SpecService,
+    api: PracticeService,
     config: ConfigService,
-    route: ActivatedRoute
-  ){
+    route: ActivatedRoute,
+    private routerService: RouterService,
+    private unsub: UnsubscriberService
+  ) {
     this.appname = config.settings.appname || "Gameboard";
-    this.search.term = route.snapshot.queryParams.term || "";
 
     this.list$ = this.search$.pipe(
-      debounceTime(500),
-      switchMap(m => api.browse(m)),
-      tap(r => this.count = r.length)
+      switchMap(m => api.searchChallenges(m)),
+      tap(r => {
+        this.count = r.results.paging.itemCount;
+        this.skip = (r.results.paging.pageNumber || 0) * (r.results.paging.pageSize || PracticePageComponent.DEFAULT_PAGE_SIZE);
+        this.take = r.results.paging.pageSize || PracticePageComponent.DEFAULT_PAGE_SIZE;
+        this.oneWayTerm = route.snapshot.queryParams.term || "";
+      }),
+      map(results => results.results.items)
     );
-  }
 
-  termed(term: any): void {
-    this.search.skip = 0;
-    this.search$.next(this.search);
+    this.queryParamsSub = route.queryParams.subscribe(params => this.search({ ...params } as Search));
+    this.unsub.add(this.queryParamsSub);
+
+    this.search({ ...route.snapshot.queryParams } as Search);
   }
 
   paged(s: number): void {
-    this.search.skip = s;
-    this.search$.next(this.search);
+    this.routerService.updateQueryParams({ skip: s });
   }
 
-  slug(s: string) : string {
+  slug(s: string): string {
     return s.toLowerCase().replace(/\W/g, "-").replace("--", "-");
+  }
+
+  private search(search: Search) {
+    search.take = search.take || PracticePageComponent.DEFAULT_PAGE_SIZE;
+    search.term = search.term || "";
+    this.search$.next({ ...search });
   }
 }

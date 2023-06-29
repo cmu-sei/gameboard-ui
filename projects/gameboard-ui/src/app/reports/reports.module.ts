@@ -16,7 +16,6 @@ import { ParameterGameComponent } from './components/parameters/parameter-game/p
 import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
 import { ParameterChallengeSpecComponent } from './components/parameters/parameter-challenge-spec/parameter-challenge-spec.component';
-import { ShareButtonComponent } from './components/share-button/share-button.component';
 import { SupportReportComponent } from './components/reports/support-report/support-report.component';
 import { ParameterNumberComponent } from './components/parameters/parameter-number/parameter-number.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
@@ -61,7 +60,6 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
     ReportSelectComponent,
     ReportsHomeComponent,
     ParameterSponsorComponent,
-    ShareButtonComponent,
     StringsToTooltipPipe,
     SupportReportComponent,
     SupportReportContextMenuComponent,

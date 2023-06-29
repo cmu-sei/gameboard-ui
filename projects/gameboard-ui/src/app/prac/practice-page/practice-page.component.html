@@ -4,21 +4,22 @@
 
 <div class="container">
 
-  <h1>Practice Challenges</h1>
+  <h1 class="mb-4">Practice Challenges</h1>
 
   <ng-container *ngIf="list$ | async as list; else loading">
-
-    <div class="input-group input-group-sm col-5 ml-auto mb-2">
+    <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
+      <app-share-button class="d-block mr-1" size="small"
+        message="Copied a link to this search to your clipboard."></app-share-button>
       <div class="input-group-prepend">
         <span class="input-group-text">
           <fa-icon [icon]="faSearch"></fa-icon>
         </span>
       </div>
-      <input type="search" [(ngModel)]="search.term" placeholder="search" class="form-control border-0"
-        (input)="termed($event)">
+      <input type="search" placeholder="search" class="form-control border-0" [value]="oneWayTerm"
+        [autofocus]="!!oneWayTerm" [appQueryParamModel]="termQueryParamModel">
     </div>
 
-    <app-pager [skip]="search.skip || 0" [take]="search.take || 0" [count]="count" (changed)="paged($event)"></app-pager>
+    <app-pager [skip]="skip || 0" [take]="take || 0" [count]="count" (changed)="paged($event)"></app-pager>
 
     <table class="table">
       <thead>
@@ -40,8 +41,7 @@
       </tbody>
     </table>
 
-    <app-pager [skip]="search.skip || 0" [take]="search.take || 0" [count]="count" (changed)="paged($event)"></app-pager>
-
+    <app-pager [skip]="skip || 0" [take]="take || 0" [count]="count" (changed)="paged($event)"></app-pager>
   </ng-container>
 </div>
 
