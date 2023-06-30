@@ -106,9 +106,6 @@ export function loadSettings(
     ;
 }
 
-export function register(
-  user: CurrentUserService
-): (() => Promise<void>) {
-  return (): Promise<void> => user.register()
-    ;
+export function register(user: CurrentUserService): (() => Promise<void>) {
+  return (): Promise<void> => user.register();
 }

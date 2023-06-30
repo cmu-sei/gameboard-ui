@@ -36,22 +36,31 @@
   </div>
 </div>
 
-<small *ngIf="source.length === 100" class="text-warning">Results limited to 100. Refine search term if
-  necessary.</small>
+<small *ngIf="source.length === 100" class="text-warning">
+  Results limited to 100. Refine search term if necessary.
+</small>
 <hr />
 
 <ng-container *ngIf="source$ | async as list; else loading">
 
-  <small class="text-warning mx-2">count: {{list.length}}</small>
+  <small class="text-warning d-block mx-2 mb-2">count: {{list.length}}</small>
 
   <div *ngFor="let user of list; trackBy:trackById"
-    class="d-flex mb-1 mx-2 p-2 flex-wrap align-items-baseline bg-secondary">
-    <div class="">
-      <span class="mr-2">{{user.approvedName}}</span>
+    class="d-flex mb-1 p-3 flex-wrap align-items-baseline bg-secondary rounded">
+    <div>
+      <span class="mr-2 fs-11">{{user.approvedName}}</span>
       <span class="text-muted">{{user.pendingName}}</span><br />
-      <small class="text-muted">
-        <app-clipspan>{{user.id | slice:0:8}}</app-clipspan>
-      </small>
+
+      <div class="d-flex align-items-center">
+        <small class="text-muted">
+          <app-clipspan>{{user.id | slice:0:8}}</app-clipspan>
+        </small>
+      </div>
+
+      <p *ngIf="user.lastLoginDate" class="text-muted fs-08 m-0">
+        <strong>Last login:</strong>
+        {{ user.lastLoginDate | shortdate }} @ {{ user.lastLoginDate | friendlyTime}}
+      </p>
     </div>
     <app-error-div [errors]="errors"></app-error-div>
     <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="approveName(user)">
@@ -77,48 +86,55 @@
       </app-confirm-button>
     </div>
     <div *ngIf="viewed === user" class="col-12 mt-4">
-      <h5>Name</h5>
-      <div class="form-group">
-        <label class="mb-0" for="name-input">Approved Name</label>
-        <input id="name-input" class="form-control" type="text" [(ngModel)]="user.approvedName" (change)="update(user)">
-      </div>
-      <div class="form-group">
-        <label class="mb-0" for="reason-input">Disapproved Reason</label>
-        <input id="reason-input" class="form-control" type="text" [(ngModel)]="user.nameStatus" (change)="update(user)">
-        <small>
-          <button *ngFor="let reason of reasons" class="btn btn-link btn-sm"
-            (click)="user.nameStatus = reason; update(user)">
-            {{reason}}
-          </button>
-        </small>
-      </div>
-
-      <h5>Roles</h5>
-      <div class="form-group">
-        <div class="btn-group" id="role-button-group">
-          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isObserver" (click)="role(user, 'observer')"
-            btnCheckbox tabindex="0" role="button">Observer</label>
-          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isSupport" (click)="role(user, 'support')"
-            btnCheckbox tabindex="0" role="button">Support</label>
-          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isTester" (click)="role(user, 'tester')"
-            btnCheckbox tabindex="0" role="button">Tester</label>
-          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDesigner" (click)="role(user, 'designer')"
-            btnCheckbox tabindex="0" role="button">Designer</label>
-          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isRegistrar" (click)="role(user, 'registrar')"
-            btnCheckbox tabindex="0" role="button">Registrar</label>
-          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDirector" (click)="role(user, 'director')"
-            btnCheckbox tabindex="0" role="button">Director</label>
-          <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isAdmin" (click)="role(user, 'admin')"
-            btnCheckbox tabindex="0" role="button">Admin</label>
+      <div class="name-info mb-4">
+        <h5>Name</h5>
+        <div class="form-group mb-0 pb-1">
+          <label class="mb-0" for="name-input">Approved Name</label>
+          <input id="name-input" class="form-control" type="text" [(ngModel)]="user.approvedName"
+            (change)="update(user)">
+        </div>
+        <div class="form-group mb-0 pb-1">
+          <label class="mb-0" for="reason-input">Disapproved Reason</label>
+          <input id="reason-input" class="form-control" type="text" [(ngModel)]="user.nameStatus"
+            (change)="update(user)">
+          <small>
+            <button *ngFor="let reason of reasons" class="btn btn-link btn-sm"
+              (click)="user.nameStatus = reason; update(user)">
+              {{reason}}
+            </button>
+          </small>
         </div>
       </div>
 
-      <h5>API Keys</h5>
-      <app-user-api-keys [user]="user"></app-user-api-keys>
+      <div class="role-info mb-4">
+        <h5>Roles</h5>
+        <div class="form-group">
+          <div class="btn-group" id="role-button-group">
+            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isObserver" (click)="role(user, 'observer')"
+              btnCheckbox tabindex="0" role="button">Observer</label>
+            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isSupport" (click)="role(user, 'support')"
+              btnCheckbox tabindex="0" role="button">Support</label>
+            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isTester" (click)="role(user, 'tester')"
+              btnCheckbox tabindex="0" role="button">Tester</label>
+            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDesigner" (click)="role(user, 'designer')"
+              btnCheckbox tabindex="0" role="button">Designer</label>
+            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isRegistrar"
+              (click)="role(user, 'registrar')" btnCheckbox tabindex="0" role="button">Registrar</label>
+            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDirector" (click)="role(user, 'director')"
+              btnCheckbox tabindex="0" role="button">Director</label>
+            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isAdmin" (click)="role(user, 'admin')"
+              btnCheckbox tabindex="0" role="button">Admin</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="api-key-info">
+        <h5>API Keys</h5>
+        <app-user-api-keys [user]="user"></app-user-api-keys>
+      </div>
     </div>
   </div>
 </ng-container>
-<!-- </div> -->
 
 <ng-template #loading>
   <div class="text-center">

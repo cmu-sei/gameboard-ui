@@ -42,7 +42,7 @@ import { ProfileHistoryComponent } from './profile-history/profile-history.compo
           { path: '', pathMatch: 'full', redirectTo: '/home' },
           { path: 'login', component: LoginPageComponent },
           { path: 'oidc', component: OidcComponent },
-          { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+          { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], title: "Profile" },
           { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
           { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
           { path: 'doc/:id', component: TocPageComponent },

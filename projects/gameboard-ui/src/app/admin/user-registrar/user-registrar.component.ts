@@ -85,7 +85,6 @@ export class UserRegistrarComponent {
         );
       }
     });
-
   }
 
   update(model: ApiUser): void {

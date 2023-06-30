@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode } from './user-models';
+import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult } from './user-models';
+import { LogService } from '@/services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -14,8 +15,9 @@ export class UserService {
   url = '';
 
   constructor(
+    private config: ConfigService,
     private http: HttpClient,
-    private config: ConfigService
+    private log: LogService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -35,9 +37,12 @@ export class UserService {
     );
   }
 
-  public create(model: NewUser): Observable<ApiUser> {
-    return this.http.post<ApiUser>(`${this.url}/user`, model).pipe(
-      map(r => this.transform(r))
+  public tryCreate(model: NewUser): Observable<TryCreateUserResult> {
+    return this.http.post<TryCreateUserResult>(`${this.url}/user`, model).pipe(
+      map(r => {
+        r.user = this.transform(r.user);
+        return r;
+      })
     );
   }
 
@@ -49,13 +54,6 @@ export class UserService {
 
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/user/${id}`);
-  }
-
-  public register(model: NewUser, authorization: string): Observable<ApiUser> {
-    model.id = model.sub;
-    return this.http.post<ApiUser>(`${this.url}/user`, model, { headers: { authorization } }).pipe(
-      map(r => this.transform(r))
-    );
   }
 
   public logout(): Observable<any> {
@@ -74,6 +72,12 @@ export class UserService {
 
   public announce(model: Announcement): Observable<any> {
     return this.http.post<any>(`${this.url}/announce`, model);
+  }
+
+  // records a login event for the currently authorized user
+  public updateLoginEvents(): Observable<void> {
+    this.log.logInfo("User login event recorded");
+    return this.http.put<void>(`${this.url}/user/login`, {});
   }
 
   private mapToTree(list: string[]): TreeNode {
@@ -104,8 +108,7 @@ export class UserService {
   private transform(user: ApiUser, disallowedName: string | null = null): ApiUser {
     user.sponsorLogo = user.sponsor
       ? `${this.config.imagehost}/${user.sponsor}`
-      : `${this.config.basehref}assets/sponsor.svg`
-      ;
+      : `${this.config.basehref}assets/sponsor.svg`;
 
     // If the user has no name status but they changed their name, it's pending approval
     if (!user.nameStatus && user.approvedName !== user.name) {

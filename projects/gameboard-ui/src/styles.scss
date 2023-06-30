@@ -57,10 +57,6 @@ body {
   scroll-behavior: smooth;
 }
 
-nav {
-  background-color: $body-bg;
-}
-
 ol,
 ul {
   padding-inline-start: 0;
@@ -81,8 +77,12 @@ app-root {
   margin: 0 auto;
 }
 
+.fs-08 {
+  font-size: 0.8rem;
+}
+
 .fs-10 {
-  font-size: 1reme;
+  font-size: 1rem;
 }
 
 .fs-11 {
