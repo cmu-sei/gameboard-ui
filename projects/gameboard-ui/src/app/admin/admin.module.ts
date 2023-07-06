@@ -42,6 +42,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
 import { ManageManualChallengeBonusesComponent } from './components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
 import { ManageManualChallengeBonusesModalComponent } from './components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
+import { ChallengeSpecBonusParameterPipe } from './pipes/challenge-spec-bonus-parameter.pipe';
+import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
+import { GameEditorChallengeSpecConfigComponent } from './components/game-challenge-spec-config/game-challenge-spec-config.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +74,10 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
     UserApiKeysComponent,
     TeamAdminContextMenuComponent,
     ManageManualChallengeBonusesComponent,
-    ManageManualChallengeBonusesModalComponent
+    ManageManualChallengeBonusesModalComponent,
+    ChallengeSpecBonusParameterPipe,
+    GameBonusesConfigComponent,
+    GameEditorChallengeSpecConfigComponent,
   ],
   imports: [
     CommonModule,
@@ -96,7 +102,6 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
           { path: 'report/support', component: SupportReportComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: 'support', component: ChallengeBrowserComponent }
-          // { path: '**', redirectTo: 'dashboard' }
         ]
       },
     ]),

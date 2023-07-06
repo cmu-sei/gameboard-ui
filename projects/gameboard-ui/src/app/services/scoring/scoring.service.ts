@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CreateManualChallengeBonus, TeamGameScoreSummary } from '../api/scoring-models';
-import { ConfigService } from '../utility/config.service';
+import { Observable, firstValueFrom } from 'rxjs';
+import { CreateManualChallengeBonus, TeamGameScoreSummary, UpdateGameAutoChallengeBonusConfig } from '../../api/scoring-models';
+import { ConfigService } from '../../utility/config.service';
+import { GameScoringConfig } from './scoring.models';
 
 @Injectable({ providedIn: 'root' })
 export class ScoringService {
@@ -19,6 +20,10 @@ export class ScoringService {
     return this.http.delete<void>(`${this.API_ROOT}/bonus/manual/${manualBonusId}`);
   }
 
+  public getGameScoringConfig(gameId: string): Observable<GameScoringConfig> {
+    return this.http.get<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/score/config`);
+  }
+
   public getTeamGameScore(teamId: string): Observable<TeamGameScoreSummary> {
     return this.http.get<TeamGameScoreSummary>(`${this.API_ROOT}/team/${teamId}/score`);
   }
@@ -28,5 +33,13 @@ export class ScoringService {
       description: model.description,
       pointValue: model.pointValue
     });
+  }
+
+  public async deleteGameAutoChallengeBonuses(gameId: string) {
+    return await firstValueFrom(this.http.delete<void>(`${this.API_ROOT}/game/${gameId}/bonus/config`));
+  }
+
+  public async updateGameAutoChallengeBonuses(gameId: string, config: UpdateGameAutoChallengeBonusConfig) {
+    return await firstValueFrom(this.http.put<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/bonus/config`, config));
   }
 }

@@ -2,13 +2,13 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { GameService } from '../../../api/game.service';
-import { GameContext } from '../../../api/models';
+import { GameContext } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
-import { GameHubService } from '../../../services/signalR/game-hub.service';
 import { SyncStartService } from '../../../services/sync-start.service';
-import { SyncStartState } from '../../game.models';
+import { SyncStartGameState } from '../../game.models';
+import { GameHubService } from '@/services/signalR/game-hub.service';
 
 @Component({
   selector: 'app-session-start-controls',
@@ -33,15 +33,16 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
 
   constructor(
     public faService: FontAwesomeService,
-    private gameHub: GameHubService,
+    private gameHubService: GameHubService,
     private gameService: GameService,
     private playerService: PlayerService,
     private syncStartService: SyncStartService) { }
 
   ngOnInit(): void {
     if (this.ctx.game.requireSynchronizedStart) {
-      this.gameService.getSyncStartState(this.ctx.game.id).pipe(first()).subscribe(this.handleNewSyncStartState);
-      this.gameHubSub = this.gameHub.syncStartChanged$.subscribe(stateUpdate => {
+      this.gameService.getSyncStartState(this.ctx.game.id).pipe(first()).subscribe(state => this.handleNewSyncStartState(state));
+
+      this.gameHubSub = this.gameHubService.syncStartGameStateChanged$.subscribe(stateUpdate => {
         this.handleNewSyncStartState(stateUpdate);
       });
     }
@@ -64,7 +65,7 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }).pipe(first()).subscribe();
   }
 
-  private handleNewSyncStartState(state: SyncStartState) {
+  private handleNewSyncStartState(state: SyncStartGameState) {
     this.isGameSyncStartReady = state.isReady;
 
     if (!state || !state.teams.length) {

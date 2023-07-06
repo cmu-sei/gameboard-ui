@@ -3,7 +3,6 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
@@ -148,7 +147,7 @@ export class PlayerService {
       ? p.name + (!!p.nameStatus ? `...${p.nameStatus}` : '...pending')
       : '';
 
-    this.gameSessionService.transformSession(p, p.sessionBegin, p.sessionEnd);
+    this.gameSessionService.addSession(p, p.sessionBegin, p.sessionEnd);
 
     return p;
   }

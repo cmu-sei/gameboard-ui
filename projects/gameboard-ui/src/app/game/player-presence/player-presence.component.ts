@@ -10,7 +10,6 @@ import { PlayerService } from '../../api/player.service';
 import { NotificationService } from '../../services/notification.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
 import { SyncStartService } from '../../services/sync-start.service';
-import { SimpleEntity } from '../../api/models';
 import { HubConnectionState } from '@microsoft/signalr';
 import { LogService } from '../../services/log.service';
 
@@ -51,7 +50,7 @@ export class PlayerPresenceComponent implements OnInit {
       this.hub.state$,
       this.hub.actors$,
       this.player$,
-      this.gameHub.syncStartChanged$.pipe(startWith(null))
+      this.gameHub.syncStartGameStateChanged$.pipe(startWith(null))
     ]).pipe(
       // map(combo => combo as unknown as { 0: HubPlayer[], 1: HubPlayer, 2: SyncStartState }),
       map(combo => ({ hubState: combo[0], actors: combo[1], player: combo[2], syncStartState: combo[3] })),

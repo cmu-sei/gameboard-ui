@@ -13,13 +13,13 @@ export interface SyncStartTeam {
     players: SyncStartPlayer[];
 }
 
-export interface SyncStartState {
+export interface SyncStartGameState {
     game: SimpleEntity,
     teams: SyncStartTeam[];
     isReady: boolean;
 }
 
-export interface SynchronizedGameStartedState {
+export interface SyncStartGameStartedState {
     game: SimpleEntity;
     sessionBegin: Date;
     sessionEnd: Date;

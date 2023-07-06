@@ -3,7 +3,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { BoardSpec, Challenge, ChallengeView, GameState } from '../../api/board-models';
+import { BoardSpec, Challenge } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { TimeWindow } from '../../api/player-models';
 
@@ -12,7 +12,7 @@ import { TimeWindow } from '../../api/player-models';
   templateUrl: './gamespace-quiz.component.html',
   styleUrls: ['./gamespace-quiz.component.scss']
 })
-export class GamespaceQuizComponent implements OnInit {
+export class GamespaceQuizComponent {
   @Input() spec!: BoardSpec;
   @Input() session!: TimeWindow;
   @Output() graded = new EventEmitter<boolean>();
@@ -21,21 +21,15 @@ export class GamespaceQuizComponent implements OnInit {
   errors: Error[] = [];
   faSubmit = faCloudUploadAlt;
 
-  constructor(
-    private api: BoardService
-  ) {
-  }
-
-  ngOnInit(): void {
-  }
+  constructor(private api: BoardService) { }
 
   submit(): void {
     this.pending = true;
 
     const submission = {
-      id: this.spec.instance!.id,
+      challengeId: this.spec.instance!.id,
       sectionIndex: this.spec.instance!.state.challenge?.sectionIndex,
-      questions: this.spec.instance!.state.challenge?.questions?.map(q => ({ answer: q.answer }))
+      answers: this.spec.instance!.state.challenge?.questions?.map(q => ({ answer: q.answer })),
     };
     this.api.grade(submission).subscribe(
       (c: Challenge) => {

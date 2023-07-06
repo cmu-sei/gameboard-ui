@@ -4,22 +4,23 @@
 <ng-container *ngIf="created$ | async"></ng-container>
 <ng-container *ngIf="updated$ | async"></ng-container>
 <ng-container *ngIf="deleted$ | async"></ng-container>
+<ng-container *ngIf="gameBonusesConfig$ | async"></ng-container>
 
 <div class="row">
   <!-- search external specs -->
   <div class="col-2">
     <div class="d-flex flex-column">
       <button class="mb-1 btn btn-secondary" (click)="view('search')">
-        <fa-icon [icon]="faSearch"></fa-icon>
+        <fa-icon [icon]="faService.search"></fa-icon>
         <span>Search</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('edit')">
-        <fa-icon [icon]="faEdit"></fa-icon>
+        <fa-icon [icon]="faService.edit"></fa-icon>
         <span>Edit</span>
         <span *ngIf="!!addedCount" class="ml-2 px-2 badge badge-info">{{addedCount}}</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('map')">
-        <fa-icon [icon]="faMapMarker"></fa-icon>
+        <fa-icon [icon]="faService.mapMarker"></fa-icon>
         <span>Map</span>
       </button>
       <ng-container *ngIf="viewing==='map'">
@@ -28,14 +29,13 @@
         </button>
         <app-dropzone inputId="map-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event)">
           <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
-            <fa-icon [icon]="faTrash"></fa-icon>
+            <fa-icon [icon]="faService.trash"></fa-icon>
             <span>Reset</span>
           </button>
         </app-dropzone>
         <div class="form-group pb-1 pt-1">
-          <!-- <label for="logo-input">Map Image</label> -->
         </div>
-        <div>Alt-Drag to resize hotspots</div>
+        <div>Alt-Drag (Option-Drag on Mac) to resize hotspots</div>
       </ng-container>
     </div>
   </div>
@@ -44,60 +44,36 @@
 
     <!-- edit game specs -->
     <div [hidden]="viewing!=='edit'">
-      <h4>Challenge Specs</h4>
+      <h3>Specs</h3>
 
-      <button class="mb-1 btn btn-sm btn-outline-info" (click)="sync()">
-        <fa-icon [icon]="faSync"></fa-icon>
+      <button class="mt-2 mb-4 btn btn-sm btn-outline-info" (click)="sync()">
+        <fa-icon [icon]="faService.sync"></fa-icon>
         <span>Sync with Source</span>
       </button>
 
       <div *ngFor="let item of list$ | async; trackBy:trackById">
-        <div class="row align-items-center bg-secondary mb-2">
-          <div class="col-4">
-            {{item.name}}
-          </div>
-          <div class="col-1">
-            <div class="form-group form-check pb-0 pt-1">
-              <input type="checkbox" class="form-check-input" id="disabled-input-{{item.id}}" name="disabled"
-                [(ngModel)]="item.disabled" (ngModelChange)="updating$.next(item)">
-              <label for="disabled-input-{{item.id}}">Disabled</label>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group pb-0 pt-1">
-              <label for="slug-input-{{item.id}}">Support Key</label>
-              <input type="text" class="form-control" id="slug-input-{{item.id}}" name="slug" [(ngModel)]="item.tag"
-                (ngModelChange)="updating$.next(item)">
-              <small></small>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group pb-0 pt-1">
-              <label for="points-input-{{item.id}}">Points</label>
-              <input type="number" class="form-control" id="points-input-{{item.id}}" name="points"
-                [(ngModel)]="item.points" (ngModelChange)="updating$.next(item)">
-              <small></small>
-            </div>
-          </div>
-          <div class="col-3">
-            <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="deleting$.next(item)">
-              <fa-icon [icon]="faTrash"></fa-icon>
-              <span>Delete</span>
-            </app-confirm-button>
-          </div>
-        </div>
+        <app-game-challenge-spec-config class="d-block mb-2" [spec]="item"
+          [scoringConfig]="specConfigMap[item.id]"></app-game-challenge-spec-config>
       </div>
+
       <!-- pre reqs -->
-      <app-prereqs [gameId]="game.id" [specs]="list"></app-prereqs>
+      <div class="prereqs-container my-5">
+        <h3>Prereqs</h3>
+        <app-prereqs [gameId]="game.id" [specs]="list"></app-prereqs>
+      </div>
+
+      <div class="bonus-config my-5">
+        <h3>Automatic Bonuses</h3>
+        <app-game-bonuses-config [game]="game" *ngIf="game" [gameScoringConfig]="(gameBonusesConfig$ | async)"
+          (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"></app-game-bonuses-config>
+      </div>
     </div>
 
     <!-- search external specs -->
     <app-spec-browser [hidden]="viewing!=='search'"></app-spec-browser>
 
-
     <!-- edit spec map locations -->
     <div [hidden]="viewing!=='map'">
-
       <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.mapbox-hover]="!!specHover">
         <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
           <span>{{this.specHover?.name}}</span><br />

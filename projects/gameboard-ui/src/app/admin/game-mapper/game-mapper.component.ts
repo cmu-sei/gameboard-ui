@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { faEdit, faMapMarker, faPlus, faSearch, faSyncAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
@@ -10,6 +9,9 @@ import { GameService } from '../../api/game.service';
 import { ExternalSpec, NewSpec, Spec } from '../../api/spec-models';
 import { SpecService } from '../../api/spec.service';
 import { ConfigService } from '../../utility/config.service';
+import { FontAwesomeService } from '../../services/font-awesome.service';
+import { ChallengeSpecScoringConfig, GameScoringConfig } from '@/services/scoring/scoring.models';
+import { ScoringService } from '@/services/scoring/scoring.service';
 
 @Component({
   selector: 'app-game-mapper',
@@ -28,7 +30,9 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   altkey = false;
   showGrid = false;
   showCallout = false;
+  specConfigMap: { [specId: string]: ChallengeSpecScoringConfig } = {};
 
+  gameBonusesConfig$: Observable<GameScoringConfig>;
   refresh$ = new Subject<string>();
   updating$ = new Subject<Spec>();
   deleting$ = new Subject<Spec>();
@@ -39,12 +43,6 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   list$: Observable<Spec[]>;
   recentExternalSpecList$: Observable<ExternalSpec[]>;
   list: Spec[] = [];
-  faSearch = faSearch;
-  faTrash = faTrash;
-  faEdit = faEdit;
-  faMapMarker = faMapMarker;
-  faPlus = faPlus;
-  faSync = faSyncAlt;
 
   show = false;
   viewing = 'edit';
@@ -54,12 +52,29 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     private api: SpecService,
     private gameSvc: GameService,
     private renderer: Renderer2,
-    private config: ConfigService
+    private config: ConfigService,
+    public faService: FontAwesomeService,
+    scoringService: ScoringService
   ) {
     this.list$ = this.refresh$.pipe(
       debounceTime(500),
       switchMap(id => gameSvc.retrieveSpecs(id)),
       tap(r => this.list = r),
+    );
+
+    this.gameBonusesConfig$ = this.refresh$.pipe(
+      debounceTime(500),
+      switchMap(id => scoringService.getGameScoringConfig(id)),
+      tap(config => {
+        this.specConfigMap = {};
+
+        if (!config)
+          return;
+
+        for (let specConfig of config.challengeSpecScoringConfigs) {
+          this.specConfigMap[specConfig.challengeSpec.id] = specConfig;
+        }
+      })
     );
 
     // Grabs external specs
@@ -72,6 +87,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
           extSpec => {
             // Find the one in the local list that matches this one
             var item = this.list.find(i => i.externalId === extSpec.externalId);
+
             // Compare the name and description of each; if they aren't equal, update the challenge in the GB database
             if (item) {
               var tmpName = item.name;
@@ -146,6 +162,10 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
         this.game.mapUrl = `${this.config.basehref}assets/map.png`;
       }
     );
+  }
+
+  handleBonusesChanged() {
+    this.refresh();
   }
 
   sync(): void {

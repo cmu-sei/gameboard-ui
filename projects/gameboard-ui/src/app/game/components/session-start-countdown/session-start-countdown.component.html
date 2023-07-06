@@ -1,0 +1,44 @@
+<div class="session-start-countdown-component d-flex justify-content-center align-items-center"
+    *ngIf="ctx$ | async as ctx; else loading">
+    <div class="card-container mr-4">
+        <app-game-card [game]="ctx.game"></app-game-card>
+    </div>
+    <div class="game-detail-panel">
+        <h2 class="gray-text fw-bold">Your game is starting...</h2>
+        <h1>{{ctx.game.name}}</h1>
+        <div class="detail-badges">
+            <ul>
+                <li class="badge badge-info">
+                    {{ctx.sessionLengthInMinutes}} minutes
+                </li>
+                <li class="badge badge-info">
+                    {{ctx.player.session!.beginDate | friendlyTime}} - {{ctx.player.session!.endDate |
+                    friendlyTime}}
+                </li>
+            </ul>
+        </div>
+        <hr>
+        <div class="bottom-panel d-flex">
+            <div class="countdown-container text-center">
+                <strong class="countdown-seconds">{{ctx.secondsRemaining}}</strong>
+                <label class="countdown-seconds-label">second{{ ctx.secondsRemaining == 1 ? "" : "s"}}</label>
+            </div>
+
+            <div class="player-info d-flex mt-2 justify-content-center align-items-center">
+                <app-player-avatar [avatarUri]=" ctx.player.sponsorLogo" [session]="ctx.player.session"
+                    [size]="'large'"></app-player-avatar>
+                <div class="ml-4 mt-2 player-team-info d-flex flex-column justify-content-center">
+                    <h2>{{ctx.player.approvedName}}</h2>
+                    <h3 *ngIf="ctx.team && ctx.team.approvedName">{{ctx.team.approvedName}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="loading-container">
+        <app-spinner></app-spinner>
+        <h1>Loading the session...</h1>
+    </div>
+</ng-template>

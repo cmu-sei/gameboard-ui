@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { SimpleEntity } from '../../../api/models';
 import { CreateManualChallengeBonus, TeamGameScoreSummary } from '../../../api/scoring-models';
-import { ScoringService } from '../../../services/scoring.service';
+import { ScoringService } from '../../../services/scoring/scoring.service';
 
 @Component({
   selector: 'app-manage-manual-challenge-bonuses',

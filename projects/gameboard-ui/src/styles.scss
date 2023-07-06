@@ -7,12 +7,12 @@
 @import "../../../node_modules/bootstrap/scss/variables";
 @import "../../../node_modules/bootstrap/scss/mixins";
 
+@import "../../../node_modules/bootstrap/scss/code";
 @import "../../../node_modules/bootstrap/scss/root";
 @import "../../../node_modules/bootstrap/scss/reboot";
+@import "../../../node_modules/bootstrap/scss/grid";
 @import "../../../node_modules/bootstrap/scss/type";
 @import "../../../node_modules/bootstrap/scss/images";
-@import "../../../node_modules/bootstrap/scss/code";
-@import "../../../node_modules/bootstrap/scss/grid";
 @import "../../../node_modules/bootstrap/scss/tables";
 @import "../../../node_modules/bootstrap/scss/forms";
 @import "../../../node_modules/bootstrap/scss/buttons";
@@ -168,7 +168,7 @@ app-spinner svg {
   }
 }
 
-.grayText {
+.gray-text {
   color: #767676;
 }
 
@@ -196,6 +196,10 @@ app-spinner svg {
 .light-tooltip .tooltip-inner {
   background-color: white;
   color: black;
+}
+
+hr.light {
+  border-color: #dddddd;
 }
 
 .custom-bg-red {
@@ -237,4 +241,21 @@ th[align="center"] {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.page-width {
+  width: 1380px;
+  max-width: 100%;
+}
+
+.page-min-height {
+  min-height: 85vh;
+}
+
+.flex-basis-50 {
+  flex-basis: 50%;
+}
+
+.full-width {
+  width: 100%;
 }

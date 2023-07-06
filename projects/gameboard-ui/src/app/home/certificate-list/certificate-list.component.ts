@@ -1,4 +1,4 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
+import { Component, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { faArrowLeft, faAward, faPrint, faMedal, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
@@ -10,7 +10,7 @@ import { PlayerService } from '../../api/player.service';
   templateUrl: './certificate-list.component.html',
   styleUrls: ['./certificate-list.component.scss']
 })
-export class CertificateListComponent implements OnInit {
+export class CertificateListComponent {
   faArrowLeft = faArrowLeft;
   faAward = faAward;
   faMedal = faMedal;
@@ -26,9 +26,6 @@ export class CertificateListComponent implements OnInit {
     this.certs$ = apiPlayer.getUserCertificates();
   }
 
-  ngOnInit(): void {
-  }
-
   print(cert: PlayerCertificate): void {
     let printWindow = window.open('', '', '');
     // make sure background is always there and no margins to print to pdf as is
@@ -41,5 +38,4 @@ export class CertificateListComponent implements OnInit {
     printWindow?.addEventListener('load', printWindow?.print, true); // wait until all content loads before printing
     // don't close new tab automatically in case want to keep open for some reason [ printWindow?.close(); ]
   }
-
 }

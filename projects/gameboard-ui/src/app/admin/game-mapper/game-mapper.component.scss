@@ -1,12 +1,15 @@
 label {
   margin-bottom: 0;
 }
+
 .mapbox-hover {
   cursor: pointer;
 }
+
 .mapbox-active {
   cursor: crosshair !important;
 }
+
 .mapbox-dot {
   fill: blue;
   stroke: lime;
@@ -14,6 +17,7 @@ label {
   stroke-opacity: 1;
   stroke-width: .25;
 }
+
 .callout {
   position: absolute;
   z-index: 10;

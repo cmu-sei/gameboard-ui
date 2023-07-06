@@ -11,7 +11,7 @@
     <div class="d-flex flex-column align-items-center">
       <a [routerLink]="['../', 'scores', ctx.game.id]" class="p-4">
         <span>
-          <fa-icon [icon]="faList"></fa-icon>
+          <fa-icon [icon]="faService.listOl"></fa-icon>
           <span>Scoreboard</span>
         </span>
       </a>
@@ -33,7 +33,8 @@
         <div class="col panel">
           <div tabindex="0" (click)="showCert = !showCert">
             <div class="d-flex align-items-center">
-              <fa-icon class="d-inline" [icon]="showCert ? faCaretDown : faCaretRight" size="lg"></fa-icon>
+              <fa-icon class="d-inline" [icon]="showCert ? faService.caretDown : faService.caretRight"
+                size="lg"></fa-icon>
               <span>
                 <h2 class="d-inline">Certificate</h2>
               </span>
@@ -82,7 +83,7 @@
           <span>Scoreboard</span>&nbsp;&nbsp;
           <a [routerLink]="['../', 'scores', ctx.game.id]">
             <small>
-              <fa-icon [icon]="faLink"></fa-icon>
+              <fa-icon [icon]="faService.externalLinkAlt"></fa-icon>
             </small>
           </a>
         </h2>

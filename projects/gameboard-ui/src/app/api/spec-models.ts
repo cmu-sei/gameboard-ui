@@ -17,6 +17,7 @@ export interface SpecDetail extends ExternalSpec {
   y: number;
   r: number;
   c: string;
+
 }
 
 export interface Spec extends SpecDetail {
@@ -45,4 +46,21 @@ export interface SpecSummary {
 export enum GameEngineType {
   topomojo = 'topomojo',
   crucible = 'crucible',
+}
+
+export interface AddSolveSpeedChallengeBonus {
+  description: string;
+  pointValue: number;
+  rank: number;
+}
+
+export interface ChallengeSpecBonusViewModel {
+  id: string;
+  description: string;
+  pointValue: number;
+  parameters: { [key: string]: any };
+}
+
+export enum ChallengeBonusType {
+  SolveSpeed = 0
 }

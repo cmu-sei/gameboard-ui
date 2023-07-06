@@ -1,0 +1,16 @@
+# sample yaml configuration. this generates first and second-place bonuses for every challenge in the game,
+# plus a third place bonus for a challenge with the support key "aChallengeSupportKey".
+
+---
+allChallengesBonuses:
+  - pointValue: 100
+    description: "Earned for finishing the challenge first" # description is optional (but recommended for scoreboard purposes)
+    solveRank: 1
+  - pointValue: 50
+    description: "Earned for finishing the challenge second"
+    solveRank: 2
+specificChallengesBonuses:
+  - supportKey: "aChallengeSupportKey"
+    description: "Earned for placing third on the Magical Mystery Tour challenge"
+    solveRank: 3
+    pointValue: 30

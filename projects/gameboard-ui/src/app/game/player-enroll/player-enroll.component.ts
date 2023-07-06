@@ -5,12 +5,13 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { finalize, map, tap, delay, first } from 'rxjs/operators';
-import { GameContext } from '../../api/models';
+import { GameContext } from '../../api/game-models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
+import { GameHubService } from '@/services/signalR/game-hub.service';
 
 @Component({
   selector: 'app-player-enroll',
@@ -48,8 +49,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   constructor(
     private api: PlayerService,
     private config: ConfigService,
-    private hubService: NotificationService,
-    private localUser: UserService
+    private hubService: NotificationService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
       map(i => this.ctx),

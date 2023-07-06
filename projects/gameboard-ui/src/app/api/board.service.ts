@@ -104,7 +104,7 @@ export class BoardService {
       this.setColor(s);
     });
 
-    this.gameSessionService.transformSession(b, b.sessionBegin, b.sessionEnd);
+    this.gameSessionService.addSession(b, b.sessionBegin, b.sessionEnd);
 
     return b;
   }

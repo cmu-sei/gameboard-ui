@@ -3,7 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { GameContext } from '../../api/models';
+import { GameContext } from '../../api/game-models';
 import { PlayerService } from '../../api/player.service';
 
 @Component({

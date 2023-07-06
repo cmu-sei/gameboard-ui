@@ -5,9 +5,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
-import { Game } from '../../api/game-models';
-import { GameService } from '../../api/game.service';
-import { Standing } from '../../api/player-models';
+import { Game } from '../../../api/game-models';
+import { GameService } from '../../../api/game.service';
+import { Standing } from '../../../api/player-models';
 
 @Component({
   selector: 'app-scoreboard-page',

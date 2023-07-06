@@ -2,25 +2,38 @@ import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import {
   faArrowLeft,
+  faAward,
   faBolt,
+  faCaretDown,
+  faCaretRight,
+  faCaretUp,
   faCheck,
   faCheckSquare,
   faChevronDown,
   faChevronUp,
   faClipboard,
+  faCloudUploadAlt,
   faCopy,
+  faEdit,
   faExclamationTriangle,
   faExternalLink,
+  faExternalLinkAlt,
   faFilter,
+  faGamepad,
+  faListOl,
   faLongArrowAltDown,
+  faMapMarker,
   faSquare,
   faStar,
   faSyncAlt,
   faEllipsisVertical,
   faGear,
+  faInfoCircle,
   faList,
   faTriangleExclamation,
   faSearch,
+  faToggleOff,
+  faToggleOn,
   faTrash,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
@@ -29,23 +42,36 @@ import {
 export class FontAwesomeService {
   arrowDown = faLongArrowAltDown;
   arrowLeft = faArrowLeft;
+  award = faAward;
   bolt = faBolt;
+  caretDown = faCaretDown;
+  caretRight = faCaretRight;
+  caretUp = faCaretUp;
   check = faCheck;
   checkSquare = faCheckSquare;
   chevronDown = faChevronDown;
   chevronUp = faChevronUp;
   clipboard = faClipboard;
+  cloudUploadAlt = faCloudUploadAlt;
   copy = faCopy;
+  edit = faEdit;
   ellipsisVertical = faEllipsisVertical;
   exclamationTriangle = faExclamationTriangle;
   externalLink = faExternalLink;
+  externalLinkAlt = faExternalLinkAlt;
   list = faList;
+  listOl = faListOl;
   filter = faFilter;
+  gamepad = faGamepad;
   gear = faGear;
+  infoCircle = faInfoCircle;
+  mapMarker = faMapMarker;
   search = faSearch;
   star = faStar;
   square = faSquare;
   sync = faSyncAlt;
+  toggleOff = faToggleOff;
+  toggleOn = faToggleOn;
   trash = faTrash;
   triangleExclamation = faTriangleExclamation;
 

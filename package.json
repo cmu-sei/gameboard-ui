@@ -23,7 +23,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.1.2",
     "@fortawesome/free-regular-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
-    "@microsoft/signalr": "^6.0.7",
+    "@microsoft/signalr": "^7.0.5",
     "bootstrap": "^4.6.2",
     "jquery": "^3.6.0",
     "jquery-ui-dist": "^1.13.1",
