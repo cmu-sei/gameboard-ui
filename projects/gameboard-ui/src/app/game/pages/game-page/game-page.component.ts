@@ -202,6 +202,14 @@ export class GamePageComponent implements OnDestroy {
     });
   }
 
+  ngOnDestroy(): void {
+    this.hubEventsSubcription?.unsubscribe();
+    this.localUserSubscription?.unsubscribe();
+    this.enrolledPlayerIdSub?.unsubscribe();
+    this.syncStartChangedSubscription?.unsubscribe();
+    this.externalGameDeployStartSubscription?.unsubscribe();
+  }
+
   protected onSessionStarted(player: Player): void {
     this.player$.next(player);
   }
@@ -267,18 +275,10 @@ export class GamePageComponent implements OnDestroy {
   private async handleLiveSyncStartSessionJoined(ctx: GameEnrollmentContext) {
     const startState = await firstValueFrom(this.apiGame.getSyncStartState(ctx.game.id));
 
-    if (startState && ctx.game.session.isDuring && ctx.playerId) {
+    if (startState.isReady && ctx.game.session.isDuring && ctx.playerId) {
       this.routerService.goToGameStartPage({ gameId: ctx.game.id, playerId: ctx.playerId });
     } else {
       this.logService.logError(`Couldn't enroll and join game "${ctx.game.id}". Start state was undefined or had no player id.`, startState, this.ctxIds.playerId);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.hubEventsSubcription?.unsubscribe();
-    this.localUserSubscription?.unsubscribe();
-    this.enrolledPlayerIdSub?.unsubscribe();
-    this.syncStartChangedSubscription?.unsubscribe();
-    this.externalGameDeployStartSubscription?.unsubscribe();
   }
 }
