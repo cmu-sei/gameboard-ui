@@ -40,4 +40,12 @@ describe('LinkRendererPipe', () => {
         expect(result).toHaveSize(3);
         expect(result[1]).toEqual({ isUrl: true, text: "https://google.com" });
     });
+
+    it("should preserve white space in the string", () => {
+        const testValue = "This is a multiline comment\r\n\r\nSee?";
+        const result = pipe.transform(testValue);
+
+        expect(result).toHaveSize(1);
+        expect(result[0]).toEqual({ isUrl: false, text: testValue });
+    });
 });
