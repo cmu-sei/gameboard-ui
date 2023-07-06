@@ -202,6 +202,14 @@ export class GamePageComponent implements OnDestroy {
     });
   }
 
+  ngOnDestroy(): void {
+    this.hubEventsSubcription?.unsubscribe();
+    this.localUserSubscription?.unsubscribe();
+    this.enrolledPlayerIdSub?.unsubscribe();
+    this.syncStartChangedSubscription?.unsubscribe();
+    this.externalGameDeployStartSubscription?.unsubscribe();
+  }
+
   protected onSessionStarted(player: Player): void {
     this.player$.next(player);
   }
@@ -272,13 +280,5 @@ export class GamePageComponent implements OnDestroy {
     } else {
       this.logService.logError(`Couldn't enroll and join game "${ctx.game.id}". Start state was undefined or had no player id.`, startState, this.ctxIds.playerId);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.hubEventsSubcription?.unsubscribe();
-    this.localUserSubscription?.unsubscribe();
-    this.enrolledPlayerIdSub?.unsubscribe();
-    this.syncStartChangedSubscription?.unsubscribe();
-    this.externalGameDeployStartSubscription?.unsubscribe();
   }
 }
