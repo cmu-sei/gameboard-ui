@@ -73,10 +73,11 @@ const PUBLIC_DECLARATIONS = [
 ];
 
 const RELAYED_MODULES = [
+  BsDatepickerModule,
   BsDropdownModule,
   FontAwesomeModule,
   FormsModule,
-  BsDatepickerModule,
+  MarkdownModule,
   NgChartsModule,
   TabsModule,
   TooltipModule,
@@ -101,7 +102,6 @@ const RELAYED_MODULES = [
   exports: [
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
-    MarkdownModule
   ]
 })
 export class CoreModule { }
