@@ -1,42 +1,38 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
-import { faTrash, faList, faSearch, faFilter, faCheck, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
-import { debounceTime, switchMap, tap } from 'rxjs/operators';
-import { Search } from '../../api/models';
+import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
+import { Search, SortDirection } from '../../api/models';
 import { ApiUser, UserRole } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
+import { FontAwesomeService } from '@/services/font-awesome.service';
+import { SortService } from '@/services/sort.service';
+
+type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 
 @Component({
   selector: 'app-user-registrar',
   templateUrl: './user-registrar.component.html',
   styleUrls: ['./user-registrar.component.scss']
 })
-export class UserRegistrarComponent {
+export class UserRegistrarComponent implements OnInit {
   refresh$ = new BehaviorSubject<boolean>(true);
   source$: Observable<ApiUser[]>;
   source: ApiUser[] = [];
   selected: ApiUser[] = [];
   viewed: ApiUser | undefined = undefined;
   viewChange$ = new BehaviorSubject<ApiUser | undefined>(this.viewed);
-  search: Search = { term: '', take: 0 };
+  search: Search = { term: '', take: 0, sort: "name" };
   filter = '';
-  scope = '';
-  scopes: string[] = [];
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique'];
   errors: any[] = [];
 
-  faTrash = faTrash;
-  faList = faList;
-  faSearch = faSearch;
-  faFilter = faFilter;
-  faCheck = faCheck;
-  faArrowLeft = faArrowLeft;
-
   constructor(
     private api: UserService,
+    private sortService: SortService,
+    public fa: FontAwesomeService,
   ) {
     this.source$ = merge(
       this.refresh$,
@@ -44,9 +40,14 @@ export class UserRegistrarComponent {
     ).pipe(
       debounceTime(500),
       switchMap(() => this.api.list(this.search)),
+      map(r => this.sortResults(r, this.search.sort as UserRegistrarSort, this.search.sortDirection || "asc")),
       tap(r => this.source = r),
       tap(() => this.review()),
     );
+  }
+
+  ngOnInit(): void {
+
   }
 
   toggleFilter(role: string): void {
@@ -55,9 +56,16 @@ export class UserRegistrarComponent {
     this.refresh$.next(true);
   }
 
-  toggleScope(scope: string): void {
-    this.scope = this.scope !== scope ? scope : '';
-    // this.search.scope = this.scope;
+  setSort(sort: UserRegistrarSort) {
+    // choose a sensible default for new sorts, or invert order for repeated sort
+    if (this.search.sort && sort && sort !== this.search.sort) {
+      this.search.sortDirection = "asc";
+    }
+    else if (this.search.sort === sort) {
+      this.search.sortDirection = this.search.sortDirection === "asc" ? "desc" : "asc";
+    }
+
+    this.search.sort = sort;
     this.refresh$.next(true);
   }
 
@@ -115,6 +123,31 @@ export class UserRegistrarComponent {
       ? a.join(', ') as UserRole : UserRole.member;
 
     this.update(model);
+  }
+
+  private sortResults(results: ApiUser[], sort: UserRegistrarSort, direction: SortDirection) {
+    console.log("direction", direction);
+    switch (sort) {
+      case "lastLogin":
+        return this.sortService.sort<ApiUser, number>({
+          array: results,
+          transform: user => (user.lastLoginDate || new Date(0)).valueOf(),
+          direction: direction
+        });
+      case "createdOn":
+        return this.sortService.sort<ApiUser, number>({
+          array: results,
+          transform: user => user.createdOn.valueOf(),
+          direction: direction
+        });
+      default:
+        return this.sortService.sort({
+          array: results,
+          transform: user => user.approvedName || user.name || "",
+          direction: direction
+        });
+    }
+
   }
 
   private updateRoleString(u: ApiUser) {

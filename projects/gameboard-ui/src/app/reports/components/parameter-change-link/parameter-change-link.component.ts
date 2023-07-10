@@ -7,8 +7,7 @@ export interface ParameterChangeRouterLinkConfig {
 
 @Component({
   selector: 'app-parameter-change-link',
-  templateUrl: './parameter-change-link.component.html',
-  styleUrls: ['./parameter-change-link.component.scss']
+  templateUrl: './parameter-change-link.component.html'
 })
 export class ParameterChangeLinkComponent implements OnInit {
   @Input() config?: ParameterChangeRouterLinkConfig;

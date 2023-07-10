@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, map } from 'rxjs';
 import { ReportViewModel, ReportKey, ReportResults, ReportTimeSpan } from './reports-models';
-import { SimpleEntity } from '../api/models';
+import { PagingArgs, SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
 import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
 import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
@@ -14,6 +14,7 @@ import { EnrollmentReportComponent } from './components/reports/enrollment-repor
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
   public static DEFAULT_PAGE_SIZE = 5;
+  public static DEFAULT_PAGING: PagingArgs = { pageNumber: 0, pageSize: 5 };
 
   private static reportComponentMap: { [reportKey: string]: any } = {
     'challenges-report': ChallengesReportComponent,

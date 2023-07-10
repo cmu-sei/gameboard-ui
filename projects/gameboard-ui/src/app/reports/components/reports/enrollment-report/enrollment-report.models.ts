@@ -1,6 +1,6 @@
 import { ChallengeResult } from "@/api/board-models";
 import { PagingArgs, SimpleEntity } from "@/api/models";
-import { ReportDateRange } from "@/reports/reports-models";
+import { ReportDateRange, ReportGame } from "@/reports/reports-models";
 
 export interface EnrollmentReportFlatParameters {
     enrollDateStart?: string;
@@ -43,14 +43,7 @@ export interface EnrollmentReportRecord {
         enrollDate?: Date;
         sponsor: EnrollmentReportSponsorViewModel
     },
-    game: {
-        id: string;
-        name: string;
-        isTeamGame: boolean;
-        series: string;
-        season: string;
-        track: string;
-    },
+    game: ReportGame,
     playTime: {
         start?: Date;
         end?: Date;

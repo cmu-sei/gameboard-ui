@@ -1,43 +1,47 @@
 import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import {
+  IconDefinition,
   faArrowLeft,
+  faArrowUp,
   faBolt,
   faCaretDown,
   faCaretRight,
+  faCaretUp,
   faCheck,
   faCheckSquare,
   faChevronDown,
   faChevronUp,
   faClipboard,
   faCopy,
+  faEllipsisVertical,
   faExclamationTriangle,
   faExternalLink,
   faFilter,
+  faGear,
+  faList,
   faLongArrowAltDown,
   faPaperclip,
+  faSearch,
+  faShare,
+  faShareAlt,
   faSquare,
   faStar,
   faSyncAlt,
-  faEllipsisVertical,
-  faGear,
-  faList,
   faTimes,
-  faTriangleExclamation,
-  faSearch,
-  faShare,
   faTrash,
-  IconDefinition,
-  faShareAlt,
+  faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 
 @Injectable({ providedIn: 'root' })
 export class FontAwesomeService {
   arrowDown = faLongArrowAltDown;
   arrowLeft = faArrowLeft;
+  arrowUp = faArrowUp;
   bolt = faBolt;
   caretDown = faCaretDown;
   caretRight = faCaretRight;
+  caretUp = faCaretUp;
   check = faCheck;
   checkSquare = faCheckSquare;
   chevronDown = faChevronDown;

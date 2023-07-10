@@ -48,13 +48,31 @@ export enum ReportKey {
     ChallengesReport = "challenges",
     EnrollmentReport = "enrollment",
     PlayersReport = "players",
+    PracticeModeReport = "practice-mode",
     SupportReport = "support"
+}
+
+export interface ReportGame {
+    id: string;
+    name: string;
+    isTeamGame: boolean;
+    series: string;
+    season: string;
+    track: string;
 }
 
 export interface ReportSponsor {
     id: string;
     name: string;
-    logoUri: string;
+    logoFileName: string;
+}
+
+export interface ReportTeam {
+    id: string;
+    name: string;
+    sponsors: ReportSponsor;
+    players: SimpleEntity[];
+    captain: SimpleEntity;
 }
 
 export enum ReportTrackParameterModifier {

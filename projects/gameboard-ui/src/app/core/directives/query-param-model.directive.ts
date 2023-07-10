@@ -2,7 +2,7 @@ import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { Params } from '@angular/router';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 
 export interface QueryParamModelConfig<T> {
   name: string;
@@ -17,7 +17,8 @@ export class QueryParamModelDirective<T> implements OnInit {
   @Input('appQueryParamModel') config?: QueryParamModelConfig<T>;
 
   private _queryParamsBuffer$ = new Subject<T>();
-  private _updatesSub?: Subscription;
+  private _publishUpdate$ = new Subject<T>();
+  public valueChanged$ = this._publishUpdate$.asObservable();
 
   constructor(
     private elementRef: ElementRef,
@@ -29,12 +30,13 @@ export class QueryParamModelDirective<T> implements OnInit {
       throw new Error(`Use of the QueryParamModel directive requires configuration of type QueryParamModelConfig<T>. You passed: ${this.config}`);
     }
 
-    this._updatesSub = this._queryParamsBuffer$.pipe(
-      debounceTime(this.config.debounce || 0)
-    ).subscribe(paramValue => {
-      this.navigate(paramValue);
-    });
-    this.unsub.add(this._updatesSub);
+    this.unsub.add(
+      this._queryParamsBuffer$.pipe(
+        debounceTime(this.config.debounce || 0)
+      ).subscribe(paramValue => {
+        this.navigate(paramValue);
+      })
+    );
 
     const el = this.elementRef.nativeElement as HTMLInputElement;
     const existingEvent = el.oninput;

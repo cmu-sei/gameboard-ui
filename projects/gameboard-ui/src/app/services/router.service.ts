@@ -51,7 +51,7 @@ export class RouterService {
   public updateQueryParams(params: Params, resetParams: string[] = []): Promise<boolean> {
     if (this.router.getCurrentNavigation()) {
       // router is currently performing navigation, don't mess with it
-      this.logService.logInfo("Navigation to query params flushed by the router service:", params);
+      this.logService.logError("Navigation to query params flushed by the router service:", params);
       return Promise.resolve(false);
     }
 

@@ -42,6 +42,8 @@ import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { SortPipe } from './pipes/sort.pipe';
+import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 
 
 const PUBLIC_DECLARATIONS = [
@@ -63,8 +65,10 @@ const PUBLIC_DECLARATIONS = [
   RelativeUrlsPipe,
   SelectPagerComponent,
   ShareButtonComponent,
+  SortPipe,
   SpinnerComponent,
   TextToColorPipe,
+  ToggleClassPipe,
   TicketStatusBadgePipe,
   UrlRewritePipe,
   WhitespacePipe,
@@ -86,7 +90,7 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS,
+    ...PUBLIC_DECLARATIONS
   ],
   imports: [
     CommonModule,

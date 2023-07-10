@@ -77,12 +77,12 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
     FormsModule,
     RouterModule.forChild([
       {
-        path: '', component: AdminPageComponent, children: [
+        path: '', component: AdminPageComponent, title: "Admin", children: [
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           { path: 'designer/:id', component: GameEditorComponent },
           { path: 'registrar/sponsors', component: SponsorBrowserComponent },
-          { path: 'registrar/users', component: UserRegistrarComponent },
+          { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
           { path: 'registrar/players', component: PlayerNamesComponent },
           { path: 'registrar/:id', component: PlayerRegistrarComponent },
           { path: 'observer/challenges/:id', component: ChallengeObserverComponent },

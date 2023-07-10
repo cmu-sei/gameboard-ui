@@ -8,10 +8,13 @@ import { ApiUser } from "./user-models";
 export interface Search {
   term?: string;
   sort?: string;
+  sortDirection?: SortDirection;
   skip?: number;
   take?: number;
   filter?: string[];
 }
+
+export type SortDirection = "asc" | "desc";
 
 export interface GameContext {
   game: Game;

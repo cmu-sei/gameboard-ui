@@ -1,0 +1,167 @@
+<div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
+    <app-report-parameters-container>
+        <app-parameter-date-range label="Practice Session Date" [(ngModel)]="selectedParameters.practiceDate"
+            ngDefaultControl></app-parameter-date-range>
+    </app-report-parameters-container>
+</div>
+
+<div class="report-body mt-4" *ngIf="ctx$ | async as ctx; else loading" #enrollmentReport>
+    <tabset class="mt-5" *ngIf="ctx.results.records.length; else noPlayerRecords">
+        <tab heading="By Player" id="tab-by-player">
+            <div *ngIf="ctx.results.records.length" class="results">
+                <table class="report-table table-hover gameboard-report">
+                    <col>
+                    <col>
+                    <colgroup span="5"></colgroup>
+                    <colgroup span="3"></colgroup>
+
+                    <thead class="thead-light">
+                        <tr class="headers super-headers-row">
+                            <th scope="col" colSpan="1"></th>
+                            <th scope="col" colSpan="1"></th>
+                            <th scope="col" colSpan="5" class="group-header">Attempts</th>
+                            <th scope="col" colSpan="3" class="group-header">Competitive</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="headers headers-row">
+                            <td>Player</td>
+                            <td>Challenge</td>
+                            <td>Total</td>
+                            <td>Most Recent</td>
+                            <td>Best Score</td>
+                            <td>Date of Best Score</td>
+                            <td>Partial/Full Correct</td>
+                            <td>Avg. % Points</td>
+                            <td>Challenges/Games Played</td>
+                            <td>Last Competition Date</td>
+                        </tr>
+
+                        {{ ctx.results.records[0] | json }}
+                        <tr class="data-row" *ngFor="let record of ctx.results.records">
+                            <!--PLAYER-->
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <!-- <app-parameter-change-link
+                                        [config]="{ parameterChange: { sponsors: record.user.sponsor.id} }">
+                                        <app-player-avatar class="d-block mr-2"
+                                            [avatarUri]="record.user.sponsor.logoFileName | relativeImage"
+                                            size="small"></app-player-avatar>
+                                    </app-parameter-change-link> -->
+
+                                    <div class="player-info flex-grow-1">
+                                        <p class="player-name m-0">{{record.user.name}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="game-name m-0">{{ record.challenge.name }}</p>
+                                <p class="game-info subtle-info">
+                                    <span>
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { game: record.challenge.game.id } }">
+                                            {{ record.challenge.game.name }}
+                                        </app-parameter-change-link>
+                                        ::
+                                    </span>
+                                    <span *ngIf="record.challenge.game.season">
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { seasons: record.challenge.game.season }}">
+                                            {{ record.challenge.game.season }}
+                                        </app-parameter-change-link>
+                                        ::
+                                    </span>
+                                    <span *ngIf="record.challenge.game.season">
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { seasons: record.challenge.game.season }}">
+                                            {{ record.challenge.game.season }}
+                                        </app-parameter-change-link>
+                                        ::
+                                    </span>
+                                    <span *ngIf="record.challenge.game.track; else noValue">
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { tracks: record.challenge.game.track }}">
+                                            {{ record.challenge.game.track }}
+                                        </app-parameter-change-link>
+                                    </span>
+                                </p>
+                            </td>
+
+                            <!--ATTEMPTS-->
+                            <td report-field numerical>
+                                <p>{{ record.attempts.length }}</p>
+                            </td>
+                            <td>
+                                <p>{{ (record.attempts | sort: "start":true)[0].start | shortdate }}</p>
+                            </td>
+                            <td>
+                                <p>{{ (record.attempts | sort: "score":true)[0].score }}</p>
+                            </td>
+                            <td>
+                                <p>{{ (record.attempts | sort: "score":true)[0].durationMs | msToDuration }}</p>
+                            </td>
+                            <td>
+                                <p>
+                                    {{ (record.attempts | sort: "score":true)[0].partiallyCorrectCount }} /
+                                    {{ (record.attempts | sort: "score":true)[0].fullyCorrectCount }}
+                                </p>
+                            </td>
+
+                            <!--COMPETITIVE PERFORMANCE-->
+                            <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.avgCompetitivePointsPct else noValue">
+                                    {{ (record.competitiveSummary?.avgCompetitivePointsPct || 0) }}%
+                                </p>
+                            </td>
+                            <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.competitiveChallengesPlayed else noValue">
+                                    {{ record.competitiveSummary?.competitiveChallengesPlayed }} /
+                                    {{ record.competitiveSummary?.competitiveGamesPlayed }}
+                                </p>
+                            </td>
+                            <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.lastCompetitiveChallengeDate else noValue">
+                                    {{ record.competitiveSummary?.lastCompetitiveChallengeDate }}
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pager-container d-flex justify-content-end mt-4">
+                <div class="flex-grow-1"></div>
+                <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
+                    (change)="handlePagingChange($event)"></app-select-pager>
+            </div>
+        </tab>
+
+        <tab heading="By Challenge" id="tab-by-challenge">
+            <div>Coming soon!</div>
+        </tab>
+    </tabset>
+</div>
+
+<ng-template #noPlayerRecords>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <span class="no-records-text">There aren't any players who match your filtering criteria.</span>
+    </div>
+</ng-template>
+
+<ng-template #noChallengeRecords>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <span class="no-records-text">There aren't any practice challenges which match your filtering
+            criteria.</span>
+    </div>
+</ng-template>
+
+<ng-template #loading>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <app-spinner>Loading the report...</app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noValue>
+    <span class="no-value">--</span>
+</ng-template>

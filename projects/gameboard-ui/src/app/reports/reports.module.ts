@@ -32,6 +32,7 @@ import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { ReportGlobalControlsComponent } from './components/report-global-controls/report-global-controls.component';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { ParameterChangeLinkComponent } from './components/parameter-change-link/parameter-change-link.component';
+import { PracticeModeReportComponent } from './components/reports/practice-mode-report/practice-mode-report.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
     StringsToTooltipPipe,
     SupportReportComponent,
     SupportReportContextMenuComponent,
+    PracticeModeReportComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +77,7 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
           { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
           { path: 'players', component: PlayersReportComponent, title: "Players Report" },
+          { path: 'practice-mode', component: PracticeModeReportComponent, title: "Practice Mode Report" },
           { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]
       }
