@@ -10,7 +10,7 @@ import { ReportParameterComponent, createCustomInputControlValueAccessor } from 
   providers: [createCustomInputControlValueAccessor(ParameterTicketStatusComponent)]
 })
 export class ParameterTicketStatusComponent extends ReportParameterComponent<string> {
-  statuses$: Observable<string[]>
+  statuses$: Observable<string[]>;
 
   constructor(private reportsService: ReportsService) {
     super();

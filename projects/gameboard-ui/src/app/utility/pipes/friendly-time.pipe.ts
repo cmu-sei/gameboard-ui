@@ -1,24 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { LocaleService } from '../services/locale.service';
+import { FriendlyDatesService } from '@/services/friendly-dates.service';
 
 @Pipe({ name: 'friendlyTime' })
 export class FriendlyTimePipe implements PipeTransform {
 
-  constructor(private localeService: LocaleService) { }
+  constructor(private friendlyDates: FriendlyDatesService) { }
 
   transform(value?: Date): string {
-    if (!value) {
-      return "";
-    }
-
-    let dateValue = value;
-    if (typeof dateValue === "string") {
-      dateValue = new Date(Date.parse(dateValue));
-    }
-
-    return dateValue.toLocaleTimeString(this.localeService.getLocale(), {
-      hour: "numeric",
-      minute: "2-digit"
-    });
+    return this.friendlyDates.toFriendlyTime(value);
   }
 }

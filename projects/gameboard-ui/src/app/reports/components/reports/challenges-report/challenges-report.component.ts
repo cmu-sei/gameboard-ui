@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { firstValueFrom, map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
+import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
 import { ReportComponentBase } from '../report-base.component';
 import { ChallengesReportParameters, ChallengesReportModel, ChallengesReportRecord, ChallengesReportFlatParameters } from './challenges-report.models';
 import { ChallengesReportService } from '@/reports/services/challenges-report-service';
@@ -13,7 +13,7 @@ import { ReportViewUpdate } from '@/reports/reports-models';
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportParameters, ChallengesReportRecord> implements AfterViewInit, OnInit, OnDestroy {
+export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportParameters, ChallengesReportRecord> implements AfterViewInit, OnDestroy {
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
   @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
   private reportElementRef?: ElementRef<HTMLDivElement>;
@@ -27,9 +27,6 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     private route: ActivatedRoute,
     public reportService: ChallengesReportService) {
     super(activeReportService);
-  }
-
-  async ngOnInit(): Promise<void> {
   }
 
   async ngAfterViewInit(): Promise<void> {

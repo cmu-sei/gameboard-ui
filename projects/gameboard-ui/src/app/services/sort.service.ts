@@ -10,8 +10,6 @@ export interface SortArgs<TItems, TTransformed> {
 
 @Injectable({ providedIn: 'root' })
 export class SortService {
-  constructor() { }
-
   sort<TItems, TTransformed>(args: SortArgs<TItems, TTransformed>) {
     const toSort = [...args.array];
     const transform = args.transform || ((item: TItems) => item as unknown as TTransformed);
@@ -22,13 +20,7 @@ export class SortService {
       const transformedA = transform(a);
       const transformedB = transform(b);
 
-      return this.maybeInvertResult(
-        (
-          compare ?
-            compare(transformedA, transformedB) :
-            this.compare(transformedA, transformedB)
-        ), sortDirection
-      );
+      return this.maybeInvertResult(compare(transformedA, transformedB), sortDirection);
     });
   }
 

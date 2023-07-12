@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SupportReportParameters, SupportReportRecord } from './support-report.models';
-import { ReportKey, ReportResults } from '../../../reports-models';
+import { ReportResults } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { SupportReportService } from '../../../services/support-report.service';

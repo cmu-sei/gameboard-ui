@@ -1,4 +1,4 @@
-<div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
+<div class="enrollment-report-params" *ngIf="ctx$ | async as ctx; else loading">
     <app-report-parameters-container>
         <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
             [(ngModel)]="selectedParameters.series"></app-multi-select>
@@ -7,8 +7,8 @@
         <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
             [(ngModel)]="selectedParameters.seasons"></app-multi-select>
         <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
-            [(ngModel)]="selectedParameters.sponsors" [display]="displaySponsorName"
-            [value]="getSponsorValue"></app-multi-select>
+            [(ngModel)]="selectedParameters.sponsors" [itemTemplate]="multiSelectSponsor"
+            [getSearchText]="displaySponsorName" [value]="getSponsorValue"></app-multi-select>
         <app-parameter-date-range label="Enrollment Date" [(ngModel)]="selectedParameters.enrollDate"
             ngDefaultControl></app-parameter-date-range>
     </app-report-parameters-container>
@@ -153,11 +153,13 @@
 </ng-template>
 
 <ng-template #noRecords>
-    <div class="page-height d-flex flex-column align-items-center justify-content-center">
-        <span class="no-records-text">There aren't any enrollments which match your filtering criteria.</span>
-    </div>
+    <app-no-matching-report-records recordDescription="enrollments"></app-no-matching-report-records>
 </ng-template>
 
 <ng-template #noValue>
-    <span class="no-value">--</span>
+    <app-report-field-no-value></app-report-field-no-value>
+</ng-template>
+
+<ng-template #multiSelectSponsor let-context>
+    <span class="sponsor-name">{{ context.name }}</span>
 </ng-template>

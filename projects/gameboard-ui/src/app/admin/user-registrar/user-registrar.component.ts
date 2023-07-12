@@ -17,7 +17,7 @@ type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
   templateUrl: './user-registrar.component.html',
   styleUrls: ['./user-registrar.component.scss']
 })
-export class UserRegistrarComponent implements OnInit {
+export class UserRegistrarComponent {
   refresh$ = new BehaviorSubject<boolean>(true);
   source$: Observable<ApiUser[]>;
   source: ApiUser[] = [];
@@ -44,10 +44,6 @@ export class UserRegistrarComponent implements OnInit {
       tap(r => this.source = r),
       tap(() => this.review()),
     );
-  }
-
-  ngOnInit(): void {
-
   }
 
   toggleFilter(role: string): void {
@@ -126,7 +122,6 @@ export class UserRegistrarComponent implements OnInit {
   }
 
   private sortResults(results: ApiUser[], sort: UserRegistrarSort, direction: SortDirection) {
-    console.log("direction", direction);
     switch (sort) {
       case "lastLogin":
         return this.sortService.sort<ApiUser, number>({

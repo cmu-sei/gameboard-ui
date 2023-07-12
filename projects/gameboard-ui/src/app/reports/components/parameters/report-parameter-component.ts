@@ -17,12 +17,16 @@ export abstract class ReportParameterComponent<T> implements ControlValueAccesso
     protected onTouched = () => { };
 
     private _ngModel?: T;
-    public get ngModel(): T | undefined { return this._ngModel; }
+    public get ngModel(): T | undefined { return this._ngModel || this.getDefaultValue(); }
     @Input() public set ngModel(value: T | undefined) {
         if (this._ngModel !== value) {
-            this._ngModel = value || undefined;
+            this._ngModel = value || this.getDefaultValue();
             this.ngModelChange.emit(this._ngModel);
         }
+    }
+
+    getDefaultValue(): T | undefined {
+        return undefined;
     }
 
     writeValue(obj: any): void {
@@ -40,5 +44,4 @@ export abstract class ReportParameterComponent<T> implements ControlValueAccesso
     setDisabledState?(isDisabled: boolean): void {
         this.isDisabled = isDisabled;
     }
-
 }

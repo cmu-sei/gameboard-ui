@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, map } from 'rxjs';
-import { ReportViewModel, ReportKey, ReportResults, ReportTimeSpan } from './reports-models';
+import { ReportViewModel, ReportKey, ReportResults, ReportTimeSpan, ReportSponsor } from './reports-models';
 import { PagingArgs, SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
 import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
@@ -13,9 +13,6 @@ import { EnrollmentReportComponent } from './components/reports/enrollment-repor
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
-  public static DEFAULT_PAGE_SIZE = 5;
-  public static DEFAULT_PAGING: PagingArgs = { pageNumber: 0, pageSize: 5 };
-
   private static reportComponentMap: { [reportKey: string]: any } = {
     'challenges-report': ChallengesReportComponent,
     'enrollment': EnrollmentReportComponent,
@@ -63,8 +60,8 @@ export class ReportsService {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/series"));
   }
 
-  getSponsors(): Observable<SimpleEntity[]> {
-    return this.http.get<SimpleEntity[]>(this.apiUrlService.build("/reports/parameter/sponsors"));
+  getSponsors(): Observable<ReportSponsor[]> {
+    return this.http.get<ReportSponsor[]>(this.apiUrlService.build("/reports/parameter/sponsors"));
   }
 
   getTicketStatuses(): Observable<string[]> {
@@ -73,6 +70,13 @@ export class ReportsService {
 
   getTracks(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/tracks"));
+  }
+
+  getDefaultPaging(): PagingArgs {
+    return {
+      pageNumber: 0,
+      pageSize: 5
+    };
   }
 
   dateToQueryStringEncoded(date?: Date) {
@@ -109,7 +113,7 @@ export class ReportsService {
     };
   }
 
-  timespanToMinutes(timespan?: ReportTimeSpan): number {
+  timespanToMinutes(timespan: ReportTimeSpan | null | undefined): number {
     if (!timespan)
       return 0;
 

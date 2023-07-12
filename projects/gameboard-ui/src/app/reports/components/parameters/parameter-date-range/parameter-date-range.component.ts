@@ -11,6 +11,7 @@ import { ReportDateRange } from '../../../reports-models';
 export class ParameterDateRangeComponent extends ReportParameterComponent<ReportDateRange> {
   @Input() label = "Date range";
 
-  handleModelChanged(event?: any) {
+  override getDefaultValue(): ReportDateRange | undefined {
+    return {};
   }
 }

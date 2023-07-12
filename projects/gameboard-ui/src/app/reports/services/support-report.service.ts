@@ -20,13 +20,14 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
   public flattenParameters(parameters: SupportReportParameters) {
     let flattened: SupportReportFlatParameters = {
       ...parameters,
-      challengeSpecId: parameters.gameChallengeSpec.challengeSpecId,
-      gameId: parameters.gameChallengeSpec.gameId,
+      challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
+      gameId: parameters.gameChallengeSpec?.gameId,
       labels: parameters.labels?.join(',') || '',
       openedDateStart: parameters.openedDateRange?.dateStart?.toLocaleDateString(),
       openedDateEnd: parameters.openedDateRange?.dateEnd?.toLocaleDateString(),
       minutesSinceOpen: this.reportsService.timespanToMinutes(parameters.timeSinceOpen),
       minutesSinceUpdate: this.reportsService.timespanToMinutes(parameters.timeSinceUpdate),
+      status: parameters.status || undefined
     };
 
     flattened = this.objectService.deleteKeys(

@@ -47,11 +47,6 @@ $value in $theme-colors {
   }
 }
 
-@font-face {
-  font-family: "SourceCodePro";
-  src: url("assets/fonts/SourceCodePro.ttf") format("truetype");
-}
-
 body {
   min-height: 100vh;
   scroll-behavior: smooth;
@@ -200,6 +195,13 @@ app-spinner svg {
 .light-tooltip .tooltip-inner {
   background-color: white;
   color: black;
+}
+
+// override bootstrap tabs to play nice with custom backgrounds
+tabset a.nav-link.active {
+  border-color: #fff !important;
+  border-width: 1px 1px 0 1px;
+  border-bottom-color: transparent !important;
 }
 
 .custom-bg-red {

@@ -1,0 +1,99 @@
+<!-- <div *ngIf="ctx.results.records.length; else noPlayerRecords" class="results">
+    <table class="report-table table-hover gameboard-report">
+        <col span="2">
+        <colgroup span="6"></colgroup>
+        <colgroup span="3"></colgroup>
+
+        <thead class="thead-light">
+            <tr class="headers super-headers-row">
+                <th scope="col" colSpan="2">Practice</th>
+                <th scope="col" colSpan="6" class="group-header">Attempts</th>
+                <!-- <th scope="col" colSpan="3" class="group-header">Competitive</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr class="headers headers-row">
+                <td>Player</td>
+                <td>Challenge</td>
+                <td>Total</td>
+                <td>Most Recent</td>
+                <td>Best Score</td>
+                <td>Date of Best Score</td>
+                <td>Best Score Time</td>
+                <td>Partial/Full Correct</td>
+                <!-- <td>Avg. % Points</td>
+                                            <td>Challenges/Games Played</td>
+                                            <td>Last Competition Date</td>
+            </tr>
+
+            <tr class="data-row" *ngFor="let record of ctx.results.records">
+                
+                <td>
+                    <div class="d-flex align-items-center">
+                        <app-parameter-change-link
+                                                        [config]="{ parameterChange: { sponsors: record.user.sponsor.id} }">
+                                                        <app-player-avatar class="d-block mr-2"
+                                                            [avatarUri]="record.user.sponsor.logoFileName | relativeImage"
+                                                            size="small"></app-player-avatar>
+                                                    </app-parameter-change-link>
+
+                        <div class="player-info flex-grow-1">
+                            <p class="player-name m-0">{{record.user.name}}</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                                <p class="game-name m-0">{{ record.challenge.name }}</p>
+                                <p class="game-info subtle-info">
+                                    <span>
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { game: record.challenge.game.id } }">
+                                            {{ record.challenge.game.name }}
+                                        </app-parameter-change-link>
+                                        ::
+                                    </span>
+                                    <span *ngIf="record.challenge.game.season">
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { seasons: record.challenge.game.season }}">
+                                            {{ record.challenge.game.season }}
+                                        </app-parameter-change-link>
+                                        ::
+                                    </span>
+                                    <span *ngIf="record.challenge.game.season">
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { seasons: record.challenge.game.season }}">
+                                            {{ record.challenge.game.season }}
+                                        </app-parameter-change-link>
+                                        ::
+                                    </span>
+                                    <span *ngIf="record.challenge.game.track; else noValue">
+                                        <app-parameter-change-link
+                                            [config]="{ parameterChange: { tracks: record.challenge.game.track }}">
+                                            {{ record.challenge.game.track }}
+                                        </app-parameter-change-link>
+                                    </span>
+                                </p>
+                            </td>
+
+                <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.avgCompetitivePointsPct else noValue">
+                                    {{ (record.competitiveSummary?.avgCompetitivePointsPct || 0) }}%
+                                </p>
+                            </td>
+                            <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.competitiveChallengesPlayed else noValue">
+                                    {{ record.competitiveSummary?.competitiveChallengesPlayed }} /
+                                    {{ record.competitiveSummary?.competitiveGamesPlayed }}
+                                </p>
+                            </td>
+                            <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.lastCompetitiveChallengeDate else noValue">
+                                    {{ record.competitiveSummary?.lastCompetitiveChallengeDate }}
+                                </p>
+                            </td>
+            </tr>
+        </tbody>
+    </table>
+</div> 
+-->

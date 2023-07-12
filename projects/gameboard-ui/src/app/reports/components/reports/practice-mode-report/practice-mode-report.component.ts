@@ -1,19 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { PracticeModeReportParameters, PracticeModeReportRecord } from './practice-mode-report.model';
+import { PracticeModeReportParameters, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters } from './practice-mode-report.models';
 import { ReportsService } from '@/reports/reports.service';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { ReportDateRange, ReportResults } from '@/reports/reports-models';
+import { ReportResults, ReportSponsor } from '@/reports/reports-models';
 import { QueryParamModelConfig } from '@/core/directives/query-param-model.directive';
 import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
-import { Subject, firstValueFrom } from 'rxjs';
-import { PagingRequest } from '@/core/components/select-pager/select-pager.component';
-import { RouterService } from '@/services/router.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { SimpleEntity } from '@/api/models';
 
-export interface PracticeModeReportContext {
-  results: ReportResults<PracticeModeReportRecord>;
-  selectedParameters: PracticeModeReportParameters
-}
+type PracticeModeReportSelectedTab = "by-player" | "by-challenge" | "prac-vs-comp";
 
 @Component({
   selector: 'app-practice-mode-report',
@@ -27,46 +23,73 @@ export class PracticeModeReportComponent implements OnInit {
   //   deserialize: (queryStringValue) => ({ dateStart: new Date(queryStringValue), dateEnd: undefined }),
   // };
 
-  selectedParameters: PracticeModeReportParameters = {
-    practiceDate: undefined,
+  protected games$: Observable<SimpleEntity[]> = this.reportsService.getGames();
+  protected seasons$: Observable<string[]> = this.reportsService.getSeasons();
+  protected series$: Observable<string[]> = this.reportsService.getSeries();
+  protected sponsors$: Observable<ReportSponsor[]> = this.reportsService.getSponsors();
+  protected tracks$: Observable<string[]> = this.reportsService.getTracks();
+  protected byChallengeResults$?: Observable<ReportResults<PracticeModeReportByChallengeRecord>>;
+  protected selectedTab: PracticeModeReportSelectedTab = "by-player";
+
+  protected getGameValue = (g: SimpleEntity) => g.id;
+  protected getGameSearchText = (g: SimpleEntity) => g.name;
+  protected getSponsorValue = (s: ReportSponsor) => s.id;
+  protected getSponsorSearchText = (s: ReportSponsor) => s.name;
+
+  private _selectedParameters$ = new BehaviorSubject<PracticeModeReportParameters>({
+    practiceDate: {},
     games: [],
+    seasons: [],
     series: [],
     sponsors: [],
     tracks: [],
-    paging: {
-      pageNumber: 0,
-      pageSize: ReportsService.DEFAULT_PAGE_SIZE
-    }
-  };
-
-  protected ctx$ = new Subject<PracticeModeReportContext>();
+    paging: this.reportsService.getDefaultPaging(),
+    grouping: PracticeModeReportGrouping.player
+  });
+  protected selectedParameters$ = this._selectedParameters$.asObservable();
+  protected get selectedParameters(): PracticeModeReportParameters {
+    return this._selectedParameters$.value;
+  }
+  protected set(value: PracticeModeReportParameters) {
+    this._selectedParameters$.next(value);
+  }
 
   constructor(
     private reportService: PracticeModeReportService,
+    private reportsService: ReportsService,
     private route: ActivatedRoute,
-    private routerService: RouterService,
     private unsub: UnsubscriberService) { }
 
   async ngOnInit(): Promise<void> {
     this.unsub.add(
       this.route.params.subscribe(async params => {
-        this.selectedParameters = { ...params } as unknown as PracticeModeReportParameters;
-        await this.updateView(this.selectedParameters);
+        const queryParams = { ...params };
+        if (!queryParams.grouping) {
+          queryParams.grouping = PracticeModeReportGrouping.player;
+        }
+
+        const parameters = queryParams as PracticeModeReportParameters;
+
+        switch (parameters.grouping) {
+          case PracticeModeReportGrouping.challenge:
+            this.selectedTab = "by-challenge";
+            break;
+          case PracticeModeReportGrouping.player:
+            this.selectedTab = "by-player";
+            break;
+          case PracticeModeReportGrouping.practiceVersusCompetitive:
+            this.selectedTab = "prac-vs-comp";
+            break;
+        }
+
+        this._selectedParameters$.next(this.reportService.unflattenParameters(queryParams as PracticeModeReportFlatParameters));
       })
     );
 
-    await this.updateView(this.selectedParameters);
+    this._selectedParameters$.next(this.selectedParameters);
   }
 
-  protected handlePagingChange(paging: PagingRequest) {
-    this.routerService.updateQueryParams({ pageNumber: paging.page, pageSize: ReportsService.DEFAULT_PAGE_SIZE });
-  }
-
-  private async updateView(parameters: PracticeModeReportParameters) {
-    const data = await firstValueFrom(this.reportService.getReportData(parameters));
-    this.ctx$.next({
-      results: data,
-      selectedParameters: parameters
-    });
+  protected handleTabSelected(tabId: PracticeModeReportSelectedTab) {
+    this.selectedTab = tabId;
   }
 }

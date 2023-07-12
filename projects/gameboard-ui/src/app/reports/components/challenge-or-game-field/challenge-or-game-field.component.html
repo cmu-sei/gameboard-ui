@@ -1,0 +1,32 @@
+<ng-container *ngIf="game">
+    <p class="entity-name m-0">{{ challengeName || game.name }}</p>
+    <p class="game-info subtle-info">
+        <span *ngIf="challengeName">
+            <app-parameter-change-link [config]="{ parameterChange: { game: game.id } }">
+                {{ game.name }}
+            </app-parameter-change-link>
+            ::
+        </span>
+        <span *ngIf="game.season">
+            <app-parameter-change-link [config]="{ parameterChange: { seasons: game.season }}">
+                {{ game.season }}
+            </app-parameter-change-link>
+            ::
+        </span>
+        <span *ngIf="game.series">
+            <app-parameter-change-link [config]="{ parameterChange: { seasons: game.series}}">
+                {{ game.series }}
+            </app-parameter-change-link>
+            ::
+        </span>
+        <span *ngIf="game.track; else noValue">
+            <app-parameter-change-link [config]="{ parameterChange: { tracks: game.track }}">
+                {{ game.track }}
+            </app-parameter-change-link>
+        </span>
+    </p>
+</ng-container>
+
+<ng-template #noValue>
+    <app-report-field-no-value></app-report-field-no-value>
+</ng-template>

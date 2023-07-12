@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '../custom-input/custom-input.component';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Subscription } from 'rxjs';
@@ -10,18 +10,25 @@ import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
   styleUrls: ['./multi-select.component.scss'],
   providers: [createCustomInputControlValueAccessor(MultiSelectComponent)]
 })
-export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implements OnInit, OnChanges, OnDestroy {
+export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() label?: string;
   @Input() searchPlaceholder?: string = "Search items";
   @Input() options: T[] | null = [];
   @Input() showSearchBoxThreshold = 6;
   @Input() showSelectionSummaryThreshold = 0;
-  @Input() display: (option: T) => string = (option) => `${option}`;
-  @Input() value: (option: T) => any = (option) => `${option}`;
+  @Input() getSearchText: (option: T) => string = option => `${option}`;
+  @Input() value: (option: T) => any = option => `${option}`;
+
+  private _itemTemplate: TemplateRef<T> | null = null;
+  public get itemTemplate() { return this._itemTemplate; }
+  @Input() public set itemTemplate(value: TemplateRef<T> | null) { this._itemTemplate = value; }
+
+  @ViewChild("defaultItemTemplate") defaultItemTemplate?: TemplateRef<T>;
 
   public get ngModel(): T[] | undefined {
     return this._ngModel || [];
   }
+
   @Input() public set ngModel(value: T[] | undefined) {
     if (this._ngModel !== value) {
       this._ngModel = value || [];
@@ -44,6 +51,10 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
 
   ngOnInit(): void {
     this._ngModelChangeSub = this.ngModelChange.subscribe(model => this.handleNgModelChanged.bind(this)(model));
+  }
+
+  ngAfterViewInit(): void {
+    this._itemTemplate = this._itemTemplate ? this.itemTemplate : this.defaultItemTemplate || null;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,9 +97,10 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
     }
 
     const selectedItemValues = selectedItems.map(t => this.value(t));
+
     let summary = (this.options || [])
       .filter(o => selectedItemValues.some(s => s == this.value(o)))
-      .map(i => this.display(i))
+      .map(i => this.getSearchText(i))
       .slice(0, MultiSelectComponent.selectedItemsDisplayedThreshold).join(", ");
 
     this.countSelectedOverDisplayThreshold = Math.max(selectedItems.length - MultiSelectComponent.selectedItemsDisplayedThreshold, 0);
@@ -125,7 +137,7 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
       return true;
     }
 
-    const optionText = this.display(option).toLowerCase();
+    const optionText = this.getSearchText(option).toLowerCase();
     return optionText.indexOf(this.searchValue.toLowerCase()) >= 0;
   }
 
@@ -139,7 +151,7 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
 
   handleSelectedOverDisplayThresholdClicked() {
     const displaySelectedOptions = this.ngModel!
-      .map(o => this.display(o));
+      .map(o => this.getSearchText(o));
 
     // sort works in place, so we have to do this separately
     displaySelectedOptions.sort();

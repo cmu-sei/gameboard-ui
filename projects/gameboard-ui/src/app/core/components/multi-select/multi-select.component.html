@@ -13,7 +13,8 @@
                         [checked]="getOptionIsChecked(option)" [id]="'multi-select-' + uniqueId + '-' + i"
                         (change)="handleCheckedChanged(option, $event)">
                     <label class="checkbox-label pl-2" [for]="'multi-select-' + uniqueId + '-' + i">
-                        {{ display(option) }}
+                        <ng-container *ngTemplateOutlet="itemTemplate; context:option | toTemplateContext">
+                        </ng-container>
                     </label>
                 </ng-container>
             </div>
@@ -35,3 +36,7 @@
         <button type="button" class="btn btn-info ml-1" (click)="handleClearSelectionsClicked()">Clear</button>
     </div>
 </div>
+
+<ng-template #defaultItemTemplate let-context>
+    {{ context }}
+</ng-template>

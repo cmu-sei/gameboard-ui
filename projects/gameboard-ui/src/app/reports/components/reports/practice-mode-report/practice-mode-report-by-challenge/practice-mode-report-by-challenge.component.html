@@ -1,0 +1,111 @@
+<div *ngIf="results; else loading" class="results">
+    <table *ngIf="results.records.length; else noRecords" class="report-table table-hover gameboard-report">
+        <col span="2">
+        <colgroup span="6"></colgroup>
+        <!-- <colgroup span="3"></colgroup> -->
+
+        <thead class="thead-light">
+            <tr class="headers super-headers-row">
+                <th scope="col" colSpan="2">Practice</th>
+                <th scope="col" colSpan="6" class="group-header">Attempts</th>
+                <!-- <th scope="col" colSpan="3" class="group-header">Competitive</th> -->
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr class="headers headers-row">
+                <td>Player</td>
+                <td>Challenge</td>
+                <td>Total</td>
+                <td>Most Recent</td>
+                <td>Best Score</td>
+                <td>Date of Best Score</td>
+                <td>Best Score Time</td>
+                <td>Partial/Full Correct</td>
+                <!-- <td>Avg. % Points</td>
+                            <td>Challenges/Games Played</td>
+                            <td>Last Competition Date</td> -->
+            </tr>
+
+            <tr class="data-row" *ngFor="let record of results.records">
+                <!--CHALLENGE-->
+                <td>
+                    <app-challenge-or-game-field [challengeName]="record.name"
+                        [game]="record.game"></app-challenge-or-game-field>
+                </td>
+
+                <!--SCORING-->
+                <td>
+
+                </td>
+
+                <!--ATTEMPTS-->
+                <!-- <td class="report-field numerical">
+                    <p [class.tooltipped-value]="record.attempts.length > 0"
+                        (click)="record.attempts.length && showAttemptsSummary(record)">
+                        {{ record.attempts.length }}
+                    </p>
+                </td>
+                <td class="report-field numerical">
+                    <p>{{ (record.attempts | sort: "start":true)[0].start | shortdate }}</p>
+                </td>
+                <td class="report-field numerical">
+                    <p *ngIf="record.user.hasScoringAttempt; else noValue">{{ (record.attempts | sort:
+                        "score":true)[0].score }}</p>
+                </td>
+                <td class="report-field numerical">
+                    <p *ngIf="record.user.hasScoringAttempt; else noValue">
+                        {{ (record.attempts | sort: "score":true)[0].start | friendlyDateAndTime }}
+                    </p>
+                </td>
+                <td class="report-field numerical">
+                    <p *ngIf="record.user.hasScoringAttempt; else noValue">
+                        {{ (record.attempts | sort: "score":true)[0].durationMs | msToDuration }}
+                    </p>
+                </td>
+                <td class="report-field numerical">
+                    <p *ngIf="record.user.hasScoringAttempt; else noValue">
+                        {{ (record.attempts | sort: "score":true)[0].partiallyCorrectCount }} /
+                        {{ (record.attempts | sort: "score":true)[0].fullyCorrectCount }}
+                    </p>
+                </td> -->
+
+                <!--COMPETITIVE PERFORMANCE-->
+                <!-- <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.avgCompetitivePointsPct else noValue">
+                                    {{ (record.competitiveSummary?.avgCompetitivePointsPct || 0) }}%
+                                </p>
+                            </td>
+                            <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.competitiveChallengesPlayed else noValue">
+                                    {{ record.competitiveSummary?.competitiveChallengesPlayed }} /
+                                    {{ record.competitiveSummary?.competitiveGamesPlayed }}
+                                </p>
+                            </td>
+                            <td class="report-field numerical">
+                                <p *ngIf="record.competitiveSummary?.lastCompetitiveChallengeDate else noValue">
+                                    {{ record.competitiveSummary?.lastCompetitiveChallengeDate }}
+                                </p>
+                            </td> -->
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pager-container d-flex justify-content-end mt-4">
+        <div class="flex-grow-1"></div>
+        <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
+            (change)="handlePagingChange($event)"></app-select-pager>
+    </div>
+</div>
+
+<ng-template #loading>
+    <app-spinner>Loading your report..</app-spinner>
+</ng-template>
+
+<ng-template #noRecords>
+    <app-no-matching-report-records recordDescription="challenges"></app-no-matching-report-records>
+</ng-template>
+
+<ng-template #noValue>
+    <app-report-field-no-value></app-report-field-no-value>
+</ng-template>

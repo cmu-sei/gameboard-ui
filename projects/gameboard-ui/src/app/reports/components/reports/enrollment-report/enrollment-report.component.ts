@@ -35,6 +35,9 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   sponsors$: Observable<SimpleEntity[]> = this.reportsService.getSponsors();
   tracks$: Observable<string[]> = this.reportsService.getTracks();
 
+  protected displaySponsorName = (s: SimpleEntity) => s.name;
+  protected getSponsorValue = (s: SimpleEntity) => s.id;
+
   private queryParamsSub?: Subscription;
   private runRequestSub?: Subscription;
 
@@ -52,7 +55,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   getDefaultParameters(): EnrollmentReportParameters {
     return {
       enrollDate: {},
-      paging: { pageSize: ReportsService.DEFAULT_PAGE_SIZE, pageNumber: 0 },
+      paging: this.reportsService.getDefaultPaging(),
       seasons: [],
       series: [],
       sponsors: [],
@@ -137,14 +140,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     return this.routerService.getReportRoute(ReportKey.EnrollmentReport, updatedSelectedParameters).toString();
   }
 
-  protected displaySponsorName(s: SimpleEntity) {
-    return s.name;
-  }
-
-  protected getSponsorValue(s: SimpleEntity) {
-    return s.id;
-  }
-
   protected showChallengesDetail(record: EnrollmentReportRecord, challengeStatus: "deployed" | "partial" | "complete") {
     let challenges: { name: string, score?: number, maxPossiblePoints: number }[] = [];
 
@@ -192,7 +187,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   protected handlePagingChange(paging: PagingRequest) {
-    const parameterChangeUrl = this.buildParameterChangeUrl({ paging: { pageNumber: paging.page, pageSize: ReportsService.DEFAULT_PAGE_SIZE } });
+    const parameterChangeUrl = this.buildParameterChangeUrl({ paging });
     this.routerService.router.navigateByUrl(parameterChangeUrl);
   }
 }

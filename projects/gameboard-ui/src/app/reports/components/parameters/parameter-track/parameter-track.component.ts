@@ -7,7 +7,6 @@ import { ReportTrackParameter, ReportTrackParameterModifier } from '../../../rep
 @Component({
   selector: 'app-parameter-track',
   templateUrl: './parameter-track.component.html',
-  styleUrls: ['./parameter-track.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTrackComponent)]
 })
 export class ParameterTrackComponent extends ReportParameterComponent<ReportTrackParameter> {

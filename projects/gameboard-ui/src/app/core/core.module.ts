@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -34,22 +34,25 @@ import { markedOptionsFactory } from './config/marked.config';
 import { ModalConfirmDirective } from './directives/modal-confirm.directive';
 import { QueryParamModelDirective } from './directives/query-param-model.directive';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
+import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
 import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
+import { SortPipe } from './pipes/sort.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
+import { ToTemplateContextPipe } from './pipes/to-template-context.pipe';
+import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlPipe } from './pipes/yaml.pipe';
-import { SortPipe } from './pipes/sort.pipe';
-import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 
 
 const PUBLIC_DECLARATIONS = [
   AssetPathPipe,
   ColoredTextChipComponent,
   DoughnutChartComponent,
+  FriendlyDateAndTimePipe,
   LineChartComponent,
   LinkRendererPipe,
   LongContentHiderComponent,
@@ -69,6 +72,7 @@ const PUBLIC_DECLARATIONS = [
   SpinnerComponent,
   TextToColorPipe,
   ToggleClassPipe,
+  ToTemplateContextPipe,
   TicketStatusBadgePipe,
   UrlRewritePipe,
   WhitespacePipe,
