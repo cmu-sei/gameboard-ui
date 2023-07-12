@@ -21,7 +21,7 @@ export class ExternalGameService {
     private storage: LocalStorageService,
     private log: LogService) { }
 
-  private createLocalStorageKeys(game: ExternalGameActive) {
+  public createLocalStorageKeys(game: ExternalGameActive) {
     this.log.logInfo("Resolving OIDC storage keys...");
     const storageKey = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
     const oidcUserToken = this.storage.getArbitrary(storageKey);

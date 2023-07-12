@@ -11,6 +11,7 @@ import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
+import { ExternalGameService } from '@/services/external-game.service';
 
 interface GameLaunchContext {
   game: Game;
@@ -32,12 +33,13 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
   private gameStartFailureSub?: Subscription;
 
   errors: string[] = [];
-  launchCompleted = false;
   gameLaunchCtx?: GameLaunchContext;
+  launchCompleted = false;
   state?: GameStartState;
 
   constructor(
     route: ActivatedRoute,
+    private externalGameService: ExternalGameService,
     private gameApi: GameService,
     private gameHub: GameHubService,
     private log: LogService,
@@ -126,8 +128,13 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
       this.externalGameLaunchProgressChangedSub = this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state);
       this.externalGameLaunchEndedSub = this.gameHub.externalGameLaunchEnded$.subscribe(state => {
         this.state = state;
-        this.launchCompleted = true;
-        this.routerService.goToExternalGamePage(`${ctx.game.id}`);
+
+        const team = state.teams.find(t => t.team.id === ctx.player.teamId);
+        if (!team) {
+          this.log.logError(`Couldn't find a team in state for player's team ("${ctx.player.teamId}").`);
+        }
+
+        this.externalGameService.createLocalStorageKeys({ teamId: ctx.player.teamId, gameServerUrl: team!.headlessUrl });
       });
     }
   }

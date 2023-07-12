@@ -45,7 +45,7 @@ export interface GameStartState {
     gamespacesDeployed: GameState[];
     gamespacesTotal: number;
     players: GameStartStatePlayer[];
-    teamsTotal: GameStartStateTeam[];
+    teams: GameStartStateTeam[];
     overallProgress: number;
 
     startTime: Date,
@@ -68,6 +68,7 @@ export interface GameStartStatePlayer {
 export interface GameStartStateTeam {
     team: SimpleEntity;
     captain: GameStartStateCaptain;
+    headlessUrl: string;
 }
 
 export interface GameStartStateCaptain {
