@@ -6,12 +6,14 @@ import { ConfigService } from '../../utility/config.service';
 import { LogService } from '../log.service';
 import { SignalRHubEventHandler, SignalRHubEventType } from './signalr-hub.models';
 
+type SignalRHubEventHandlerCollection = { [eventType: string]: SignalRHubEventHandler<any> };
+
 @Injectable({ providedIn: 'root' })
-export class SignalRService<TEvent extends SignalRHubEventType> {
+export class SignalRService {
   private _connection?: HubConnection;
   private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
   private _events$ = new BehaviorSubject<SignalRHubEventHandler<any> | null>(null);
-  private _eventHandlers: { [eventType: string]: SignalRHubEventHandler<any> } = {};
+  private _eventHandlers: SignalRHubEventHandlerCollection = {};
   public events$ = this._events$.asObservable();
   public state$ = this._connectionState$.asObservable();
 
@@ -28,6 +30,11 @@ export class SignalRService<TEvent extends SignalRHubEventType> {
   public async connect(hubUrl: string, eventHandlers: SignalRHubEventHandler<any>[]) {
     const connectToUrl = `${this.config.apphost}${hubUrl}`;
     this.logger.logInfo(`Connecting to SignalR hub at ${connectToUrl}...`);
+
+    if (this._connection?.baseUrl === hubUrl) {
+      this.logger.logInfo(`Already connected to hub at "${connectToUrl}".`);
+      return;
+    }
 
     if (
       this._connection
@@ -69,15 +76,23 @@ export class SignalRService<TEvent extends SignalRHubEventType> {
 
     connection.onclose(err => this.handleClose.bind(this)(err));
     connection.onreconnected(cid => this.handleConnected.bind(this)(cid));
+    this.bindEventHandlersToConnection(connection, eventHandlers, this._eventHandlers);
+
+    return connection;
+  }
+
+  private bindEventHandlersToConnection(connection: HubConnection, newEventHandlers: SignalRHubEventHandler<any>[], existingEventHandlers: SignalRHubEventHandlerCollection) {
+    // if any handlers are already bound, unbind them
+    for (const handlerEvent in existingEventHandlers) {
+      connection.off(existingEventHandlers[handlerEvent].eventType.toString());
+    }
 
     // federate specific event types to their respective services
     this._eventHandlers = {};
-    for (let handler of eventHandlers) {
+    for (let handler of newEventHandlers) {
       this._eventHandlers[handler.eventType.toString()] = handler;
       connection.on(handler.eventType.toString(), ev => handler.handler(ev));
     }
-
-    return connection;
   }
 
   private async resolveOpenConnection(connection: HubConnection, attemptCount = 0, maxAttempts = 5): Promise<void> {
@@ -120,6 +135,9 @@ export class SignalRService<TEvent extends SignalRHubEventType> {
   }
 
   private handleClose(err?: Error) {
+    this.logger.logInfo("SignalR service connection closed.");
+    this._eventHandlers = {};
+
     if (err) {
       this.logger.logError(`SignalR Service Error: ${err}`);
     }

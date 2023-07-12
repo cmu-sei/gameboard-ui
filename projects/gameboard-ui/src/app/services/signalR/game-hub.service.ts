@@ -25,7 +25,7 @@ export class GameHubService {
 
   constructor(
     private logService: LogService,
-    private signalRService: SignalRService<GameHubEvent<any>>) { }
+    private signalRService: SignalRService) { }
 
   async joinGame(gameId: string) {
     await this.signalRService.connect(
