@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SupportService } from 'projects/gameboard-ui/src/app/api/support.service';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { Observable, combineLatest, map, of } from 'rxjs';
@@ -26,7 +26,11 @@ export class ParameterTicketLabelsComponent extends ReportParameterComponent<str
     ]).pipe(
       map(([serviceLabels, selectedLabels]) => ({ serviceLabels, selectedLabels })),
       map(allLabels => allLabels.serviceLabels.filter(l => (allLabels.selectedLabels?.length || 0 > 0) || allLabels.selectedLabels!.indexOf(l) < 0))
-    )
+    );
+  }
+
+  override getDefaultValue(): string[] | undefined {
+    return [];
   }
 
   handleChipRemoveClick(event: ColoredTextChipEvent) {

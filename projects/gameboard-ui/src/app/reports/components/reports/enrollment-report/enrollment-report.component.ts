@@ -18,7 +18,6 @@ import { ReportComponentBase } from '../report-base.component';
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
   chartConfig: LineChartConfig;
-  selectedParameters: EnrollmentReportParameters;
 }
 
 @Component({
@@ -43,24 +42,13 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
   constructor(
     activeReportService: ActiveReportService,
-    public reportService: EnrollmentReportService,
     private markdownHelpersService: MarkdownHelpersService,
     private modalService: ModalConfirmService,
+    private reportService: EnrollmentReportService,
     private reportsService: ReportsService,
     private route: ActivatedRoute,
     private routerService: RouterService) {
     super(activeReportService);
-  }
-
-  getDefaultParameters(): EnrollmentReportParameters {
-    return {
-      enrollDate: {},
-      paging: this.reportsService.getDefaultPaging(),
-      seasons: [],
-      series: [],
-      sponsors: [],
-      tracks: []
-    };
   }
 
   ngOnInit(): void {
@@ -80,10 +68,20 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     this.runRequestSub?.unsubscribe();
   }
 
+  getDefaultParameters(): EnrollmentReportParameters {
+    return {
+      enrollDate: {},
+      paging: {},
+      seasons: [],
+      series: [],
+      sponsors: [],
+      tracks: []
+    };
+  }
+
   async updateView(parameters: EnrollmentReportParameters): Promise<ReportViewUpdate<EnrollmentReportRecord>> {
     const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
-
 
     this.ctx$ = of({
       results: reportResults,
@@ -126,12 +124,11 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           }
         }
       },
-      selectedParameters: parameters
     });
 
     return {
-      results: reportResults,
-      reportContainerRef: this.reportContainer
+      reportContainerRef: this.reportContainer,
+      results: reportResults
     };
   }
 

@@ -2,8 +2,8 @@
     <app-report-parameters-container>
         <app-parameter-game-challengespec ngDefaultControl
             [(ngModel)]="selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
-        <app-parameter-ticket-status ngDefaultControl
-            [(ngModel)]="selectedParameters.status"></app-parameter-ticket-status>
+        <app-parameter-ticket-status ngDefaultControl [(ngModel)]="selectedParameters.status"
+            [appQueryParamModel]="thing"></app-parameter-ticket-status>
         <app-parameter-date-range ngDefaultControl [(ngModel)]="selectedParameters.openedDateRange"
             name="openedDateRange" label="Date ticket opened"></app-parameter-date-range>
         <app-parameter-ticket-labels ngDefaultControl

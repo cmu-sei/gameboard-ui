@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 
@@ -9,11 +9,14 @@ import { ReportParameterComponent, createCustomInputControlValueAccessor } from 
   styleUrls: ['./parameter-ticket-status.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTicketStatusComponent)]
 })
-export class ParameterTicketStatusComponent extends ReportParameterComponent<string> {
-  statuses$: Observable<string[]>;
+export class ParameterTicketStatusComponent extends ReportParameterComponent<string> implements OnInit {
+  statuses$: Observable<string[]> = of([]);
 
   constructor(private reportsService: ReportsService) {
     super();
+  }
+
+  ngOnInit(): void {
     this.statuses$ = this.reportsService.getTicketStatuses();
   }
 }

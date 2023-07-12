@@ -1,5 +1,7 @@
 import { ActiveReportService } from '@/reports/services/active-report.service';
+import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { RouterService } from '@/services/router.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -15,7 +17,11 @@ export class ReportGlobalControlsComponent implements OnInit {
 
   protected parametersPristine$?: Observable<boolean>;
 
-  constructor(private activeReportService: ActiveReportService, private modal: ModalConfirmService) { }
+  constructor(
+    private activeReportService: ActiveReportService,
+    private logService: LogService,
+    private modal: ModalConfirmService,
+    private routerService: RouterService) { }
 
   ngOnInit(): void {
     this.parametersPristine$ = this.activeReportService.parametersPristine$;
@@ -37,6 +43,10 @@ export class ReportGlobalControlsComponent implements OnInit {
   }
 
   handleResetClick() {
+    const key = this.activeReportService.metaData$.value?.key;
+    if (!key)
+      this.logService.logError(`Can't reset report without metadata report key: "${key}".`);
+    this.routerService.toReport(key!);
     this.activeReportService.parameterResetRequest$.next();
   }
 }

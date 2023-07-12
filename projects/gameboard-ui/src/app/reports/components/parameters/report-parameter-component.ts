@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { isEmpty } from "@/tools/object-tools.lib";
 
 export function createCustomInputControlValueAccessor(extendedInputComponent: any) {
     return {
@@ -17,12 +18,18 @@ export abstract class ReportParameterComponent<T> implements ControlValueAccesso
     protected onTouched = () => { };
 
     private _ngModel?: T;
-    public get ngModel(): T | undefined { return this._ngModel || this.getDefaultValue(); }
+    public get ngModel(): T | undefined { return this._ngModel; }
     @Input() public set ngModel(value: T | undefined) {
-        if (this._ngModel !== value) {
-            this._ngModel = value || this.getDefaultValue();
+        value = value || this.getDefaultValue();
+        const bothEmpty = (isEmpty(value) && isEmpty(this._ngModel));
+
+        if (this._ngModel !== value && !bothEmpty) {
             this.ngModelChange.emit(this._ngModel);
         }
+    }
+
+    constructor() {
+        this._ngModel = this.getDefaultValue();
     }
 
     getDefaultValue(): T | undefined {

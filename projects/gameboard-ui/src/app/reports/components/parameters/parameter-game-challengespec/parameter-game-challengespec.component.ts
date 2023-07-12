@@ -26,6 +26,10 @@ export class ParameterGameChallengespecComponent
     this.loadChallengeSpecs();
   }
 
+  override getDefaultValue(): ReportGameChallengeSpec | undefined {
+    return {};
+  }
+
   handleGameChanged(event$: Event) {
     this.loadChallengeSpecs(this.ngModel?.gameId);
   }

@@ -4,11 +4,9 @@ import { ReportGameChallengeSpec } from "../../parameters/parameter-game-challen
 
 export interface SupportReportParameters {
     gameChallengeSpec: ReportGameChallengeSpec;
-    challengeSpecId?: string;
-    gameId?: string;
     labels: string[];
-    timeSinceOpen?: ReportTimeSpan,
-    timeSinceUpdate?: ReportTimeSpan,
+    timeSinceOpen: ReportTimeSpan,
+    timeSinceUpdate: ReportTimeSpan,
     openedDateRange: ReportDateRange;
     openedTimeWindow?: SupportReportTicketWindow;
     status?: string;
@@ -17,7 +15,7 @@ export interface SupportReportParameters {
 export interface SupportReportFlatParameters {
     challengeSpecId?: string;
     gameId?: string;
-    labels: string;
+    labels?: string;
     minutesSinceOpen?: number;
     minutesSinceUpdate?: number;
     openedDateStart?: string;

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SupportReportParameters, SupportReportRecord } from './support-report.models';
-import { ReportResults } from '../../../reports-models';
+import { ReportKey, ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { SupportReportService } from '../../../services/support-report.service';
@@ -10,7 +10,9 @@ import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { SupportService } from '@/api/support.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { ActiveReportService } from '@/reports/services/active-report.service';
+import { ReportComponentBase } from '../report-base.component';
 import { ActivatedRoute } from '@angular/router';
+import { QueryParamModelConfig } from '@/core/directives/query-param-model.directive';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -25,43 +27,48 @@ interface SupportReportContext {
   styleUrls: ['./support-report.component.scss'],
   providers: [createCustomInputControlValueAccessor(SupportReportComponent)]
 })
-export class SupportReportComponent implements OnInit, OnDestroy {
-  private queryParamsSub?: Subscription;
-  private runRequestSub?: Subscription;
-
-  selectedParameters: SupportReportParameters = {
-    gameChallengeSpec: {},
-    labels: [],
-    openedDateRange: {},
-    timeSinceOpen: {},
-    timeSinceUpdate: {},
-  };
-  ctx?: SupportReportContext;
-
+export class SupportReportComponent extends ReportComponentBase<SupportReportParameters, SupportReportRecord> implements OnInit, OnDestroy {
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
+
+  ctx?: SupportReportContext;
+  private queryParamsSub?: Subscription;
+
+  protected thing: QueryParamModelConfig<string> = {
+    name: "status",
+  };
 
   constructor(
     public faService: FontAwesomeService,
-    private activeReportService: ActiveReportService,
+    activeReportService: ActiveReportService,
     private reportService: SupportReportService,
     private rgbService: TextToRgbService,
     private route: ActivatedRoute,
-    private supportService: SupportService) { }
+    private supportService: SupportService) { super(activeReportService); }
 
   async ngOnInit() {
-    await this.updateView();
-
-    this.queryParamsSub = this.route.queryParams.subscribe();
-    this.runRequestSub = this.activeReportService.runRequest$.subscribe(_ => this.updateView());
+    this.queryParamsSub = this.route.queryParams.subscribe(query => {
+      const reportParams = this.reportService.unflattenParameters({ ...query });
+      // this causes the report to reload
+      this.selectedParameters = reportParams;
+    });
   }
 
   ngOnDestroy(): void {
     this.queryParamsSub?.unsubscribe();
-    this.runRequestSub?.unsubscribe();
   }
 
-  private async updateView() {
-    const results = await firstValueFrom(this.reportService.getReportData(this.selectedParameters));
+  getDefaultParameters(): SupportReportParameters {
+    return {
+      gameChallengeSpec: {},
+      labels: [],
+      openedDateRange: {},
+      timeSinceOpen: {},
+      timeSinceUpdate: {},
+    };
+  }
+
+  async updateView(parameters: SupportReportParameters): Promise<ReportViewUpdate<SupportReportRecord>> {
+    const results = await firstValueFrom(this.reportService.getReportData(parameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
 
     this.ctx = {
@@ -71,8 +78,24 @@ export class SupportReportComponent implements OnInit, OnDestroy {
       statusChartConfig: this.buildTicketsByStatus(results.records)
     };
 
-    this.activeReportService.htmlElement$.next(this.reportElementRef);
-    this.activeReportService.metaData$.next(results.metaData);
+    return {
+      reportContainerRef: this.reportElementRef,
+      results
+    };
+
+    return {
+      reportContainerRef: this.reportElementRef,
+      results: {
+        records: [],
+        metaData: {
+          key: ReportKey.SupportReport,
+          title: "whatever",
+          description: "yay",
+          runAt: new Date()
+        },
+        paging: { pageNumber: 0, pageSize: 5, itemCount: 0 }
+      }
+    };
   }
 
   private buildTicketsByStatus(records: SupportReportRecord[]): DoughnutChartConfig {

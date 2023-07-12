@@ -15,10 +15,10 @@ export class ReportCardComponent implements OnChanges {
   constructor(private logService: LogService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.report) {
-      this.logService.logError(`Couldn't set up navigation to report, as it's a falsey thing: ${this.report}`)
+    if (!changes.report.currentValue) {
+      this.logService.logError(`Couldn't set up navigation to report, as it's a falsey thing: ${changes.report.currentValue}`);
     }
 
-    this.reportUrl = `/reports/${this.report!.key}`;
+    this.reportUrl = `/reports/${changes.report.currentValue.key}`;
   }
 }

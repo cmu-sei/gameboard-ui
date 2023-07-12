@@ -22,7 +22,7 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
       ...parameters,
       challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
       gameId: parameters.gameChallengeSpec?.gameId,
-      labels: parameters.labels?.join(',') || '',
+      labels: parameters.labels?.join(','),
       openedDateStart: parameters.openedDateRange?.dateStart?.toLocaleDateString(),
       openedDateEnd: parameters.openedDateRange?.dateEnd?.toLocaleDateString(),
       minutesSinceOpen: this.reportsService.timespanToMinutes(parameters.timeSinceOpen),

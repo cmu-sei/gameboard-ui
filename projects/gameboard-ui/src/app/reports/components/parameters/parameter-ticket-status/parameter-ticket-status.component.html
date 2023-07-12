@@ -1,8 +1,8 @@
 <div class="parameter-ticket-status report-parameter" *ngIf="statuses$ | async as statuses">
-    <label for="status" class="report-component-label">Ticket Status</label>
+    <label for="status" class="report-component-label">Ticket Status {{ngModel | json}}</label>
     <select class="form-control form-select" name="status" aria-label="Status select" [(ngModel)]="ngModel">
         <option [value]="undefined" selected>[any status]</option>
-        <option *ngFor="let status of statuses" [ngValue]="status">{{status}}
+        <option *ngFor="let status of statuses" [value]="status">{{status}}
         </option>
     </select>
 </div>

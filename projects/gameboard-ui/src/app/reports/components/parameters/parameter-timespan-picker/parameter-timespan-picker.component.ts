@@ -10,4 +10,8 @@ import { ReportTimeSpan } from '@/reports/reports-models';
 })
 export class ParameterTimespanPickerComponent extends ReportParameterComponent<ReportTimeSpan> {
   @Input() label = '';
+
+  override getDefaultValue(): ReportTimeSpan | undefined {
+    return {};
+  }
 }

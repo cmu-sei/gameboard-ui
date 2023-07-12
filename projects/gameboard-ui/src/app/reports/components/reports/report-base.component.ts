@@ -4,23 +4,25 @@ import { ActiveReportService } from "../../services/active-report.service";
 import { Subscription } from "rxjs";
 
 @Component({ template: '' })
-export abstract class ReportComponentBase<TStructured extends {}, TReportRecord> implements OnDestroy {
+export abstract class ReportComponentBase<TStructuredParameters extends {}, TReportRecord> implements OnDestroy {
+    private _defaultParameters: TStructuredParameters;
     private _parameterResetSub?: Subscription;
+    private _runRequestSub?: Subscription;
 
-    private _selectedParameters?: TStructured;
-    public get selectedParameters(): TStructured {
-        return this._selectedParameters || this.getDefaultParameters();
+    private _selectedParameters?: TStructuredParameters;
+    public get selectedParameters(): TStructuredParameters {
+        return this._selectedParameters!;
     }
-    public set selectedParameters(value: TStructured) {
+    public set selectedParameters(value: TStructuredParameters) {
         if (value === undefined) {
-            value = this.getDefaultParameters();
+            value = this._defaultParameters;
         }
         else {
             // if something sets the value of the a default parameter to undefined and if 
             // the specified default parameters have a value for this, use that instead
             for (const entry of Object.entries(value)) {
                 if (entry[1] === undefined) {
-                    (value as any)[entry[0]] = (this.getDefaultParameters() as any)[entry[0]];
+                    (value as any)[entry[0]] = (this._defaultParameters as any)[entry[0]];
                 }
             }
         }
@@ -30,19 +32,25 @@ export abstract class ReportComponentBase<TStructured extends {}, TReportRecord>
     }
 
     constructor(protected activeReportService: ActiveReportService) {
-        activeReportService.parameterResetRequest$.subscribe(_ => {
-            this.selectedParameters = this.getDefaultParameters();
+        this._defaultParameters = this.getDefaultParameters();
+        this._selectedParameters = this._defaultParameters;
+
+        this._parameterResetSub = activeReportService.parameterResetRequest$.subscribe(_ => {
+            this.selectedParameters = this._defaultParameters;
         });
+
+        this._runRequestSub = activeReportService.runRequest$.subscribe(_ => this.updateView(this.selectedParameters));
     }
 
     ngOnDestroy(): void {
         this._parameterResetSub?.unsubscribe();
+        this._runRequestSub?.unsubscribe();
     }
 
-    abstract getDefaultParameters(): TStructured;
-    abstract updateView(parameters: TStructured): Promise<ReportViewUpdate<TReportRecord>>;
+    abstract getDefaultParameters(): TStructuredParameters;
+    abstract updateView(parameters: TStructuredParameters): Promise<ReportViewUpdate<TReportRecord>>;
 
-    private async _updateView(parameters: TStructured) {
+    private async _updateView(parameters: TStructuredParameters) {
         const viewUpdate = await this.updateView(parameters);
         this.activeReportService.parametersPristine = true;
         this.activeReportService.metaData$.next(viewUpdate.results.metaData);

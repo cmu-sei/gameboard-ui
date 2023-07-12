@@ -18,9 +18,9 @@ export class ReportPageComponent implements AfterViewInit {
   protected metaData$: Observable<ReportMetaData> = this
     .activeReportService
     .metaData$
-    .pipe(tap(m => this.metaData = m));
+    .pipe(tap(m => this.metaData = m!));
 
-  private metaData?: ReportMetaData;
+  private metaData: ReportMetaData | null = null;
   private reportTitle?: string;
 
   constructor(
