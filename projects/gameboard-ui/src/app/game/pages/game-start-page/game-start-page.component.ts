@@ -135,6 +135,7 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
         }
 
         this.externalGameService.createLocalStorageKeys({ teamId: ctx.player.teamId, gameServerUrl: team!.headlessUrl });
+        this.handleGameReady(ctx);
       });
     }
   }
