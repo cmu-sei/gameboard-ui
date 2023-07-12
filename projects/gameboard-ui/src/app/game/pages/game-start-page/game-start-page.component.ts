@@ -127,6 +127,8 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
       this.externalGameLaunchEndedSub = this.gameHub.externalGameLaunchEnded$.subscribe(state => {
         this.state = state;
         this.launchCompleted = true;
+        this.log.logWarning(`Navigating to game at /external${ctx.game.id}`);
+        this.routerService.router.navigateByUrl(`/external/${ctx.game.id}`);
       });
     }
   }
