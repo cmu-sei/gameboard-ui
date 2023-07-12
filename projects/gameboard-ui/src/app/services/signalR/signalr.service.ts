@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, map, timer } from 'rxjs';
+import { BehaviorSubject, Subject, firstValueFrom, map, timer } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
-import { UserService } from '../../api/user.service';
-import { ConfigService } from '../../utility/config.service';
-import { LogService } from '../log.service';
-import { SignalRHubEventHandler, SignalRHubEventType } from './signalr-hub.models';
+import { UserService } from '@/api/user.service';
+import { ConfigService } from '@/utility/config.service';
+import { LogService } from '@/services/log.service';
+import { SignalRHubEventHandler } from './signalr-hub.models';
 
 type SignalRHubEventHandlerCollection = { [eventType: string]: SignalRHubEventHandler<any> };
 
 @Injectable({ providedIn: 'root' })
 export class SignalRService {
+  private readonly AUTO_RECONNECT_INTERVALS = [1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000];
+
+  private _channelJoined$ = new Subject<string>();
   private _connection?: HubConnection;
   private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
   private _events$ = new BehaviorSubject<SignalRHubEventHandler<any> | null>(null);
   private _eventHandlers: SignalRHubEventHandlerCollection = {};
+
+  public channelJoined$ = this._channelJoined$.asObservable();
   public events$ = this._events$.asObservable();
   public state$ = this._connectionState$.asObservable();
 
@@ -43,7 +48,7 @@ export class SignalRService {
         this._connectionState$.value == HubConnectionState.Reconnecting
       )
     ) {
-      this.logger.logInfo(`Currently in state ${this._connectionState$.value} state. Disconnecting...`);
+      this.logger.logInfo(`SignalRHub at URL ${connectToUrl} is in state "${this._connectionState$.value}". Disconnecting...`);
       await this.disconnect();
     }
 
@@ -58,7 +63,7 @@ export class SignalRService {
       this.logger.logInfo(`Connection started with url`, connectToUrl);
     }
     else {
-      this.logger.logError(`The SignalR service was unable to join hub "${connectToUrl}" after all retries were exhausted.`);
+      this.logger.logError(`CRITICAL: The SignalR service was unable to join hub "${connectToUrl}".`);
     }
   }
 
@@ -70,7 +75,7 @@ export class SignalRService {
         skipNegotiation: true,
         headers: { "Content-Type": "application/json" }
       } as IHttpConnectionOptions)
-      .withAutomaticReconnect([1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000])
+      .withAutomaticReconnect(this.AUTO_RECONNECT_INTERVALS)
       .configureLogging(this.logger)
       .build();
 
@@ -95,26 +100,28 @@ export class SignalRService {
     }
   }
 
-  private async resolveOpenConnection(connection: HubConnection, attemptCount = 0, maxAttempts = 5): Promise<void> {
-    if (attemptCount >= maxAttempts) {
-      throw new Error("Couldn't connect to the SignalR hub.");
-    }
-
+  private async resolveOpenConnection(connection: HubConnection, attemptCount = 0, maxAttempts = 5, attemptIntervals: number[] = [2000, 3000, 3000, 5000, 10000]): Promise<void> {
     await connection.start();
     if (connection.state === HubConnectionState.Connected) {
       this.handleConnected();
       return;
     }
 
-    const attemptIntervals = [2000, 3000, 3000, 5000, 10000];
-    await firstValueFrom(timer(attemptIntervals[attemptCount]));
+    if (attemptCount >= maxAttempts) {
+      throw new Error(`Couldn't connect to the SignalR hub at ${connection.baseUrl} after all retries were exhausted.`);
+    }
 
-    return await this.resolveOpenConnection(connection, attemptCount + 1);
+    await firstValueFrom(timer(attemptIntervals[attemptCount]));
+    const remainingIntervals = attemptIntervals.slice(1);
+    return await this.resolveOpenConnection(connection, attemptCount + 1, maxAttempts, remainingIntervals);
   }
 
   private handleConnected(channelId?: string) {
     this.logger.logInfo(`SignalR Service | Connected ${(channelId ? `channel id "${channelId}"` : "")}`);
     this.updateState();
+
+    if (channelId)
+      this._channelJoined$.next(channelId);
   }
 
   public async disconnect(): Promise<void> {
@@ -125,7 +132,7 @@ export class SignalRService {
 
   public async sendMessage<T>(message: string, arg: T) {
     if (!this._connection || this._connection.state !== HubConnectionState.Connected) {
-      this.logger.logError(`Can't send message "${message}" with parameters ${arg}. The hub is not connected.`);
+      this.logger.logError(`Can't send message "${message}" with parameters ${arg}. The hub is not connected (State: "${this._connection?.state}").`);
       return;
     }
 

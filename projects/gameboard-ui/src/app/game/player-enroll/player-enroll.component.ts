@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { finalize, map, tap, delay, first } from 'rxjs/operators';
@@ -10,8 +10,6 @@ import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitat
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
-import { UserService } from '../../utility/user.service';
-import { GameHubService } from '@/services/signalR/game-hub.service';
 
 @Component({
   selector: 'app-player-enroll',
@@ -26,6 +24,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   errors: any[] = [];
   code = '';
   invitation = '';
+  isEnrolling = false;
   token = '';
   delayMs = 2000;
 
@@ -105,12 +104,14 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       code: this.token.split('/').pop()
     } as PlayerEnlistment;
 
+    this.isEnrolling = true;
     const sub: Subscription = this.api.enlist(model).pipe(
       tap(p => this.token = ''),
       finalize(() => sub.unsubscribe())
     ).subscribe(
       p => this.enrolled(p),
-      err => this.errors.push(err)
+      err => this.errors.push(err),
+      () => this.isEnrolling = false
     );
   }
 
@@ -132,6 +133,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
 
   protected handleEnroll(userId: string, gameId: string): void {
     const model = { userId, gameId } as NewPlayer;
+    this.isEnrolling = true;
+
     this.api.create(model).pipe(first()).subscribe(p => {
       this.enrolled(p);
     });
@@ -144,6 +147,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   }
 
   private enrolled(p: Player): void {
+    this.isEnrolling = false;
     this.onEnroll.emit(p);
   }
 

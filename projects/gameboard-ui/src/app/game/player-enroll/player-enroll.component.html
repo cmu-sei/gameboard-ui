@@ -54,26 +54,28 @@
 
       <!-- enrollment controls -->
       <ng-container *ngIf="!ctx.player.id">
-        <div class="d-flex align-items-center justify-content-center mt-5"
-          *ngIf="ctxDelayed$ | async as delay; else loading">
-          <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
-            <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
-              (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-              <fa-icon [icon]="faEdit"></fa-icon>
-              <span>Enroll</span>
-            </app-confirm-button>
-          </div>
-
-          <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
-            class="text-center">
-            <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-              <fa-icon [icon]="faEdit"></fa-icon>
-              <span>Admin Enroll</span>
-            </app-confirm-button>
-          </div>
-
+        <ng-container *ngIf="!isEnrolling; else enrolling">
           <app-error-div [errors]="errors"></app-error-div>
-        </div>
+
+          <div class="d-flex align-items-center justify-content-center mt-5"
+            *ngIf="ctxDelayed$ | async as delay; else loading">
+            <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
+              <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
+                (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                <fa-icon [icon]="faEdit"></fa-icon>
+                <span>Enroll</span>
+              </app-confirm-button>
+            </div>
+
+            <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
+              class="text-center">
+              <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                <fa-icon [icon]="faEdit"></fa-icon>
+                <span>Admin Enroll</span>
+              </app-confirm-button>
+            </div>
+          </div>
+        </ng-container>
       </ng-container>
 
       <!-- already enrolled -->
@@ -177,4 +179,8 @@
   <div class="text-center">
     <app-spinner></app-spinner>
   </div>
+</ng-template>
+
+<ng-template #enrolling>
+  <app-spinner>Enrolling you in the game...</app-spinner>
 </ng-template>
