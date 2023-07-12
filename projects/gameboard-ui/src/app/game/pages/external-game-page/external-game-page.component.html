@@ -1,19 +1,21 @@
 <div class="external-game-page-component page-min-height d-flex flex-column align-items-center justify-content-center">
     <ng-container *ngIf="game; else loading">
-        <div class="unity-container" *ngIf="externalGameActive; else loadingExternalClient">
+        <div class="unity-container">
             <iframe [src]="game.externalGameClientUrl" id="unity-game-window" [title]="iframeWindowTitle"
                 frameborder="0" scrolling="no"></iframe>
         </div>
 
-        <div class="connecting-to-host" *ngIf="!isProduction">
+        <app-error-div [errors]="errors"></app-error-div>
+
+        <div class="connecting-to-host">
             <p class="connecting-to-launch-p"><strong>Connecting to external game at </strong></p>
             <p>{{ game.externalGameClientUrl }}</p>
         </div>
 
-        <ng-template #loadingExternalClient>
+        <!-- <ng-template #loadingExternalClient>
             <app-morphing-text *ngIf="!errors.length"
                 class="full-width d-flex flex-column flex-grow-1 justify-content-center"></app-morphing-text>
-        </ng-template>
+        </ng-template> -->
     </ng-container>
 
     <ng-template #loading>

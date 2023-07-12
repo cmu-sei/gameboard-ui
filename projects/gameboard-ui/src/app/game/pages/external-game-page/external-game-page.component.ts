@@ -15,7 +15,6 @@ import { RouterService } from '@/services/router.service';
 })
 export class ExternalGamePageComponent implements OnInit, OnDestroy {
   errors: string[] = [];
-  externalGameActive?: ExternalGameActive;
   game?: Game;
   iframeWindowTitle: string = 'External Game Client';
   isProduction = true;
