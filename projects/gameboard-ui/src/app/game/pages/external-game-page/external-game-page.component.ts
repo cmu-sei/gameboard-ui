@@ -5,9 +5,8 @@ import { Game } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { LayoutService } from '@/utility/layout.service';
-import { ExternalGameActive } from '@/services/external-game.service';
 import { RouterService } from '@/services/router.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-external-game-page',
@@ -20,14 +19,11 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
   iframeWindowTitle: string = 'External Game Client';
   isProduction = true;
 
-  protected externalClientUrl?: SafeResourceUrl;
-
   constructor(
     private gameService: GameService,
     private layoutService: LayoutService,
     private route: ActivatedRoute,
-    private routerService: RouterService,
-    private sanitizer: DomSanitizer) { }
+    private routerService: RouterService) { }
 
   async ngOnInit(): Promise<void> {
     this.isProduction = environment.production;
@@ -38,7 +34,6 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     if (!this.game.externalGameClientUrl) {
       this.errors.push(`Unable to resolve external game client Url ("${this.game.externalGameClientUrl}")`);
     }
-    this.externalClientUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.game.externalGameClientUrl!);
 
     // we still don't know why, but we have to reload after hitting an iframe page
     // in order to prevent weird css bugs

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { GameService } from '../../../api/game.service';
 import { GameContext } from '../../../api/game-models';
@@ -9,6 +9,8 @@ import { FontAwesomeService } from '../../../services/font-awesome.service';
 import { SyncStartService } from '../../../services/sync-start.service';
 import { SyncStartGameState } from '../../game.models';
 import { GameHubService } from '@/services/signalR/game-hub.service';
+import { HubState } from '@/services/notification.service';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-session-start-controls',
@@ -22,11 +24,13 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   @Output() onDoubleCheckChanged = new EventEmitter<boolean>();
   @Output() onRequestStart = new EventEmitter();
 
-  private gameHubSub?: Subscription;
+  private gameHubStateSub?: Subscription;
+  private syncStartStateChangeSub?: Subscription;
 
   protected START_DISABLED_TOOLTIP = "We're still waiting for all registered players to ready up. Once they do, you can start your session.";
   protected isDoubleChecking = false;
   protected isGameSyncStartReady = false;
+  protected isConnectedToGameHub = false;
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
   protected playerReadyPct = 0;
@@ -42,14 +46,19 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     if (this.ctx.game.requireSynchronizedStart) {
       this.gameService.getSyncStartState(this.ctx.game.id).pipe(first()).subscribe(state => this.handleNewSyncStartState(state));
 
-      this.gameHubSub = this.gameHubService.syncStartGameStateChanged$.subscribe(stateUpdate => {
+      this.gameHubStateSub = this.gameHubService.hubState$.subscribe(state => {
+        this.isConnectedToGameHub = state == HubConnectionState.Connected;
+      });
+
+      this.syncStartStateChangeSub = this.gameHubService.syncStartGameStateChanged$.subscribe(stateUpdate => {
         this.handleNewSyncStartState(stateUpdate);
       });
     }
   }
 
   ngOnDestroy(): void {
-    this.gameHubSub?.unsubscribe();
+    this.gameHubStateSub?.unsubscribe();
+    this.syncStartStateChangeSub?.unsubscribe();
   }
 
   protected handleDoubleCheckRequest(isDoubleChecking: boolean) {
