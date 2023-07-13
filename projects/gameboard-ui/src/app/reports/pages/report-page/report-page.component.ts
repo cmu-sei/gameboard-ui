@@ -15,7 +15,7 @@ import { Observable, from, switchMap, tap } from 'rxjs';
 })
 export class ReportPageComponent implements AfterViewInit {
   protected report$?: Observable<ReportViewModel | null>;
-  protected metaData$: Observable<ReportMetaData> = this
+  protected metaData$: Observable<ReportMetaData | null> = this
     .activeReportService
     .metaData$
     .pipe(tap(m => this.metaData = m!));
