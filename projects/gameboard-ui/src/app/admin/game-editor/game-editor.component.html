@@ -30,7 +30,6 @@
     <div [hidden]="viewing!==1" class="row mb-4">
       <!-- left (form) -->
       <div class="col-lg-6 col-sm-12">
-
         <div class="form-group pb-0 pt-1">
           <label class="mb-0" for="hidden-toggle">Publish</label>
           <div class="form-control auto-h d-flex align-items-center">
@@ -273,6 +272,7 @@
               [(ngModel)]="game.externalGameStartupUrl">
             <small>
               When Gameboard boots an external game, it'll post game metadata to this URL.
+              <em>({{externalGameServerUrlBase}}/{{game.externalGameStartupUrl}})</em>
             </small>
           </div>
 

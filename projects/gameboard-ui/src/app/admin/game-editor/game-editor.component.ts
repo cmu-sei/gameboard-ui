@@ -34,6 +34,7 @@ export class GameEditorComponent implements AfterViewInit {
   viewing = 1;
   showCertificateInfo = false;
   showExternalGameFields = false;
+  externalGameServerUrlBase = this.config.gamebrainhost;
 
   // the first time we flip the mode to external, suggest the gamebrainhost endpoint as the external startup
   // url

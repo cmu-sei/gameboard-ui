@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from '@/../environments/environment';
 import { LogLevel } from '@microsoft/signalr';
 
 @Injectable({ providedIn: 'root' })
