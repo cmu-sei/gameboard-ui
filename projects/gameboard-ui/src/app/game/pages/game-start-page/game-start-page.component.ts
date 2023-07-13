@@ -28,6 +28,8 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
   private gameId: string | null;
   private playerId: string | null;
 
+  private subs: Subscription[] = [];
+  private externalGameLaunchStartedSub?: Subscription;
   private externalGameLaunchProgressChangedSub?: Subscription;
   private externalGameLaunchEndedSub?: Subscription;
   private gameStartFailureSub?: Subscription;
@@ -80,9 +82,9 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.externalGameLaunchEndedSub?.unsubscribe();
-    this.externalGameLaunchProgressChangedSub?.unsubscribe();
-    this.gameStartFailureSub?.unsubscribe();
+    for (const sub of this.subs) {
+      sub?.unsubscribe();
+    }
   }
 
   handleGameReady(ctx: GameLaunchContext) {
@@ -124,9 +126,11 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
     }
 
     if (ctx.game.mode == GameMode.External) {
-      this.gameStartFailureSub = this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error));
-      this.externalGameLaunchProgressChangedSub = this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state);
-      this.externalGameLaunchEndedSub = this.gameHub.externalGameLaunchEnded$.subscribe(state => {
+      this.subs.push(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.state = state));
+      this.subs.push(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state));
+      this.subs.push(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
+
+      const externalGameLaunchEndedSub = this.gameHub.externalGameLaunchEnded$.subscribe(state => {
         this.state = state;
 
         const team = state.teams.find(t => t.team.id === ctx.player.teamId);
@@ -137,6 +141,8 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
         this.externalGameService.createLocalStorageKeys({ teamId: ctx.player.teamId, gameServerUrl: team!.headlessUrl });
         this.handleGameReady(ctx);
       });
+
+      this.subs.push(externalGameLaunchEndedSub);
     }
   }
 }
