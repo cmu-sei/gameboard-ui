@@ -94,7 +94,7 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
       return;
     } else if (ctx.game.mode == GameMode.External) {
       this.log.logInfo("Navigating to external game", ctx.game.id);
-      this.routerService.goToExternalGamePage(ctx.game.id);
+      this.routerService.goToExternalGamePage(ctx.game.id, ctx.player.teamId);
       return;
     }
 

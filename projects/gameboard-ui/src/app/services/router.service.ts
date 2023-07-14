@@ -26,8 +26,8 @@ export class RouterService implements OnDestroy {
     }
   }
 
-  public goToExternalGamePage(gameId: string) {
-    this.router.navigateByUrl(`/game/external/${gameId}`);
+  public goToExternalGamePage(gameId: string, teamId: string) {
+    this.router.navigateByUrl(`/game/external/${gameId}/${teamId}`);
   }
 
   public getGamePageUrlTree(gameId: string): UrlTree {

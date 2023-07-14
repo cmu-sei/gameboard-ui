@@ -6,7 +6,6 @@ import { GameService } from '@/api/game.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { LayoutService } from '@/utility/layout.service';
 import { RouterService } from '@/services/router.service';
-import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-external-game-page',
@@ -16,7 +15,8 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 export class ExternalGamePageComponent implements OnInit, OnDestroy {
   errors: string[] = [];
   game?: Game;
-  iframeWindowTitle: string = 'External Game Client';
+  iframeWindowTitle: string = `External Game Client`;
+  iframeSrcUrl?: string;
   isProduction = true;
 
   constructor(
@@ -27,8 +27,9 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.isProduction = environment.production;
-    this.game = await this.resolveGame(this.route.snapshot.paramMap);
+    this.game = await this.resolveGame(this.route.snapshot.paramMap.get('gameId'));
     this.iframeWindowTitle = `${this.game.name} (External Gameboard Game)`;
+    this.iframeSrcUrl = `${this.game.externalGameClientUrl}?teamId=${this.route.snapshot.paramMap.get('teamId')}`;
     this.layoutService.stickyMenu$.next(false);
 
     if (!this.game.externalGameClientUrl) {
@@ -44,8 +45,7 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     this.layoutService.stickyMenu$.next(true);
   }
 
-  private resolveGame(routeParams: ParamMap): Promise<Game> {
-    const gameId = routeParams.get('gameId');
+  private resolveGame(gameId: string | null): Promise<Game> {
     if (!gameId) {
       this.errors.push("Couldn't resolve the gameId.");
       throw new Error("Couldn't resolve the gameId.");
