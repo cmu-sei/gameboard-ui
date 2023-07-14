@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PracticeModeReportByUserRecord, PracticeModeReportParameters } from '../practice-mode-report.models';
-import { Observable, firstValueFrom } from 'rxjs';
-import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { firstValueFrom } from 'rxjs';
 import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
 import { ReportResults } from '@/reports/reports-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
@@ -38,7 +37,7 @@ export class PracticeModeReportByUserComponent implements OnChanges {
   }
 
   protected handlePagingChange(request: PagingRequest) {
-    this.routerService.updateQueryParams({ ...request });
+    this.routerService.updateQueryParams({ parameters: { ...request } });
   }
 
   protected showAttemptsSummary(record: PracticeModeReportByUserRecord): void {

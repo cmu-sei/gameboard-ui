@@ -29,10 +29,10 @@ export class PracticePageComponent {
   termQueryParamModel: QueryParamModelConfig<string> = {
     name: "term",
     debounce: 500,
-    resetQueryParams: ["skip", "take"]
+    resetQueryParams: ["skip", "take"],
+    navigateOnChange: true
   };
 
-  private queryParamsSub: Subscription;
   private static readonly DEFAULT_PAGE_SIZE = 100;
 
   constructor(
@@ -55,14 +55,20 @@ export class PracticePageComponent {
       map(results => results.results.items)
     );
 
-    this.queryParamsSub = route.queryParams.subscribe(params => this.search({ ...params } as Search));
-    this.unsub.add(this.queryParamsSub);
+    this.unsub.add(
+      route.queryParams.subscribe(params => this.search({ ...params } as Search))
+    );
 
     this.search({ ...route.snapshot.queryParams } as Search);
   }
 
   paged(s: number): void {
-    this.routerService.updateQueryParams({ skip: s });
+    this.routerService.updateQueryParams({
+      parameters: {
+        skip: s, navigate: true
+      },
+      navigate: true
+    });
   }
 
   slug(s: string): string {

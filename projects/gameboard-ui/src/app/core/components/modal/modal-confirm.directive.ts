@@ -1,16 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
-import { ModalConfirmService } from '../../services/modal-confirm.service';
+import { ModalConfirmService } from '../../../services/modal-confirm.service';
+import { ModalConfirmConfig } from './modal.models';
 
-export interface ModalConfirmConfig {
-  bodyContent: string;
-  title?: string;
-  confirmButtonText?: string;
-  cancelButtonText?: string;
-  onCancel?: Function;
-  onConfirm?: Function;
-  hideCancel?: boolean;
-  renderBodyAsMarkdown?: boolean;
-}
 
 @Directive({ selector: '[appModalConfirm]' })
 export class ModalConfirmDirective implements AfterViewInit {

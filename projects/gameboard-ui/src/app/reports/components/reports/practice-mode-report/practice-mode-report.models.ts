@@ -31,7 +31,9 @@ export interface PracticeModeReportParameters {
     grouping: PracticeModeReportGrouping;
 }
 
-export interface PracticeModeReportByUserRecord {
+export interface PracticeModeReportRecord { }
+
+export interface PracticeModeReportByUserRecord extends PracticeModeReportRecord {
     user: {
         id: string,
         name: string,
@@ -57,7 +59,7 @@ export interface PracticeModeReportByUserRecord {
     }[]
 }
 
-export interface PracticeModeReportByChallengeRecord {
+export interface PracticeModeReportByChallengeRecord extends PracticeModeReportRecord {
     id: string;
     name: string;
     game: ReportGame;
@@ -67,10 +69,12 @@ export interface PracticeModeReportByChallengeRecord {
     text: string;
     sponsorsPlayed: ReportSponsor[];
     overallPerformance: PracticeModeReportByChallengePerformance;
-    performanceBySponsor: {
-        sponsor: ReportSponsor;
-        performance: PracticeModeReportByChallengePerformance;
-    }
+    performanceBySponsor: PracticeModeReportSponsorPerformance[];
+}
+
+export interface PracticeModeReportSponsorPerformance {
+    sponsor: ReportSponsor;
+    performance: PracticeModeReportByChallengePerformance;
 }
 
 export interface PracticeModeReportByChallengePerformance {

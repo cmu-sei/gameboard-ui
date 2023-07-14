@@ -86,7 +86,7 @@ export interface ReportTrackParameter {
     modifier?: ReportTrackParameterModifier;
 }
 
-export interface ReportViewUpdate<TRecord> {
+export interface ReportViewUpdate {
+    metaData: ReportMetaData;
     reportContainerRef?: ElementRef<HTMLDivElement>;
-    results: ReportResults<TRecord>;
 }

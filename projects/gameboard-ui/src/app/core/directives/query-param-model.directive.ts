@@ -9,6 +9,7 @@ export interface QueryParamModelConfig<T> {
   debounce?: number;
   serialize?: (value: T) => string;
   deserialize?: (queryStringValue: string) => T;
+  navigateOnChange?: boolean,
   resetQueryParams?: string[]
 }
 
@@ -53,7 +54,10 @@ export class QueryParamModelDirective<T> implements OnInit {
     const params: Params = {};
     params[this.config!.name] = serialized;
 
-    await this.routerService.updateQueryParams({ ...params }, this.config?.resetQueryParams);
+    await this.routerService.updateQueryParams({
+      parameters: { ...params },
+      resetParams: this.config?.resetQueryParams
+    });
   }
 
   private defaultSerialize(value: T) {

@@ -47,13 +47,13 @@ export abstract class ReportComponentBase<TStructuredParameters extends {}, TRep
         this._runRequestSub?.unsubscribe();
     }
 
-    abstract getDefaultParameters(): TStructuredParameters;
-    abstract updateView(parameters: TStructuredParameters): Promise<ReportViewUpdate<TReportRecord>>;
+    protected abstract getDefaultParameters(): TStructuredParameters;
+    protected abstract updateView(parameters: TStructuredParameters): Promise<ReportViewUpdate>;
 
     private async _updateView(parameters: TStructuredParameters) {
         const viewUpdate = await this.updateView(parameters);
         this.activeReportService.parametersPristine = true;
-        this.activeReportService.metaData$.next(viewUpdate.results.metaData);
+        this.activeReportService.metaData$.next(viewUpdate.metaData);
         this.activeReportService.htmlElement$.next(viewUpdate.reportContainerRef);
     }
 }

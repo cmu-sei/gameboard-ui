@@ -17,19 +17,20 @@
     </app-report-parameters-container>
 </div>
 
-<div class="report-body mt-4">
-    <tabset class="mt-5">
-        <tab heading="By Player" id="tab-by-player">
+<div class="report-body mt-5">
+    <tabset>
+        <tab heading="By Player" id="tab-by-player" (selectTab)="handleTabSelected('by-player')" #byPlayer>
             <app-practice-mode-report-by-user *ngIf="selectedTab == 'by-player'"
-                [parameters]="selectedParameters$ | async"></app-practice-mode-report-by-user>
+                [parameters]="selectedParameters"></app-practice-mode-report-by-user>
         </tab>
 
-        <tab heading="By Challenge" id="tab-by-challenge">
+        <tab heading="By Challenge" id="tab-by-challenge" (selectTab)="handleTabSelected('by-challenge')" #byChallenge>
             <app-practice-mode-report-by-challenge *ngIf="selectedTab == 'by-challenge'"
-                [parameters]="selectedParameters$ | async"></app-practice-mode-report-by-challenge>
+                [parameters]="selectedParameters"></app-practice-mode-report-by-challenge>
         </tab>
 
-        <tab heading="Players: Practice vs. Competitive" id="tab-prac-v-comp">
+        <tab heading="Players: Practice vs. Competitive" id="tab-prac-v-comp"
+            (selectTab)="handleTabSelected('by-challenge')" #pracVComp>
             <app-practice-mode-report-prac-vs-comp
                 *ngIf="selectedTab == 'prac-vs-comp'"></app-practice-mode-report-prac-vs-comp>
         </tab>

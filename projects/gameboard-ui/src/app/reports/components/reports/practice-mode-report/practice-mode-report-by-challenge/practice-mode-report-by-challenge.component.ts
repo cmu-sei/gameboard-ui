@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { PracticeModeReportByChallengeRecord, PracticeModeReportParameters } from '../practice-mode-report.models';
-import { ReportResults } from '@/reports/reports-models';
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { PracticeModeReportByChallengeRecord, PracticeModeReportParameters, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
+import { ReportResults, ReportSponsor } from '@/reports/reports-models';
 import { PagingRequest } from '@/core/components/select-pager/select-pager.component';
 import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
 import { RouterService } from '@/services/router.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
   selector: 'app-practice-mode-report-by-challenge',
@@ -13,10 +14,12 @@ import { RouterService } from '@/services/router.service';
 })
 export class PracticeModeReportByChallengeComponent implements OnChanges {
   @Input() parameters: PracticeModeReportParameters | null = null;
+  @ViewChild("sponsorPerformance") sponsorPerformanceTemplate?: TemplateRef<PracticeModeReportSponsorPerformance[]>;
 
   protected results: ReportResults<PracticeModeReportByChallengeRecord> | null = null;
 
   constructor(
+    private modalService: ModalConfirmService,
     private reportService: PracticeModeReportService,
     private routerService: RouterService) { }
 
@@ -26,11 +29,23 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
     }
 
     if (changes.parameters.currentValue) {
-      this.results = await firstValueFrom(this.reportService.getByChallengeData(changes.para.currentValue));
+      const results = await firstValueFrom(this.reportService.getByChallengeData(changes.parameters.currentValue));
+      this.results = results as ReportResults<PracticeModeReportByChallengeRecord>;
     }
   }
 
+  handleSponsorsClicked(sponsorPerformance: PracticeModeReportSponsorPerformance[]) {
+    if (!this.sponsorPerformanceTemplate) {
+      throw new Error("Couldn't resolve the sponsor performance template.");
+    }
+
+    this.modalService.openComponent({
+      templateRef: this.sponsorPerformanceTemplate,
+      context: sponsorPerformance
+    });
+  }
+
   handlePagingChange($event: PagingRequest) {
-    this.routerService.updateQueryParams({ ...$event });
+    this.routerService.updateQueryParams({ parameters: { ...$event } });
   }
 }

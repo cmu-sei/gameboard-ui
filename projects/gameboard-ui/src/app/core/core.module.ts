@@ -31,7 +31,7 @@ import { ShareButtonComponent } from './components/share-button/share-button.com
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { markedOptionsFactory } from './config/marked.config';
-import { ModalConfirmDirective } from './directives/modal-confirm.directive';
+import { ModalConfirmDirective } from './components/modal/modal-confirm.directive';
 import { QueryParamModelDirective } from './directives/query-param-model.directive';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';

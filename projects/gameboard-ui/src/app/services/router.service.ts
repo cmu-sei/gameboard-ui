@@ -4,6 +4,12 @@ import { ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { ObjectService } from './object.service';
 import { LogService } from './log.service';
 
+export interface QueryParamsUpdate {
+  parameters: Params,
+  navigate?: boolean,
+  resetParams?: string[]
+}
+
 @Injectable({ providedIn: 'root' })
 export class RouterService {
   constructor(
@@ -48,23 +54,27 @@ export class RouterService {
     }
   }
 
-  public updateQueryParams(params: Params, resetParams: string[] = []): Promise<boolean> {
+  public updateQueryParams(update: QueryParamsUpdate): Promise<boolean> {
     if (this.router.getCurrentNavigation()) {
       // router is currently performing navigation, don't mess with it
-      this.logService.logError("Navigation to query params flushed by the router service:", params);
+      this.logService.logError("Navigation to query params flushed by the router service:", update);
       return Promise.resolve(false);
     }
 
-    const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...params });
+    const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...update.parameters });
 
     // delete requested keys (for example, if we're updating the `term` query param, we might need to reset paging)
-    if (resetParams) {
-      for (const resetParam of resetParams) {
+    if (update.resetParams?.length) {
+      for (const resetParam of update.resetParams) {
         delete cleanParams[resetParam];
       }
     }
 
     const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: cleanParams });
-    return this.router.navigateByUrl(urlTree);
+
+    if (update.navigate || false)
+      return this.router.navigateByUrl(urlTree);
+
+    return new Promise((resolve, reject) => true);
   }
 }

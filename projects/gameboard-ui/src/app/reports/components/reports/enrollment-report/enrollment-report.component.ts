@@ -79,7 +79,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     };
   }
 
-  async updateView(parameters: EnrollmentReportParameters): Promise<ReportViewUpdate<EnrollmentReportRecord>> {
+  async updateView(parameters: EnrollmentReportParameters): Promise<ReportViewUpdate> {
     const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
 
@@ -127,8 +127,8 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     });
 
     return {
+      metaData: reportResults.metaData,
       reportContainerRef: this.reportContainer,
-      results: reportResults
     };
   }
 

@@ -9,9 +9,9 @@ import { GameContext } from '../../api/models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
-import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
 import { FontAwesomeService } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 
 @Component({
   selector: 'app-player-session',

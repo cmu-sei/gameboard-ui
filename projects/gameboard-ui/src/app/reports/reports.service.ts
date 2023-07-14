@@ -1,25 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, map } from 'rxjs';
-import { ReportViewModel, ReportKey, ReportResults, ReportTimeSpan, ReportSponsor } from './reports-models';
+import { ReportViewModel, ReportKey, ReportTimeSpan, ReportSponsor, ReportMetaData } from './reports-models';
 import { PagingArgs, SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
-import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
-import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { LogService } from '../services/log.service';
-import { SupportReportComponent } from './components/reports/support-report/support-report.component';
 import { ApiUrlService } from '@/services/api-url.service';
-import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
-  private static reportComponentMap: { [reportKey: string]: any } = {
-    'challenges-report': ChallengesReportComponent,
-    'enrollment': EnrollmentReportComponent,
-    'players-report': PlayersReportComponent,
-    'support-report': SupportReportComponent
-  };
-
   constructor(
     private apiUrlService: ApiUrlService,
     private filesService: FilesService,
@@ -34,14 +23,6 @@ export class ReportsService {
   async get(key: string): Promise<ReportViewModel | null> {
     const reports = await this.list();
     return reports.find(r => r.key === key) || null;
-  }
-
-  getComponentForReport(key: ReportKey): any {
-    if (ReportsService.reportComponentMap[key]) {
-      return ReportsService.reportComponentMap[key];
-    }
-
-    this.logService.logError(`Can't resolve a component for report key "${key.toString()}".`);
   }
 
   getChallengeSpecs(gameId?: string): Observable<SimpleEntity[]> {
@@ -77,6 +58,10 @@ export class ReportsService {
       pageNumber: 0,
       pageSize: 5
     };
+  }
+
+  getReportMetaData(key: ReportKey): Observable<ReportMetaData> {
+    return this.http.get<ReportMetaData>(this.apiUrlService.build("/reports/metaData", { reportKey: key }));
   }
 
   dateToQueryStringEncoded(date?: Date) {

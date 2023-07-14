@@ -29,7 +29,9 @@ import { EnrollmentReportComponent } from './components/reports/enrollment-repor
 import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { PracticeModeReportByChallengeComponent } from './components/reports/practice-mode-report/practice-mode-report-by-challenge/practice-mode-report-by-challenge.component';
 import { PracticeModeReportByUserComponent } from './components/reports/practice-mode-report/practice-mode-report-by-user/practice-mode-report-by-user.component';
+import { PracticeModeReportPracVsCompComponent } from './components/reports/practice-mode-report/practice-mode-report-prac-vs-comp/practice-mode-report-prac-vs-comp.component';
 import { PracticeModeReportComponent } from './components/reports/practice-mode-report/practice-mode-report.component';
+import { SponsorChallengePerformanceComponent } from './components/reports/practice-mode-report/sponsor-challenge-performance/sponsor-challenge-performance.component';
 import { SupportReportContextMenuComponent } from './components/reports/support-report-context-menu/support-report-context-menu.component';
 import { SupportReportComponent } from './components/reports/support-report/support-report.component';
 import { ReportPageComponent } from './pages/report-page/report-page.component';
@@ -38,7 +40,6 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
-import { PracticeModeReportPracVsCompComponent } from './components/reports/practice-mode-report/practice-mode-report-prac-vs-comp/practice-mode-report-prac-vs-comp.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { PracticeModeReportPracVsCompComponent } from './components/reports/prac
     ReportFieldNoValueComponent,
     ChallengeOrGameFieldComponent,
     PracticeModeReportPracVsCompComponent,
+    SponsorChallengePerformanceComponent,
   ],
   imports: [
     CommonModule,

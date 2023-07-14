@@ -11,7 +11,6 @@ import { UserRegistrarComponent } from './user-registrar/user-registrar.componen
 import { UtilityModule } from '../utility/utility.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ApiModule } from '../api/api.module';
 import { FormsModule } from '@angular/forms';
 import { GameEditorComponent } from './game-editor/game-editor.component';
@@ -31,7 +30,7 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { PrereqsComponent } from './prereqs/prereqs.component';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { SupportReportComponent } from './support-report/support-report.component';
+import { SupportReportLegacyComponent } from './support-report-legacy/support-report-legacy.component';
 import { PlayerNamesComponent } from './player-names/player-names.component';
 import { ParticipationReportComponent } from './participation-report/participation-report.component';
 import { CoreModule } from '../core/core.module';
@@ -64,7 +63,7 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
     TeamObserverComponent,
     PrereqsComponent,
     FeedbackReportComponent,
-    SupportReportComponent,
+    SupportReportLegacyComponent,
     PlayerNamesComponent,
     ParticipationReportComponent,
     UserApiKeysComponent,
@@ -92,7 +91,7 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },
           { path: 'report/feedback', component: FeedbackReportComponent },
-          { path: 'report/support', component: SupportReportComponent },
+          { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: 'support', component: ChallengeBrowserComponent }
         ]

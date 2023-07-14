@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { PracticeModeReportParameters, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters } from './practice-mode-report.models';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { PracticeModeReportParameters, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters, PracticeModeReportRecord } from './practice-mode-report.models';
 import { ReportsService } from '@/reports/reports.service';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { ReportResults, ReportSponsor } from '@/reports/reports-models';
+import { ReportKey, ReportResults, ReportSponsor } from '@/reports/reports-models';
 import { QueryParamModelConfig } from '@/core/directives/query-param-model.directive';
-import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
+import { ReportComponentBase } from '../report-base.component';
+import { ActiveReportService } from '@/reports/services/active-report.service';
 
 type PracticeModeReportSelectedTab = "by-player" | "by-challenge" | "prac-vs-comp";
 
@@ -16,12 +17,16 @@ type PracticeModeReportSelectedTab = "by-player" | "by-challenge" | "prac-vs-com
   templateUrl: './practice-mode-report.component.html',
   styleUrls: ['./practice-mode-report.component.scss']
 })
-export class PracticeModeReportComponent implements OnInit {
+export class PracticeModeReportComponent extends ReportComponentBase<PracticeModeReportParameters, PracticeModeReportRecord> implements OnInit {
   // private dateQueryParamModel: QueryParamModelConfig<ReportDateRange> = {
   //   name: "practiceDate",
   //   serialize: (value) => value.dateStart!.toString(),
   //   deserialize: (queryStringValue) => ({ dateStart: new Date(queryStringValue), dateEnd: undefined }),
   // };
+
+  @ViewChild("byChallenge") byChallengeElementRef?: ElementRef<HTMLElement>;
+  @ViewChild("byPlayer") byPlayerElementRef?: ElementRef<HTMLElement>;
+  @ViewChild("pracVComp") pracVCompElementRef?: ElementRef<HTMLElement>;
 
   protected games$: Observable<SimpleEntity[]> = this.reportsService.getGames();
   protected seasons$: Observable<string[]> = this.reportsService.getSeasons();
@@ -36,29 +41,11 @@ export class PracticeModeReportComponent implements OnInit {
   protected getSponsorValue = (s: ReportSponsor) => s.id;
   protected getSponsorSearchText = (s: ReportSponsor) => s.name;
 
-  private _selectedParameters$ = new BehaviorSubject<PracticeModeReportParameters>({
-    practiceDate: {},
-    games: [],
-    seasons: [],
-    series: [],
-    sponsors: [],
-    tracks: [],
-    paging: this.reportsService.getDefaultPaging(),
-    grouping: PracticeModeReportGrouping.player
-  });
-  protected selectedParameters$ = this._selectedParameters$.asObservable();
-  protected get selectedParameters(): PracticeModeReportParameters {
-    return this._selectedParameters$.value;
-  }
-  protected set(value: PracticeModeReportParameters) {
-    this._selectedParameters$.next(value);
-  }
-
   constructor(
-    private reportService: PracticeModeReportService,
+    protected activeReportService: ActiveReportService,
     private reportsService: ReportsService,
     private route: ActivatedRoute,
-    private unsub: UnsubscriberService) { }
+    private unsub: UnsubscriberService) { super(activeReportService); }
 
   async ngOnInit(): Promise<void> {
     this.unsub.add(
@@ -81,15 +68,44 @@ export class PracticeModeReportComponent implements OnInit {
             this.selectedTab = "prac-vs-comp";
             break;
         }
-
-        this._selectedParameters$.next(this.reportService.unflattenParameters(queryParams as PracticeModeReportFlatParameters));
       })
     );
+  }
 
-    this._selectedParameters$.next(this.selectedParameters);
+  protected getDefaultParameters(): PracticeModeReportParameters {
+    return {
+      practiceDate: {},
+      games: [],
+      seasons: [],
+      series: [],
+      sponsors: [],
+      tracks: [],
+      paging: {},
+      grouping: PracticeModeReportGrouping.player
+    };
   }
 
   protected handleTabSelected(tabId: PracticeModeReportSelectedTab) {
     this.selectedTab = tabId;
+  }
+
+  protected async updateView(parameters: PracticeModeReportParameters) {
+    const elRef = (() => {
+      switch (parameters.grouping) {
+        case PracticeModeReportGrouping.challenge:
+          return this.byChallengeElementRef;
+        case PracticeModeReportGrouping.player:
+          return this.byPlayerElementRef;
+        case PracticeModeReportGrouping.practiceVersusCompetitive:
+          return this.pracVCompElementRef;
+        default:
+          return undefined;
+      }
+    })();
+
+    return {
+      metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.PracticeModeReport)),
+      reportElementRef: elRef
+    };
   }
 }

@@ -44,13 +44,13 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     return { competition: undefined, registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
   }
 
-  async updateView(parameters: ChallengesReportParameters): Promise<ReportViewUpdate<ChallengesReportRecord>> {
+  async updateView(parameters: ChallengesReportParameters): Promise<ReportViewUpdate> {
     const results = await firstValueFrom(this.reportService.getReportData(parameters));
     this.chartConfig = this.buildDoughnutChart(results);
     this.ctx$ = of(results);
 
     return {
-      results,
+      metaData: results.metaData,
       reportContainerRef: this.reportElementRef!
     };
   }

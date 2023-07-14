@@ -66,7 +66,7 @@ export class PlayersReportComponent
     });
   }
 
-  async updateView(params?: PlayersReportParameters): Promise<ReportViewUpdate<PlayersReportRecord>> {
+  async updateView(params?: PlayersReportParameters): Promise<ReportViewUpdate> {
     const apiParams = params ? this.reportService.flattenParameters(params) : undefined;
     const results = await firstValueFrom(this.reportService.getReportData(apiParams));
 
@@ -76,7 +76,7 @@ export class PlayersReportComponent
     };
 
     return {
-      results,
+      metaData: results.metaData,
       reportContainerRef: this.reportElementRef!
     };
   }

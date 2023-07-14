@@ -67,7 +67,7 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportPar
     };
   }
 
-  async updateView(parameters: SupportReportParameters): Promise<ReportViewUpdate<SupportReportRecord>> {
+  async updateView(parameters: SupportReportParameters): Promise<ReportViewUpdate> {
     const results = await firstValueFrom(this.reportService.getReportData(parameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
 
@@ -79,22 +79,8 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportPar
     };
 
     return {
+      metaData: results.metaData,
       reportContainerRef: this.reportElementRef,
-      results
-    };
-
-    return {
-      reportContainerRef: this.reportElementRef,
-      results: {
-        records: [],
-        metaData: {
-          key: ReportKey.SupportReport,
-          title: "whatever",
-          description: "yay",
-          runAt: new Date()
-        },
-        paging: { pageNumber: 0, pageSize: 5, itemCount: 0 }
-      }
     };
   }
 
