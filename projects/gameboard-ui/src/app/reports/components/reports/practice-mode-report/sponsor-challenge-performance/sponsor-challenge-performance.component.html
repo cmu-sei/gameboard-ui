@@ -1,7 +1,9 @@
 <div class="sponsor-challenge-performance-component">
     <div class="modal-header">
-        <h4 class="modal-title pull-left">Sponsor Performance</h4>
-        <h5 class="modal-title pull-left">{{ context.challenge.name }}</h5>
+        <div class="modal-title pull-left">
+            <h2>{{ context.challenge.name }}</h2>
+            <h4>Sponsor Performance</h4>
+        </div>
         <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
             <span aria-hidden="true" class="visually-hidden">&times;</span>
         </button>
@@ -27,8 +29,8 @@
                     <td>Sponsor</td>
                     <td>Player Count</td>
                     <td>Total Attempts</td>
-                    <td>High Score</td>
-                    <td>Avg. Score</td>
+                    <td>High</td>
+                    <td>Avg</td>
                     <td>Complete</td>
                     <td>Partial</td>
                     <td>Zero</td>
@@ -37,7 +39,7 @@
                     <td>
                         <div class="d-flex align-items-center">
                             <app-player-avatar class="d-block mr-2"
-                                [avatarUri]="sponsorPerformance.sponsor.logoFileName| relativeImage"
+                                [avatarUri]="sponsorPerformance.sponsor.logoFileName | relativeImage"
                                 size="small"></app-player-avatar>
 
                             <div class="sponsor-info flex-grow-1">
@@ -46,20 +48,27 @@
                         </div>
                     </td>
                     <td class="report-field numerical">
-                        <p>{{ sponsorPerformance.performance.playerCount }}</p>
+                        <p>{{ sponsorPerformance.performance.players.length }}</p>
                     </td>
                     <td class="report-field numerical">
                         <p>{{ sponsorPerformance.performance.totalAttempts }}</p>
                     </td>
 
                     <td class="report-field numerical">
-                        <p>{{ sponsorPerformance.performance }}</p>
+                        <p>{{ sponsorPerformance.performance.scoreHigh }}</p>
                     </td>
                     <td class="report-field numerical">
-                        <p>{{ sponsorPerformance.performance }}</p>
+                        <p>{{ sponsorPerformance.performance.scoreAvg }}</p>
+                    </td>
+
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.percentageCompleteSolved }}%</p>
                     </td>
                     <td class="report-field numerical">
-                        <p>{{ sponsorPerformance.performance }}</p>
+                        <p>{{ sponsorPerformance.performance.percentagePartiallySolved }}%</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.percentageZeroScoreSolved }}%</p>
                     </td>
                 </tr>
             </tbody>

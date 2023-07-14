@@ -7,22 +7,24 @@
         <thead class="thead-light">
             <tr class="headers super-headers-row">
                 <th scope="col"></th>
-                <th scope="col" colSpan="2" class="group-header">Scoring</th>
-                <th scope="col" colSpan="6" class="group-header">Performance</th>
+                <th scope="col" colspan="3" class="group-header">Engagement</th>
+                <th scope="col" colSpan="3" class="group-header">Scoring</th>
+                <th scope="col" colSpan="3" class="group-header">Solves</th>
             </tr>
         </thead>
 
         <tbody>
             <tr class="headers headers-row">
                 <td>Challenge</td>
-                <td>Max Possible</td>
-                <td>Average</td>
                 <td>Players</td>
                 <td>Attempts</td>
                 <td>Sponsors</td>
-                <td>Complete Solves</td>
-                <td>Partial Solves</td>
-                <td>Unsolves</td>
+                <td>Max Possible</td>
+                <td>High</td>
+                <td>Average</td>
+                <td>Complete</td>
+                <td>Partial</td>
+                <td>Zero</td>
             </tr>
 
             <tr class="data-row" *ngFor="let record of results.records">
@@ -32,18 +34,9 @@
                         [game]="record.game"></app-challenge-or-game-field>
                 </td>
 
-                <!--SCORING-->
+                <!--ENGAGEMENT-->
                 <td class="report-field numerical">
-                    <p>{{ record.maxPossibleScore }}</p>
-                </td>
-
-                <td class="report-field numerical">
-                    <p>{{ record.avgScore }}</p>
-                </td>
-
-                <!--PERFORMANCE-->
-                <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.playerCount }}</p>
+                    <p>{{ record.overallPerformance.players.length }}</p>
                 </td>
                 <td class="report-field numerical">
                     <p>{{ record.overallPerformance.totalAttempts }}</p>
@@ -51,9 +44,23 @@
                 <td class="report-field numerical">
                     <p class="tooltipped-value"
                         (click)="handleSponsorsClicked({ id: record.id, name: record.name }, record.performanceBySponsor)">
-                        {{
-                        record.sponsorsPlayed.length }}</p>
+                        {{ record.sponsorsPlayed.length }}</p>
                 </td>
+
+                <!--SCORING-->
+                <td class="report-field numerical">
+                    <p>{{ record.maxPossibleScore }}</p>
+                </td>
+
+                <td class="report-field numerical">
+                    <p>{{ record.overallPerformance.scoreHigh }}</p>
+                </td>
+
+                <td class="report-field numerical">
+                    <p>{{ record.avgScore }}</p>
+                </td>
+
+                <!--PERFORMANCE-->
                 <td class="report-field numerical">
                     <p>{{ record.overallPerformance.percentageCompleteSolved }}%</p>
                 </td>
