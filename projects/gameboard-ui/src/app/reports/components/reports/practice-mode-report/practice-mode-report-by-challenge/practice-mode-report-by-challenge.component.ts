@@ -6,6 +6,8 @@ import { PagingRequest } from '@/core/components/select-pager/select-pager.compo
 import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
 import { RouterService } from '@/services/router.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';
+import { SimpleEntity } from '@/api/models';
 
 @Component({
   selector: 'app-practice-mode-report-by-challenge',
@@ -34,14 +36,18 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
     }
   }
 
-  handleSponsorsClicked(sponsorPerformance: PracticeModeReportSponsorPerformance[]) {
+  handleSponsorsClicked(challenge: SimpleEntity, sponsorPerformance: PracticeModeReportSponsorPerformance[]) {
     if (!this.sponsorPerformanceTemplate) {
       throw new Error("Couldn't resolve the sponsor performance template.");
     }
 
-    this.modalService.openComponent({
-      templateRef: this.sponsorPerformanceTemplate,
-      context: sponsorPerformance
+    this.modalService.openComponent<SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext>({
+      content: SponsorChallengePerformanceComponent,
+      context: {
+        challenge,
+        sponsorPerformance
+      },
+      modalClasses: "modal-dialog-centered modal-xl"
     });
   }
 

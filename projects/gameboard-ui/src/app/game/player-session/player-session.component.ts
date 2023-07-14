@@ -12,6 +12,8 @@ import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm
 import { FontAwesomeService } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-player-session',
@@ -38,7 +40,8 @@ export class PlayerSessionComponent implements OnDestroy {
 
   constructor(
     private api: PlayerService,
-    private modalService: BsModalService,
+    private log: LogService,
+    private modalService: ModalConfirmService,
     protected faService: FontAwesomeService
   ) { }
 
@@ -104,12 +107,14 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   showConfirmTeamReset(p: Player) {
-    this.modalService.show(ModalConfirmComponent, { initialState: { config: this.modalConfig } });
+    if (!this.modalConfig)
+      throw new Error("Couldn't open the reset modal: no ModalConfig present.");
+
+    this.modalService.openConfirm(this.modalConfig);
   }
 
   confirmResetTeam(p: Player): void {
-    this.modalService.hide(this.modalRef?.id);
-    this.modalRef = undefined;
+    this.modalService.hide();
     this.handleReset(p);
   }
 

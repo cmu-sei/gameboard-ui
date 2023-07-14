@@ -1,17 +1,18 @@
 import { TemplateRef } from "@angular/core";
-import { ModalConfirmComponent } from "./modal-confirm.component";
 
-export interface IModalReady<T> {
-    // constructor: (new (...args: any[]) => T);
-    config: Partial<T>;
+export interface IModalReady<TModalContext> {
+    context: TModalContext;
 }
 
-export interface ModalComponentConfig<T> {
-    templateRef: TemplateRef<T>,
-    context: T;
+export interface ModalConfig<TComponent, TContext extends Partial<TComponent>> {
+    content: ModalContent<TComponent>;
+    context: TContext;
+    modalClasses?: string;
 }
 
-export interface ModalConfirmConfig extends Partial<ModalConfirmComponent> {
+export type ModalContent<TComponent> = string | TemplateRef<any> | { new(...args: any[]): TComponent };
+
+export interface ModalConfirmConfig {
     bodyContent: string;
     title?: string;
     confirmButtonText?: string;

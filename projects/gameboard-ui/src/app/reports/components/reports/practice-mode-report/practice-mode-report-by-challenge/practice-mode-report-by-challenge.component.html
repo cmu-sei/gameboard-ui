@@ -49,7 +49,9 @@
                     <p>{{ record.overallPerformance.totalAttempts }}</p>
                 </td>
                 <td class="report-field numerical">
-                    <p class="tooltipped-value" (click)="handleSponsorsClicked(record.performanceBySponsor)">{{
+                    <p class="tooltipped-value"
+                        (click)="handleSponsorsClicked({ id: record.id, name: record.name }, record.performanceBySponsor)">
+                        {{
                         record.sponsorsPlayed.length }}</p>
                 </td>
                 <td class="report-field numerical">
