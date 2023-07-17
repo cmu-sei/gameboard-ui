@@ -243,7 +243,7 @@ export class NotificationService {
   }
 
   private async onTeamEvent(e: HubEvent): Promise<void> {
-    await this.maybeUpdateTeammates(e.model.teamId, e.action);
+    await this.maybeUpdateTeammates(e.model.id, e.action);
     this.teamEvents.next(e);
     this.postState({});
   }

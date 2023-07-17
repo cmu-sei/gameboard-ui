@@ -122,7 +122,7 @@ export class GamePageComponent implements OnDestroy {
         // this event relies on the hub, so we have to listen to it whether we generated it or not
         const currentPlayer = this.player$.getValue();
 
-        if (playerEvent.hubEvent.action == HubEventAction.roleChanged && currentPlayer && playerEvent.hubEvent.model.id !== currentPlayer.id) {
+        if (playerEvent.hubEvent.action == HubEventAction.roleChanged && currentPlayer && playerEvent.hubEvent.actingUser.id !== currentPlayer.userId) {
           const isPromoted = playerEvent.hubEvent.model.id == currentPlayer.id;
           currentPlayer.role = isPromoted ? PlayerRole.manager : PlayerRole.member;
           currentPlayer.isManager = isPromoted;

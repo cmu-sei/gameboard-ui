@@ -32,7 +32,11 @@
       <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="canUnenroll"
         (confirm)="onUnenrollRequest.emit(team.teamId)">Unenroll</app-confirm-button>
       <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="!canUnenroll"
-        (confirm)="onResetSessionRequest.emit(team.teamId)">Reset Session</app-confirm-button>
+        (confirm)="onResetSessionRequest.emit({ player, unenroll: false })">Reset
+        Session</app-confirm-button>
+      <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="!canUnenroll"
+        (confirm)="onResetSessionRequest.emit({ player, unenroll: true })">Reset Session &amp;
+        Unenroll</app-confirm-button>
     </div>
   </div>
 

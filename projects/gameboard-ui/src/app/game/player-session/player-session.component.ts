@@ -29,6 +29,7 @@ export class PlayerSessionComponent implements OnDestroy {
   playerObservable$ = this.player$.asObservable();
 
   private ctxSub?: Subscription;
+  private _isSyncStart = false;
 
   // sets up the modal if it's a team game that needs confirmation
   private modalRef?: BsModalRef;
@@ -45,6 +46,9 @@ export class PlayerSessionComponent implements OnDestroy {
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
       tap(ctx => {
+        // record whether we're on sync start (to decide if we preserve teams across resets)
+        this._isSyncStart = ctx?.game.requireSynchronizedStart || false;
+
         let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
 
         if (ctx) {
@@ -61,7 +65,7 @@ export class PlayerSessionComponent implements OnDestroy {
               }
             },
             game: {
-              isPracticeMode: ctx.game.isPracticeMode
+              isPracticeMode: ctx.game.isPracticeMode,
             }
           };
         }
@@ -98,7 +102,8 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   handleReset(p: Player): void {
-    this.api.resetSession({ player: p, unenrollTeam: true }).pipe(first()).subscribe(_ => {
+    this.api.resetSession({ player: p, unenroll: !this._isSyncStart }).pipe(first()).subscribe(_ => {
+      delete p.session;
       this.onSessionReset.emit(p);
     });
   }

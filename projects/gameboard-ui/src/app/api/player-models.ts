@@ -3,7 +3,7 @@
 
 import { ChallengeResult } from "./board-models";
 import { Game } from "./game-models";
-import { Search } from "./models";
+import { Search, SimpleEntity } from "./models";
 
 export interface Player {
   id: string;
@@ -188,6 +188,11 @@ export interface PlayerEnlistment {
   code: string;
 }
 
+export interface ResetSessionRequest {
+  player: Player;
+  unenroll: boolean;
+}
+
 export interface Standing {
   teamId: string;
   approvedName: string;
@@ -265,12 +270,11 @@ export interface TeamPlayer {
 }
 
 export interface TeamState {
-  teamId: string;
+  id: string;
   name: string;
-  approvedName: string;
-  sessionBegin: Date;
-  sessionEnd: Date;
-  actor: { userId: string };
+  sessionBegin: Date,
+  sessionEnd: Date,
+  actor: SimpleEntity
 }
 
 export interface TeamSummary {

@@ -15,7 +15,7 @@ export class TeamAdminContextMenuComponent implements OnInit {
   @Input() isViewing = false;
 
   @Output() onBonusManageRequest = new EventEmitter<Player>();
-  @Output() onSessionResetRequest = new EventEmitter<Player>();
+  @Output() onSessionResetRequest = new EventEmitter<{ player: Player, unenroll: boolean }>();
   @Output() onUnenrollRequest = new EventEmitter<Player>();
   @Output() onViewRequest = new EventEmitter<Player>();
 

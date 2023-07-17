@@ -19,7 +19,7 @@ export interface GameboardPerformanceSummaryViewModel {
     }
   },
   game: {
-    isPracticeMode: boolean
+    isPracticeMode: boolean;
   }
 }
 

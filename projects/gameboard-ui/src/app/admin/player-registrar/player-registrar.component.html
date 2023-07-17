@@ -19,7 +19,7 @@
       <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control"
         (input)="refresh$.next(true)">
     </div>
-    <div>
+    <div *ngIf="!isLoading; else loading">
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('active')">
         <fa-icon [hidden]="filter!=='active'" [icon]="faService.filter"></fa-icon>
         <span>active-only</span>
@@ -72,8 +72,7 @@
   </div>
 
   <small *ngIf="source.length === 100" class="text-warning">
-    Results limited to 100. Refine search term if
-    necessary.
+    Results limited to 100. Refine search term if necessary.
   </small>
   <hr />
 
@@ -170,7 +169,7 @@
       </button>
 
       <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
-        (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset(player)"
+        (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset($event)"
         (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
       </app-team-admin-context-menu>
     </div>
@@ -189,8 +188,9 @@
             {{reason}}
           </button></small>
       </div>
-      <app-player-session [id]="player.teamId" (onManageManualBonusesRequest)="manageManualBonuses(player)"
-        (onResetSessionRequest)="resetSession(player)" (onUnenrollRequest)="unenroll(player)"></app-player-session>
+      <app-admin-player-session [player]="player" (onManageManualBonusesRequest)="manageManualBonuses(player)"
+        (onResetSessionRequest)="confirmReset($event)"
+        (onUnenrollRequest)="unenroll(player)"></app-admin-player-session>
     </div>
   </div>
 </ng-container>

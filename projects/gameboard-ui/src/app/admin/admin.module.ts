@@ -19,7 +19,7 @@ import { GameMapperComponent } from './game-mapper/game-mapper.component';
 import { SpecBrowserComponent } from './spec-browser/spec-browser.component';
 import { PlayerRegistrarComponent } from './player-registrar/player-registrar.component';
 import { SponsorBrowserComponent } from './sponsor-browser/sponsor-browser.component';
-import { PlayerSessionComponent } from './player-session/player-session.component';
+import { PlayerSessionComponent } from './admin-player-session/admin-player-session.component';
 import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { ReportPageComponent } from './report-page/report-page.component';

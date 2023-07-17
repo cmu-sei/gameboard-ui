@@ -5,20 +5,20 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
-import { Team, TimeWindow } from '../../api/player-models';
+import { Player, ResetSessionRequest, Team, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { GameSessionService } from '../../services/game-session.service';
 
 @Component({
-  selector: 'app-player-session',
-  templateUrl: './player-session.component.html',
-  styleUrls: ['./player-session.component.scss']
+  selector: 'app-admin-player-session',
+  templateUrl: './admin-player-session.component.html',
+  styleUrls: ['./admin-player-session.component.scss']
 })
 export class PlayerSessionComponent implements OnInit {
-  @Input() id = '';
+  @Input() player!: Player;
   @Output() onManageManualBonusesRequest = new EventEmitter<string>();
   @Output() onUnenrollRequest = new EventEmitter<string>();
-  @Output() onResetSessionRequest = new EventEmitter<string>();
+  @Output() onResetSessionRequest = new EventEmitter<ResetSessionRequest>();
 
   team$!: Observable<Team>;
   team!: Team;
@@ -36,7 +36,7 @@ export class PlayerSessionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.team$ = this.api.getTeam(this.id).pipe(
+    this.team$ = this.api.getTeam(this.player.teamId).pipe(
       tap(t => this.team = t),
       tap(t => this.canUnenroll = this.sessionService.canUnenrollSession(new TimeWindow(t.sessionBegin, t.sessionEnd)))
     );

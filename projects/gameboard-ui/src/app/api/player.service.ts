@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, ResetSessionRequest, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -56,13 +56,8 @@ export class PlayerService {
     );
   }
 
-  public resetSession(request: { player: Player, unenrollTeam: boolean }): Observable<any> {
-    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { isManualReset: true, unenrollTeam: request.unenrollTeam }).pipe(
-      map(r => {
-        delete request.player.session;
-        return;
-      })
-    );
+  public resetSession(request: ResetSessionRequest): Observable<void> {
+    return this.http.post<void>(`${this.url}/team/${request.player.teamId}/session`, { unenroll: request.unenroll });
   }
 
   public updateSession(model: SessionChangeRequest): Observable<any> {
