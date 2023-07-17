@@ -24,6 +24,7 @@ export class PlayerSessionComponent implements OnDestroy {
   @Output() onSessionReset = new EventEmitter<Player>();
 
   errors: any[] = [];
+  isResetting = false;
   myCtx$!: Observable<GameContext | undefined>;
   player$ = new BehaviorSubject<Player | undefined>(undefined);
   playerObservable$ = this.player$.asObservable();
@@ -101,11 +102,11 @@ export class PlayerSessionComponent implements OnDestroy {
     this.onSessionStart.emit(startedPlayer);
   }
 
-  handleReset(p: Player): void {
-    this.api.resetSession({ player: p, unenroll: !this._isSyncStart }).pipe(first()).subscribe(_ => {
-      delete p.session;
-      this.onSessionReset.emit(p);
-    });
+  async handleReset(p: Player): Promise<void> {
+    this.isResetting = true;
+    await firstValueFrom(this.api.resetSession({ player: p, unenroll: !this._isSyncStart }));
+    delete p.session;
+    this.onSessionReset.emit();
   }
 
   showConfirmTeamReset(p: Player) {

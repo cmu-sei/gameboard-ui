@@ -139,12 +139,12 @@ export class GamePageComponent implements OnDestroy {
           return;
         }
 
-        if (playerEvent.hubEvent.action == HubEventAction.departed && playerEvent.hubEvent.actingUser.id !== localUser.user$.getValue()?.id) {
+        if (playerEvent.hubEvent.action == HubEventAction.departed && playerEvent.hubEvent.actingUser?.id !== localUser.user$.getValue()?.id) {
           return;
         }
 
         if (playerEvent.hubEvent.action == HubEventAction.deleted) {
-          this.showModal(playerEvent.hubEvent.actingUser.name);
+          this.showModal(playerEvent.hubEvent.actingUser?.name);
           this.player$.next(null);
         }
 
@@ -257,13 +257,15 @@ export class GamePageComponent implements OnDestroy {
     }
   }
 
-  private showModal(resettingPlayerName: string): void {
+  private showModal(resettingPlayerName?: string): void {
+    const resetInitiator = resettingPlayerName ? `your teammate "${resettingPlayerName}"` : "an administrator";
+
     this.modalService.show(
       ModalConfirmComponent, {
       initialState: {
         config: {
           title: "Session reset",
-          bodyContent: `Your session was reset by your teammate "${resettingPlayerName}". We'll take you back to the game page so you can re-enroll if you'd like to.`,
+          bodyContent: `Your session was reset by ${resetInitiator}. We'll take you back to the game page so you can re-enroll if you'd like to.`,
           confirmButtonText: "Got it",
           hideCancel: true
         }

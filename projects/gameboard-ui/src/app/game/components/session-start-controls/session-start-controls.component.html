@@ -19,7 +19,8 @@
             "I'm ready" below. If you're all set to play, be sure to ready up so everyone can start playing!
         </p>
 
-        <div class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
+        <div *ngIf="isConnectedToGameHub; else connectingToHub"
+            class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
             <progressbar class="flex-grow-1" [animate]="true" [value]="playerReadyPct" [max]="100" [ariaValueMin]="0"
                 [ariaValueMax]="100" type="info">
                 <strong>{{playerReadyPct}}%</strong>
@@ -33,10 +34,9 @@
 
     <div class="d-flex align-items-center justify-content-center" *ngIf="!isDoubleChecking">
         <ng-container *ngIf="ctx.game.requireSynchronizedStart">
-            <button btnCheckbox class="btn btn-lg mr-4" [class.btn-outline-success]="!ctx.player.isReady"
-                [class.btn-danger]="ctx.player.isReady" [(ngModel)]="ctx.player.isReady"
-                (click)="handleReadyUpdated(ctx.player)" [disabled]="!isConnectedToGameHub"
-                [tooltip]="(!isConnectedToGameHub ? 'Connecting to the game hub...' : '')">
+            <button *ngIf="isConnectedToGameHub; else connectingToHub" btnCheckbox class="btn btn-lg mr-4"
+                [class.btn-outline-success]="!ctx.player.isReady" [class.btn-danger]="ctx.player.isReady"
+                [(ngModel)]="ctx.player.isReady" (click)="handleReadyUpdated(ctx.player)">
                 <span>{{ ctx.player.isReady ? "Cancel - I'm not ready" : "I'm ready!" }}</span>
             </button>
         </ng-container>
@@ -83,3 +83,7 @@
         </div>
     </div>
 </div>
+
+<ng-template #connectingToHub>
+    <app-spinner>Connecting to the game...</app-spinner>
+</ng-template>

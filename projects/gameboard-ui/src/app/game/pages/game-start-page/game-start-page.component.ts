@@ -27,12 +27,7 @@ interface GameLaunchContext {
 export class GameStartPageComponent implements OnInit, OnDestroy {
   private gameId: string | null;
   private playerId: string | null;
-
   private subs: Subscription[] = [];
-  private externalGameLaunchStartedSub?: Subscription;
-  private externalGameLaunchProgressChangedSub?: Subscription;
-  private externalGameLaunchEndedSub?: Subscription;
-  private gameStartFailureSub?: Subscription;
 
   errors: string[] = [];
   gameLaunchCtx?: GameLaunchContext;
