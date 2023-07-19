@@ -9,7 +9,7 @@ export interface EnrollmentReportFlatParameters {
     pageSize?: number;
     seasons?: string
     series?: string;
-    sponsors?: string;
+    sponsorIds?: string;
     tracks?: string;
 }
 

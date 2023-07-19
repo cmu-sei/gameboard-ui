@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IReportService } from './ireport.service';
 import { ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord } from '../components/reports/challenges-report/challenges-report.models';
 import { Observable } from 'rxjs';
 import { ReportResults } from '../reports-models';
@@ -9,7 +8,7 @@ import { ObjectService } from '@/services/object.service';
 import { ReportsService } from '../reports.service';
 
 @Injectable({ providedIn: 'root' })
-export class ChallengesReportService implements IReportService<ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord> {
+export class ChallengesReportService {
 
   constructor(
     private apiRootService: ApiUrlService,

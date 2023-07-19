@@ -6,7 +6,6 @@ import { Search } from '@/api/models';
 import { SpecSummary } from '@/api/spec-models';
 import { ConfigService } from '@/utility/config.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { QueryParamModelConfig } from '@/core/directives/query-param-model.directive';
 import { RouterService } from '@/services/router.service';
 import { PracticeService } from '@/services/practice.service';
 
@@ -25,13 +24,6 @@ export class PracticePageComponent {
   count = 0;
   skip = 0;
   take = 1;
-
-  termQueryParamModel: QueryParamModelConfig<string> = {
-    name: "term",
-    debounce: 500,
-    resetQueryParams: ["skip", "take"],
-    navigateOnChange: true
-  };
 
   private static readonly DEFAULT_PAGE_SIZE = 100;
 
@@ -66,8 +58,7 @@ export class PracticePageComponent {
     this.routerService.updateQueryParams({
       parameters: {
         skip: s, navigate: true
-      },
-      navigate: true
+      }
     });
   }
 

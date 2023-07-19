@@ -16,7 +16,8 @@
         </span>
       </div>
       <input type="search" placeholder="search" class="form-control border-0" [value]="oneWayTerm"
-        [autofocus]="!!oneWayTerm" [appQueryParamModel]="termQueryParamModel">
+        [autofocus]="!!oneWayTerm"
+        [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
     </div>
 
     <app-pager [skip]="skip || 0" [take]="take || 0" [count]="count" (changed)="paged($event)"></app-pager>

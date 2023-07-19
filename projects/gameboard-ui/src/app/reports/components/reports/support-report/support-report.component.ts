@@ -1,18 +1,17 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SupportReportParameters, SupportReportRecord } from './support-report.models';
-import { ReportKey, ReportResults, ReportViewUpdate } from '../../../reports-models';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
+import { ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '../../../services/support-report.service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { groupBy } from 'projects/gameboard-ui/src/tools';
 import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { SupportService } from '@/api/support.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
-import { ActiveReportService } from '@/reports/services/active-report.service';
 import { ReportComponentBase } from '../report-base.component';
-import { ActivatedRoute } from '@angular/router';
-import { QueryParamModelConfig } from '@/core/directives/query-param-model.directive';
+import { PagingArgs } from '@/api/models';
+import { RouterService } from '@/services/router.service';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -27,48 +26,32 @@ interface SupportReportContext {
   styleUrls: ['./support-report.component.scss'],
   providers: [createCustomInputControlValueAccessor(SupportReportComponent)]
 })
-export class SupportReportComponent extends ReportComponentBase<SupportReportParameters, SupportReportRecord> implements OnInit, OnDestroy {
+export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters, SupportReportParameters> {
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
 
   ctx?: SupportReportContext;
-  private queryParamsSub?: Subscription;
-
-  protected thing: QueryParamModelConfig<string> = {
-    name: "status",
-  };
 
   constructor(
-    public faService: FontAwesomeService,
-    activeReportService: ActiveReportService,
+    protected faService: FontAwesomeService,
     private reportService: SupportReportService,
     private rgbService: TextToRgbService,
-    private route: ActivatedRoute,
-    private supportService: SupportService) { super(activeReportService); }
+    private routerService: RouterService,
+    private supportService: SupportService) { super(); }
 
-  async ngOnInit() {
-    this.queryParamsSub = this.route.queryParams.subscribe(query => {
-      const reportParams = this.reportService.unflattenParameters({ ...query });
-      // this causes the report to reload
-      this.selectedParameters = reportParams;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.queryParamsSub?.unsubscribe();
-  }
-
-  getDefaultParameters(): SupportReportParameters {
+  getDefaultParameters(defaultPaging: PagingArgs): SupportReportParameters {
     return {
       gameChallengeSpec: {},
       labels: [],
       openedDateRange: {},
+      paging: defaultPaging,
       timeSinceOpen: {},
       timeSinceUpdate: {},
     };
   }
 
-  async updateView(parameters: SupportReportParameters): Promise<ReportViewUpdate> {
-    const results = await firstValueFrom(this.reportService.getReportData(parameters));
+  async updateView(parameters: SupportReportFlatParameters): Promise<ReportViewUpdate> {
+    const structuredParameters = this.reportService.unflattenParameters(parameters);
+    const results = await firstValueFrom(this.reportService.getReportData(structuredParameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
 
     this.ctx = {
@@ -82,6 +65,10 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportPar
       metaData: results.metaData,
       reportContainerRef: this.reportElementRef,
     };
+  }
+
+  protected handlePagingChange(paging: PagingArgs) {
+    this.routerService.updateQueryParams({ parameters: { ...paging } });
   }
 
   private buildTicketsByStatus(records: SupportReportRecord[]): DoughnutChartConfig {

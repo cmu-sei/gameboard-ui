@@ -1,68 +1,27 @@
 import { Injectable } from '@angular/core';
-import { IReportService } from './ireport.service';
 import { EnrollmentReportFlatParameters, EnrollmentReportLineChartGroup, EnrollmentReportParameters, EnrollmentReportRecord } from '../components/reports/enrollment-report/enrollment-report.models';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ReportResults } from '../reports-models';
 import { ReportsService } from '../reports.service';
-import { SimpleEntity } from '@/api/models';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '@/services/api-url.service';
 import { DateTime } from 'luxon';
 
 @Injectable({ providedIn: 'root' })
-export class EnrollmentReportService
-  implements IReportService<EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord> {
-
+export class EnrollmentReportService {
   constructor(
     private apiUrl: ApiUrlService,
     private http: HttpClient,
     private reportsService: ReportsService) { }
 
-  flattenParameters(parameters: EnrollmentReportParameters): EnrollmentReportFlatParameters {
-    return {
-      enrollDateEnd: this.reportsService.dateToQueryStringEncoded(parameters.enrollDate?.dateEnd),
-      enrollDateStart: this.reportsService.dateToQueryStringEncoded(parameters.enrollDate?.dateStart),
-      pageNumber: parameters.paging.pageNumber,
-      pageSize: parameters.paging.pageSize,
-      seasons: this.reportsService.flattenMultiSelectValues(parameters.seasons),
-      series: this.reportsService.flattenMultiSelectValues(parameters.series),
-      sponsors: this.reportsService.flattenMultiSelectValues(parameters.sponsors?.map(s => s.id) || []),
-      tracks: this.reportsService.flattenMultiSelectValues(parameters.tracks)
-    };
+  getReportData(parameters: EnrollmentReportFlatParameters): Observable<ReportResults<EnrollmentReportRecord>> {
+    const pagedParameters = this.reportsService.applyDefaultPaging(parameters);
+    return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", pagedParameters));
   }
 
-  unflattenParameters(parameters: EnrollmentReportFlatParameters): EnrollmentReportParameters {
-    const defaultPaging = this.reportsService.getDefaultPaging();
-
-    return {
-      enrollDate: {
-        dateStart: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateStart),
-        dateEnd: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateEnd)
-      },
-      paging: {
-        pageNumber: parameters.pageNumber || defaultPaging.pageNumber,
-        pageSize: parameters.pageSize || defaultPaging.pageSize
-      },
-      seasons: this.reportsService.unflattenMultiSelectValues(parameters.seasons),
-      series: this.reportsService.unflattenMultiSelectValues(parameters.series),
-      sponsors: this.reportsService
-        .unflattenMultiSelectValues(parameters.sponsors)
-        .map<SimpleEntity>(v => ({ id: v, name: '' })),
-      tracks: this.reportsService.unflattenMultiSelectValues(parameters.tracks)
-    };
-  }
-
-  getReportData(parameters: EnrollmentReportParameters): Observable<ReportResults<EnrollmentReportRecord>> {
-    if (!parameters.paging?.pageSize) {
-      parameters.paging = this.reportsService.getDefaultPaging();
-    }
-
-    return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", this.flattenParameters(parameters)));
-  }
-
-  getTrendData(parameters: EnrollmentReportParameters): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
+  getTrendData(parameters: EnrollmentReportFlatParameters): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
     // ignore paging parameters for the line chart
-    const flattened = this.flattenParameters(parameters);
+    const flattened = parameters;
     flattened.pageNumber = undefined;
     flattened.pageSize = undefined;
 

@@ -7,7 +7,6 @@ import { ToastService } from '../../../utility/services/toast.service';
 @Component({
   selector: 'app-share-button',
   templateUrl: './share-button.component.html',
-  styleUrls: ['./share-button.component.scss']
 })
 export class ShareButtonComponent {
   @Input() message?: string;

@@ -12,16 +12,11 @@ export interface SponsorChallengePerformanceModalContext extends Partial<Sponsor
 @Component({
   selector: 'app-sponsor-challenge-performance',
   templateUrl: './sponsor-challenge-performance.component.html',
-  styleUrls: ['./sponsor-challenge-performance.component.scss']
 })
 export class SponsorChallengePerformanceComponent implements IModalReady<SponsorChallengePerformanceModalContext> {
   context!: SponsorChallengePerformanceModalContext;
 
   constructor(private modalRef: BsModalRef) { }
-
-  ngOnInit() {
-    console.log(this.context);
-  }
 
   close() {
     this.modalRef.hide();

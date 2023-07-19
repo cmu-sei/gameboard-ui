@@ -36,6 +36,7 @@ import { QueryParamModelDirective } from './directives/query-param-model.directi
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
+import { PluralizerPipe } from './pipes/pluralizer.pipe';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
 import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
 import { SortPipe } from './pipes/sort.pipe';
@@ -46,6 +47,7 @@ import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 
 const PUBLIC_DECLARATIONS = [
@@ -63,6 +65,7 @@ const PUBLIC_DECLARATIONS = [
   PlayerAvatarComponent,
   PlayerAvatarListComponent,
   PlayerStatusComponent,
+  PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,
   RelativeUrlsPipe,
@@ -81,6 +84,7 @@ const PUBLIC_DECLARATIONS = [
 ];
 
 const RELAYED_MODULES = [
+  AlertModule,
   BsDatepickerModule,
   BsDropdownModule,
   FontAwesomeModule,
@@ -94,7 +98,7 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
   ],
   imports: [
     CommonModule,

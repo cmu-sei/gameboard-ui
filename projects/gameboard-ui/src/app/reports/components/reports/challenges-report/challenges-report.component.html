@@ -1,13 +1,9 @@
 <div class="challenge-report-component" *ngIf="ctx$ | async as ctx; else loading">
     <app-report-parameters-container>
-        <app-parameter-series [(ngModel)]="selectedParameters.competition" ngDefaultControl
-            name="competition"></app-parameter-series>
-        <app-parameter-track [(ngModel)]="selectedParameters.track" [hideModifierSelect]="true" ngDefaultControl
-            name="track"></app-parameter-track>
-        <app-parameter-game-challengespec ngDefaultControl
-            [(ngModel)]="selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
-        <app-parameter-date-range ngDefaultControl label="Challenge deploy date range"
-            [(ngModel)]="selectedParameters.registrationDateRange"></app-parameter-date-range>
+        <app-parameter-series ngDefaultControl name="competition"></app-parameter-series>
+        <app-parameter-track [hideModifierSelect]="true" ngDefaultControl name="track"></app-parameter-track>
+        <app-parameter-game-challengespec ngDefaultControl></app-parameter-game-challengespec>
+        <app-parameter-date-range ngDefaultControl label="Challenge deploy date range"></app-parameter-date-range>
     </app-report-parameters-container>
 
     <div class="report-body mt-4" *ngIf="ctx.records.length" #challengesReport>

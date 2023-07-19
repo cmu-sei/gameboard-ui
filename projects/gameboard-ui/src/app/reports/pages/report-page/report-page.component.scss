@@ -28,73 +28,78 @@ nav li {
     border-left: solid 1px #ffffff;
 }
 
-::ng-deep table.gameboard-report {
-    width: 100%;
-
-    th,
-    td {
-        padding: 4px 8px;
+::ng-deep {
+    hr {
+        border: double 1px #bbbbbb;
     }
 
-    /* override reboot.scss */
-    td p {
-        margin: 0;
-    }
+    table.gameboard-report {
+        width: 100%;
 
-    .data-row {
-        border-bottom: dotted 1px #dddddd;
-        font-size: 1.1rem;
-
+        th,
         td {
-            padding: 1rem 0.5rem;
+            padding: 4px 8px;
+        }
+
+        /* override reboot.scss */
+        td p {
+            margin: 0;
+        }
+
+        .data-row {
+            border-bottom: dotted 1px #dddddd;
+            font-size: 1.1rem;
+
+            td {
+                padding: 1rem 0.5rem;
+            }
+        }
+
+        td.report-field.date {
+            text-align: center;
+        }
+
+        td.report-field.numerical {
+            text-align: center;
+        }
+
+        .headers-row {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: solid 1px #ffffff;
+
+            td:not(:first-of-type) {
+                border-left: solid 1px #ffffff;
+            }
+        }
+
+        .super-headers-row {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: solid 1px #ffffff;
+            border-top: solid 1px #ffffff;
+            text-transform: uppercase;
+
+            th:not(:first-of-type) {
+                border-left: solid 1px #ffffff;
+            }
+        }
+
+        .tooltipped-value {
+            border-bottom: dotted 1px $info;
+            color: $info;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .overflow-to-ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
-
-    td.report-field.date {
-        text-align: center;
-    }
-
-    td.report-field.numerical {
-        text-align: center;
-    }
-
-    .headers-row {
-        font-size: 1.2rem;
-        font-weight: bold;
-        text-align: center;
-        border-bottom: solid 1px #ffffff;
-
-        td:not(:first-of-type) {
-            border-left: solid 1px #ffffff;
-        }
-    }
-
-    .super-headers-row {
-        font-size: 1.25rem;
-        font-weight: bold;
-        text-align: center;
-        border-bottom: solid 1px #ffffff;
-        border-top: solid 1px #ffffff;
-        text-transform: uppercase;
-
-        th.group-header:not(:first-of-type) {
-            border-left: solid 1px #ffffff;
-        }
-    }
-
-    .tooltipped-value {
-        border-bottom: dotted 1px $info;
-        color: $info;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .overflow-to-ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
     .subtle-info {
         color: #aaa;
         font-size: 0.9rem;

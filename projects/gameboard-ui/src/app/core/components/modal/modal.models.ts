@@ -7,7 +7,7 @@ export interface IModalReady<TModalContext> {
 export interface ModalConfig<TComponent, TContext extends Partial<TComponent>> {
     content: ModalContent<TComponent>;
     context: TContext;
-    modalClasses?: string;
+    modalClasses?: string[];
 }
 
 export type ModalContent<TComponent> = string | TemplateRef<any> | { new(...args: any[]): TComponent };

@@ -10,7 +10,7 @@ import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
   styleUrls: ['./multi-select.component.scss'],
   providers: [createCustomInputControlValueAccessor(MultiSelectComponent)]
 })
-export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class MultiSelectComponent<T> extends CustomInputComponent<T[] | null> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() label?: string;
   @Input() searchPlaceholder?: string = "Search items";
   @Input() options: T[] | null = [];
@@ -25,11 +25,11 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
 
   @ViewChild("defaultItemTemplate") defaultItemTemplate?: TemplateRef<T>;
 
-  public get ngModel(): T[] | undefined {
+  public get ngModel(): T[] | null {
     return this._ngModel || [];
   }
 
-  @Input() public set ngModel(value: T[] | undefined) {
+  @Input() public set ngModel(value: T[] | null) {
     if (this._ngModel !== value) {
       this._ngModel = value || [];
       this.ngModelChange.emit(this._ngModel);
@@ -89,21 +89,19 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
     }
   }
 
-  updateSelectionSummary(selectedItems?: T[]): void {
-    if (!selectedItems?.length || !this.options?.length) {
+  updateSelectionSummary(selectedItemValues: T[] | null): void {
+    if (!selectedItemValues?.length || !this.options?.length) {
       this.selectionSummary = "";
       this.countSelectedOverDisplayThreshold = 0;
       return;
     }
-
-    const selectedItemValues = selectedItems.map(t => this.value(t));
 
     let summary = (this.options || [])
       .filter(o => selectedItemValues.some(s => s == this.value(o)))
       .map(i => this.getSearchText(i))
       .slice(0, MultiSelectComponent.selectedItemsDisplayedThreshold).join(", ");
 
-    this.countSelectedOverDisplayThreshold = Math.max(selectedItems.length - MultiSelectComponent.selectedItemsDisplayedThreshold, 0);
+    this.countSelectedOverDisplayThreshold = Math.max(selectedItemValues.length - MultiSelectComponent.selectedItemsDisplayedThreshold, 0);
     this.selectionSummary = summary;
   }
 
@@ -115,12 +113,12 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
 
     // if the box isn't checked, we must be removing an item
     if (!isChecked) {
-      this.ngModel = [...this.ngModel.filter(i => i !== option)];
+      this.ngModel = [...this.ngModel.filter(i => i !== this.value(option))];
       return;
     }
 
     // if we're not removing, we must be adding
-    this.ngModel = [...this.ngModel, option];
+    this.ngModel = [...this.ngModel, this.value(option)];
   }
 
   getOptionIsChecked(option: T) {
@@ -145,8 +143,8 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[]> implement
     this.ngModel = [];
   }
 
-  handleNgModelChanged(model: T[]) {
-    this.updateSelectionSummary(model);
+  handleNgModelChanged(model: T[] | null) {
+    this.updateSelectionSummary(model || []);
   }
 
   handleSelectedOverDisplayThresholdClicked() {

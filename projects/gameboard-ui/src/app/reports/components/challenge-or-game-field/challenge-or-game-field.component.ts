@@ -9,4 +9,6 @@ import { Component, Input } from '@angular/core';
 export class ChallengeOrGameFieldComponent {
   @Input() challengeName?: string;
   @Input() game?: ReportGame;
+  @Input() disableLinks = false;
+  @Input() fontSize: "small" | "large" = "small";
 }

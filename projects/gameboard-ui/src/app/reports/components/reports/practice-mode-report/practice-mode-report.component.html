@@ -1,45 +1,74 @@
 <div class="practice-mode-report-component">
-    <app-report-parameters-container>
+    <app-report-parameters-container *ngIf="selectedParameters; else loading">
         <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
-            [(ngModel)]="selectedParameters.series"></app-multi-select>
+            [appQueryParamModel]="seriesQueryModel" #seriesMultiSelect></app-multi-select>
         <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
-            [(ngModel)]="selectedParameters.tracks"></app-multi-select>
+            [appQueryParamModel]="tracksQueryModel" #tracksMultiSelect></app-multi-select>
         <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
-            [(ngModel)]="selectedParameters.seasons"></app-multi-select>
+            [appQueryParamModel]="seasonsQueryModel" #seasonsMultiSelect></app-multi-select>
         <app-multi-select label="Games" name="games" ngDefaultControl [options]="games$ | async"
-            [(ngModel)]="selectedParameters.games" [itemTemplate]="multiSelectGame" [value]="getGameValue"
-            [getSearchText]="getGameSearchText"></app-multi-select>
+            [itemTemplate]="multiSelectGame" [value]="getGameValue" [getSearchText]="getGameSearchText"
+            [appQueryParamModel]="gamesQueryModel"></app-multi-select>
         <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
-            [(ngModel)]="selectedParameters.sponsors" [itemTemplate]="multiSelectSponsor"
-            [getSearchText]="getSponsorSearchText" [value]="getSponsorValue"></app-multi-select>
-        <app-parameter-date-range label="Practice Session Date" [(ngModel)]="selectedParameters.practiceDate"
-            ngDefaultControl></app-parameter-date-range>
+            [itemTemplate]="multiSelectSponsor" [getSearchText]="getSponsorSearchText" [value]="getSponsorValue"
+            [appQueryParamModel]="sponsorsQueryModel" #sponsorsMultiSelect></app-multi-select>
+        <app-parameter-date-range label="Practice Session Date" ngDefaultControl
+            [appQueryParamModel]="practiceSessionDateRangeQueryModel"
+            #practiceSessionDateRange></app-parameter-date-range>
     </app-report-parameters-container>
 </div>
 
-<div class="report-body mt-5">
-    <tabset>
-        <tab heading="By Player" id="tab-by-player" (selectTab)="handleTabSelected('by-player')" #byPlayer>
-            <app-practice-mode-report-by-user *ngIf="selectedTab == 'by-player'"
-                [parameters]="selectedParameters"></app-practice-mode-report-by-user>
-        </tab>
+<div class="report-body">
+    <h2 class="text-center text-upper mb-4">Summary</h2>
+    <div *ngIf="overallStats" class="overall-stats d-flex align-items-center justify-content-center mb-5">
+        <div class="overall-stat">
+            <p class="value">{{ overallStats.attemptCount }}</p>
+            <p class="label">{{ "Attempt" | pluralizer:overallStats.attemptCount }}</p>
+        </div>
 
-        <tab heading="By Challenge" id="tab-by-challenge" (selectTab)="handleTabSelected('by-challenge')" #byChallenge>
-            <app-practice-mode-report-by-challenge *ngIf="selectedTab == 'by-challenge'"
-                [parameters]="selectedParameters"></app-practice-mode-report-by-challenge>
-        </tab>
+        <div class="overall-stat">
+            <p class="value">{{ overallStats.challengeCount }}</p>
+            <p class="label">{{ "Challenge" | pluralizer:overallStats.challengeCount }}</p>
+        </div>
 
-        <tab heading="Players: Practice vs. Competitive" id="tab-prac-v-comp"
-            (selectTab)="handleTabSelected('by-challenge')" #pracVComp>
-            <app-practice-mode-report-prac-vs-comp
-                *ngIf="selectedTab == 'prac-vs-comp'"></app-practice-mode-report-prac-vs-comp>
-        </tab>
-    </tabset>
+        <div class="overall-stat">
+            <p class="value">{{ overallStats.playerCount }}</p>
+            <p class="label">{{ "Player" | pluralizer:overallStats.playerCount }}</p>
+        </div>
+
+        <div class="overall-stat">
+            <p class="value">{{ overallStats.sponsorCount }}</p>
+            <p class="label">{{ "Sponsor" | pluralizer:overallStats.sponsorCount }}</p>
+        </div>
+    </div>
+    <hr />
+    <div class="mt-5">
+        <tabset>
+            <tab heading="Challenges" id="tab-by-challenge" (selectTab)="handleTabSelected('challenge')" #byChallenge>
+                <app-practice-mode-report-by-challenge *ngIf="selectedTab == 'challenge'"
+                    [parameters]="selectedParameters"
+                    (overallStatsUpdate)="handleOverallStatsUpdate($event)"></app-practice-mode-report-by-challenge>
+            </tab>
+
+            <tab heading="Players: Per-Challenge Performance" id="tab-by-player"
+                (selectTab)="handleTabSelected('player')" #byPlayer>
+                <app-practice-mode-report-by-user *ngIf="selectedTab == 'player'" [parameters]="selectedParameters"
+                    (overallStatsUpdate)="handleOverallStatsUpdate($event)"></app-practice-mode-report-by-user>
+            </tab>
+
+            <tab heading="Players: Practice vs. Competitive" id="tab-prac-v-comp"
+                (selectTab)="handleTabSelected('playerModePerformance')" #byPlayerModePerformance>
+                <app-practice-mode-report-by-player-mode-performance *ngIf="selectedTab == 'player-mode-performance'"
+                    [parameters]="selectedParameters" (overallStatsUpdate)="handleOverallStatsUpdate($event)">
+                </app-practice-mode-report-by-player-mode-performance>
+            </tab>
+        </tabset>
+    </div>
 </div>
 
 <ng-template #loading>
-    <div class="page-height d-flex flex-column align-items-center justify-content-center">
-        <app-spinner>Loading the report...</app-spinner>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center mt-5">
+        <app-spinner class="d-block">Loading your report...</app-spinner>
     </div>
 </ng-template>
 

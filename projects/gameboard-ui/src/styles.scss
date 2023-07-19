@@ -76,6 +76,10 @@ app-root {
   font-size: 0.8rem;
 }
 
+.fs-09 {
+  font-size: 0.9rem;
+}
+
 .fs-10 {
   font-size: 1rem;
 }
@@ -158,6 +162,11 @@ alert {
     margin-block-end: 0;
     margin-bottom: 0;
   }
+}
+
+.nav-tabs li {
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 app-spinner svg {
@@ -254,6 +263,10 @@ th[align="center"] {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.full-width {
+  width: 100%;
 }
 
 .link-button {

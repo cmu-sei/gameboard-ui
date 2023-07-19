@@ -1,10 +1,11 @@
-import { SimpleEntity } from "projects/gameboard-ui/src/app/api/models";
+import { PagingArgs, SimpleEntity } from "projects/gameboard-ui/src/app/api/models";
 import { ReportDateRange, ReportMetaData, ReportResults, ReportTimeSpan } from "../../../reports-models";
 import { ReportGameChallengeSpec } from "../../parameters/parameter-game-challengespec/parameter-game-challengespec.component";
 
 export interface SupportReportParameters {
     gameChallengeSpec: ReportGameChallengeSpec;
     labels: string[];
+    paging: PagingArgs,
     timeSinceOpen: ReportTimeSpan,
     timeSinceUpdate: ReportTimeSpan,
     openedDateRange: ReportDateRange;
@@ -21,6 +22,8 @@ export interface SupportReportFlatParameters {
     openedDateStart?: string;
     openedDateEnd?: string;
     openedTimeWindow?: SupportReportTicketWindow;
+    pageNumber?: number;
+    pageSize?: number;
     status?: string;
 }
 

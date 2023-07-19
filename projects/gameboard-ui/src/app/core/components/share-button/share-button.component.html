@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-secondary m-0" [class.btn-lg]="size == 'large'" [class.btn-sm]="size =='small'"
-    tooltip="Copy a link to this report" (click)="handleShareClick()">
-    <fa-icon [icon]="faService.copy"></fa-icon>
+<button type="button" class="btn btn-secondary m-0 border border-light" [class.btn-lg]="size == 'large'"
+    [class.btn-sm]="size =='small'" tooltip="Copy a link to this report" (click)="handleShareClick()">
+    <fa-icon [icon]="faService.clipboard"></fa-icon>
 </button>

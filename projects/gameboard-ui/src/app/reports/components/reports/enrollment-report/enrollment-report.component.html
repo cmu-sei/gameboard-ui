@@ -1,16 +1,16 @@
 <div class="enrollment-report-params" *ngIf="ctx$ | async as ctx; else loading">
     <app-report-parameters-container>
         <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
-            [(ngModel)]="selectedParameters.series"></app-multi-select>
+            [appQueryParamModel]="seriesQueryModel" #seriesMultiSelect></app-multi-select>
         <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
-            [(ngModel)]="selectedParameters.tracks"></app-multi-select>
+            [appQueryParamModel]="tracksQueryModel" #tracksMultiSelect></app-multi-select>
         <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
-            [(ngModel)]="selectedParameters.seasons"></app-multi-select>
+            [appQueryParamModel]="seasonsQueryModel" #seasonsMultiSelect></app-multi-select>
         <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
-            [(ngModel)]="selectedParameters.sponsors" [itemTemplate]="multiSelectSponsor"
-            [getSearchText]="displaySponsorName" [value]="getSponsorValue"></app-multi-select>
-        <app-parameter-date-range label="Enrollment Date" [(ngModel)]="selectedParameters.enrollDate"
-            ngDefaultControl></app-parameter-date-range>
+            [itemTemplate]="multiSelectSponsor" [getSearchText]="displaySponsorName" [value]="getSponsorValue"
+            [appQueryParamModel]="sponsorsQueryModel" #sponsorsMultiSelect></app-multi-select>
+        <app-parameter-date-range label="Enrollment Date" ngDefaultControl
+            [appQueryParamModel]="enrollmentDateRangeQueryModel" #enrollmentDateRange></app-parameter-date-range>
     </app-report-parameters-container>
 </div>
 
@@ -45,19 +45,8 @@
                         <tr class="data-row" *ngFor="let record of ctx.results.records">
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <app-parameter-change-link
-                                        [config]="{ parameterChange: { sponsors: record.player.sponsor.id} }">
-                                        <app-player-avatar class="d-block mr-2"
-                                            [avatarUri]="record.player.sponsor.logoFileName | relativeImage"
-                                            size="small"></app-player-avatar>
-                                    </app-parameter-change-link>
-
-                                    <div class="player-info flex-grow-1">
-                                        <p class="player-name m-0">{{record.player.name}}</p>
-                                        <p class="team-name subtle-info" *ngIf="record.game.isTeamGame">
-                                            Team: <span class="color-foreground">{{ record.team.name }}</span>
-                                        </p>
-                                    </div>
+                                    <app-player-field
+                                        [player]="{ userId: record.player.id, name: record.player.name, sponsor: record.player.sponsor, team: record.game.isTeamGame ? record.team : undefined }"></app-player-field>
                                 </div>
                             </td>
                             <td class="report-field date">

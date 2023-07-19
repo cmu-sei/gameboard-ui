@@ -9,9 +9,15 @@ export class UnsubscriberService implements OnDestroy {
     this._subscriptions.push(sub);
   }
 
-  ngOnDestroy(): void {
+  unsubscribeAll() {
     for (const sub of this._subscriptions) {
       sub?.unsubscribe();
     }
+
+    this._subscriptions = [];
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
   }
 }

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { ReportDateRange } from '../../../reports-models';
+import { CustomInputComponent } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-parameter-date-range',
@@ -8,10 +9,15 @@ import { ReportDateRange } from '../../../reports-models';
   styleUrls: ['./parameter-date-range.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterDateRangeComponent)]
 })
-export class ParameterDateRangeComponent extends ReportParameterComponent<ReportDateRange> {
+export class ParameterDateRangeComponent extends CustomInputComponent<ReportDateRange> {
   @Input() label = "Date range";
 
-  override getDefaultValue(): ReportDateRange | undefined {
-    return {};
+  constructor() {
+    super();
+    this.ngModel = {};
+  }
+
+  handleModelChange() {
+    this.updateNgModel({ ...this.ngModel });
   }
 }

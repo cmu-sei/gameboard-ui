@@ -5,7 +5,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FriendlyDateAndTimePipe implements PipeTransform {
   constructor(private friendlyDates: FriendlyDatesService) { }
 
-  transform(value?: Date): unknown {
+  transform(value?: Date): string | null {
+    if (!value)
+      return null;
+
     return this.friendlyDates.toFriendlyDateAndTime(value);
   }
 }

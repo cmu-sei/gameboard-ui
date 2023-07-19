@@ -20,7 +20,7 @@ export class ReportPageComponent implements AfterViewInit {
     .metaData$
     .pipe(tap(m => this.metaData = m!));
 
-  private metaData: ReportMetaData | null = null;
+  protected metaData: ReportMetaData | null = null;
   private reportTitle?: string;
 
   constructor(

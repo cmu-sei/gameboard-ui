@@ -6,7 +6,7 @@ export class MsToDurationPipe implements PipeTransform {
     if (!value)
       return "";
 
-    const MS_IN_HOUR = 3600000
+    const MS_IN_HOUR = 3600000;
     const MS_IN_MINUTE = 60000;
     const MS_IN_SECOND = 1000;
 

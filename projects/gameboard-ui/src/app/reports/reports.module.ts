@@ -18,6 +18,8 @@ import { ParameterTicketLabelsComponent } from './components/parameters/paramete
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
 import { ParameterTimespanPickerComponent } from './components/parameters/parameter-timespan-picker/parameter-timespan-picker.component';
 import { ParameterTrackComponent } from './components/parameters/parameter-track/parameter-track.component';
+import { PlayerFieldComponent } from './components/player-field/player-field.component';
+import { PlayerModePerformanceSummaryComponent } from './components/reports/practice-mode-report/player-mode-performance-summary/player-mode-performance-summary.component';
 import { ReportCardComponent } from './components/report-card/report-card.component';
 import { ReportFieldNoValueComponent } from './components/report-field-no-value/report-field-no-value.component';
 import { ReportGlobalControlsComponent } from './components/report-global-controls/report-global-controls.component';
@@ -28,8 +30,8 @@ import { ChallengesReportComponent } from './components/reports/challenges-repor
 import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
 import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { PracticeModeReportByChallengeComponent } from './components/reports/practice-mode-report/practice-mode-report-by-challenge/practice-mode-report-by-challenge.component';
+import { PracticeModeReportByPlayerModePerformanceComponent } from './components/reports/practice-mode-report/practice-mode-report-by-player-mode-performance/practice-mode-report-by-player-mode-performance.component';
 import { PracticeModeReportByUserComponent } from './components/reports/practice-mode-report/practice-mode-report-by-user/practice-mode-report-by-user.component';
-import { PracticeModeReportPracVsCompComponent } from './components/reports/practice-mode-report/practice-mode-report-prac-vs-comp/practice-mode-report-prac-vs-comp.component';
 import { PracticeModeReportComponent } from './components/reports/practice-mode-report/practice-mode-report.component';
 import { SponsorChallengePerformanceComponent } from './components/reports/practice-mode-report/sponsor-challenge-performance/sponsor-challenge-performance.component';
 import { SupportReportContextMenuComponent } from './components/reports/support-report-context-menu/support-report-context-menu.component';
@@ -39,7 +41,6 @@ import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
-import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,6 @@ import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
     ReportSelectComponent,
     ReportsHomeComponent,
     ParameterSponsorComponent,
-    StringsToTooltipPipe,
     SupportReportComponent,
     SupportReportContextMenuComponent,
     PracticeModeReportComponent,
@@ -77,8 +77,10 @@ import { StringsToTooltipPipe } from './pipes/strings-to-tooltip.pipe';
     NoReportRecordsComponent,
     ReportFieldNoValueComponent,
     ChallengeOrGameFieldComponent,
-    PracticeModeReportPracVsCompComponent,
+    PracticeModeReportByPlayerModePerformanceComponent,
     SponsorChallengePerformanceComponent,
+    PlayerFieldComponent,
+    PlayerModePerformanceSummaryComponent,
   ],
   imports: [
     CommonModule,

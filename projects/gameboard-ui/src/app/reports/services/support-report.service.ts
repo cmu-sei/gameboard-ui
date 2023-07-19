@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 import { ReportResults } from '../reports-models';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '../../services/api-url.service';
-import { IReportService } from './ireport.service';
 import { ReportsService } from '../reports.service';
 
 @Injectable({ providedIn: 'root' })
-export class SupportReportService implements IReportService<SupportReportFlatParameters, SupportReportParameters, SupportReportRecord> {
+export class SupportReportService {
 
   constructor(
     private apiUri: ApiUrlService,
@@ -18,6 +17,8 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
     private reportsService: ReportsService,) { }
 
   public flattenParameters(parameters: SupportReportParameters) {
+    const defaultPaging = this.reportsService.getDefaultPaging();
+
     let flattened: SupportReportFlatParameters = {
       ...parameters,
       challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
@@ -27,6 +28,8 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
       openedDateEnd: parameters.openedDateRange?.dateEnd?.toLocaleDateString(),
       minutesSinceOpen: this.reportsService.timespanToMinutes(parameters.timeSinceOpen),
       minutesSinceUpdate: this.reportsService.timespanToMinutes(parameters.timeSinceUpdate),
+      pageNumber: parameters.paging.pageNumber || defaultPaging.pageNumber!,
+      pageSize: parameters.paging.pageSize || defaultPaging.pageSize!,
       status: parameters.status || undefined
     };
 
@@ -42,6 +45,8 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
   }
 
   public unflattenParameters(parameters: SupportReportFlatParameters) {
+    const defaultPaging = this.reportsService.getDefaultPaging();
+
     const structured: SupportReportParameters = {
       ...parameters,
       gameChallengeSpec: {
@@ -53,6 +58,10 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
         dateStart: parameters.openedDateStart ? new Date(parameters.openedDateStart) : undefined,
         dateEnd: parameters.openedDateEnd ? new Date(parameters.openedDateEnd) : undefined,
       },
+      paging: {
+        pageNumber: parameters.pageNumber || defaultPaging.pageNumber!,
+        pageSize: parameters.pageSize || defaultPaging.pageSize!
+      },
       timeSinceOpen: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceOpen as any)),
       timeSinceUpdate: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceUpdate as any)),
     };
@@ -63,6 +72,6 @@ export class SupportReportService implements IReportService<SupportReportFlatPar
 
   getReportData(args: SupportReportParameters): Observable<ReportResults<SupportReportRecord>> {
     const flattened = this.flattenParameters(args);
-    return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support-report", flattened));
+    return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support", flattened));
   }
 }

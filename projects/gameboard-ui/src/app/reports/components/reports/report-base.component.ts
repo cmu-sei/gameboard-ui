@@ -1,56 +1,35 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, OnInit, inject } from "@angular/core";
 import { ReportViewUpdate } from "../../reports-models";
 import { ActiveReportService } from "../../services/active-report.service";
-import { Subscription } from "rxjs";
+import { PagingArgs } from "@/api/models";
+import { ReportsService } from "@/reports/reports.service";
+import { ActivatedRoute } from "@angular/router";
+import { UnsubscriberService } from "@/services/unsubscriber.service";
+import { ObjectService } from "@/services/object.service";
 
-@Component({ template: '' })
-export abstract class ReportComponentBase<TStructuredParameters extends {}, TReportRecord> implements OnDestroy {
-    private _defaultParameters: TStructuredParameters;
-    private _parameterResetSub?: Subscription;
-    private _runRequestSub?: Subscription;
+@Component({ template: '', providers: [UnsubscriberService] })
+export abstract class ReportComponentBase<TFlatParameters extends {}, TStructuredParameters extends {}> implements OnInit {
+    // manually injected services (so the inheritors don't have to resolve dependencies)
+    protected readonly activeReportService = inject(ActiveReportService);
+    protected readonly reportsService = inject(ReportsService);
+    protected readonly route = inject(ActivatedRoute);
+    protected readonly unsub = inject(UnsubscriberService);
+    protected readonly objectService = inject(ObjectService);
 
-    private _selectedParameters?: TStructuredParameters;
-    public get selectedParameters(): TStructuredParameters {
-        return this._selectedParameters!;
-    }
-    public set selectedParameters(value: TStructuredParameters) {
-        if (value === undefined) {
-            value = this._defaultParameters;
-        }
-        else {
-            // if something sets the value of the a default parameter to undefined and if 
-            // the specified default parameters have a value for this, use that instead
-            for (const entry of Object.entries(value)) {
-                if (entry[1] === undefined) {
-                    (value as any)[entry[0]] = (this._defaultParameters as any)[entry[0]];
-                }
-            }
-        }
-
-        this._selectedParameters = value;
-        this._updateView(value);
+    constructor() {
+        this.unsub.add(this.route.queryParams.subscribe(params => {
+            this._updateView({ ...params } as TFlatParameters);
+        }));
     }
 
-    constructor(protected activeReportService: ActiveReportService) {
-        this._defaultParameters = this.getDefaultParameters();
-        this._selectedParameters = this._defaultParameters;
-
-        this._parameterResetSub = activeReportService.parameterResetRequest$.subscribe(_ => {
-            this.selectedParameters = this._defaultParameters;
-        });
-
-        this._runRequestSub = activeReportService.runRequest$.subscribe(_ => this.updateView(this.selectedParameters));
+    ngOnInit(): void {
+        this._updateView({ ...this.route.snapshot.queryParams } as TFlatParameters);
     }
 
-    ngOnDestroy(): void {
-        this._parameterResetSub?.unsubscribe();
-        this._runRequestSub?.unsubscribe();
-    }
+    protected abstract getDefaultParameters(defaultPaging: PagingArgs): TStructuredParameters;
+    protected abstract updateView(parameters: TFlatParameters): Promise<ReportViewUpdate>;
 
-    protected abstract getDefaultParameters(): TStructuredParameters;
-    protected abstract updateView(parameters: TStructuredParameters): Promise<ReportViewUpdate>;
-
-    private async _updateView(parameters: TStructuredParameters) {
+    private async _updateView(parameters: TFlatParameters) {
         const viewUpdate = await this.updateView(parameters);
         this.activeReportService.parametersPristine = true;
         this.activeReportService.metaData$.next(viewUpdate.metaData);

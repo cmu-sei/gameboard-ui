@@ -1,12 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { PlayersReportParameters, PlayersReportRecord } from './players-report.models';
+import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from './players-report.models';
 import { ReportResults, ReportTrackParameterModifier, ReportViewUpdate } from '../../../reports-models';
 import { ReportComponentBase } from '../report-base.component';
 import { PlayersReportService } from '@/reports/services/players-report.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { SimpleEntity } from '@/api/models';
-import { ActiveReportService } from '@/reports/services/active-report.service';
+import { PagingArgs, SimpleEntity } from '@/api/models';
 
 interface PlayersReportContext {
   results: ReportResults<PlayersReportRecord>;
@@ -19,9 +18,9 @@ interface PlayersReportContext {
   styleUrls: ['./players-report.component.scss']
 })
 export class PlayersReportComponent
-  extends ReportComponentBase<PlayersReportParameters, PlayersReportRecord>
-  implements AfterViewInit, OnInit {
-  getDefaultParameters(): PlayersReportParameters {
+  extends ReportComponentBase<PlayersReportFlatParameters, PlayersReportParameters>
+  implements AfterViewInit {
+  getDefaultParameters(defaultPaging: PagingArgs): PlayersReportParameters {
     return {
       gameChallengeSpec: {},
       track: { track: undefined, modifier: ReportTrackParameterModifier.CompetedInOnlyThisTrack }
@@ -34,14 +33,9 @@ export class PlayersReportComponent
   private reportElementRef?: ElementRef<HTMLDivElement>;
 
   constructor(
-    activeReportService: ActiveReportService,
     public modalService: ModalConfirmService,
     public reportService: PlayersReportService) {
-    super(activeReportService);
-  }
-
-  async ngOnInit(): Promise<void> {
-    await this.updateView(this.selectedParameters);
+    super();
   }
 
   ngAfterViewInit(): void {
@@ -66,13 +60,13 @@ export class PlayersReportComponent
     });
   }
 
-  async updateView(params?: PlayersReportParameters): Promise<ReportViewUpdate> {
-    const apiParams = params ? this.reportService.flattenParameters(params) : undefined;
-    const results = await firstValueFrom(this.reportService.getReportData(apiParams));
+  async updateView(params: PlayersReportFlatParameters): Promise<ReportViewUpdate> {
+    const structuredParameters = this.reportService.unflattenParameters(params);
+    const results = await firstValueFrom(this.reportService.getReportData(structuredParameters));
 
     this.ctx = {
       results,
-      selectedParameters: params || { gameChallengeSpec: {} }
+      selectedParameters: structuredParameters
     };
 
     return {

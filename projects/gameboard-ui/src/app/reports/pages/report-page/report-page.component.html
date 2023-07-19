@@ -14,6 +14,50 @@
         <h1>{{metaData.title}}</h1>
         <h5>{{metaData.runAt | shortdate }} @ {{metaData.runAt | friendlyTime}}</h5>
         <p>{{ metaData.description }}</p>
+
+        <alert type="info" class="beta-test my-4" [dismissible]="true">
+            <h2>A new look for Reports!</h2>
+
+            <p>
+                Welcome, internal SEI testers! We're deep into the process of revamping Gameboard's reporting
+                capabilities.
+                We plan for this new reporting module to ultimately replace the old reports (found in
+                <a [routerLink]="['/admin/report']">Admin</a>).
+            </p>
+
+            <p>
+                However, we still have work to do, so we welcome your help! If you experience a bug not listed in the
+                "Known issues" panel below, message Ben on your choice of Mattermost or Teams at your convenience to
+                describe it. Additionally, if you have feedback about the usability or user experience of these reports,
+                feel free to voice those. Some of these are subject to review from CISA, but we'll evaluate all feedback
+                -
+                we want this to continue to improve on the prior reporting system and address needs as they emerge.
+                Thanks for your support!
+            </p>
+        </alert>
+
+        <alert type="warning" class="my-4" [dismissible]="true">
+            <h2>Known issues</h2>
+
+            <p>
+                We're aware of several issues with the current build of this screen and are addressing them as
+                efficiently
+                possible. If you experience an issue NOT listed here, please let us know!
+            </p>
+
+            <ul class="d-block mt-4 list-group">
+                <li class="list-group-item">The Support Report's filters do not currently respond.</li>
+                <li class="list-group-item">
+                    Filter controls do not reflect their currently selected values if you open a
+                    link to the reports page which includes filtering. For example,
+                    <a [routerLink]="['/reports/enrollment']" [queryParams]="{ track: 'Track A' }">
+                        this link
+                    </a>
+                    should open to the Enrollment Report with Track A selected, and it will display results correctly.
+                    However, the track filter does not show that Track A is selected.
+                </li>
+            </ul>
+        </alert>
     </div>
 
     <app-report-global-controls (exportRequestCsv)="handleExportToCsv()" (exportRequestPdf)="handleExportToPdf()"

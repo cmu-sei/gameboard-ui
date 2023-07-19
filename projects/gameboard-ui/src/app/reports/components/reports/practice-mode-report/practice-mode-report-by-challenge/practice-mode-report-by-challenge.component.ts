@@ -1,39 +1,40 @@
-import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { PracticeModeReportByChallengeRecord, PracticeModeReportParameters, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
-import { ReportResults, ReportSponsor } from '@/reports/reports-models';
-import { PagingRequest } from '@/core/components/select-pager/select-pager.component';
+import { PracticeModeReportByChallengeRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
+import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
 import { RouterService } from '@/services/router.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';
-import { SimpleEntity } from '@/api/models';
+import { PagingArgs, SimpleEntity } from '@/api/models';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-practice-mode-report-by-challenge',
   templateUrl: './practice-mode-report-by-challenge.component.html',
   styleUrls: ['./practice-mode-report-by-challenge.component.scss']
 })
-export class PracticeModeReportByChallengeComponent implements OnChanges {
-  @Input() parameters: PracticeModeReportParameters | null = null;
+export class PracticeModeReportByChallengeComponent implements OnInit {
+  @Input() parameters: PracticeModeReportFlatParameters | null = null;
+  @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
   @ViewChild("sponsorPerformance") sponsorPerformanceTemplate?: TemplateRef<PracticeModeReportSponsorPerformance[]>;
 
-  protected results: ReportResults<PracticeModeReportByChallengeRecord> | null = null;
+  protected results: ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord> | null = null;
 
   constructor(
+    private log: LogService,
     private modalService: ModalConfirmService,
     private reportService: PracticeModeReportService,
     private routerService: RouterService) { }
 
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    if (changes.parameters) {
-      this.results = null;
+  async ngOnInit() {
+    if (!this.parameters) {
+      this.log.logError("Couldn't load by-challenge data for the practice report: no parameters specified.");
+      return;
     }
 
-    if (changes.parameters.currentValue) {
-      const results = await firstValueFrom(this.reportService.getByChallengeData(changes.parameters.currentValue));
-      this.results = results as ReportResults<PracticeModeReportByChallengeRecord>;
-    }
+    this.results = await firstValueFrom(this.reportService.getByChallengeData(this.parameters));
+    this.overallStatsUpdate.emit(this.results.overallStats);
   }
 
   handleSponsorsClicked(challenge: SimpleEntity, sponsorPerformance: PracticeModeReportSponsorPerformance[]) {
@@ -47,11 +48,11 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
         challenge,
         sponsorPerformance
       },
-      modalClasses: "modal-dialog-centered modal-xl"
+      modalClasses: ["modal-dialog-centered", "modal-xl"]
     });
   }
 
-  handlePagingChange($event: PagingRequest) {
+  handlePagingChange($event: PagingArgs) {
     this.routerService.updateQueryParams({ parameters: { ...$event } });
   }
 }

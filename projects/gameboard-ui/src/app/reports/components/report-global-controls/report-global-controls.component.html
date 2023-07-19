@@ -2,12 +2,9 @@
     <div class="flex-grow-1">
         <span class="about-filters-link link-button" (click)="handleAboutFiltersClick()">[ About report filters ]</span>
     </div>
-    <div class="export-label mr-2">Export to:</div>
-    <div class="btn-group mr-2">
+    <div class="mr-2">
         <button class="btn btn-info btn-lg csv-export-button" (click)="exportRequestCsv.emit()" tabindex="0"
-            role="button">CSV</button>
-        <button class="btn btn-info btn-lg pdf-export-button" (click)="exportRequestPdf.emit()" tabindex="0"
-            role="button">PDF</button>
+            role="button">Export to CSV</button>
     </div>
     <app-share-button class="d-block mr-2"
         message="Copied a link to this report (and its filtering settings) to your clipboard."></app-share-button>

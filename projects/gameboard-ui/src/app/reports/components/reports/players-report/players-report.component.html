@@ -1,14 +1,10 @@
 <div class="players-report-component" *ngIf="ctx; else loading">
     <div class="report-parameters">
         <app-report-parameters-container>
-            <app-parameter-series name="series" ngDefaultControl
-                [(ngModel)]="ctx.selectedParameters.series"></app-parameter-series>
-            <app-parameter-track name="track" ngDefaultControl
-                [(ngModel)]="ctx.selectedParameters.track"></app-parameter-track>
-            <app-parameter-game-challengespec ngDefaultControl
-                [(ngModel)]="ctx.selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
-            <app-parameter-sponsor ngDefaultControl
-                [(ngModel)]="ctx.selectedParameters.sponsorId"></app-parameter-sponsor>
+            <app-parameter-series name="series" ngDefaultControl></app-parameter-series>
+            <app-parameter-track name="track" ngDefaultControl></app-parameter-track>
+            <app-parameter-game-challengespec ngDefaultControl></app-parameter-game-challengespec>
+            <app-parameter-sponsor ngDefaultControl></app-parameter-sponsor>
         </app-report-parameters-container>
         <hr />
     </div>

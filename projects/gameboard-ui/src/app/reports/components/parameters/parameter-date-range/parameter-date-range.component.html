@@ -2,13 +2,13 @@
     <label class="report-component-label">{{label}}</label>
     <div class="date-range-component d-flex form-control-group">
         <div class="date-input-container">
-            <input type="datetime" name="dateStart" placeholder="Start date" autocomplete="off"
-                [(ngModel)]="ngModel.dateStart" class="form-control" bsDatepicker>
+            <input type="datetime" class="form-control" name="dateStart" placeholder="Start date" autocomplete="off"
+                [(ngModel)]="ngModel.dateStart" bsDatepicker (ngModelChange)="handleModelChange()">
         </div>
         <div class="arrow-symbol"> → </div>
         <div class="date-input-container">
-            <input type="datetime" name="dateEnd" placeholder="End date" autocomplete="off"
-                [(ngModel)]="ngModel.dateEnd" class="form-control" bsDatepicker>
+            <input type="datetime" name="dateEnd" placeholder="End date" autocomplete="off" class="form-control"
+                bsDatepicker [(ngModel)]="ngModel.dateEnd" (ngModelChange)="handleModelChange()">
         </div>
     </div>
 </div>

@@ -12,17 +12,16 @@ export function createCustomInputControlValueAccessor(extendedInputComponent: an
 
 @Component({ template: '' })
 export abstract class CustomInputComponent<T> implements ControlValueAccessor {
-  // required by ControlValueAcessor
-  @Output() ngModelChange = new EventEmitter<T>();
+  @Output() ngModelChange = new EventEmitter<T | null>();
   protected isDisabled = false;
   protected onChange = () => { };
   protected onTouched = () => { };
 
-  protected _ngModel?: T;
-  public get ngModel(): T | undefined {
+  protected _ngModel: T | null = null;
+  public get ngModel(): T | null {
     return this._ngModel;
   }
-  @Input() public set ngModel(value: T | undefined) {
+  @Input() public set ngModel(value: T | null) {
     if (this._ngModel !== value) {
       this._ngModel = value;
       this.ngModelChange.emit(this._ngModel);
@@ -33,6 +32,10 @@ export abstract class CustomInputComponent<T> implements ControlValueAccessor {
   // say, a list of things, it can use the unique id of the component
   // to ensure page ids/names are unique
   protected uniqueId = uuid4();
+
+  protected updateNgModel(updates: Partial<T>) {
+    this.ngModel = { ...this.ngModel, ...updates } as T;
+  }
 
   writeValue(obj: any): void {
     this.ngModel = obj;

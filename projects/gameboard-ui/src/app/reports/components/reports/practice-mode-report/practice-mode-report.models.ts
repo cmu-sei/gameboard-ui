@@ -1,10 +1,18 @@
+import { ChallengeResult } from "@/api/board-models";
 import { PagingArgs, SimpleEntity } from "@/api/models";
 import { ReportDateRange, ReportGame, ReportSponsor, ReportTeam } from "@/reports/reports-models";
 
 export enum PracticeModeReportGrouping {
     challenge = "challenge",
     player = "player",
-    practiceVersusCompetitive = "practice-versus-competitive"
+    playerModePerformance = "player-mode-performance"
+}
+
+export interface PracticeModeReportOverallStats {
+    attemptCount: number;
+    challengeCount: number;
+    playerCount: number;
+    sponsorCount: number;
 }
 
 export interface PracticeModeReportFlatParameters {
@@ -13,7 +21,7 @@ export interface PracticeModeReportFlatParameters {
     games?: string;
     seasons?: string;
     series?: string;
-    sponsors?: string;
+    sponsorIds?: string;
     tracks?: string;
     pageNumber?: number;
     pageSize?: number;
@@ -88,4 +96,40 @@ export interface PracticeModeReportByChallengePerformance {
     percentagePartiallySolved: number;
     zeroScoreSolves: number;
     percentageZeroScoreSolved: number;
+}
+
+export interface PracticeModeReportByPlayerModePerformanceRecord {
+    player: SimpleEntity;
+    sponsor: ReportSponsor;
+    practiceStats?: PracticeModeReportByPlayerModePerformanceModeSummary;
+    competitiveStats?: PracticeModeReportByPlayerModePerformanceModeSummary;
+}
+
+export interface PracticeModeReportByPlayerModePerformanceModeSummary {
+    lastAttemptDate?: Date;
+    totalChallengesPlayed: number;
+    zeroScoreSolves: number;
+    partialSolves: number;
+    completeSolves: number;
+    avgPctAvailablePointsScored: number;
+    avgScorePercentile: number;
+}
+
+export interface PracticeModeReportPlayerModeSummary {
+    player: {
+        id: string,
+        name: string,
+        sponsor: ReportSponsor,
+    };
+    challenges: PracticeModeReportPlayerModeSummaryChallenge[];
+}
+
+export interface PracticeModeReportPlayerModeSummaryChallenge {
+    challengeSpec: SimpleEntity,
+    game: ReportGame,
+    score: number;
+    maxPossibleScore: number;
+    result: ChallengeResult;
+    pctAvailablePointsEarned: number;
+    scorePercentile: number;
 }

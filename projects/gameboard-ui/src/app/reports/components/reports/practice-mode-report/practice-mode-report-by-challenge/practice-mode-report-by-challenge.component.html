@@ -62,19 +62,19 @@
 
                 <!--PERFORMANCE-->
                 <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.percentageCompleteSolved }}%</p>
+                    <p>{{ record.overallPerformance.percentageCompleteSolved | percent }}</p>
                 </td>
                 <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.percentagePartiallySolved }}%</p>
+                    <p>{{ record.overallPerformance.percentagePartiallySolved | percent }}</p>
                 </td>
                 <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.percentageZeroScoreSolved }}%</p>
+                    <p>{{ record.overallPerformance.percentageZeroScoreSolved | percent }}</p>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <div class="pager-container d-flex justify-content-end mt-4">
+    <div class="pager-container d-flex justify-content-end mt-4" *ngIf="results.paging">
         <div class="flex-grow-1"></div>
         <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
             (change)="handlePagingChange($event)"></app-select-pager>

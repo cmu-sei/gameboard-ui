@@ -1,42 +1,46 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { PracticeModeReportByUserRecord, PracticeModeReportParameters } from '../practice-mode-report.models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PracticeModeReportOverallStats, PracticeModeReportByUserRecord, PracticeModeReportFlatParameters } from '../practice-mode-report.models';
 import { firstValueFrom } from 'rxjs';
 import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
-import { ReportResults } from '@/reports/reports-models';
+import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
-import { PagingRequest } from '@/core/components/select-pager/select-pager.component';
 import { RouterService } from '@/services/router.service';
+import { PagingArgs } from '@/api/models';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-practice-mode-report-by-user',
   templateUrl: './practice-mode-report-by-user.component.html',
 })
-export class PracticeModeReportByUserComponent implements OnChanges {
-  @Input() parameters: PracticeModeReportParameters | null = null;
+export class PracticeModeReportByUserComponent implements OnInit {
+  @Input() parameters: PracticeModeReportFlatParameters | null = null;
+  @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
 
   protected isLoading = true;
-  protected results: ReportResults<PracticeModeReportByUserRecord> | null = null;
+  protected results: ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord> | null = null;
 
   constructor(
     private friendlyDates: FriendlyDatesService,
+    private log: LogService,
     private markdownHelpers: MarkdownHelpersService,
     private modalService: ModalConfirmService,
     private reportService: PracticeModeReportService,
     private routerService: RouterService) {
   }
 
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    if (changes.parameters)
-      this.results = null;
-
-    if (this.parameters) {
-      this.results = await firstValueFrom(this.reportService.getByUserData(this.parameters));
+  async ngOnInit() {
+    if (!this.parameters) {
+      this.log.logError("Couldn't load by-user data for the practice report: no parameters specified.");
+      return;
     }
+
+    this.results = await firstValueFrom(this.reportService.getByUserData(this.parameters));
+    this.overallStatsUpdate.emit(this.results.overallStats);
   }
 
-  protected handlePagingChange(request: PagingRequest) {
+  protected handlePagingChange(request: PagingArgs) {
     this.routerService.updateQueryParams({ parameters: { ...request } });
   }
 
@@ -69,10 +73,5 @@ export class PracticeModeReportByUserComponent implements OnChanges {
     }
 
     return `${args.partial} partially correct / ${args.full} fully correct`;
-  }
-
-  private async updateView(parameters: PracticeModeReportParameters) {
-    this.isLoading = true;
-    this.results = await firstValueFrom(this.reportService.getByUserData(parameters));
   }
 }

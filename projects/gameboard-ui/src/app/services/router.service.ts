@@ -6,7 +6,6 @@ import { LogService } from './log.service';
 
 export interface QueryParamsUpdate {
   parameters: Params,
-  navigate?: boolean,
   resetParams?: string[]
 }
 
@@ -71,10 +70,6 @@ export class RouterService {
     }
 
     const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: cleanParams });
-
-    if (update.navigate || false)
-      return this.router.navigateByUrl(urlTree);
-
-    return new Promise((resolve, reject) => true);
+    return this.router.navigateByUrl(urlTree);
   }
 }

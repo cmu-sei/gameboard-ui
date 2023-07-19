@@ -8,16 +8,18 @@
             <button class="dropdown-item btn" [routerLink]="['/support/tickets/' + record.key]">View This
                 Ticket</button>
         </li>
-        <li role="menuitem" *ngIf="record.game">
-            <button class="dropdown-item btn" [routerLink]="['/game/' + record.game.id]">View This Game's
-                Page</button>
-        </li>
-        <li class="divider dropdown-divider"></li>
-        <li role="menuitem" *ngIf="record.game">
-            <button class="dropdown-item btn" [routerLink]="['/reports/challenges-report']"
-                [queryParams]="{ gameId: record.game.id }">
-                Scope the Challenges report to this game
-            </button>
-        </li>
+        <ng-container *ngIf="record.game">
+            <li role="menuitem" *ngIf="record.game">
+                <button class="dropdown-item btn" [routerLink]="['/game/' + record.game.id]">View This Game's
+                    Page</button>
+            </li>
+            <li class="divider dropdown-divider" *ngIf="record.game"></li>
+            <li role="menuitem" *ngIf="record.game">
+                <button class="dropdown-item btn" [routerLink]="['/reports/enrollment']"
+                    [queryParams]="{ gameId: record.game.id }">
+                    Scope the Enrollment report to this game
+                </button>
+            </li>
+        </ng-container>
     </ul>
 </div>

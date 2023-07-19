@@ -1,23 +1,23 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportParametersUpdate, EnrollmentReportRecord } from './enrollment-report.models';
-import { ReportKey, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
+import { ReportDateRange, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
 import { Observable, Subscription, firstValueFrom, of } from 'rxjs';
-import { ReportsService } from '@/reports/reports.service';
-import { SimpleEntity } from '@/api/models';
+import { PagingArgs, SimpleEntity } from '@/api/models';
 import { RouterService } from '@/services/router.service';
-import { PagingRequest } from '@/core/components/select-pager/select-pager.component';
-import { ActiveReportService } from '@/reports/services/active-report.service';
-import { ActivatedRoute } from '@angular/router';
 import { ChallengeResult } from '@/api/board-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
 import { ReportComponentBase } from '../report-base.component';
+import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig, stringArrayDeserializer, stringArraySerializer } from '@/core/directives/query-param-model.directive';
+import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
+import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
 
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
   chartConfig: LineChartConfig;
+  selectedParameters: EnrollmentReportParameters;
 }
 
 @Component({
@@ -25,7 +25,7 @@ interface EnrollmentReportContext {
   templateUrl: './enrollment-report.component.html',
   styleUrls: ['./enrollment-report.component.scss']
 })
-export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportParameters, EnrollmentReportRecord> implements OnDestroy {
+export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters, EnrollmentReportParameters> {
   @ViewChild("enrollmentReport") reportContainer!: ElementRef<HTMLDivElement>;
 
   ctx$?: Observable<EnrollmentReportContext>;
@@ -36,42 +36,61 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
   protected displaySponsorName = (s: SimpleEntity) => s.name;
   protected getSponsorValue = (s: SimpleEntity) => s.id;
+  protected selectedParameters?: EnrollmentReportParameters;
 
-  private queryParamsSub?: Subscription;
-  private runRequestSub?: Subscription;
+  protected enrollmentDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
+  @ViewChild("enrollmentDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
+    if (component) {
+      this.enrollmentDateRangeQueryModel = getDateRangeQueryModelConfig({
+        propertyNameMap: [
+          { propertyName: "dateStart", queryStringParamName: "enrollDateStart" },
+          { propertyName: "dateEnd", queryStringParamName: "enrollDateEnd" }
+        ],
+        emitter: component.ngModelChange
+      });
+    }
+  }
+
+  protected seriesQueryModel?: QueryParamModelConfig<string[]>;
+  @ViewChild('seriesMultiSelect') set seriesMultiSelect(component: MultiSelectComponent<string>) {
+    if (component) {
+      this.seriesQueryModel = getStringArrayQueryModelConfig("series", component.ngModelChange);
+    }
+  }
+
+  protected seasonsQueryModel?: QueryParamModelConfig<string[]>;
+  @ViewChild('seasonsMultiSelect') set seasonsMultiSelect(component: MultiSelectComponent<string>) {
+    if (component) {
+      this.seasonsQueryModel = getStringArrayQueryModelConfig("seasons", component.ngModelChange);
+    }
+  }
+
+  protected sponsorsQueryModel?: QueryParamModelConfig<string[]>;
+  @ViewChild('sponsorsMultiSelect') set sponsorsMultiSelect(component: MultiSelectComponent<string>) {
+    if (component) {
+      this.sponsorsQueryModel = getStringArrayQueryModelConfig("sponsorIds", component.ngModelChange);
+    }
+  }
+
+  protected tracksQueryModel?: QueryParamModelConfig<string[]>;
+  @ViewChild('tracksMultiSelect') set tracksMultiSelect(component: MultiSelectComponent<string>) {
+    if (component) {
+      this.tracksQueryModel = getStringArrayQueryModelConfig("tracks", component.ngModelChange);
+    }
+  }
 
   constructor(
-    activeReportService: ActiveReportService,
     private markdownHelpersService: MarkdownHelpersService,
     private modalService: ModalConfirmService,
     private reportService: EnrollmentReportService,
-    private reportsService: ReportsService,
-    private route: ActivatedRoute,
     private routerService: RouterService) {
-    super(activeReportService);
+    super();
   }
 
-  ngOnInit(): void {
-    this.queryParamsSub = this.route.queryParams.subscribe(query => {
-      const reportParams = this.reportService.unflattenParameters({ ...query });
-      // this causes the report to reload
-      this.selectedParameters = reportParams;
-    });
-
-    this.runRequestSub = this.activeReportService.runRequest$.subscribe(_ => {
-      this.routerService.toReport(ReportKey.EnrollmentReport, this.reportService.flattenParameters(this.selectedParameters));
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.queryParamsSub?.unsubscribe();
-    this.runRequestSub?.unsubscribe();
-  }
-
-  getDefaultParameters(): EnrollmentReportParameters {
+  getDefaultParameters(defaultPaging: PagingArgs): EnrollmentReportParameters {
     return {
       enrollDate: {},
-      paging: {},
+      paging: defaultPaging,
       seasons: [],
       series: [],
       sponsors: [],
@@ -79,12 +98,12 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     };
   }
 
-  async updateView(parameters: EnrollmentReportParameters): Promise<ReportViewUpdate> {
+  async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
     const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
+    const structuredParameters = this.unflattenParameters(parameters);
 
     this.ctx$ = of({
-      results: reportResults,
       chartConfig: {
         type: 'line',
         data: {
@@ -124,17 +143,14 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           }
         }
       },
+      selectedParameters: structuredParameters,
+      results: reportResults,
     });
 
     return {
       metaData: reportResults.metaData,
       reportContainerRef: this.reportContainer,
     };
-  }
-
-  protected buildParameterChangeUrl(parameterBuilder: EnrollmentReportParametersUpdate) {
-    const updatedSelectedParameters: EnrollmentReportFlatParameters = this.reportService.flattenParameters({ ...this.selectedParameters, ...parameterBuilder });
-    return this.routerService.getReportRoute(ReportKey.EnrollmentReport, updatedSelectedParameters).toString();
   }
 
   protected showChallengesDetail(record: EnrollmentReportRecord, challengeStatus: "deployed" | "partial" | "complete") {
@@ -183,8 +199,28 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     });
   }
 
-  protected handlePagingChange(paging: PagingRequest) {
-    const parameterChangeUrl = this.buildParameterChangeUrl({ paging });
-    this.routerService.router.navigateByUrl(parameterChangeUrl);
+  protected handlePagingChange(paging: PagingArgs) {
+    this.routerService.updateQueryParams({ parameters: { ...paging } });
+  }
+
+  private unflattenParameters(parameters: EnrollmentReportFlatParameters): EnrollmentReportParameters {
+    const defaultPaging = this.reportsService.getDefaultPaging();
+
+    return {
+      enrollDate: {
+        dateStart: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateStart),
+        dateEnd: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateEnd)
+      },
+      paging: {
+        pageNumber: parseInt((parameters.pageNumber || defaultPaging.pageNumber)!.toString()),
+        pageSize: parseInt((parameters.pageSize || defaultPaging.pageSize)!.toString())
+      },
+      seasons: this.reportsService.unflattenMultiSelectValues(parameters.seasons),
+      series: this.reportsService.unflattenMultiSelectValues(parameters.series),
+      sponsors: this.reportsService
+        .unflattenMultiSelectValues(parameters.sponsorIds)
+        .map<SimpleEntity>(v => ({ id: v, name: '' })),
+      tracks: this.reportsService.unflattenMultiSelectValues(parameters.tracks)
+    };
   }
 }

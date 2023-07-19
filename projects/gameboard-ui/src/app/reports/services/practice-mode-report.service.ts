@@ -1,9 +1,9 @@
 import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PracticeModeReportFlatParameters, PracticeModeReportParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportRecord, PracticeModeReportGrouping } from '../components/reports/practice-mode-report/practice-mode-report.models';
+import { PracticeModeReportFlatParameters, PracticeModeReportParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats } from '../components/reports/practice-mode-report/practice-mode-report.models';
 import { Observable, map } from 'rxjs';
-import { ReportResults, ReportSponsor } from '../reports-models';
+import { ReportResultsWithOverallStats } from '../reports-models';
 import { ReportsService } from '../reports.service';
 import { SimpleEntity } from '@/api/models';
 import { LogService } from '@/services/log.service';
@@ -17,40 +17,49 @@ export class PracticeModeReportService {
     private reportsService: ReportsService,
   ) { }
 
-  getData(parameters: PracticeModeReportParameters): Observable<ReportResults<PracticeModeReportRecord>> {
-    switch (parameters.grouping) {
-      case PracticeModeReportGrouping.challenge:
-        return this.getByChallengeData(parameters);
-      case PracticeModeReportGrouping.player:
-        return this.getByUserData(parameters);
-      default: {
-        const errorMessage = `Couldn't retrive practice mode report data for grouping "${parameters.grouping}"`;
-        this.log.logError(errorMessage);
-        throw new Error(errorMessage);
-      }
-    }
-  }
-
-  getByChallengeData(parameters: PracticeModeReportParameters): Observable<ReportResults<PracticeModeReportByChallengeRecord>> {
+  getByChallengeData(parameters: PracticeModeReportFlatParameters): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>> {
     parameters.grouping = PracticeModeReportGrouping.challenge;
-    parameters.paging = parameters.paging || this.reportsService.getDefaultPaging();
-    const flatParams = this.flattenParameters(parameters);
+    this.reportsService.applyDefaultPaging(parameters);
 
-    return this.http.get<ReportResults<PracticeModeReportByChallengeRecord>>(this.apiUrl.build("reports/practice-mode", flatParams));
+    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>>(this.apiUrl.build("reports/practice-mode", parameters));
   }
 
-  getByUserData(parameters: PracticeModeReportParameters): Observable<ReportResults<PracticeModeReportByUserRecord>> {
-    parameters.grouping = PracticeModeReportGrouping.player;
-    parameters.paging = parameters.paging || this.reportsService.getDefaultPaging();
-    const flatParams = this.flattenParameters(parameters);
+  getByPlayerModePerformance(parameters: PracticeModeReportFlatParameters): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>> {
+    parameters.grouping = PracticeModeReportGrouping.playerModePerformance;
+    this.reportsService.applyDefaultPaging(parameters);
 
-    return this.http.get<ReportResults<PracticeModeReportByUserRecord>>(this.apiUrl.build("reports/practice-mode", flatParams)).pipe(
+    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>>(this.apiUrl.build("reports/practice-mode", parameters)).pipe(
       map(r => {
         r.records = r.records.map(record => {
-          // dates come in as strings because everything is horrible
+          if (record.practiceStats?.lastAttemptDate) {
+            record.practiceStats.lastAttemptDate = this.reportsService.queryStringEncodedDateToDate(record.practiceStats.lastAttemptDate as any);
+          }
+
+          if (record.competitiveStats?.lastAttemptDate)
+            record.competitiveStats.lastAttemptDate = this.reportsService.queryStringEncodedDateToDate(record.competitiveStats.lastAttemptDate as any);
+
+          return record;
+        });
+
+        return r;
+      })
+    );
+  }
+
+  getByUserData(parameters: PracticeModeReportFlatParameters): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>> {
+    if (parameters)
+      parameters = { grouping: PracticeModeReportGrouping.player };
+
+    parameters.grouping = PracticeModeReportGrouping.player;
+    this.reportsService.applyDefaultPaging(parameters);
+
+    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>>(this.apiUrl.build("reports/practice-mode", parameters)).pipe(
+      map(r => {
+        r.records = r.records.map(record => {
           for (let attempt of record.attempts || []) {
-            attempt.start = (attempt.start ? new Date(attempt.start) : undefined);
-            attempt.end = (attempt.end ? new Date(attempt.end) : undefined);
+            // dates come in as strings because everything is horrible
+            attempt.start = this.reportsService.queryStringEncodedDateToDate(attempt.start as any);
+            attempt.end = this.reportsService.queryStringEncodedDateToDate(attempt.end as any);
           }
 
           return record;
@@ -60,51 +69,7 @@ export class PracticeModeReportService {
       }));
   }
 
-  flattenParameters(parameters: PracticeModeReportParameters): PracticeModeReportFlatParameters {
-    if (!parameters.paging || !parameters.paging.pageSize) {
-      parameters.paging = this.reportsService.getDefaultPaging();
-    }
-
-    return {
-      practiceDateStart: this.reportsService.dateToQueryStringEncoded(parameters?.practiceDate?.dateStart),
-      practiceDateEnd: this.reportsService.dateToQueryStringEncoded(parameters?.practiceDate?.dateEnd),
-      games: this.reportsService.flattenMultiSelectValues(parameters.games.map(g => g.id)),
-      seasons: this.reportsService.flattenMultiSelectValues(parameters.seasons),
-      series: this.reportsService.flattenMultiSelectValues(parameters.series),
-      sponsors: this.reportsService.flattenMultiSelectValues(parameters.sponsors.map(s => s.id)),
-      tracks: this.reportsService.flattenMultiSelectValues(parameters.tracks),
-      grouping: parameters.grouping,
-      pageNumber: parameters.paging.pageNumber,
-      pageSize: parameters.paging.pageSize
-    };
-  }
-
-  unflattenParameters(parameters: PracticeModeReportFlatParameters): PracticeModeReportParameters {
-    if (!parameters.pageSize || !parameters.pageNumber) {
-      const defaultPaging = this.reportsService.getDefaultPaging();
-      parameters.pageNumber = defaultPaging.pageNumber;
-      parameters.pageSize = defaultPaging.pageSize;
-    }
-
-    return {
-      practiceDate: {
-        dateStart: this.reportsService.queryStringEncodedDateToDate(parameters.practiceDateStart),
-        dateEnd: this.reportsService.queryStringEncodedDateToDate(parameters.practiceDateEnd)
-      },
-      games: this.reportsService
-        .unflattenMultiSelectValues(parameters.games)
-        .map<SimpleEntity>(s => ({ id: s, name: '' })),
-      grouping: parameters.grouping,
-      seasons: this.reportsService.unflattenMultiSelectValues(parameters.seasons),
-      series: this.reportsService.unflattenMultiSelectValues(parameters.series),
-      sponsors: this.reportsService
-        .unflattenMultiSelectValues(parameters.sponsors)
-        .map<ReportSponsor>(v => ({ id: v, name: '', logoFileName: '' })),
-      tracks: this.reportsService.unflattenMultiSelectValues(parameters.tracks),
-      paging: {
-        pageNumber: parameters.pageNumber,
-        pageSize: parameters.pageSize
-      }
-    };
+  getPlayerModeSummary(request: { userId: string; isPractice: boolean }): Observable<PracticeModeReportPlayerModeSummary> {
+    return this.http.get<PracticeModeReportPlayerModeSummary>(this.apiUrl.build(`reports/practice-mode/user/${request.userId}/summary`, { isPractice: request.isPractice }));
   }
 }

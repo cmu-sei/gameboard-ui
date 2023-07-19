@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IReportService } from './ireport.service';
 import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from '../components/reports/players-report/players-report.models';
 import { Observable } from 'rxjs';
 import { ReportResults, ReportTrackParameterModifier } from '../reports-models';
@@ -8,7 +7,7 @@ import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
-export class PlayersReportService implements IReportService<PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord> {
+export class PlayersReportService {
 
   constructor(
     private apiUri: ApiUrlService,
@@ -72,7 +71,8 @@ export class PlayersReportService implements IReportService<PlayersReportFlatPar
     };
   }
 
-  getReportData(parameters?: PlayersReportFlatParameters): Observable<ReportResults<PlayersReportRecord>> {
-    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUri.build("/reports/players-report", parameters));
+  getReportData(parameters: PlayersReportParameters): Observable<ReportResults<PlayersReportRecord>> {
+    const flatParameters = this.flattenParameters(parameters);
+    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUri.build("/reports/players-report", flatParameters));
   }
 }

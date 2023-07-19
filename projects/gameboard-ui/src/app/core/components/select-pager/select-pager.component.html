@@ -1,15 +1,15 @@
 <div class="select-pager-component d-flex align-items-center" *ngIf="pages.length > 1">
-    <button type="button" class="btn btn-outline-info pager-button mr-1" [disabled]="page == 0"
-        (click)="setPage(0)">⇇</button>
-    <button type="button" class="btn btn-outline-info pager-button" [disabled]="page == 0"
-        (click)="setPage(page - 1)">←</button>
+    <button type="button" class="btn btn-outline-info pager-button mr-1" [disabled]="pageNumber == 0"
+        (click)="setPageNumber(0)">⇇</button>
+    <button type="button" class="btn btn-outline-info pager-button" [disabled]="pageNumber == 0"
+        (click)="setPageNumber(pageNumber - 1)">←</button>
     <div class="input-group mx-1">
-        <select class="form-control" [(ngModel)]="page" (ngModelChange)="setPage(page)">
+        <select class="form-control" [(ngModel)]="pageNumber" (ngModelChange)="setPageNumber(pageNumber)">
             <option *ngFor="let pageNum of pages" [ngValue]="pageNum">{{ pageNum + 1 }}</option>
         </select>
     </div>
-    <button type="button" class="btn btn-outline-info pager-button" [disabled]="page == pages.length - 1"
-        (click)="setPage(page + 1)">→</button>
-    <button type="button" class="btn btn-outline-info pager-button ml-1" [disabled]="page == pages.length - 1"
-        (click)="setPage(this.pages.length - 1)">⇉</button>
+    <button type="button" class="btn btn-outline-info pager-button" [disabled]="pageNumber == pages.length - 1"
+        (click)="setPageNumber(pageNumber + 1)">→</button>
+    <button type="button" class="btn btn-outline-info pager-button ml-1" [disabled]="pageNumber == pages.length - 1"
+        (click)="setPageNumber(this.pages.length - 1)">⇉</button>
 </div>

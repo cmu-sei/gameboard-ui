@@ -38,5 +38,6 @@ export interface ChallengesReportRecord {
 
 export interface ChallengesReportModel {
     metaData: ReportMetaData,
-    records: ChallengesReportRecord[]
+    records: ChallengesReportRecord[],
+    selectedParameters: ChallengesReportParameters
 }

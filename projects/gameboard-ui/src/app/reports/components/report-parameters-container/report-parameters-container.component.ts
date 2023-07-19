@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-report-parameters-container',
-  template: `<div class="report-parameters-component">
+  template: `<div class="report-parameters-component mb-5">
     <hr />
     <form #parametersForm="ngForm">
       <div class="parameters-container d-flex flex-wrap input-group-lg full-width">

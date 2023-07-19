@@ -1,0 +1,13 @@
+<div class="player-field-component d-flex align-items-center" *ngIf="player">
+    <app-parameter-change-link [config]="{ parameterChange: { sponsors: player.sponsor.id} }">
+        <app-player-avatar class="d-block mr-2" [avatarUri]="player.sponsor.logoFileName | relativeImage"
+            size="small"></app-player-avatar>
+    </app-parameter-change-link>
+
+    <div class="player-info flex-grow-1">
+        <p class="player-name m-0">{{player.name}}</p>
+        <p class="team-name subtle-info" *ngIf="player.team">
+            Team: <span class="color-foreground">{{ player.team.name }}</span>
+        </p>
+    </div>
+</div>

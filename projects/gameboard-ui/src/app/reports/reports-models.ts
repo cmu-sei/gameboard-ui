@@ -16,6 +16,13 @@ export interface ReportResults<T> {
     records: T[]
 }
 
+export interface ReportResultsWithOverallStats<TOverallStats, TRecord> {
+    metaData: ReportMetaData,
+    overallStats: TOverallStats,
+    paging: PagingResults,
+    records: TRecord[]
+}
+
 export interface ReportMetaData {
     key: ReportKey;
     title: string;

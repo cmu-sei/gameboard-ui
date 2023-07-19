@@ -1,16 +1,14 @@
-<div class="support-report-component">
+<div class="support-report-component" *ngIf="ctx; else loading">
     <app-report-parameters-container>
-        <app-parameter-game-challengespec ngDefaultControl
-            [(ngModel)]="selectedParameters.gameChallengeSpec"></app-parameter-game-challengespec>
-        <app-parameter-ticket-status ngDefaultControl [(ngModel)]="selectedParameters.status"
+        <app-parameter-game-challengespec ngDefaultControl></app-parameter-game-challengespec>
+        <app-parameter-ticket-status ngDefaultControl
             [appQueryParamModel]="{ name: 'status' }"></app-parameter-ticket-status>
-        <app-parameter-date-range ngDefaultControl [(ngModel)]="selectedParameters.openedDateRange"
-            name="openedDateRange" label="Date ticket opened"></app-parameter-date-range>
-        <app-parameter-ticket-labels ngDefaultControl
-            [ngModel]="selectedParameters.labels"></app-parameter-ticket-labels>
-        <app-parameter-timespan-picker ngDefaultControl [(ngModel)]="selectedParameters.timeSinceOpen"
+        <app-parameter-date-range ngDefaultControl name="openedDateRange"
+            label="Date ticket opened"></app-parameter-date-range>
+        <app-parameter-ticket-labels ngDefaultControl></app-parameter-ticket-labels>
+        <app-parameter-timespan-picker ngDefaultControl
             label="Time since ticket was opened"></app-parameter-timespan-picker>
-        <app-parameter-timespan-picker ngDefaultControl [(ngModel)]="selectedParameters.timeSinceUpdate"
+        <app-parameter-timespan-picker ngDefaultControl
             label="Time since ticket was updated"></app-parameter-timespan-picker>
     </app-report-parameters-container>
 
@@ -56,8 +54,9 @@
                                 <p class="secondary-info-text mt-1" *ngIf="record.game || record.challenge">
                                     <a *ngIf="record.game" [routerLink]="['/game/' + record.game.id]"
                                         target="_blank">{{record.game.name}}</a>
-                                    <span class="game-challenge-spacer"
-                                        *ngIf="record.game && record.challenge">//</span>
+                                    <span class="game-challenge-spacer" *ngIf="record.game && record.challenge">
+                                        ::
+                                    </span>
                                     {{record.challenge?.name}}
                                 </p>
                             </td>
@@ -86,6 +85,12 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="pager-container d-flex justify-content-end mt-4">
+                <div class="flex-grow-1"></div>
+                <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
+                    (change)="handlePagingChange($event)"></app-select-pager>
             </div>
         </tab>
         <tab heading="Tickets by Status" id="tab-proportion-graphs" *ngIf="ctx">

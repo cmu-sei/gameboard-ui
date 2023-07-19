@@ -1,9 +1,5 @@
+import { PagingArgs } from '@/api/models';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-
-export interface PagingRequest {
-  page: number;
-  pageSize: number;
-}
 
 @Component({
   selector: 'app-select-pager',
@@ -13,9 +9,9 @@ export interface PagingRequest {
 export class SelectPagerComponent implements OnChanges {
   @Input() itemCount?: number;
   @Input() pageSize?: number;
-  @Output() change = new EventEmitter<PagingRequest>();
+  @Output() change = new EventEmitter<PagingArgs>();
 
-  protected page = 0;
+  protected pageNumber = 0;
   protected pages: number[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -30,7 +26,7 @@ export class SelectPagerComponent implements OnChanges {
   private calcPages(config: { itemCount: number, pageSize: number }) {
     if (!config.itemCount || !config.pageSize) {
       this.pages = [];
-      this.setPage(0);
+      this.setPageNumber(0);
       return;
     }
 
@@ -41,15 +37,15 @@ export class SelectPagerComponent implements OnChanges {
     this.pages = Array(currentPages).fill(currentPages).map((x, i) => i);
 
     // set page to clamped value
-    this.setPage(this.page);
+    this.setPageNumber(this.pageNumber);
   }
 
-  protected setPage(pageNumber: number) {
+  protected setPageNumber(pageNumber: number) {
     let clampedPageNumber = Math.max(0, pageNumber);
     clampedPageNumber = Math.min(pageNumber, this.pages.length - 1);
     clampedPageNumber = clampedPageNumber < 0 ? 0 : clampedPageNumber;
 
-    this.page = clampedPageNumber;
-    this.change.emit({ page: this.page, pageSize: this.pageSize! });
+    this.pageNumber = clampedPageNumber;
+    this.change.emit({ pageNumber: this.pageNumber, pageSize: this.pageSize! });
   }
 }

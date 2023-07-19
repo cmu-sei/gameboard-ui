@@ -53,6 +53,10 @@ export class ReportsService {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/tracks"));
   }
 
+  applyDefaultPaging<T extends { pageNumber?: number; pageSize?: number }>(reportParameters: T): T {
+    return { ...this.getDefaultPaging(), ...reportParameters };
+  }
+
   getDefaultPaging(): PagingArgs {
     return {
       pageNumber: 0,
@@ -66,7 +70,7 @@ export class ReportsService {
 
   dateToQueryStringEncoded(date?: Date) {
     if (!date) return undefined;
-    // this is prettier, but the default API-side modelbinder can't bind it to a date
+    // this is prettier in the qs, but the default API-side modelbinder can't bind it to a date
     // return `${(date.getMonth() + 1) % 12}-${date.getDate()}-${date.getFullYear()}`;
     return date.toLocaleDateString();
   }
