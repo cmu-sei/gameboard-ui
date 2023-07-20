@@ -16,7 +16,6 @@ import { ParameterSponsorComponent } from './components/parameters/parameter-spo
 import { ParameterTicketLabelsComponent } from './components/parameters/parameter-ticket-labels/parameter-ticket-labels.component';
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
 import { ParameterTimespanPickerComponent } from './components/parameters/parameter-timespan-picker/parameter-timespan-picker.component';
-import { ParameterTrackComponent } from './components/parameters/parameter-track/parameter-track.component';
 import { PlayerFieldComponent } from './components/player-field/player-field.component';
 import { PlayerModePerformanceSummaryComponent } from './components/reports/practice-mode-report/player-mode-performance-summary/player-mode-performance-summary.component';
 import { ReportCardComponent } from './components/report-card/report-card.component';
@@ -57,7 +56,6 @@ import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
     ParameterTicketLabelsComponent,
     ParameterTicketStatusComponent,
     ParameterTimespanPickerComponent,
-    ParameterTrackComponent,
     PlayersReportComponent,
     ReportCardComponent,
     ParameterChangeLinkComponent,

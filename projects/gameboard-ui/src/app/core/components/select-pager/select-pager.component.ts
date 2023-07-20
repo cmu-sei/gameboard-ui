@@ -1,5 +1,6 @@
 import { PagingArgs } from '@/api/models';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-select-pager',
@@ -14,6 +15,12 @@ export class SelectPagerComponent implements OnChanges {
   protected pageNumber = 0;
   protected pages: number[] = [];
 
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    console.log("look how init i init");
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     const shouldCalcPages = (changes.itemCount || changes.pageSize);
     const itemCount = changes.itemCount?.currentValue || this.itemCount;
@@ -26,7 +33,7 @@ export class SelectPagerComponent implements OnChanges {
   private calcPages(config: { itemCount: number, pageSize: number }) {
     if (!config.itemCount || !config.pageSize) {
       this.pages = [];
-      this.setPageNumber(0);
+      this.setPageNumber(this.pageNumber || 0);
       return;
     }
 

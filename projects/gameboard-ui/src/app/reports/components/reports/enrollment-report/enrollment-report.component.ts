@@ -1,15 +1,15 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportParametersUpdate, EnrollmentReportRecord } from './enrollment-report.models';
+import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord } from './enrollment-report.models';
 import { ReportDateRange, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
 import { Observable, firstValueFrom, of } from 'rxjs';
-import { PagingArgs, SimpleEntity } from '@/api/models';
+import { PagingArgs, PagingResults, SimpleEntity } from '@/api/models';
 import { ChallengeResult } from '@/api/board-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
 import { ReportComponentBase } from '../report-base.component';
-import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig, stringArrayDeserializer, stringArraySerializer } from '@/core/directives/query-param-model.directive';
+import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig } from '@/core/directives/query-param-model.directive';
 import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
 import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
 
@@ -35,6 +35,8 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   protected displaySponsorName = (s: SimpleEntity) => s.name;
   protected getSponsorValue = (s: SimpleEntity) => s.id;
   protected isLoading = false;
+
+  protected paging?: PagingResults;
 
   protected enrollmentDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
   @ViewChild("enrollmentDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
@@ -99,6 +101,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     this.isLoading = true;
     const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
+    this.paging = reportResults.paging;
     this.isLoading = false;
 
     this.ctx$ = of({
@@ -145,6 +148,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
     return {
       metaData: reportResults.metaData,
+      pagingResults: reportResults.paging,
       reportContainerRef: this.reportContainer,
     };
   }

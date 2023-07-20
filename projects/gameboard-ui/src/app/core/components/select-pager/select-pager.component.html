@@ -1,4 +1,4 @@
-<div class="select-pager-component d-flex align-items-center" *ngIf="pages.length > 1">
+<div class="select-pager-component d-flex align-items-center" [hidden]="pages.length <= 1">
     <button type="button" class="btn btn-outline-info pager-button mr-1" [disabled]="pageNumber == 0"
         (click)="setPageNumber(0)">⇇</button>
     <button type="button" class="btn btn-outline-info pager-button" [disabled]="pageNumber == 0"

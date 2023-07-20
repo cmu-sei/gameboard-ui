@@ -1,5 +1,5 @@
 import { SimpleEntity } from "../../../../api/models";
-import { ReportDateRange, ReportTrackParameter, ReportTrackParameterModifier } from "../../../reports-models";
+import { ReportDateRange, ReportTrackParameter } from "../../../reports-models";
 import { ReportGameChallengeSpec } from "../../parameters/parameter-game-challengespec/parameter-game-challengespec.component";
 
 export class PlayersReportParameters {
@@ -17,7 +17,6 @@ export class PlayersReportFlatParameters {
     playerSessionStartBeginDate?: Date;
     playerSessionStartEndDate?: Date;
     sponsorId?: string;
-    trackModifier?: ReportTrackParameterModifier;
     trackName?: string;
 }
 

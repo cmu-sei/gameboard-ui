@@ -54,17 +54,6 @@ export class ReportPageComponent implements AfterViewInit {
     );
   }
 
-  handleExportToPdf() {
-    const exportElement = this.activeReportService.htmlElement$.value;
-
-    if (!exportElement) {
-      this.logService.logError("Couldn't resolve element ref for PDF export.");
-      return;
-    }
-
-    this.pdfService.exportHtmlToPdf(this.reportTitle || "Report", exportElement);
-  }
-
   private displayReport(reportKey: ReportKey, query: Object | null = null) {
     this.routerService.toReport(reportKey, query);
   }

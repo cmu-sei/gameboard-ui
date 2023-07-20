@@ -82,18 +82,12 @@ export interface ReportTeam {
     captain: SimpleEntity;
 }
 
-export enum ReportTrackParameterModifier {
-    CompetedInThisTrack = "include",
-    CompetedInOnlyThisTrack = "include-only",
-    DidntCompeteInThisTrack = "exclude"
-}
-
 export interface ReportTrackParameter {
     track?: string;
-    modifier?: ReportTrackParameterModifier;
 }
 
 export interface ReportViewUpdate {
     metaData: ReportMetaData;
+    pagingResults?: PagingResults;
     reportContainerRef?: ElementRef<HTMLDivElement>;
 }

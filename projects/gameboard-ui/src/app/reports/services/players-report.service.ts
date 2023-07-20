@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from '../components/reports/players-report/players-report.models';
 import { Observable } from 'rxjs';
-import { ReportResults, ReportTrackParameterModifier } from '../reports-models';
+import { ReportResults } from '../reports-models';
 import { ObjectService } from '../../services/object.service';
 import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
@@ -20,7 +20,6 @@ export class PlayersReportService {
       gameId: parameters.gameChallengeSpec?.gameId,
       playerSessionStartBeginDate: parameters.sessionStartWindow?.dateStart,
       playerSessionStartEndDate: parameters.sessionStartWindow?.dateEnd,
-      trackModifier: parameters.track?.modifier,
       trackName: parameters.track?.track,
       ...parameters
     };
@@ -40,7 +39,6 @@ export class PlayersReportService {
     const gameId = parameters.gameId;
     const challengeSpecId = parameters.challengeSpecId;
     const trackName = parameters.trackName;
-    const trackModifier = parameters.trackModifier;
     const sessionStartBeginDate = parameters.playerSessionStartBeginDate;
     const sessionStartEndDate = parameters.playerSessionStartEndDate;
 
@@ -65,8 +63,7 @@ export class PlayersReportService {
         dateEnd: sessionStartEndDate
       } : undefined,
       track: {
-        track: trackName,
-        modifier: trackModifier || ReportTrackParameterModifier.CompetedInThisTrack,
+        track: trackName
       },
     };
   }

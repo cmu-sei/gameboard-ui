@@ -121,13 +121,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <div class="pager-container d-flex justify-content-end mt-4">
-                    <div class="flex-grow-1"></div>
-                    <app-select-pager [itemCount]="ctx.results.paging.itemCount"
-                        [pageSize]="ctx.results.paging.pageSize"
-                        (change)="handlePagingChange($event)"></app-select-pager>
-                </div>
             </tab>
 
             <tab heading="Enrollment Over Time" id="tab-trend-line">
@@ -135,6 +128,12 @@
             </tab>
         </tabset>
     </ng-container>
+</div>
+
+<div class="pager-container d-flex justify-content-end mt-4">
+    <div class="flex-grow-1"></div>
+    <app-select-pager [hidden]="!paging" [itemCount]="paging?.itemCount" [pageSize]="paging?.pageSize || 20"
+        (change)="handlePagingChange($event)"></app-select-pager>
 </div>
 
 <ng-template #loading>

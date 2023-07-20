@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from './players-report.models';
-import { ReportResults, ReportTrackParameterModifier, ReportViewUpdate } from '../../../reports-models';
+import { ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { ReportComponentBase } from '../report-base.component';
 import { PlayersReportService } from '@/reports/services/players-report.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
@@ -23,7 +23,7 @@ export class PlayersReportComponent
   getDefaultParameters(defaultPaging: PagingArgs): PlayersReportParameters {
     return {
       gameChallengeSpec: {},
-      track: { track: undefined, modifier: ReportTrackParameterModifier.CompetedInOnlyThisTrack }
+      track: { track: undefined }
     };
   }
   ctx: PlayersReportContext | null = null;

@@ -21,8 +21,8 @@ export class EnrollmentReportService {
 
   getTrendData(parameters: EnrollmentReportFlatParameters): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
     // ignore paging parameters for the line chart
-    parameters.pageNumber = undefined;
-    parameters.pageSize = undefined;
+    // parameters.pageNumber = undefined;
+    // parameters.pageSize = undefined;
 
     return firstValueFrom(this
       .http

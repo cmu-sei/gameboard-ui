@@ -19,8 +19,6 @@ export abstract class ReportComponentBase<TFlatParameters extends {}, TStructure
     protected readonly unsub = inject(UnsubscriberService);
     protected readonly objectService = inject(ObjectService);
 
-    private _lastParameters?: TFlatParameters;
-
     constructor() {
         this.unsub.add(this.route.queryParams.subscribe(params => {
             this._updateView({ ...params } as TFlatParameters);
@@ -39,7 +37,6 @@ export abstract class ReportComponentBase<TFlatParameters extends {}, TStructure
     }
 
     private async _updateView(parameters: TFlatParameters) {
-        this._lastParameters = parameters;
         const viewUpdate = await this.updateView(parameters);
         this.activeReportService.metaData$.next(viewUpdate.metaData);
         this.activeReportService.htmlElement$.next(viewUpdate.reportContainerRef);
