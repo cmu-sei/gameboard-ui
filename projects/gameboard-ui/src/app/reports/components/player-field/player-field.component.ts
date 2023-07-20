@@ -5,7 +5,6 @@ import { SimpleEntity } from '@/api/models';
 @Component({
   selector: 'app-player-field',
   templateUrl: './player-field.component.html',
-  styleUrls: ['./player-field.component.scss']
 })
 export class PlayerFieldComponent {
   @Input() player?: {

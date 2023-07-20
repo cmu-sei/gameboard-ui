@@ -45,7 +45,8 @@
                         <tr class="data-row" *ngFor="let record of ctx.results.records">
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <app-player-field
+                                    <p class="subtle-info">{{ record.player.id }}</p>
+                                    <app-player-field class="d-block"
                                         [player]="{ userId: record.player.id, name: record.player.name, sponsor: record.player.sponsor, team: record.game.isTeamGame ? record.team : undefined }"></app-player-field>
                                 </div>
                             </td>
