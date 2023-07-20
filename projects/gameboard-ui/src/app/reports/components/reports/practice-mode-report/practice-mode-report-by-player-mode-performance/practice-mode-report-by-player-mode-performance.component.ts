@@ -6,6 +6,8 @@ import { PracticeModeReportService } from '@/reports/services/practice-mode-repo
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { PlayerModePerformanceSummaryComponent, PlayerModePerformanceSummaryContext } from '@/reports/components/reports/practice-mode-report/player-mode-performance-summary/player-mode-performance-summary.component';
 import { LogService } from '@/services/log.service';
+import { PagingArgs } from '@/api/models';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-practice-mode-report-by-player-mode-performance',
@@ -21,7 +23,8 @@ export class PracticeModeReportByPlayerModePerformanceComponent implements OnIni
   constructor(
     private log: LogService,
     private modalService: ModalConfirmService,
-    private reportService: PracticeModeReportService) { }
+    private reportService: PracticeModeReportService,
+    private routerService: RouterService) { }
 
   async ngOnInit(): Promise<void> {
     if (!this.parameters) {
@@ -38,5 +41,9 @@ export class PracticeModeReportByPlayerModePerformanceComponent implements OnIni
       context: event as PlayerModePerformanceSummaryContext,
       modalClasses: ["modal-dialog-centered", "modal-lg"]
     });
+  }
+
+  protected handlePagingChange($event: PagingArgs) {
+    this.routerService.updateQueryParams({ parameters: { ...$event } });
   }
 }

@@ -1,108 +1,116 @@
 <div class="practice-mode-report-prac-vs-comp-component" *ngIf="!isLoading; else loading">
-    <table class="report-table table-hover gameboard-report" *ngIf="results?.records; else noRecords">
-        <col>
-        <colgroup span="5"></colgroup>
-        <colgroup span="5"></colgroup>
+    <ng-container *ngIf="results; else noRecords">
+        <table class="report-table table-hover gameboard-report" *ngIf="results?.records; else noRecords">
+            <col>
+            <colgroup span="5"></colgroup>
+            <colgroup span="5"></colgroup>
 
-        <thead class="thead-light">
-            <tr class="headers super-headers-row">
-                <th scope="col"></th>
-                <th scope="col" colSpan="5">Practice Mode</th>
-                <th scope="col" colSpan="5">Competitive Mode</th>
-            </tr>
-        </thead>
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col"></th>
+                    <th scope="col" colSpan="5">Practice Mode</th>
+                    <th scope="col" colSpan="5">Competitive Mode</th>
+                </tr>
+            </thead>
 
-        <tbody>
-            <tr class="headers headers-row">
-                <td>Challenges</td>
-                <td>Last Played</td>
-                <td>Attempts</td>
-                <td>Zero / Partial / Complete</td>
-                <td>Avg. % Points Scored</td>
-                <td>Avg. Score Percentile</td>
-                <td>Last Played</td>
-                <td>Challenges</td>
-                <td>Zero / Partial / Complete</td>
-                <td>Avg. % Points Scored</td>
-                <td>Avg. Score Percentile</td>
-            </tr>
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Challenges</td>
+                    <td>Last Played</td>
+                    <td>Attempts</td>
+                    <td>Zero / Partial / Complete</td>
+                    <td>Avg. % Points Scored</td>
+                    <td>Avg. Score Percentile</td>
+                    <td>Last Played</td>
+                    <td>Challenges</td>
+                    <td>Zero / Partial / Complete</td>
+                    <td>Avg. % Points Scored</td>
+                    <td>Avg. Score Percentile</td>
+                </tr>
 
-            <tr class="data-row" *ngFor="let record of results?.records">
-                <td>
-                    <app-player-field
-                        [player]="{ userId: record.player.id, name: record.player.name, sponsor: record.sponsor }"></app-player-field>
-                </td>
+                <tr class="data-row" *ngFor="let record of results?.records">
+                    <td>
+                        <app-player-field
+                            [player]="{ userId: record.player.id, name: record.player.name, sponsor: record.sponsor }"></app-player-field>
+                    </td>
 
-                <!--PRACTICE MODE STATS-->
-                <td class="report-field date">
-                    <div *ngIf="record.practiceStats?.lastAttemptDate; else noValue">
-                        <p>{{ record.practiceStats?.lastAttemptDate | shortdate }}</p>
-                        <p class="subtle-info">{{ record.practiceStats?.lastAttemptDate | friendlyTime }}</p>
-                    </div>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.practiceStats?.totalChallengesPlayed; else noValue"
-                        [class]="record.practiceStats?.totalChallengesPlayed | countToTooltipClass"
-                        (click)="record.practiceStats?.totalChallengesPlayed && totalAttemptsClicked({ userId: record.player.id, isPractice: true})">
-                        {{ record.practiceStats?.totalChallengesPlayed }}
-                    </p>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.practiceStats; else noValue">
-                        <span>{{ record.practiceStats.zeroScoreSolves || 0}}</span>
-                        <span> / </span>
-                        <span>{{ record.practiceStats.partialSolves || 0 }}</span>
-                        <span> / </span>
-                        <span>{{ record.practiceStats.completeSolves || 0 }}</span>
-                    </p>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.practiceStats">
-                        {{ record.practiceStats.avgPctAvailablePointsScored | percent:'2.0-2' }}
-                    </p>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.practiceStats">
-                        {{ record.practiceStats.avgScorePercentile | percent:'2.0-2' }}
-                    </p>
-                </td>
+                    <!--PRACTICE MODE STATS-->
+                    <td class="report-field date">
+                        <div *ngIf="record.practiceStats?.lastAttemptDate; else noValue">
+                            <p>{{ record.practiceStats?.lastAttemptDate | shortdate }}</p>
+                            <p class="subtle-info">{{ record.practiceStats?.lastAttemptDate | friendlyTime }}</p>
+                        </div>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.practiceStats?.totalChallengesPlayed; else noValue"
+                            [class]="record.practiceStats?.totalChallengesPlayed | countToTooltipClass"
+                            (click)="record.practiceStats?.totalChallengesPlayed && totalAttemptsClicked({ userId: record.player.id, isPractice: true})">
+                            {{ record.practiceStats?.totalChallengesPlayed }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.practiceStats; else noValue">
+                            <span>{{ record.practiceStats.zeroScoreSolves || 0}}</span>
+                            <span> / </span>
+                            <span>{{ record.practiceStats.partialSolves || 0 }}</span>
+                            <span> / </span>
+                            <span>{{ record.practiceStats.completeSolves || 0 }}</span>
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.practiceStats">
+                            {{ record.practiceStats.avgPctAvailablePointsScored | percent:'2.0-2' }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.practiceStats">
+                            {{ record.practiceStats.avgScorePercentile | percent:'2.0-2' }}
+                        </p>
+                    </td>
 
-                <!--COMPETITIVE MODE STATS-->
-                <td class="report-field date">
-                    <div *ngIf="record.competitiveStats?.lastAttemptDate; else noValue">
-                        <p>{{ record.competitiveStats?.lastAttemptDate | shortdate }}</p>
-                        <p class="subtle-info">{{ record.competitiveStats?.lastAttemptDate | friendlyTime }}</p>
-                    </div>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.competitiveStats?.totalChallengesPlayed; else noValue"
-                        [class]="record.competitiveStats?.totalChallengesPlayed | countToTooltipClass"
-                        (click)="totalAttemptsClicked({ userId: record.player.id, isPractice: false })">
-                        {{ record.competitiveStats?.totalChallengesPlayed }}
-                    </p>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.competitiveStats; else noValue">
-                        <span>{{ record.competitiveStats.zeroScoreSolves || 0}}</span>
-                        <span> / </span>
-                        <span>{{ record.competitiveStats.partialSolves || 0 }}</span>
-                        <span> / </span>
-                        <span>{{ record.competitiveStats.completeSolves || 0 }}</span>
-                    </p>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.competitiveStats; else noValue">
-                        {{ record.competitiveStats.avgPctAvailablePointsScored }}%
-                    </p>
-                </td>
-                <td class="report-field numerical">
-                    <p *ngIf="record.competitiveStats; else noValue">
-                        {{ record.competitiveStats.avgScorePercentile }}%
-                    </p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    <!--COMPETITIVE MODE STATS-->
+                    <td class="report-field date">
+                        <div *ngIf="record.competitiveStats?.lastAttemptDate; else noValue">
+                            <p>{{ record.competitiveStats?.lastAttemptDate | shortdate }}</p>
+                            <p class="subtle-info">{{ record.competitiveStats?.lastAttemptDate | friendlyTime }}</p>
+                        </div>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.competitiveStats?.totalChallengesPlayed; else noValue"
+                            [class]="record.competitiveStats?.totalChallengesPlayed | countToTooltipClass"
+                            (click)="totalAttemptsClicked({ userId: record.player.id, isPractice: false })">
+                            {{ record.competitiveStats?.totalChallengesPlayed }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.competitiveStats; else noValue">
+                            <span>{{ record.competitiveStats.zeroScoreSolves || 0}}</span>
+                            <span> / </span>
+                            <span>{{ record.competitiveStats.partialSolves || 0 }}</span>
+                            <span> / </span>
+                            <span>{{ record.competitiveStats.completeSolves || 0 }}</span>
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.competitiveStats; else noValue">
+                            {{ record.competitiveStats.avgPctAvailablePointsScored }}%
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.competitiveStats; else noValue">
+                            {{ record.competitiveStats.avgScorePercentile }}%
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pager-container d-flex justify-content-end mt-4">
+            <div class="flex-grow-1"></div>
+            <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
+                (change)="handlePagingChange($event)"></app-select-pager>
+        </div>
+    </ng-container>
 </div>
 
 <ng-template #loading>
