@@ -1,5 +1,5 @@
 <div class="player-field-component d-flex align-items-center" *ngIf="player">
-    <app-parameter-change-link [config]="{ parameterChange: { sponsors: player.sponsor.id} }">
+    <app-parameter-change-link *ngIf="player.sponsor" [config]="{ parameterChange: { sponsors: player.sponsor.id} }">
         <app-player-avatar class="d-block mr-2" [avatarUri]="player.sponsor.logoFileName | relativeImage"
             size="small"></app-player-avatar>
     </app-parameter-change-link>

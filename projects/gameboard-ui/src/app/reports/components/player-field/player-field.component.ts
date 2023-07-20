@@ -11,7 +11,7 @@ export class PlayerFieldComponent {
   @Input() player?: {
     userId: string;
     name: string;
-    sponsor: ReportSponsor;
+    sponsor?: ReportSponsor;
     team?: SimpleEntity
   };
 }
