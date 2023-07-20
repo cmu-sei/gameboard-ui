@@ -1,4 +1,4 @@
-<div class="enrollment-report-params" *ngIf="ctx$ | async as ctx; else loading">
+<div class="enrollment-report-params">
     <app-report-parameters-container>
         <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
             [appQueryParamModel]="seriesQueryModel" #seriesMultiSelect></app-multi-select>
@@ -14,125 +14,127 @@
     </app-report-parameters-container>
 </div>
 
-<div class="report-body mt-4" *ngIf="ctx$ | async as ctx; else loading" #enrollmentReport>
-    <tabset class="mt-5" *ngIf="ctx.results.records.length; else noRecords">
-        <tab heading="Summary Table" id="tab-summary-table">
-            <div *ngIf="ctx.results.records.length" class="results">
-                <table class="report-table table-hover gameboard-report">
-                    <colgroup span="3"></colgroup>
-                    <col>
-                    <colgroup span="4"></colgroup>
+<div class="report-body mt-4" *ngIf="!isLoading; else loading" #enrollmentReport>
+    <ng-container *ngIf="ctx$ | async as ctx">
+        <tabset class="mt-5" *ngIf="ctx.results.records.length; else noRecords">
+            <tab heading="Summary Table" id="tab-summary-table">
+                <div class="results">
+                    <table class="report-table table-hover gameboard-report">
+                        <colgroup span="3"></colgroup>
+                        <colgroup span="5"></colgroup>
 
-                    <thead class="thead-light">
-                        <tr class="headers super-headers-row">
-                            <th scope="col" colSpan="3" class="group-header">Enrollment</th>
-                            <th scope="col" colSpan="5" class="group-header">Performance</th>
-                        </tr>
-                    </thead>
+                        <thead class="thead-light">
+                            <tr class="headers super-headers-row">
+                                <th scope="col" colSpan="3" class="group-header">Enrollment</th>
+                                <th scope="col" colSpan="5" class="group-header">Performance</th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        <tr class="headers headers-row">
-                            <td>Player</td>
-                            <td>Enroll Date</td>
-                            <td>Game</td>
-                            <td>Cumulative Time</td>
-                            <td>Attempted</td>
-                            <td>Partially Solved</td>
-                            <td>Completely Solved</td>
-                            <td>Score</td>
-                        </tr>
+                        <tbody>
+                            <tr class="headers headers-row">
+                                <td>Player</td>
+                                <td>Enroll Date</td>
+                                <td>Game</td>
+                                <td>Cumulative Time</td>
+                                <td>Attempted</td>
+                                <td>Partially Solved</td>
+                                <td>Completely Solved</td>
+                                <td>Score</td>
+                            </tr>
 
-                        <tr class="data-row" *ngFor="let record of ctx.results.records">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <app-player-field class="d-block"
-                                        [player]="{ userId: record.player.id, name: record.player.name, sponsor: record.player.sponsor, team: record.game.isTeamGame ? record.team : undefined }"></app-player-field>
-                                </div>
-                            </td>
-                            <td class="report-field date">
-                                <p *ngIf="record.player.enrollDate else noValue">
-                                    {{ record.player.enrollDate | shortdate }} @
-                                    {{ record.player.enrollDate | friendlyTime }}
-                                </p>
-                            </td>
-                            <td>
-                                <p class="game-name m-0">{{ record.game.name }}</p>
-                                <p class="game-info subtle-info">
-                                    <span *ngIf="record.game.series">
-                                        <app-parameter-change-link
-                                            [config]="{ parameterChange: { series: record.game.series } }">
-                                            {{ record.game.series }}
-                                        </app-parameter-change-link>
-                                        ::
-                                    </span>
-                                    <span *ngIf="record.game.season">
-                                        <app-parameter-change-link
-                                            [config]="{ parameterChange: { seasons: record.game.season }}">
-                                            {{ record.game.season }}
-                                        </app-parameter-change-link>
-                                        ::
-                                    </span>
-                                    <span *ngIf="record.game.track; else noValue">
-                                        <app-parameter-change-link
-                                            [config]="{ parameterChange: { tracks: record.game.track }}">
-                                            {{ record.game.track }}
-                                        </app-parameter-change-link>
-                                    </span>
-                                </p>
-                            </td>
-                            <td class="report-field numerical">
-                                <p class="report-field" *ngIf="record.playTime.durationMs; else noValue">
-                                    {{ record.playTime.durationMs | msToDuration }}
-                                </p>
-                            </td>
-                            <td class="report-field numerical">
-                                <p class="challenges-deployed">
-                                    <span [class.tooltipped-value]="record.challenges.length"
-                                        (click)="record.challenges && showChallengesDetail(record, 'deployed')">
-                                        {{ record.challenges | arrayToCount }}
-                                    </span>
-                                </p>
-                            </td>
-                            <td class="report-field numerical">
-                                <p class="count challenges-partial">
-                                    <span [class.tooltipped-value]="record.challengesPartiallySolvedCount"
-                                        (click)="record.challengesPartiallySolvedCount && showChallengesDetail(record, 'partial')">
-                                        {{ record.challengesPartiallySolvedCount }}
-                                    </span>
-                                </p>
-                            </td>
-                            <td class="report-field numerical">
-                                <p class="count challenges-complete">
-                                    <span [class.tooltipped-value]="record.challengesCompletelySolvedCount"
-                                        (click)="record.challengesCompletelySolvedCount && showChallengesDetail(record, 'complete')">
-                                        {{ record.challengesCompletelySolvedCount }}
-                                    </span>
-                                </p>
-                            </td>
-                            <td class="report-field numerical">
-                                <p>
-                                    <span [class.tooltipped-value]="(record.score || 0) > 0"
-                                        (click)="(record.score || 0) && showScoreBreakdown(record)">
-                                        {{ record.score }}
-                                    </span>
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                            <tr class="data-row" *ngFor="let record of ctx.results.records">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <app-player-field class="d-block"
+                                            [player]="{ userId: record.player.id, name: record.player.name, sponsor: record.player.sponsor, team: record.game.isTeamGame ? record.team : undefined }"></app-player-field>
+                                    </div>
+                                </td>
+                                <td class="report-field date">
+                                    <p *ngIf="record.player.enrollDate else noValue">
+                                        {{ record.player.enrollDate | shortdate }} @
+                                        {{ record.player.enrollDate | friendlyTime }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p class="game-name m-0">{{ record.game.name }}</p>
+                                    <p class="game-info subtle-info">
+                                        <span *ngIf="record.game.series">
+                                            <app-parameter-change-link
+                                                [config]="{ parameterChange: { series: record.game.series } }">
+                                                {{ record.game.series }}
+                                            </app-parameter-change-link>
+                                            ::
+                                        </span>
+                                        <span *ngIf="record.game.season">
+                                            <app-parameter-change-link
+                                                [config]="{ parameterChange: { seasons: record.game.season }}">
+                                                {{ record.game.season }}
+                                            </app-parameter-change-link>
+                                            ::
+                                        </span>
+                                        <span *ngIf="record.game.track; else noValue">
+                                            <app-parameter-change-link
+                                                [config]="{ parameterChange: { tracks: record.game.track }}">
+                                                {{ record.game.track }}
+                                            </app-parameter-change-link>
+                                        </span>
+                                    </p>
+                                </td>
+                                <td class="report-field numerical">
+                                    <p class="report-field" *ngIf="record.playTime.durationMs; else noValue">
+                                        {{ record.playTime.durationMs | msToDuration }}
+                                    </p>
+                                </td>
+                                <td class="report-field numerical">
+                                    <p class="challenges-deployed">
+                                        <span [class.tooltipped-value]="record.challenges.length"
+                                            (click)="record.challenges && showChallengesDetail(record, 'deployed')">
+                                            {{ record.challenges | arrayToCount }}
+                                        </span>
+                                    </p>
+                                </td>
+                                <td class="report-field numerical">
+                                    <p class="count challenges-partial">
+                                        <span [class.tooltipped-value]="record.challengesPartiallySolvedCount"
+                                            (click)="record.challengesPartiallySolvedCount && showChallengesDetail(record, 'partial')">
+                                            {{ record.challengesPartiallySolvedCount }}
+                                        </span>
+                                    </p>
+                                </td>
+                                <td class="report-field numerical">
+                                    <p class="count challenges-complete">
+                                        <span [class.tooltipped-value]="record.challengesCompletelySolvedCount"
+                                            (click)="record.challengesCompletelySolvedCount && showChallengesDetail(record, 'complete')">
+                                            {{ record.challengesCompletelySolvedCount }}
+                                        </span>
+                                    </p>
+                                </td>
+                                <td class="report-field numerical">
+                                    <p>
+                                        <span [class.tooltipped-value]="(record.score || 0) > 0"
+                                            (click)="(record.score || 0) && showScoreBreakdown(record)">
+                                            {{ record.score }}
+                                        </span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="pager-container d-flex justify-content-end mt-4">
-                <div class="flex-grow-1"></div>
-                <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
-                    (change)="handlePagingChange($event)"></app-select-pager>
-            </div>
-        </tab>
+                <div class="pager-container d-flex justify-content-end mt-4">
+                    <div class="flex-grow-1"></div>
+                    <app-select-pager [itemCount]="ctx.results.paging.itemCount"
+                        [pageSize]="ctx.results.paging.pageSize"
+                        (change)="handlePagingChange($event)"></app-select-pager>
+                </div>
+            </tab>
 
-        <tab heading="Enrollment Over Time" id="tab-trend-line">
-            <app-line-chart id="enrollmentTrend" [config]="ctx.chartConfig"></app-line-chart>
-        </tab>
-    </tabset>
+            <tab heading="Enrollment Over Time" id="tab-trend-line">
+                <app-line-chart id="enrollmentTrend" [config]="ctx.chartConfig"></app-line-chart>
+            </tab>
+        </tabset>
+    </ng-container>
 </div>
 
 <ng-template #loading>

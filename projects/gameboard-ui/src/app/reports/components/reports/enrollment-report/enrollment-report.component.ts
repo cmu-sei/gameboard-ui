@@ -1,10 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportParametersUpdate, EnrollmentReportRecord } from './enrollment-report.models';
 import { ReportDateRange, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
-import { Subject, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, of } from 'rxjs';
 import { PagingArgs, SimpleEntity } from '@/api/models';
-import { RouterService } from '@/services/router.service';
 import { ChallengeResult } from '@/api/board-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
@@ -17,7 +16,6 @@ import { ParameterDateRangeComponent } from '../../parameters/parameter-date-ran
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
   chartConfig: LineChartConfig;
-  selectedParameters: EnrollmentReportParameters;
 }
 
 @Component({
@@ -33,9 +31,10 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   sponsors$ = this.reportsService.getSponsors();
   tracks$ = this.reportsService.getTracks();
 
-  protected ctx$ = new Subject<EnrollmentReportContext | null>();
+  protected ctx$?: Observable<EnrollmentReportContext>;
   protected displaySponsorName = (s: SimpleEntity) => s.name;
   protected getSponsorValue = (s: SimpleEntity) => s.id;
+  protected isLoading = false;
 
   protected enrollmentDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
   @ViewChild("enrollmentDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
@@ -81,8 +80,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   constructor(
     private markdownHelpersService: MarkdownHelpersService,
     private modalService: ModalConfirmService,
-    private reportService: EnrollmentReportService,
-    private routerService: RouterService) {
+    private reportService: EnrollmentReportService) {
     super();
   }
 
@@ -98,12 +96,12 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
-    this.ctx$.next(null);
+    this.isLoading = true;
     const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
-    const structuredParameters = this.unflattenParameters(parameters);
+    this.isLoading = false;
 
-    this.ctx$.next({
+    this.ctx$ = of({
       chartConfig: {
         type: 'line',
         data: {
@@ -142,7 +140,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           }
         }
       },
-      selectedParameters: structuredParameters,
       results: reportResults,
     });
 
@@ -196,30 +193,5 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
       renderBodyAsMarkdown: true,
       title: `${record.player.name}: Score Breakdown`
     });
-  }
-
-  protected handlePagingChange(paging: PagingArgs) {
-    this.routerService.updateQueryParams({ parameters: { ...paging } });
-  }
-
-  private unflattenParameters(parameters: EnrollmentReportFlatParameters): EnrollmentReportParameters {
-    const defaultPaging = this.reportsService.getDefaultPaging();
-
-    return {
-      enrollDate: {
-        dateStart: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateStart),
-        dateEnd: this.reportsService.queryStringEncodedDateToDate(parameters.enrollDateEnd)
-      },
-      paging: {
-        pageNumber: parseInt((parameters.pageNumber || defaultPaging.pageNumber)!.toString()),
-        pageSize: parseInt((parameters.pageSize || defaultPaging.pageSize)!.toString())
-      },
-      seasons: this.reportsService.unflattenMultiSelectValues(parameters.seasons),
-      series: this.reportsService.unflattenMultiSelectValues(parameters.series),
-      sponsors: this.reportsService
-        .unflattenMultiSelectValues(parameters.sponsorIds)
-        .map<SimpleEntity>(v => ({ id: v, name: '' })),
-      tracks: this.reportsService.unflattenMultiSelectValues(parameters.tracks)
-    };
   }
 }

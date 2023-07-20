@@ -86,7 +86,6 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
     private queryParamModelService: QueryParamModelService,
     private reportService: SupportReportService,
     private rgbService: TextToRgbService,
-    private routerService: RouterService,
     private supportService: SupportService) { super(); }
 
   getDefaultParameters(defaultPaging: PagingArgs): SupportReportParameters {
@@ -117,10 +116,6 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
       metaData: results.metaData,
       reportContainerRef: this.reportElementRef,
     };
-  }
-
-  protected handlePagingChange(paging: PagingArgs) {
-    this.routerService.updateQueryParams({ parameters: { ...paging } });
   }
 
   private buildTicketsByStatus(records: SupportReportRecord[]): DoughnutChartConfig {

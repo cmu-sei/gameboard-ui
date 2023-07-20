@@ -56,7 +56,7 @@ export class ReportsService {
   getDefaultPaging(): PagingArgs {
     return {
       pageNumber: 0,
-      pageSize: 20
+      pageSize: 5
     };
   }
 

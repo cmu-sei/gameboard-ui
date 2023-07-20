@@ -21,13 +21,12 @@ export class EnrollmentReportService {
 
   getTrendData(parameters: EnrollmentReportFlatParameters): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
     // ignore paging parameters for the line chart
-    const flattened = parameters;
-    flattened.pageNumber = undefined;
-    flattened.pageSize = undefined;
+    parameters.pageNumber = undefined;
+    parameters.pageSize = undefined;
 
     return firstValueFrom(this
       .http
-      .get<{ [dateString: string]: EnrollmentReportLineChartGroup }>(this.apiUrl.build("reports/enrollment/trend", flattened))
+      .get<{ [dateString: string]: EnrollmentReportLineChartGroup }>(this.apiUrl.build("reports/enrollment/trend", parameters))
       .pipe(
         map(results => {
           const mapped = new Map<DateTime, EnrollmentReportLineChartGroup>();

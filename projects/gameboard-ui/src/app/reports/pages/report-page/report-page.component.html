@@ -34,10 +34,8 @@
                 we want this to continue to improve on the prior reporting system and address needs as they emerge.
                 Thanks for your support!
             </p>
-        </alert>
 
-        <alert type="warning" class="my-4" [dismissible]="true">
-            <h2>Known issues</h2>
+            <h2 class="mt-4">Known issues</h2>
 
             <p>
                 We're aware of several issues with the current build of this screen and are addressing them as
@@ -46,12 +44,18 @@
             </p>
 
             <ul class="d-block mt-4 list-group">
-                <li class="list-group-item">The "Report Select" dropdown at the upper left of the page appears blank on
-                    initial page load. (It displays the correct value after it's touched by the user once.)</li>
-                <li class="list-group-item">The Game/Challenge filter on the Support Report has no effect on the
-                    report's results.</li>
                 <li class="list-group-item">
-                    Filter controls do not reflect their currently selected values if you open a
+                    The <strong>paging controls</strong> at the bottom of each report are currently not correctly
+                    paging the results. Until this is resolved, use filter controls to find the results you're
+                    interested.
+                    This is our current highest priority.
+                </li>
+                <li class="list-group-item">
+                    <strong>The "Report Select" dropdown</strong> at the upper left of the page appears blank on
+                    initial page load. (It displays the correct value after it's touched by the user once.)
+                </li>
+                <li class="list-group-item">
+                    <strong>Filter controls</strong> do not reflect their currently selected values if you open a
                     link to the reports page which includes filtering. For example,
                     <a [routerLink]="['/reports/enrollment']" [queryParams]="{ track: 'Track A' }">
                         this link
@@ -59,6 +63,9 @@
                     should open to the Enrollment Report with Track A selected, and it will display results correctly.
                     However, the track filter does not show that Track A is selected.
                 </li>
+                <li class="list-group-item">The <strong>Game/Challenge</strong> filter on the Support Report has no
+                    effect on the
+                    report's results.</li>
             </ul>
         </alert>
     </div>
@@ -66,7 +73,7 @@
     <app-report-global-controls (exportRequestCsv)="handleExportToCsv()"
         (exportRequestPdf)="handleExportToPdf()"></app-report-global-controls>
 
-    <div class="report-page-router-outlet">
+    <div class="report-page-router-outlet mb-4">
         <router-outlet></router-outlet>
     </div>
 </div>

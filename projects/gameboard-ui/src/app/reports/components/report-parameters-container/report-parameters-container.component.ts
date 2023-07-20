@@ -32,10 +32,6 @@ export class ReportParametersContainerComponent implements AfterViewInit, OnDest
       this.logService.logError("Couldn't resolve the report parameters form.");
       return;
     }
-
-    this.parametersForm.valueChanges!.subscribe(changes => {
-      this.activeReportService.parametersPristine = this.parametersForm?.pristine || true;
-    });
   }
 
   ngOnDestroy(): void {
