@@ -45,10 +45,6 @@ export class ReportsService {
     return this.http.get<ReportSponsor[]>(this.apiUrlService.build("/reports/parameter/sponsors"));
   }
 
-  getTicketStatuses(): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/ticket-statuses")).pipe(map(statuses => statuses.sort()));
-  }
-
   getTracks(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/tracks"));
   }
@@ -109,7 +105,7 @@ export class ReportsService {
     return (timespan.days || 0) * 24 * 60 + (timespan.hours || 0) * 60 + (timespan.minutes || 0);
   }
 
-  flattenMultiSelectValues(input: string[]): string | undefined {
+  flattenMultiSelectValues(input?: string[]): string | undefined {
     if (!input)
       return undefined;
 

@@ -29,10 +29,10 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   @ViewChild("enrollmentReport") reportContainer!: ElementRef<HTMLDivElement>;
 
   ctx$?: Observable<EnrollmentReportContext>;
-  seasons$: Observable<string[]> = this.reportsService.getSeasons();
-  series$: Observable<string[]> = this.reportsService.getSeries();
-  sponsors$: Observable<SimpleEntity[]> = this.reportsService.getSponsors();
-  tracks$: Observable<string[]> = this.reportsService.getTracks();
+  seasons$ = this.reportsService.getSeasons();
+  series$ = this.reportsService.getSeries();
+  sponsors$ = this.reportsService.getSponsors();
+  tracks$ = this.reportsService.getTracks();
 
   protected displaySponsorName = (s: SimpleEntity) => s.name;
   protected getSponsorValue = (s: SimpleEntity) => s.id;

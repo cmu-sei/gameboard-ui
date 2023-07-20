@@ -10,7 +10,7 @@ export interface SupportReportParameters {
     timeSinceUpdate: ReportTimeSpan,
     openedDateRange: ReportDateRange;
     openedTimeWindow?: SupportReportTicketWindow;
-    status?: string;
+    statuses?: string[];
 }
 
 export interface SupportReportFlatParameters {
@@ -24,7 +24,7 @@ export interface SupportReportFlatParameters {
     openedTimeWindow?: SupportReportTicketWindow;
     pageNumber?: number;
     pageSize?: number;
-    status?: string;
+    statuses?: string;
 }
 
 export interface SupportReportRecord {

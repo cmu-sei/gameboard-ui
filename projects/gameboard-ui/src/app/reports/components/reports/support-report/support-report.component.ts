@@ -12,8 +12,9 @@ import { FontAwesomeService } from '@/services/font-awesome.service';
 import { ReportComponentBase } from '../report-base.component';
 import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
-import { QueryParamModelConfig, getDateRangeQueryModelConfig } from '@/core/directives/query-param-model.directive';
+import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig } from '@/core/directives/query-param-model.directive';
 import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
+import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -31,6 +32,9 @@ interface SupportReportContext {
 export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters, SupportReportParameters> {
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
 
+  protected ticketLabels$ = this.reportService.getTicketLabels();
+  protected ticketStatuses$ = this.reportService.getTicketStatuses();
+
   protected openedDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
   @ViewChild("openedDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
     if (component) {
@@ -44,6 +48,21 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
     }
   }
 
+  protected labelsQueryModel?: QueryParamModelConfig<string[]>;
+  @ViewChild('labelsMulti') set labelsMultiSelect(component: MultiSelectComponent<string>) {
+    if (component) {
+      this.labelsQueryModel = getStringArrayQueryModelConfig("labels", component.ngModelChange);
+    }
+  }
+
+  protected statusQueryModel?: QueryParamModelConfig<string[]>;
+  @ViewChild('statusMulti') set statusesMultiSelect(component: MultiSelectComponent<string>) {
+    if (component) {
+      this.statusQueryModel = getStringArrayQueryModelConfig("statuses", component.ngModelChange);
+    }
+  }
+
+  protected isLoading = false;
   ctx?: SupportReportContext;
 
   constructor(
@@ -65,8 +84,10 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
   }
 
   async updateView(parameters: SupportReportFlatParameters): Promise<ReportViewUpdate> {
+    this.isLoading = true;
     const results = await firstValueFrom(this.reportService.getReportData(parameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
+    this.isLoading = false;
 
     this.ctx = {
       results,

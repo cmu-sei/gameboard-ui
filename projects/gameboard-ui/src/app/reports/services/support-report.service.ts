@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from '../components/reports/support-report/support-report.models';
 import { ObjectService } from '../../services/object.service';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest, map } from 'rxjs';
 import { ReportResults } from '../reports-models';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '../../services/api-url.service';
 import { ReportsService } from '../reports.service';
+import { SupportService } from '@/api/support.service';
 
 @Injectable({ providedIn: 'root' })
 export class SupportReportService {
@@ -14,7 +15,8 @@ export class SupportReportService {
     private apiUri: ApiUrlService,
     private http: HttpClient,
     private objectService: ObjectService,
-    private reportsService: ReportsService,) { }
+    private reportsService: ReportsService,
+    private supportService: SupportService) { }
 
   public flattenParameters(parameters: SupportReportParameters) {
     const defaultPaging = this.reportsService.getDefaultPaging();
@@ -30,7 +32,7 @@ export class SupportReportService {
       minutesSinceUpdate: this.reportsService.timespanToMinutes(parameters.timeSinceUpdate),
       pageNumber: parameters.paging.pageNumber || defaultPaging.pageNumber!,
       pageSize: parameters.paging.pageSize || defaultPaging.pageSize!,
-      status: parameters.status || undefined
+      statuses: this.reportsService.flattenMultiSelectValues(parameters.statuses) || undefined
     };
 
     flattened = this.objectService.deleteKeys(
@@ -62,6 +64,7 @@ export class SupportReportService {
         pageNumber: parameters.pageNumber || defaultPaging.pageNumber!,
         pageSize: parameters.pageSize || defaultPaging.pageSize!
       },
+      statuses: this.reportsService.unflattenMultiSelectValues(parameters.statuses),
       timeSinceOpen: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceOpen as any)),
       timeSinceUpdate: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceUpdate as any)),
     };
@@ -73,5 +76,13 @@ export class SupportReportService {
   getReportData(args: SupportReportFlatParameters): Observable<ReportResults<SupportReportRecord>> {
     this.reportsService.applyDefaultPaging(args);
     return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support", args));
+  }
+
+  getTicketStatuses(): Observable<string[]> {
+    return this.http.get<string[]>(this.apiUri.build("/reports/parameter/ticket-statuses")).pipe(map(statuses => statuses.sort()));
+  }
+
+  getTicketLabels(): Observable<string[]> {
+    return this.supportService.listLabels(null);
   }
 }

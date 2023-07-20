@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ReportsService } from '@/reports/reports.service';
 import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
+import { SupportReportService } from '@/reports/services/support-report.service';
 
 @Component({
   selector: 'app-parameter-ticket-status',
@@ -12,11 +12,11 @@ import { ReportParameterComponent, createCustomInputControlValueAccessor } from 
 export class ParameterTicketStatusComponent extends ReportParameterComponent<string> implements OnInit {
   statuses$: Observable<string[]> = of([]);
 
-  constructor(private reportsService: ReportsService) {
+  constructor(private supportReportService: SupportReportService) {
     super();
   }
 
   ngOnInit(): void {
-    this.statuses$ = this.reportsService.getTicketStatuses();
+    this.statuses$ = this.supportReportService.getTicketStatuses();
   }
 }
