@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportParametersUpdate, EnrollmentReportRecord } from './enrollment-report.models';
 import { ReportDateRange, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
-import { Observable, Subscription, firstValueFrom, of } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import { PagingArgs, SimpleEntity } from '@/api/models';
 import { RouterService } from '@/services/router.service';
 import { ChallengeResult } from '@/api/board-models';
@@ -28,15 +28,14 @@ interface EnrollmentReportContext {
 export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters, EnrollmentReportParameters> {
   @ViewChild("enrollmentReport") reportContainer!: ElementRef<HTMLDivElement>;
 
-  ctx$?: Observable<EnrollmentReportContext>;
   seasons$ = this.reportsService.getSeasons();
   series$ = this.reportsService.getSeries();
   sponsors$ = this.reportsService.getSponsors();
   tracks$ = this.reportsService.getTracks();
 
+  protected ctx$ = new Subject<EnrollmentReportContext | null>();
   protected displaySponsorName = (s: SimpleEntity) => s.name;
   protected getSponsorValue = (s: SimpleEntity) => s.id;
-  protected selectedParameters?: EnrollmentReportParameters;
 
   protected enrollmentDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
   @ViewChild("enrollmentDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
@@ -99,11 +98,12 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
+    this.ctx$.next(null);
     const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
     const structuredParameters = this.unflattenParameters(parameters);
 
-    this.ctx$ = of({
+    this.ctx$.next({
       chartConfig: {
         type: 'line',
         data: {
@@ -113,7 +113,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
               label: "Enrolled players",
               data: Array.from(lineChartResults.values()).map(g => g.totalCount),
               backgroundColor: 'blue',
-              color: "blue"
             },
           ]
         },
@@ -121,7 +120,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           scales: {
             x: {
               type: 'time',
-              distribution: 'series',
+              // distribution: 'series',
               time: {
                 displayFormats: {
                   day: "MM/dd/yy",
