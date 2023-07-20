@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
-import { ReportResults, ReportViewUpdate } from '../../../reports-models';
+import { ReportDateRange, ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
 import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '../../../services/support-report.service';
@@ -12,6 +12,8 @@ import { FontAwesomeService } from '@/services/font-awesome.service';
 import { ReportComponentBase } from '../report-base.component';
 import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
+import { QueryParamModelConfig, getDateRangeQueryModelConfig } from '@/core/directives/query-param-model.directive';
+import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -28,6 +30,19 @@ interface SupportReportContext {
 })
 export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters, SupportReportParameters> {
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
+
+  protected openedDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
+  @ViewChild("openedDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
+    if (component) {
+      this.openedDateRangeQueryModel = getDateRangeQueryModelConfig({
+        propertyNameMap: [
+          { propertyName: "dateStart", queryStringParamName: "openedDateStart" },
+          { propertyName: "dateEnd", queryStringParamName: "openedDateEnd" }
+        ],
+        emitter: component.ngModelChange
+      });
+    }
+  }
 
   ctx?: SupportReportContext;
 
@@ -50,8 +65,7 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
   }
 
   async updateView(parameters: SupportReportFlatParameters): Promise<ReportViewUpdate> {
-    const structuredParameters = this.reportService.unflattenParameters(parameters);
-    const results = await firstValueFrom(this.reportService.getReportData(structuredParameters));
+    const results = await firstValueFrom(this.reportService.getReportData(parameters));
     const labels = await firstValueFrom(this.supportService.listLabels());
 
     this.ctx = {

@@ -70,8 +70,8 @@ export class SupportReportService {
     return structured;
   }
 
-  getReportData(args: SupportReportParameters): Observable<ReportResults<SupportReportRecord>> {
-    const flattened = this.flattenParameters(args);
-    return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support", flattened));
+  getReportData(args: SupportReportFlatParameters): Observable<ReportResults<SupportReportRecord>> {
+    this.reportsService.applyDefaultPaging(args);
+    return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support", args));
   }
 }

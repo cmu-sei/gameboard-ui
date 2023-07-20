@@ -1,14 +1,14 @@
 <div class="support-report-component" *ngIf="ctx; else loading">
     <app-report-parameters-container>
-        <app-parameter-game-challengespec ngDefaultControl></app-parameter-game-challengespec>
-        <app-parameter-ticket-status ngDefaultControl
-            [appQueryParamModel]="{ name: 'status' }"></app-parameter-ticket-status>
-        <app-parameter-date-range ngDefaultControl name="openedDateRange"
-            label="Date ticket opened"></app-parameter-date-range>
-        <app-parameter-ticket-labels ngDefaultControl></app-parameter-ticket-labels>
-        <app-parameter-timespan-picker ngDefaultControl
+        <app-parameter-game-challengespec ngDefaultControl #gameChallengeSpec></app-parameter-game-challengespec>
+        <app-parameter-ticket-status ngDefaultControl [appQueryParamModel]="{ name: 'status' }"
+            #ticketStatus></app-parameter-ticket-status>
+        <app-parameter-date-range ngDefaultControl [appQueryParamModel]="openedDateRangeQueryModel" #openedDateRange
+            name="openedDateRange" label="Date ticket opened"></app-parameter-date-range>
+        <app-parameter-ticket-labels ngDefaultControl #ticketLabels></app-parameter-ticket-labels>
+        <app-parameter-timespan-picker ngDefaultControl #openedTimeSpan
             label="Time since ticket was opened"></app-parameter-timespan-picker>
-        <app-parameter-timespan-picker ngDefaultControl
+        <app-parameter-timespan-picker ngDefaultControl #updatedTimeSpan
             label="Time since ticket was updated"></app-parameter-timespan-picker>
     </app-report-parameters-container>
 
