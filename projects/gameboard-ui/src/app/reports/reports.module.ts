@@ -10,7 +10,6 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
 import { ParameterChallengeSpecComponent } from './components/parameters/parameter-challenge-spec/parameter-challenge-spec.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
 import { ParameterGameChallengespecComponent } from './components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
-import { ParameterGameComponent } from './components/parameters/parameter-game/parameter-game.component';
 import { ParameterNumberComponent } from './components/parameters/parameter-number/parameter-number.component';
 import { ParameterSeriesComponent } from './components/parameters/parameter-series/parameter-series.component';
 import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
@@ -51,7 +50,6 @@ import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
     EnrollmentReportComponent,
     ParameterChallengeSpecComponent,
     MsToDurationPipe,
-    ParameterGameComponent,
     ParameterGameChallengespecComponent,
     ParameterNumberComponent,
     ParameterDateRangeComponent,

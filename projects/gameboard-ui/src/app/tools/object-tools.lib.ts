@@ -1,5 +1,4 @@
 export function deepEquals<T1, T2>(obj1: T1, obj2: T2): boolean {
-    console.log("comparing", obj1, obj2, JSON.stringify(obj1) === JSON.stringify(obj2));
     return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
 
