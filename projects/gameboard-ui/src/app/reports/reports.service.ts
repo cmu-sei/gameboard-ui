@@ -78,7 +78,7 @@ export class ReportsService {
     return new Date(Date.parse(dateString));
   }
 
-  minutesToTimeSpan(minutes?: number): ReportTimeSpan {
+  minutesToTimeSpan(minutes: number | undefined | null): ReportTimeSpan {
     if (!minutes)
       return { days: undefined, hours: undefined, minutes: undefined };
 

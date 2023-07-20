@@ -1,16 +1,16 @@
 <div class="support-report-component">
     <app-report-parameters-container>
-        <app-parameter-game-challengespec ngDefaultControl #gameChallengeSpec></app-parameter-game-challengespec>
         <app-multi-select [options]="ticketStatuses$ | async" label="Statuses" name="ticket-statuses" ngDefaultControl
             [appQueryParamModel]="statusQueryModel" #statusMulti></app-multi-select>
         <app-multi-select [options]="ticketLabels$ | async" label="Labels" name="ticket-labels" ngDefaultControl
             [appQueryParamModel]="labelsQueryModel" #labelsMulti></app-multi-select>
         <app-parameter-date-range ngDefaultControl [appQueryParamModel]="openedDateRangeQueryModel" #openedDateRange
             name="openedDateRange" label="Date ticket opened"></app-parameter-date-range>
-        <app-parameter-timespan-picker ngDefaultControl #openedTimeSpan
+        <app-parameter-game-challengespec ngDefaultControl #gameChallengeSpec></app-parameter-game-challengespec>
+        <app-parameter-timespan-picker ngDefaultControl [appQueryParamModel]="openedTimeSpanQueryModel" #openedTimeSpan
             label="Time since ticket was opened"></app-parameter-timespan-picker>
-        <app-parameter-timespan-picker ngDefaultControl #updatedTimeSpan
-            label="Time since ticket was updated"></app-parameter-timespan-picker>
+        <app-parameter-timespan-picker ngDefaultControl [appQueryParamModel]="updatedTimeSpanQueryModel"
+            #updatedTimeSpan label="Time since ticket was updated"></app-parameter-timespan-picker>
     </app-report-parameters-container>
 
     <tabset class="mt-5" *ngIf="ctx && !isLoading; else loading">

@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
-import { ReportDateRange, ReportResults, ReportViewUpdate } from '../../../reports-models';
+import { ReportDateRange, ReportResults, ReportTimeSpan, ReportViewUpdate } from '../../../reports-models';
 import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
 import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '../../../services/support-report.service';
@@ -15,6 +15,8 @@ import { RouterService } from '@/services/router.service';
 import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig } from '@/core/directives/query-param-model.directive';
 import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
 import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
+import { ParameterTimespanPickerComponent } from '../../parameters/parameter-timespan-picker/parameter-timespan-picker.component';
+import { QueryParamModelService } from '@/core/directives/query-param-model.service';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -62,11 +64,26 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
     }
   }
 
+  protected openedTimeSpanQueryModel?: QueryParamModelConfig<ReportTimeSpan>;
+  @ViewChild("openedTimeSpan") set openedTimeSpan(component: ParameterTimespanPickerComponent) {
+    if (component) {
+      this.openedTimeSpanQueryModel = this.queryParamModelService.getTimeSpanQueryModelConfig("minutesSinceOpen", component.ngModelChange);
+    }
+  }
+
+  protected updatedTimeSpanQueryModel?: QueryParamModelConfig<ReportTimeSpan>;
+  @ViewChild("updatedTimeSpan") set updatedTimeSpan(component: ParameterTimespanPickerComponent) {
+    if (component) {
+      this.updatedTimeSpanQueryModel = this.queryParamModelService.getTimeSpanQueryModelConfig("minutesSinceUpdate", component.ngModelChange);
+    }
+  }
+
   protected isLoading = false;
   ctx?: SupportReportContext;
 
   constructor(
     protected faService: FontAwesomeService,
+    private queryParamModelService: QueryParamModelService,
     private reportService: SupportReportService,
     private rgbService: TextToRgbService,
     private routerService: RouterService,

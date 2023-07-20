@@ -1,6 +1,6 @@
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
-import { ReportDateRange } from '@/reports/reports-models';
+import { ReportDateRange, ReportTimeSpan } from '@/reports/reports-models';
 import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Directive, ElementRef, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';

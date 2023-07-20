@@ -65,10 +65,6 @@ export class ReportPageComponent implements AfterViewInit {
     this.pdfService.exportHtmlToPdf(this.reportTitle || "Report", exportElement);
   }
 
-  handleRunReport() {
-    this.activeReportService.runRequest$.next();
-  }
-
   private displayReport(reportKey: ReportKey, query: Object | null = null) {
     this.routerService.toReport(reportKey, query);
   }

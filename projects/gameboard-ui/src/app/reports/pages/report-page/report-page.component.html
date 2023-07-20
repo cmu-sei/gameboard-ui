@@ -48,7 +48,8 @@
             <ul class="d-block mt-4 list-group">
                 <li class="list-group-item">The "Report Select" dropdown at the upper left of the page appears blank on
                     initial page load. (It displays the correct value after it's touched by the user once.)</li>
-                <li class="list-group-item">The Support Report's filters do not currently respond.</li>
+                <li class="list-group-item">The Game/Challenge filter on the Support Report has no effect on the
+                    report's results.</li>
                 <li class="list-group-item">
                     Filter controls do not reflect their currently selected values if you open a
                     link to the reports page which includes filtering. For example,
@@ -62,8 +63,8 @@
         </alert>
     </div>
 
-    <app-report-global-controls (exportRequestCsv)="handleExportToCsv()" (exportRequestPdf)="handleExportToPdf()"
-        (runRequest)="handleRunReport()"></app-report-global-controls>
+    <app-report-global-controls (exportRequestCsv)="handleExportToCsv()"
+        (exportRequestPdf)="handleExportToPdf()"></app-report-global-controls>
 
     <div class="report-page-router-outlet">
         <router-outlet></router-outlet>

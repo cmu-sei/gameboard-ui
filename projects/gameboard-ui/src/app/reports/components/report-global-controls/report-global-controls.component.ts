@@ -13,7 +13,6 @@ import { Observable } from 'rxjs';
 export class ReportGlobalControlsComponent implements OnInit {
   @Output() exportRequestCsv = new EventEmitter<void>();
   @Output() exportRequestPdf = new EventEmitter<void>();
-  @Output() runRequest = new EventEmitter<void>();
 
   protected parametersPristine$?: Observable<boolean>;
 

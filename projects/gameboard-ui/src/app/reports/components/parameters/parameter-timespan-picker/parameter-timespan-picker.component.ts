@@ -14,4 +14,8 @@ export class ParameterTimespanPickerComponent extends ReportParameterComponent<R
   override getDefaultValue(): ReportTimeSpan | undefined {
     return {};
   }
+
+  handleModelChange() {
+    this.ngModelChange.emit(this.ngModel);
+  }
 }
