@@ -44,7 +44,6 @@ export class ReportGlobalControlsComponent {
         - **The "Export to CSV" button** does not give visual feedback to indicate that it's creating the CSV when clicked. For now, wait 10-15 seconds for it to assemble the document, and if it doesn't, let us know. We'll be improving this experience soon.
         - **The "Report Select" dropdown** at the upper left of the page appears blank on initial page load. (It displays the correct value after it's touched by the user once.)
         - **Filter controls** do not reflect their currently selected values if you open a link to the reports page which includes filtering. For example, [this link](/reports/enrollment?seasons=Season%203) should open to the Enrollment Report with Season 3 selected, and it will display results correctly. However, the track filter does not show that Track A is selected.
-        - The **Game/Challenge** filter on the Support Report has no effect on the report's results.
         - The **Mode Performance Summary** dialog that pops when you click a player's "challenges" column in the "Practice vs. Competitive" tab of the Practice Mode report needs visual improvements for readability.
       `,
       renderBodyAsMarkdown: true
