@@ -6,7 +6,6 @@ import { faUser, faUsers, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { BoardGame } from '../../../api/board-models';
 import { Game } from '../../../api/game-models';
 import { ConfigService } from '../../config.service';
-import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game-card',
@@ -27,15 +26,10 @@ export class GameCardComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.game) {
-      this.game.cardUrl = this.game.logo
-        ? `${this.config.imagehost}/${this.game.logo}`
-        : `${this.config.basehref}assets/card.png`
-      ;
-
       this.game.modeUrl = this.game.mode
         ? `${this.config.basehref}assets/${this.game.mode}.png`
         : `${this.config.basehref}assets/vm.png`
-      ;
+        ;
     }
   }
 

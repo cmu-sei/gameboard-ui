@@ -55,7 +55,6 @@ export interface GameDetail {
 export interface Game extends GameDetail {
   id: string;
   mapUrl: string;
-  cardUrl: string;
   modeUrl: string;
   isPracticeMode: boolean;
 }

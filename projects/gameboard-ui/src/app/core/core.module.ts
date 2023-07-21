@@ -18,6 +18,7 @@ import 'chartjs-adapter-luxon';
 
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
+import { GameCardImageComponent } from './components/game-card-image/game-card-image.component';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
@@ -55,6 +56,7 @@ const PUBLIC_DECLARATIONS = [
   ColoredTextChipComponent,
   DoughnutChartComponent,
   FriendlyDateAndTimePipe,
+  GameCardImageComponent,
   LineChartComponent,
   LinkRendererPipe,
   LongContentHiderComponent,

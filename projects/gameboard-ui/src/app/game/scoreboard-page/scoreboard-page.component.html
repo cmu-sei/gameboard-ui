@@ -4,11 +4,11 @@
 <ng-container *ngIf="game$ | async as game; else loading">
   <div class="jumbotron d-flex align-items-center">
     <a [routerLink]="['../../', game.id]">
-      <img [src]="game.cardUrl" class="img-fluid" alt="{{game.name}} logo">
+      <app-game-card-image [game]="game" width="16rem"></app-game-card-image>
     </a>
-    <span class="text-success mx-4">
+    <h1 class="text-success mx-4">
       {{game.name}}
-    </span>
+    </h1>
   </div>
 
   <div class="container">

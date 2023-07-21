@@ -130,7 +130,9 @@
                 <td class="text-right">Max Attempts</td>
               </tr>
               <tr *ngFor="let game of games; trackBy:trackById">
-                <td class="thin-col sticky-card sticky-cell"><img [src]="game.cardUrl" class="table-card"></td>
+                <td class="thin-col sticky-card sticky-cell">
+                  <app-game-card-image [game]="game"></app-game-card-image>
+                </td>
                 <td class="thin-col">
                   <div [tooltip]="game.isPublished ? 'Published' : 'Unpublished'" containerClass="light-tooltip"
                     container="body" [adaptivePosition]="true" placement="top">

@@ -110,7 +110,6 @@ export class GameEditorComponent implements AfterViewInit {
     this.api.uploadImage(this.game.id, type, files[0]).subscribe(
       r => {
         this.game.logo = r.filename;
-        this.game.cardUrl = `${this.config.imagehost}/${r.filename}`;
       }
     );
   }
@@ -119,7 +118,6 @@ export class GameEditorComponent implements AfterViewInit {
     this.api.deleteImage(this.game.id, 'card').subscribe(
       r => {
         this.game.logo = r.filename;
-        this.game.cardUrl = `${this.config.basehref}assets/card.png`;
       }
     );
   }

@@ -9,7 +9,7 @@
       </span>
     </h2>
   </div>
-  <img [src]="game.cardUrl" class="img-fluid">
+  <app-game-card-image [game]="game"></app-game-card-image>
   <div class="d-flex flex-column p-0 position-absolute h-100 w-100">
     <div class="game-front d-flex justify-content-end p-3">
       <h6 class="text-white mt-0">
@@ -28,7 +28,8 @@
       </h1>
     </div>
     <div *ngIf="game.mode" class="d-flex justify-content-start p-3 game-front w-100 h-100 position-absolute">
-      <img *ngIf="game.modeUrl" [src]="game.modeUrl" class="mt-auto mode-logo rounded-circle bg-white" alt="Environment Logo" (error)="setModeUrlPath()">
+      <img *ngIf="game.modeUrl" [src]="game.modeUrl" class="mt-auto mode-logo rounded-circle bg-white"
+        alt="Environment Logo" (error)="setModeUrlPath()">
     </div>
     <h2>
       <span class="badge d-flex justify-content-end m-1 lb-font upper">{{ game.cardText3 }}</span>

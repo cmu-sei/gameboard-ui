@@ -144,10 +144,6 @@ export class GameService {
   }
 
   private transform(game: Game): Game {
-    game.cardUrl = game.logo
-      ? `${this.config.imagehost}/${game.logo}`
-      : `${this.config.basehref}assets/card.png`;
-
     game.mapUrl = game.background
       ? `${this.config.imagehost}/${game.background}`
       : `${this.config.basehref}assets/map.png`;

@@ -36,28 +36,28 @@ import { SyncStartPageComponent } from './components/sync-start-page/sync-start-
 import { SyncStartGuard } from '../guards/sync-start.guard';
 
 const MODULE_DECLARATIONS = [
-  PlayerEnrollComponent,
+  CertificateComponent,
+  CumulativeTimeClockComponent,
+  FeedbackFormComponent,
   GameInfoComponent,
-  PlayerSessionComponent,
   GamePageComponent,
   GameboardPageComponent,
+  GameboardPerformanceSummaryComponent,
   GamespaceQuizComponent,
+  HubStateToPlayerStatusPipe,
+  PlayerEnrollComponent,
+  PlayerPresenceComponent,
+  PlayerSessionComponent,
   SessionForecastComponent,
+  SessionStartControlsComponent,
   ScoreboardPageComponent,
   ScoreboardTableComponent,
-  PlayerPresenceComponent,
-  FeedbackFormComponent,
-  CertificateComponent,
-  HubStateToPlayerStatusPipe
+  SyncStartPageComponent,
 ];
 
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
-    GameboardPerformanceSummaryComponent,
-    CumulativeTimeClockComponent,
-    SessionStartControlsComponent,
-    SyncStartPageComponent
   ],
   imports: [
     CommonModule,

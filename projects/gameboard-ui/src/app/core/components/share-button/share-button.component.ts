@@ -12,6 +12,7 @@ export class ShareButtonComponent {
   @Input() message?: string;
   @Input() textSelector?: () => string;
   @Input() size: "small" | "medium" | "large" = "large";
+  @Input() tooltip?: string;
 
   constructor(
     public faService: FontAwesomeService,

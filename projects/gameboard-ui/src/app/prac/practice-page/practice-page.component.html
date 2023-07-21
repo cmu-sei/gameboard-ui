@@ -8,8 +8,8 @@
 
   <ng-container *ngIf="list$ | async as list; else loading">
     <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
-      <app-share-button class="d-block mr-1" size="small"
-        message="Copied a link to this search to your clipboard."></app-share-button>
+      <app-share-button class="d-block mr-1" size="small" message="Copied a link to this search to your clipboard."
+        tooltip="Copy a link to this search"></app-share-button>
       <div class="input-group-prepend">
         <span class="input-group-text">
           <fa-icon [icon]="faSearch"></fa-icon>
@@ -32,11 +32,14 @@
       </thead>
       <tbody>
         <tr *ngFor="let c of list">
-          <td><a [routerLink]="[c.id, slug(c.gameName), slug(c.name)]">{{c.name}}</a></td>
-          <td>{{c.description}}</td>
+          <td class="align-middle"><a [routerLink]="[c.id, slug(c.gameName), slug(c.name)]">{{c.name}}</a></td>
+          <td class="align-middle">{{c.description}}</td>
           <td>
-            <img [src]="c.gameLogo | relativeImage" width="32px">&nbsp;
-            <span>{{c.gameName}}</span>
+            <div class="d-flex align-items-center">
+              <app-game-card-image [game]="{ id: c.gameId, name: c.gameName, logo: c.gameLogo }"
+                width="32px"></app-game-card-image>
+              <div class="ml-2">{{c.gameName}}</div>
+            </div>
           </td>
         </tr>
       </tbody>
