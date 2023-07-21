@@ -23,7 +23,6 @@ export class SelectPagerComponent implements OnChanges {
     const itemCount = changes.itemCount?.currentValue || this.itemCount;
     const pageSize = changes.pageSize?.currentValue || this.pageSize;
     this.isHidden = (itemCount <= pageSize);
-    console.log("set ishidden to", this.isHidden);
 
     if (shouldCalcPages)
       this.calcPages({ itemCount, pageSize });
