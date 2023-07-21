@@ -41,6 +41,7 @@ export class ReportGlobalControlsComponent {
         We're aware of several issues with the current build of this screen and are addressing them as efficiently
         possible. If you experience an issue NOT listed here, please let us know!
 
+        - The **Enrollment** report shows large numbers of players with no enroll date. This is expected, as we added the ability to track enroll date for this feature. This also causes the **Enrollment Over Time** graph on the report to appear blank.
         - **The "Export to CSV" button** does not give visual feedback to indicate that it's creating the CSV when clicked. For now, wait 10-15 seconds for it to assemble the document, and if it doesn't, let us know. We'll be improving this experience soon.
         - **The "Report Select" dropdown** at the upper left of the page appears blank on initial page load. (It displays the correct value after it's touched by the user once.)
         - **Filter controls** do not reflect their currently selected values if you open a link to the reports page which includes filtering. For example, [this link](/reports/enrollment?seasons=Season%203) should open to the Enrollment Report with Season 3 selected, and it will display results correctly. However, the track filter does not show that Track A is selected.
