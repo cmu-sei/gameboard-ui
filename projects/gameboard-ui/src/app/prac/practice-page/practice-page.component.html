@@ -35,7 +35,7 @@
           <td><a [routerLink]="[c.id, slug(c.gameName), slug(c.name)]">{{c.name}}</a></td>
           <td>{{c.description}}</td>
           <td>
-            <img [src]="c.gameLogo" width="32px">&nbsp;
+            <img [src]="c.gameLogo | relativeImage" width="32px">&nbsp;
             <span>{{c.gameName}}</span>
           </td>
         </tr>

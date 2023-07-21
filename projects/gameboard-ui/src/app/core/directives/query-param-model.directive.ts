@@ -45,14 +45,31 @@ export class QueryParamModelDirective<T> implements OnChanges {
     private unsub: UnsubscriberService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+    // config hasn't changed, don't do anything
     if (!changes.config) {
       return;
     }
+
+    // if we have no config, be sure we're unsubscribed from all subscriptions
+    // and then bail
     if (!this.config) {
       this.unsub.unsubscribeAll();
       return;
     }
 
+    // OTHERWISE: we have new config and need to set up our subs
+
+    // listen for external changes to the querystring (like regular navigation).
+    // when this happens, we need to update the ngmodel of the component without
+    // triggering an emitter event
+    this.unsub.add(
+      this.route.params.subscribe(params => {
+        this.deserializeModel(params, this.config)
+      })
+    );
+
+    // when the component is manipulated, it serializes its value
+    // to the querystring via thie _queryParamBuffer$ subject
     this.unsub.add(
       this._queryParamsBuffer$.pipe(
         debounceTime(this.config.debounce || 0)
@@ -61,6 +78,7 @@ export class QueryParamModelDirective<T> implements OnChanges {
       })
     );
 
+    // this is for standard html controls like text inputs
     if (!this.config.emitter) {
       const el = this.elementRef.nativeElement as HTMLInputElement;
       const existingEvent = el.oninput;
@@ -71,7 +89,7 @@ export class QueryParamModelDirective<T> implements OnChanges {
         this._queryParamsBuffer$.next((ev.target as any).value);
       };
     }
-
+    // for complex custom components
     else {
       this.unsub.add(
         this.config.emitter.subscribe(value => {
@@ -113,6 +131,14 @@ export class QueryParamModelDirective<T> implements OnChanges {
       parameters: { ...params },
       resetParams: this.config?.resetQueryParams
     });
+  }
+
+  private async deserializeModel<T>(params: Params, config: QueryParamModelConfig<T> | null | undefined) {
+    if (!config) {
+      return null;
+    }
+
+    return null;
   }
 }
 

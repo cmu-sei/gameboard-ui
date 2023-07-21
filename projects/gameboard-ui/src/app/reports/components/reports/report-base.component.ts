@@ -6,7 +6,6 @@ import { ReportsService } from "@/reports/reports.service";
 import { ActivatedRoute } from "@angular/router";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { ObjectService } from "@/services/object.service";
-import { deepEquals } from "@/tools/object-tools.lib";
 import { RouterService } from "@/services/router.service";
 
 @Component({ template: '', providers: [UnsubscriberService] })
@@ -40,8 +39,5 @@ export abstract class ReportComponentBase<TFlatParameters extends {}, TStructure
         const viewUpdate = await this.updateView(parameters);
         this.activeReportService.metaData$.next(viewUpdate.metaData);
         this.activeReportService.htmlElement$.next(viewUpdate.reportContainerRef);
-        // if (!deepEquals(parameters, this._lastParameters)) {
-
-        // }
     }
 }
