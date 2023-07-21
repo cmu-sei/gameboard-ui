@@ -26,12 +26,15 @@ interface EnrollmentReportContext {
 export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters, EnrollmentReportParameters> {
   @ViewChild("enrollmentReport") reportContainer!: ElementRef<HTMLDivElement>;
 
+  games$ = this.reportsService.getGames();
   seasons$ = this.reportsService.getSeasons();
   series$ = this.reportsService.getSeries();
   sponsors$ = this.reportsService.getSponsors();
   tracks$ = this.reportsService.getTracks();
 
   protected ctx$?: Observable<EnrollmentReportContext>;
+  protected displayGameName = (s: SimpleEntity) => s.name;
+  protected getGameValue = (s: SimpleEntity) => s.id;
   protected displaySponsorName = (s: SimpleEntity) => s.name;
   protected getSponsorValue = (s: SimpleEntity) => s.id;
   protected isLoading = false;
@@ -49,6 +52,12 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
         emitter: component.ngModelChange
       });
     }
+  }
+
+  protected gamesQueryModel?: QueryParamModelConfig<string[]>;
+  @ViewChild("gamesMulti") set gamesMulti(component: MultiSelectComponent<string>) {
+    if (component)
+      this.gamesQueryModel = getStringArrayQueryModelConfig("games", component.ngModelChange);
   }
 
   protected seriesQueryModel?: QueryParamModelConfig<string[]>;

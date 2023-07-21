@@ -5,7 +5,7 @@ import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Directive, ElementRef, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-interface QueryStringParameter {
+export interface QueryStringParameter {
   name: string;
   value: string | null;
 }
@@ -14,7 +14,6 @@ export type QueryStringSerializer<TValue> = (value: TValue | null) => string | n
 export type QueryStringDeserializer<TValue> = (value: string | null) => TValue | null;
 export type QueryStringMultiSerializer<TValue> = (value: TValue | null, propertyNameMap: PropertyNameMap) => QueryStringParameter[] | null;
 export type QueryStringMultiDeserializer<TValue> = (queryParams: Params | null, propertyNameMap: PropertyNameMap) => TValue | null;
-
 
 // todo: there should be some kind of keyof typeof thing to do here
 export type PropertyNameToQueryStringParamNameMap = { propertyName: string, queryStringParamName: string }[];

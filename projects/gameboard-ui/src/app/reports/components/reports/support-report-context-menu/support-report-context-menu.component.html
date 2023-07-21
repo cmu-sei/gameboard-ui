@@ -16,7 +16,7 @@
             <li class="divider dropdown-divider" *ngIf="record.game"></li>
             <li role="menuitem" *ngIf="record.game">
                 <button class="dropdown-item btn" [routerLink]="['/reports/enrollment']"
-                    [queryParams]="{ gameId: record.game.id }">
+                    [queryParams]="{ games: record.game.id }">
                     Scope the Enrollment report to this game
                 </button>
             </li>

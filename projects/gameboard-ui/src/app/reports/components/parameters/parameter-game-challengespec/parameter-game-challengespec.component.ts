@@ -37,7 +37,13 @@ export class ParameterGameChallengespecComponent
   private loadChallengeSpecs(gameId?: string) {
     this.challengeSpecs$ = this.reportsService.getChallengeSpecs(gameId);
 
-    if (this.ngModel)
+    if (this.ngModel) {
       this.ngModel.challengeSpecId = undefined;
+      this.handleNgModelChange();
+    }
+  }
+
+  protected handleNgModelChange() {
+    this.ngModelChange.emit(this.ngModel);
   }
 }

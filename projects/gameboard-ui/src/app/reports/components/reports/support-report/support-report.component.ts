@@ -17,6 +17,7 @@ import { ParameterDateRangeComponent } from '../../parameters/parameter-date-ran
 import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
 import { ParameterTimespanPickerComponent } from '../../parameters/parameter-timespan-picker/parameter-timespan-picker.component';
 import { QueryParamModelService } from '@/core/directives/query-param-model.service';
+import { ParameterGameChallengespecComponent, ReportGameChallengeSpec } from '../../parameters/parameter-game-challengespec/parameter-game-challengespec.component';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -36,6 +37,17 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
 
   protected ticketLabels$ = this.reportService.getTicketLabels();
   protected ticketStatuses$ = this.reportService.getTicketStatuses();
+
+  protected gameChallengeSpecQueryModel?: QueryParamModelConfig<ReportGameChallengeSpec>;
+  @ViewChild("gameChallengeSpec") set gameChallengeSpec(component: ParameterGameChallengespecComponent) {
+    if (component) {
+      this.gameChallengeSpecQueryModel = this.queryParamModelService.getGameChallengeSpecQueryModelConfig({
+        gameIdParamName: "gameId",
+        challengeSpecIdParamName: "challengeSpecId",
+        emitter: component.ngModelChange
+      });
+    }
+  }
 
   protected openedDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
   @ViewChild("openedDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {

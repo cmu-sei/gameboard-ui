@@ -6,6 +6,9 @@
             [appQueryParamModel]="tracksQueryModel" #tracksMultiSelect></app-multi-select>
         <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
             [appQueryParamModel]="seasonsQueryModel" #seasonsMultiSelect></app-multi-select>
+        <app-multi-select label="Games" name="games" [options]="games$ | async" [itemTemplate]="multiSelectGame"
+            [getSearchText]="displayGameName" [value]="getGameValue" [appQueryParamModel]="gamesQueryModel"
+            #gamesMulti></app-multi-select>
         <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
             [itemTemplate]="multiSelectSponsor" [getSearchText]="displaySponsorName" [value]="getSponsorValue"
             [appQueryParamModel]="sponsorsQueryModel" #sponsorsMultiSelect></app-multi-select>
@@ -50,10 +53,10 @@
                                     </div>
                                 </td>
                                 <td class="report-field date">
-                                    <p *ngIf="record.player.enrollDate else noValue">
-                                        {{ record.player.enrollDate | shortdate }} @
-                                        {{ record.player.enrollDate | friendlyTime }}
-                                    </p>
+                                    <ng-container *ngIf="record.player.enrollDate else noValue">
+                                        <p>{{ record.player.enrollDate | shortdate }}</p>
+                                        <p class="subtle-info">{{ record.player.enrollDate | friendlyTime }}</p>
+                                    </ng-container>
                                 </td>
                                 <td>
                                     <p class="game-name m-0">{{ record.game.name }}</p>
@@ -143,11 +146,15 @@
 </ng-template>
 
 <ng-template #noRecords>
-    <app-no-matching-report-records recordDescription="enrollments"></app-no-matching-report-records>
+    <app-no-report-records recordDescription="enrollments"></app-no-report-records>
 </ng-template>
 
 <ng-template #noValue>
     <app-report-field-no-value></app-report-field-no-value>
+</ng-template>
+
+<ng-template #multiSelectGame let-context>
+    <span class="game-name">{{ context.name }}</span>
 </ng-template>
 
 <ng-template #multiSelectSponsor let-context>

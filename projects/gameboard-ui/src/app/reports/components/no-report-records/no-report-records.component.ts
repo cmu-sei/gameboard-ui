@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-no-matching-report-records',
+  selector: 'app-no-report-records',
   styles: [`
     .no-records-text {
       color: #888888;
