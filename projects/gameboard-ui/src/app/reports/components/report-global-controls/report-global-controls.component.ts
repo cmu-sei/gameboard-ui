@@ -34,6 +34,22 @@ export class ReportGlobalControlsComponent {
     });
   }
 
+  handleKnownIssuesClick() {
+    this.modal.openConfirm({
+      title: "Known issues",
+      bodyContent: `
+        We're aware of several issues with the current build of this screen and are addressing them as efficiently
+        possible. If you experience an issue NOT listed here, please let us know!
+
+        - **The "Export to CSV" button** does not give visual feedback to indicate that it's creating the CSV when clicked. For now, wait 10-15 seconds for it to assemble the document, and if it doesn't, let us know. We'll be improving this experience soon.
+        - **The "Report Select" dropdown** at the upper left of the page appears blank on initial page load. (It displays the correct value after it's touched by the user once.)
+        - **Filter controls** do not reflect their currently selected values if you open a link to the reports page which includes filtering. For example, [this link]{/reports/enrollment?track:Track%20%A} should open to the Enrollment Report with Track A selected, and it will display results correctly. However, the track filter does not show that Track A is selected.
+        - The **Game/Challenge** filter on the Support Report has no effect on the report's results.
+      `,
+      renderBodyAsMarkdown: true
+    });
+  }
+
   handleResetClick() {
     const key = this.activeReportService.metaData$.value?.key;
     if (!key)

@@ -39,34 +39,10 @@
 
             <p>
                 We're aware of several issues with the current build of this screen and are addressing them as
-                efficiently
-                possible. If you experience an issue NOT listed here, please let us know!
+                efficiently possible. Click the "Known issues" linkbutton below to view them, and if you experience an
+                issue NOT listed there,
+                please let us know!
             </p>
-
-            <ul class="d-block mt-4 list-group">
-                <li class="list-group-item">
-                    The <strong>paging controls</strong> at the bottom of each report are currently not correctly
-                    paging the results. Until this is resolved, use filter controls to find the results you're
-                    interested.
-                    This is our current highest priority.
-                </li>
-                <li class="list-group-item">
-                    <strong>The "Report Select" dropdown</strong> at the upper left of the page appears blank on
-                    initial page load. (It displays the correct value after it's touched by the user once.)
-                </li>
-                <li class="list-group-item">
-                    <strong>Filter controls</strong> do not reflect their currently selected values if you open a
-                    link to the reports page which includes filtering. For example,
-                    <a [routerLink]="['/reports/enrollment']" [queryParams]="{ track: 'Track A' }">
-                        this link
-                    </a>
-                    should open to the Enrollment Report with Track A selected, and it will display results correctly.
-                    However, the track filter does not show that Track A is selected.
-                </li>
-                <li class="list-group-item">The <strong>Game/Challenge</strong> filter on the Support Report has no
-                    effect on the
-                    report's results.</li>
-            </ul>
         </alert>
     </div>
 
