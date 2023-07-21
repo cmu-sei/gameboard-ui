@@ -12,19 +12,18 @@ export class SelectPagerComponent implements OnChanges {
   @Input() pageSize?: number;
   @Output() change = new EventEmitter<PagingArgs>();
 
+  protected isHidden = false;
   protected pageNumber = 0;
   protected pages: number[] = [];
 
   constructor(private route: ActivatedRoute) { }
 
-  ngOnInit() {
-    console.log("look how init i init");
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     const shouldCalcPages = (changes.itemCount || changes.pageSize);
     const itemCount = changes.itemCount?.currentValue || this.itemCount;
     const pageSize = changes.pageSize?.currentValue || this.pageSize;
+    this.isHidden = (itemCount <= pageSize);
+    console.log("set ishidden to", this.isHidden);
 
     if (shouldCalcPages)
       this.calcPages({ itemCount, pageSize });

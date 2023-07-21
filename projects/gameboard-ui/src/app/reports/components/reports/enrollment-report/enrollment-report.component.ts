@@ -36,7 +36,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   protected getSponsorValue = (s: SimpleEntity) => s.id;
   protected isLoading = false;
 
-  protected paging?: PagingResults;
+  protected results?: ReportResults<EnrollmentReportRecord>;
 
   protected enrollmentDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
   @ViewChild("enrollmentDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
@@ -68,7 +68,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   protected sponsorsQueryModel?: QueryParamModelConfig<string[]>;
   @ViewChild('sponsorsMultiSelect') set sponsorsMultiSelect(component: MultiSelectComponent<string>) {
     if (component) {
-      this.sponsorsQueryModel = getStringArrayQueryModelConfig("sponsorIds", component.ngModelChange);
+      this.sponsorsQueryModel = getStringArrayQueryModelConfig("sponsors", component.ngModelChange);
     }
   }
 
@@ -99,9 +99,8 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
     this.isLoading = true;
-    const reportResults = await firstValueFrom(this.reportService.getReportData(parameters));
+    this.results = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
-    this.paging = reportResults.paging;
     this.isLoading = false;
 
     this.ctx$ = of({
@@ -143,12 +142,12 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           }
         }
       },
-      results: reportResults,
+      results: this.results,
     });
 
     return {
-      metaData: reportResults.metaData,
-      pagingResults: reportResults.paging,
+      metaData: this.results.metaData,
+      pagingResults: this.results.paging,
       reportContainerRef: this.reportContainer,
     };
   }

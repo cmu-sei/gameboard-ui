@@ -132,7 +132,7 @@
 
 <div class="pager-container d-flex justify-content-end mt-4">
     <div class="flex-grow-1"></div>
-    <app-select-pager [hidden]="!paging" [itemCount]="paging?.itemCount" [pageSize]="paging?.pageSize || 20"
+    <app-select-pager [itemCount]="results?.paging?.itemCount" [pageSize]="results?.paging?.pageSize || 20"
         (change)="handlePagingChange($event)"></app-select-pager>
 </div>
 

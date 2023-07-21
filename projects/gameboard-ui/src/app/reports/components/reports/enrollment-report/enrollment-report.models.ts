@@ -9,7 +9,7 @@ export interface EnrollmentReportFlatParameters {
     pageSize?: number;
     seasons?: string
     series?: string;
-    sponsorIds?: string;
+    sponsors?: string;
     tracks?: string;
 }
 
@@ -20,14 +20,6 @@ export interface EnrollmentReportParameters {
     series: string[];
     sponsors: SimpleEntity[];
     tracks: string[];
-}
-
-export interface EnrollmentReportParametersUpdate {
-    paging?: PagingArgs;
-    seasons?: string[];
-    series?: string[];
-    sponsors?: SimpleEntity[];
-    tracks?: string[];
 }
 
 export interface EnrollmentReportSponsorViewModel {
