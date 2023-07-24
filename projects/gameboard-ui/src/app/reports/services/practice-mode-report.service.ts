@@ -1,34 +1,28 @@
 import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PracticeModeReportFlatParameters, PracticeModeReportParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats } from '../components/reports/practice-mode-report/practice-mode-report.models';
+import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats } from '../components/reports/practice-mode-report/practice-mode-report.models';
 import { Observable, map } from 'rxjs';
 import { ReportResultsWithOverallStats } from '../reports-models';
 import { ReportsService } from '../reports.service';
-import { SimpleEntity } from '@/api/models';
-import { LogService } from '@/services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeModeReportService {
   constructor(
     private apiUrl: ApiUrlService,
     private http: HttpClient,
-    private log: LogService,
     private reportsService: ReportsService,
   ) { }
 
-  getByChallengeData(parameters: PracticeModeReportFlatParameters): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>> {
-    parameters.grouping = PracticeModeReportGrouping.challenge;
-    this.reportsService.applyDefaultPaging(parameters);
-
-    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>>(this.apiUrl.build("reports/practice-mode", parameters));
+  getByChallengeData(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>> {
+    const finalParams = this.reportsService.applyDefaultPaging({ ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.challenge } });
+    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>>(this.apiUrl.build("reports/practice-mode", finalParams));
   }
 
-  getByPlayerModePerformance(parameters: PracticeModeReportFlatParameters): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>> {
-    parameters.grouping = PracticeModeReportGrouping.playerModePerformance;
-    this.reportsService.applyDefaultPaging(parameters);
+  getByPlayerModePerformance(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>> {
+    const finalParams = this.reportsService.applyDefaultPaging({ ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.playerModePerformance } });
 
-    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>>(this.apiUrl.build("reports/practice-mode", parameters)).pipe(
+    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>>(this.apiUrl.build("reports/practice-mode", finalParams)).pipe(
       map(r => {
         r.records = r.records.map(record => {
           if (record.practiceStats?.lastAttemptDate) {
@@ -46,14 +40,10 @@ export class PracticeModeReportService {
     );
   }
 
-  getByUserData(parameters: PracticeModeReportFlatParameters): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>> {
-    if (parameters)
-      parameters = { grouping: PracticeModeReportGrouping.player };
+  getByUserData(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>> {
+    const finalParams = this.reportsService.applyDefaultPaging({ ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.player } });
 
-    parameters.grouping = PracticeModeReportGrouping.player;
-    this.reportsService.applyDefaultPaging(parameters);
-
-    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>>(this.apiUrl.build("reports/practice-mode", parameters)).pipe(
+    return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>>(this.apiUrl.build("reports/practice-mode", finalParams)).pipe(
       map(r => {
         r.records = r.records.map(record => {
           for (let attempt of record.attempts || []) {

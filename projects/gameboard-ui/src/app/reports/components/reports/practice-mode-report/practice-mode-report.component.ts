@@ -108,6 +108,10 @@ export class PracticeModeReportComponent
   }
 
   protected async updateView(parameters: PracticeModeReportFlatParameters) {
+    if (!parameters) {
+      parameters = { grouping: PracticeModeReportGrouping.challenge };
+    }
+
     switch (parameters.grouping) {
       case PracticeModeReportGrouping.challenge:
         this.selectedTab = PracticeModeReportGrouping.challenge;

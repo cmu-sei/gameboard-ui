@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PracticeModeReportByChallengeRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
@@ -14,7 +14,7 @@ import { LogService } from '@/services/log.service';
   templateUrl: './practice-mode-report-by-challenge.component.html',
   styleUrls: ['./practice-mode-report-by-challenge.component.scss']
 })
-export class PracticeModeReportByChallengeComponent implements OnInit {
+export class PracticeModeReportByChallengeComponent implements OnChanges {
   @Input() parameters: PracticeModeReportFlatParameters | null = null;
   @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
   @ViewChild("sponsorPerformance") sponsorPerformanceTemplate?: TemplateRef<PracticeModeReportSponsorPerformance[]>;
@@ -27,9 +27,8 @@ export class PracticeModeReportByChallengeComponent implements OnInit {
     private reportService: PracticeModeReportService,
     private routerService: RouterService) { }
 
-  async ngOnInit() {
-    if (!this.parameters) {
-      this.log.logError("Couldn't load by-challenge data for the practice report: no parameters specified.");
+  async ngOnChanges(changes: SimpleChanges) {
+    if (!changes.parameters) {
       return;
     }
 

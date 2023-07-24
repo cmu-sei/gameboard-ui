@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { PracticeModeReportOverallStats, PracticeModeReportByUserRecord, PracticeModeReportFlatParameters } from '../practice-mode-report.models';
 import { firstValueFrom } from 'rxjs';
 import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
@@ -8,13 +8,12 @@ import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
 import { RouterService } from '@/services/router.service';
 import { PagingArgs } from '@/api/models';
-import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-practice-mode-report-by-user',
   templateUrl: './practice-mode-report-by-user.component.html',
 })
-export class PracticeModeReportByUserComponent implements OnInit {
+export class PracticeModeReportByUserComponent implements OnChanges {
   @Input() parameters: PracticeModeReportFlatParameters | null = null;
   @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
 
@@ -23,18 +22,15 @@ export class PracticeModeReportByUserComponent implements OnInit {
 
   constructor(
     private friendlyDates: FriendlyDatesService,
-    private log: LogService,
     private markdownHelpers: MarkdownHelpersService,
     private modalService: ModalConfirmService,
     private reportService: PracticeModeReportService,
     private routerService: RouterService) {
   }
 
-  async ngOnInit() {
-    if (!this.parameters) {
-      this.log.logError("Couldn't load by-user data for the practice report: no parameters specified.");
+  async ngOnChanges(changes: SimpleChanges) {
+    if (!changes.parameters)
       return;
-    }
 
     this.results = await firstValueFrom(this.reportService.getByUserData(this.parameters));
     this.overallStatsUpdate.emit(this.results.overallStats);
