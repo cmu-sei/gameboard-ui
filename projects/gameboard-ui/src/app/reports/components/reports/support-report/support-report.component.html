@@ -52,7 +52,7 @@
                             <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
                                 <td><a [routerLink]="['/support/tickets/' + record.key.toString()]"
                                         target="_blank">{{record.prefixedKey}}</a></td>
-                                <td class="cell-summary">
+                                <td class="cell-summary m-1">
                                     <p class="overflow-to-ellipsis">{{record.summary}}</p>
 
                                     <p class="secondary-info-text mt-1" *ngIf="record.game || record.challenge">
@@ -64,7 +64,7 @@
                                         {{record.challenge?.name}}
                                     </p>
                                 </td>
-                                <td [innerHTML]="record.status | ticketStatusBadge"></td>
+                                <td class="text-center" [innerHTML]="record.status | ticketStatusBadge"></td>
                                 <td>
                                     <app-colored-text-chip *ngFor="let label of (record.labels || [])" [text]="label"
                                         size="small"></app-colored-text-chip>
@@ -98,12 +98,12 @@
                 </div>
             </tab>
             <tab heading="Tickets by Game & Challenge" *ngIf="ctx">
-                <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center">
+                <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center flex-wrap">
                     <app-doughnut-chart [config]="ctx.challengesChartConfig"></app-doughnut-chart>
                 </div>
             </tab>
             <tab heading="Tickets by Label" *ngIf="ctx">
-                <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center">
+                <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center flex-wrap">
                     <app-doughnut-chart *ngFor="let config of ctx.labelsChartConfigs" class="label-doughnut-chart"
                         [config]="config"></app-doughnut-chart>
                 </div>
