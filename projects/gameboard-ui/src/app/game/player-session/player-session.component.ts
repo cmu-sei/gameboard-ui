@@ -2,18 +2,15 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { FontAwesomeService } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-player-session',
@@ -33,14 +30,12 @@ export class PlayerSessionComponent implements OnDestroy {
   private ctxSub?: Subscription;
 
   // sets up the modal if it's a team game that needs confirmation
-  private modalRef?: BsModalRef;
   protected modalConfig?: ModalConfirmConfig;
   protected isDoubleChecking = false;
-  protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
+  protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
 
   constructor(
     private api: PlayerService,
-    private log: LogService,
     private modalService: ModalConfirmService,
     protected faService: FontAwesomeService
   ) { }
@@ -48,28 +43,23 @@ export class PlayerSessionComponent implements OnDestroy {
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
       tap(ctx => {
-        let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
-
-        if (ctx) {
-          vm = {
-            player: {
-              id: ctx.player.id,
-              teamId: ctx.player.teamId,
-              session: ctx.player.session,
-              scoring: {
-                rank: ctx.player.rank,
-                score: ctx.player.score,
-                correctCount: ctx.player.correctCount,
-                partialCount: ctx.player.partialCount
-              }
-            },
-            game: {
-              isPracticeMode: ctx.game.isPracticeMode
+        this.performanceSummaryViewModel = !ctx ? undefined : {
+          player: {
+            id: ctx.player.id,
+            teamId: ctx.player.teamId,
+            session: ctx.player.session,
+            scoring: {
+              rank: ctx.player.rank,
+              score: ctx.player.score,
+              correctCount: ctx.player.correctCount,
+              partialCount: ctx.player.partialCount
             }
-          };
-        }
+          },
+          game: {
+            isPracticeMode: ctx.game.isPracticeMode
+          }
+        };
 
-        this.performanceSummaryViewModel$.next(vm);
         this.player$.next(ctx?.player);
       }),
       tap(ctx => {

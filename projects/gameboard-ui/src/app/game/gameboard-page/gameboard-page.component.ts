@@ -8,7 +8,6 @@ import { asyncScheduler, BehaviorSubject, interval, merge, Observable, of, sched
 import { catchError, debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
-import { SessionChangeRequest } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
@@ -44,7 +43,7 @@ export class GameboardPageComponent implements OnDestroy {
   hubstate$: Observable<HubState>;
   hubsub: Subscription;
   cid = '';
-  performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
+  performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
 
   constructor(
     route: ActivatedRoute,
@@ -74,7 +73,8 @@ export class GameboardPageComponent implements OnDestroy {
       )),
       tap(b => {
         this.ctx = b;
-        this.performanceSummaryViewModel$.next({
+        console.log("player", b.session);
+        this.performanceSummaryViewModel = {
           player: {
             id: b.id,
             teamId: b.teamId,
@@ -89,10 +89,10 @@ export class GameboardPageComponent implements OnDestroy {
           game: {
             isPracticeMode: b.game.isPracticeMode
           }
-        });
+        }
       }),
       tap(b => this.startHub(b)),
-      tap(b => this.reselect())
+      tap(() => this.reselect())
     ).subscribe();
 
     const launched$ = this.launching$.pipe(
@@ -235,8 +235,8 @@ export class GameboardPageComponent implements OnDestroy {
     );
   }
 
-  handleRefreshRequest(id: string) {
-    this.refresh$.next(this.ctx.id);
+  handleRefreshRequest(playerId: string) {
+    this.refresh$.next(playerId);
   }
 
   graded(): void {

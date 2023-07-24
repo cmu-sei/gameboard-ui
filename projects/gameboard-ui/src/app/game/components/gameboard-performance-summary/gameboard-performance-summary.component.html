@@ -1,4 +1,4 @@
-<div class="gameboard-performance-summary-component" *ngIf="ctx$ | async as ctx; else loading">
+<div class="gameboard-performance-summary-component" *ngIf="ctx; else loading">
     <div class="text-info card-text mb-2">
         <span *ngIf="ctx.player.session?.isAfter || ((countdown$ | async) || 0 ) <= 0">Game Over </span>
         <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
