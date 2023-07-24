@@ -33,10 +33,6 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     );
   }
 
-  getDefaultParameters(paging: PagingArgs): ChallengesReportParameters {
-    return { competition: undefined, registrationDateRange: {}, gameChallengeSpec: {}, track: {} };
-  }
-
   async updateView(parameters: ChallengesReportFlatParameters): Promise<ReportViewUpdate> {
     const structuredParameters = this.reportService.unflattenParameters(parameters);
     const results = await firstValueFrom(this.reportService.getReportData(structuredParameters));

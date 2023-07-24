@@ -95,17 +95,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     super();
   }
 
-  getDefaultParameters(defaultPaging: PagingArgs): EnrollmentReportParameters {
-    return {
-      enrollDate: {},
-      paging: defaultPaging,
-      seasons: [],
-      series: [],
-      sponsors: [],
-      tracks: []
-    };
-  }
-
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
     this.isLoading = true;
     this.results = await firstValueFrom(this.reportService.getReportData(parameters));

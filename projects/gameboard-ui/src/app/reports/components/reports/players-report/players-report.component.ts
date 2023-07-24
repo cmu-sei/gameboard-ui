@@ -20,12 +20,7 @@ interface PlayersReportContext {
 export class PlayersReportComponent
   extends ReportComponentBase<PlayersReportFlatParameters, PlayersReportParameters>
   implements AfterViewInit {
-  getDefaultParameters(defaultPaging: PagingArgs): PlayersReportParameters {
-    return {
-      gameChallengeSpec: {},
-      track: { track: undefined }
-    };
-  }
+
   ctx: PlayersReportContext | null = null;
 
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")

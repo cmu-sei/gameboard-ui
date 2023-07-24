@@ -93,12 +93,12 @@
                     </td>
                     <td class="report-field numerical">
                         <p *ngIf="record.competitiveStats; else noValue">
-                            {{ record.competitiveStats.avgPctAvailablePointsScored }}%
+                            {{ record.competitiveStats.avgPctAvailablePointsScored | percent:"1.0-2" }}%
                         </p>
                     </td>
                     <td class="report-field numerical">
                         <p *ngIf="record.competitiveStats; else noValue">
-                            {{ record.competitiveStats.avgScorePercentile }}%
+                            {{ record.competitiveStats.avgScorePercentile | number:"1.0-2" }}
                         </p>
                     </td>
                 </tr>

@@ -11,7 +11,6 @@ import { SupportService } from '@/api/support.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { ReportComponentBase } from '../report-base.component';
 import { PagingArgs } from '@/api/models';
-import { RouterService } from '@/services/router.service';
 import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig } from '@/core/directives/query-param-model.directive';
 import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
 import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
@@ -99,17 +98,6 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
     private reportService: SupportReportService,
     private rgbService: TextToRgbService,
     private supportService: SupportService) { super(); }
-
-  getDefaultParameters(defaultPaging: PagingArgs): SupportReportParameters {
-    return {
-      gameChallengeSpec: {},
-      labels: [],
-      openedDateRange: {},
-      paging: defaultPaging,
-      timeSinceOpen: {},
-      timeSinceUpdate: {},
-    };
-  }
 
   async updateView(parameters: SupportReportFlatParameters): Promise<ReportViewUpdate> {
     this.isLoading = true;

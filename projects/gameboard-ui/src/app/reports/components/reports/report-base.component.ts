@@ -28,7 +28,6 @@ export abstract class ReportComponentBase<TFlatParameters extends {}, TStructure
         this._updateView({ ...this.route.snapshot.queryParams } as TFlatParameters);
     }
 
-    protected abstract getDefaultParameters(defaultPaging: PagingArgs): TStructuredParameters;
     protected abstract updateView(parameters: TFlatParameters): Promise<ReportViewUpdate>;
 
     protected handlePagingChange(paging: PagingArgs) {

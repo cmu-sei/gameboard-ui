@@ -85,19 +85,6 @@ export class PracticeModeReportComponent
 
   constructor(protected reportService: PracticeModeReportService) { super(); }
 
-  protected getDefaultParameters(defaultPaging: PagingArgs): PracticeModeReportParameters {
-    return {
-      practiceDate: {},
-      games: [],
-      seasons: [],
-      series: [],
-      sponsors: [],
-      tracks: [],
-      paging: defaultPaging,
-      grouping: PracticeModeReportGrouping.player
-    };
-  }
-
   protected handleOverallStatsUpdate(stats: PracticeModeReportOverallStats) {
     this.overallStats = stats;
   }

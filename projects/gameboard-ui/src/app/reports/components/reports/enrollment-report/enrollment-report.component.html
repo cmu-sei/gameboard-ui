@@ -127,7 +127,9 @@
             </tab>
 
             <tab heading="Enrollment Over Time" id="tab-trend-line">
-                <app-line-chart id="enrollmentTrend" [config]="ctx.chartConfig"></app-line-chart>
+                <div class="trend-line-container mt-4">
+                    <app-line-chart id="enrollmentTrend" [config]="ctx.chartConfig"></app-line-chart>
+                </div>
             </tab>
         </tabset>
     </ng-container>
