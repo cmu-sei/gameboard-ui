@@ -1,16 +1,14 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
 import { ReportDateRange, ReportResults, ReportTimeSpan, ReportViewUpdate } from '../../../reports-models';
-import { createCustomInputControlValueAccessor } from '../../parameters/report-parameter-component';
 import { firstValueFrom } from 'rxjs';
-import { SupportReportService } from '../../../services/support-report.service';
+import { SupportReportService } from '@/reports/services/support-report.service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { groupBy } from 'projects/gameboard-ui/src/tools';
 import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { SupportService } from '@/api/support.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { ReportComponentBase } from '../report-base.component';
-import { PagingArgs } from '@/api/models';
 import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig } from '@/core/directives/query-param-model.directive';
 import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
 import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
@@ -28,8 +26,7 @@ interface SupportReportContext {
 @Component({
   selector: 'app-support-report',
   templateUrl: './support-report.component.html',
-  styleUrls: ['./support-report.component.scss'],
-  providers: [createCustomInputControlValueAccessor(SupportReportComponent)]
+  styleUrls: ['./support-report.component.scss']
 })
 export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters, SupportReportParameters> {
   @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
@@ -124,13 +121,23 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
     const inProg = records.filter(r => r.status.toLowerCase() == 'in progress').length;
     const other = records.filter(r => r.status == 'other').length;
 
+    const labels = ["Closed", "In Progress", "Open"];
+    const dataSets = [{
+      label: "Statuses",
+      data: [
+        closed,
+        inProg,
+        open
+      ]
+    }];
+
+    if (other) {
+      labels.push("Other");
+      dataSets[0].data.push(other);
+    }
+
     return {
-      labels: [
-        'Closed',
-        'In Progress',
-        'Open',
-        'Other'
-      ],
+      labels,
       dataSets: [{
         label: 'Statuses',
         data: [
