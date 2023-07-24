@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Search, SortDirection } from '../../api/models';

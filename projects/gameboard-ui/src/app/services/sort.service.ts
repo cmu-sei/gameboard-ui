@@ -25,14 +25,12 @@ export class SortService {
   }
 
   private compare<T>(a: T, b: T) {
-    let result = 0;
-
     if (a < b)
-      result = -1;
+      return -1;
     else if (a > b)
-      result = 1;
+      return 1;
 
-    return result;
+    return 0;
   }
 
   private maybeInvertResult(result: number, direction: SortDirection) {
