@@ -1,9 +1,10 @@
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
-import { ReportDateRange, ReportTimeSpan } from '@/reports/reports-models';
+import { ReportDateRange } from '@/reports/reports-models';
 import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Directive, ElementRef, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { CustomInputComponent } from '../components/custom-input/custom-input.component';
 
 export interface QueryStringParameter {
   name: string;
@@ -36,9 +37,13 @@ export interface QueryParamModelConfig<TValue> {
 export class QueryParamModelDirective<T> implements OnChanges {
   @Input('appQueryParamModel') config?: QueryParamModelConfig<T>;
 
+  private _isMultiConfig = false;
   private _queryParamsBuffer$ = new Subject<T | null>();
+  private _toPropertyNames: { [queryStringParamName: string]: string } = {};
+  private _toQueryStringParamNames: { [propertyName: string]: string } = {};
 
   constructor(
+    private hostComponent: CustomInputComponent<T>,
     private route: ActivatedRoute,
     private elementRef: ElementRef,
     private routerService: RouterService,
@@ -50,21 +55,43 @@ export class QueryParamModelDirective<T> implements OnChanges {
       return;
     }
 
-    // if we have no config, be sure we're unsubscribed from all subscriptions
-    // and then bail
+    // if we have no config, be sure we're unsubscribed from all subscriptions and undo
+    // all config, then bail
     if (!this.config) {
       this.unsub.unsubscribeAll();
+      this._isMultiConfig = false;
+      this._toPropertyNames = {};
+      this._toQueryStringParamNames = {};
       return;
     }
 
-    // OTHERWISE: we have new config and need to set up our subs
+    // OTHERWISE: we have new config and need to (re) init
+
+    // determine if the config describes a simple single property or an object
+    this._isMultiConfig = !!this.config.propertyNameToQueryParamNameMap;
+
+    if (this._isMultiConfig) {
+      // build two dictionaries for easy translation to/from query string param names and property names
+      for (const entry of this.config.propertyNameToQueryParamNameMap!) {
+        this._toPropertyNames[entry.queryStringParamName] = entry.propertyName;
+        this._toQueryStringParamNames[entry.propertyName] = entry.queryStringParamName;
+      }
+
+      // for multis, automatically reset all properties wired up on change
+      this.config.resetQueryParams = [
+        ...(this.config.resetQueryParams || []),
+        ...(this.config.propertyNameToQueryParamNameMap?.map(entry => entry.queryStringParamName) || [])
+      ];
+    }
 
     // listen for external changes to the querystring (like regular navigation).
     // when this happens, we need to update the ngmodel of the component without
     // triggering an emitter event
     this.unsub.add(
-      this.route.params.subscribe(params => {
-        this.deserializeModel(params, this.config)
+      this.route.queryParams.subscribe(params => {
+        console.log("stuff happened", params, this.hostComponent);
+        const model = this.deserializeModel(params, this.config!);
+        this.hostComponent.ngModel = model;
       })
     );
 
@@ -107,17 +134,12 @@ export class QueryParamModelDirective<T> implements OnChanges {
     }
 
     if (value) {
-      // use "name" as the discriminant for now
-      if (this.config.name) {
+      if (!this._isMultiConfig) {
         const serialized = this.config.serialize ? this.config.serialize(value) : defaultSerializer(value);
-        params[this.config!.name] = serialized;
-      } else if (this.config.propertyNameToQueryParamNameMap) {
-        const propertyNameMap: PropertyNameMap = {};
-        for (const nameMapping of this.config.propertyNameToQueryParamNameMap) {
-          propertyNameMap[nameMapping.propertyName] = nameMapping.queryStringParamName;
-        }
-
-        const serialized = this.config!.serializeMulti!(value, propertyNameMap);
+        params[this.config.name!] = serialized;
+      }
+      else {
+        const serialized = this.config!.serializeMulti!(value, this._toQueryStringParamNames);
 
         if (serialized) {
           for (const param of serialized) {
@@ -133,12 +155,28 @@ export class QueryParamModelDirective<T> implements OnChanges {
     });
   }
 
-  private async deserializeModel<T>(params: Params, config: QueryParamModelConfig<T> | null | undefined) {
+  private deserializeModel<T>(params: Params, config: QueryParamModelConfig<T>): T | null {
     if (!config) {
       return null;
     }
 
-    return null;
+    if (!this._isMultiConfig) {
+      // we're deserializing a simple type using a provided serializer
+      // and mapping it to config.name
+
+      if (!config.name) {
+        throw new Error("Can't deserialize a query param model with no name.");
+      }
+
+      return (config.deserialize || defaultDeserializer)(params[config.name]);
+    }
+
+    // otherwise, we're deserializing an object with multiple properties
+    if (!config.deserializeMulti || !config.propertyNameToQueryParamNameMap) {
+      throw new Error("Can't deserialize a multiproperty query param model without a deserializer and a param names map.");
+    }
+
+    return config.deserializeMulti!(params, this._toQueryStringParamNames) as T;
   }
 }
 
@@ -176,7 +214,8 @@ export const getDateRangeQueryModelConfig = (config: { propertyNameMap: Property
     emitter: config.emitter,
     serializeMulti: dateRangeSerializer,
     deserializeMulti: dateRangeDeserializer,
-    propertyNameToQueryParamNameMap: config.propertyNameMap
+    propertyNameToQueryParamNameMap: config.propertyNameMap,
+    resetQueryParams: config.propertyNameMap.map(e => e.queryStringParamName)
   };
 };
 
@@ -210,7 +249,7 @@ export const dateRangeDeserializer: QueryStringMultiDeserializer<ReportDateRange
   }
 
   return {
-    dateStart: params[propertyNameMap["dateStart"]],
-    dateEnd: params[propertyNameMap["dateEnd"]]
+    dateStart: params[propertyNameMap["dateStart"]] ? new Date(params[propertyNameMap["dateStart"]]) : undefined,
+    dateEnd: params[propertyNameMap["dateEnd"]] ? new Date(params[propertyNameMap["dateEnd"]]) : undefined
   };
 };

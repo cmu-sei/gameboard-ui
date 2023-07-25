@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
+import { Component, EventEmitter, Injectable, Input, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { v4 as uuid4 } from 'uuid';
 
@@ -11,6 +11,7 @@ export function createCustomInputControlValueAccessor(extendedInputComponent: an
 }
 
 @Component({ template: '' })
+@Injectable({ providedIn: 'root' })
 export abstract class CustomInputComponent<T> implements ControlValueAccessor {
   @Output() ngModelChange = new EventEmitter<T | null>();
   protected isDisabled = false;

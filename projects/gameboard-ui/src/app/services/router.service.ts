@@ -69,7 +69,8 @@ export class RouterService {
       }
     }
 
-    const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: cleanParams });
+    const updatedParams = { ...cleanParams, ...update.parameters };
+    const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: updatedParams });
     return this.router.navigateByUrl(urlTree);
   }
 }

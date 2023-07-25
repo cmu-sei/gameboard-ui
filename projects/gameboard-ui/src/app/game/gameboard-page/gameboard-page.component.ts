@@ -73,7 +73,6 @@ export class GameboardPageComponent implements OnDestroy {
       )),
       tap(b => {
         this.ctx = b;
-        console.log("player", b.session);
         this.performanceSummaryViewModel = {
           player: {
             id: b.id,

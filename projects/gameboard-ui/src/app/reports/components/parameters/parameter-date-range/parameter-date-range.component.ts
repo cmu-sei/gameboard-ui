@@ -24,14 +24,14 @@ export class ParameterDateRangeComponent extends CustomInputComponent<ReportDate
 
   handleStartDateClear() {
     if (this.ngModel) {
-      this.ngModel.dateEnd = undefined;
+      this.ngModel.dateStart = undefined;
       this.handleModelChange();
     }
   }
 
   handleEndDateClear() {
     if (this.ngModel) {
-      this.ngModel.dateStart = undefined;
+      this.ngModel.dateEnd = undefined;
       this.handleModelChange();
     }
   }
