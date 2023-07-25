@@ -18,8 +18,8 @@ export class PlayersReportService {
     const flattened: PlayersReportFlatParameters = {
       challengeSpecId: parameters.gameChallengeSpec?.challengeSpecId,
       gameId: parameters.gameChallengeSpec?.gameId,
-      playerSessionStartBeginDate: parameters.sessionStartWindow?.dateStart,
-      playerSessionStartEndDate: parameters.sessionStartWindow?.dateEnd,
+      playerSessionStartBeginDate: parameters.sessionStartWindow?.dateStart || undefined,
+      playerSessionStartEndDate: parameters.sessionStartWindow?.dateEnd || undefined,
       trackName: parameters.track?.track,
       ...parameters
     };
@@ -59,8 +59,8 @@ export class PlayersReportService {
         challengeSpecId
       },
       sessionStartWindow: sessionStartBeginDate || sessionStartEndDate ? {
-        dateStart: sessionStartBeginDate,
-        dateEnd: sessionStartEndDate
+        dateStart: sessionStartBeginDate || null,
+        dateEnd: sessionStartEndDate || null
       } : undefined,
       track: {
         track: trackName

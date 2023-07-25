@@ -1,6 +1,6 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
-import { ReportDateRange, ReportResults, ReportTimeSpan, ReportViewUpdate } from '../../../reports-models';
+import { ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '@/reports/services/support-report.service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
@@ -9,12 +9,10 @@ import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { SupportService } from '@/api/support.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { ReportComponentBase } from '../report-base.component';
-import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig } from '@/core/directives/query-param-model.directive';
-import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
-import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
-import { ParameterTimespanPickerComponent } from '../../parameters/parameter-timespan-picker/parameter-timespan-picker.component';
-import { QueryParamModelService } from '@/core/directives/query-param-model.service';
-import { ParameterGameChallengespecComponent, ReportGameChallengeSpec } from '../../parameters/parameter-game-challengespec/parameter-game-challengespec.component';
+import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
+import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
+import { TimespanQueryParamModel } from '@/core/models/timespan-query-param-model';
+import { GameChallengeSpecQueryModel } from '@/core/models/game-challenge-spec-query-param.model';
 
 interface SupportReportContext {
   results: ReportResults<SupportReportRecord>,
@@ -32,67 +30,38 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
   protected ticketLabels$ = this.reportService.getTicketLabels();
   protected ticketStatuses$ = this.reportService.getTicketStatuses();
 
-  protected gameChallengeSpecQueryModel?: QueryParamModelConfig<ReportGameChallengeSpec>;
-  @ViewChild("gameChallengeSpec") set gameChallengeSpec(component: ParameterGameChallengespecComponent) {
-    if (component) {
-      this.gameChallengeSpecQueryModel = this.queryParamModelService.getGameChallengeSpecQueryModelConfig({
-        gameIdParamName: "gameId",
-        challengeSpecIdParamName: "challengeSpecId",
-        emitter: component.ngModelChange
-      });
-    }
-  }
 
-  protected openedDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
-  @ViewChild("openedDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
-    if (component) {
-      this.openedDateRangeQueryModel = getDateRangeQueryModelConfig({
-        propertyNameMap: [
-          { propertyName: "dateStart", queryStringParamName: "openedDateStart" },
-          { propertyName: "dateEnd", queryStringParamName: "openedDateEnd" }
-        ],
-        emitter: component.ngModelChange
-      });
-    }
-  }
+  protected gameChallengeSpecQueryModel: GameChallengeSpecQueryModel | null = new GameChallengeSpecQueryModel();
+  protected openedDateRangeModel: DateRangeQueryParamModel | null = null;
 
-  protected labelsQueryModel?: QueryParamModelConfig<string[]>;
-  @ViewChild('labelsMulti') set labelsMultiSelect(component: MultiSelectComponent<string>) {
-    if (component) {
-      this.labelsQueryModel = getStringArrayQueryModelConfig("labels", component.ngModelChange);
-    }
-  }
+  protected labelsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
+    paramName: "labels",
+    options: firstValueFrom(this.ticketLabels$)
+  });
 
-  protected statusQueryModel?: QueryParamModelConfig<string[]>;
-  @ViewChild('statusMulti') set statusesMultiSelect(component: MultiSelectComponent<string>) {
-    if (component) {
-      this.statusQueryModel = getStringArrayQueryModelConfig("statuses", component.ngModelChange);
-    }
-  }
+  protected statusesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
+    paramName: "statuses",
+    options: firstValueFrom(this.ticketStatuses$)
+  });
 
-  protected openedTimeSpanQueryModel?: QueryParamModelConfig<ReportTimeSpan>;
-  @ViewChild("openedTimeSpan") set openedTimeSpan(component: ParameterTimespanPickerComponent) {
-    if (component) {
-      this.openedTimeSpanQueryModel = this.queryParamModelService.getTimeSpanQueryModelConfig("minutesSinceOpen", component.ngModelChange);
-    }
-  }
-
-  protected updatedTimeSpanQueryModel?: QueryParamModelConfig<ReportTimeSpan>;
-  @ViewChild("updatedTimeSpan") set updatedTimeSpan(component: ParameterTimespanPickerComponent) {
-    if (component) {
-      this.updatedTimeSpanQueryModel = this.queryParamModelService.getTimeSpanQueryModelConfig("minutesSinceUpdate", component.ngModelChange);
-    }
-  }
+  protected openedTimeSpanQueryModel: TimespanQueryParamModel | null = new TimespanQueryParamModel({ paramName: "minutesSinceOpen" });
+  protected updatedTimeSpanQueryModel: TimespanQueryParamModel | null = new TimespanQueryParamModel({ paramName: "minutesSinceUpdate" });
 
   protected isLoading = false;
   ctx?: SupportReportContext;
 
   constructor(
     protected faService: FontAwesomeService,
-    private queryParamModelService: QueryParamModelService,
     private reportService: SupportReportService,
     private rgbService: TextToRgbService,
-    private supportService: SupportService) { super(); }
+    private supportService: SupportService) {
+    super();
+
+    this.openedDateRangeModel = new DateRangeQueryParamModel({
+      dateStartParamName: "openedDateStart",
+      dateEndParamName: "openedDateEnd"
+    });
+  }
 
   async updateView(parameters: SupportReportFlatParameters): Promise<ReportViewUpdate> {
     this.isLoading = true;

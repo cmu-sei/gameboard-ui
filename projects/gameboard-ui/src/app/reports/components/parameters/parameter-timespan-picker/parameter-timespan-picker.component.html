@@ -1,13 +1,13 @@
 <label class="report-component-label">{{label}}</label>
 <div class="parameter-timespan-picker-component report-parameter d-flex full-width" *ngIf="ngModel">
     <div class="input-container mr-1">
-        <input type="number" class="form-control" min="0" name="days" [(ngModel)]="ngModel!.days" placeholder="[Days]"
-            (input)="handleModelChange()">
+        <input type="number" class="form-control" min="0" name="days" [ngModel]="ngModel.days" (input)="setDays($event)"
+            placeholder="[Days]">
     </div>
 
     <div class="input-container mx-1">
-        <select class="form-control" name="hours" [(ngModel)]="ngModel!.hours" (change)="handleModelChange()">
-            <option selected [ngValue]="undefined">[Hours]</option>
+        <select class="form-control" name="hours" [(ngModel)]="ngModel.hours">
+            <option selected [ngValue]="0">[Hours]</option>
             <option [ngValue]="1">1</option>
             <option [ngValue]="2">2</option>
             <option [ngValue]="3">3</option>
@@ -35,8 +35,8 @@
     </div>
 
     <div class="input-container ml-1">
-        <select class="form-control" name="minutes" [(ngModel)]="ngModel!.minutes" (change)="handleModelChange()">
-            <option selected [ngValue]="undefined">[Minutes]</option>
+        <select class="form-control" name="minutes" [(ngModel)]="ngModel.minutes">
+            <option selected [ngValue]="0">[Minutes]</option>
             <option [ngValue]="5">5</option>
             <option [ngValue]="10">10</option>
             <option [ngValue]="15">15</option>

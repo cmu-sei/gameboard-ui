@@ -1,10 +1,8 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Challenge } from "./board-models";
-
 export interface UserReport {
-  title: string ;
+  title: string;
   timestamp: Date;
   enrolledUserCount: number;
   unenrolledUserCount: number;
@@ -44,7 +42,7 @@ export interface GameSponsorReport {
 }
 
 export interface GameSponsorStat {
-  gameId: string; 
+  gameId: string;
   gameName: string;
   stats: SponsorStat[];
 }

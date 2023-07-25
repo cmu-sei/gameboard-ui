@@ -31,8 +31,8 @@ export interface ReportMetaData {
 }
 
 export interface ReportDateRange {
-    dateStart?: Date;
-    dateEnd?: Date;
+    dateStart: Date | null | undefined;
+    dateEnd: Date | null | undefined;
 }
 
 export interface ReportTimeSpan {
@@ -40,6 +40,33 @@ export interface ReportTimeSpan {
     hours?: number;
     minutes?: number;
 }
+
+export const timespanToMinutes = (timespan: ReportTimeSpan) => {
+    if (!timespan)
+        return 0;
+
+    return (timespan.days || 0) * 24 * 60 + (timespan.hours || 0) * 60 + (timespan.minutes || 0);
+};
+
+export const minutesToTimeSpan = (minutes: number | undefined | null): ReportTimeSpan => {
+    if (!minutes)
+        return { days: undefined, hours: undefined, minutes: undefined };
+
+    const minutesInDay = 24 * 60;
+
+    let remainingMinutes = minutes;
+    const days = Math.floor(remainingMinutes / minutesInDay);
+    remainingMinutes = remainingMinutes % minutesInDay;
+
+    const hours = Math.floor(remainingMinutes / 60);
+    remainingMinutes = remainingMinutes % 60;
+
+    return {
+        days: days || undefined,
+        hours: hours || 0,
+        minutes: remainingMinutes
+    };
+};
 
 export interface ReportParameterOptions {
     challenges: SimpleEntity[];

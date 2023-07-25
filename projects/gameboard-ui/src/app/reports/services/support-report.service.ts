@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from '../components/reports/support-report/support-report.models';
 import { ObjectService } from '../../services/object.service';
 import { Observable, combineLatest, map } from 'rxjs';
-import { ReportResults } from '../reports-models';
+import { ReportResults, minutesToTimeSpan, timespanToMinutes } from '../reports-models';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '../../services/api-url.service';
 import { ReportsService } from '../reports.service';
@@ -28,8 +28,8 @@ export class SupportReportService {
       labels: parameters.labels?.join(','),
       openedDateStart: parameters.openedDateRange?.dateStart?.toLocaleDateString(),
       openedDateEnd: parameters.openedDateRange?.dateEnd?.toLocaleDateString(),
-      minutesSinceOpen: this.reportsService.timespanToMinutes(parameters.timeSinceOpen),
-      minutesSinceUpdate: this.reportsService.timespanToMinutes(parameters.timeSinceUpdate),
+      minutesSinceOpen: timespanToMinutes(parameters.timeSinceOpen),
+      minutesSinceUpdate: timespanToMinutes(parameters.timeSinceUpdate),
       pageNumber: parameters.paging.pageNumber || defaultPaging.pageNumber!,
       pageSize: parameters.paging.pageSize || defaultPaging.pageSize!,
       statuses: this.reportsService.flattenMultiSelectValues(parameters.statuses) || undefined
@@ -57,16 +57,16 @@ export class SupportReportService {
       },
       labels: parameters.labels?.split(',') || [],
       openedDateRange: {
-        dateStart: parameters.openedDateStart ? new Date(parameters.openedDateStart) : undefined,
-        dateEnd: parameters.openedDateEnd ? new Date(parameters.openedDateEnd) : undefined,
+        dateStart: parameters.openedDateStart ? new Date(parameters.openedDateStart) : null,
+        dateEnd: parameters.openedDateEnd ? new Date(parameters.openedDateEnd) : null,
       },
       paging: {
         pageNumber: parameters.pageNumber || defaultPaging.pageNumber!,
         pageSize: parameters.pageSize || defaultPaging.pageSize!
       },
       statuses: this.reportsService.unflattenMultiSelectValues(parameters.statuses),
-      timeSinceOpen: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceOpen as any)),
-      timeSinceUpdate: this.reportsService.minutesToTimeSpan(parseInt(parameters.minutesSinceUpdate as any)),
+      timeSinceOpen: minutesToTimeSpan(parseInt(parameters.minutesSinceOpen as any)),
+      timeSinceUpdate: minutesToTimeSpan(parseInt(parameters.minutesSinceUpdate as any)),
     };
 
     this.objectService.deleteKeys(structured, "gameId", "challengeId", "openedDateStart", "openedDateEnd");

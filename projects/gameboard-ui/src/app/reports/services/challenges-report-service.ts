@@ -30,26 +30,9 @@ export class ChallengesReportService {
     return cleanedRetVal;
   }
 
-  unflattenParameters(parameters: ChallengesReportFlatParameters) {
-    const retVal: ChallengesReportParameters = {
-      ...parameters,
-      registrationDateRange: {
-        dateStart: parameters.registrationDateStart ? new Date(parameters.registrationDateStart) : undefined,
-        dateEnd: parameters.registrationDateEnd ? new Date(parameters.registrationDateEnd) : undefined
-      },
-      gameChallengeSpec: {
-        challengeSpecId: parameters.challengeSpecId,
-        gameId: parameters.gameId
-      },
-      track: {
-        track: parameters.trackName,
-      }
-    };
 
-    return this.objectService.deleteKeys(retVal, "challengeSpecId", "gameId", "registrationStart", "registrationEnd", "trackName");
-  }
 
-  getReportData(parameters: ChallengesReportParameters): Observable<ReportResults<ChallengesReportRecord>> {
+  getReportData(parameters: ChallengesReportFlatParameters): Observable<ReportResults<ChallengesReportRecord>> {
     return this.http.get<ReportResults<ChallengesReportRecord>>(this.apiRootService.build("/reports/challenges-report", parameters));
   }
 }

@@ -1,3 +1,18 @@
+export function arraysEqual<T>(a: Array<T>, b: Array<T>): boolean {
+    if (a.length !== b.length)
+        return false;
+
+    const aSorted = [...a.sort()];
+    const bSorted = [...b.sort()];
+
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i])
+            return false;
+    }
+
+    return true;
+}
+
 export function deepEquals<T1, T2>(obj1: T1, obj2: T2): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
 }

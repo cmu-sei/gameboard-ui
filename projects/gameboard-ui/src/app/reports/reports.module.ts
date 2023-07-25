@@ -23,9 +23,7 @@ import { ReportGlobalControlsComponent } from './components/report-global-contro
 import { ReportParametersContainerComponent } from './components/report-parameters-container/report-parameters-container.component';
 import { ReportSelectComponent } from './components/report-select/report-select.component';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
-import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
 import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
-import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { PracticeModeReportByChallengeComponent } from './components/reports/practice-mode-report/practice-mode-report-by-challenge/practice-mode-report-by-challenge.component';
 import { PracticeModeReportByPlayerModePerformanceComponent } from './components/reports/practice-mode-report/practice-mode-report-by-player-mode-performance/practice-mode-report-by-player-mode-performance.component';
 import { PracticeModeReportByUserComponent } from './components/reports/practice-mode-report/practice-mode-report-by-user/practice-mode-report-by-user.component';
@@ -43,7 +41,6 @@ import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
   declarations: [
     ArrayToCountPipe,
     ArrayFieldToClassPipe,
-    ChallengesReportComponent,
     CountToTooltipClassPipe,
     EnrollmentReportComponent,
     ParameterChallengeSpecComponent,
@@ -54,7 +51,6 @@ import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
     ParameterTicketLabelsComponent,
     ParameterTicketStatusComponent,
     ParameterTimespanPickerComponent,
-    PlayersReportComponent,
     ReportCardComponent,
     ParameterChangeLinkComponent,
     ReportGlobalControlsComponent,
@@ -84,9 +80,7 @@ import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
         path: '',
         component: ReportPageComponent,
         children: [
-          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
-          { path: 'players', component: PlayersReportComponent, title: "Players Report" },
           { path: 'practice-mode', component: PracticeModeReportComponent, title: "Practice Mode Report" },
           { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]

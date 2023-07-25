@@ -1,20 +1,20 @@
 <div class="practice-mode-report-component">
     <app-report-parameters-container *ngIf="selectedParameters; else loading">
         <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
-            [appQueryParamModel]="seriesQueryModel" #seriesMultiSelect></app-multi-select>
+            [(ngModel)]="seriesQueryModel"></app-multi-select>
         <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
-            [appQueryParamModel]="tracksQueryModel" #tracksMultiSelect></app-multi-select>
+            [(ngModel)]="tracksQueryModel"></app-multi-select>
         <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
-            [appQueryParamModel]="seasonsQueryModel" #seasonsMultiSelect></app-multi-select>
+            [(ngModel)]="seasonsQueryModel"></app-multi-select>
         <app-multi-select label="Games" name="games" ngDefaultControl [options]="games$ | async"
             [itemTemplate]="multiSelectGame" [value]="getGameValue" [getSearchText]="getGameSearchText"
-            [appQueryParamModel]="gamesQueryModel"></app-multi-select>
+            [(ngModel)]="gamesQueryModel">
+        </app-multi-select>
         <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
-            [itemTemplate]="multiSelectSponsor" [getSearchText]="getSponsorSearchText" [value]="getSponsorValue"
-            [appQueryParamModel]="sponsorsQueryModel" #sponsorsMultiSelect></app-multi-select>
+            [(ngModel)]="sponsorsQueryModel" [itemTemplate]="multiSelectSponsor" [getSearchText]="getSponsorSearchText"
+            [value]="getSponsorValue"></app-multi-select>
         <app-parameter-date-range label="Practice Session Date" ngDefaultControl
-            [appQueryParamModel]="practiceSessionDateRangeQueryModel"
-            #practiceSessionDateRange></app-parameter-date-range>
+            [(ngModel)]="practiceDateQueryModel"></app-parameter-date-range>
     </app-report-parameters-container>
 </div>
 

@@ -1,17 +1,16 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord } from './enrollment-report.models';
-import { ReportDateRange, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
+import { ReportResults, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
 import { Observable, firstValueFrom, of } from 'rxjs';
-import { PagingArgs, PagingResults, SimpleEntity } from '@/api/models';
+import { SimpleEntity } from '@/api/models';
 import { ChallengeResult } from '@/api/board-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
 import { ReportComponentBase } from '../report-base.component';
-import { QueryParamModelConfig, getDateRangeQueryModelConfig, getStringArrayQueryModelConfig } from '@/core/directives/query-param-model.directive';
-import { MultiSelectComponent } from '@/core/components/multi-select/multi-select.component';
-import { ParameterDateRangeComponent } from '../../parameters/parameter-date-range/parameter-date-range.component';
+import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
+import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 
 interface EnrollmentReportContext {
   results: ReportResults<EnrollmentReportRecord>;
@@ -33,58 +32,48 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   protected ctx$?: Observable<EnrollmentReportContext>;
   protected displayGameName = (s: SimpleEntity) => s.name;
   protected getGameValue = (s: SimpleEntity) => s.id;
-  protected displaySponsorName = (s: SimpleEntity) => s.name;
-  protected getSponsorValue = (s: SimpleEntity) => s.id;
+  protected displaySponsorName = (s: ReportSponsor) => s.name;
+  protected getSponsorValue = (s: ReportSponsor) => s.id;
   protected isLoading = false;
 
   protected results?: ReportResults<EnrollmentReportRecord>;
 
-  protected enrollmentDateRangeQueryModel?: QueryParamModelConfig<ReportDateRange>;
-  @ViewChild("enrollmentDateRange") set enrollmentDateRange(component: ParameterDateRangeComponent) {
-    if (component) {
-      this.enrollmentDateRangeQueryModel = getDateRangeQueryModelConfig({
-        propertyNameMap: [
-          { propertyName: "dateStart", queryStringParamName: "enrollDateStart" },
-          { propertyName: "dateEnd", queryStringParamName: "enrollDateEnd" }
-        ],
-        emitter: component.ngModelChange
-      });
-    }
-  }
+  // parameter query models
+  protected enrollmentDateRangeModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
+    dateStartParamName: "enrollDateStart",
+    dateEndParamName: "enrollDateEnd"
+  });
 
-  protected gamesQueryModel?: QueryParamModelConfig<string[]>;
-  @ViewChild("gamesMulti") set gamesMulti(component: MultiSelectComponent<string>) {
-    if (component)
-      this.gamesQueryModel = getStringArrayQueryModelConfig("games", component.ngModelChange);
-  }
+  protected gamesQueryModel: MultiSelectQueryParamModel<SimpleEntity> | null = new MultiSelectQueryParamModel<SimpleEntity>({
+    paramName: "games",
+    options: firstValueFrom(this.reportsService.getGames()),
+    serializer: (value: SimpleEntity) => value.id,
+    deserializer: (value: string, options?: SimpleEntity[]) => options!.find(g => g.id === value) || null
+  });
 
-  protected seriesQueryModel?: QueryParamModelConfig<string[]>;
-  @ViewChild('seriesMultiSelect') set seriesMultiSelect(component: MultiSelectComponent<string>) {
-    if (component) {
-      this.seriesQueryModel = getStringArrayQueryModelConfig("series", component.ngModelChange);
-    }
-  }
+  protected practiceDateQueryModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
+    dateStartParamName: "practiceDateStart",
+    dateEndParamName: "practiceDateEnd"
+  });
 
-  protected seasonsQueryModel?: QueryParamModelConfig<string[]>;
-  @ViewChild('seasonsMultiSelect') set seasonsMultiSelect(component: MultiSelectComponent<string>) {
-    if (component) {
-      this.seasonsQueryModel = getStringArrayQueryModelConfig("seasons", component.ngModelChange);
-    }
-  }
+  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
+    paramName: "seasons"
+  });
 
-  protected sponsorsQueryModel?: QueryParamModelConfig<string[]>;
-  @ViewChild('sponsorsMultiSelect') set sponsorsMultiSelect(component: MultiSelectComponent<string>) {
-    if (component) {
-      this.sponsorsQueryModel = getStringArrayQueryModelConfig("sponsors", component.ngModelChange);
-    }
-  }
+  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
+    paramName: "series"
+  });
 
-  protected tracksQueryModel?: QueryParamModelConfig<string[]>;
-  @ViewChild('tracksMultiSelect') set tracksMultiSelect(component: MultiSelectComponent<string>) {
-    if (component) {
-      this.tracksQueryModel = getStringArrayQueryModelConfig("tracks", component.ngModelChange);
-    }
-  }
+  protected sponsorsQueryModel: MultiSelectQueryParamModel<ReportSponsor> | null = new MultiSelectQueryParamModel<ReportSponsor>({
+    paramName: "sponsors",
+    options: firstValueFrom(this.reportsService.getSponsors()),
+    serializer: (value: ReportSponsor) => value.id,
+    deserializer: (value: string, options?: ReportSponsor[]) => options!.find(s => s.id === value) || null
+  });
+
+  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
+    paramName: "tracks"
+  });
 
   constructor(
     private markdownHelpersService: MarkdownHelpersService,

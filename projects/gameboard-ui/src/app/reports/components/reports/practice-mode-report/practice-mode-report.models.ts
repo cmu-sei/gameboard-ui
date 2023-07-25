@@ -21,7 +21,7 @@ export interface PracticeModeReportFlatParameters {
     games?: string;
     seasons?: string;
     series?: string;
-    sponsorIds?: string;
+    sponsors?: string;
     tracks?: string;
     pageNumber?: number;
     pageSize?: number;

@@ -64,7 +64,7 @@ export class ReportsService {
     return this.http.get<ReportMetaData>(this.apiUrlService.build("/reports/metaData", { reportKey: key }));
   }
 
-  dateToQueryStringEncoded(date?: Date) {
+  dateToQueryStringEncoded(date: Date | null | undefined) {
     if (!date) return undefined;
     // this is prettier in the qs, but the default API-side modelbinder can't bind it to a date
     // return `${(date.getMonth() + 1) % 12}-${date.getDate()}-${date.getFullYear()}`;
@@ -76,33 +76,6 @@ export class ReportsService {
       return undefined;
 
     return new Date(Date.parse(dateString));
-  }
-
-  minutesToTimeSpan(minutes: number | undefined | null): ReportTimeSpan {
-    if (!minutes)
-      return { days: undefined, hours: undefined, minutes: undefined };
-
-    const minutesInDay = 24 * 60;
-
-    let remainingMinutes = minutes;
-    const days = remainingMinutes / minutesInDay;
-    remainingMinutes = remainingMinutes % minutesInDay;
-
-    const hours = remainingMinutes / 60;
-    remainingMinutes = remainingMinutes % 60;
-
-    return {
-      days: days || undefined,
-      hours: hours || undefined,
-      minutes: remainingMinutes
-    };
-  }
-
-  timespanToMinutes(timespan: ReportTimeSpan | null | undefined): number {
-    if (!timespan)
-      return 0;
-
-    return (timespan.days || 0) * 24 * 60 + (timespan.hours || 0) * 60 + (timespan.minutes || 0);
   }
 
   flattenMultiSelectValues(input?: string[]): string | undefined {

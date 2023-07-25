@@ -44,27 +44,4 @@ export class QueryParamModelService {
       }
     };
   }
-
-  getTimeSpanQueryModelConfig(name: string, emitter: EventEmitter<ReportTimeSpan | null>, debounce?: number): QueryParamModelConfig<ReportTimeSpan> {
-    return {
-      name,
-      emitter,
-      debounce: debounce || 500,
-      serialize: (value) => this.serializeTimeSpan(value),
-      deserialize: (value) => this.deserializeTimeSpan(value)
-    };
-  }
-
-  private serializeTimeSpan(value: ReportTimeSpan | null): string | null {
-    const serialized = this.reportsService.timespanToMinutes(value);
-    return serialized > 0 ? serialized.toString() : null;
-  }
-
-  private deserializeTimeSpan(value: string | null): ReportTimeSpan | null {
-    if (!value) {
-      return null;
-    }
-
-    return this.reportsService.minutesToTimeSpan(parseInt(value));
-  }
 }

@@ -3,6 +3,7 @@ import { CustomInputComponent, createCustomInputControlValueAccessor } from '../
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Subscription } from 'rxjs';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
+import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 
 @Component({
   selector: 'app-multi-select',
@@ -10,31 +11,20 @@ import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
   styleUrls: ['./multi-select.component.scss'],
   providers: [createCustomInputControlValueAccessor(MultiSelectComponent)]
 })
-export class MultiSelectComponent<T> extends CustomInputComponent<T[] | null> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelectQueryParamModel<TItem>> implements OnInit, AfterViewInit, OnDestroy {
   @Input() label?: string;
   @Input() searchPlaceholder?: string = "Search items";
-  @Input() options: T[] | null = [];
+  @Input() options: TItem[] | null = [];
   @Input() showSearchBoxThreshold = 6;
   @Input() showSelectionSummaryThreshold = 0;
-  @Input() getSearchText: (option: T) => string = option => `${option}`;
-  @Input() value: (option: T) => any = option => `${option}`;
+  @Input() getSearchText: (option: TItem) => string = option => `${option}`;
+  @Input() value: (option: TItem) => string = option => option as unknown as string;
 
-  private _itemTemplate: TemplateRef<T> | null = null;
+  private _itemTemplate: TemplateRef<TItem> | null = null;
   public get itemTemplate() { return this._itemTemplate; }
-  @Input() public set itemTemplate(value: TemplateRef<T> | null) { this._itemTemplate = value; }
+  @Input() public set itemTemplate(value: TemplateRef<TItem> | null) { this._itemTemplate = value; }
 
-  @ViewChild("defaultItemTemplate") defaultItemTemplate?: TemplateRef<T>;
-
-  public get ngModel(): T[] | null {
-    return this._ngModel || [];
-  }
-
-  @Input() public set ngModel(value: T[] | null) {
-    if (this._ngModel !== value) {
-      this._ngModel = value || [];
-      this.ngModelChange.emit(this._ngModel);
-    }
-  }
+  @ViewChild("defaultItemTemplate") defaultItemTemplate?: TemplateRef<TItem>;
 
   protected countSelectedOverDisplayThreshold = 0;
   protected searchValue = "";
@@ -50,46 +40,22 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[] | null> im
   }
 
   ngOnInit(): void {
-    this._ngModelChangeSub = this.ngModelChange.subscribe(model => this.handleNgModelChanged.bind(this)(model));
+    if (!this.ngModel) {
+      throw new Error("MultiSelectComponent requires an ngModel binding.");
+    }
+
+    this._ngModelChangeSub = this.ngModel.modelUpdate$.subscribe(model => this.handleNgModelChanged.bind(this)(model));
   }
 
   ngAfterViewInit(): void {
     this._itemTemplate = this._itemTemplate ? this.itemTemplate : this.defaultItemTemplate || null;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // force options not to be empty and to be an array if it isn't
-    if (changes.options) {
-      if (!changes.options.currentValue) {
-        this.options = [];
-      } else if (!Array.isArray(changes.options.currentValue)) {
-        this.options = [changes.options.currentValue];
-      }
-    }
-
-    // coerce ngmodel to be an array if it isn't
-    if (changes.ngModel) {
-      this._coerceNgModelToArray();
-    }
-
-    this.updateSelectionSummary(this.ngModel);
-  }
-
   ngOnDestroy(): void {
     this._ngModelChangeSub?.unsubscribe();
   }
 
-  private _coerceNgModelToArray() {
-    if (!this.ngModel) {
-      this.ngModel = [];
-    } else {
-      if (!Array.isArray(this.ngModel)) {
-        this.ngModel = [this.ngModel];
-      }
-    }
-  }
-
-  updateSelectionSummary(selectedItemValues: T[] | null): void {
+  updateSelectionSummary(selectedItemValues: string[] | null): void {
     if (!selectedItemValues?.length || !this.options?.length) {
       this.selectionSummary = "";
       this.countSelectedOverDisplayThreshold = 0;
@@ -105,32 +71,28 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[] | null> im
     this.selectionSummary = summary;
   }
 
-  handleCheckedChanged(option: T, event: any) {
-    const isChecked = (event.target as any).checked;
-
+  handleCheckedChanged(option: TItem, event: any) {
     if (!this.ngModel)
-      this.ngModel = [];
+      return;
+
+    const isChecked = (event.target as any).checked;
 
     // if the box isn't checked, we must be removing an item
     if (!isChecked) {
-      this.ngModel = [...this.ngModel.filter(i => i !== this.value(option))];
+      this.ngModel.selectedValues = [...this.ngModel.selectedValues.filter(i => i !== option)];
       return;
     }
 
     // if we're not removing, we must be adding
-    this.ngModel = [...this.ngModel, this.value(option)];
+    this.ngModel.selectedValues = [...this.ngModel.selectedValues, option];
   }
 
-  getOptionIsChecked(option: T) {
-    // HACK
-    // i don't know how ngModel is ever anything but an array since we're handling it in 
-    // ngOnChanges, but coerce it here again as a workaround for now
-    this._coerceNgModelToArray();
+  getOptionIsChecked(option: TItem) {
     const optionValue = this.value(option);
-    return this.ngModel && this.ngModel.some(o => this.value(o) === optionValue);
+    return this.ngModel && this.ngModel.selectedValues.some(o => this.value(o) === optionValue);
   }
 
-  getOptionVisibility(option: T) {
+  getOptionVisibility(option: TItem) {
     if (!this.searchValue) {
       return true;
     }
@@ -140,15 +102,16 @@ export class MultiSelectComponent<T> extends CustomInputComponent<T[] | null> im
   }
 
   handleClearSelectionsClicked() {
-    this.ngModel = [];
+    this.ngModel!.selectedValues = [];
   }
 
-  handleNgModelChanged(model: T[] | null) {
-    this.updateSelectionSummary(model || []);
+  handleNgModelChanged(model: TItem[] | null) {
+    this.updateSelectionSummary((model || []).map(o => this.value(o)));
   }
 
   handleSelectedOverDisplayThresholdClicked() {
     const displaySelectedOptions = this.ngModel!
+      .selectedValues
       .map(o => this.getSearchText(o));
 
     // sort works in place, so we have to do this separately

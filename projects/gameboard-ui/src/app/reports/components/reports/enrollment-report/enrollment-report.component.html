@@ -1,19 +1,19 @@
 <div class="enrollment-report-params">
     <app-report-parameters-container>
         <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
-            [appQueryParamModel]="seriesQueryModel" #seriesMultiSelect></app-multi-select>
+            [(ngModel)]="seriesQueryModel"></app-multi-select>
         <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
-            [appQueryParamModel]="tracksQueryModel" #tracksMultiSelect></app-multi-select>
+            [(ngModel)]="tracksQueryModel"></app-multi-select>
         <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
-            [appQueryParamModel]="seasonsQueryModel" #seasonsMultiSelect></app-multi-select>
-        <app-multi-select label="Games" name="games" [options]="games$ | async" [itemTemplate]="multiSelectGame"
-            [getSearchText]="displayGameName" [value]="getGameValue" [appQueryParamModel]="gamesQueryModel"
-            #gamesMulti></app-multi-select>
+            [(ngModel)]="seasonsQueryModel"></app-multi-select>
+        <app-multi-select label="Games" name="games" [options]="games$ | async" [(ngModel)]="gamesQueryModel"
+            [itemTemplate]="multiSelectGame" [getSearchText]="displayGameName"
+            [value]="getGameValue"></app-multi-select>
         <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
-            [itemTemplate]="multiSelectSponsor" [getSearchText]="displaySponsorName" [value]="getSponsorValue"
-            [appQueryParamModel]="sponsorsQueryModel" #sponsorsMultiSelect></app-multi-select>
+            [(ngModel)]="sponsorsQueryModel" [itemTemplate]="multiSelectSponsor" [getSearchText]="displaySponsorName"
+            [value]="getSponsorValue"></app-multi-select>
         <app-parameter-date-range label="Enrollment Date" ngDefaultControl
-            [appQueryParamModel]="enrollmentDateRangeQueryModel" #enrollmentDateRange></app-parameter-date-range>
+            [(ngModel)]="enrollmentDateRangeModel"></app-parameter-date-range>
     </app-report-parameters-container>
 </div>
 

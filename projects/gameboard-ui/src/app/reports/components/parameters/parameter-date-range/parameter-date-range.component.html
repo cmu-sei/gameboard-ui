@@ -4,7 +4,7 @@
         <div class="date-input-container">
             <div class="input-group">
                 <input type="datetime" class="form-control" name="dateStart" placeholder="Start date" autocomplete="off"
-                    [(ngModel)]="ngModel.dateStart" bsDatepicker (ngModelChange)="handleModelChange()">
+                    [(ngModel)]="ngModel.dateStart" bsDatepicker>
                 <div class="input-group-append">
                     <button type="button" class="btn btn-info" (click)="handleStartDateClear()">
                         <fa-icon [icon]="faService.eraser"></fa-icon>
@@ -16,7 +16,7 @@
         <div class="date-input-container">
             <div class="input-group">
                 <input type="datetime" class="form-control" name="dateStart" placeholder="End date" autocomplete="off"
-                    [(ngModel)]="ngModel.dateEnd" bsDatepicker (ngModelChange)="handleModelChange()">
+                    [(ngModel)]="ngModel.dateEnd" bsDatepicker>
                 <div class="input-group-append">
                     <button type="button" class="btn btn-info" (click)="handleEndDateClear()">
                         <fa-icon [icon]="faService.eraser"></fa-icon>

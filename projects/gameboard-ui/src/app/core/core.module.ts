@@ -33,7 +33,6 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { markedOptionsFactory } from './config/marked.config';
 import { ModalConfirmDirective } from './components/modal/modal-confirm.directive';
-import { QueryParamModelDirective } from './directives/query-param-model.directive';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
@@ -49,6 +48,7 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlPipe } from './pipes/yaml.pipe';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { QueryParamModelDirective } from './directives/query-param-model.directive';
 
 
 const PUBLIC_DECLARATIONS = [
