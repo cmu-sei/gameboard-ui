@@ -29,8 +29,6 @@ interface SupportReportContext {
   styleUrls: ['./support-report.component.scss']
 })
 export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters, SupportReportParameters> {
-  @ViewChild("supportReport") reportElementRef?: ElementRef<HTMLDivElement>;
-
   protected ticketLabels$ = this.reportService.getTicketLabels();
   protected ticketStatuses$ = this.reportService.getTicketStatuses();
 
@@ -110,8 +108,7 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
     };
 
     return {
-      metaData: results.metaData,
-      reportContainerRef: this.reportElementRef,
+      metaData: results.metaData
     };
   }
 

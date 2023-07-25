@@ -89,5 +89,4 @@ export interface ReportTrackParameter {
 export interface ReportViewUpdate {
     metaData: ReportMetaData;
     pagingResults?: PagingResults;
-    reportContainerRef?: ElementRef<HTMLDivElement>;
 }

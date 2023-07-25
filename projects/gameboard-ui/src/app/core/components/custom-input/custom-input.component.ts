@@ -38,6 +38,10 @@ export abstract class CustomInputComponent<T> implements ControlValueAccessor {
     this.ngModel = { ...this.ngModel, ...updates } as T;
   }
 
+  protected getDefaultValue(): T | null {
+    return null;
+  }
+
   writeValue(obj: any): void {
     this.ngModel = obj;
   }

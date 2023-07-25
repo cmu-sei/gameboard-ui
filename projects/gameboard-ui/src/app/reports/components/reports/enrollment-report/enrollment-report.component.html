@@ -17,7 +17,7 @@
     </app-report-parameters-container>
 </div>
 
-<div class="report-body mt-4" *ngIf="!isLoading; else loading" #enrollmentReport>
+<div class="report-body mt-4" *ngIf="!isLoading; else loading">
     <ng-container *ngIf="ctx$ | async as ctx">
         <tabset class="mt-5" *ngIf="ctx.results.records.length; else noRecords">
             <tab heading="Summary Table" id="tab-summary-table">

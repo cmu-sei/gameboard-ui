@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SupportService } from 'projects/gameboard-ui/src/app/api/support.service';
-import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { Observable, combineLatest, map, of } from 'rxjs';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { ColoredTextChipEvent } from '@/core/components/colored-text-chip/colored-text-chip.component';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-parameter-ticket-labels',
@@ -11,7 +11,7 @@ import { ColoredTextChipEvent } from '@/core/components/colored-text-chip/colore
   styleUrls: ['./parameter-ticket-labels.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTicketLabelsComponent)]
 })
-export class ParameterTicketLabelsComponent extends ReportParameterComponent<string[]> implements OnInit {
+export class ParameterTicketLabelsComponent extends CustomInputComponent<string[]> implements OnInit {
   addLabel: string = '';
   labels$: Observable<string[]> = of([]);
 
@@ -29,7 +29,7 @@ export class ParameterTicketLabelsComponent extends ReportParameterComponent<str
     );
   }
 
-  override getDefaultValue(): string[] | undefined {
+  override getDefaultValue(): string[] | null {
     return [];
   }
 

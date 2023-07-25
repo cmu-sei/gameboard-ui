@@ -24,8 +24,6 @@ interface EnrollmentReportContext {
   styleUrls: ['./enrollment-report.component.scss']
 })
 export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters, EnrollmentReportParameters> {
-  @ViewChild("enrollmentReport") reportContainer!: ElementRef<HTMLDivElement>;
-
   games$ = this.reportsService.getGames();
   seasons$ = this.reportsService.getSeasons();
   series$ = this.reportsService.getSeries();
@@ -96,6 +94,11 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
+    // TODO: figure out why "this.reportService" is undefined sometimes but not others
+    if (!this.reportService) {
+      return null as unknown as ReportViewUpdate;
+    }
+
     this.isLoading = true;
     this.results = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
@@ -146,7 +149,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     return {
       metaData: this.results.metaData,
       pagingResults: this.results.paging,
-      reportContainerRef: this.reportContainer,
     };
   }
 

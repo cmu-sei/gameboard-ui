@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from './players-report.models';
 import { ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { ReportComponentBase } from '../report-base.component';
 import { PlayersReportService } from '@/reports/services/players-report.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { PagingArgs, SimpleEntity } from '@/api/models';
+import { SimpleEntity } from '@/api/models';
 
 interface PlayersReportContext {
   results: ReportResults<PlayersReportRecord>;
@@ -17,26 +17,14 @@ interface PlayersReportContext {
   templateUrl: './players-report.component.html',
   styleUrls: ['./players-report.component.scss']
 })
-export class PlayersReportComponent
-  extends ReportComponentBase<PlayersReportFlatParameters, PlayersReportParameters>
-  implements AfterViewInit {
+export class PlayersReportComponent extends ReportComponentBase<PlayersReportFlatParameters, PlayersReportParameters> {
 
   ctx: PlayersReportContext | null = null;
-
-  // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
-  @ViewChildren('playersReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
-  private reportElementRef?: ElementRef<HTMLDivElement>;
 
   constructor(
     public modalService: ModalConfirmService,
     public reportService: PlayersReportService) {
     super();
-  }
-
-  ngAfterViewInit(): void {
-    this.viewContainerRefs!.changes.subscribe(item => {
-      this.reportElementRef = this.viewContainerRefs ? this.viewContainerRefs.get(0) : undefined;
-    });
   }
 
   simpleEntitiesToStrings(entities: SimpleEntity[]): string[] {
@@ -65,8 +53,7 @@ export class PlayersReportComponent
     };
 
     return {
-      metaData: results.metaData,
-      reportContainerRef: this.reportElementRef!
+      metaData: results.metaData
     };
   }
 }

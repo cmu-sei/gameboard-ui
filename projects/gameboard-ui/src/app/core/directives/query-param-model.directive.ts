@@ -89,7 +89,6 @@ export class QueryParamModelDirective<T> implements OnChanges {
     // triggering an emitter event
     this.unsub.add(
       this.route.queryParams.subscribe(params => {
-        console.log("stuff happened", params, this.hostComponent);
         const model = this.deserializeModel(params, this.config!);
         this.hostComponent.ngModel = model;
       })

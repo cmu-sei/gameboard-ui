@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { ReportsService } from '@/reports/reports.service';
 import { SimpleEntity } from '@/api/models';
 import { Observable } from 'rxjs';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 export interface ReportGameChallengeSpec {
   gameId?: string;
@@ -16,7 +16,7 @@ export interface ReportGameChallengeSpec {
   providers: [createCustomInputControlValueAccessor(ParameterGameChallengespecComponent)]
 })
 export class ParameterGameChallengespecComponent
-  extends ReportParameterComponent<ReportGameChallengeSpec> {
+  extends CustomInputComponent<ReportGameChallengeSpec> {
   games$: Observable<SimpleEntity[]>;
   challengeSpecs$!: Observable<SimpleEntity[]>;
 
@@ -26,7 +26,7 @@ export class ParameterGameChallengespecComponent
     this.loadChallengeSpecs();
   }
 
-  override getDefaultValue(): ReportGameChallengeSpec | undefined {
+  override getDefaultValue(): ReportGameChallengeSpec | null {
     return {};
   }
 

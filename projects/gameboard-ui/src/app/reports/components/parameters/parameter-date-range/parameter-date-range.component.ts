@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { ReportDateRange } from '../../../reports-models';
-import { CustomInputComponent } from '@/core/components/custom-input/custom-input.component';
 import { FontAwesomeService } from '@/services/font-awesome.service';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-parameter-date-range',

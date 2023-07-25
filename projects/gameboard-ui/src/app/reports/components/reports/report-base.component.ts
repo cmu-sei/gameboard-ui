@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { ReportViewUpdate } from "../../reports-models";
 import { ActiveReportService } from "../../services/active-report.service";
 import { PagingArgs } from "@/api/models";
@@ -36,7 +36,9 @@ export abstract class ReportComponentBase<TFlatParameters extends {}, TStructure
 
     private async _updateView(parameters: TFlatParameters) {
         const viewUpdate = await this.updateView(parameters);
-        this.activeReportService.metaData$.next(viewUpdate.metaData);
-        this.activeReportService.htmlElement$.next(viewUpdate.reportContainerRef);
+
+        if (viewUpdate) {
+            this.activeReportService.metaData$.next(viewUpdate.metaData);
+        }
     }
 }

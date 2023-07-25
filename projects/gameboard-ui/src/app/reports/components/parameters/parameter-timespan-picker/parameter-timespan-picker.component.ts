@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { ReportTimeSpan } from '@/reports/reports-models';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-parameter-timespan-picker',
@@ -8,10 +8,10 @@ import { ReportTimeSpan } from '@/reports/reports-models';
   styleUrls: ['./parameter-timespan-picker.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTimespanPickerComponent)]
 })
-export class ParameterTimespanPickerComponent extends ReportParameterComponent<ReportTimeSpan> {
+export class ParameterTimespanPickerComponent extends CustomInputComponent<ReportTimeSpan> {
   @Input() label = '';
 
-  override getDefaultValue(): ReportTimeSpan | undefined {
+  override getDefaultValue(): ReportTimeSpan | null {
     return {};
   }
 

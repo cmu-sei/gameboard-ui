@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, forwardRef } from '@angular/core';
-import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { SimpleEntity } from '../../../../api/models';
 import { Observable } from 'rxjs';
 import { ReportsService } from '../../../reports.service';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-parameter-challenge-spec',
@@ -10,7 +10,7 @@ import { ReportsService } from '../../../reports.service';
   styleUrls: ['./parameter-challenge-spec.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterChallengeSpecComponent)]
 })
-export class ParameterChallengeSpecComponent extends ReportParameterComponent<string> implements OnChanges, OnInit {
+export class ParameterChallengeSpecComponent extends CustomInputComponent<string> implements OnChanges, OnInit {
   @Input() gameId?: string;
   specs$?: Observable<SimpleEntity[]>;
 

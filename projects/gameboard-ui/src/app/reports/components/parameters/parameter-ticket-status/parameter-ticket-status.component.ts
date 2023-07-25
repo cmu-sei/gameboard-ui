@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
 import { SupportReportService } from '@/reports/services/support-report.service';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-parameter-ticket-status',
@@ -9,7 +9,7 @@ import { SupportReportService } from '@/reports/services/support-report.service'
   styleUrls: ['./parameter-ticket-status.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterTicketStatusComponent)]
 })
-export class ParameterTicketStatusComponent extends ReportParameterComponent<string> implements OnInit {
+export class ParameterTicketStatusComponent extends CustomInputComponent<string> implements OnInit {
   statuses$: Observable<string[]> = of([]);
 
   constructor(private supportReportService: SupportReportService) {

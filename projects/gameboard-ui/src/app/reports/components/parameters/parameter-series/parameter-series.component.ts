@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ReportsService } from '../../../reports.service';
 import { Observable } from 'rxjs';
-import { ReportParameterComponent, createCustomInputControlValueAccessor } from '../report-parameter-component';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
   selector: 'app-parameter-series',
@@ -9,7 +9,7 @@ import { ReportParameterComponent, createCustomInputControlValueAccessor } from 
   styleUrls: ['./parameter-series.component.scss'],
   providers: [createCustomInputControlValueAccessor(ParameterSeriesComponent)]
 })
-export class ParameterSeriesComponent extends ReportParameterComponent<string> {
+export class ParameterSeriesComponent extends CustomInputComponent<string> {
   series$: Observable<string[]>;
 
   constructor(private reportsService: ReportsService) {

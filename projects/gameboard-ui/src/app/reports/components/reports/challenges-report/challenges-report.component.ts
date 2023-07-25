@@ -1,21 +1,18 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, QueryList, ViewChildren } from '@angular/core';
-import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { firstValueFrom, map, Observable, of } from 'rxjs';
 import { ReportComponentBase } from '../report-base.component';
 import { ChallengesReportParameters, ChallengesReportModel, ChallengesReportRecord, ChallengesReportFlatParameters } from './challenges-report.models';
 import { ChallengesReportService } from '@/reports/services/challenges-report-service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { ReportViewUpdate } from '@/reports/reports-models';
-import { PagingArgs } from '@/api/models';
 
 @Component({
   selector: 'app-challenge-report',
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportFlatParameters, ChallengesReportParameters> implements AfterViewInit {
+export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportFlatParameters, ChallengesReportParameters> {
   // have to do wackiness because the viewchild of interest is inside a structural directive ("if")
-  @ViewChildren('challengesReport', { read: ElementRef<HTMLDivElement> }) protected viewContainerRefs?: QueryList<ElementRef<HTMLDivElement>>;
-  private reportElementRef?: ElementRef<HTMLDivElement>;
 
   protected ctx$?: Observable<ChallengesReportModel>;
   protected chartConfig?: DoughnutChartConfig;
@@ -23,14 +20,6 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
   constructor(
     private reportService: ChallengesReportService) {
     super();
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    this.unsub.add(
-      this.viewContainerRefs!.changes.subscribe(item => {
-        this.reportElementRef = this.viewContainerRefs ? this.viewContainerRefs.get(0) : undefined;
-      })
-    );
   }
 
   async updateView(parameters: ChallengesReportFlatParameters): Promise<ReportViewUpdate> {
@@ -45,8 +34,7 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     });
 
     return {
-      metaData: results.metaData,
-      reportContainerRef: this.reportElementRef!
+      metaData: results.metaData
     };
   }
 
