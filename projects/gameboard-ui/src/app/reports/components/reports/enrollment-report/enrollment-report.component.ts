@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord } from './enrollment-report.models';
-import { ReportResults, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
-import { EnrollmentReportService } from '@/reports/services/enrollment-report.service';
+import { Component } from '@angular/core';
+import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
+import { ReportResults, ReportResultsWithOverallStats, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
+import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
 import { Observable, firstValueFrom, of } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
 import { ChallengeResult } from '@/api/board-models';
@@ -11,9 +11,10 @@ import { LineChartConfig } from '@/core/components/line-chart/line-chart.compone
 import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
+import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
 
 interface EnrollmentReportContext {
-  results: ReportResults<EnrollmentReportRecord>;
+  results: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
   chartConfig: LineChartConfig;
 }
 
@@ -36,7 +37,8 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   protected getSponsorValue = (s: ReportSponsor) => s.id;
   protected isLoading = false;
 
-  protected results?: ReportResults<EnrollmentReportRecord>;
+  protected results?: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
+  protected stats: ReportSummaryStat[] = [];
 
   // parameter query models
   protected enrollmentDateRangeModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
@@ -91,6 +93,20 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     this.isLoading = true;
     this.results = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
+
+    this.stats = [
+      { label: "Player", value: this.results.overallStats.distinctPlayerCount },
+      { label: "Team", value: this.results.overallStats.distinctTeamCount },
+      { label: "Sponsor", value: this.results.overallStats.distinctSponsorCount },
+      {
+        label: "Leading Sponsor",
+        value: this.results.overallStats.sponsorWithMostPlayers.sponsor.name,
+        additionalInfo: `(${this.results.overallStats.sponsorWithMostPlayers.distinctPlayerCount} players)`
+      }
+    ]
+      .filter(e => !!e)
+      .map(e => e as ReportSummaryStat);
+
     this.isLoading = false;
 
     this.ctx$ = of({

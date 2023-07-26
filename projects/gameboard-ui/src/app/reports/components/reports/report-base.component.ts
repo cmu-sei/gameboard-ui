@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { ReportViewUpdate } from "../../reports-models";
-import { ActiveReportService } from "../../services/active-report.service";
+import { ActiveReportService } from "@/reports/services/active-report.service";
 import { PagingArgs } from "@/api/models";
 import { ReportsService } from "@/reports/reports.service";
 import { ActivatedRoute } from "@angular/router";

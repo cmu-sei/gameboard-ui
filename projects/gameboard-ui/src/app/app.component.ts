@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
   constructor(
     private usersvc: UserService,
     private config: ConfigService,
-    private gamesApi: GameService,
     public layoutService: LayoutService,
     @Inject(DOCUMENT) private document: Document,
     private practiceService: PracticeService,

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { PracticeModeReportOverallStats, PracticeModeReportByUserRecord, PracticeModeReportFlatParameters } from '../practice-mode-report.models';
 import { firstValueFrom } from 'rxjs';
-import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
+import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';

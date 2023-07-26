@@ -19,28 +19,7 @@
 </div>
 
 <div class="report-body">
-    <h2 class="text-center text-upper mb-4">Summary</h2>
-    <div *ngIf="overallStats" class="overall-stats d-flex align-items-center justify-content-center mb-5">
-        <div class="overall-stat">
-            <p class="value">{{ overallStats.attemptCount }}</p>
-            <p class="label">{{ "Attempt" | pluralizer:overallStats.attemptCount }}</p>
-        </div>
-
-        <div class="overall-stat">
-            <p class="value">{{ overallStats.challengeCount }}</p>
-            <p class="label">{{ "Challenge" | pluralizer:overallStats.challengeCount }}</p>
-        </div>
-
-        <div class="overall-stat">
-            <p class="value">{{ overallStats.playerCount }}</p>
-            <p class="label">{{ "Player" | pluralizer:overallStats.playerCount }}</p>
-        </div>
-
-        <div class="overall-stat">
-            <p class="value">{{ overallStats.sponsorCount }}</p>
-            <p class="label">{{ "Sponsor" | pluralizer:overallStats.sponsorCount }}</p>
-        </div>
-    </div>
+    <app-report-stat-summary [stats]="overallStats"></app-report-stat-summary>
     <hr />
     <div class="mt-5">
         <tabset>

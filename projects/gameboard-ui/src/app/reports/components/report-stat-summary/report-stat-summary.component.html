@@ -1,0 +1,12 @@
+<ng-container *ngIf="stats.length">
+    <h2 class="text-center text-upper mb-5">Summary</h2>
+    <ul class="overall-stats d-flex align-items-center justify-content-center mb-5">
+        <div *ngFor="let stat of stats" class="overall-stat">
+            <p class="value">{{ stat.value }}</p>
+            <p class="label">
+                {{ stat.label | pluralizer:stat.value }}
+                <span class="addl-info subtle-color" *ngIf="stat.additionalInfo"> {{stat.additionalInfo}}</span>
+            </p>
+        </div>
+    </ul>
+</ng-container>

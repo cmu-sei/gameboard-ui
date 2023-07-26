@@ -4,9 +4,10 @@ import { ReportKey, ReportResults, ReportSponsor } from '@/reports/reports-model
 import { Observable, firstValueFrom } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
 import { ReportComponentBase } from '../report-base.component';
-import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
+import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
+import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
 
 @Component({
   selector: 'app-practice-mode-report',
@@ -19,7 +20,7 @@ export class PracticeModeReportComponent
   @ViewChild("byPlayer") byPlayerElementRef?: ElementRef<HTMLElement>;
   @ViewChild("byPlayerModePerformance") byPlayerModePerformanceElementRef?: ElementRef<HTMLElement>;
 
-  protected overallStats?: PracticeModeReportOverallStats;
+  protected overallStats: ReportSummaryStat[] = [];
   protected games$: Observable<SimpleEntity[]> = this.reportsService.getGames();
   protected seasons$: Observable<string[]> = this.reportsService.getSeasons();
   protected series$: Observable<string[]> = this.reportsService.getSeries();
@@ -69,7 +70,12 @@ export class PracticeModeReportComponent
   constructor(protected reportService: PracticeModeReportService) { super(); }
 
   protected handleOverallStatsUpdate(stats: PracticeModeReportOverallStats) {
-    this.overallStats = stats;
+    this.overallStats = [
+      { label: "Attempt", value: stats.attemptCount },
+      { label: "Challenge", value: stats.challengeCount },
+      { label: "Player", value: stats.playerCount },
+      { label: "Sponsor", value: stats.sponsorCount }
+    ];
   }
 
   protected handleTabSelected(tabId: string) {

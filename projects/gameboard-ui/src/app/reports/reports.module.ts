@@ -36,6 +36,7 @@ import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
+import { ReportStatSummaryComponent } from './components/report-stat-summary/report-stat-summary.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
     SponsorChallengePerformanceComponent,
     PlayerFieldComponent,
     PlayerModePerformanceSummaryComponent,
+    ReportStatSummaryComponent,
   ],
   imports: [
     CommonModule,

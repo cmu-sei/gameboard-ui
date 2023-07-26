@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, Templ
 import { firstValueFrom } from 'rxjs';
 import { PracticeModeReportByChallengeRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
-import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
+import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { RouterService } from '@/services/router.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';

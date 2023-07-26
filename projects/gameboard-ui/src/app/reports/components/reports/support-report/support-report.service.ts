@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from '../components/reports/support-report/support-report.models';
-import { ObjectService } from '../../services/object.service';
+import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
+import { ObjectService } from '../../../../services/object.service';
 import { Observable, combineLatest, map } from 'rxjs';
-import { ReportResults, minutesToTimeSpan, timespanToMinutes } from '../reports-models';
+import { ReportResults, minutesToTimeSpan, timespanToMinutes } from '../../../reports-models';
 import { HttpClient } from '@angular/common/http';
-import { ApiUrlService } from '../../services/api-url.service';
-import { ReportsService } from '../reports.service';
+import { ApiUrlService } from '../../../../services/api-url.service';
+import { ReportsService } from '../../../reports.service';
 import { SupportService } from '@/api/support.service';
 
 @Injectable({ providedIn: 'root' })

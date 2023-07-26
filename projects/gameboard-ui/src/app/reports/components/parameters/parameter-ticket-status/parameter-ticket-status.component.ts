@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { SupportReportService } from '@/reports/services/support-report.service';
+import { SupportReportService } from '@/reports/components/reports/support-report/support-report.service';
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({

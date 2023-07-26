@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
 import { ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { firstValueFrom } from 'rxjs';
-import { SupportReportService } from '@/reports/services/support-report.service';
+import { SupportReportService } from '@/reports/components/reports/support-report/support-report.service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { groupBy } from 'projects/gameboard-ui/src/tools';
 import { TextToRgbService } from '@/services/text-to-rgb.service';

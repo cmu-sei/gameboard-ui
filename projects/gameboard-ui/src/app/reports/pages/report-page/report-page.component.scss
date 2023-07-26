@@ -28,6 +28,8 @@ nav li {
     border-left: solid 1px #ffffff;
 }
 
+$subtleColor: #aaaaaa;
+
 ::ng-deep {
     hr {
         border: double 1px #bbbbbb;
@@ -100,8 +102,13 @@ nav li {
             white-space: nowrap;
         }
     }
+
+    .subtle-color {
+        color: $subtleColor;
+    }
+
     .subtle-info {
-        color: #aaa;
+        color: $subtleColor;
         font-size: 0.9rem;
         margin: 0;
     }

@@ -67,9 +67,6 @@ export class MultiSelectQueryParamModel<TOption> {
 
     private updateQueryParams(model: TOption[]) {
         const params: Params = {};
-        console.log("serializing", this
-            .selectedValues
-            .map(v => this.config.serializer!(v)));
         params[this.config.paramName] = this
             .selectedValues
             .map(v => this.config.serializer!(v))

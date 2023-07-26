@@ -1,5 +1,5 @@
 import { IModalReady } from '@/core/components/modal/modal.models';
-import { PracticeModeReportService } from '@/reports/services/practice-mode-report.service';
+import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { PracticeModeReportPlayerModeSummary } from '../practice-mode-report.models';

@@ -1,6 +1,6 @@
 import { ChallengeResult } from "@/api/board-models";
 import { PagingArgs, SimpleEntity } from "@/api/models";
-import { ReportDateRange, ReportGame } from "@/reports/reports-models";
+import { ReportDateRange, ReportGame, ReportSponsor } from "@/reports/reports-models";
 
 export interface EnrollmentReportFlatParameters {
     enrollDateStart?: string;
@@ -62,6 +62,16 @@ export interface EnrollmentReportRecord {
     challengesPartiallySolvedCount: number,
     challengesCompletelySolvedCount: number,
     score?: number;
+}
+
+export interface EnrollmentReportStatSummary {
+    distinctPlayerCount: number;
+    distinctSponsorCount: number;
+    distinctTeamCount: number;
+    sponsorWithMostPlayers: {
+        sponsor: ReportSponsor,
+        distinctPlayerCount: number;
+    }
 }
 
 export interface EnrollmentReportLineChartGroup {

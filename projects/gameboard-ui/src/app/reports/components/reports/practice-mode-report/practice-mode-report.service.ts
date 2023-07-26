@@ -1,10 +1,10 @@
 import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats } from '../components/reports/practice-mode-report/practice-mode-report.models';
+import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats } from './practice-mode-report.models';
 import { Observable, map } from 'rxjs';
-import { ReportResultsWithOverallStats } from '../reports-models';
-import { ReportsService } from '../reports.service';
+import { ReportResultsWithOverallStats } from '../../../reports-models';
+import { ReportsService } from '../../../reports.service';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeModeReportService {
