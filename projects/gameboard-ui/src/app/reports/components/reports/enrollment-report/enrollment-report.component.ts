@@ -99,11 +99,13 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
       { label: "Player", value: this.results.overallStats.distinctPlayerCount },
       { label: "Team", value: this.results.overallStats.distinctTeamCount },
       { label: "Sponsor", value: this.results.overallStats.distinctSponsorCount },
-      {
-        label: "Leading Sponsor",
-        value: this.results.overallStats.sponsorWithMostPlayers.sponsor.name,
-        additionalInfo: `(${this.results.overallStats.sponsorWithMostPlayers.distinctPlayerCount} players)`
-      }
+      this.results.overallStats.sponsorWithMostPlayers ?
+        {
+          label: "Leading Sponsor",
+          value: this.results.overallStats.sponsorWithMostPlayers?.sponsor.name,
+          additionalInfo: `(${this.results.overallStats.sponsorWithMostPlayers.distinctPlayerCount} players)`
+        } :
+        null
     ]
       .filter(e => !!e)
       .map(e => e as ReportSummaryStat);

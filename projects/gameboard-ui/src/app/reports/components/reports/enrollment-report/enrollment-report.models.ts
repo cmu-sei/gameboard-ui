@@ -69,7 +69,7 @@ export interface EnrollmentReportStatSummary {
     distinctPlayerCount: number;
     distinctSponsorCount: number;
     distinctTeamCount: number;
-    sponsorWithMostPlayers: {
+    sponsorWithMostPlayers?: {
         sponsor: ReportSponsor,
         distinctPlayerCount: number;
     }

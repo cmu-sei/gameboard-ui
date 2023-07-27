@@ -19,7 +19,7 @@
 
 <div class="report-body mt-4" *ngIf="!isLoading; else loading">
     <ng-container *ngIf="ctx$ | async as ctx">
-        <app-report-stat-summary [stats]="stats"></app-report-stat-summary>
+        <app-report-stat-summary *ngIf="ctx.results.records.length" [stats]="stats"></app-report-stat-summary>
         <tabset class="mt-5" *ngIf="ctx.results.records.length; else noRecords">
             <tab heading="Summary Table" id="tab-summary-table">
                 <div class="results">
