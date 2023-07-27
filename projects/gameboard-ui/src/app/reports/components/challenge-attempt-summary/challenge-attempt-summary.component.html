@@ -15,7 +15,7 @@
 
                 <div *ngIf="challenge.scorePercentile !== undefined">
                     <span class="subtle-color">Percentile: </span>
-                    {{ challenge.scorePercentile }}
+                    {{ challenge.scorePercentile | number:"1.0-2" }}
                 </div>
             </div>
         </div>
