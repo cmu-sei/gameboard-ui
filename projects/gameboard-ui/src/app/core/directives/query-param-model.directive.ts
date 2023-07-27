@@ -132,18 +132,16 @@ export class QueryParamModelDirective<T> implements OnChanges {
       throw new Error("Couldn't navigate via query param model - no configuration specified.");
     }
 
-    if (value) {
-      if (!this._isMultiConfig) {
-        const serialized = this.config.serialize ? this.config.serialize(value) : defaultSerializer(value);
-        params[this.config.name!] = serialized;
-      }
-      else {
-        const serialized = this.config!.serializeMulti!(value, this._toQueryStringParamNames);
+    if (!this._isMultiConfig) {
+      const serialized = this.config.serialize ? this.config.serialize(value) : defaultSerializer(value);
+      params[this.config.name!] = serialized;
+    }
+    else {
+      const serialized = this.config!.serializeMulti!(value, this._toQueryStringParamNames);
 
-        if (serialized) {
-          for (const param of serialized) {
-            params[param.name] = param.value;
-          }
+      if (serialized) {
+        for (const param of serialized) {
+          params[param.name] = param.value;
         }
       }
     }
