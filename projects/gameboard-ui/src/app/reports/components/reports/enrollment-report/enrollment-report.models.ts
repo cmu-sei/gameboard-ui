@@ -65,6 +65,7 @@ export interface EnrollmentReportRecord {
 }
 
 export interface EnrollmentReportStatSummary {
+    distinctGameCount: number;
     distinctPlayerCount: number;
     distinctSponsorCount: number;
     distinctTeamCount: number;

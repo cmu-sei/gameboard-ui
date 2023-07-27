@@ -37,18 +37,18 @@ export class LandingComponent implements OnInit {
   ) {
     this.past$ = this.refresh$.pipe(
       debounceTime(400),
-      switchMap(() => api.listGrouped({filter: ['past'], term: this.searchText})),
-      tap(g => {if (g.length > 0) { this.showSearchBar = true;} })
+      switchMap(() => api.listGrouped({ filter: ['past', "competitive"], term: this.searchText })),
+      tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
     );
     this.present$ = this.refresh$.pipe(
       debounceTime(200),
-      switchMap(() => api.list({filter: ['present'], term: this.searchText})),
-      tap(g => {if (g.length > 0) { this.showSearchBar = true;} })
+      switchMap(() => api.list({ filter: ["present", "competitive"], term: this.searchText })),
+      tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
     );
     this.future$ = this.refresh$.pipe(
       debounceTime(300),
-      switchMap(() => api.listGrouped({filter: ['future'], term: this.searchText})),
-      tap(g => {if (g.length > 0) { this.showSearchBar = true;} })
+      switchMap(() => api.listGrouped({ filter: ['future', "competitive"], term: this.searchText })),
+      tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
     );
   }
 

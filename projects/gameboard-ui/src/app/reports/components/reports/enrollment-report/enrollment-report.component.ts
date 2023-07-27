@@ -95,6 +95,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     const lineChartResults = await this.reportService.getTrendData(parameters);
 
     this.stats = [
+      { label: "Game", value: this.results.overallStats.distinctGameCount },
       { label: "Player", value: this.results.overallStats.distinctPlayerCount },
       { label: "Team", value: this.results.overallStats.distinctTeamCount },
       { label: "Sponsor", value: this.results.overallStats.distinctSponsorCount },
