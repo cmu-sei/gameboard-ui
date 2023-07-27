@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportByUserRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportParameters } from '../practice-mode-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { firstValueFrom } from 'rxjs';
@@ -8,13 +8,12 @@ import { PlayerModePerformanceSummaryComponent, PlayerModePerformanceSummaryCont
 import { LogService } from '@/services/log.service';
 import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
-import { PlayerChallengeAttempts, PlayerChallengeAttemptsModalComponent } from '@/reports/components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 
 @Component({
   selector: 'app-practice-mode-report-by-player-mode-performance',
   templateUrl: './practice-mode-report-by-player-mode-performance.component.html',
 })
-export class PracticeModeReportByPlayerModePerformanceComponent implements OnInit {
+export class PracticeModeReportByPlayerModePerformanceComponent implements OnChanges {
   @Input() parameters: PracticeModeReportFlatParameters | null = null;
   @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
 
@@ -27,13 +26,13 @@ export class PracticeModeReportByPlayerModePerformanceComponent implements OnIni
     private reportService: PracticeModeReportService,
     private routerService: RouterService) { }
 
-  async ngOnInit(): Promise<void> {
-    if (!this.parameters) {
-      this.log.logError("Couldn't load user mode performance data for the practice report: no parameters specified.");
+  async ngOnChanges(changes: SimpleChanges) {
+    if (!changes.parameters) {
       return;
     }
 
     this.results = await firstValueFrom(this.reportService.getByPlayerModePerformance(this.parameters));
+    this.overallStatsUpdate.emit(this.results.overallStats);
   }
 
   protected totalAttemptsClicked(event: { userId: string, isPractice: boolean }) {

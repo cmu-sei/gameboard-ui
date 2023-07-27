@@ -1,5 +1,5 @@
 <div class="practice-mode-report-prac-vs-comp-component" *ngIf="!isLoading; else loading">
-    <ng-container *ngIf="results; else noRecords">
+    <ng-container *ngIf="results?.records?.length; else noRecords">
         <table class="report-table table-hover gameboard-report" *ngIf="results?.records; else noRecords">
             <col>
             <colgroup span="5"></colgroup>
@@ -107,7 +107,7 @@
 
         <div class="pager-container d-flex justify-content-end mt-4">
             <div class="flex-grow-1"></div>
-            <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
+            <app-select-pager [itemCount]="results?.paging?.itemCount" [pageSize]="results?.paging?.pageSize"
                 (change)="handlePagingChange($event)"></app-select-pager>
         </div>
     </ng-container>
