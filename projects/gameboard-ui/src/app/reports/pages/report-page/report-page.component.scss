@@ -29,6 +29,7 @@ nav li {
 }
 
 $subtleColor: #aaaaaa;
+$subtleSize: 0.9rem;
 
 ::ng-deep {
     hr {
@@ -109,7 +110,11 @@ $subtleColor: #aaaaaa;
 
     .subtle-info {
         color: $subtleColor;
-        font-size: 0.9rem;
+        font-size: $subtleSize;
         margin: 0;
+    }
+
+    .subtle-size {
+        font-size: $subtleSize;
     }
 }

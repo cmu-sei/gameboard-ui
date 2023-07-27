@@ -14,28 +14,28 @@
         </button>
     </div>
     <div class="modal-body container">
-        <div class="row" *ngFor="let challenge of context.summary.challenges">
-            <div class="col-8">
-                <app-challenge-or-game-field [challengeName]="challenge.challengeSpec.name" [game]="challenge.game"
-                    [disableLinks]="true" fontSize="large"></app-challenge-or-game-field>
-            </div>
-            <div class="col-2">
-                <div class="challenge-score-summary">
-                    <p>
-                        <span class="info-text">{{ challenge.score }}</span>
-                        <span> / {{ challenge.maxPossibleScore }}</span>
-                    </p>
-                    <p class="result">
-                        {{ challenge.result }}
-                    </p>
+        <div class="d-flex justify-content-between align-items-center my-2"
+            *ngFor="let challenge of context.summary.challenges">
+            <app-challenge-or-game-field class="d-block" [challengeName]="challenge.challengeSpec.name"
+                [game]="challenge.game" [disableLinks]="true" fontSize="large"></app-challenge-or-game-field>
+
+            <div class="challenge-score-summary flex-shrink-0">
+                <div [class]="'fs-13 font-weight-bold ' + (challenge.result | challengeResultColor) ">{{
+                    challenge.result |
+                    challengeResultPretty }}</div>
+                <div class="subtle-size m-0 d-flex justify-content-between">
+                    <div>
+                        <span class="subtle-color">Score: </span>
+                        {{ challenge.score }} / {{ challenge.maxPossibleScore }}
+                    </div>
+
+                    <div>
+                        <span class="subtle-color">Percentile: </span>
+                        {{ challenge.scorePercentile }}
+                    </div>
                 </div>
             </div>
-            <div class="2">
-                <p><em>Percentile:</em> {{ challenge.scorePercentile }}</p>
-                <p><em>Score:</em> {{ challenge.score }}</p>
-            </div>
         </div>
-
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-info" (click)="close()">OK</button>

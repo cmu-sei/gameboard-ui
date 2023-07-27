@@ -37,6 +37,8 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { ReportStatSummaryComponent } from './components/report-stat-summary/report-stat-summary.component';
+import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
+import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
 
 @NgModule({
   declarations: [
@@ -73,6 +75,8 @@ import { ReportStatSummaryComponent } from './components/report-stat-summary/rep
     PlayerFieldComponent,
     PlayerModePerformanceSummaryComponent,
     ReportStatSummaryComponent,
+    ChallengeResultPrettyPipe,
+    ChallengeResultColorPipe,
   ],
   imports: [
     CommonModule,

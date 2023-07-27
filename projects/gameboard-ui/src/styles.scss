@@ -100,6 +100,10 @@ app-root {
   font-size: 2em;
 }
 
+.colorblind-danger {
+  color: lighten($danger, 20%);
+}
+
 .auto-h {
   height: auto;
 }

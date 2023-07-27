@@ -54,11 +54,11 @@ export class RouterService {
   }
 
   public updateQueryParams(update: QueryParamsUpdate): Promise<boolean> {
-    if (this.router.getCurrentNavigation()) {
-      // router is currently performing navigation, don't mess with it
-      this.logService.logError("Navigation to query params flushed by the router service:", update);
-      return Promise.resolve(false);
-    }
+    // if (this.router.getCurrentNavigation()) {
+    //   // router is currently performing navigation, don't mess with it
+    //   this.logService.logError("Navigation to query params flushed by the router service:", update);
+    //   return Promise.resolve(false);
+    // }
 
     const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...update.parameters });
 

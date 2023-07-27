@@ -34,8 +34,11 @@ export class DateRangeQueryParamModel {
         const previousValue = this._dateStart ? this._dateStart.valueOf() : null;
         const currentValue = value ? value.valueOf() : null;
 
+        console.log("set date start", previousValue, currentValue);
+
         if (previousValue !== currentValue) {
             this._model.dateStart = value || null;
+            console.log("_date start is", this._model.dateStart);
             this.updateQueryParams(this._model);
         }
     }

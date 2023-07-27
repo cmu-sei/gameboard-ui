@@ -27,11 +27,8 @@
                 <tr class="data-row" *ngFor="let record of results.records">
                     <!--PLAYER-->
                     <td>
-                        <div class="d-flex align-items-center">
-                            <div class="player-info flex-grow-1">
-                                <p class="player-name m-0">{{record.user.name}}</p>
-                            </div>
-                        </div>
+                        <app-player-field
+                            [player]="{ userId: record.user.id, name: record.user.name, sponsor: record.user.sponsor }"></app-player-field>
                     </td>
                     <td>
                         <app-challenge-or-game-field [challengeName]="record.challenge.name"
