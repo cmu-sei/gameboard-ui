@@ -58,18 +58,18 @@
                         </p>
                     </td>
                     <td class="report-field numerical">
-                        <p *ngIf="record.practiceStats">
+                        <p *ngIf="record.practiceStats; else noValue">
                             {{ record.practiceStats.avgPctAvailablePointsScored | percent:'2.0-2' }}
                         </p>
                     </td>
                     <td class="report-field numerical">
-                        <p *ngIf="record.practiceStats">
+                        <p *ngIf="record.practiceStats; else noValue">
                             {{ record.practiceStats.avgScorePercentile | number:'1.0-2' }}
                         </p>
                     </td>
 
                     <!--COMPETITIVE MODE STATS-->
-                    <td class="report-field date">
+                    <td class=" report-field date">
                         <div *ngIf="record.competitiveStats?.lastAttemptDate; else noValue">
                             <p>{{ record.competitiveStats?.lastAttemptDate | shortdate }}</p>
                             <p class="subtle-info">{{ record.competitiveStats?.lastAttemptDate | friendlyTime }}</p>

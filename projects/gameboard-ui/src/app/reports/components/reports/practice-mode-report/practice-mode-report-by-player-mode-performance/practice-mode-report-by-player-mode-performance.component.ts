@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportParameters } from '../practice-mode-report.models';
+import { PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportByUserRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportParameters } from '../practice-mode-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { firstValueFrom } from 'rxjs';
 import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
@@ -8,6 +8,7 @@ import { PlayerModePerformanceSummaryComponent, PlayerModePerformanceSummaryCont
 import { LogService } from '@/services/log.service';
 import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
+import { PlayerChallengeAttempts, PlayerChallengeAttemptsModalComponent } from '@/reports/components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 
 @Component({
   selector: 'app-practice-mode-report-by-player-mode-performance',

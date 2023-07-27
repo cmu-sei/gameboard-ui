@@ -22,7 +22,6 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
   protected results: ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord> | null = null;
 
   constructor(
-    private log: LogService,
     private modalService: ModalConfirmService,
     private reportService: PracticeModeReportService,
     private routerService: RouterService) { }

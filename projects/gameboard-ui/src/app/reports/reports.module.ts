@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
 import { UtilityModule } from '../utility/utility.module';
+import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt-summary/challenge-attempt-summary.component';
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
 import { NoReportRecordsComponent } from './components/no-report-records/no-report-records.component';
 import { ParameterChangeLinkComponent } from './components/parameter-change-link/parameter-change-link.component';
@@ -16,14 +17,15 @@ import { ParameterTicketLabelsComponent } from './components/parameters/paramete
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
 import { ParameterTimespanPickerComponent } from './components/parameters/parameter-timespan-picker/parameter-timespan-picker.component';
 import { PlayerFieldComponent } from './components/player-field/player-field.component';
-import { PlayerModePerformanceSummaryComponent } from './components/reports/practice-mode-report/player-mode-performance-summary/player-mode-performance-summary.component';
 import { ReportCardComponent } from './components/report-card/report-card.component';
 import { ReportFieldNoValueComponent } from './components/report-field-no-value/report-field-no-value.component';
 import { ReportGlobalControlsComponent } from './components/report-global-controls/report-global-controls.component';
 import { ReportParametersContainerComponent } from './components/report-parameters-container/report-parameters-container.component';
 import { ReportSelectComponent } from './components/report-select/report-select.component';
+import { ReportStatSummaryComponent } from './components/report-stat-summary/report-stat-summary.component';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
 import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
+import { PlayerModePerformanceSummaryComponent } from './components/reports/practice-mode-report/player-mode-performance-summary/player-mode-performance-summary.component';
 import { PracticeModeReportByChallengeComponent } from './components/reports/practice-mode-report/practice-mode-report-by-challenge/practice-mode-report-by-challenge.component';
 import { PracticeModeReportByPlayerModePerformanceComponent } from './components/reports/practice-mode-report/practice-mode-report-by-player-mode-performance/practice-mode-report-by-player-mode-performance.component';
 import { PracticeModeReportByUserComponent } from './components/reports/practice-mode-report/practice-mode-report-by-user/practice-mode-report-by-user.component';
@@ -34,17 +36,20 @@ import { SupportReportComponent } from './components/reports/support-report/supp
 import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
+import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
+import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
-import { ReportStatSummaryComponent } from './components/report-stat-summary/report-stat-summary.component';
-import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
-import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
+import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 
 @NgModule({
   declarations: [
     ArrayToCountPipe,
     ArrayFieldToClassPipe,
+    ChallengeResultColorPipe,
+    ChallengeResultPrettyPipe,
     CountToTooltipClassPipe,
+    ChallengeAttemptSummaryComponent,
     EnrollmentReportComponent,
     ParameterChallengeSpecComponent,
     MsToDurationPipe,
@@ -75,8 +80,7 @@ import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
     PlayerFieldComponent,
     PlayerModePerformanceSummaryComponent,
     ReportStatSummaryComponent,
-    ChallengeResultPrettyPipe,
-    ChallengeResultColorPipe,
+    PlayerChallengeAttemptsModalComponent,
   ],
   imports: [
     CommonModule,

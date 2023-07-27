@@ -13,8 +13,8 @@ export interface QueryParamsUpdate {
 export class RouterService {
   constructor(
     private logService: LogService,
+    public route: ActivatedRoute,
     public router: Router,
-    private route: ActivatedRoute,
     private objectService: ObjectService) { }
 
   public getCurrentPathBase(): string {
@@ -51,6 +51,10 @@ export class RouterService {
     else {
       this.router.navigateByUrl("/");
     }
+  }
+
+  public deleteQueryParams(): Promise<boolean> {
+    return this.router.navigateByUrl(this.router.createUrlTree([this.getCurrentPathBase()]));
   }
 
   public updateQueryParams(update: QueryParamsUpdate): Promise<boolean> {

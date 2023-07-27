@@ -6,7 +6,7 @@ export class ChallengeResultPrettyPipe implements PipeTransform {
 
   transform(value: ChallengeResult): string {
     if (!value || value == ChallengeResult.None) {
-      return "Fail";
+      return "No Score";
     }
 
     if (value == ChallengeResult.Complete) {

@@ -14,28 +14,8 @@
         </button>
     </div>
     <div class="modal-body container">
-        <div class="d-flex justify-content-between align-items-center my-2"
-            *ngFor="let challenge of context.summary.challenges">
-            <app-challenge-or-game-field class="d-block" [challengeName]="challenge.challengeSpec.name"
-                [game]="challenge.game" [disableLinks]="true" fontSize="large"></app-challenge-or-game-field>
-
-            <div class="challenge-score-summary flex-shrink-0">
-                <div [class]="'fs-13 font-weight-bold ' + (challenge.result | challengeResultColor) ">{{
-                    challenge.result |
-                    challengeResultPretty }}</div>
-                <div class="subtle-size m-0 d-flex justify-content-between">
-                    <div>
-                        <span class="subtle-color">Score: </span>
-                        {{ challenge.score }} / {{ challenge.maxPossibleScore }}
-                    </div>
-
-                    <div>
-                        <span class="subtle-color">Percentile: </span>
-                        {{ challenge.scorePercentile }}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-challenge-attempt-summary class="my-3" [challenge]="challenge"
+            *ngFor="let challenge of context.summary.challenges"></app-challenge-attempt-summary>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-info" (click)="close()">OK</button>

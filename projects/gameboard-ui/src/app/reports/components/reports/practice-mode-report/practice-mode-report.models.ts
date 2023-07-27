@@ -61,6 +61,7 @@ export interface PracticeModeReportByUserRecord extends PracticeModeReportRecord
         start?: Date,
         end?: Date,
         durationMs?: number;
+        result: ChallengeResult;
         score?: number;
         partiallyCorrectCount?: number;
         fullyCorrectCount?: number;

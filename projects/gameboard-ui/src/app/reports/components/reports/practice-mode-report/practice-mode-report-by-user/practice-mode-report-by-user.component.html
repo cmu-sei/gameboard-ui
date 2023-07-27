@@ -8,7 +8,8 @@
             <thead class="thead-light">
                 <tr class="headers super-headers-row">
                     <th scope="col" colSpan="2"></th>
-                    <th scope="col" colSpan="6" class="group-header">Attempts</th>
+                    <th scope="col" colSpan="2" class="group-header">Attempts</th>
+                    <th scope="col" colSpan="4" class="group-header">Best Attempt</th>
                 </tr>
             </thead>
 
@@ -18,10 +19,10 @@
                     <td>Challenge</td>
                     <td>Total</td>
                     <td>Most Recent</td>
-                    <td>Best Score</td>
-                    <td>Date of Best Score</td>
-                    <td>Best Score Time</td>
-                    <td>Partial/Full Correct</td>
+                    <td>Score</td>
+                    <td>Date</td>
+                    <td>Total Time</td>
+                    <td>Result</td>
                 </tr>
 
                 <tr class="data-row" *ngFor="let record of results.records">
@@ -60,10 +61,8 @@
                         </p>
                     </td>
                     <td class="report-field numerical">
-                        <p *ngIf="record.user.hasScoringAttempt; else noValue">
-                            {{ (record.attempts | sort: "score":true)[0].partiallyCorrectCount }} /
-                            {{ (record.attempts | sort: "score":true)[0].fullyCorrectCount }}
-                        </p>
+                        <ng-content
+                            *ngTemplateOutlet="(record.user.hasScoringAttempt ? attemptResult : noValue); context: { attempt: (record.attempts | sort: 'score':true)[0] }"></ng-content>
                     </td>
                 </tr>
             </tbody>
@@ -85,6 +84,14 @@
 
 <ng-template #noRecords>
     <app-no-report-records></app-no-report-records>
+</ng-template>
+
+<ng-template #attemptResult let-attempt="attempt">
+    <span [class]="attempt.result | challengeResultColor">
+        <strong>
+            {{ attempt.result | challengeResultPretty }}
+        </strong>
+    </span>
 </ng-template>
 
 <ng-template #noValue>

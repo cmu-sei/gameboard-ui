@@ -50,11 +50,7 @@ export class ReportGlobalControlsComponent {
     });
   }
 
-  handleResetClick() {
-    const key = this.activeReportService.metaData$.value?.key;
-    if (!key)
-      this.logService.logError(`Can't reset report without metadata report key: "${key}".`);
-    this.routerService.toReport(key!);
-    this.activeReportService.parameterResetRequest$.next();
+  async handleResetClick() {
+    await this.routerService.deleteQueryParams();
   }
 }

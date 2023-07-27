@@ -28,8 +28,6 @@ import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.m
   styleUrls: ['./modal-confirm.component.scss']
 })
 export class ModalConfirmComponent implements IModalReady<ModalConfirmConfig> {
-  // ngx-bootstrap's implementation is weird - this is magically
-  // populated without an injection marker just by passing it to the service.show
   context!: ModalConfirmConfig;
 
   constructor(protected modalRef: BsModalRef) { }
