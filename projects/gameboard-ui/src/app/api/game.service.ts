@@ -112,7 +112,7 @@ export class GameService {
   // an abstracted definition for this rule. Does this game run
   // in Gameboard or elsewhere?
   public isExternalGame(g: Game): boolean {
-    return g.mode === "unity" || g.mode === "external";
+    return g.mode !== "vm";
   }
 
   private tryCache(id: string, limit: number = 20): Game | null {

@@ -3,16 +3,6 @@
 
 <span *ngIf="created$ | async"></span>
 
-<!-- tools -->
-<div>
-
-  <a class="btn btn-link" [routerLink]="['../registrar', 'users']">Users</a>
-  <a class="btn btn-link" [routerLink]="['../registrar', 'players']">Players</a>
-  <a class="btn btn-link" [routerLink]="['../registrar', 'sponsors']">Sponsors</a>
-  <a class="btn btn-link" [routerLink]="['../support']">Challenges</a>
-  <a class="btn btn-link" [routerLink]="['../report']">Reports</a>
-</div>
-
 <!-- game browser -->
 <div class="row">
 
@@ -24,8 +14,6 @@
       (input)="typing($event)" aria-label="search term" aria-describedby="search-label"
       placeholder="Enter name, season, track, division, series, sponsor, key, mode, card text, or id">
   </div>
-
-  <!-- <div class=""> -->
 
   <div *ngIf="tableView" class="col-4">
     <button class="btn btn-secondary btn-sm" (click)="create()">
@@ -215,10 +203,8 @@
         </div>
       </div>
     </ng-container> <!-- End table view -->
-
   </ng-container>
 
-  <!-- </div> -->
   <div class="my-4"></div>
 
   <div class="col-12 mt-4">

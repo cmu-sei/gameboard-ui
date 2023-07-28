@@ -40,6 +40,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
 import { ManageManualChallengeBonusesComponent } from './components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
 import { ManageManualChallengeBonusesModalComponent } from './components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
+import { PracticeGamesComponent } from './practice-games/practice-games.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
     UserApiKeysComponent,
     TeamAdminContextMenuComponent,
     ManageManualChallengeBonusesComponent,
-    ManageManualChallengeBonusesModalComponent
+    ManageManualChallengeBonusesModalComponent,
+    PracticeGamesComponent
   ],
   imports: [
     CommonModule,
@@ -80,6 +82,7 @@ import { ManageManualChallengeBonusesModalComponent } from './components/manage-
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           { path: 'designer/:id', component: GameEditorComponent },
+          { path: "practice", component: PracticeGamesComponent },
           { path: 'registrar/sponsors', component: SponsorBrowserComponent },
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
           { path: 'registrar/players', component: PlayerNamesComponent },

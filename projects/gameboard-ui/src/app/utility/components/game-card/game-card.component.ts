@@ -12,30 +12,13 @@ import { ConfigService } from '../../config.service';
   templateUrl: './game-card.component.html',
   styleUrls: ['./game-card.component.scss']
 })
-export class GameCardComponent implements OnInit {
+export class GameCardComponent {
   @Input() game!: Game | BoardGame;
   @Output() selected = new EventEmitter<Game | BoardGame>();
 
   faUser = faUser;
   faUsers = faUsers;
   faEyeSlash = faEyeSlash;
-
-  constructor(
-    private config: ConfigService
-  ) { }
-
-  ngOnInit(): void {
-    if (this.game) {
-      this.game.modeUrl = this.game.mode
-        ? `${this.config.basehref}assets/${this.game.mode}.png`
-        : `${this.config.basehref}assets/vm.png`
-        ;
-    }
-  }
-
-  setModeUrlPath() {
-    this.game.modeUrl = '';
-  }
 
   select(): void {
     this.selected.next(

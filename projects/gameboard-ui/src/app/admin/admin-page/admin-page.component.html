@@ -5,10 +5,23 @@
   <h1 class="admin-header mb-0">Administration</h1>
 </div>
 
-<main class="container mb-4 pb-4">
-
-  <router-outlet></router-outlet>
-
-</main>
+<div class="container mb-4 pb-4">
+  <nav class="my-2">
+    <a class="btn btn-link" routerLink="../">
+      <fa-icon [icon]="faService.arrowLeft"></fa-icon>
+      <span>Back</span>
+    </a>
+    <a class="btn btn-link" [routerLink]="['dashboard']">Competition Mode</a>
+    <a class="btn btn-link" [routerLink]="['practice']">Practice Mode</a>
+    <a class="btn btn-link" [routerLink]="['registrar', 'users']">Users</a>
+    <a class="btn btn-link" [routerLink]="['registrar', 'players']">Players</a>
+    <a class="btn btn-link" [routerLink]="['registrar', 'sponsors']">Sponsors</a>
+    <a class="btn btn-link" [routerLink]="['support']">Challenges</a>
+    <a class="btn btn-link" [routerLink]="['report']">Reports</a>
+  </nav>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
 
 <footer class="p-4 mt-4"></footer>

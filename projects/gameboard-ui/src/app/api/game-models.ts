@@ -52,6 +52,17 @@ export interface GameDetail {
   hasEnded: boolean;
 }
 
+export interface GameCardContext {
+  id: string;
+  name: string;
+  engineMode: "vm" | "cubespace" | "external";
+  liveSessionCount: number;
+  isPractice: boolean;
+  isPublished: boolean;
+  isTeamGame: boolean;
+}
+
+
 export interface Game extends GameDetail {
   id: string;
   mapUrl: string;
