@@ -5,7 +5,7 @@ import { LogService } from '@/services/log.service';
 import { PlayerService } from '@/api/player.service';
 import { UserService } from '@/utility/user.service';
 import { Subscription, firstValueFrom } from 'rxjs';
-import { Game, GameMode } from '../../../api/game-models';
+import { Game, GameEngineMode } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
@@ -83,11 +83,11 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
   }
 
   handleGameReady(ctx: GameLaunchContext) {
-    if (ctx.game.mode == GameMode.Standard) {
+    if (ctx.game.mode == GameEngineMode.Standard) {
       this.log.logInfo("Navigating to standard game", ctx.game.id);
       this.routerService.goToGamePage(ctx.game.id);
       return;
-    } else if (ctx.game.mode == GameMode.External) {
+    } else if (ctx.game.mode == GameEngineMode.External) {
       this.log.logInfo("Navigating to external game", ctx.game.id);
       this.routerService.goToExternalGamePage(ctx.game.id, ctx.player.teamId);
       return;
@@ -105,7 +105,7 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
     }
 
     // if the game is non-sync-start and is standard-vm mode, just redirect to the game page
-    if (!ctx.game.requireSynchronizedStart && ctx.game.mode == GameMode.Standard) {
+    if (!ctx.game.requireSynchronizedStart && ctx.game.mode == GameEngineMode.Standard) {
       this.handleGameReady(ctx);
       return;
     }
@@ -120,7 +120,7 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
       this.log.logInfo(`Already connected to game "${ctx.game.id}". Skipping connection.`);
     }
 
-    if (ctx.game.mode == GameMode.External) {
+    if (ctx.game.mode == GameEngineMode.External) {
       this.subs.push(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.state = state));
       this.subs.push(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state));
       this.subs.push(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));

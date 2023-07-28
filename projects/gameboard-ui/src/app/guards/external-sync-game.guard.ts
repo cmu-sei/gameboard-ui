@@ -1,4 +1,4 @@
-import { GameMode } from '@/api/game-models';
+import { GameEngineMode } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
@@ -26,6 +26,6 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
     }
 
     const game = await firstValueFrom(this.gameService.retrieve(gameId));
-    return (game.requireSynchronizedStart && game.mode == GameMode.External);
+    return (game.requireSynchronizedStart && game.mode == GameEngineMode.External);
   }
 }

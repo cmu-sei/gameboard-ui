@@ -5,7 +5,7 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Game, GameMode } from '../../api/game-models';
+import { Game, GameEngineMode } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -115,10 +115,10 @@ export class GameEditorComponent implements AfterViewInit {
   }
 
   handleModeChange(event: Event) {
-    const gameMode = ((event?.target as any).value as GameMode);
+    const gameMode = ((event?.target as any).value as GameEngineMode);
     this.game.mode = gameMode;
 
-    if (gameMode == GameMode.External) {
+    if (gameMode == GameEngineMode.External) {
       this.showExternalModeToast();
     }
   }
