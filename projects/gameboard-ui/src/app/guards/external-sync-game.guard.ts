@@ -1,7 +1,7 @@
 import { GameEngineMode } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

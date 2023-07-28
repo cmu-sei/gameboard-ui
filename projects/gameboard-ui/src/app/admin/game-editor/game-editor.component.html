@@ -245,7 +245,8 @@
           <label>Yes</label>
         </div>
         <small>
-          All registered players must mark themselves ready before any player can start
+          If Synchronized Start is enabled, all players will need to ready up before playing. The session will start
+          automatically when everyone is ready.
         </small>
       </div>
 
@@ -272,7 +273,7 @@
               [(ngModel)]="game.externalGameStartupUrl">
             <small>
               When Gameboard boots an external game, it'll post game metadata to this URL.
-              <em>({{externalGameServerUrlBase}}/{{game.externalGameStartupUrl}})</em>
+              <em>({{externalGameServerUrlBase | trim:"/":"end"}}/{{game.externalGameStartupUrl}})</em>
             </small>
           </div>
 

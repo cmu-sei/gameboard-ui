@@ -93,7 +93,7 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    throw new Error("Not implemented");
+    throw new Error(`Game engine mode "${ctx.game.mode}" not implemented.`);
   }
 
   private async launchGame(ctx: GameLaunchContext): Promise<void> {

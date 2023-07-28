@@ -80,7 +80,7 @@ export class GameHubService {
   }
 
   private handleExternalGameLaunchProgressChanged(ev: GameHubEvent<GameStartState>) {
-    this.logService.logInfo("progress updated", ev.data);
+    this.logService.logWarning("progress updated", ev.data);
     this._externalGameLaunchProgressChanged$.next(ev.data);
   }
 

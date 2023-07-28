@@ -17,6 +17,7 @@ import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
 import { RenderLinksInTextComponent } from './components/render-links-in-text/render-links-in-text.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.component';
+import { TrimPipe } from './pipes/trim.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
@@ -37,6 +38,7 @@ const PUBLIC_DECLARATIONS = [
   SpinnerComponent,
   UrlRewritePipe,
   ToggleSwitchComponent,
+  TrimPipe,
   WhitespacePipe,
   YamlBlockComponent,
   YamlPipe
