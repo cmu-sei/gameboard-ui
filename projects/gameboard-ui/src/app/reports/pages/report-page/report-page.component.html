@@ -14,25 +14,6 @@
         <h1>{{metaData.title}}</h1>
         <h5>{{metaData.runAt | shortdate }} @ {{metaData.runAt | friendlyTime}}</h5>
         <p>{{ metaData.description }}</p>
-
-        <!-- <alert type="info" class="beta-test my-4" [dismissible]="true">
-            <h2>A new look for Reports!</h2>
-
-            <p>
-                Welcome, internal SEI testers! We're deep into the process of revamping Gameboard's reporting
-                capabilities.
-                We plan for this new reporting module to ultimately replace the old reports (found in
-                <a [routerLink]="['/admin/report']">Admin</a>).
-            </p>
-
-            <p>
-                However, we still have work to do, so we welcome your help! If you experience a bug not listed in the
-                "Known issues" dialog below, message Ben on your choice of Mattermost or Teams at your convenience to
-                describe it. Additionally, if you have feedback about the usability or user experience of these reports,
-                feel free to voice those. Some of these are subject to review from CISA, but we'll evaluate all feedback
-                and look forward to making this feature better with your help. Thanks for your support!
-            </p>
-        </alert> -->
     </div>
 
     <app-report-global-controls (exportRequestCsv)="handleExportToCsv()"></app-report-global-controls>

@@ -20,7 +20,7 @@ export class PracticePageComponent {
   appname = '';
   faSearch = faSearch;
 
-  oneWayTerm = "";
+  term = "";
   count = 0;
   skip = 0;
   take = 1;
@@ -42,7 +42,7 @@ export class PracticePageComponent {
         this.count = r.results.paging.itemCount;
         this.skip = (r.results.paging.pageNumber || 0) * (r.results.paging.pageSize || PracticePageComponent.DEFAULT_PAGE_SIZE);
         this.take = r.results.paging.pageSize || PracticePageComponent.DEFAULT_PAGE_SIZE;
-        this.oneWayTerm = route.snapshot.queryParams.term || "";
+        this.term = route.snapshot.queryParams.term || "";
       }),
       map(results => results.results.items)
     );

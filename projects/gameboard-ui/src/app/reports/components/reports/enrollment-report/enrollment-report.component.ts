@@ -38,6 +38,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   protected isLoading = false;
 
   protected results?: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
+  protected leadingSponsorStat?: ReportSummaryStat;
   protected stats: ReportSummaryStat[] = [];
 
   // parameter query models
@@ -94,18 +95,18 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     this.results = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
 
+    this.leadingSponsorStat = this.results.overallStats.sponsorWithMostPlayers ?
+      {
+        label: "Leading Sponsor",
+        value: this.results.overallStats.sponsorWithMostPlayers?.sponsor.name,
+        additionalInfo: `(${this.results.overallStats.sponsorWithMostPlayers.distinctPlayerCount} players)`
+      } :
+      undefined;
     this.stats = [
       { label: "Game", value: this.results.overallStats.distinctGameCount },
       { label: "Player", value: this.results.overallStats.distinctPlayerCount },
       { label: "Team", value: this.results.overallStats.distinctTeamCount },
-      { label: "Sponsor", value: this.results.overallStats.distinctSponsorCount },
-      this.results.overallStats.sponsorWithMostPlayers ?
-        {
-          label: "Leading Sponsor",
-          value: this.results.overallStats.sponsorWithMostPlayers?.sponsor.name,
-          additionalInfo: `(${this.results.overallStats.sponsorWithMostPlayers.distinctPlayerCount} players)`
-        } :
-        null
+      { label: "Sponsor", value: this.results.overallStats.distinctSponsorCount }
     ]
       .filter(e => !!e)
       .map(e => e as ReportSummaryStat);

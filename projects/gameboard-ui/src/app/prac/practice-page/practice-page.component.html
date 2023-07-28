@@ -15,8 +15,7 @@
           <fa-icon [icon]="faSearch"></fa-icon>
         </span>
       </div>
-      <input type="search" placeholder="search" class="form-control border-0" [value]="oneWayTerm"
-        [autofocus]="!!oneWayTerm"
+      <input type="search" placeholder="search" class="form-control border-0" [(ngModel)]="term" [autofocus]="!!term"
         [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
     </div>
 

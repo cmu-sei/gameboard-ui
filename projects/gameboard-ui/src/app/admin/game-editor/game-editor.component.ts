@@ -8,9 +8,9 @@ import { Observable } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { ConfigService } from '../../utility/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyValue } from '@angular/common';
+import { PracticeService } from '@/services/practice.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -25,6 +25,7 @@ export class GameEditorComponent implements AfterViewInit {
   loaded$!: Observable<Game>;
   updated$!: Observable<boolean>;
   dirty = false;
+  needsPracticeModeEnabledRefresh = false;
   refreshFeedback = false;
   feedbackMessage?: string = undefined;
   feedbackWarning: boolean = false;
@@ -55,10 +56,9 @@ export class GameEditorComponent implements AfterViewInit {
   faInfoCircle = faInfoCircle;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private api: GameService,
-    private config: ConfigService
+    private practiceService: PracticeService,
+    route: ActivatedRoute
   ) {
 
     // one-time get list of all games for field suggestions
@@ -81,21 +81,30 @@ export class GameEditorComponent implements AfterViewInit {
 
     this.updated$ = this.form.valueChanges.pipe(
       filter(f => !this.form.pristine && (this.form.valid || false)),
-      tap(g => this.dirty = true),
+      tap(values => {
+        this.dirty = true;
+        this.needsPracticeModeEnabledRefresh = values.playerMode !== this.game.playerMode;
+      }),
       debounceTime(500),
       switchMap(g => this.api.update(this.game)),
-      tap(r => this.dirty = false),
-      filter(f => this.refreshFeedback),
+      tap(() => this.dirty = false),
+      filter(f => this.refreshFeedback || this.needsPracticeModeEnabledRefresh),
       switchMap(g => this.api.retrieve(this.game.id).pipe(
         tap(game => {
-          this.game.feedbackTemplate = game.feedbackTemplate;
-          this.updateFeedbackMessage();
-          this.refreshFeedback = false;
+          if (this.refreshFeedback) {
+            this.game.feedbackTemplate = game.feedbackTemplate;
+            this.updateFeedbackMessage();
+            this.refreshFeedback = false;
+          }
+
+          if (this.needsPracticeModeEnabledRefresh) {
+            this.practiceService.gamePlayerModeChanged({ gameId: game.id, isPractice: game.isPracticeMode })
+            this.needsPracticeModeEnabledRefresh = false;
+          }
         }))
       ),
       map(g => false)
     );
-
   }
 
   yamlChanged() {

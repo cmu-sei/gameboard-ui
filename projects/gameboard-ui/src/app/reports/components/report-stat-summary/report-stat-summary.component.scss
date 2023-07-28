@@ -3,7 +3,24 @@ h2 {
     text-transform: uppercase;
 }
 
-.overall-stat {
+ul {
+    margin-bottom: 0;
+}
+
+alert {
+   border: solid 2px #dfdfdf !important;
+   margin-bottom: 0;
+
+   ::ng-deep .alert.alert-dark {
+    margin: 0;
+   }
+
+   ::ng-deep .expanded-view {
+    margin: 0 !important;
+   }
+}
+
+.stat {
     flex-wrap: wrap;
     margin: 0 1rem;
     text-align: center;
@@ -19,4 +36,8 @@ h2 {
         line-height: 3.5rem;
         margin: 0;
     }
+}
+
+.subtle-color {
+    color: #dfdfdf;
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 export interface ReportSummaryStat {
   label: string;
@@ -11,6 +11,17 @@ export interface ReportSummaryStat {
   templateUrl: './report-stat-summary.component.html',
   styleUrls: ['./report-stat-summary.component.scss']
 })
-export class ReportStatSummaryComponent {
+export class ReportStatSummaryComponent implements OnChanges {
+  @Input() importantStat?: ReportSummaryStat;
   @Input() stats: ReportSummaryStat[] = [];
+
+  protected allStats: ReportSummaryStat[] = [];
+  protected isCollapsed = false;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.allStats = [
+      this.importantStat,
+      ...this.stats
+    ].filter(e => !!e) as ReportSummaryStat[];
+  }
 }

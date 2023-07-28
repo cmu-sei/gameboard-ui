@@ -12,6 +12,7 @@ import { ConfigService } from './utility/config.service';
 import { LayoutService } from './utility/layout.service';
 import { UserService } from './utility/user.service';
 import { PracticeService } from './services/practice.service';
+import { UnsubscriberService } from './services/unsubscriber.service';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,8 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document,
     private practiceService: PracticeService,
     private toc: TocService,
-    private title: Title
+    private title: Title,
+    private unsub: UnsubscriberService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -40,12 +42,16 @@ export class AppComponent implements OnInit {
     this.toc$ = this.toc.toc$;
     this.title.setTitle(this.config.settings.appname || 'Gameboard');
 
-    this.custom_bg = this.config.settings.custom_background || "";
-    if (this.custom_bg) {
-      this.document.body.classList.add(this.custom_bg);
+    if (this.config.settings.custom_background) {
+      this.document.body.classList.add(this.config.settings.custom_background);
     }
 
+    this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));
     this.isPracticeModeEnabled = await this.practiceService.isEnabled();
+  }
+
+  private updatePracticeModeEnabled(isEnabled: boolean) {
+    this.isPracticeModeEnabled = isEnabled;
   }
 
   logout(): void {
