@@ -36,7 +36,8 @@ export interface GameDetail {
   isPublished: boolean;
   requireSponsoredTeam: boolean;
   allowPreview: boolean;
-  requireSession: boolean;
+  externalGameClientUrl?: string;
+  externalGameStartupUrl?: string;
   requireSynchronizedStart: boolean;
   requireTeam: boolean;
   allowTeam: boolean;
