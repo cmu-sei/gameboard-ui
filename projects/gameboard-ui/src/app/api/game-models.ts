@@ -11,7 +11,7 @@ export interface GameDetail {
   track: string;
   season: string;
   division: string;
-  mode: string;
+  mode: GameEngineMode;
   logo: string;
   sponsor: string;
   background: string;
@@ -66,6 +66,12 @@ export interface NewGame extends GameDetail {
 }
 
 export type ChangedGame = Game
+
+export enum GameEngineMode {
+  Cubespace = "unity",
+  External = "external",
+  Standard = "vm"
+}
 
 export enum GameRegistrationType {
   none = 'none',
