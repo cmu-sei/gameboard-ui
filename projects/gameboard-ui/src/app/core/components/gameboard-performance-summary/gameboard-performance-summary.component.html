@@ -9,14 +9,14 @@
     <table class="table mt-2 text-center">
         <tbody>
             <tr>
-                <td>Rank</td>
+                <td *ngIf="ctx.player.scoring.rank">Rank</td>
                 <td>Score</td>
                 <td>Cumulative Time</td>
                 <td>Completes</td>
                 <td>Partials</td>
             </tr>
             <tr>
-                <td>{{ctx.player.scoring.rank}}</td>
+                <td *ngIf="ctx.player.scoring.rank">{{ctx.player.scoring.rank}}</td>
                 <td>{{ctx.player.scoring.score}}</td>
                 <td>
                     <app-cumulative-time-clock [session]="ctx.player.session"></app-cumulative-time-clock>
@@ -36,15 +36,6 @@
                 <fa-icon [icon]="faService.exclamationTriangle"></fa-icon>
                 disconnected
             </small>
-        </div>
-        <div *ngIf="ctx.game.isPracticeMode" class="text-center">
-            <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession(false)">
-                Extend Session
-            </app-confirm-button>
-            <span class="mr-2"></span>
-            <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession(true)">
-                End Session
-            </app-confirm-button>
         </div>
     </ng-container>
 

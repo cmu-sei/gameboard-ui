@@ -7,7 +7,7 @@ import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-confirm-button',
   templateUrl: './confirm-button.component.html',
-  styleUrls: ['./confirm-button.component.scss']
+  styleUrls: ['./confirm-button.component.scss'],
 })
 export class ConfirmButtonComponent implements OnInit {
   @Input() btnClass = 'btn btn-info btn-sm';

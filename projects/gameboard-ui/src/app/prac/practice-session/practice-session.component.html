@@ -4,10 +4,9 @@
     <span class="lead">{{spec.gameName}}</span>
     <p>{{spec.description}}</p>
 
-    <div *ngIf="user$ | async as user" class="text-center">
-      <app-confirm-button *ngIf="!!user && !!spec.id" btnClass="btn btn-lg btn-info px-4" (confirm)="play(user, spec)">
-        <span>Start Practice Session</span>
-      </app-confirm-button>
+    <div *ngIf="user$ | async as user" class="text-center my-5">
+      <ng-container
+        *ngTemplateOutlet="(activeOtherChallenge ? activeOtherChallengeButton : standardConfirm); context: { spec: spec }"></ng-container>
     </div>
 
     <app-login *ngIf="unauthed"></app-login>
@@ -21,4 +20,17 @@
   <div class="text-center">
     <app-spinner></app-spinner>
   </div>
+</ng-template>
+
+<ng-template #standardConfirm let-spec="spec">
+  <app-confirm-button btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec)" class="d-block">
+    <span>Start Practice Session</span>
+  </app-confirm-button>
+</ng-template>
+
+<ng-template #activeOtherChallengeButton let-spec="spec">
+  <button type="button" class="btn btn-lg btn-warning"
+    (click)="handleStartNewChallengeClick(spec, activeOtherChallenge!)">
+    Stop your current challenge and play this one instead
+  </button>
 </ng-template>

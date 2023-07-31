@@ -4,10 +4,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult } from './user-models';
 import { LogService } from '@/services/log.service';
+import { UserChallengeSlim } from './board-models';
+import { ApiUrlService } from '@/services/api-url.service';
+import { PlayerMode } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -15,6 +18,7 @@ export class UserService {
   url = '';
 
   constructor(
+    private apiUrl: ApiUrlService,
     private config: ConfigService,
     private http: HttpClient,
     private log: LogService

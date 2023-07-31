@@ -1,7 +1,9 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { ApiTimeWindow } from "@/core/models/api-time-window";
 import { FeedbackTemplate } from "./feedback-models";
+import { SimpleEntity } from "./models";
 import { PlayerMode, PlayerRole, TimeWindow } from "./player-models";
 
 export interface Challenge {
@@ -272,4 +274,18 @@ export interface ObserveVM {
   isRunning: boolean;
   fullWidth: boolean;
   minimized: boolean;
+}
+
+export interface UserChallengeSlim {
+  challenge: SimpleEntity;
+  game: SimpleEntity;
+  player: SimpleEntity;
+  user: SimpleEntity;
+  specId: string;
+  teamId: string;
+  session: ApiTimeWindow;
+  playerMode: PlayerMode;
+  hasDeployedGamespace: boolean;
+  maxPossibleScore: number;
+  score: number;
 }

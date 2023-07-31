@@ -4,8 +4,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, BehaviorSubject, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
-import { catchError, debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { catchError, debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { PlayerService } from '../../api/player.service';
@@ -13,7 +13,7 @@ import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
 import { HubState, NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
-import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -73,21 +73,24 @@ export class GameboardPageComponent implements OnDestroy {
       )),
       tap(b => {
         this.ctx = b;
-        this.performanceSummaryViewModel = {
-          player: {
-            id: b.id,
-            teamId: b.teamId,
-            session: b.session,
-            scoring: {
-              rank: b.rank,
-              score: b.score,
-              partialCount: b.partialCount,
-              correctCount: b.correctCount
+
+        if (!b.game.isPracticeMode) {
+          this.performanceSummaryViewModel = {
+            player: {
+              id: b.id,
+              teamId: b.teamId,
+              session: b.session,
+              scoring: {
+                rank: b.rank,
+                score: b.score,
+                partialCount: b.partialCount,
+                correctCount: b.correctCount
+              }
+            },
+            game: {
+              isPracticeMode: b.game.isPracticeMode
             }
-          },
-          game: {
-            isPracticeMode: b.game.isPracticeMode
-          }
+          };
         }
       }),
       tap(b => this.startHub(b)),
@@ -191,11 +194,15 @@ export class GameboardPageComponent implements OnDestroy {
       return;
     }
 
-    const spec = this.ctx.game.specs.find(s => s.id === id);
+    // search both challenges and spec ids for selection
+    let spec = this.ctx.game.specs.find(s => s.id === id);
+    if (!spec)
+      spec = this.ctx.game.specs.find(s => s?.instance?.id === id);
+
     if (!!spec) {
-      timer(100).subscribe(() =>
-        this.selecting$.next(spec)
-      );
+      timer(100).subscribe(() => {
+        this.selecting$.next(spec!);
+      });
     }
   }
 

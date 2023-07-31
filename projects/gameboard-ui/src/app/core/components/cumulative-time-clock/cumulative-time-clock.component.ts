@@ -1,13 +1,12 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TimeWindow } from '../../../api/player-models';
-import { GameSessionService } from '../../../services/game-session.service';
+import { TimeWindow } from '@/api/player-models';
+import { GameSessionService } from '@/services/game-session.service';
 
 @Component({
   selector: 'app-cumulative-time-clock',
   templateUrl: './cumulative-time-clock.component.html',
-  styleUrls: ['./cumulative-time-clock.component.scss']
 })
 export class CumulativeTimeClockComponent implements OnInit, OnChanges {
   @Input() session?: TimeWindow;

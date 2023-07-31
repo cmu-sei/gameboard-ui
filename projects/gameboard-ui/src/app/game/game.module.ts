@@ -24,25 +24,20 @@ import { PlayerPresenceComponent } from './player-presence/player-presence.compo
 import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CertificateComponent } from './certificate/certificate.component';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UnityModule } from '../unity/unity.module';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
 import { CoreModule } from '../core/core.module';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
-import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
-import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 import { SyncStartPageComponent } from './components/sync-start-page/sync-start-page.component';
 import { SyncStartGuard } from '../guards/sync-start.guard';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
-  CumulativeTimeClockComponent,
   FeedbackFormComponent,
   GameInfoComponent,
   GamePageComponent,
   GameboardPageComponent,
-  GameboardPerformanceSummaryComponent,
   GamespaceQuizComponent,
   HubStateToPlayerStatusPipe,
   PlayerEnrollComponent,
@@ -78,7 +73,6 @@ const MODULE_DECLARATIONS = [
     MarkdownModule,
     ButtonsModule,
     ModalModule,
-    BsDropdownModule,
     UnityModule
   ]
 })

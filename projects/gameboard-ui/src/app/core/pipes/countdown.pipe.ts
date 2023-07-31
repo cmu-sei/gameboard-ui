@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { ConfigService } from '.././config.service';
+import { ConfigService } from '../../utility/config.service';
 
 @Pipe({ name: 'countdown' })
 export class CountdownPipe implements PipeTransform {
@@ -13,7 +13,7 @@ export class CountdownPipe implements PipeTransform {
       this.startSecondsAtMinute = config?.settings.countdownStartSecondsAtMinute!;
   }
 
-  transform(value?: number, ...args: unknown[]): string {
+  transform(value?: number): string {
     if (!value || value < 0) {
       return "";
     }

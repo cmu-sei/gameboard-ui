@@ -1,0 +1,55 @@
+<ng-container *ngIf="userActivePracticeChallenge === undefined; else resolved">
+    <app-spinner></app-spinner>
+</ng-container>
+
+<ng-template #resolved>
+    <ng-container *ngIf="userActivePracticeChallenge">
+        <div class="text-info card-text mb-2">
+            <a
+                [routerLink]="['/game/board', userActivePracticeChallenge.player.id, userActivePracticeChallenge.challenge.id]">
+                <alert type="info">
+                    <strong>Your active practice challenge:</strong> {{ userActivePracticeChallenge.challenge.name }}
+                </alert>
+            </a>
+            <span
+                *ngIf="userActivePracticeChallenge.session.msTilEnd && userActivePracticeChallenge.session.msTilEnd <= 0">
+                Game Over
+            </span>
+            <span *ngIf="userActivePracticeChallenge.session.msTilEnd">Time Remaining:
+                {{ (msRemaining$ | async) || undefined | countdown }}
+            </span>
+        </div>
+        <table class="table mt-2 text-center">
+            <tbody>
+                <tr>
+                    <td>Score</td>
+                    <td>Cumulative Time</td>
+                </tr>
+                <tr>
+                    <td>{{userActivePracticeChallenge.score}}</td>
+                    <td>
+                        {{ (msElapsed$ | async) || 0 | clock }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ng-container *ngIf="userActivePracticeChallenge.session.msTilEnd">
+            <div class="text-center">
+                <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession()">
+                    Extend Session
+                </app-confirm-button>
+                <span class="mr-2"></span>
+                <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="endSession()">
+                    End Session
+                </app-confirm-button>
+            </div>
+        </ng-container>
+
+        <div *ngIf="userActivePracticeChallenge.session.msTilEnd && userActivePracticeChallenge.session.msTilEnd <= 0"
+            class="text-center">
+            <a class="btn btn-info btn-sm" [routerLink]="['/practice']">
+                More Practice
+            </a>
+        </div>
+    </ng-container>
+</ng-template>

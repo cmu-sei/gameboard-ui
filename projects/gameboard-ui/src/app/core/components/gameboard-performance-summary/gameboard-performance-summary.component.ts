@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subject, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { calculateCountdown, Player, SessionChangeRequest, TimeWindow } from '../../../api/player-models';
+import { calculateCountdown, TimeWindow } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { FontAwesomeService } from '../../../services/font-awesome.service';
 import { HubState, NotificationService } from '../../../services/notification.service';
@@ -12,7 +12,7 @@ export interface GameboardPerformanceSummaryViewModel {
     teamId: string;
     session?: TimeWindow;
     scoring: {
-      rank: number;
+      rank?: number;
       score: number;
       correctCount: number;
       partialCount: number;
@@ -37,8 +37,7 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
 
   constructor(
     hubService: NotificationService,
-    public faService: FontAwesomeService,
-    private playerService: PlayerService) {
+    public faService: FontAwesomeService) {
     this.hubState$ = hubService.state$;
   }
 
@@ -48,19 +47,6 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateCountdown();
-  }
-
-  async extendSession(quit: boolean): Promise<void> {
-    if (!this.ctx) {
-      throw new Error("Can't extend the session without a Player.");
-    }
-
-    const updatedPlayer = await firstValueFrom(this.playerService.updateSession({
-      teamId: this.ctx.player.teamId,
-      sessionEnd: quit ? new Date(Date.parse("0001-01-01T00:00:00Z")) : new Date()
-    }));
-
-    this.onRefreshRequest.emit(this.ctx.player.id);
   }
 
   private updateCountdown() {
