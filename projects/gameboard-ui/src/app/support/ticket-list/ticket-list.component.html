@@ -21,14 +21,14 @@
       </div>
       <button *ngIf="ctx.canManage" class="btn btn-outline-info btn-sm mx-1 mr-2" (click)="downloadTicketDetailReport()"
         [disabled]="!ctx.canManage">
-        <fa-icon [icon]="faFileDownload"></fa-icon>
+        <fa-icon [icon]="fa.fileDownload"></fa-icon>
         <span>csv</span>
       </button>
     </div>
     <div class="input-group input-group-sm col-5 ml-auto">
       <div class="input-group-prepend">
         <span class="input-group-text">
-          <fa-icon [icon]="faSearch"></fa-icon>
+          <fa-icon [icon]="fa.search"></fa-icon>
         </span>
       </div>
       <input type="search" [(ngModel)]="searchText" placeholder="term" class="form-control border-0"
@@ -42,10 +42,10 @@
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Key</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'key' && hoverOrderItem != 'key'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+        <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'key' || curOrderItem == 'key')) || (curOrderItem != 'key' && hoverOrderItem != 'key')">
         </fa-icon>
-        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'key'"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="fa.caretUp" [hidden]="isDescending || curOrderItem != 'key'"></fa-icon>
       </span>
     </div>
 
@@ -54,10 +54,10 @@
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Summary</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'summary' && hoverOrderItem != 'summary'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+        <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'summary' || curOrderItem == 'summary')) || (curOrderItem != 'summary' && hoverOrderItem != 'summary')">
         </fa-icon>
-        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'summary'"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="fa.caretUp" [hidden]="isDescending || curOrderItem != 'summary'"></fa-icon>
       </span>
     </div>
 
@@ -66,10 +66,10 @@
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Status{{ctx.canManage ? ' / Assignee' : ''}}</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'status' && hoverOrderItem != 'status'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+        <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'status' || curOrderItem == 'status')) || (curOrderItem != 'status' && hoverOrderItem != 'status')">
         </fa-icon>
-        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'status'"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="fa.caretUp" [hidden]="isDescending || curOrderItem != 'status'"></fa-icon>
       </span>
     </div>
 
@@ -79,10 +79,10 @@
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Created</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'created' && hoverOrderItem != 'created'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+        <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'created' || curOrderItem == 'created')) || (curOrderItem != 'created' && hoverOrderItem != 'created')">
         </fa-icon>
-        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'created'"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="fa.caretUp" [hidden]="isDescending || curOrderItem != 'created'"></fa-icon>
       </span>
     </div>
 
@@ -92,10 +92,10 @@
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
       <span class="m-0 p-1">Updated</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'updated' && hoverOrderItem != 'updated'">
-        <fa-icon class="m-0 p-1" [icon]="faCaretDown"
+        <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'updated' || curOrderItem == 'updated')) || (curOrderItem != 'updated' && hoverOrderItem != 'updated')">
         </fa-icon>
-        <fa-icon class="m-0 p-1" [icon]="faCaretUp" [hidden]="isDescending || curOrderItem != 'updated'"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="fa.caretUp" [hidden]="isDescending || curOrderItem != 'updated'"></fa-icon>
       </span>
     </div>
 
@@ -109,7 +109,8 @@
     <div *ngFor="let ticket of ctx.tickets" class="row b-1 mx-0 py-2">
       <div class="col-1">
         <!-- <span class="mr-1 badge badge-pill bg-danger">*</span> -->
-        <fa-icon *ngIf="ticket.lastSeen < ticket.lastUpdated" class="text-warning" [icon]="faNote"></fa-icon>
+        <fa-icon *ngIf="ticket.lastSeen < ticket.lastUpdated" class="text-warning"
+          [icon]="fa.exclamationCircle"></fa-icon>
         <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.key]">{{ticket.fullKey}}</a>
       </div>
 
@@ -155,7 +156,7 @@
 
       <div *ngIf="ctx.canManage" class="col-1">
         <button class="btn btn-secondary" tooltip="Copy ticket to markdown" (click)="copyMarkdown(ticket)">
-          <fa-icon [icon]="faService.clipboard"></fa-icon>
+          <fa-icon [icon]="fa.clipboard"></fa-icon>
         </button>
       </div>
     </div>
@@ -164,14 +165,14 @@
   <div *ngIf="!!ctx.tickets" class="d-flex justify-content-between">
     <div>
       <a class="btn btn-link" (click)="prev()" [hidden]="skip == 0">
-        <fa-icon class="m-0 p-1" [icon]="faCaretLeft"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="fa.caretLeft"></fa-icon>
         <span class="m-0 p-1">prev</span>
       </a>
     </div>
     <div>
       <a class="btn btn-link" (click)="next()" [hidden]="ctx.tickets.length == 0 || ctx.nextTicket.length == 0">
         <span class="m-0 p-1">next</span>
-        <fa-icon class="m-0 p-1" [icon]="faCaretRight"></fa-icon>
+        <fa-icon class="m-0 p-1" [icon]="fa.caretRight"></fa-icon>
       </a>
     </div>
   </div>

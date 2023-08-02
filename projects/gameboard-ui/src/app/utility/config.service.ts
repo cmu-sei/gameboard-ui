@@ -10,6 +10,8 @@ import { environment } from '../../environments/environment';
 import { Location, PlatformLocation } from '@angular/common';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { LogService } from '../services/log.service';
+import { VmState } from '@/api/board-models';
+import { BrowserService } from '@/services/browser.service';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
@@ -20,7 +22,6 @@ export class ConfigService {
   settings: Settings = environment.settings;
   local: LocalAppSettings = {};
   absoluteUrl = '';
-  tabs: TabRef[] = [];
   settings$ = new BehaviorSubject<Settings>(this.settings);
   sidebar$ = new Subject<boolean>();
 
@@ -86,6 +87,7 @@ export class ConfigService {
   );
 
   constructor(
+    private browser: BrowserService,
     private http: HttpClient,
     private location: Location,
     private log: LogService,
@@ -183,23 +185,12 @@ export class ConfigService {
       );
   }
 
-  openConsole(qs: string): void {
-    this.showTab(this.mkshost + qs);
+  buildConsoleUrl(vm: VmState) {
+    return `${this.mkshost}?`;
   }
 
-  showTab(url: string): void {
-    let item = this.tabs.find(t => t.url === url);
-
-    if (!item) {
-      item = { url, window: null };
-      this.tabs.push(item);
-    }
-
-    if (!item.window || item.window.closed) {
-      item.window = window.open(url);
-    } else {
-      item.window.focus();
-    }
+  openConsole(qs: string): void {
+    this.browser.showTab(this.mkshost + qs);
   }
 
   updateLocal(model: LocalAppSettings): void {
@@ -262,9 +253,3 @@ export interface AppUserManagerSettings extends UserManagerSettings {
   useLocalStorage?: boolean;
   debug?: boolean;
 }
-
-export interface TabRef {
-  url: string;
-  window: Window | null;
-}
-

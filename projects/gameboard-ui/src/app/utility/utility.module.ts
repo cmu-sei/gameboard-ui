@@ -42,7 +42,6 @@ import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
 
-import { NAVIGATOR } from './services/navigator.service';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 const components = [
@@ -76,7 +75,6 @@ const components = [
     ...components,
     ProgressbarModule,
   ],
-  providers: [{ provide: NAVIGATOR, useValue: navigator }],
   imports: [
     CommonModule,
     FormsModule,

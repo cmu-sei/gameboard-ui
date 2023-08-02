@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { ApiTimeWindow } from "@/core/models/api-time-window";
+import { ApiTimeWindow, LocalTimeWindow } from "@/core/models/api-time-window";
 import { FeedbackTemplate } from "./feedback-models";
 import { SimpleEntity } from "./models";
 import { PlayerMode, PlayerRole, TimeWindow } from "./player-models";
@@ -72,7 +72,7 @@ export interface ChallengeEvent {
 export interface NewChallenge {
   specId: string;
   playerId: string;
-  variant: number;
+  variant?: number;
 }
 
 export interface ChangedChallenge {
@@ -149,7 +149,6 @@ export interface BoardPlayer {
   partialCount: number;
   isManager: boolean;
   isPractice: boolean;
-
   session: TimeWindow;
   game: BoardGame;
   challenges: Challenge[];
@@ -169,7 +168,6 @@ export interface GameState {
   endTime: string;
   expirationTime: string;
   isActive: boolean;
-  // players: Player[];
   vms: VmState[];
   challenge: ChallengeView;
 }
@@ -276,16 +274,30 @@ export interface ObserveVM {
   minimized: boolean;
 }
 
-export interface UserChallengeSlim {
-  challenge: SimpleEntity;
+export interface ActiveChallenge {
+  challengeSpec: {
+    id: string;
+    name: string;
+    tag: string;
+  };
   game: SimpleEntity;
   player: SimpleEntity;
   user: SimpleEntity;
-  specId: string;
+  challengeDeployment: {
+    challengeId: string,
+    vms: VmState[]
+  };
   teamId: string;
-  session: ApiTimeWindow;
   playerMode: PlayerMode;
   hasDeployedGamespace: boolean;
   maxPossibleScore: number;
   score: number;
+}
+
+export interface ApiActiveChallenge extends ActiveChallenge {
+  session: ApiTimeWindow;
+}
+
+export interface LocalActiveChallenge extends ActiveChallenge {
+  session: LocalTimeWindow;
 }

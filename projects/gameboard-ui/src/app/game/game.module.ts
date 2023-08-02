@@ -31,6 +31,7 @@ import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.p
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 import { SyncStartPageComponent } from './components/sync-start-page/sync-start-page.component';
 import { SyncStartGuard } from '../guards/sync-start.guard';
+import { PlayComponent } from './components/play/play.component';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -53,6 +54,7 @@ const MODULE_DECLARATIONS = [
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
+    PlayComponent,
   ],
   imports: [
     CommonModule,
@@ -74,6 +76,9 @@ const MODULE_DECLARATIONS = [
     ButtonsModule,
     ModalModule,
     UnityModule
+  ],
+  exports: [
+    PlayComponent,
   ]
 })
 export class GameModule { }

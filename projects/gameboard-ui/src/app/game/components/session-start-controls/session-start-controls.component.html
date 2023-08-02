@@ -42,14 +42,14 @@
 
         <app-confirm-button btnClass="btn btn-lg btn-info" *ngIf="!ctx.game.requireSynchronizedStart"
             (confirm)="handleDoubleCheckRequest(true)" (cancel)="handleDoubleCheckRequest(false)">
-            <fa-icon [icon]="faService.bolt"></fa-icon>
+            <fa-icon [icon]="fa.bolt"></fa-icon>
             <span>Start Session</span>
         </app-confirm-button>
 
         <ng-container *ngIf="ctx.user.isRegistrar || ctx.user.isAdmin">
             <div class="text-center ml-4">
                 <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="onRequestStart.emit(ctx.player)">
-                    <fa-icon [icon]="faService.bolt"></fa-icon>
+                    <fa-icon [icon]="fa.bolt"></fa-icon>
                     <span>Admin Start</span>
                 </app-confirm-button>
             </div>
@@ -75,7 +75,7 @@
             <div class="text-center">
                 <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="handleStartRequest(ctx.player)"
                     (cancel)="handleDoubleCheckRequest(false)">
-                    <fa-icon [icon]="faService.bolt"></fa-icon>
+                    <fa-icon [icon]="fa.bolt"></fa-icon>
                     <span>Yes, start {{ctx.game.name}}</span>
                 </app-confirm-button>
             </div>

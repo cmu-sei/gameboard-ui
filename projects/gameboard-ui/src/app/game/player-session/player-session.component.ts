@@ -7,7 +7,7 @@ import { first, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { FontAwesomeService } from '../../services/font-awesome.service';
+import { fa } from '../../services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
@@ -33,11 +33,11 @@ export class PlayerSessionComponent implements OnDestroy {
   protected modalConfig?: ModalConfirmConfig;
   protected isDoubleChecking = false;
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
+  protected fa = fa;
 
   constructor(
     private api: PlayerService,
     private modalService: ModalConfirmService,
-    protected faService: FontAwesomeService
   ) { }
 
   async ngOnInit() {

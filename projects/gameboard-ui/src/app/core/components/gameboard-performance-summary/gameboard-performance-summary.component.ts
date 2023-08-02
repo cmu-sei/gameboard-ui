@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subject, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { calculateCountdown, TimeWindow } from '../../../api/player-models';
-import { PlayerService } from '../../../api/player.service';
-import { FontAwesomeService } from '../../../services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { HubState, NotificationService } from '../../../services/notification.service';
 
 export interface GameboardPerformanceSummaryViewModel {
@@ -34,10 +33,10 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
 
   countdown$?: Observable<number | undefined>;
   hubState$: BehaviorSubject<HubState>;
+  protected fa = fa;
 
   constructor(
-    hubService: NotificationService,
-    public faService: FontAwesomeService) {
+    hubService: NotificationService) {
     this.hubState$ = hubService.state$;
   }
 

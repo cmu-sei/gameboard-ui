@@ -12,7 +12,6 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { Observable } from 'rxjs';
 import { ApiModule } from './api/api.module';
 
@@ -29,6 +28,7 @@ import { NotificationService } from './services/notification.service';
 import { AuthService } from './utility/auth.service';
 import { UserService } from './api/user.service';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { NAVIGATOR } from './services/navigator.service';
 
 @NgModule({
   declarations: [
@@ -88,6 +88,10 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
         CurrentUserService,
         UserService
       ]
+    },
+    {
+      provide: NAVIGATOR,
+      useValue: navigator
     },
     {
       provide: ModalConfirmService,

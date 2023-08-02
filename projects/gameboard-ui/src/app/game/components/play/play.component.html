@@ -1,0 +1,61 @@
+<ng-container *ngIf="challenge">
+    <ng-container *ngIf="!isDeploying; else deploying">
+        <h3>Gamespace Resources</h3>
+        <div *ngIf="!isDeploying; else deploying">
+            <div class="vms-container my-4">
+                <ul class="d-flex">
+                    <li *ngFor="let vm of challenge.challengeDeployment.vms">
+                        <button class="btn btn-sm btn-dark mr-2" [routerLink]="vmUrls[vm.id]">
+                            <fa-icon [icon]="fa.tv"></fa-icon>
+                            <span>{{vm.name}}</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="vm-controls-container my-4">
+                <app-confirm-button *ngIf="challenge.challengeDeployment.vms.length"
+                    btnClass="btn btn-sm btn-outline-warning"
+                    (confirm)="undeploy(challenge.challengeDeployment.challengeId)">
+                    <fa-icon [icon]="fa.trash"></fa-icon>
+                    <span>Destroy</span>
+                </app-confirm-button>
+                <app-confirm-button *ngIf="challenge.challengeDeployment.vms.length"
+                    btnClass="btn btn-sm btn-outline-warning"
+                    (confirm)="deploy(challenge.challengeDeployment.challengeId)">
+                    <fa-icon [icon]="fa.bolt"></fa-icon>
+                    <span>Deploy</span>
+                </app-confirm-button>
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- <h3 *ngIf="spec.instance!.state.challenge?.questions?.length">Challenge Questions</h3>
+    <app-gamespace-quiz [spec]="spec!" [session]="ctx.session" (graded)="graded()"></app-gamespace-quiz> -->
+
+    <div class="text-right m-4">
+        <div class="mb-1">
+            Need Challenge Support?
+            <span class="m-2 p-2">
+                <a class="btn btn-info" target="_blank" [routerLink]="['/support/create']"
+                    [queryParams]="{cid: challenge.challengeDeployment.challengeId}">
+                    <span>Create Ticket</span>
+                </a>
+            </span>
+        </div>
+        <div>
+            Support Code:
+            <app-clipspan class="text-info m-2 p-2">{{challenge.challengeDeployment.challengeId| slice:0:8}}
+                {{challenge.challengeSpec.tag}}</app-clipspan>
+        </div>
+    </div>
+
+    <!-- <div *ngIf="spec.instance!.state.challenge && ctx.game.feedbackTemplate?.challenge?.length">
+        <app-feedback-form [boardPlayer]="ctx" [title]="'Challenge Feedback'" [spec]="spec"
+            [type]="'challenge'"></app-feedback-form>
+    </div> -->
+</ng-container>
+
+<ng-template #deploying let="context">
+    <app-spinner>Deploying your challenge...</app-spinner>
+</ng-template>

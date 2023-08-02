@@ -1,13 +1,12 @@
-import { UserChallengeSlim } from '@/api/board-models';
-import { PlayerMode } from '@/api/player-models';
+import { LocalActiveChallenge } from '@/api/board-models';
 import { PlayerService } from '@/api/player.service';
-import { UserService } from '@/api/user.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { LogService } from '@/services/log.service';
 import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable, Subject, combineLatest, firstValueFrom, map, of, timer } from 'rxjs';
+import { DateTime, Duration } from 'luxon';
+import { Observable, firstValueFrom, map, of, timer } from 'rxjs';
 
 @Component({
   selector: 'app-practice-challenge-state-summary',
@@ -19,7 +18,7 @@ export class PracticeChallengeStateSummaryComponent implements OnChanges {
 
   protected msElapsed$?: Observable<number | undefined>;
   protected msRemaining$?: Observable<number | undefined>;
-  protected userActivePracticeChallenge: UserChallengeSlim | undefined | null;
+  protected userActivePracticeChallenge: LocalActiveChallenge | undefined | null;
 
   private _timer$ = timer(0, 1000);
 
@@ -27,7 +26,6 @@ export class PracticeChallengeStateSummaryComponent implements OnChanges {
     protected faService: FontAwesomeService,
     private logService: LogService,
     private playerService: PlayerService,
-    private routerService: RouterService,
     private practiceService: PracticeService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
@@ -47,15 +45,20 @@ export class PracticeChallengeStateSummaryComponent implements OnChanges {
   }
 
   private updateTimes() {
-    if (this.userActivePracticeChallenge) {
-      // rely on the server's concept of "now" to avoid timezone issues
-      this.msElapsed$ = this._timer$.pipe(map(tick => (this.userActivePracticeChallenge!.session.now.getTime() - this.userActivePracticeChallenge!.session.start.getTime() || 0) + tick * 1000));
-      this.msRemaining$ = this._timer$.pipe(map(tick => Math.max(this.userActivePracticeChallenge?.session.msTilEnd || 0) - tick * 1000, 0));
-    }
-    else {
-      this.msElapsed$ = undefined;
-      this.msRemaining$ = undefined;
-    }
+    this.msElapsed$ = this._timer$.pipe(
+      map(tick =>
+        this.userActivePracticeChallenge?.session.start ?
+          DateTime.now().diff(this.userActivePracticeChallenge.session.start).toMillis() :
+          undefined
+      )
+    );
+
+    this.msRemaining$ = this._timer$.pipe(
+      map(tick =>
+        this.userActivePracticeChallenge?.session.end ?
+          this.userActivePracticeChallenge.session.end.diffNow().toMillis() : undefined
+      )
+    );
   }
 
   async extendSession(): Promise<void> {

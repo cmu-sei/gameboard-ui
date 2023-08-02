@@ -6,17 +6,18 @@
     <ng-container *ngIf="userActivePracticeChallenge">
         <div class="text-info card-text mb-2">
             <a
-                [routerLink]="['/game/board', userActivePracticeChallenge.player.id, userActivePracticeChallenge.challenge.id]">
+                [routerLink]="['/game/board', userActivePracticeChallenge.player.id, userActivePracticeChallenge.challengeDeployment.challengeId]">
                 <alert type="info">
-                    <strong>Your active practice challenge:</strong> {{ userActivePracticeChallenge.challenge.name }}
+                    <strong>Your active practice challenge:</strong> {{ userActivePracticeChallenge.challengeSpec.name
+                    }}
                 </alert>
             </a>
             <span
                 *ngIf="userActivePracticeChallenge.session.msTilEnd && userActivePracticeChallenge.session.msTilEnd <= 0">
                 Game Over
             </span>
-            <span *ngIf="userActivePracticeChallenge.session.msTilEnd">Time Remaining:
-                {{ (msRemaining$ | async) || undefined | countdown }}
+            <span *ngIf="userActivePracticeChallenge.session.msTilEnd">
+                Time Remaining: {{ (msRemaining$ | async) || undefined | countdown }}
             </span>
         </div>
         <table class="table mt-2 text-center">

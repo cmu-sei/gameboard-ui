@@ -57,6 +57,7 @@ import { CountdownPipe } from './pipes/countdown.pipe';
 import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { PracticeChallengeStateSummaryComponent } from './components/practice-challenge-state-summary/practice-challenge-state-summary.component';
+import { fa } from '@/services/font-awesome.service';
 
 
 const PUBLIC_DECLARATIONS = [

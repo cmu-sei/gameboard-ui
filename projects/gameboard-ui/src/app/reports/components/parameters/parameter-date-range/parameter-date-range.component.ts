@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
+import { fa } from "@/services/font-awesome.service";
+
 
 @Component({
   selector: 'app-parameter-date-range',
@@ -11,6 +13,8 @@ import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.m
 })
 export class ParameterDateRangeComponent extends CustomInputComponent<DateRangeQueryParamModel> {
   @Input() label = "Date range";
+
+  protected fa = fa;
 
   constructor(public faService: FontAwesomeService) {
     super();

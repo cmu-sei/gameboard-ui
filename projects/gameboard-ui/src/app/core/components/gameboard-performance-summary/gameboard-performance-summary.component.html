@@ -29,11 +29,11 @@
     <ng-container *ngIf="ctx.player.session?.isDuring">
         <div *ngIf="hubState$ | async as hubstate" class="text-center mb-2">
             <small *ngIf="!!hubstate.joined" class="text-success">
-                <fa-icon [icon]="faService.bolt"></fa-icon>
+                <fa-icon [icon]="fa.bolt"></fa-icon>
                 connected
             </small>
             <small *ngIf="!hubstate.joined" class="ml-2 text-danger">
-                <fa-icon [icon]="faService.exclamationTriangle"></fa-icon>
+                <fa-icon [icon]="fa.exclamationTriangle"></fa-icon>
                 disconnected
             </small>
         </div>

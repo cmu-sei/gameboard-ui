@@ -10,7 +10,7 @@ import { NotificationService } from '../../services/notification.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { ToastService } from '../../utility/services/toast.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
-import { FontAwesomeService } from '../../services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -35,24 +35,15 @@ export class TicketListComponent implements OnInit, OnDestroy {
   take = 25;
   skip = 0;
 
-  faComments = faComments;
-  faPaperclip = faPaperclip;
-  faSearch = faSearch;
-  faCaretDown = faCaretDown;
-  faCaretUp = faCaretUp;
-  faCaretRight = faCaretRight;
-  faCaretLeft = faCaretLeft;
-  faNote = faExclamationCircle;
-  faFileDownload = faFileDownload;
+  protected fa = fa;
 
   constructor(
+    local: LocalUserService,
     private api: SupportService,
     private clipboard: ClipboardService,
-    private local: LocalUserService,
     private config: ConfigService,
     private reportApi: ReportService,
     private toastService: ToastService,
-    public faService: FontAwesomeService,
     hub: NotificationService
   ) {
 
@@ -179,7 +170,7 @@ export class TicketListComponent implements OnInit, OnDestroy {
       switchMap(ticket => this.api.getTicketMarkdown(ticket)),
     ).subscribe(async md => {
       await this.clipboard.copy(md);
-      this.toastService.show({ text: "Copied ticket markdown", faIcon: this.faService.clipboard });
+      this.toastService.show({ text: "Copied ticket markdown", faIcon: fa.clipboard });
     });
   }
 }

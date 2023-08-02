@@ -5,7 +5,7 @@ import { GameService } from '../../../api/game.service';
 import { GameContext } from '../../../api/models';
 import { Player } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
-import { FontAwesomeService } from '../../../services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { GameHubService } from '../../../services/signalR/game-hub.service';
 import { SyncStartService } from '../../../services/sync-start.service';
 import { SyncStartState } from '../../game.models';
@@ -30,9 +30,9 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
   protected playerReadyPct = 0;
+  protected fa = fa;
 
   constructor(
-    public faService: FontAwesomeService,
     private gameHub: GameHubService,
     private gameService: GameService,
     private playerService: PlayerService,

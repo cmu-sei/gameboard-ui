@@ -9,8 +9,9 @@ import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { PracticePageComponent } from './practice-page/practice-page.component';
-import { PracticeChallengeListComponent } from '@/practice-challenge-list/practice-challenge-list.component';
+import { PracticeChallengeListComponent } from './practice-challenge-list/practice-challenge-list.component';
 import { PracticeSessionComponent } from './practice-session/practice-session.component';
+import { GameModule } from '@/game/game.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PracticeSessionComponent } from './practice-session/practice-session.co
           { path: '', pathMatch: 'full', component: PracticeChallengeListComponent }
         ]
       }
-    ])
+    ]),
+    GameModule,
   ]
 })
 export class PracModule { }

@@ -14,6 +14,7 @@ import { ConfigService } from '../../utility/config.service';
 import { HubState, NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { BrowserService } from '@/services/browser.service';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -47,9 +48,9 @@ export class GameboardPageComponent implements OnDestroy {
 
   constructor(
     route: ActivatedRoute,
+    private browserService: BrowserService,
     private router: Router,
     private api: BoardService,
-    private playerApi: PlayerService,
     private config: ConfigService,
     private hub: NotificationService,
     usersvc: UserService
@@ -133,7 +134,6 @@ export class GameboardPageComponent implements OnDestroy {
       asyncScheduler).pipe(
         mergeAll(),
       );
-
   }
 
   validate(b: BoardPlayer): void {
@@ -260,7 +260,7 @@ export class GameboardPageComponent implements OnDestroy {
     }
 
     if (isUrl) {
-      this.config.showTab(vm.id);
+      this.browserService.showTab(vm.id);
     } else {
       this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`);
     }

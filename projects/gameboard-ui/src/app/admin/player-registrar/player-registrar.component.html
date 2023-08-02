@@ -2,7 +2,7 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <a class="btn btn-link" routerLink="../../">
-  <fa-icon [icon]="faService.arrowLeft"></fa-icon>
+  <fa-icon [icon]="fa.arrowLeft"></fa-icon>
   <span>Back</span>
 </a>
 
@@ -12,7 +12,7 @@
     <div class="input-group input-group-sm">
       <div class="input-group-prepend">
         <span class="input-group-text">
-          <fa-icon [icon]="faService.search"></fa-icon>
+          <fa-icon [icon]="fa.search"></fa-icon>
           <span>Search</span>
         </span>
       </div>
@@ -21,51 +21,51 @@
     </div>
     <div>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('active')">
-        <fa-icon [hidden]="filter!=='active'" [icon]="faService.filter"></fa-icon>
+        <fa-icon [hidden]="filter!=='active'" [icon]="fa.filter"></fa-icon>
         <span>active-only</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('complete')">
-        <fa-icon [hidden]="filter!=='complete'" [icon]="faService.filter"></fa-icon>
+        <fa-icon [hidden]="filter!=='complete'" [icon]="fa.filter"></fa-icon>
         <span>complete-only</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('advanced')">
-        <fa-icon [hidden]="filter!=='advanced'" [icon]="faService.filter"></fa-icon>
+        <fa-icon [hidden]="filter!=='advanced'" [icon]="fa.filter"></fa-icon>
         <span>advanced</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('dismissed')">
-        <fa-icon [hidden]="filter!=='dismissed'" [icon]="faService.filter"></fa-icon>
+        <fa-icon [hidden]="filter!=='dismissed'" [icon]="fa.filter"></fa-icon>
         <span>dismissed</span>
       </button>
 
       <span class="text-warning"> | </span>
 
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('competition')">
-        <fa-icon [hidden]="mode!=='competition'" [icon]="faService.filter"></fa-icon>
+        <fa-icon [hidden]="mode!=='competition'" [icon]="fa.filter"></fa-icon>
         <span>comp</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('practice')">
-        <fa-icon [hidden]="mode!=='practice'" [icon]="faService.filter"></fa-icon>
+        <fa-icon [hidden]="mode!=='practice'" [icon]="fa.filter"></fa-icon>
         <span>prac</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('test')">
-        <fa-icon [hidden]="mode!=='test'" [icon]="faService.filter"></fa-icon>
+        <fa-icon [hidden]="mode!=='test'" [icon]="fa.filter"></fa-icon>
         <span>test</span>
       </button>
 
       <ng-container *ngIf="ctx.game.allowTeam">
         <span class="text-warning"> | </span>
         <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleTeamView()">
-          <fa-icon [hidden]="teamView===''" [icon]="faService.filter"></fa-icon>
+          <fa-icon [hidden]="teamView===''" [icon]="fa.filter"></fa-icon>
           <span>consolidate-teams</span>
         </button>
       </ng-container>
       <span class="text-warning"> | </span>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleSort('time')">
-        <fa-icon [hidden]="search.sort!=='time'" [icon]="faService.arrowDown"></fa-icon>
+        <fa-icon [hidden]="search.sort!=='time'" [icon]="fa.arrowDown"></fa-icon>
         <span>time</span>
       </button>
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleSort('rank')">
-        <fa-icon [hidden]="search.sort!=='rank'" [icon]="faService.arrowDown"></fa-icon>
+        <fa-icon [hidden]="search.sort!=='rank'" [icon]="fa.arrowDown"></fa-icon>
         <span>rank</span>
       </button>
     </div>
@@ -85,26 +85,26 @@
         (click)="clearSelected()">x</button>
       <span class="text-warning"> | </span>
       <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="exportCsv(ctx.players)">
-        <fa-icon [icon]="faService.copy"></fa-icon>
+        <fa-icon [icon]="fa.copy"></fa-icon>
         <span>csv</span>
       </button>
       <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="exportMailMeta(ctx.players)">
-        <fa-icon [icon]="faService.copy"></fa-icon>
+        <fa-icon [icon]="fa.copy"></fa-icon>
         <span>mail</span>
       </button>
       <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="rerank(ctx.game.id)">
-        <fa-icon [icon]="faService.arrowDown"></fa-icon>
+        <fa-icon [icon]="fa.arrowDown"></fa-icon>
         <span>rerank</span>
       </button>
       <button *ngIf="selected.length" class="btn btn-sm btn-outline-warning py-0 ml-2"
         (click)="advanceOptions=!advanceOptions">
-        <fa-icon [icon]="faService.star"></fa-icon>
+        <fa-icon [icon]="fa.star"></fa-icon>
         <span>advance</span>
       </button>
       <span class="spacer"></span>
       <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
         role="button">
-        <fa-icon [icon]="faService.sync"></fa-icon>
+        <fa-icon [icon]="fa.sync"></fa-icon>
         <span>{{autorefresh ? 'auto' : 'off'}}</span>
       </label>
     </ng-container>
@@ -112,7 +112,7 @@
 
   <div *ngIf="advanceOptions && selected.length">
     <button class="btn btn-secondary btn-sm m-1" (click)="advanceScores=!advanceScores">
-      <fa-icon [icon]="advanceScores ? faService.checkSquare : faService.square"></fa-icon>
+      <fa-icon [icon]="advanceScores ? fa.checkSquare : fa.square"></fa-icon>
       <span>With Scores</span>
     </button>
     <div *ngFor="let g of ctx.futures" class="m-1">
@@ -127,7 +127,7 @@
     [class.pop-success]="player.checked">
     <div class="mx-2">
       <button class="btn btn-secondary btn-sm" (click)="toggleSelected(player)">
-        <fa-icon [icon]="player.checked ? faService.checkSquare : faService.square"></fa-icon>
+        <fa-icon [icon]="player.checked ? fa.checkSquare : fa.square"></fa-icon>
       </button>
     </div>
     <app-player-avatar-list class="cursor-pointer" (click)="view(player)" [avatarUris]="player.sponsorList"
@@ -135,7 +135,7 @@
       [captainSession]="player.session"></app-player-avatar-list>
     <div class="ml-2">
       <span *ngIf="player.advanced" class="text-success ml-2">
-        <fa-icon [icon]="faService.star"></fa-icon>
+        <fa-icon [icon]="fa.star"></fa-icon>
       </span>
       <span class="cursor-pointer" (click)="view(player)">{{player.approvedName}}</span>
       <span class="text-muted">{{player.pendingName}}</span><br />
@@ -148,11 +148,11 @@
     </div>
     <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1"
       (click)="approveName(player)">
-      <fa-icon [icon]="faService.check"></fa-icon>
+      <fa-icon [icon]="fa.check"></fa-icon>
       <span>Approve</span>
     </button>
     <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(player)">
-      <fa-icon [icon]="faService.check"></fa-icon>
+      <fa-icon [icon]="fa.check"></fa-icon>
       <span>Disapprove</span>
     </button>
     <div class="spacer"></div>
@@ -166,7 +166,7 @@
     </div>
     <div>
       <button class="btn rounded-circle ml-4" (click)="view(player)">
-        <fa-icon [icon]="viewed === player ? faService.chevronUp : faService.chevronDown"></fa-icon>
+        <fa-icon [icon]="viewed === player ? fa.chevronUp : fa.chevronDown"></fa-icon>
       </button>
 
       <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"

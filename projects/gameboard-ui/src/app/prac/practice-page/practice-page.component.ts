@@ -8,7 +8,7 @@ import { ConfigService } from '@/utility/config.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { RouterService } from '@/services/router.service';
 import { PracticeService } from '@/services/practice.service';
-import { UserChallengeSlim } from '@/api/board-models';
+import { LocalActiveChallenge } from '@/api/board-models';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { UserService } from '@/api/user.service';
 import { PlayerMode } from '@/api/player-models';
