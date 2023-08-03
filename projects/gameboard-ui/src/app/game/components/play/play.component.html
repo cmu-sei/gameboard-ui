@@ -5,10 +5,11 @@
             <div class="vms-container my-4">
                 <ul class="d-flex">
                     <li *ngFor="let vm of challenge.challengeDeployment.vms">
-                        <button class="btn btn-sm btn-dark mr-2" [routerLink]="vmUrls[vm.id]">
+                        {{ vmUrls[vm.id] }}
+                        <a class="btn btn-sm btn-dark mr-2 d-block" [routerLink]="vmUrls[vm.id]" role="button">
                             <fa-icon [icon]="fa.tv"></fa-icon>
                             <span>{{vm.name}}</span>
-                        </button>
+                        </a>
                     </li>
                 </ul>
             </div>

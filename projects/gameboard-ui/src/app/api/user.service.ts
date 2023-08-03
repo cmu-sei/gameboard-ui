@@ -8,9 +8,7 @@ import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult } from './user-models';
 import { LogService } from '@/services/log.service';
-import { LocalActiveChallenge } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
-import { PlayerMode } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

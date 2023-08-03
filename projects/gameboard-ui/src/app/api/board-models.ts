@@ -289,7 +289,6 @@ export interface ActiveChallenge {
   };
   teamId: string;
   playerMode: PlayerMode;
-  hasDeployedGamespace: boolean;
   maxPossibleScore: number;
   score: number;
 }
