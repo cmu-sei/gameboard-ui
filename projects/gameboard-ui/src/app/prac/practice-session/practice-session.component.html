@@ -1,38 +1,46 @@
 <div class="container">
+  <app-error-div [errors]="errors"></app-error-div>
+
   <div *ngIf="spec$ | async as spec; else loading">
     <h2>{{spec.name}}</h2>
     <span class="lead">{{spec.gameName}}</span>
     <p>{{spec.description}}</p>
 
-    <div class="challenge-management-buttons my-5 d-flex justify-content-center">
-      <ng-container
-        *ngTemplateOutlet="(isPlayingOtherChallenge ? activeOtherChallengeButton : standardConfirm); context: { spec: spec }"></ng-container>
-    </div>
+    <ng-container *ngIf="(authed$ | async); else unauthed">
+      <div class="challenge-management-buttons my-5 d-flex justify-content-center">
 
-    <markdown [data]="spec.text"></markdown>
+        <app-confirm-button *ngIf="!activeChallenge" btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec)"
+          class="d-block">
+          <span>Start Practice Session</span>
+        </app-confirm-button>
+
+        <button *ngIf="isPlayingOtherChallenge" type="button" class="btn btn-lg btn-warning"
+          (click)="handleStartNewChallengeClick(spec, activeChallenge!)">
+          Stop your current challenge and play this one instead
+        </button>
+      </div>
+
+      <markdown [data]="spec.text"></markdown>
+
+      <ng-container *ngIf="!isStartingSession; else starting">
+        <app-play *ngIf="!isPlayingOtherChallenge && activeChallenge" [challenge]="activeChallenge"></app-play>
+      </ng-container>
+    </ng-container>
   </div>
-
-  <app-error-div [errors]="errors"></app-error-div>
-
-  <app-login *ngIf="unauthed"></app-login>
-  <app-play *ngIf="!isPlayingOtherChallenge && activeChallenge" [challenge]="activeChallenge"></app-play>
 </div>
 
 <ng-template #loading>
   <div class="text-center">
-    <app-spinner></app-spinner>
+    <app-spinner>Loading the challenge...</app-spinner>
   </div>
 </ng-template>
 
-<ng-template #standardConfirm let-spec="spec">
-  <app-confirm-button *ngIf="!activeChallenge" btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec)"
-    class="d-block">
-    <span>Start Practice Session</span>
-  </app-confirm-button>
+<ng-template #starting>
+  <div class="text-center">
+    <app-spinner>Starting your challenge...</app-spinner>
+  </div>
 </ng-template>
 
-<ng-template #activeOtherChallengeButton let-spec="spec">
-  <button type="button" class="btn btn-lg btn-warning" (click)="handleStartNewChallengeClick(spec, activeChallenge!)">
-    Stop your current challenge and play this one instead
-  </button>
+<ng-template #unauthed>
+  <app-login></app-login>
 </ng-template>

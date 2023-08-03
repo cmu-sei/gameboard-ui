@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { NewPlayer } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { SpecSummary } from '../../api/spec-models';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { LocalActiveChallenge } from '@/api/board-models';
 import { ChallengesService } from '@/api/challenges.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { LogService } from '@/services/log.service';
+import { LocalActiveChallenge } from '@/api/challenges.models';
 
 @Component({
   selector: 'app-practice-session',
@@ -19,11 +20,12 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 export class PracticeSessionComponent {
   errors: Error[] = [];
   spec$: Observable<SpecSummary>;
-  unauthed = true;
+  authed$: Observable<boolean>;
   activeChallenge: LocalActiveChallenge | null = null;
 
   private _specId?: string;
   protected isPlayingOtherChallenge = false;
+  protected isStartingSession = false;
 
   constructor(
     route: ActivatedRoute,
@@ -41,14 +43,13 @@ export class PracticeSessionComponent {
       tap(s => this._specId = s.id)
     );
 
-    this.unsub.add(
-      localUser.user$.subscribe(u => {
-        this.unauthed = !u;
-
+    this.authed$ = localUser.user$.pipe(
+      tap(u => {
         if (u) {
           this.resolveActiveChallenge(u.id);
         }
-      })
+      }),
+      map(u => !!u),
     );
   }
 
@@ -61,7 +62,6 @@ export class PracticeSessionComponent {
 
     const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId: s.gameId } as NewPlayer));
     await firstValueFrom(this.challengesService.startPlaying({ specId: s.id, playerId: player.id }));
-    // await firstValueFrom(this.challengesService.deploy({ id: challenge.id }));
     this.resolveActiveChallenge(userId);
   }
 
@@ -82,8 +82,12 @@ export class PracticeSessionComponent {
   }
 
   private async resolveActiveChallenge(userId: string): Promise<void> {
-    const activePracticeChallenge = await firstValueFrom(this.practiceService.getActivePracticeChallenge(userId));
-    this.activeChallenge = activePracticeChallenge;
-    this.isPlayingOtherChallenge = !!activePracticeChallenge && (activePracticeChallenge.challengeSpec.id !== this._specId);
+    const activeChallenges = await firstValueFrom(this.challengesService.getActiveChallenges(userId));
+
+    if (activeChallenges.practice.length) {
+      this.activeChallenge = activeChallenges.practice[0];
+    }
+
+    this.isPlayingOtherChallenge = !!this._specId && !!this.activeChallenge && (this.activeChallenge.challengeSpec.id !== this._specId!);
   }
 }

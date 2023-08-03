@@ -5,8 +5,8 @@
             <div class="vms-container my-4">
                 <ul class="d-flex">
                     <li *ngFor="let vm of challenge.challengeDeployment.vms">
-                        {{ vmUrls[vm.id] }}
-                        <a class="btn btn-sm btn-dark mr-2 d-block" [routerLink]="vmUrls[vm.id]" role="button">
+                        <a class="btn btn-sm btn-dark mr-2 d-block" [href]="vmUrls[vm.id]" target="_blank"
+                            role="button">
                             <fa-icon [icon]="fa.tv"></fa-icon>
                             <span>{{vm.name}}</span>
                         </a>
@@ -16,7 +16,7 @@
 
             <div class="vm-controls-container my-4">
                 <app-confirm-button *ngIf="challenge.challengeDeployment.vms.length"
-                    btnClass="btn btn-sm btn-outline-warning"
+                    btnClass="btn btn-sm btn-outline-warning mr-2"
                     (confirm)="undeploy(challenge.challengeDeployment.challengeId)">
                     <fa-icon [icon]="fa.trash"></fa-icon>
                     <span>Destroy</span>

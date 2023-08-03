@@ -1,12 +1,13 @@
-import { LocalActiveChallenge } from '@/api/board-models';
+import { LocalActiveChallenge } from '@/api/challenges.models';
+import { ChallengesService } from '@/api/challenges.service';
 import { PlayerService } from '@/api/player.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { LogService } from '@/services/log.service';
 import { PracticeService } from '@/services/practice.service';
-import { RouterService } from '@/services/router.service';
+import { logTap } from '@/tools/operators';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { DateTime, Duration } from 'luxon';
-import { Observable, firstValueFrom, map, of, timer } from 'rxjs';
+import { DateTime } from 'luxon';
+import { Observable, firstValueFrom, map, of, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-practice-challenge-state-summary',
@@ -24,6 +25,7 @@ export class PracticeChallengeStateSummaryComponent implements OnChanges {
 
   constructor(
     protected faService: FontAwesomeService,
+    private challengesService: ChallengesService,
     private logService: LogService,
     private playerService: PlayerService,
     private practiceService: PracticeService) { }
@@ -40,7 +42,8 @@ export class PracticeChallengeStateSummaryComponent implements OnChanges {
     if (!this.userId)
       this.userActivePracticeChallenge = null;
 
-    this.userActivePracticeChallenge = await firstValueFrom(this.practiceService.getActivePracticeChallenge(this.userId!));
+    const activeChallenges = await firstValueFrom(this.challengesService.getActiveChallenges(this.userId!));
+    this.userActivePracticeChallenge = activeChallenges.practice.length ? activeChallenges.practice[0] : null;
     this.updateTimes();
   }
 

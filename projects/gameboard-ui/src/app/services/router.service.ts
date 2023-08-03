@@ -57,7 +57,7 @@ export class RouterService {
       throw new Error(`Can't launch a VM console without an isolationId and a name.`);
     }
 
-    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}`
+    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}`;
   }
 
   public toVmConsole(vm: VmState) {

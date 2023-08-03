@@ -273,30 +273,3 @@ export interface ObserveVM {
   fullWidth: boolean;
   minimized: boolean;
 }
-
-export interface ActiveChallenge {
-  challengeSpec: {
-    id: string;
-    name: string;
-    tag: string;
-  };
-  game: SimpleEntity;
-  player: SimpleEntity;
-  user: SimpleEntity;
-  challengeDeployment: {
-    challengeId: string,
-    vms: VmState[]
-  };
-  teamId: string;
-  playerMode: PlayerMode;
-  maxPossibleScore: number;
-  score: number;
-}
-
-export interface ApiActiveChallenge extends ActiveChallenge {
-  session: ApiTimeWindow;
-}
-
-export interface LocalActiveChallenge extends ActiveChallenge {
-  session: LocalTimeWindow;
-}

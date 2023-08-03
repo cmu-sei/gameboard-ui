@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
 import { SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
-import { ActiveChallenge, ApiActiveChallenge, LocalActiveChallenge } from '@/api/board-models';
 import { PlayerService } from '@/api/player.service';
 import { LocalTimeWindow } from '@/core/models/api-time-window';
 
@@ -32,22 +31,6 @@ export class PracticeService {
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {
     await this.updateIsEnabled();
-  }
-
-  public getActivePracticeChallenge(userId: string): Observable<LocalActiveChallenge | null> {
-    return this.http.get<ApiActiveChallenge[]>(this.apiUrl.build(`practice/user/${userId}/challenges/active`)).pipe(
-      map(
-        challenges => {
-          const mappedChallenges = challenges.map(c => ({
-            ...c,
-            session: new LocalTimeWindow(c.session)
-          }));
-
-          // for now, we're only allowing a single active practice challenge
-          return mappedChallenges.length ? mappedChallenges[0] : null;
-        }
-      ),
-    );
   }
 
   async isEnabled(): Promise<boolean> {
