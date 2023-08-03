@@ -52,8 +52,8 @@
       </button>
 
       <div *ngFor="let item of list$ | async; trackBy:trackById">
-        <app-game-challenge-spec-config class="d-block mb-2" [spec]="item"
-          [scoringConfig]="specConfigMap[item.id]"></app-game-challenge-spec-config>
+        <app-game-challenge-spec-config class="d-block mb-2" [spec]="item" [scoringConfig]="specConfigMap[item.id]"
+          (deleted)="deleting$.next(item)" (updated)="updating$.next(item)"></app-game-challenge-spec-config>
       </div>
 
       <!-- pre reqs -->
