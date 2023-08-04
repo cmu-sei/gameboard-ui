@@ -1,8 +1,8 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
-import { firstValueFrom, from, switchMap, tap } from 'rxjs';
+import { Subject, firstValueFrom, from, switchMap, tap } from 'rxjs';
 import { LocalActiveChallenge } from '@/api/challenges.models';
 import { BoardPlayer, BoardSpec } from '@/api/board-models';
 import { BoardService } from '@/api/board.service';
@@ -31,6 +31,7 @@ export class PlayComponent {
   @Input() playerContext: { playerId: string, userId: string } | null = null;
   @Input() challengeSpec: SpecSummary | null = null;
   @Input() autoPlay = false;
+  @Output() challengeStarted = new EventEmitter<void>();
 
   protected challenge: LocalActiveChallenge | null = null;
   protected fa = fa;
@@ -55,17 +56,21 @@ export class PlayComponent {
     );
   }
 
-  async ngOnInit() {
-    if (this.challengeSpec && this.playerContext) {
-      if (this.autoPlay) {
-        this.isDeploying = true;
-        const activeChallenge = await firstValueFrom(this.challengesService.startPlaying({
-          specId: this.challengeSpec.id,
-          playerId: this.playerContext.playerId,
-          userId: this.playerContext.userId
-        }));
-        this.isDeploying = false;
-      }
+  ngOnInit() {
+    this._needsAutoBoot = this.autoPlay;
+  }
+
+  async ngOnChanges(changes: SimpleChanges) {
+    if (this._needsAutoBoot && this.playerContext && this.challengeSpec) {
+      this.isDeploying = true;
+      this.challenge = await firstValueFrom(this.challengesService.startPlaying({
+        specId: this.challengeSpec.id,
+        playerId: this.playerContext.playerId,
+        userId: this.playerContext.userId
+      }));
+      this.isDeploying = false;
+      this._needsAutoBoot = false;
+      this.challengeStarted.emit();
     } else {
       this.legacyContext = {
         boardPlayer: null,
@@ -73,20 +78,6 @@ export class PlayComponent {
         session: null
       };
       this.vmUrls = {};
-    }
-  }
-
-  async ngOnChanges(changes: SimpleChanges) {
-    if (changes.autoPlay && this.autoPlay && this.challengeSpec && this.playerContext && this._needsAutoBoot) {
-      this._needsAutoBoot = false;
-
-      this.isDeploying = true;
-      const activeChallenge = await firstValueFrom(this.challengesService.startPlaying({
-        specId: this.challengeSpec.id,
-        playerId: this.playerContext.playerId,
-        userId: this.playerContext.userId
-      }));
-      this.isDeploying = false;
     }
   }
 

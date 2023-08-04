@@ -41,20 +41,17 @@ export class PracticeSessionComponent {
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );
 
-    this.authed$ = localUser.user$.pipe(
-      map(u => !!u),
-    );
+    this.authed$ = localUser.user$.pipe(map(u => !!u));
 
     this.unsub.add(
       this.activeChallengesRepo.activePracticeChallenge$
-        .pipe(
-          tap(c => {
-            if (c)
-              this.playerContext = { playerId: c.player.id, userId: c.user.id };
-            else
-              this.playerContext = null;
-          })
-        )
+        .pipe(tap(c => {
+          if (c)
+            this.playerContext = {
+              playerId: c.player.id,
+              userId: c.user.id
+            }
+        }))
         .subscribe(activeChallenge => this.activePracticeChallenge$.next(activeChallenge))
     );
   }
@@ -68,6 +65,7 @@ export class PracticeSessionComponent {
 
     this.isStartingSession = true;
     const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId: s.gameId } as NewPlayer));
+    this.playerContext = { playerId: player.id, userId: player.userId }
     this.isStartingSession = false;
   }
 
