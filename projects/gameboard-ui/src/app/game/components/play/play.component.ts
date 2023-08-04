@@ -47,10 +47,11 @@ export class PlayComponent {
     this.unsub.add(
       this.activeChallengesRepo.activePracticeChallenge$.pipe(
         tap(challenge => this.challenge = challenge),
+        tap(challenge => this._buildLegacyContext(challenge)),
         tap(challenge => this.buildVmLinks(challenge)),
-        switchMap(challenge => from(this._buildLegacyContext(challenge))),
-      ).subscribe(legacyContext => {
-        this.legacyContext = legacyContext;
+      ).subscribe(async challenge => {
+        this.vmUrls = this.buildVmLinks(challenge);
+        this.legacyContext = await this._buildLegacyContext(challenge);
       })
     );
   }
@@ -65,8 +66,6 @@ export class PlayComponent {
           userId: this.playerContext.userId
         }));
         this.isDeploying = false;
-
-        this.vmUrls = this.buildVmLinks(activeChallenge);
       }
     } else {
       this.legacyContext = {
@@ -85,7 +84,6 @@ export class PlayComponent {
 
     this.isDeploying = true;
     const challenge = await firstValueFrom(this.challengesService.deploy({ id: challengeId }));
-
     this.isDeploying = false;
   }
 

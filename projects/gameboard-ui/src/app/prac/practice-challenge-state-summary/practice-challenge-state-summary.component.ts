@@ -44,9 +44,7 @@ export class PracticeChallengeStateSummaryComponent {
           practiceChallenge
         }))
       ).subscribe(ctx => {
-        if (ctx.localUser) {
-          this.updatePracticeChallenge(ctx.practiceChallenge);
-        }
+        this.updatePracticeChallenge(ctx.practiceChallenge);
       })
     );
   }

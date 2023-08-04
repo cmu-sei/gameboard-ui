@@ -1,5 +1,5 @@
-<ng-container *ngIf="challenge">
-    <ng-container *ngIf="!isDeploying;">
+<ng-container *ngIf="playerContext && challengeSpec">
+    <ng-container *ngIf="!isDeploying && challenge; else deploying">
         <h3>Gamespace Resources</h3>
         <div class="vms-container my-4">
             <ul class="d-flex">
@@ -58,7 +58,6 @@
 </ng-container>
 
 <ng-template #deploying>
-    omg sup what
     <app-challenge-deploy-countdown *ngIf="challenge"
         [deploySeconds]="challenge.spec.averageDeploySeconds"></app-challenge-deploy-countdown>
 </ng-template>
