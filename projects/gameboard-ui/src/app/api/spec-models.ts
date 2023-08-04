@@ -40,6 +40,7 @@ export interface SpecSummary {
   gameId: string;
   gameName: string;
   gameLogo: string;
+  averageDeploySeconds: number;
 }
 
 export enum GameEngineType {

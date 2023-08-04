@@ -18,5 +18,6 @@ export interface ChallengeAttemptSummary {
   styleUrls: ['./challenge-attempt-summary.component.scss']
 })
 export class ChallengeAttemptSummaryComponent {
-  @Input() challenge?: ChallengeAttemptSummary;
+  @Input() attempt?: ChallengeAttemptSummary;
+  @Input() primaryData: "challengeName" | "date" = "challengeName";
 }

@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, switchMap, tap } from 'rxjs';
-import { Challenge, NewChallenge } from './board-models';
+import { Observable, Subject, map, switchMap, tap } from 'rxjs';
+import { Challenge, NewChallenge, SectionSubmission } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
-import { ActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
+import { ActiveChallenge, LocalActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
 import { LocalTimeWindow } from '@/core/models/api-time-window';
 import { PlayerMode } from './player-models';
-import { SimpleEntity } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesService {
+  private _challengeDeployStateChanged$ = new Subject<string>();
+  public challengeDeployStateChanged$ = this._challengeDeployStateChanged$.asObservable();
+
+  private _challengeGraded$ = new Subject<string>();
+  public challengeGraded$ = this._challengeGraded$.asObservable();
+
   constructor(
     private apiUrl: ApiUrlService,
     private http: HttpClient) { }
@@ -42,7 +47,7 @@ export class ChallengesService {
     );
   }
 
-  public startPlaying(challenge: NewChallenge): Observable<ActiveChallenge> {
+  public startPlaying(challenge: NewChallenge): Observable<LocalActiveChallenge> {
     const specId = challenge.specId;
     return this.http.post<Challenge>(this.apiUrl.build("challenge"), challenge).pipe(
       switchMap(c => this.getActiveChallenges(challenge.userId)),
@@ -54,14 +59,30 @@ export class ChallengesService {
 
         return startedChallenge;
       })
-    )
+    );
   }
 
   public deploy(challenge: { id: string }): Observable<Challenge> {
-    return this.http.put<Challenge>(this.apiUrl.build("challenge/start"), challenge);
+    return this.http.put<Challenge>(this.apiUrl.build("challenge/start"), challenge).pipe(tap(challenge => {
+      this._challengeDeployStateChanged$.next(challenge.id);
+    }));
   }
 
   public undeploy(challenge: { id: string }): Observable<Challenge> {
-    return this.http.put<Challenge>(this.apiUrl.build("challenge/stop"), challenge);
+    return this.http.put<Challenge>(this.apiUrl.build("challenge/stop"), challenge).pipe(tap(challenge => {
+      this._challengeDeployStateChanged$.next(challenge.id);
+    }));
+  }
+
+  public grade(model: SectionSubmission): Observable<Challenge> {
+    return this.http.put<Challenge>(this.apiUrl.build("challenge/grade"), model).pipe(
+      tap(challenge => this._challengeGraded$.next(challenge.id))
+    );
+  }
+
+  public regrade(id: string): Observable<Challenge> {
+    return this.http.put<Challenge>(this.apiUrl.build("challenge/regrade"), { id }).pipe(
+      tap(challenge => this._challengeGraded$.next(challenge.id))
+    );
   }
 }

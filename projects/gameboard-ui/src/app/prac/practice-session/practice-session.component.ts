@@ -1,37 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { NewPlayer } from '../../api/player-models';
-import { PlayerService } from '../../api/player.service';
-import { SpecSummary } from '../../api/spec-models';
+import { NewPlayer } from '@/api/player-models';
+import { PlayerService } from '@/api/player.service';
+import { SpecSummary } from '@/api/spec-models';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { ChallengesService } from '@/api/challenges.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { LogService } from '@/services/log.service';
 import { LocalActiveChallenge } from '@/api/challenges.models';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
+import { PlayerContext } from '@/game/components/play/play.component';
 
 @Component({
   selector: 'app-practice-session',
   templateUrl: './practice-session.component.html',
 })
 export class PracticeSessionComponent {
-  errors: Error[] = [];
   spec$: Observable<SpecSummary>;
   authed$: Observable<boolean>;
   activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
 
-  private _specId?: string;
+  protected playerContext: PlayerContext | null = null;
   protected isPlayingOtherChallenge = false;
   protected isStartingSession = false;
 
   constructor(
     route: ActivatedRoute,
     private activeChallengesRepo: ActiveChallengesRepo,
-    private challengesService: ChallengesService,
     private modalService: ModalConfirmService,
     private localUser: LocalUserService,
     private playerService: PlayerService,
@@ -42,7 +39,7 @@ export class PracticeSessionComponent {
       filter(p => !!p.cid),
       switchMap(p => practiceService.searchChallenges({ term: p.cid })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
-      tap(s => this._specId = s.id)
+      // tap(s => this.spec = s)
     );
 
     this.authed$ = localUser.user$.pipe(
@@ -50,7 +47,8 @@ export class PracticeSessionComponent {
     );
 
     this.unsub.add(
-      this.activeChallengesRepo.activePracticeChallenge$().subscribe(activeChallenge => this.activePracticeChallenge$.next(activeChallenge))
+      this.activeChallengesRepo.activePracticeChallenge$
+        .subscribe(activeChallenge => this.activePracticeChallenge$.next(activeChallenge))
     );
   }
 
@@ -63,11 +61,10 @@ export class PracticeSessionComponent {
 
     this.isStartingSession = true;
     const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId: s.gameId } as NewPlayer));
-    await firstValueFrom(this.challengesService.startPlaying({
-      specId: s.id,
+    this.playerContext = {
       playerId: player.id,
-      userId: userId
-    }));
+      userId: player.userId
+    };
     this.isStartingSession = false;
   }
 

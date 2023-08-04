@@ -56,8 +56,6 @@ import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
-import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
-
 
 const PUBLIC_DECLARATIONS = [
   AssetPathPipe,
@@ -128,7 +126,6 @@ const RELAYED_MODULES = [
     }),
     ...RELAYED_MODULES
   ],
-  providers: [{ provide: ActiveChallengesRepo, useClass: ActiveChallengesRepo }],
   exports: [
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,

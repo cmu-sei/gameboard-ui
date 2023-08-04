@@ -3,26 +3,26 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
-import { UserService as LocalUserService } from '@/utility/user.service';
 import { ConfigService } from '../utility/config.service';
 import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
-import { ActiveChallengesPredicate, ActiveChallengesRepo, activeChallengesStore } from '@/stores/active-challenges.store';
-import { ChallengesService } from './challenges.service';
-import { LocalActiveChallenge } from './challenges.models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
   url = '';
 
+  private _teamSessionChanged$ = new Subject<string>();
+  public teamSessionChanged$ = this._teamSessionChanged$.asObservable();
+
+  private _playerSessionReset$ = new Subject<string>();
+  public playerSessionReset$ = this._playerSessionReset$.asObservable();
+
   constructor(
     private http: HttpClient,
-    private activeChallengesRepo: ActiveChallengesRepo,
     private config: ConfigService,
     private gameSessionService: GameSessionService,
-    private localUser: LocalUserService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -67,20 +67,15 @@ export class PlayerService {
       map(r => {
         delete request.player.session;
         return;
-      })
+      }),
+      tap(_ => this._playerSessionReset$.next(request.player.id))
     );
   }
 
-  public updateSession(model: SessionChangeRequest): Observable<LocalActiveChallenge[]> {
+  public updateSession(model: SessionChangeRequest): Observable<void> {
     return this.http.put<any>(`${this.url}/team/session`, model).pipe(
-      tap(_ => {
-        if (this.localUser.user$.value) {
-          return this.activeChallengesRepo.search((challenge: LocalActiveChallenge): challenge is LocalActiveChallenge => challenge.teamId === model.teamId);
-        }
-
-        return [];
-      })
-    );
+      tap(_ => this._teamSessionChanged$.next(model.teamId)
+      ));
   }
 
   public unenroll(id: string, asAdmin: boolean = false): Observable<void> {

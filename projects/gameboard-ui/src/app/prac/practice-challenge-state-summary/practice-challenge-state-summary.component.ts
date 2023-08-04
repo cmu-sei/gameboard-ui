@@ -31,11 +31,13 @@ export class PracticeChallengeStateSummaryComponent {
     private logService: LogService,
     private playerService: PlayerService,
     private practiceService: PracticeService,
+    // have to keep "unsub" around so it gets ngDestroyed. 
+    // this is an argument for an inherited base class, i think
     private unsub: UnsubscriberService) {
     unsub.add(
       combineLatest([
         localUserService.user$,
-        activeChallengesRepo.activePracticeChallenge$()
+        activeChallengesRepo.activePracticeChallenge$
       ]).pipe(
         map(([localUser, practiceChallenge]) => ({
           localUser,

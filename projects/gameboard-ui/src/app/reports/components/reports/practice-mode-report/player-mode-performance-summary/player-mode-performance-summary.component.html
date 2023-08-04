@@ -14,7 +14,7 @@
         </button>
     </div>
     <div class="modal-body container">
-        <app-challenge-attempt-summary class="my-3" [challenge]="challenge"
+        <app-challenge-attempt-summary class="my-3" [attempt]="challenge"
             *ngFor="let challenge of context.summary.challenges"></app-challenge-attempt-summary>
     </div>
     <div class="modal-footer">

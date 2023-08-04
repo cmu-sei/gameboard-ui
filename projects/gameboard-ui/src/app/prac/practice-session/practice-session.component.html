@@ -1,6 +1,4 @@
 <div class="container">
-  <app-error-div [errors]="errors"></app-error-div>
-
   <div *ngIf="spec$ | async as spec; else loading">
     <h2>{{spec.name}}</h2>
     <span class="lead">{{spec.gameName}}</span>
@@ -22,9 +20,8 @@
 
       <markdown [data]="spec.text"></markdown>
 
-      <ng-container *ngIf="!isStartingSession; else starting">
-        <app-play *ngIf="!isPlayingOtherChallenge" [challenge]="(activePracticeChallenge$ | async) || null"></app-play>
-      </ng-container>
+      <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
+        [playerContext]="playerContext" [autoPlay]="true"></app-play>
     </ng-container>
   </div>
 </div>
@@ -35,9 +32,9 @@
   </div>
 </ng-template>
 
-<ng-template #starting>
+<ng-template #starting let-challenge="challenge">
   <div class="text-center">
-    <app-spinner>Starting your challenge...</app-spinner>
+    <app-spinner>Starting your practice session...</app-spinner>
   </div>
 </ng-template>
 

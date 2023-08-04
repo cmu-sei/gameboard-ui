@@ -58,7 +58,7 @@ export interface PracticeModeReportByUserRecord extends PracticeModeReportRecord
         player: SimpleEntity;
         team?: ReportTeam;
         sponsor: ReportSponsor;
-        start?: Date,
+        start: Date,
         end?: Date,
         durationMs?: number;
         result: ChallengeResult;

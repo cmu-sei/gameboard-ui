@@ -1,13 +1,13 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-spinner',
   template: `
     <div class="spinner-component">
-      <h1><ng-content></ng-content></h1>
+      <h1 *ngIf="textPosition == 'top'"><ng-content></ng-content></h1>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
         y="0px" width="108px" height="132px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;"
         xml:space="preserve">
@@ -36,6 +36,7 @@ import { Component } from '@angular/core';
             repeatCount="indefinite" />
         </rect>
       </svg>
+      <h1 *ngIf="textPosition == 'bottom'"><ng-content></ng-content></h1>
     </div>
   `,
   styles: [
@@ -43,4 +44,5 @@ import { Component } from '@angular/core';
   ]
 })
 export class SpinnerComponent {
+  @Input() textPosition: "top" | "bottom" = "top";
 }

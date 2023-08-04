@@ -48,7 +48,7 @@ export class PracticeModeReportService {
         r.records = r.records.map(record => {
           for (let attempt of record.attempts || []) {
             // dates come in as strings because everything is horrible
-            attempt.start = this.reportsService.queryStringEncodedDateToDate(attempt.start as any);
+            attempt.start = this.reportsService.queryStringEncodedDateToDate(attempt.start as any)!;
             attempt.end = this.reportsService.queryStringEncodedDateToDate(attempt.end as any);
           }
 

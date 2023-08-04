@@ -1,3 +1,4 @@
+import { TimeWindow } from "@/api/player-models";
 import { DateTime } from "luxon";
 
 export interface ApiTimeWindow {
@@ -36,6 +37,13 @@ export class LocalTimeWindow {
     isBefore() { return this.state == ApiTimeWindowState.Before; }
     isDuring() { return this.state == ApiTimeWindowState.During; }
     isAfter() { return this.state == ApiTimeWindowState.After; }
+
+    public toLegacyTimeWindow(): TimeWindow {
+        if (!this.start && !this.end)
+            throw new Error(`Can't convert LocalTimeWindow (${this.start} => ${this.end}) to LegacyTimeWindow - start or end is missing.`);
+
+        return new TimeWindow(this.start!.toJSDate(), this.end!.toJSDate());
+    }
 }
 
 export enum ApiTimeWindowState {

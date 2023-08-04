@@ -32,15 +32,18 @@ import { SessionStartControlsComponent } from './components/session-start-contro
 import { SyncStartPageComponent } from './components/sync-start-page/sync-start-page.component';
 import { SyncStartGuard } from '../guards/sync-start.guard';
 import { PlayComponent } from './components/play/play.component';
+import { ChallengeDeployCountdownComponent } from './components/challenge-deploy-countdown/challenge-deploy-countdown.component';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
+  ChallengeDeployCountdownComponent,
   FeedbackFormComponent,
   GameInfoComponent,
   GamePageComponent,
   GameboardPageComponent,
   GamespaceQuizComponent,
   HubStateToPlayerStatusPipe,
+  PlayComponent,
   PlayerEnrollComponent,
   PlayerPresenceComponent,
   PlayerSessionComponent,
@@ -54,7 +57,6 @@ const MODULE_DECLARATIONS = [
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
-    PlayComponent,
   ],
   imports: [
     CommonModule,
@@ -78,6 +80,7 @@ const MODULE_DECLARATIONS = [
     UnityModule
   ],
   exports: [
+    ChallengeDeployCountdownComponent,
     PlayComponent,
   ]
 })

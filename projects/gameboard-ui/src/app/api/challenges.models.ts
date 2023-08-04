@@ -8,6 +8,7 @@ export interface ActiveChallenge {
         id: string;
         name: string;
         tag: string;
+        averageDeploySeconds: number;
     };
     game: SimpleEntity;
     player: SimpleEntity;

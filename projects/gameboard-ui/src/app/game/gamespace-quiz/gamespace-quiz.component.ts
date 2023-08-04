@@ -2,10 +2,13 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { BoardSpec, Challenge, ChallengeView, GameState } from '../../api/board-models';
+import { fa } from "@/services/font-awesome.service";
+import { BoardSpec } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { TimeWindow } from '../../api/player-models';
+import { catchError, firstValueFrom, tap } from 'rxjs';
+import { ChallengesService } from '@/api/challenges.service';
+import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 
 @Component({
   selector: 'app-gamespace-quiz',
@@ -19,11 +22,13 @@ export class GamespaceQuizComponent {
 
   pending = false;
   errors: Error[] = [];
-  faSubmit = faCloudUploadAlt;
+  protected fa = fa;
 
-  constructor(private api: BoardService) { }
+  constructor(
+    private api: BoardService,
+    private challengesService: ChallengesService) { }
 
-  submit(): void {
+  async submit(): Promise<void> {
     this.pending = true;
 
     const submission = {
@@ -31,14 +36,21 @@ export class GamespaceQuizComponent {
       sectionIndex: this.spec.instance!.state.challenge?.sectionIndex,
       questions: this.spec.instance!.state.challenge?.questions?.map(q => ({ answer: q.answer }))
     };
-    this.api.grade(submission).subscribe(
-      (c: Challenge) => {
-        this.spec.instance = c;
-        this.api.setColor(this.spec);
-        this.graded.emit(true);
-      },
-      (err: any) => this.errors.push(err.error),
-      () => this.pending = false
-    );
+
+    await firstValueFrom(this.challengesService.grade(submission).pipe(
+      catchError((err, caughtChallenge) => {
+        this.errors.push(err);
+        return caughtChallenge;
+      }),
+      tap(c => {
+        if (c) {
+          this.spec.instance = c;
+          this.api.setColor(this.spec);
+          this.graded.emit(true);
+        }
+
+        this.pending = false;
+      })
+    ));
   }
 }

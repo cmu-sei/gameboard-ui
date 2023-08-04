@@ -1,11 +1,12 @@
 import { LocalActiveChallenge } from "@/api/challenges.models";
 import { createStore, withProps } from "@ngneat/elf";
 import { SimpleEntity } from "@/api/models";
-import { Observable, combineLatest, firstValueFrom, map, of } from "rxjs";
+import { Observable, Subscription, combineLatest, firstValueFrom, map, of, race, startWith } from "rxjs";
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { ChallengesService } from "@/api/challenges.service";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
+import { PlayerService } from "@/api/player.service";
 
 interface ActiveChallengesProps {
     user: SimpleEntity;
@@ -26,16 +27,27 @@ export const activeChallengesStore = createStore(
 
 export type ActiveChallengesPredicate = (challenge: LocalActiveChallenge) => challenge is LocalActiveChallenge;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ActiveChallengesRepo implements OnDestroy {
+    public activePracticeChallenge$: Observable<LocalActiveChallenge | null> = activeChallengesStore.pipe(
+        map(store => this.resolveActivePracticeChallenge(store))
+    );
+
     constructor(
         challengesService: ChallengesService,
-        private localUser: LocalUserService,
+        playerService: PlayerService,
+        localUser: LocalUserService,
         private unsub: UnsubscriberService) {
+
         this.unsub.add(
             combineLatest([
                 of(challengesService),
-                localUser.user$
+                localUser.user$,
+                race([
+                    challengesService.challengeGraded$.pipe(startWith("")),
+                    challengesService.challengeDeployStateChanged$.pipe(startWith("")),
+                    playerService.playerSessionReset$.pipe(startWith("")),
+                ]),
             ]).pipe(
                 map(([challengesService, user]) => ({ challengesService, user }))
             ).subscribe(ctx => this._initState(ctx.challengesService, ctx.user?.id || null))
@@ -43,7 +55,7 @@ export class ActiveChallengesRepo implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        throw new Error("Method not implemented.");
+        this.unsub.unsubscribeAll();
     }
 
     private async _initState(challengesService: ChallengesService, localUserId: string | null) {
@@ -61,12 +73,8 @@ export class ActiveChallengesRepo implements OnDestroy {
         }));
     }
 
-    activePracticeChallenge$(): Observable<LocalActiveChallenge | null> {
-        return activeChallengesStore.pipe(map(store => store.practice.length ? store.practice[0] : null));
-    }
-
-    getPracticeChallenge(): LocalActiveChallenge | null {
-        return activeChallengesStore.state.practice.length ? activeChallengesStore.state.practice[0] : null;
+    getActivePracticeChallenge(): LocalActiveChallenge | null {
+        return this.resolveActivePracticeChallenge(activeChallengesStore.value);
     }
 
 
@@ -79,5 +87,9 @@ export class ActiveChallengesRepo implements OnDestroy {
             ...(activeChallengesStore.state.practice.filter(predicate) || []),
             ...(activeChallengesStore.state.competition.filter(predicate) || [])
         ];
+    }
+
+    private resolveActivePracticeChallenge(storeState: ActiveChallengesProps) {
+        return storeState.practice.length ? storeState.practice[0] : null;
     }
 }
