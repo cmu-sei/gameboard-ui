@@ -19,7 +19,6 @@
       </div>
 
       <markdown [data]="spec.text"></markdown>
-
       <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
         [playerContext]="playerContext" [autoPlay]="true"></app-play>
     </ng-container>

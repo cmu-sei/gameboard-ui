@@ -39,7 +39,6 @@ export class PracticeSessionComponent {
       filter(p => !!p.cid),
       switchMap(p => practiceService.searchChallenges({ term: p.cid })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
-      // tap(s => this.spec = s)
     );
 
     this.authed$ = localUser.user$.pipe(
@@ -48,6 +47,14 @@ export class PracticeSessionComponent {
 
     this.unsub.add(
       this.activeChallengesRepo.activePracticeChallenge$
+        .pipe(
+          tap(c => {
+            if (c)
+              this.playerContext = { playerId: c.player.id, userId: c.user.id };
+            else
+              this.playerContext = null;
+          })
+        )
         .subscribe(activeChallenge => this.activePracticeChallenge$.next(activeChallenge))
     );
   }
@@ -61,10 +68,6 @@ export class PracticeSessionComponent {
 
     this.isStartingSession = true;
     const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId: s.gameId } as NewPlayer));
-    this.playerContext = {
-      playerId: player.id,
-      userId: player.userId
-    };
     this.isStartingSession = false;
   }
 

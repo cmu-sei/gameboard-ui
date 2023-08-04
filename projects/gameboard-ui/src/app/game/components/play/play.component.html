@@ -58,6 +58,6 @@
 </ng-container>
 
 <ng-template #deploying>
-    <app-challenge-deploy-countdown *ngIf="challenge"
-        [deploySeconds]="challenge.spec.averageDeploySeconds"></app-challenge-deploy-countdown>
+    <app-challenge-deploy-countdown *ngIf="isDeploying && challengeSpec"
+        [deploySeconds]="challengeSpec.averageDeploySeconds"></app-challenge-deploy-countdown>
 </ng-template>

@@ -38,6 +38,8 @@ export class PlayComponent {
   protected isDeploying = false;
   protected vmUrls: { [id: string]: string } = {};
 
+  private _needsAutoBoot = false;
+
   constructor(
     private activeChallengesRepo: ActiveChallengesRepo,
     private boardService: BoardService,
@@ -49,14 +51,11 @@ export class PlayComponent {
         tap(challenge => this.challenge = challenge),
         tap(challenge => this._buildLegacyContext(challenge)),
         tap(challenge => this.buildVmLinks(challenge)),
-      ).subscribe(async challenge => {
-        this.vmUrls = this.buildVmLinks(challenge);
-        this.legacyContext = await this._buildLegacyContext(challenge);
-      })
+      ).subscribe()
     );
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
+  async ngOnInit() {
     if (this.challengeSpec && this.playerContext) {
       if (this.autoPlay) {
         this.isDeploying = true;
@@ -74,6 +73,20 @@ export class PlayComponent {
         session: null
       };
       this.vmUrls = {};
+    }
+  }
+
+  async ngOnChanges(changes: SimpleChanges) {
+    if (changes.autoPlay && this.autoPlay && this.challengeSpec && this.playerContext && this._needsAutoBoot) {
+      this._needsAutoBoot = false;
+
+      this.isDeploying = true;
+      const activeChallenge = await firstValueFrom(this.challengesService.startPlaying({
+        specId: this.challengeSpec.id,
+        playerId: this.playerContext.playerId,
+        userId: this.playerContext.userId
+      }));
+      this.isDeploying = false;
     }
   }
 
