@@ -1,5 +1,6 @@
 <ng-container *ngIf="userActivePracticeChallenge === undefined; else resolved">
     <app-spinner></app-spinner>
+    Finding your challenge...
 </ng-container>
 
 <ng-template #resolved>
@@ -60,5 +61,5 @@
 </ng-template>
 
 <ng-template #changingSessionEnd>
-    <app-spinner></app-spinner>
+    <app-spinner>Updating your session...</app-spinner>
 </ng-template>

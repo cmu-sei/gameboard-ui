@@ -50,7 +50,7 @@ export class PracticeSessionComponent {
             this.playerContext = {
               playerId: c.player.id,
               userId: c.user.id
-            }
+            };
         }))
         .subscribe(activeChallenge => this.activePracticeChallenge$.next(activeChallenge))
     );

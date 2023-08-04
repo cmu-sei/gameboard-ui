@@ -1,7 +1,7 @@
 import { LocalActiveChallenge } from "@/api/challenges.models";
 import { createStore, withProps } from "@ngneat/elf";
 import { SimpleEntity } from "@/api/models";
-import { Observable, Subscription, combineLatest, firstValueFrom, map, of, race, startWith } from "rxjs";
+import { Observable, combineLatest, concat, firstValueFrom, map, merge, of, startWith, tap } from "rxjs";
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { ChallengesService } from "@/api/challenges.service";
@@ -18,7 +18,7 @@ const DEFAULT_STATE: ActiveChallengesProps = {
     user: { id: "", name: "" },
     competition: [],
     practice: []
-}
+};
 
 export const activeChallengesStore = createStore(
     { name: 'activeChallenges' },
@@ -43,13 +43,15 @@ export class ActiveChallengesRepo implements OnDestroy {
             combineLatest([
                 of(challengesService),
                 localUser.user$,
-                race([
+                merge([
                     challengesService.challengeGraded$.pipe(startWith("")),
                     challengesService.challengeDeployStateChanged$.pipe(startWith("")),
                     playerService.playerSessionReset$.pipe(startWith("")),
+                    playerService.playerSessionChanged$.pipe(startWith("")),
+                    playerService.teamSessionChanged$.pipe(startWith(""))
                 ]),
             ]).pipe(
-                map(([challengesService, user]) => ({ challengesService, user }))
+                map(([challengesService, user]) => ({ challengesService, user })),
             ).subscribe(ctx => this._initState(ctx.challengesService, ctx.user?.id || null))
         );
     }

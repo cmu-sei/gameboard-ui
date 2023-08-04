@@ -13,11 +13,14 @@ import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, 
 export class PlayerService {
   url = '';
 
-  private _teamSessionChanged$ = new Subject<string>();
-  public teamSessionChanged$ = this._teamSessionChanged$.asObservable();
-
   private _playerSessionReset$ = new Subject<string>();
   public playerSessionReset$ = this._playerSessionReset$.asObservable();
+
+  private _playerSessionChanged$ = new Subject<string>();
+  public playerSessionChanged$ = this._playerSessionChanged$.asObservable();
+
+  private _teamSessionChanged$ = new Subject<string>();
+  public teamSessionChanged$ = this._teamSessionChanged$.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -74,8 +77,9 @@ export class PlayerService {
 
   public updateSession(model: SessionChangeRequest): Observable<void> {
     return this.http.put<any>(`${this.url}/team/session`, model).pipe(
-      tap(_ => this._teamSessionChanged$.next(model.teamId)
-      ));
+      tap(_ => this._teamSessionChanged$.next(model.teamId)),
+      tap(_ => this._playerSessionChanged$.next(model.teamId)),
+    );
   }
 
   public unenroll(id: string, asAdmin: boolean = false): Observable<void> {

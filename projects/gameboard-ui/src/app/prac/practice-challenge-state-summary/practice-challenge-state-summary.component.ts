@@ -45,6 +45,7 @@ export class PracticeChallengeStateSummaryComponent {
         }))
       ).subscribe(ctx => {
         this.updatePracticeChallenge(ctx.practiceChallenge);
+        this.isChangingSessionEnd = false;
       })
     );
   }
@@ -82,7 +83,6 @@ export class PracticeChallengeStateSummaryComponent {
       teamId,
       sessionEnd: new Date()
     }));
-    await this.updatePracticeChallenge(practiceChallenge);
     this.isChangingSessionEnd = false;
   }
 

@@ -1,5 +1,4 @@
 <ng-container *ngIf="playerContext && challengeSpec">
-    {{ isDeploying && challenge }}
     <ng-container *ngIf="!isDeploying && challenge; else deploying">
         <h3>Gamespace Resources</h3>
         <div class="vms-container my-4">
@@ -45,8 +44,10 @@
             </div>
             <div>
                 Support Code:
-                <app-clipspan class="text-info m-2 p-2">{{challenge.challengeDeployment.challengeId| slice:0:8}}
-                    {{challenge.spec.tag}}</app-clipspan>
+                <app-clipspan class="text-info m-2 p-2">
+                    {{challenge.challengeDeployment.challengeId| slice:0:8}}
+                    {{challenge.spec.tag}}
+                </app-clipspan>
             </div>
         </div>
 
