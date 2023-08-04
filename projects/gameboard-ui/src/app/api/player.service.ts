@@ -3,12 +3,15 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DateTime } from 'luxon';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
+import { UserService as LocalUserService } from '@/utility/user.service';
 import { ConfigService } from '../utility/config.service';
 import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ActiveChallengesPredicate, ActiveChallengesRepo, activeChallengesStore } from '@/stores/active-challenges.store';
+import { ChallengesService } from './challenges.service';
+import { LocalActiveChallenge } from './challenges.models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -16,8 +19,10 @@ export class PlayerService {
 
   constructor(
     private http: HttpClient,
+    private activeChallengesRepo: ActiveChallengesRepo,
     private config: ConfigService,
-    private gameSessionService: GameSessionService
+    private gameSessionService: GameSessionService,
+    private localUser: LocalUserService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -66,8 +71,16 @@ export class PlayerService {
     );
   }
 
-  public updateSession(model: SessionChangeRequest): Observable<any> {
-    return this.http.put<any>(`${this.url}/team/session`, model);
+  public updateSession(model: SessionChangeRequest): Observable<LocalActiveChallenge[]> {
+    return this.http.put<any>(`${this.url}/team/session`, model).pipe(
+      tap(_ => {
+        if (this.localUser.user$.value) {
+          return this.activeChallengesRepo.search((challenge: LocalActiveChallenge): challenge is LocalActiveChallenge => challenge.teamId === model.teamId);
+        }
+
+        return [];
+      })
+    );
   }
 
   public unenroll(id: string, asAdmin: boolean = false): Observable<void> {

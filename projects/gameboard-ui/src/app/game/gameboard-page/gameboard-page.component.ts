@@ -8,7 +8,6 @@ import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription
 import { catchError, debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
-import { PlayerService } from '../../api/player.service';
 import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
 import { HubState, NotificationService } from '../../services/notification.service';
@@ -75,31 +74,31 @@ export class GameboardPageComponent implements OnDestroy {
       tap(b => {
         this.ctx = b;
 
-        if (!b.game.isPracticeMode) {
-          this.performanceSummaryViewModel = {
-            player: {
-              id: b.id,
-              teamId: b.teamId,
-              session: b.session,
-              scoring: {
-                rank: b.rank,
-                score: b.score,
-                partialCount: b.partialCount,
-                correctCount: b.correctCount
-              }
-            },
-            game: {
-              isPracticeMode: b.game.isPracticeMode
+        this.performanceSummaryViewModel = {
+          player: {
+            id: b.id,
+            teamId: b.teamId,
+            session: b.session,
+            scoring: {
+              rank: b.rank,
+              score: b.score,
+              partialCount: b.partialCount,
+              correctCount: b.correctCount
             }
-          };
-        }
+          }
+        };
       }),
       tap(b => this.startHub(b)),
       tap(() => this.reselect())
     ).subscribe();
 
     const launched$ = this.launching$.pipe(
-      switchMap(s => api.launch({ playerId: this.ctx.id, specId: s.id, variant: this.variant })),
+      switchMap(s => api.launch({
+        playerId: this.ctx.id,
+        specId: s.id,
+        variant: this.variant,
+        userId: usersvc.user$.value!.id
+      })),
       catchError(err => {
         this.errors.push(err);
         return of(null as unknown as Challenge);

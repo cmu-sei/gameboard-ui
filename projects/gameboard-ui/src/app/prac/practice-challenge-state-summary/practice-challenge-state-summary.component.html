@@ -6,10 +6,10 @@
     <ng-container *ngIf="userActivePracticeChallenge">
         <div class="text-info card-text mb-2">
             <a
-                [routerLink]="['/game/board', userActivePracticeChallenge.player.id, userActivePracticeChallenge.challengeDeployment.challengeId]">
+                [routerLink]="['/practice', userActivePracticeChallenge.spec.id, slug(userActivePracticeChallenge.spec.name)]">
                 <alert type="info">
-                    <strong>Your active practice challenge:</strong> {{ userActivePracticeChallenge.challengeSpec.name
-                    }}
+                    <strong>Your active practice challenge:</strong>
+                    {{ userActivePracticeChallenge.spec.name }}
                 </alert>
             </a>
             <span
@@ -34,23 +34,31 @@
                 </tr>
             </tbody>
         </table>
-        <ng-container *ngIf="userActivePracticeChallenge.session.msTilEnd">
-            <div class="text-center">
-                <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="extendSession()">
-                    Extend Session
-                </app-confirm-button>
-                <span class="mr-2"></span>
-                <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="endSession()">
-                    End Session
-                </app-confirm-button>
-            </div>
+
+        <ng-container *ngIf="userActivePracticeChallenge.session.isDuring()">
+            <ng-container *ngIf="!isChangingSessionEnd; else changingSessionEnd">
+                <div class="text-center">
+                    <app-confirm-button btnClass="btn btn-info btn-sm"
+                        (confirm)="extendSession(userActivePracticeChallenge)">
+                        Extend Session
+                    </app-confirm-button>
+                    <span class="mr-2"></span>
+                    <app-confirm-button btnClass="btn btn-info btn-sm"
+                        (confirm)="endSession(userActivePracticeChallenge)">
+                        End Session
+                    </app-confirm-button>
+                </div>
+            </ng-container>
         </ng-container>
 
-        <div *ngIf="userActivePracticeChallenge.session.msTilEnd && userActivePracticeChallenge.session.msTilEnd <= 0"
-            class="text-center">
+        <div *ngIf="userActivePracticeChallenge.session.isAfter()" class="text-center">
             <a class="btn btn-info btn-sm" [routerLink]="['/practice']">
                 More Practice
             </a>
         </div>
     </ng-container>
+</ng-template>
+
+<ng-template #changingSessionEnd>
+    <app-spinner></app-spinner>
 </ng-template>

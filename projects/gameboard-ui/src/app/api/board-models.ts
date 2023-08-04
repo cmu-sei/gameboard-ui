@@ -72,6 +72,7 @@ export interface ChallengeEvent {
 export interface NewChallenge {
   specId: string;
   playerId: string;
+  userId: string;
   variant?: number;
 }
 

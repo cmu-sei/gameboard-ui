@@ -1,5 +1,4 @@
-import { ApiTimeWindowState } from '@/core/models/api-time-window';
-import { Component, Input, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
@@ -11,25 +10,17 @@ import { LocalActiveChallenge } from '@/api/challenges.models';
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss']
 })
-export class PlayComponent implements OnInit {
-  @Input() challenge?: LocalActiveChallenge;
+export class PlayComponent {
+  @Input() challenge: LocalActiveChallenge | null = null;
   @Input() autoPlay = false;
 
-  protected isPlayAllowed = false;
   protected isDeploying = false;
   protected fa = fa;
   protected vmUrls: { [id: string]: string } = {};
 
   constructor(
     private challengesService: ChallengesService,
-    private routerService: RouterService) { }
-
-  ngOnInit(): void {
-    if (!this.challenge) {
-      throw new Error("Can't use the Play component without a challenge input.");
-    }
-
-    this.isPlayAllowed = this.challenge.session.state == ApiTimeWindowState.During;
+    private routerService: RouterService) {
   }
 
   ngOnChanges(changes: SimpleChanges) {

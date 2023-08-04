@@ -12,9 +12,11 @@ import { PracticePageComponent } from './practice-page/practice-page.component';
 import { PracticeChallengeListComponent } from './practice-challenge-list/practice-challenge-list.component';
 import { PracticeSessionComponent } from './practice-session/practice-session.component';
 import { GameModule } from '@/game/game.module';
+import { PracticeChallengeStateSummaryComponent } from './practice-challenge-state-summary/practice-challenge-state-summary.component';
 
 @NgModule({
   declarations: [
+    PracticeChallengeStateSummaryComponent,
     PracticePageComponent,
     PracticeChallengeListComponent,
     PracticeSessionComponent,

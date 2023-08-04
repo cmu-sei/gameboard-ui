@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { NewPlayer } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -12,6 +12,7 @@ import { ChallengesService } from '@/api/challenges.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { LogService } from '@/services/log.service';
 import { LocalActiveChallenge } from '@/api/challenges.models';
+import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 
 @Component({
   selector: 'app-practice-session',
@@ -21,7 +22,7 @@ export class PracticeSessionComponent {
   errors: Error[] = [];
   spec$: Observable<SpecSummary>;
   authed$: Observable<boolean>;
-  activeChallenge: LocalActiveChallenge | null = null;
+  activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
 
   private _specId?: string;
   protected isPlayingOtherChallenge = false;
@@ -29,6 +30,7 @@ export class PracticeSessionComponent {
 
   constructor(
     route: ActivatedRoute,
+    private activeChallengesRepo: ActiveChallengesRepo,
     private challengesService: ChallengesService,
     private modalService: ModalConfirmService,
     private localUser: LocalUserService,
@@ -44,12 +46,11 @@ export class PracticeSessionComponent {
     );
 
     this.authed$ = localUser.user$.pipe(
-      tap(u => {
-        if (u) {
-          this.resolveActiveChallenge(u.id);
-        }
-      }),
       map(u => !!u),
+    );
+
+    this.unsub.add(
+      this.activeChallengesRepo.activePracticeChallenge$().subscribe(activeChallenge => this.activePracticeChallenge$.next(activeChallenge))
     );
   }
 
@@ -60,34 +61,31 @@ export class PracticeSessionComponent {
       throw new Error("Can't start a practice challenge while not authenticated.");
     }
 
+    this.isStartingSession = true;
     const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId: s.gameId } as NewPlayer));
-    await firstValueFrom(this.challengesService.startPlaying({ specId: s.id, playerId: player.id }));
-    this.resolveActiveChallenge(userId);
+    await firstValueFrom(this.challengesService.startPlaying({
+      specId: s.id,
+      playerId: player.id,
+      userId: userId
+    }));
+    this.isStartingSession = false;
   }
 
-  handleStartNewChallengeClick(spec: SpecSummary, otherChallenge: LocalActiveChallenge) {
+  handleStartNewChallengeClick(spec: SpecSummary) {
+    const currentPracticeChallenge = this.activePracticeChallenge$.value;
+    if (!currentPracticeChallenge) {
+      throw new Error("Can't end previous challenge and start a new one - no previous challenge detected.");
+    }
+
     this.modalService.openConfirm({
       title: `Start a new practice challenge?`,
-      bodyContent: `If you continue, you'll end your session for practice challenge **${otherChallenge.challengeSpec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
+      bodyContent: `If you continue, you'll end your session for practice challenge **${currentPracticeChallenge.spec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-        if (!this.activeChallenge) {
-          throw new Error("Can't end previous challenge and start a new one - no previous challenge detected.");
-        }
 
-        await this.practiceService.endPracticeChallenge(this.activeChallenge.teamId);
+        await this.practiceService.endPracticeChallenge(currentPracticeChallenge.teamId);
         this.play(spec);
       }
     });
-  }
-
-  private async resolveActiveChallenge(userId: string): Promise<void> {
-    const activeChallenges = await firstValueFrom(this.challengesService.getActiveChallenges(userId));
-
-    if (activeChallenges.practice.length) {
-      this.activeChallenge = activeChallenges.practice[0];
-    }
-
-    this.isPlayingOtherChallenge = !!this._specId && !!this.activeChallenge && (this.activeChallenge.challengeSpec.id !== this._specId!);
   }
 }

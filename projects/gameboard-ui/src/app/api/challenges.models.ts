@@ -4,7 +4,7 @@ import { VmState } from "./board-models";
 import { SimpleEntity } from "./models";
 
 export interface ActiveChallenge {
-    challengeSpec: {
+    spec: {
         id: string;
         name: string;
         tag: string;
@@ -14,6 +14,7 @@ export interface ActiveChallenge {
     user: SimpleEntity;
     challengeDeployment: {
         challengeId: string,
+        isDeployed: boolean;
         vms: VmState[]
     };
     teamId: string;

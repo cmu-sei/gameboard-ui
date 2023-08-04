@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 import { Challenge, NewChallenge } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
-import { UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
+import { ActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
 import { LocalTimeWindow } from '@/core/models/api-time-window';
 import { PlayerMode } from './player-models';
 import { SimpleEntity } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesService {
-
   constructor(
     private apiUrl: ApiUrlService,
     private http: HttpClient) { }
@@ -43,10 +42,19 @@ export class ChallengesService {
     );
   }
 
-  public startPlaying(challenge: NewChallenge): Observable<Challenge> {
-    return this.http.post<Challenge>(this.apiUrl.build("challenge"), challenge).pipe(tap(c => {
+  public startPlaying(challenge: NewChallenge): Observable<ActiveChallenge> {
+    const specId = challenge.specId;
+    return this.http.post<Challenge>(this.apiUrl.build("challenge"), challenge).pipe(
+      switchMap(c => this.getActiveChallenges(challenge.userId)),
+      map(activeChallenges => {
+        const startedChallenge = [...activeChallenges.competition, ...activeChallenges.practice].find(c => c.spec.id === specId);
 
-    }));
+        if (!startedChallenge)
+          throw new Error(`Couldn't resolve the started challenge with specId ${specId}.`);
+
+        return startedChallenge;
+      })
+    )
   }
 
   public deploy(challenge: { id: string }): Observable<Challenge> {

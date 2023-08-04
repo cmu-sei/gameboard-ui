@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ConfigService } from '@/utility/config.service';
-import { UserService as LocalUserService } from '@/utility/user.service';
 
 @Component({
   selector: 'app-practice-page',
@@ -9,12 +8,9 @@ import { UserService as LocalUserService } from '@/utility/user.service';
 })
 export class PracticePageComponent {
   protected appName?: string;
-  protected localUserId?: string;
 
   constructor(
-    configService: ConfigService,
-    localUser: LocalUserService) {
+    configService: ConfigService) {
     this.appName = configService.settings.appname || "Gameboard";
-    this.localUserId = localUser.user$.getValue()?.id;
   }
 }

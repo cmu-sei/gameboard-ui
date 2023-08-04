@@ -8,6 +8,7 @@ import { SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { PlayerService } from '@/api/player.service';
 import { LocalTimeWindow } from '@/core/models/api-time-window';
+import { activeChallengesStore } from '@/stores/active-challenges.store';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
@@ -27,6 +28,13 @@ export class PracticeService {
       teamId,
       sessionEnd: new Date(Date.parse("0001-01-01T00:00:00Z"))
     }));
+
+    activeChallengesStore.update(state => {
+      return {
+        ...state,
+        practice: []
+      };
+    });
   }
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {

@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, map, switchMap, tap } from 'rxjs';
+import { slug } from '@/tools/functions';
 
 @Component({
   selector: 'app-practice-challenge-list',
@@ -25,6 +26,7 @@ export class PracticeChallengeListComponent {
   count = 0;
   skip = 0;
   take = 1;
+  protected slug = slug;
 
   private static readonly DEFAULT_PAGE_SIZE = 100;
 
@@ -63,10 +65,6 @@ export class PracticeChallengeListComponent {
         skip: s, navigate: true
       }
     });
-  }
-
-  slug(s: string): string {
-    return s.toLowerCase().replace(/\W/g, "-").replace("--", "-");
   }
 
   private search(search: Search) {

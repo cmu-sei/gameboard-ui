@@ -7,15 +7,15 @@
     <p>{{spec.description}}</p>
 
     <ng-container *ngIf="(authed$ | async); else unauthed">
-      <div class="challenge-management-buttons my-5 d-flex justify-content-center">
+      <div *ngIf="!isStartingSession" class="challenge-management-buttons my-5 d-flex justify-content-center">
 
-        <app-confirm-button *ngIf="!activeChallenge" btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec)"
-          class="d-block">
+        <app-confirm-button *ngIf="!(activePracticeChallenge$ | async)" btnClass="btn btn-lg btn-info px-4"
+          (confirm)="play(spec)" class="d-block">
           <span>Start Practice Session</span>
         </app-confirm-button>
 
         <button *ngIf="isPlayingOtherChallenge" type="button" class="btn btn-lg btn-warning"
-          (click)="handleStartNewChallengeClick(spec, activeChallenge!)">
+          (click)="handleStartNewChallengeClick(spec)">
           Stop your current challenge and play this one instead
         </button>
       </div>
@@ -23,7 +23,7 @@
       <markdown [data]="spec.text"></markdown>
 
       <ng-container *ngIf="!isStartingSession; else starting">
-        <app-play *ngIf="!isPlayingOtherChallenge && activeChallenge" [challenge]="activeChallenge"></app-play>
+        <app-play *ngIf="!isPlayingOtherChallenge" [challenge]="(activePracticeChallenge$ | async) || null"></app-play>
       </ng-container>
     </ng-container>
   </div>

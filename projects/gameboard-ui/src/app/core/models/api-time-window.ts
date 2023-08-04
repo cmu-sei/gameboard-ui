@@ -38,9 +38,8 @@ export class LocalTimeWindow {
     isAfter() { return this.state == ApiTimeWindowState.After; }
 }
 
-
 export enum ApiTimeWindowState {
-    Before,
-    During,
-    After
+    Before = "before",
+    During = "during",
+    After = "after"
 }

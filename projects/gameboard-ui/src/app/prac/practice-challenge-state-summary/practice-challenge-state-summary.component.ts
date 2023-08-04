@@ -1,53 +1,59 @@
 import { LocalActiveChallenge } from '@/api/challenges.models';
-import { ChallengesService } from '@/api/challenges.service';
 import { PlayerService } from '@/api/player.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';
 import { LogService } from '@/services/log.service';
 import { PracticeService } from '@/services/practice.service';
-import { logTap } from '@/tools/operators';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UserService as LocalUserService } from '@/utility/user.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { Component } from '@angular/core';
 import { DateTime } from 'luxon';
-import { Observable, firstValueFrom, map, of, tap, timer } from 'rxjs';
+import { Observable, combineLatest, firstValueFrom, map, timer } from 'rxjs';
+import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
+import { slug } from '@/tools/functions';
 
 @Component({
   selector: 'app-practice-challenge-state-summary',
   templateUrl: './practice-challenge-state-summary.component.html',
   styleUrls: ['./practice-challenge-state-summary.component.scss']
 })
-export class PracticeChallengeStateSummaryComponent implements OnChanges {
-  @Input() userId?: string;
-
+export class PracticeChallengeStateSummaryComponent {
+  protected isChangingSessionEnd = false;
   protected msElapsed$?: Observable<number | undefined>;
   protected msRemaining$?: Observable<number | undefined>;
   protected userActivePracticeChallenge: LocalActiveChallenge | undefined | null;
-
+  protected slug = slug;
   private _timer$ = timer(0, 1000);
 
   constructor(
+    activeChallengesRepo: ActiveChallengesRepo,
+    localUserService: LocalUserService,
     protected faService: FontAwesomeService,
-    private challengesService: ChallengesService,
     private logService: LogService,
     private playerService: PlayerService,
-    private practiceService: PracticeService) { }
-
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    if (!changes.userId)
-      return;
-
-    this.updatePracticeChallenge();
+    private practiceService: PracticeService,
+    private unsub: UnsubscriberService) {
+    unsub.add(
+      combineLatest([
+        localUserService.user$,
+        activeChallengesRepo.activePracticeChallenge$()
+      ]).pipe(
+        map(([localUser, practiceChallenge]) => ({
+          localUser,
+          practiceChallenge
+        }))
+      ).subscribe(ctx => {
+        if (ctx.localUser) {
+          this.updatePracticeChallenge(ctx.practiceChallenge);
+        }
+      })
+    );
   }
 
-  private async updatePracticeChallenge() {
-    this.userActivePracticeChallenge = undefined;
-    if (!this.userId)
-      this.userActivePracticeChallenge = null;
+  private async updatePracticeChallenge(challenge: LocalActiveChallenge | null) {
+    // store the active challenge
+    this.userActivePracticeChallenge = challenge || null;
 
-    const activeChallenges = await firstValueFrom(this.challengesService.getActiveChallenges(this.userId!));
-    this.userActivePracticeChallenge = activeChallenges.practice.length ? activeChallenges.practice[0] : null;
-    this.updateTimes();
-  }
-
-  private updateTimes() {
+    // update timers to accurately reflect the active challenge
     this.msElapsed$ = this._timer$.pipe(
       map(tick =>
         this.userActivePracticeChallenge?.session.start ?
@@ -64,26 +70,29 @@ export class PracticeChallengeStateSummaryComponent implements OnChanges {
     );
   }
 
-  async extendSession(): Promise<void> {
+  async extendSession(practiceChallenge: LocalActiveChallenge): Promise<void> {
     if (!this.userActivePracticeChallenge) {
       this.logService.logError("Can't extend a session without an active practice challenge.");
     }
 
+    this.isChangingSessionEnd = true;
     const teamId = this.userActivePracticeChallenge!.teamId;
     this.userActivePracticeChallenge = undefined;
     await firstValueFrom(this.playerService.updateSession({
       teamId,
       sessionEnd: new Date()
     }));
-    await this.updatePracticeChallenge();
+    await this.updatePracticeChallenge(practiceChallenge);
+    this.isChangingSessionEnd = false;
   }
 
-  async endSession(): Promise<void> {
+  async endSession(practiceChallenge: LocalActiveChallenge): Promise<void> {
     if (!this.userActivePracticeChallenge) {
       this.logService.logError("Can't extend a session without an active practice challenge.");
     }
 
+    this.isChangingSessionEnd = true;
     await this.practiceService.endPracticeChallenge(this.userActivePracticeChallenge!.teamId);
-    await this.updatePracticeChallenge();
+    this.isChangingSessionEnd = false;
   }
 }

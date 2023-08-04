@@ -54,9 +54,6 @@ export class PlayerSessionComponent implements OnDestroy {
               correctCount: ctx.player.correctCount,
               partialCount: ctx.player.partialCount
             }
-          },
-          game: {
-            isPracticeMode: ctx.game.isPracticeMode
           }
         };
 

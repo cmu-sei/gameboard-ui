@@ -16,9 +16,6 @@ export interface GameboardPerformanceSummaryViewModel {
       correctCount: number;
       partialCount: number;
     }
-  },
-  game: {
-    isPracticeMode: boolean
   }
 }
 

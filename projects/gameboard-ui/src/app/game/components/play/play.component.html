@@ -15,13 +15,13 @@
             </div>
 
             <div class="vm-controls-container my-4">
-                <app-confirm-button *ngIf="challenge.challengeDeployment.vms.length"
+                <app-confirm-button *ngIf="challenge.challengeDeployment.isDeployed"
                     btnClass="btn btn-sm btn-outline-warning mr-2"
                     (confirm)="undeploy(challenge.challengeDeployment.challengeId)">
                     <fa-icon [icon]="fa.trash"></fa-icon>
                     <span>Destroy</span>
                 </app-confirm-button>
-                <app-confirm-button *ngIf="challenge.challengeDeployment.vms.length"
+                <app-confirm-button *ngIf="!challenge.challengeDeployment.isDeployed"
                     btnClass="btn btn-sm btn-outline-warning"
                     (confirm)="deploy(challenge.challengeDeployment.challengeId)">
                     <fa-icon [icon]="fa.bolt"></fa-icon>
@@ -47,7 +47,7 @@
         <div>
             Support Code:
             <app-clipspan class="text-info m-2 p-2">{{challenge.challengeDeployment.challengeId| slice:0:8}}
-                {{challenge.challengeSpec.tag}}</app-clipspan>
+                {{challenge.spec.tag}}</app-clipspan>
         </div>
     </div>
 
