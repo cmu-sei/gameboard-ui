@@ -27,9 +27,9 @@ export class GamespaceQuizComponent {
     this.pending = true;
 
     const submission = {
-      challengeId: this.spec.instance!.id,
+      id: this.spec.instance!.id,
       sectionIndex: this.spec.instance!.state.challenge?.sectionIndex,
-      answers: this.spec.instance!.state.challenge?.questions?.map(q => ({ answer: q.answer })),
+      questions: this.spec.instance!.state.challenge?.questions?.map(q => ({ answer: q.answer })),
     };
     this.api.grade(submission).subscribe(
       (c: Challenge) => {

@@ -51,6 +51,7 @@ export class BoardService {
   }
 
   public grade(model: SectionSubmission): Observable<Challenge> {
+    console.log("grading this", model);
     return this.http.put<Challenge>(`${this.url}/challenge/grade`, model);
   }
 

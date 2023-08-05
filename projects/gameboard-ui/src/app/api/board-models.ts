@@ -195,9 +195,9 @@ export interface QuestionView {
 }
 
 export interface SectionSubmission {
-  challengeId: string;
+  id: string;
   sectionIndex: number;
-  answers: AnswerSubmission[];
+  questions: AnswerSubmission[];
 }
 
 export interface AnswerSubmission {
