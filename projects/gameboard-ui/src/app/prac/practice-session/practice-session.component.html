@@ -5,6 +5,8 @@
     <p>{{spec.description}}</p>
 
     <ng-container *ngIf="(authed$ | async); else unauthed">
+      <markdown [data]="spec.text"></markdown>
+
       <div *ngIf="!isStartingSession" class="challenge-management-buttons my-5 d-flex justify-content-center">
 
         <app-confirm-button *ngIf="!(activePracticeChallenge$ | async)" btnClass="btn btn-lg btn-info px-4"
@@ -18,7 +20,6 @@
         </button>
       </div>
 
-      <markdown [data]="spec.text"></markdown>
       <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
         [playerContext]="playerContext" [autoPlay]="true"></app-play>
     </ng-container>

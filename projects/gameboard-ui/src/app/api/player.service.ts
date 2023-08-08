@@ -14,13 +14,16 @@ export class PlayerService {
   url = '';
 
   private _playerSessionReset$ = new Subject<string>();
-  public playerSessionReset$ = this._playerSessionReset$.asObservable();
+  public readonly playerSessionReset$ = this._playerSessionReset$.asObservable();
+
+  private _playerSessionStarted$ = new Subject<string>();
+  public readonly playerSessionStarted$ = this._playerSessionStarted$.asObservable();
 
   private _playerSessionChanged$ = new Subject<string>();
-  public playerSessionChanged$ = this._playerSessionChanged$.asObservable();
+  public readonly playerSessionChanged$ = this._playerSessionChanged$.asObservable();
 
   private _teamSessionChanged$ = new Subject<string>();
-  public teamSessionChanged$ = this._teamSessionChanged$.asObservable();
+  public readonly teamSessionChanged$ = this._teamSessionChanged$.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -61,7 +64,8 @@ export class PlayerService {
 
   public start(player: Player): Observable<Player> {
     return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
-      map(p => this.transform(p) as Player)
+      map(p => this.transform(p) as Player),
+      tap(p => this._playerSessionStarted$.next(p.id))
     );
   }
 

@@ -1,7 +1,7 @@
 import { LocalActiveChallenge } from "@/api/challenges.models";
 import { createStore, withProps } from "@ngneat/elf";
 import { SimpleEntity } from "@/api/models";
-import { Observable, combineLatest, concat, firstValueFrom, map, merge, of, startWith, tap } from "rxjs";
+import { Observable, Subject, combineLatest, filter, firstValueFrom, map, merge, mergeAll, mergeMap, of, startWith, switchMap, tap } from "rxjs";
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { ChallengesService } from "@/api/challenges.service";
@@ -29,9 +29,11 @@ export type ActiveChallengesPredicate = (challenge: LocalActiveChallenge) => cha
 
 @Injectable({ providedIn: 'root' })
 export class ActiveChallengesRepo implements OnDestroy {
-    public activePracticeChallenge$: Observable<LocalActiveChallenge | null> = activeChallengesStore.pipe(
-        map(store => this.resolveActivePracticeChallenge(store))
-    );
+    public readonly activePracticeChallenge$: Observable<LocalActiveChallenge | null> = activeChallengesStore
+        .pipe(
+            startWith(activeChallengesStore.state),
+            switchMap(store => of(this.resolveActivePracticeChallenge(store))),
+        );
 
     constructor(
         challengesService: ChallengesService,
@@ -43,17 +45,19 @@ export class ActiveChallengesRepo implements OnDestroy {
             combineLatest([
                 of(challengesService),
                 localUser.user$,
-                merge([
-                    challengesService.challengeGraded$.pipe(startWith("")),
-                    challengesService.challengeDeployStateChanged$.pipe(startWith("")),
-                    playerService.playerSessionReset$.pipe(startWith("")),
-                    playerService.playerSessionChanged$.pipe(startWith("")),
-                    playerService.teamSessionChanged$.pipe(startWith(""))
-                ]),
+                merge(
+                    challengesService.challengeGraded$,
+                    challengesService.challengeDeployStateChanged$,
+                    playerService.playerSessionReset$,
+                    playerService.playerSessionChanged$,
+                    playerService.teamSessionChanged$
+                )
             ]).pipe(
-                map(([challengesService, user]) => ({ challengesService, user })),
-            ).subscribe(ctx => this._initState(ctx.challengesService, ctx.user?.id || null))
+                map(([challengesService]) => ({ challengesService })),
+            ).subscribe(ctx => this._initState(ctx.challengesService, localUser.user$.value?.id || null))
         );
+
+        this._initState(challengesService, localUser.user$.value?.id || null);
     }
 
     ngOnDestroy(): void {
@@ -63,6 +67,7 @@ export class ActiveChallengesRepo implements OnDestroy {
     private async _initState(challengesService: ChallengesService, localUserId: string | null) {
         if (!localUserId) {
             activeChallengesStore.update(state => DEFAULT_STATE);
+            return;
         }
 
         // the challenges come in with an API-level time-window (with epoch times for session)

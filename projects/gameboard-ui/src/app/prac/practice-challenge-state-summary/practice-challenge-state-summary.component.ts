@@ -42,7 +42,7 @@ export class PracticeChallengeStateSummaryComponent {
         map(([localUser, practiceChallenge]) => ({
           localUser,
           practiceChallenge
-        }))
+        })),
       ).subscribe(ctx => {
         this.updatePracticeChallenge(ctx.practiceChallenge);
         this.isChangingSessionEnd = false;

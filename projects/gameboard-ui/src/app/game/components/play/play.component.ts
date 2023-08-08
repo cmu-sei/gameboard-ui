@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
-import { Subject, firstValueFrom, from, switchMap, tap } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 import { LocalActiveChallenge } from '@/api/challenges.models';
 import { BoardPlayer, BoardSpec } from '@/api/board-models';
 import { BoardService } from '@/api/board.service';
@@ -37,9 +37,11 @@ export class PlayComponent {
   protected fa = fa;
   protected legacyContext: LegacyContext = { boardPlayer: null, boardSpec: null, session: null };
   protected isDeploying = false;
+  protected isUndeploying = false;
   protected vmUrls: { [id: string]: string } = {};
 
-  private _needsAutoBoot = false;
+  private _autobootedForPlayerId?: string;
+
 
   constructor(
     private activeChallengesRepo: ActiveChallengesRepo,
@@ -50,18 +52,26 @@ export class PlayComponent {
     this.unsub.add(
       this.activeChallengesRepo.activePracticeChallenge$.pipe(
         tap(challenge => this.challenge = challenge),
-        tap(challenge => this._buildLegacyContext(challenge)),
-        tap(challenge => this.buildVmLinks(challenge)),
+        tap(async challenge => this.legacyContext = await this._buildLegacyContext(challenge)),
+        tap(challenge => this.vmUrls = this.buildVmLinks(challenge)),
       ).subscribe()
     );
   }
 
-  ngOnInit() {
-    this._needsAutoBoot = this.autoPlay;
-  }
-
   async ngOnChanges(changes: SimpleChanges) {
-    if (this._needsAutoBoot && this.playerContext && this.challengeSpec) {
+    if (!this.playerContext?.playerId) {
+      this.legacyContext = {
+        boardPlayer: null,
+        boardSpec: null,
+        session: null
+      };
+
+      this.vmUrls = {};
+    }
+    // if the player record has changed since the last autoboot, reset it
+    // (this happens if the player ends the session and restarts it from the same)
+    // page
+    if (this.playerContext && this.challengeSpec && this._autobootedForPlayerId !== this.playerContext.playerId) {
       this.isDeploying = true;
       this.challenge = await firstValueFrom(this.challengesService.startPlaying({
         specId: this.challengeSpec.id,
@@ -69,15 +79,8 @@ export class PlayComponent {
         userId: this.playerContext.userId
       }));
       this.isDeploying = false;
-      this._needsAutoBoot = false;
+      this._autobootedForPlayerId = this.playerContext.playerId;
       this.challengeStarted.emit();
-    } else {
-      this.legacyContext = {
-        boardPlayer: null,
-        boardSpec: null,
-        session: null
-      };
-      this.vmUrls = {};
     }
   }
 
@@ -87,14 +90,14 @@ export class PlayComponent {
     }
 
     this.isDeploying = true;
-    const challenge = await firstValueFrom(this.challengesService.deploy({ id: challengeId }));
+    await firstValueFrom(this.challengesService.deploy({ id: challengeId }));
     this.isDeploying = false;
   }
 
   protected async undeploy(challengeId: string) {
-    this.isDeploying = true;
+    this.isUndeploying = true;
     await firstValueFrom(this.challengesService.undeploy({ id: challengeId }));
-    this.isDeploying = false;
+    this.isUndeploying = false;
   }
 
   private buildVmLinks(challenge: LocalActiveChallenge | null) {

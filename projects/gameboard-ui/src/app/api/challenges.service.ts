@@ -1,20 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, map, switchMap, tap } from 'rxjs';
 import { Challenge, NewChallenge, SectionSubmission } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
-import { ActiveChallenge, LocalActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
+import { LocalActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
 import { LocalTimeWindow } from '@/core/models/api-time-window';
 import { PlayerMode } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesService {
   private _challengeDeployStateChanged$ = new Subject<string>();
-  public challengeDeployStateChanged$ = this._challengeDeployStateChanged$.asObservable();
+  public readonly challengeDeployStateChanged$ = this._challengeDeployStateChanged$.asObservable();
 
   private _challengeGraded$ = new Subject<string>();
-  public challengeGraded$ = this._challengeGraded$.asObservable();
+  public readonly challengeGraded$ = this._challengeGraded$.asObservable();
 
   constructor(
     private apiUrl: ApiUrlService,

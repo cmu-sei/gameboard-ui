@@ -1,10 +1,20 @@
 <ng-container *ngIf="playerContext && challengeSpec">
-    <ng-container *ngIf="!isDeploying && challenge; else deploying">
+    <ng-container *ngIf="isDeploying">
+        <app-challenge-deploy-countdown *ngIf="isDeploying && challengeSpec"
+            [deploySeconds]="challengeSpec.averageDeploySeconds"></app-challenge-deploy-countdown>
+    </ng-container>
+
+    <ng-container *ngIf="isUndeploying">
+        <app-spinner>Stopping challenge resources...</app-spinner>
+    </ng-container>
+
+    <ng-container *ngIf="!isDeploying && !isUndeploying && challenge;">
         <h3>Gamespace Resources</h3>
         <div class="vms-container my-4">
-            <ul class="d-flex">
+            <ul class="d-flex flex-wrap">
                 <li *ngFor="let vm of challenge.challengeDeployment.vms">
-                    <a class="btn btn-sm btn-dark mr-2 d-block" [href]="vmUrls[vm.id]" target="_blank" role="button">
+                    <a class="btn btn-sm btn-dark mr-2 d-block" [href]="vmUrls[vm.id] | safeurl" target="_blank"
+                        role="button">
                         <fa-icon [icon]="fa.tv"></fa-icon>
                         <span>{{vm.name}}</span>
                     </a>
@@ -58,8 +68,3 @@
         </div>
     </ng-container>
 </ng-container>
-
-<ng-template #deploying>
-    <app-challenge-deploy-countdown *ngIf="isDeploying && challengeSpec"
-        [deploySeconds]="challengeSpec.averageDeploySeconds"></app-challenge-deploy-countdown>
-</ng-template>
