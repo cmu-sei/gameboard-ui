@@ -98,7 +98,7 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
     ]),
     FontAwesomeModule,
     CoreModule,
-    UtilityModule,
+    // UtilityModule,
   ]
 })
 export class ReportsModule { }
