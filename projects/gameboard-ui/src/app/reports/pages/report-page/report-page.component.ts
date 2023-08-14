@@ -1,42 +1,27 @@
 import { ReportKey, ReportMetaData, ReportViewModel } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
 import { ActiveReportService } from '@/reports/services/active-report.service';
-import { LogService } from '@/services/log.service';
-import { PdfService } from '@/services/pdf.service';
 import { RouterService } from '@/services/router.service';
-import { Component, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, from, switchMap, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-report-page',
   templateUrl: './report-page.component.html',
   styleUrls: ['./report-page.component.scss']
 })
-export class ReportPageComponent implements AfterViewInit {
+export class ReportPageComponent {
   protected report$?: Observable<ReportViewModel | null>;
   protected metaData$: Observable<ReportMetaData | null> = this
     .activeReportService
-    .metaData$
-    .pipe(tap(m => this.metaData = m!));
-
-  protected metaData: ReportMetaData | null = null;
-  private reportTitle?: string;
+    .metaData$;
 
   constructor(
     private activeReportService: ActiveReportService,
-    private logService: LogService,
-    private pdfService: PdfService,
     private reportsService: ReportsService,
     private route: ActivatedRoute,
     private routerService: RouterService) {
-  }
-
-  ngAfterViewInit(): void {
-    this.report$ = this.route.params.pipe(
-      switchMap(route => from(this.reportsService.get(route.params.reportKey))),
-      tap(report => this.reportTitle = report?.name),
-    );
   }
 
   handleReportSelect(key?: ReportKey) {
@@ -45,16 +30,17 @@ export class ReportPageComponent implements AfterViewInit {
   }
 
   handleExportToCsv() {
-    if (!this.metaData)
+    if (!this.activeReportService.metaData$.value?.key)
       throw new Error("Can't export a report with unspecified key");
 
     this.reportsService.openExport(
-      this.metaData.key,
+      this.activeReportService.metaData$.value?.key,
       { ...this.route.snapshot.params }
     );
   }
 
   private displayReport(reportKey: ReportKey, query: Object | null = null) {
+    this.activeReportService.metaData$.next(null);
     this.routerService.toReport(reportKey, query);
   }
 }

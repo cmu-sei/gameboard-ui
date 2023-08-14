@@ -33,11 +33,9 @@ import { ProfileEditorComponent } from './components/profile-editor/profile-edit
 
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { FormsModule } from '@angular/forms';
-import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
-import { ShortDatePipe } from './pipes/short-date.pipe';
 import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
@@ -57,10 +55,8 @@ const components = [
   AgedDatePipe,
   UntilPipe,
   CamelspacePipe,
-  ShortDatePipe,
   ShortTimePipe,
   UntagPipe,
-  FriendlyTimePipe,
   SafeUrlPipe,
   ObserveOrderPipe,
   MatchesTermPipe,

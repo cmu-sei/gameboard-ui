@@ -39,6 +39,7 @@ import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { PluralizerPipe } from './pipes/pluralizer.pipe';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
 import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
+import { ShortDatePipe } from './pipes/short-date.pipe';
 import { SortPipe } from './pipes/sort.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
@@ -56,6 +57,7 @@ import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
+import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 
 const PUBLIC_DECLARATIONS = [
   AssetPathPipe,
@@ -79,12 +81,14 @@ const PUBLIC_DECLARATIONS = [
   ClockPipe,
   CountdownPipe,
   CountdownColorPipe,
+  FriendlyTimePipe,
   PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,
   RelativeUrlsPipe,
   SelectPagerComponent,
   ShareButtonComponent,
+  ShortDatePipe,
   SortPipe,
   SpinnerComponent,
   TextToColorPipe,

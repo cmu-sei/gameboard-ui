@@ -30,7 +30,7 @@
 <ng-template #collapsedView>
     <ul class="d-flex">
         <li *ngFor="let stat of allStats" class="d-block mr-4">
-            <strong>{{ stat.label | pluralizer:stat.value }}: </strong> {{stat.value}}
+            <strong>{{ stat.label | pluralizer:stat.value }}: </strong> <span class="text-info">{{stat.value}}</span>
         </li>
     </ul>
 </ng-template>

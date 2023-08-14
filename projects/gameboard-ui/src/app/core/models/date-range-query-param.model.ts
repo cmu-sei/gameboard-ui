@@ -24,33 +24,37 @@ export class DateRangeQueryParamModel {
         );
     }
 
-    private readonly _model: ReportDateRange = { dateStart: null, dateEnd: null };
-
     private _dateStart: Date | null = null;
     get dateStart(): Date | null {
-        return this._dateStart;
+        return this._dateStart || null;
     }
     set dateStart(value: Date | null) {
         const previousValue = this._dateStart ? this._dateStart.valueOf() : null;
         const currentValue = value ? value.valueOf() : null;
 
         if (previousValue !== currentValue) {
-            this._model.dateStart = value || null;
-            this.updateQueryParams(this._model);
+            this._dateStart = value || null;
+            this.updateQueryParams({
+                dateStart: this.dateStart,
+                dateEnd: this.dateEnd
+            });
         }
     }
 
     private _dateEnd: Date | null = null;
     get dateEnd(): Date | null {
-        return this._model.dateEnd || null;
+        return this._dateEnd || null;
     }
     set dateEnd(value: Date | null) {
         const previousValue = this._dateEnd ? this._dateEnd.valueOf() : null;
         const currentValue = value ? value.valueOf() : null;
 
         if (previousValue !== currentValue) {
-            this._model.dateEnd = value || null;
-            this.updateQueryParams(this._model);
+            this._dateEnd = value || null;
+            this.updateQueryParams({
+                dateStart: this.dateStart,
+                dateEnd: this.dateEnd
+            });
         }
     }
 
@@ -59,8 +63,6 @@ export class DateRangeQueryParamModel {
         params[this.dateStartParamName] = model.dateStart?.toLocaleDateString("en-us");
         params[this.dateEndParamName] = model.dateEnd?.toLocaleDateString("en-us");
 
-        this.routerService.updateQueryParams({
-            parameters: params
-        });
+        this.routerService.updateQueryParams({ parameters: params });
     }
 }
