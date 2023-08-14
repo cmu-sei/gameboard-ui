@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { FontAwesomeService } from '@/services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -10,5 +10,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./admin-page.component.scss']
 })
 export class AdminPageComponent {
-  constructor(protected faService: FontAwesomeService) { }
+  protected fa = fa;
 }
