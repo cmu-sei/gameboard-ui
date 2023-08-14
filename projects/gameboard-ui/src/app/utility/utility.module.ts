@@ -18,7 +18,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // internal components/services
 import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ClipspanComponent } from './components/clipspan/clipspan.component';
-import { ConfirmButtonComponent } from './components/confirm-button/confirm-button.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
@@ -33,9 +32,6 @@ import { PagerComponent } from './components/pager/pager.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 
 import { CamelspacePipe } from './pipes/camelspace.pipe';
-import { ClockPipe } from './pipes/clock.pipe';
-import { CountdownColorPipe } from './pipes/countdown-color.pipe';
-import { CountdownPipe } from './pipes/countdown.pipe';
 import { FormsModule } from '@angular/forms';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
@@ -46,12 +42,10 @@ import { ShortTimePipe } from './pipes/short-time.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
 
-import { NAVIGATOR } from './services/navigator.service';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 const components = [
   ClipspanComponent,
-  ConfirmButtonComponent,
   ErrorDivComponent,
   DropzoneComponent,
   ImageManagerComponent,
@@ -63,12 +57,9 @@ const components = [
   AgedDatePipe,
   UntilPipe,
   CamelspacePipe,
-  CountdownPipe,
-  CountdownColorPipe,
   ShortDatePipe,
   ShortTimePipe,
   UntagPipe,
-  ClockPipe,
   FriendlyTimePipe,
   SafeUrlPipe,
   ObserveOrderPipe,
@@ -84,7 +75,6 @@ const components = [
     ...components,
     ProgressbarModule,
   ],
-  providers: [{ provide: NAVIGATOR, useValue: navigator }],
   imports: [
     CommonModule,
     FormsModule,

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { SupportReportRecord } from '../support-report/support-report.models';
-import { FontAwesomeService } from '@/services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-support-report-context-menu',
@@ -10,5 +10,5 @@ import { FontAwesomeService } from '@/services/font-awesome.service';
 export class SupportReportContextMenuComponent {
   @Input() record?: SupportReportRecord;
 
-  constructor(public faService: FontAwesomeService) { }
+  protected fa = fa;
 }

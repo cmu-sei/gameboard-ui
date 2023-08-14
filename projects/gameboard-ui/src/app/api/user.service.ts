@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult } from './user-models';
 import { LogService } from '@/services/log.service';
+import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -15,6 +16,7 @@ export class UserService {
   url = '';
 
   constructor(
+    private apiUrl: ApiUrlService,
     private config: ConfigService,
     private http: HttpClient,
     private log: LogService

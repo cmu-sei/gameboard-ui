@@ -8,11 +8,9 @@ import { map } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
 import { BoardPlayer, BoardSpec, Challenge, ChallengeResult, ChallengeSummary, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
-import { TimeWindow } from './player-models';
+import { FeedbackTemplate } from './feedback-models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class BoardService {
   url = '';
 
@@ -48,14 +46,6 @@ export class BoardService {
 
   public launch(model: NewChallenge): Observable<Challenge> {
     return this.http.post<Challenge>(`${this.url}/challenge`, model);
-  }
-
-  public grade(model: SectionSubmission): Observable<Challenge> {
-    return this.http.put<Challenge>(`${this.url}/challenge/grade`, model);
-  }
-
-  public regrade(id: string): Observable<Challenge> {
-    return this.http.put<Challenge>(`${this.url}/challenge/regrade`, { id });
   }
 
   public start(model: ChangedChallenge): Observable<Challenge> {

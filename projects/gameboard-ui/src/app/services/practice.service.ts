@@ -6,6 +6,8 @@ import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
 import { SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
+import { PlayerService } from '@/api/player.service';
+import { activeChallengesStore } from '@/stores/active-challenges.store';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
@@ -16,7 +18,22 @@ export class PracticeService {
     private apiUrl: ApiUrlService,
     private gameService: GameService,
     private http: HttpClient,
-    private logService: LogService) {
+    private logService: LogService,
+    private playerService: PlayerService) {
+  }
+
+  async endPracticeChallenge(teamId: string) {
+    await firstValueFrom(this.playerService.updateSession({
+      teamId,
+      sessionEnd: new Date(Date.parse("0001-01-01T00:00:00Z"))
+    }));
+
+    activeChallengesStore.update(state => {
+      return {
+        ...state,
+        practice: []
+      };
+    });
   }
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {

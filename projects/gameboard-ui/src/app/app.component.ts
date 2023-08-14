@@ -22,7 +22,7 @@ import { UnsubscriberService } from './services/unsubscriber.service';
 export class AppComponent implements OnInit {
   user$!: Observable<ApiUser | null>;
   toc$!: Observable<TocFile[]>;
-  custom_bg = "";
+  customBackground = "";
   env: any;
   isPracticeModeEnabled = false;
 
@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
 
     if (this.config.settings.custom_background) {
       this.document.body.classList.add(this.config.settings.custom_background);
+      this.customBackground = this.config.settings.custom_background;
     }
 
     this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));

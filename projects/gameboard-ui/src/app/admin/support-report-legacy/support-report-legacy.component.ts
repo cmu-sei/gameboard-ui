@@ -5,7 +5,7 @@ import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ReportService } from '../../api/report.service';
 import { TicketChallengeGroup, TicketDayGroup, TicketDayReport, TicketLabelGroup } from '../../api/support-models';
-import { FontAwesomeService } from '@/services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-support-report-legacy',
@@ -18,6 +18,7 @@ export class SupportReportLegacyComponent implements OnInit {
   showDays: boolean = true;
   showCategories: boolean = true;
 
+  protected fa = fa;
   games?: Game[];
   currentGame?: Game;
   startRange?: Date;
@@ -29,7 +30,6 @@ export class SupportReportLegacyComponent implements OnInit {
   challengeStats$: Observable<TicketChallengeGroup[]>;
 
   constructor(
-    public fa: FontAwesomeService,
     private gameService: GameService,
     private api: ReportService,
   ) {

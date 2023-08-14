@@ -54,15 +54,17 @@ export class PracticeModeReportByUserComponent implements OnChanges {
           sponsor: record.user.sponsor,
         },
         subtitle: `Practice Challenge: ${record.challenge.name}`,
+        subtitleDetail: record.challenge.game.name,
         attempts: record.attempts.map(a => ({
           challengeSpec: { id: record.challenge.id, name: record.challenge.name },
           game: record.challenge.game,
           maxPossibleScore: record.challenge.maxPossibleScore,
           result: a.result,
           score: a.score || 0,
+          startDate: a.start
         }))
       },
-      modalClasses: ["modal-dialog-centered", "modal-lg"]
+      modalClasses: ["modal-dialog-centered", "modal-md"]
     });
   }
 }

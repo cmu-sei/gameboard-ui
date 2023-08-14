@@ -9,6 +9,7 @@ import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 
 import { Challenge, ChallengeSummary } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { Search } from '../../api/models';
+import { ChallengesService } from '@/api/challenges.service';
 
 @Component({
   selector: 'app-challenge-browser',
@@ -37,6 +38,7 @@ export class ChallengeBrowserComponent implements OnInit {
 
   constructor(
     private api: BoardService,
+    private challengesService: ChallengesService,
     private route: ActivatedRoute,
   ) {
 
@@ -72,7 +74,7 @@ export class ChallengeBrowserComponent implements OnInit {
       map(a => {
         // remove properties that aren't displayed for current challenges for consistency
         return a.map(i => {
-          let {submissions, gameId, ...rest} = i as any;
+          let { submissions, gameId, ...rest } = i as any;
           rest.archived = true;
           return rest;
         });
@@ -110,7 +112,7 @@ export class ChallengeBrowserComponent implements OnInit {
   }
 
   regrade(c: ChallengeSummary): void {
-    this.api.regrade(c.id).subscribe(
+    this.challengesService.regrade(c.id).subscribe(
       r => this.selectedAudit = r,
       (err) => this.errors.push(err)
     );

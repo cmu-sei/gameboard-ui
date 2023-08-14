@@ -4,21 +4,40 @@
     <span class="lead">{{spec.gameName}}</span>
     <p>{{spec.description}}</p>
 
-    <div *ngIf="user$ | async as user" class="text-center">
-      <app-confirm-button *ngIf="!!user && !!spec.id" btnClass="btn btn-lg btn-info px-4" (confirm)="play(user, spec)">
-        <span>Start Practice Session</span>
-      </app-confirm-button>
-    </div>
+    <ng-container *ngIf="(authed$ | async); else unauthed">
+      <markdown [data]="spec.text"></markdown>
 
-    <app-login *ngIf="unauthed"></app-login>
-    <markdown [data]="spec.text"></markdown>
+      <div *ngIf="!isStartingSession" class="challenge-management-buttons my-5 d-flex justify-content-center">
+
+        <app-confirm-button *ngIf="!(activePracticeChallenge$ | async)" btnClass="btn btn-lg btn-info px-4"
+          (confirm)="play(spec)" class="d-block">
+          <span>Start Practice Session</span>
+        </app-confirm-button>
+
+        <button *ngIf="isPlayingOtherChallenge" type="button" class="btn btn-lg btn-warning"
+          (click)="handleStartNewChallengeClick(spec)">
+          Stop your current challenge and play this one instead
+        </button>
+      </div>
+
+      <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
+        [playerContext]="playerContext" [autoPlay]="true"></app-play>
+    </ng-container>
   </div>
-
-  <app-error-div [errors]="errors"></app-error-div>
 </div>
 
 <ng-template #loading>
   <div class="text-center">
-    <app-spinner></app-spinner>
+    <app-spinner>Loading the challenge...</app-spinner>
   </div>
+</ng-template>
+
+<ng-template #starting let-challenge="challenge">
+  <div class="text-center">
+    <app-spinner>Starting your practice session...</app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #unauthed>
+  <app-login></app-login>
 </ng-template>

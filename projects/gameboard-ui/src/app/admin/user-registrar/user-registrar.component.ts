@@ -7,7 +7,7 @@ import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Search, SortDirection } from '../../api/models';
 import { ApiUser, UserRole } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
-import { FontAwesomeService } from '@/services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { SortService } from '@/services/sort.service';
 
 type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
@@ -29,10 +29,11 @@ export class UserRegistrarComponent {
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique'];
   errors: any[] = [];
 
+  protected fa = fa;
+
   constructor(
     private api: UserService,
     private sortService: SortService,
-    public fa: FontAwesomeService,
   ) {
     this.source$ = merge(
       this.refresh$,

@@ -1,7 +1,9 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { ApiTimeWindow, LocalTimeWindow } from "@/core/models/api-time-window";
 import { FeedbackTemplate } from "./feedback-models";
+import { SimpleEntity } from "./models";
 import { PlayerMode, PlayerRole, TimeWindow } from "./player-models";
 
 export interface Challenge {
@@ -70,7 +72,8 @@ export interface ChallengeEvent {
 export interface NewChallenge {
   specId: string;
   playerId: string;
-  variant: number;
+  userId: string;
+  variant?: number;
 }
 
 export interface ChangedChallenge {
@@ -147,7 +150,6 @@ export interface BoardPlayer {
   partialCount: number;
   isManager: boolean;
   isPractice: boolean;
-
   session: TimeWindow;
   game: BoardGame;
   challenges: Challenge[];
@@ -167,7 +169,6 @@ export interface GameState {
   endTime: string;
   expirationTime: string;
   isActive: boolean;
-  // players: Player[];
   vms: VmState[];
   challenge: ChallengeView;
 }

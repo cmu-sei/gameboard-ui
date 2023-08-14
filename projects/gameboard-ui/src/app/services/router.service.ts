@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { ObjectService } from './object.service';
 import { LogService } from './log.service';
+import { VmState } from '@/api/board-models';
+import { BrowserService } from './browser.service';
+import { ConfigService } from '@/utility/config.service';
 
 export interface QueryParamsUpdate {
   parameters: Params,
@@ -12,6 +15,8 @@ export interface QueryParamsUpdate {
 @Injectable({ providedIn: 'root' })
 export class RouterService {
   constructor(
+    private browser: BrowserService,
+    private config: ConfigService,
     private logService: LogService,
     public route: ActivatedRoute,
     public router: Router,
@@ -35,12 +40,28 @@ export class RouterService {
     return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }
 
+  public toChallenge(challengeId: string, playerId: string) {
+    return this.router.navigateByUrl(`/board/${playerId}/${challengeId}`);
+  }
+
   public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): Promise<boolean> {
     return this.router.navigateByUrl(this.getReportRoute(key, query));
   }
 
   public toSupportTickets(highlightTicketKey: string) {
     return this.router.navigateByUrl(this.router.parseUrl(`/support/tickets/${highlightTicketKey}`));
+  }
+
+  public buildVmConsoleUrl(vm: VmState) {
+    if (!vm || !vm.isolationId || !vm.name) {
+      throw new Error(`Can't launch a VM console without an isolationId and a name.`);
+    }
+
+    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}`;
+  }
+
+  public toVmConsole(vm: VmState) {
+    this.browser.showTab(this.buildVmConsoleUrl(vm));
   }
 
   public tryGoBack() {

@@ -1,49 +1,89 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
-import { NewPlayer } from '../../api/player-models';
-import { PlayerService } from '../../api/player.service';
-import { SpecSummary } from '../../api/spec-models';
-import { ApiUser } from '../../api/user-models';
-import { UserService } from '../../utility/user.service';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { NewPlayer } from '@/api/player-models';
+import { PlayerService } from '@/api/player.service';
+import { SpecSummary } from '@/api/spec-models';
+import { UserService as LocalUserService } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { LocalActiveChallenge } from '@/api/challenges.models';
+import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
+import { PlayerContext } from '@/game/components/play/play.component';
 
 @Component({
   selector: 'app-practice-session',
   templateUrl: './practice-session.component.html',
-  styleUrls: ['./practice-session.component.scss']
 })
 export class PracticeSessionComponent {
-  errors: Error[] = [];
   spec$: Observable<SpecSummary>;
-  user$: Observable<ApiUser | null>;
-  unauthed = true;
+  authed$: Observable<boolean>;
+  activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
+
+  protected playerContext: PlayerContext | null = null;
+  protected isPlayingOtherChallenge = false;
+  protected isStartingSession = false;
 
   constructor(
     route: ActivatedRoute,
-    practiceService: PracticeService,
-    userSvc: UserService,
-    private router: Router,
-    private api: PlayerService
+    private activeChallengesRepo: ActiveChallengesRepo,
+    private modalService: ModalConfirmService,
+    private localUser: LocalUserService,
+    private playerService: PlayerService,
+    private practiceService: PracticeService,
+    private unsub: UnsubscriberService
   ) {
     this.spec$ = route.params.pipe(
       filter(p => !!p.cid),
       switchMap(p => practiceService.searchChallenges({ term: p.cid })),
-      map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0])
+      map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );
 
-    this.user$ = userSvc.user$.pipe(
-      tap(u => this.unauthed = !u)
+    this.authed$ = localUser.user$.pipe(map(u => !!u));
+
+    this.unsub.add(
+      this.activeChallengesRepo.activePracticeChallenge$
+        .pipe(tap(c => {
+          if (c)
+            this.playerContext = {
+              playerId: c.player.id,
+              userId: c.user.id
+            };
+        }))
+        .subscribe(activeChallenge => this.activePracticeChallenge$.next(activeChallenge))
     );
   }
 
-  play(u: ApiUser, s: SpecSummary): void {
-    const model = { userId: u.id, gameId: s.gameId } as NewPlayer;
-    this.api.create(model).pipe(
-      first()
-    ).subscribe(p =>
-      this.router.navigate(["../game/board", p.id, s.id])
-    );
+  async play(s: SpecSummary): Promise<void> {
+    const userId = this.localUser.user$.value?.id;
+
+    if (!userId) {
+      throw new Error("Can't start a practice challenge while not authenticated.");
+    }
+
+    this.isStartingSession = true;
+    const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId: s.gameId } as NewPlayer));
+    this.playerContext = { playerId: player.id, userId: player.userId }
+    this.isStartingSession = false;
+  }
+
+  handleStartNewChallengeClick(spec: SpecSummary) {
+    const currentPracticeChallenge = this.activePracticeChallenge$.value;
+    if (!currentPracticeChallenge) {
+      throw new Error("Can't end previous challenge and start a new one - no previous challenge detected.");
+    }
+
+    this.modalService.openConfirm({
+      title: `Start a new practice challenge?`,
+      bodyContent: `If you continue, you'll end your session for practice challenge **${currentPracticeChallenge.spec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
+      renderBodyAsMarkdown: true,
+      onConfirm: async () => {
+
+        await this.practiceService.endPracticeChallenge(currentPracticeChallenge.teamId);
+        this.play(spec);
+      }
+    });
   }
 }

@@ -11,7 +11,7 @@ import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Player, PlayerSearch, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { FontAwesomeService } from '../../services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { UnityService } from '../../unity/unity.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
@@ -52,6 +52,7 @@ export class PlayerRegistrarComponent {
 
   manageTeamId?: string;
 
+  protected fa = fa;
   protected showSessionStatus = true;
 
   constructor(
@@ -62,7 +63,6 @@ export class PlayerRegistrarComponent {
     private api: PlayerService,
     private boardApi: BoardService,
     private clipboard: ClipboardService,
-    protected faService: FontAwesomeService,
     private unityService: UnityService
   ) {
 

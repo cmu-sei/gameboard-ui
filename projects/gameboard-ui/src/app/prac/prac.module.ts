@@ -1,19 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PracticeSessionComponent } from './practice-session/practice-session.component';
 import { UtilityModule } from '../utility/utility.module';
-import { PracticePageComponent } from './practice-page/practice-page.component';
 import { CoreModule } from '../core/core.module';
 import { ApiModule } from '../api/api.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 
+import { PracticePageComponent } from './practice-page/practice-page.component';
+import { PracticeChallengeListComponent } from './practice-challenge-list/practice-challenge-list.component';
+import { PracticeSessionComponent } from './practice-session/practice-session.component';
+import { GameModule } from '@/game/game.module';
+import { PracticeChallengeStateSummaryComponent } from './practice-challenge-state-summary/practice-challenge-state-summary.component';
+
 @NgModule({
   declarations: [
+    PracticeChallengeStateSummaryComponent,
     PracticePageComponent,
-    PracticeSessionComponent
+    PracticeChallengeListComponent,
+    PracticeSessionComponent,
   ],
   imports: [
     CommonModule,
@@ -25,12 +31,17 @@ import { MarkdownModule } from 'ngx-markdown';
     FontAwesomeModule,
     RouterModule.forChild([
       {
-        path: ':cid', children: [
-          { path: '**', component: PracticeSessionComponent }
+        path: "", component: PracticePageComponent, children: [
+          {
+            path: ':cid', children: [
+              { path: '**', component: PracticeSessionComponent }
+            ]
+          },
+          { path: '', pathMatch: 'full', component: PracticeChallengeListComponent }
         ]
-      },
-      { path: '', pathMatch: 'full', component: PracticePageComponent }
-    ])
+      }
+    ]),
+    GameModule,
   ]
 })
 export class PracModule { }

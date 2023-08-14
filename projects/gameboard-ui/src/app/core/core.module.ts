@@ -49,13 +49,22 @@ import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlPipe } from './pipes/yaml.pipe';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { QueryParamModelDirective } from './directives/query-param-model.directive';
-
+import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
+import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { RouterModule } from '@angular/router';
+import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
+import { CountdownPipe } from './pipes/countdown.pipe';
+import { ClockPipe } from './pipes/clock.pipe';
+import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 
 const PUBLIC_DECLARATIONS = [
   AssetPathPipe,
   ColoredTextChipComponent,
+  ConfirmButtonComponent,
+  CumulativeTimeClockComponent,
   DoughnutChartComponent,
   FriendlyDateAndTimePipe,
+  GameboardPerformanceSummaryComponent,
   GameCardImageComponent,
   LineChartComponent,
   LinkRendererPipe,
@@ -67,6 +76,9 @@ const PUBLIC_DECLARATIONS = [
   PlayerAvatarComponent,
   PlayerAvatarListComponent,
   PlayerStatusComponent,
+  ClockPipe,
+  CountdownPipe,
+  CountdownColorPipe,
   PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,
@@ -93,6 +105,7 @@ const RELAYED_MODULES = [
   FormsModule,
   MarkdownModule,
   NgChartsModule,
+  RouterModule,
   TabsModule,
   TooltipModule,
   TypeaheadModule,

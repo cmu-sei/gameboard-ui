@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ConfigService } from '.././config.service';
+import { ConfigService } from '../../utility/config.service';
 
 @Pipe({ name: 'countdowncolor' })
 export class CountdownColorPipe implements PipeTransform {

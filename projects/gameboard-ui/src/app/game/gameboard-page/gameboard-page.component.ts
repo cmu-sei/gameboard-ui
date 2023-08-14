@@ -4,16 +4,16 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, BehaviorSubject, interval, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
-import { catchError, debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { catchError, debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
-import { PlayerService } from '../../api/player.service';
 import { ApiUser } from '../../api/user-models';
 import { ConfigService } from '../../utility/config.service';
 import { HubState, NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
-import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { BrowserService } from '@/services/browser.service';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -47,9 +47,9 @@ export class GameboardPageComponent implements OnDestroy {
 
   constructor(
     route: ActivatedRoute,
+    private browserService: BrowserService,
     private router: Router,
     private api: BoardService,
-    private playerApi: PlayerService,
     private config: ConfigService,
     private hub: NotificationService,
     usersvc: UserService
@@ -73,6 +73,7 @@ export class GameboardPageComponent implements OnDestroy {
       )),
       tap(b => {
         this.ctx = b;
+
         this.performanceSummaryViewModel = {
           player: {
             id: b.id,
@@ -84,18 +85,20 @@ export class GameboardPageComponent implements OnDestroy {
               partialCount: b.partialCount,
               correctCount: b.correctCount
             }
-          },
-          game: {
-            isPracticeMode: b.game.isPracticeMode
           }
-        }
+        };
       }),
       tap(b => this.startHub(b)),
       tap(() => this.reselect())
     ).subscribe();
 
     const launched$ = this.launching$.pipe(
-      switchMap(s => api.launch({ playerId: this.ctx.id, specId: s.id, variant: this.variant })),
+      switchMap(s => api.launch({
+        playerId: this.ctx.id,
+        specId: s.id,
+        variant: this.variant,
+        userId: usersvc.user$.value!.id
+      })),
       catchError(err => {
         this.errors.push(err);
         return of(null as unknown as Challenge);
@@ -130,7 +133,6 @@ export class GameboardPageComponent implements OnDestroy {
       asyncScheduler).pipe(
         mergeAll(),
       );
-
   }
 
   validate(b: BoardPlayer): void {
@@ -191,11 +193,15 @@ export class GameboardPageComponent implements OnDestroy {
       return;
     }
 
-    const spec = this.ctx.game.specs.find(s => s.id === id);
+    // search both challenges and spec ids for selection
+    let spec = this.ctx.game.specs.find(s => s.id === id);
+    if (!spec)
+      spec = this.ctx.game.specs.find(s => s?.instance?.id === id);
+
     if (!!spec) {
-      timer(100).subscribe(() =>
-        this.selecting$.next(spec)
-      );
+      timer(100).subscribe(() => {
+        this.selecting$.next(spec!);
+      });
     }
   }
 
@@ -253,7 +259,7 @@ export class GameboardPageComponent implements OnDestroy {
     }
 
     if (isUrl) {
-      this.config.showTab(vm.id);
+      this.browserService.showTab(vm.id);
     } else {
       this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`);
     }

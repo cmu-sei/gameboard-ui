@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { FontAwesomeService } from '../../../services/font-awesome.service';
-import { WindowService } from '../../../services/window.service';
-import { ClipboardService } from '../../../utility/services/clipboard.service';
-import { ToastService } from '../../../utility/services/toast.service';
+import { fa } from '@/services/font-awesome.service';
+import { WindowService } from '@/services/window.service';
+import { ClipboardService } from '@/utility/services/clipboard.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-share-button',
@@ -14,8 +14,9 @@ export class ShareButtonComponent {
   @Input() size: "small" | "medium" | "large" = "large";
   @Input() tooltip?: string;
 
+  protected fa = fa;
+
   constructor(
-    public faService: FontAwesomeService,
     private clipboardService: ClipboardService,
     private toastService: ToastService,
     private windowService: WindowService) { }

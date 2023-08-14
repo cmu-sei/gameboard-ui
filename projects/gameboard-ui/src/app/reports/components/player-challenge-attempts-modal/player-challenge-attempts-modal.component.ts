@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 
 export interface PlayerChallengeAttempts extends Partial<PlayerChallengeAttemptsModalComponent> {
   subtitle: string;
+  subtitleDetail?: string;
   player: {
     name: string,
     sponsor: ReportSponsor,
@@ -17,7 +18,8 @@ export interface PlayerChallengeAttempts extends Partial<PlayerChallengeAttempts
     maxPossibleScore: number,
     result: ChallengeResult,
     score: number;
-    scorePercentile?: number
+    scorePercentile?: number,
+    startDate: Date
   }[]
 }
 

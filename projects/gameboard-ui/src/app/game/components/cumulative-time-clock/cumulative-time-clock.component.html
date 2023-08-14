@@ -1,4 +1,0 @@
-<div class="cumulative-time-clock-component">
-    <span *ngIf="session else noSession" class="clock-value">{{(time$ | async) || 0 | clock}}</span>
-    <ng-template #noSession>--</ng-template>
-</div>

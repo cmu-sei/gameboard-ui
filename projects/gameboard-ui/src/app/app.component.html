@@ -2,7 +2,7 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <div class="app-container">
-  <nav [class]="custom_bg" [class.nonsticky]="!(layoutService.stickyMenu$ | async)">
+  <nav [class]="customBackground" [class.nonsticky]="!(layoutService.stickyMenu$ | async)">
     <div class="nav-items d-flex align-items-center justify-content-end">
       <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/home']">Home</a>
       <ng-container *ngIf="(toc$ | async)?.length">
