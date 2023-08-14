@@ -1,5 +1,3 @@
-import { ActiveReportService } from '@/reports/services/active-report.service';
-import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 import { Component, EventEmitter, Output } from '@angular/core';
@@ -14,8 +12,6 @@ export class ReportGlobalControlsComponent {
   @Output() exportRequestPdf = new EventEmitter<void>();
 
   constructor(
-    private activeReportService: ActiveReportService,
-    private logService: LogService,
     private modal: ModalConfirmService,
     private routerService: RouterService) { }
 
@@ -41,6 +37,7 @@ export class ReportGlobalControlsComponent {
         We're aware of several issues with the current build of this screen and are addressing them as efficiently
         possible. If you experience an issue NOT listed here, please let us know!
 
+        - The header of the report is a little slow to change when you select a new one via the dropdown at the top left of this page. We'll clarify this and hopefully speed it up.
         - The **Enrollment** report shows large numbers of players with no enroll date. This is expected, as we added the ability to track enroll date for this feature. This also causes the **Enrollment Over Time** graph on the report to appear blank.
         - **The "Export to CSV" button** does not give visual feedback to indicate that it's creating the CSV when clicked. For now, wait 10-15 seconds for it to assemble the document, and if it doesn't, let us know. We'll be improving this experience soon.
         - Some reports dump an error message into the browser console when run. The error doesn't affect accuracy or functionality, but we're working on eliminating it.
