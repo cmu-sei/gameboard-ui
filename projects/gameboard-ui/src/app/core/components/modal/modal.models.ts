@@ -4,7 +4,7 @@ export interface IModalReady<TModalContext> {
     context: TModalContext;
 }
 
-export interface ModalConfig<TComponent, TContext extends Partial<TComponent>> {
+export interface ModalConfig<TComponent, TContext> {
     content: ModalContent<TComponent>;
     context: TContext;
     modalClasses?: string[];
@@ -20,5 +20,6 @@ export interface ModalConfirmConfig {
     onCancel?: Function;
     onConfirm?: Function;
     hideCancel?: boolean;
+    modalClasses?: string[];
     renderBodyAsMarkdown?: boolean;
 }

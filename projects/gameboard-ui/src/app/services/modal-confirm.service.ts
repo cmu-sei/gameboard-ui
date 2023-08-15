@@ -22,14 +22,14 @@ export class ModalConfirmService implements OnDestroy {
 
 
   openConfirm(config: ModalConfirmConfig): void {
-    this.bsModalRef = this.openWithDefaultStyles({ content: ModalConfirmComponent, context: config as Partial<ModalConfirmComponent> });
+    this.bsModalRef = this.openWithDefaultStyles({ content: ModalConfirmComponent, context: config as ModalConfirmConfig, modalClasses: config.modalClasses });
 
     if (config.onCancel) {
       this.hiddenSub = this.bsModalRef.onHidden?.subscribe(s => this.onHidden(config.onCancel));
     }
   }
 
-  openComponent<TComponent, TContext extends Partial<TComponent>>(config: ModalConfig<TComponent, TContext>) {
+  openComponent<TComponent, TContext>(config: ModalConfig<TComponent, TContext>) {
     this.openWithDefaultStyles(config);
   }
 
@@ -42,7 +42,7 @@ export class ModalConfirmService implements OnDestroy {
     this.cleanupModalRef();
   }
 
-  private openWithDefaultStyles<TComponent, TContext extends Partial<TComponent>>(config: ModalConfig<TComponent, TContext>) {
+  private openWithDefaultStyles<TComponent, TContext>(config: ModalConfig<TComponent, TContext>) {
     return this.bsModalService.show(config.content, {
       initialState: { context: { ...config.context } } as unknown as Partial<TComponent>,
       class: config.modalClasses?.join(" ") || "modal-dialog-centered",

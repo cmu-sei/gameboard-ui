@@ -2,9 +2,9 @@
     <div class="greeting-container mt-4">
         <h2 class="mt-2">Practice Page Greeting</h2>
         <p>
-            This text appears on the practice page to introduce players to playing in Practice Mode. Feel free to
-            customize
-            it to your specific needs.
+            This text appears on the practice page to introduce players to playing in Practice Mode. Edit it below to
+            customize it
+            to your needs.
         </p>
 
         <textarea class="form-control" [placeholder]="ctx.introTextPlaceholder"
@@ -21,14 +21,18 @@
         </p>
 
         <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
-            [(ngModel)]="ctx.settings.certificateHtmlTemplate" rows="5"></textarea>
+            [placeholder]="certificateHtmlPlaceholder" [(ngModel)]="ctx.settings.certificateHtmlTemplate"
+            rows="5"></textarea>
+        <button type="button" class="btn btn-link text-info" (click)="handleShowCertificateTemplateHelp()">
+            How do I create a certificate template?
+        </button>
     </div>
 
     <div class="concurrent-sessions-container">
-        <h2 class="mt-4">Concurrent Sessions</h2>
+        <h2 class="mt-4">Session Limits</h2>
         <p>
-            Here, you can constrain use of Practice Mode by limiting the number of active practice challenges a player
-            is working on at once. You can also set a global maximum number of practice sessions across all players.
+            You can use the controls below to set limits on practice sessions, including how many can be active at once
+            how long they are by default, and the max length that a player can play in a single practice session.
         </p>
 
         <div class="concurrent-session-controls-container d-flex">
@@ -43,6 +47,8 @@
                 <label for="defaultSessionLength">Default Session Length (in Minutes)</label>
                 <input type="number" class="form-control" name="defaultSessionLength" min="5" required
                     (change)="handleSettingsChanged(ctx.settings)"
+                    [popover]="'The default session length is required and defaults to 60 minutes if unset.'"
+                    [isOpen]="!ctx.settings.defaultPracticeSessionLengthMinutes" placement="bottom" triggers=""
                     [(ngModel)]="ctx.settings.defaultPracticeSessionLengthMinutes">
             </div>
 
@@ -50,7 +56,7 @@
                 <label for="maxSessionLength">Maximum Session Length (in Minutes)</label>
                 <input type="number" class="form-control" name="maxSessionLength"
                     placeholder="Leave blank for no maximum" min="5" (change)="handleSettingsChanged(ctx.settings)"
-                    [(ngModel)]="ctx.settings.defaultPracticeSessionLengthMinutes">
+                    [(ngModel)]="ctx.settings.maxPracticeSessionLengthMinutes">
             </div>
         </div>
     </div>

@@ -149,8 +149,8 @@ export class GameService {
       : `${this.config.basehref}assets/map.png`;
 
     game.modeUrl = game.mode
-      ? `${this.config.basehref}assets/${game.mode}.png`
-      : `${this.config.basehref}assets/vm.png`;
+      ? `${this.config.basehref}assets/img/engineModeIcons/${game.mode}.png`
+      : `${this.config.basehref}assets/img/engineModeIcons/vm.png`;
 
     game.session = new TimeWindow(game.gameStart, game.gameEnd);
     game.registration = new TimeWindow(game.registrationOpen, game.registrationClose);
