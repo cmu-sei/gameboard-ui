@@ -1,6 +1,10 @@
 <div class="container">
     <h1 class="mb-4">Practice Challenges</h1>
 
+    <p *ngIf="introTextMarkdown" class="mt-4 mb-5">
+        <markdown [data]="introTextMarkdown"></markdown>
+    </p>
+
     <ng-container *ngIf="list$ | async as list; else loading">
         <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
             <app-share-button class="d-block mr-1" size="small"

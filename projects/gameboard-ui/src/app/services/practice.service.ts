@@ -4,10 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { SearchPracticeChallengesResult } from '@/prac/practice.models';
+import { PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { PlayerService } from '@/api/player.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
+import { GameCardContext } from '@/api/game-models';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
@@ -40,12 +41,20 @@ export class PracticeService {
     await this.updateIsEnabled();
   }
 
+  getSettings(): Observable<PracticeModeSettings> {
+    return this.http.get<PracticeModeSettings>(this.apiUrl.build("practice/settings"));
+  }
+
   async isEnabled(): Promise<boolean> {
     if (this._isEnabled$.value === undefined) {
       await this.updateIsEnabled();
     }
 
     return this._isEnabled$.value!;
+  }
+
+  listGames(): Observable<GameCardContext[]> {
+    return this.http.get<GameCardContext[]>(this.apiUrl.build('/practice/games'));
   }
 
   public searchChallenges(filter: any): Observable<SearchPracticeChallengesResult> {
@@ -56,5 +65,10 @@ export class PracticeService {
     const isEnabled = await firstValueFrom(this.gameService.list({}).pipe(map(games => games.some(g => g.playerMode == PlayerMode.practice))));
     this.logService.logInfo("Practice service queried the API for the presence of practice games: ", isEnabled);
     this._isEnabled$.next(isEnabled);
+  }
+
+  public async updateSettings(settings: PracticeModeSettings) {
+    this.logService.logInfo("Updating settings", settings);
+    return await firstValueFrom(this.http.put(this.apiUrl.build("/practice/settings"), settings));
   }
 }

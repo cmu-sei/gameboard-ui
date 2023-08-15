@@ -65,7 +65,7 @@ export class PracticeSessionComponent {
 
     this.isStartingSession = true;
     const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId: s.gameId } as NewPlayer));
-    this.playerContext = { playerId: player.id, userId: player.userId }
+    this.playerContext = { playerId: player.id, userId: player.userId };
     this.isStartingSession = false;
   }
 

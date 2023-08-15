@@ -9,3 +9,11 @@ export interface SearchPracticeChallengesResult {
 export interface SearchGamesResult {
     results: PagedArray<GameCardContext>;
 }
+
+export interface PracticeModeSettings {
+    certificateHtmlTemplate: string;
+    defaultPracticeSessionLengthMinutes: number;
+    introTextMarkdown: string;
+    maxConcurrentPracticeSessions: number | null;
+    maxPracticeSessionLengthMinutes: number | null;
+}

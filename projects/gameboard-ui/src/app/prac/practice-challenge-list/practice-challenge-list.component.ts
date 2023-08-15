@@ -7,7 +7,7 @@ import { UserService as LocalUserService } from "@/utility/user.service";
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { slug } from '@/tools/functions';
 
 @Component({
@@ -21,6 +21,7 @@ export class PracticeChallengeListComponent {
   appname = '';
   faSearch = faSearch;
   protected localUserId?: string;
+  protected introTextMarkdown = "";
 
   term = "";
   count = 0;
@@ -31,8 +32,8 @@ export class PracticeChallengeListComponent {
   private static readonly DEFAULT_PAGE_SIZE = 100;
 
   constructor(
-    api: PracticeService,
     route: ActivatedRoute,
+    private api: PracticeService,
     private localUser: LocalUserService,
     private routerService: RouterService,
     private unsub: UnsubscriberService,
@@ -57,6 +58,8 @@ export class PracticeChallengeListComponent {
 
   async ngOnInit(): Promise<void> {
     this.localUserId = this.localUser.user$.value?.id;
+    const settings = await firstValueFrom(this.api.getSettings());
+    this.introTextMarkdown = settings.introTextMarkdown;
   }
 
   paged(s: number): void {

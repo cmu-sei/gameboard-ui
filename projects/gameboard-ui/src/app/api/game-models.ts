@@ -58,6 +58,7 @@ export interface GameCardContext {
   name: string;
   engineMode: "vm" | "cubespace" | "external";
   liveSessionCount: number;
+  logo: string;
   isPractice: boolean;
   isPublished: boolean;
   isTeamGame: boolean;

@@ -13,12 +13,14 @@ import { PracticeChallengeListComponent } from './practice-challenge-list/practi
 import { PracticeSessionComponent } from './practice-session/practice-session.component';
 import { GameModule } from '@/game/game.module';
 import { PracticeChallengeStateSummaryComponent } from './practice-challenge-state-summary/practice-challenge-state-summary.component';
+import { PracticeCardComponent } from './components/practice-card/practice-card.component';
 
 @NgModule({
   declarations: [
+    PracticeCardComponent,
+    PracticeChallengeListComponent,
     PracticeChallengeStateSummaryComponent,
     PracticePageComponent,
-    PracticeChallengeListComponent,
     PracticeSessionComponent,
   ],
   imports: [
@@ -32,16 +34,15 @@ import { PracticeChallengeStateSummaryComponent } from './practice-challenge-sta
     RouterModule.forChild([
       {
         path: "", component: PracticePageComponent, children: [
-          {
-            path: ':cid', children: [
-              { path: '**', component: PracticeSessionComponent }
-            ]
-          },
+          { path: ':cid', component: PracticeSessionComponent },
           { path: '', pathMatch: 'full', component: PracticeChallengeListComponent }
         ]
       }
     ]),
     GameModule,
+  ],
+  exports: [
+    PracticeCardComponent
   ]
 })
 export class PracModule { }

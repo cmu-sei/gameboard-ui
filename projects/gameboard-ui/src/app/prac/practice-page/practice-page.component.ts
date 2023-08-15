@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '@/utility/config.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { ConfigService } from '@/utility/config.service';
 })
 export class PracticePageComponent {
   protected appName?: string;
+  protected introText = "";
 
   constructor(
     configService: ConfigService) {

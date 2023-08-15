@@ -22,6 +22,7 @@ import {
   faExclamationCircle,
   faExclamationTriangle,
   faExternalLink,
+  faEyeSlash,
   faFileDownload,
   faFilter,
   faGear,
@@ -38,6 +39,8 @@ import {
   faTrash,
   faTriangleExclamation,
   faTv,
+  faUser,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const fa = {
@@ -62,6 +65,7 @@ export const fa = {
   exclamationCircle: faExclamationCircle,
   exclamationTriangle: faExclamationTriangle,
   externalLink: faExternalLink,
+  eyeSlash: faEyeSlash,
   fileDownload: faFileDownload,
   filter: faFilter,
   list: faList,
@@ -76,7 +80,9 @@ export const fa = {
   times: faTimes,
   trash: faTrash,
   triangleExclamation: faTriangleExclamation,
-  tv: faTv
+  tv: faTv,
+  user: faUser,
+  users: faUsers
 };
 
 export type FontAwesomeIcons = typeof fa;
