@@ -34,7 +34,7 @@ import { PracticeCardComponent } from './components/practice-card/practice-card.
     RouterModule.forChild([
       {
         path: "", component: PracticePageComponent, children: [
-          { path: ':cid', component: PracticeSessionComponent },
+          { path: ':cid/:slug', component: PracticeSessionComponent },
           { path: '', pathMatch: 'full', component: PracticeChallengeListComponent }
         ]
       }

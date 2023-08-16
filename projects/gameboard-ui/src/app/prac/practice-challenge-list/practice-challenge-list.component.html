@@ -32,7 +32,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let c of list">
-                    <td class="align-middle"><a [routerLink]="[c.id, slug(c.gameName), slug(c.name)]">{{c.name}}</a>
+                    <td class="align-middle"><a [routerLink]="[c.id, slug(c.name)]">{{c.name}}</a>
                     </td>
                     <td class="align-middle">{{c.description}}</td>
                     <td>

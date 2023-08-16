@@ -1,0 +1,35 @@
+<ng-container *ngIf="ctx; else loading">
+    <table *ngIf="ctx.certificates.length; else noCertificates" class="table-hover gameboard-table table table-striped">
+        <col class="width-50">
+        <col class="width-25">
+        <col class="width-25">
+
+        <thead class="thead-light">
+            <tr class="headers">
+                <th scope="col">Challenge</th>
+                <th scope="col">Score</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr class="data-row cursor-pointer" *ngFor="let certificate of ctx.certificates"
+                (click)="handleCertificateClick(certificate)">
+                <td>{{ certificate.challenge.name }}</td>
+                <td>{{ certificate.score }}</td>
+                <td>{{ certificate.date | friendlyDateAndTime }}</td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading your practice certificates...</app-spinner>
+</ng-template>
+
+<ng-template #noCertificates>
+    <p class="text-center gray-text">
+        You haven't earned any practice challenge certificates yet. Why not head over to
+        <a [routerLink]="['/practice']">the Practice area</a> and try a challenge or two?
+    </p>
+</ng-template>

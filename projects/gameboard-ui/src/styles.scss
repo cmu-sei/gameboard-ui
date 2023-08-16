@@ -151,6 +151,10 @@ li {
   font-size: .875rem !important;
 }
 
+.nav-tabs {
+  margin: 1.5rem 0 2rem 0;
+}
+
 .untack > svg {
   transform: rotate(45deg);
 }
@@ -187,8 +191,6 @@ app-spinner svg {
 .text-black {
   color: black;
 }
-
-
 
 // bootstrap tooltip styled to show up on dark theme
 .light-tooltip.bs-tooltip-top .tooltip-arrow::before {
@@ -273,6 +275,28 @@ th[align="center"] {
 
 .full-width {
   width: 100%;
+}
+
+.gameboard-table {
+  width: 100%;
+
+  thead {
+    border-bottom: solid 1px $foreground;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    width: 100%;
+
+    th {
+      padding-bottom: 0.5rem;
+    }
+  }
+}
+
+.width-50 {
+  width: 50%;
+}
+.width-25 {
+  width: 25%;
 }
 
 .link-button {

@@ -7,10 +7,10 @@ import { PlayerService } from '../../api/player.service';
 
 @Component({
   selector: 'app-certificate-list',
-  templateUrl: './certificate-list.component.html',
-  styleUrls: ['./certificate-list.component.scss']
+  templateUrl: './competitive-certificates.component.html',
+  styleUrls: ['./competitive-certificates.component.scss']
 })
-export class CertificateListComponent implements OnInit {
+export class CompetitiveCertificatesComponent implements OnInit {
   faArrowLeft = faArrowLeft;
   faAward = faAward;
   faMedal = faMedal;

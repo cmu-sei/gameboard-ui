@@ -18,8 +18,10 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
-import { CertificateListComponent } from './certificate-list/certificate-list.component';
+import { CompetitiveCertificatesComponent } from './competitive-certificates/competitive-certificates.component';
 import { ProfileHistoryComponent } from './profile-history/profile-history.component';
+import { PracticeCertificatesComponent } from './practice-certificates/practice-certificates.component';
+import { CertificatesComponent } from './certificates/certificates.component';
 
 @NgModule({
   declarations: [
@@ -31,8 +33,10 @@ import { ProfileHistoryComponent } from './profile-history/profile-history.compo
     ForbiddenComponent,
     LoginPageComponent,
     TocPageComponent,
-    CertificateListComponent,
+    CompetitiveCertificatesComponent,
     ProfileHistoryComponent,
+    PracticeCertificatesComponent,
+    CertificatesComponent,
   ],
   imports: [
     CommonModule,
@@ -43,7 +47,13 @@ import { ProfileHistoryComponent } from './profile-history/profile-history.compo
           { path: 'login', component: LoginPageComponent },
           { path: 'oidc', component: OidcComponent },
           { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], title: "Profile" },
-          { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
+          {
+            path: 'profile/certificates', component: CertificatesComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
+              { path: 'competitive', component: CompetitiveCertificatesComponent, title: "Certificates" },
+              { path: 'practice', component: PracticeCertificatesComponent, title: "Practice Certificates" },
+              { path: '', pathMatch: 'full', redirectTo: 'competitive' }
+            ]
+          },
           { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
           { path: 'doc/:id', component: TocPageComponent },
           { path: 'forbidden', component: ForbiddenComponent },
