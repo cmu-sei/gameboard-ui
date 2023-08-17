@@ -39,7 +39,5 @@ export class PracticeCertificatesComponent implements OnInit {
     printWindow.document.write(certHtml.toString());
     printWindow.document.close();
     printWindow.focus();
-    printWindow.addEventListener('load', printWindow.print, true);
-    // printWindow.close();
   }
 }

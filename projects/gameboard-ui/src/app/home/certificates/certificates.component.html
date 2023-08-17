@@ -8,11 +8,18 @@
 
     <p>
         Use the tabs below to find and print certificates which commemorate your performance in Gameboard. You can
-        also
-        save them as PDFs for the ultimate in digital cybersecurity swag.
+        also save them as PDFs for the ultimate in digital cybersecurity swag.
     </p>
 
-    <ul class="nav nav-tabs" *ngIf="showTabs">
+    <p class="text-muted">
+        <em>
+            <strong>NOTE: </strong> For best results, be sure to print your certificate in landscape orientation
+            and adjust the Scale setting in your browser's print menu to ensure that the certificate appears
+            on a single page.
+        </em>
+    </p>
+
+    <ul class="nav nav-tabs mt-5" *ngIf="showTabs">
         <li class="nav-item">
             <a class="nav-link" [routerLink]="['competitive']" routerLinkActive="active">Competitive</a>
         </li>

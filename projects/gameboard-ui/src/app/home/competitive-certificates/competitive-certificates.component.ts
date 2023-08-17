@@ -38,8 +38,9 @@ export class CompetitiveCertificatesComponent implements OnInit {
     printWindow?.document.write(this.sanitizer.sanitize(SecurityContext.HTML, cert.html) || "");
     printWindow?.document.close();
     printWindow?.focus();
-    printWindow?.addEventListener('load', printWindow?.print, true); // wait until all content loads before printing
-    // don't close new tab automatically in case want to keep open for some reason [ printWindow?.close(); ]
+    // we're no longer automatically popping the print dialogue because we want them to assume responsibility for scaling/orienting the output
+    // (since we can't control it with CSS very well)
+    // printWindow?.addEventListener('load', printWindow?.print, true); // wait until all content loads before printing
   }
 
 }
