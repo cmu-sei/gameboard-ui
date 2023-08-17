@@ -3,6 +3,7 @@ import { PracticeService } from '@/services/practice.service';
 import { WindowService } from '@/services/window.service';
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { slug } from '@/tools/functions';
 
 interface PracticeCertificatesContext {
   certificates: PracticeModeCertificate[];
@@ -15,6 +16,7 @@ interface PracticeCertificatesContext {
 })
 export class PracticeCertificatesComponent implements OnInit {
   ctx: PracticeCertificatesContext | null = null;
+  protected slug = slug;
 
   constructor(
     private practiceService: PracticeService,
