@@ -22,6 +22,7 @@ import { CompetitiveCertificatesComponent } from './competitive-certificates/com
 import { ProfileHistoryComponent } from './profile-history/profile-history.component';
 import { PracticeCertificatesComponent } from './practice-certificates/practice-certificates.component';
 import { CertificatesComponent } from './certificates/certificates.component';
+import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,7 @@ import { CertificatesComponent } from './certificates/certificates.component';
           {
             path: 'profile/certificates', component: CertificatesComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
               { path: 'competitive', component: CompetitiveCertificatesComponent, title: "Certificates" },
-              { path: 'practice', component: PracticeCertificatesComponent, title: "Practice Certificates" },
+              { path: 'practice', component: PracticeCertificatesComponent, title: "Practice Certificates", canActivate: [practiceModeEnabledGuard] },
               { path: '', pathMatch: 'full', redirectTo: 'competitive' }
             ]
           },
