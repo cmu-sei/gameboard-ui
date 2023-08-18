@@ -35,7 +35,7 @@ export class CompetitiveCertificatesComponent implements OnInit {
     printWindow?.document?.write(`<style type="text/css">* {-webkit-print-color-adjust: exact !important; color-adjust: exact !important; }</style>`);
     printWindow?.document?.write(`<style type="text/css">@media print { body { margin: 0mm!important;} @page{ margin: 0mm!important; }}</style>`);
     printWindow?.document?.write(`<style type="text/css" media="print"> @page { size: landscape; } </style>`);
-    printWindow?.document.write(this.sanitizer.sanitize(SecurityContext.HTML, cert.html) || "");
+    printWindow?.document.write(cert.html);
     printWindow?.document.close();
     printWindow?.focus();
     // we're no longer automatically popping the print dialogue because we want them to assume responsibility for scaling/orienting the output
