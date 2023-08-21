@@ -1,7 +1,7 @@
 import { LocalActiveChallenge } from "@/api/challenges.models";
 import { createStore, withProps } from "@ngneat/elf";
 import { SimpleEntity } from "@/api/models";
-import { Observable, Subject, combineLatest, filter, firstValueFrom, map, merge, mergeAll, mergeMap, of, startWith, switchMap, tap } from "rxjs";
+import { Observable, combineLatest, filter, firstValueFrom, map, merge, of, startWith, switchMap, tap } from "rxjs";
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { ChallengesService } from "@/api/challenges.service";
@@ -83,7 +83,6 @@ export class ActiveChallengesRepo implements OnDestroy {
     getActivePracticeChallenge(): LocalActiveChallenge | null {
         return this.resolveActivePracticeChallenge(activeChallengesStore.value);
     }
-
 
     isTeamChallenge = (challenge: LocalActiveChallenge, teamId: string): challenge is LocalActiveChallenge => {
         return challenge.teamId === teamId;

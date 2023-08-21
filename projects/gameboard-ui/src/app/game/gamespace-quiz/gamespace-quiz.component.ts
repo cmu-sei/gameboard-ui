@@ -8,7 +8,6 @@ import { BoardService } from '../../api/board.service';
 import { TimeWindow } from '../../api/player-models';
 import { catchError, firstValueFrom, tap } from 'rxjs';
 import { ChallengesService } from '@/api/challenges.service';
-import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 
 @Component({
   selector: 'app-gamespace-quiz',

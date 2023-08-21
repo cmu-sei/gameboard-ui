@@ -72,6 +72,10 @@ app-root {
   margin: 0 auto;
 }
 
+.font-weight-light {
+  font-weight: lighter;
+}
+
 .fs-08 {
   font-size: 0.8rem;
 }
@@ -290,6 +294,10 @@ th[align="center"] {
       padding-bottom: 0.5rem;
     }
   }
+}
+
+.text-upper {
+  text-transform: uppercase;
 }
 
 .width-15 {

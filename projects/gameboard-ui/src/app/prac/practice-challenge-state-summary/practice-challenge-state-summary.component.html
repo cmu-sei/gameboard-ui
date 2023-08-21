@@ -9,8 +9,8 @@
             <a
                 [routerLink]="['/practice', userActivePracticeChallenge.spec.id, slug(userActivePracticeChallenge.spec.name)]">
                 <alert type="info">
-                    <strong>Your active practice challenge:</strong>
-                    {{ userActivePracticeChallenge.spec.name }}
+                    <strong class="text-upper">Your active practice challenge</strong>
+                    <div class="fs-13 font-weight-light">{{ userActivePracticeChallenge.spec.name }}</div>
                 </alert>
             </a>
             <span
