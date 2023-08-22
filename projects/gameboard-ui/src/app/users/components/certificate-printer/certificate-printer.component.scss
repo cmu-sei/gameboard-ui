@@ -1,0 +1,36 @@
+@media print {
+    body {
+        margin: 0mm !important;
+    }
+
+    @page {
+        size: landscape;
+        margin: 0mm !important;
+        width: 3300px;
+        height: 2550px;
+    }
+
+    img {
+        width: 3300px;
+        height: 2550px;
+    }
+
+    html, body * {
+        visibility: hidden;
+    }
+
+    .gameboard-print {
+        visibility: visible;
+    }
+}
+
+* {
+    --webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}

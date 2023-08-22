@@ -2,8 +2,8 @@ import { Component, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { faArrowLeft, faAward, faPrint, faMedal, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { PlayerCertificate } from '../../api/player-models';
-import { PlayerService } from '../../api/player.service';
+import { PlayerCertificate } from '../../../api/player-models';
+import { PlayerService } from '../../../api/player.service';
 
 @Component({
   selector: 'app-certificate-list',

@@ -59,8 +59,10 @@ import { CountdownPipe } from './pipes/countdown.pipe';
 import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
+import { ApiUrlPipe } from './pipes/api-url.pipe';
 
 const PUBLIC_DECLARATIONS = [
+  ApiUrlPipe,
   AssetPathPipe,
   ColoredTextChipComponent,
   ConfirmButtonComponent,

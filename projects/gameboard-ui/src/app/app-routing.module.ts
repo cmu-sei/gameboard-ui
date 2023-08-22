@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, TitleStrategy } from '@angular/router';
+import { RouterModule, Routes, TitleStrategy, provideRouter } from '@angular/router';
 import { HomePageComponent } from './home/home-page/home-page.component';
 import { AdminGuard } from './utility/admin.guard';
 import { AuthGuard } from './utility/auth.guard';
@@ -17,7 +17,6 @@ const routes: Routes = [
   },
   {
     path: 'game',
-    // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
     loadChildren: () => import('./game/game.module').then(m => m.GameModule)
   },
   {
@@ -25,6 +24,11 @@ const routes: Routes = [
     canLoad: [practiceModeEnabledGuard], canActivate: [practiceModeEnabledGuard], canActivateChild: [practiceModeEnabledGuard],
     loadChildren: () => import('./prac/prac.module').then(m => m.PracModule),
     title: "Practice"
+  },
+  {
+    path: "user",
+    title: "User",
+    loadChildren: () => import("./users/users.module").then(m => m.UsersModule)
   },
   {
     path: 'support',
@@ -38,7 +42,6 @@ const routes: Routes = [
   },
   {
     path: '',
-    // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
   },
   { path: '', component: HomePageComponent, pathMatch: 'full' }

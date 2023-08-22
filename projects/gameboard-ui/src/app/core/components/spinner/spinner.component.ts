@@ -41,7 +41,7 @@ import { Component, Input } from '@angular/core';
   `,
   styles: [
     ".spinner-component { width: 100%; text-align: center; }"
-  ]
+  ],
 })
 export class SpinnerComponent {
   @Input() textPosition: "top" | "bottom" = "top";

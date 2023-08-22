@@ -13,11 +13,9 @@ import { PracticeChallengeListComponent } from './practice-challenge-list/practi
 import { PracticeSessionComponent } from './practice-session/practice-session.component';
 import { GameModule } from '@/game/game.module';
 import { PracticeChallengeStateSummaryComponent } from './practice-challenge-state-summary/practice-challenge-state-summary.component';
-import { PracticeCardComponent } from './components/practice-card/practice-card.component';
 
 @NgModule({
   declarations: [
-    PracticeCardComponent,
     PracticeChallengeListComponent,
     PracticeChallengeStateSummaryComponent,
     PracticePageComponent,
@@ -40,9 +38,6 @@ import { PracticeCardComponent } from './components/practice-card/practice-card.
       }
     ]),
     GameModule,
-  ],
-  exports: [
-    PracticeCardComponent
   ]
 })
 export class PracModule { }

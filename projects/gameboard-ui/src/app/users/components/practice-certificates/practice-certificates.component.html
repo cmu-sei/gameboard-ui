@@ -27,7 +27,10 @@
                 <td>{{ certificate.score }}</td>
                 <td>{{ certificate.date | friendlyDateAndTime }}</td>
                 <td class="text-right">
-                    <button class="btn btn-info" (click)="handleCertificateClick(certificate)">Open</button>
+                    <a *ngIf="apiHost && localUserId" target="_blank" class="btn btn-info"
+                        [href]="('/user/' + localUserId + '/certificates/' + certificate.challenge.challengeSpecId)">
+                        Open
+                    </a>
                 </td>
             </tr>
         </tbody>

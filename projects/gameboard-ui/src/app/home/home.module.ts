@@ -18,11 +18,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
-import { CompetitiveCertificatesComponent } from './competitive-certificates/competitive-certificates.component';
 import { ProfileHistoryComponent } from './profile-history/profile-history.component';
-import { PracticeCertificatesComponent } from './practice-certificates/practice-certificates.component';
-import { CertificatesComponent } from './certificates/certificates.component';
-import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
 
 @NgModule({
   declarations: [
@@ -34,10 +30,7 @@ import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
     ForbiddenComponent,
     LoginPageComponent,
     TocPageComponent,
-    CompetitiveCertificatesComponent,
     ProfileHistoryComponent,
-    PracticeCertificatesComponent,
-    CertificatesComponent,
   ],
   imports: [
     CommonModule,
@@ -48,13 +41,6 @@ import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
           { path: 'login', component: LoginPageComponent },
           { path: 'oidc', component: OidcComponent },
           { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], title: "Profile" },
-          {
-            path: 'profile/certificates', component: CertificatesComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
-              { path: 'competitive', component: CompetitiveCertificatesComponent, title: "Certificates" },
-              { path: 'practice', component: PracticeCertificatesComponent, title: "Practice Certificates", canActivate: [practiceModeEnabledGuard] },
-              { path: '', pathMatch: 'full', redirectTo: 'competitive' }
-            ]
-          },
           { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
           { path: 'doc/:id', component: TocPageComponent },
           { path: 'forbidden', component: ForbiddenComponent },

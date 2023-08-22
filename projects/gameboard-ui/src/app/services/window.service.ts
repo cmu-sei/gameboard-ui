@@ -12,4 +12,8 @@ export class WindowService {
   open() {
     this.document.defaultView?.open(undefined, "_blank");
   }
+
+  print() {
+    this.document.defaultView!.print();
+  }
 }

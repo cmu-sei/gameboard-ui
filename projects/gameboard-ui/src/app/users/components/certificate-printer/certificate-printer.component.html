@@ -1,0 +1,4 @@
+<app-spinner *ngIf="isDownloading">Loading your certificate...</app-spinner>
+<div class="gameboard-print">
+    <img [src]="imageUrl" alt="A gameboard certificate!" (load)="handleLoad()" (error)="handleError()" />
+</div>

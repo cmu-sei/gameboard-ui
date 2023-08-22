@@ -29,11 +29,13 @@ import { AuthService } from './utility/auth.service';
 import { UserService } from './api/user.service';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NAVIGATOR } from './services/navigator.service';
+import { AppNavComponent } from './nav/nav.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SupportPillComponent
+    SupportPillComponent,
+    AppNavComponent
   ],
   imports: [
     BrowserModule,
@@ -52,15 +54,15 @@ import { NAVIGATOR } from './services/navigator.service';
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
   ],
-  exports: [
-    ApiModule,
-    UtilityModule,
-    FontAwesomeModule,
-    ButtonsModule,
-    ModalModule,
-    BsDropdownModule,
-    TooltipModule
-  ],
+  // exports: [
+  //   ApiModule,
+  //   UtilityModule,
+  //   FontAwesomeModule,
+  //   ButtonsModule,
+  //   ModalModule,
+  //   BsDropdownModule,
+  //   TooltipModule
+  // ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

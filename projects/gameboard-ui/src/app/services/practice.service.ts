@@ -63,12 +63,16 @@ export class PracticeService {
     );
   }
 
-  getCertificates(): Observable<PracticeModeCertificate[]> {
-    return this.http.get<PracticeModeCertificate[]>(this.apiUrl.build("practice/certificates"));
+  getCertificateImage(userId: string, challengeSpecId: string) {
+    return this.http.get(this.apiUrl.build(`user/${userId}/certificates/${challengeSpecId}`), { responseType: "arraybuffer" }).pipe(
+      map(response => new Blob([response])),
+      map(blob => window.URL.createObjectURL(blob)),
+      map(url => this.domSanitizer.bypassSecurityTrustUrl(url))
+    );
   }
 
-  getCertificateTemplate(): Observable<string> {
-    return this.http.get(`${this.configService.basehref}/assets/templates/practice-certificate.template.html`, { responseType: "text" });
+  getCertificates(userId: string): Observable<PracticeModeCertificate[]> {
+    return this.http.get<PracticeModeCertificate[]>(this.apiUrl.build(`user/${userId}/certificates`));
   }
 
   getSettings(): Observable<PracticeModeSettings> {
