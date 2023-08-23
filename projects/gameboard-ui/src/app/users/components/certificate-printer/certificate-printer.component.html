@@ -1,4 +1,7 @@
 <app-spinner *ngIf="isDownloading">Loading your certificate...</app-spinner>
-<div class="gameboard-print">
+<div class="gameboard-print" *ngIf="isPublished">
     <img [src]="imageUrl" alt="A gameboard certificate!" (load)="handleLoad()" (error)="handleError()" />
+</div>
+<div class="is-not-published" *ngIf="!isPublished">
+    This certificate either doesn't exist or has not been published by its owner.
 </div>

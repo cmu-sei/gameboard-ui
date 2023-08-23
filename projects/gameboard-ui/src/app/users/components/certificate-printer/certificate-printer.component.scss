@@ -4,15 +4,13 @@
     }
 
     @page {
-        size: landscape;
+        size: letter landscape;
         margin: 0mm !important;
-        width: 3300px;
-        height: 2550px;
+        min-width: 768px;
     }
 
     img {
-        width: 3300px;
-        height: 2550px;
+        width: 100vw;
     }
 
     html, body * {
@@ -20,6 +18,7 @@
     }
 
     .gameboard-print {
+        display: block;
         visibility: visible;
     }
 }
@@ -33,4 +32,18 @@
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+.gameboard-print {
+    display: flex;
+    justify-content: center;
+}
+
+img {
+    height: 100vh;
+}
+
+.is-not-published {
+    margin-top: 5rem;
+    text-align: center;
 }

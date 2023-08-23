@@ -31,7 +31,11 @@
           {{cert.player.approvedName}}</span>
       </td>
       <td class="text-right">
-        <button class="btn btn-info" (click)="print(cert)">Open</button>
+        <div class="d-flex align-items-center justify-content-end">
+          <app-certificate-publish-controls class="d-block mr-2" [certificate]="toPublishedViewModel(cert)"
+            (publishStatusChange)="loadCertificates()"></app-certificate-publish-controls>
+          <button class="btn btn-info" (click)="print(cert)">Open</button>
+        </div>
       </td>
     </tr>
   </tbody>

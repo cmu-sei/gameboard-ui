@@ -14,7 +14,7 @@ import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.m
       </div>
       <div class="modal-body" *ngIf="!context.renderBodyAsMarkdown; else markdownBodyContent" [innerHTML]="context.bodyContent.trim()"></div>
       <div class="modal-footer">
-          <button type="button" *ngIf="context.hideCancel !== true" class="btn btn-default" (click)="cancel()">{{ context.cancelButtonText || "Cancel" }}</button>
+          <button type="button" *ngIf="context.hideCancel !== true" class="btn btn-outline-info" (click)="cancel()">{{ context.cancelButtonText || "Cancel" }}</button>
           <button type="button" class="btn btn-danger" (click)="confirm()">{{ context.confirmButtonText || 'OK' }}</button>
       </div>
     </div>

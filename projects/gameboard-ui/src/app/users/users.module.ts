@@ -8,6 +8,7 @@ import { CompetitiveCertificatesComponent } from './components/competitive-certi
 import { PracticeCertificatesComponent } from './components/practice-certificates/practice-certificates.component';
 import { AuthGuard } from '@/utility/auth.guard';
 import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
+import { CertificatePublishControlsComponent } from './components/certificate-publish-controls/certificate-publish-controls.component';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -17,7 +18,7 @@ const DECLARED_COMPONENTS = [
 ];
 
 @NgModule({
-  declarations: [...DECLARED_COMPONENTS],
+  declarations: [...DECLARED_COMPONENTS, CertificatePublishControlsComponent],
   imports: [
     CommonModule,
     CoreModule,
@@ -29,7 +30,7 @@ const DECLARED_COMPONENTS = [
           { path: '', pathMatch: 'full', redirectTo: 'competitive' }
         ]
       },
-      { path: ":userId/certificates/:challengeSpecId", component: CertificatePrinterComponent },
+      { path: ":userId/certificates/:playerMode/:awardedForEntityId", component: CertificatePrinterComponent },
     ]),
   ]
 })

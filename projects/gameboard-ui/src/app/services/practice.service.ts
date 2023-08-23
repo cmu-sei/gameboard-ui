@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, forkJoin, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { PracticeModeCertificate, PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
+import { PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { PlayerService } from '@/api/player.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
 import { GameCardContext } from '@/api/game-models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@/utility/config.service';
+import { PracticeModeCertificate } from '@/users/users.models';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
@@ -43,36 +44,6 @@ export class PracticeService {
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {
     await this.updateIsEnabled();
-  }
-
-  getCertificateHtml(certificate: PracticeModeCertificate): Observable<string | null> {
-    return forkJoin([
-      this.http.get(`${this.configService.basehref}assets/templates/practice-certificate.template.html`, { responseType: 'text' }),
-      this.http.get(this.apiUrl.build(`practice/certificate/${certificate.challenge.challengeSpecId}/html`), { responseType: "text" })
-    ]).pipe(
-      map(([templateHtml, bodyContent]) => ({ templateHtml, bodyContent })),
-      map(ctx => {
-        const templateSafe = ctx.templateHtml;
-        const bodySafe = ctx.bodyContent;
-
-        return templateSafe
-          .toString()
-          .replace("{{bodyContent}}", bodySafe?.toString())
-          .replace("{{title}}", `Gameboard Practice Certificate | ${certificate.challenge.name}`);
-      })
-    );
-  }
-
-  getCertificateImage(userId: string, challengeSpecId: string) {
-    return this.http.get(this.apiUrl.build(`user/${userId}/certificates/${challengeSpecId}`), { responseType: "arraybuffer" }).pipe(
-      map(response => new Blob([response])),
-      map(blob => window.URL.createObjectURL(blob)),
-      map(url => this.domSanitizer.bypassSecurityTrustUrl(url))
-    );
-  }
-
-  getCertificates(userId: string): Observable<PracticeModeCertificate[]> {
-    return this.http.get<PracticeModeCertificate[]>(this.apiUrl.build(`user/${userId}/certificates`));
   }
 
   getSettings(): Observable<PracticeModeSettings> {

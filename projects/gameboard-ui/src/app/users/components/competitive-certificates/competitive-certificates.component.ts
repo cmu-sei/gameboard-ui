@@ -2,6 +2,7 @@ import { Component, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { faArrowLeft, faAward, faPrint, faMedal, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
+import { competitiveCertificateToPublishedViewmodel } from '@/users/functions';
 import { PlayerCertificate } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 
@@ -10,23 +11,21 @@ import { PlayerService } from '../../../api/player.service';
   templateUrl: './competitive-certificates.component.html',
   styleUrls: ['./competitive-certificates.component.scss']
 })
-export class CompetitiveCertificatesComponent implements OnInit {
+export class CompetitiveCertificatesComponent {
   faArrowLeft = faArrowLeft;
   faAward = faAward;
   faMedal = faMedal;
   faPrint = faPrint;
   faUser = faUser;
   faUsers = faUsers;
-  certs$: Observable<PlayerCertificate[]>;
+  certs$?: Observable<PlayerCertificate[]>;
+  protected toPublishedViewModel = competitiveCertificateToPublishedViewmodel;
 
   constructor(
-    apiPlayer: PlayerService,
+    private apiPlayer: PlayerService,
     private sanitizer: DomSanitizer
   ) {
-    this.certs$ = apiPlayer.getUserCertificates();
-  }
-
-  ngOnInit(): void {
+    this.loadCertificates();
   }
 
   print(cert: PlayerCertificate): void {
@@ -41,6 +40,10 @@ export class CompetitiveCertificatesComponent implements OnInit {
     // we're no longer automatically popping the print dialogue because we want them to assume responsibility for scaling/orienting the output
     // (since we can't control it with CSS very well)
     // printWindow?.addEventListener('load', printWindow?.print, true); // wait until all content loads before printing
+  }
+
+  protected loadCertificates() {
+    this.certs$ = this.apiPlayer.getUserCertificates();
   }
 
 }

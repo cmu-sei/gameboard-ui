@@ -1,0 +1,18 @@
+<div class="d-flex align-items-center" *ngIf="certificate">
+    <ng-container
+        *ngTemplateOutlet="certificate.publishedOn ? published : notPublished; context: { certificate: certificate }"></ng-container>
+</div>
+
+<ng-template #notPublished let-certificate="certificate">
+    <button type="button" *ngIf="!certificate.publishedOn" class="btn btn-warning"
+        (click)="handlePublishClick(certificate)">Publish</button>
+</ng-template>
+
+<ng-template #published let-certificate="certificate">
+    <app-share-button
+        [message]="'Copied a link to your certificate for ' + certificate.awardedForEntity.name + ' to your clipboard.'"
+        size="medium" tooltip="Copy a link to this certificate to the clipboard"
+        [shareContent]="(appBaseUrl + 'user/' + localUserId + '/certificates/' + certificate.mode + '/' + certificate.awardedForEntity.id)"></app-share-button>
+    <button type=" button" *ngIf="!!certificate.publishedOn" class="btn btn-danger mx-2"
+        (click)="handleUnpublishClick(certificate)">Unpublish</button>
+</ng-template>

@@ -10,7 +10,7 @@ import { ToastService } from '@/utility/services/toast.service';
 })
 export class ShareButtonComponent {
   @Input() message?: string;
-  @Input() textSelector?: () => string;
+  @Input() shareContent?: string;
   @Input() size: "small" | "medium" | "large" = "large";
   @Input() tooltip?: string;
 
@@ -22,7 +22,7 @@ export class ShareButtonComponent {
     private windowService: WindowService) { }
 
   async handleShareClick() {
-    const text = this.textSelector ? this.textSelector() : await this.clipboardService.copy(this.windowService.get().location.href);
+    await this.clipboardService.copy(this.shareContent || this.windowService.get().location.href);
 
     if (this.message)
       this.toastService.showMessage(this.message);

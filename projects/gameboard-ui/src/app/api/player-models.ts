@@ -310,6 +310,7 @@ export interface PlayerCertificate {
   game: Game;
   player: Player;
   html: string;
+  publishedOn?: Date;
 }
 
 export interface PlayerSearch extends Search {
