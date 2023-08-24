@@ -15,7 +15,7 @@ export class CountdownPipe implements PipeTransform {
 
   transform(value?: number): string {
     if (!value || value < 0) {
-      return "";
+      return "0";
     }
 
     const days = Math.floor(value / 1000 / 60 / 60 / 24);

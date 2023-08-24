@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, map, switchMap, tap } from 'rxjs';
 import { Challenge, NewChallenge, SectionSubmission } from './board-models';
@@ -13,7 +13,7 @@ export class ChallengesService {
   private _challengeDeployStateChanged$ = new Subject<string>();
   public readonly challengeDeployStateChanged$ = this._challengeDeployStateChanged$.asObservable();
 
-  private _challengeGraded$ = new Subject<string>();
+  private _challengeGraded$ = new Subject<Challenge>();
   public readonly challengeGraded$ = this._challengeGraded$.asObservable();
 
   constructor(
@@ -76,13 +76,13 @@ export class ChallengesService {
 
   public grade(model: SectionSubmission): Observable<Challenge> {
     return this.http.put<Challenge>(this.apiUrl.build("challenge/grade"), model).pipe(
-      tap(challenge => this._challengeGraded$.next(challenge.id))
+      tap(challenge => this._challengeGraded$.next(challenge))
     );
   }
 
   public regrade(id: string): Observable<Challenge> {
     return this.http.put<Challenge>(this.apiUrl.build("challenge/regrade"), { id }).pipe(
-      tap(challenge => this._challengeGraded$.next(challenge.id))
+      tap(challenge => this._challengeGraded$.next(challenge))
     );
   }
 }

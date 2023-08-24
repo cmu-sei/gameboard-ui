@@ -6,6 +6,8 @@ import { LogService } from './log.service';
 import { VmState } from '@/api/board-models';
 import { BrowserService } from './browser.service';
 import { ConfigService } from '@/utility/config.service';
+import { UserService as LocalUser } from '@/utility/user.service';
+import { PlayerMode } from '@/api/player-models';
 
 export interface QueryParamsUpdate {
   parameters: Params,
@@ -17,6 +19,7 @@ export class RouterService {
   constructor(
     private browser: BrowserService,
     private config: ConfigService,
+    private localUser: LocalUser,
     private logService: LogService,
     public route: ActivatedRoute,
     public router: Router,
@@ -36,12 +39,34 @@ export class RouterService {
     this.router.navigateByUrl("/");
   }
 
+  public getCertificatePrintableUrl(mode: PlayerMode, challengeSpecOrGameId: string) {
+    const localUserId = this.localUser.user$.value?.id;
+
+    if (!localUserId) {
+      throw new Error("Can't navigate to printable certificate if not authenticated.");
+    }
+
+    return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
+  }
+
   public getReportRoute<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): UrlTree {
     return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }
 
   public toChallenge(challengeId: string, playerId: string) {
     return this.router.navigateByUrl(`/board/${playerId}/${challengeId}`);
+  }
+
+  public toPracticeArea() {
+    return this.router.navigateByUrl("/practice");
+  }
+
+  public toPracticeCertificates() {
+    return this.router.navigateByUrl("/user/certificates/practice");
+  }
+
+  public toCertificatePrintable(mode: PlayerMode, challengeSpecOrGameId: string) {
+    return this.router.navigateByUrl(this.getCertificatePrintableUrl(mode, challengeSpecOrGameId));
   }
 
   public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): Promise<boolean> {

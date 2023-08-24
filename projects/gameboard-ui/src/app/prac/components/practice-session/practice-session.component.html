@@ -1,16 +1,11 @@
 <div class="container">
   <div *ngIf="spec$ | async as spec; else loading">
-    <h2>{{spec.name}}</h2>
-    <span class="lead">{{spec.gameName}}</span>
-    <p>{{spec.description}}</p>
-
     <ng-container *ngIf="(authed$ | async); else unauthed">
       <markdown [data]="spec.text"></markdown>
 
       <div *ngIf="!isStartingSession" class="challenge-management-buttons my-5 d-flex justify-content-center">
-
-        <app-confirm-button *ngIf="!(activePracticeChallenge$ | async)" btnClass="btn btn-lg btn-info px-4"
-          (confirm)="play(spec)" class="d-block">
+        <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
+          btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec.gameId)" class="d-block">
           <span>Start Practice Session</span>
         </app-confirm-button>
 
@@ -21,7 +16,8 @@
       </div>
 
       <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
-        [playerContext]="playerContext" [autoPlay]="true"></app-play>
+        [playerContext]="playerContext" [autoPlay]="true"
+        (deployStatusChanged)="handleDeployStatusChanged($event)"></app-play>
     </ng-container>
   </div>
 </div>

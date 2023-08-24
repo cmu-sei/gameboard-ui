@@ -8,7 +8,6 @@ import { ConfigService } from '@/utility/config.service';
 })
 export class PracticePageComponent {
   protected appName?: string;
-  protected introText = "";
 
   constructor(
     configService: ConfigService) {

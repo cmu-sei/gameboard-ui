@@ -36,11 +36,11 @@
             </app-confirm-button>
         </div>
 
-        <ng-container *ngIf="legacyContext.boardSpec?.instance?.state?.challenge?.questions?.length">
+        <div *ngIf="legacyContext.boardSpec?.instance?.state?.challenge?.questions?.length" class="my-5">
             <h3>Challenge Questions</h3>
             <app-gamespace-quiz [spec]="legacyContext.boardSpec!"
                 [session]="legacyContext.session!"></app-gamespace-quiz>
-        </ng-container>
+        </div>
 
         <div class="text-right m-4">
             <div class="mb-1">

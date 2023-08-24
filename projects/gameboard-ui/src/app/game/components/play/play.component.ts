@@ -32,6 +32,7 @@ export class PlayComponent {
   @Input() challengeSpec: SpecSummary | null = null;
   @Input() autoPlay = false;
   @Output() challengeStarted = new EventEmitter<void>();
+  @Output() deployStatusChanged = new EventEmitter<boolean>();
 
   protected challenge: LocalActiveChallenge | null = null;
   protected fa = fa;
@@ -41,7 +42,6 @@ export class PlayComponent {
   protected vmUrls: { [id: string]: string } = {};
 
   private _autobootedForPlayerId?: string;
-
 
   constructor(
     private activeChallengesRepo: ActiveChallengesRepo,
@@ -68,10 +68,12 @@ export class PlayComponent {
 
       this.vmUrls = {};
     }
+
     // if the player record has changed since the last autoboot, reset it
     // (this happens if the player ends the session and restarts it from the same)
     // page
     if (this.playerContext && this.challengeSpec && this._autobootedForPlayerId !== this.playerContext.playerId) {
+      this.deployStatusChanged.emit(true);
       this.isDeploying = true;
       this.challenge = await firstValueFrom(this.challengesService.startPlaying({
         specId: this.challengeSpec.id,
@@ -79,6 +81,7 @@ export class PlayComponent {
         userId: this.playerContext.userId
       }));
       this.isDeploying = false;
+      this.deployStatusChanged.emit(false);
       this._autobootedForPlayerId = this.playerContext.playerId;
       this.challengeStarted.emit();
     }
@@ -90,8 +93,10 @@ export class PlayComponent {
     }
 
     this.isDeploying = true;
+    this.deployStatusChanged.emit(true);
     await firstValueFrom(this.challengesService.deploy({ id: challengeId }));
     this.isDeploying = false;
+    this.deployStatusChanged.emit(false);
   }
 
   protected async undeploy(challengeId: string) {

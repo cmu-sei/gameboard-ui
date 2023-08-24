@@ -18,7 +18,6 @@ export class LocalTimeWindow {
     durationMs: number | null;
     msTilStart: number | null;
     msTilEnd: number | null;
-    state: ApiTimeWindowState;
 
     constructor(apiTimeWindow: ApiTimeWindow) {
         if (!apiTimeWindow.start && !apiTimeWindow.end) {
@@ -31,12 +30,11 @@ export class LocalTimeWindow {
         this.durationMs = apiTimeWindow.durationMs || null;
         this.msTilStart = apiTimeWindow.msTilStart || null;
         this.msTilEnd = apiTimeWindow.msTilEnd || null;
-        this.state = apiTimeWindow.state;
     }
 
-    isBefore() { return this.state == ApiTimeWindowState.Before; }
-    isDuring() { return this.state == ApiTimeWindowState.During; }
-    isAfter() { return this.state == ApiTimeWindowState.After; }
+    public isBefore = () => this.start && DateTime.now() < this.start;
+    public isAfter = () => this.end && DateTime.now() > this.end;
+    public isDuring = () => this.start && this.end && !this.isBefore() && !this.isAfter();
 
     public toLegacyTimeWindow(): TimeWindow {
         if (!this.start && !this.end)

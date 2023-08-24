@@ -8,7 +8,7 @@ import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.m
     <div class="modal-confirm-component">
       <div class="modal-header">
           <h4 class="modal-title pull-left">{{ context.title }}</h4>
-          <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="cancel()">
+          <button *ngIf="!context.hideCancel" type="button" class="btn-close close pull-right" aria-label="Close" (click)="cancel()">
               <span aria-hidden="true" class="visually-hidden">&times;</span>
           </button>
       </div>
@@ -34,6 +34,7 @@ export class ModalConfirmComponent implements IModalReady<ModalConfirmConfig> {
 
   confirm() {
     if (this.context.onConfirm) {
+      console.log("confirmed");
       this.context.onConfirm();
     }
 
@@ -41,6 +42,7 @@ export class ModalConfirmComponent implements IModalReady<ModalConfirmConfig> {
   }
 
   cancel() {
+    console.log("canceled");
     if (this.context.onCancel) {
       this.context.onCancel();
     }

@@ -31,7 +31,7 @@ export class CertificatesService {
     return firstValueFrom(
       this
         .http
-        .post<PublishedCertificateViewModel>(this.apiUrl.build(`user/${ownerUserId}/certificates/${(mode == PlayerMode.competition ? "competitive" : "practice")}/${awardedForEntityId}`), {})
+        .post<PublishedCertificateViewModel>(this.apiUrl.build(`user/${ownerUserId}/certificates/${this.coerceCompetitionModeString(mode)}/${awardedForEntityId}`), {})
     );
   }
 

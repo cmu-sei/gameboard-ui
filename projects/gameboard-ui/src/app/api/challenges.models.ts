@@ -2,6 +2,7 @@ import { ApiTimeWindow, LocalTimeWindow } from "@/core/models/api-time-window";
 import { PlayerMode } from "./player-models";
 import { VmState } from "./board-models";
 import { SimpleEntity } from "./models";
+import { NumberUnitLength } from "luxon";
 
 export interface ActiveChallenge {
     spec: {
@@ -20,8 +21,12 @@ export interface ActiveChallenge {
     };
     teamId: string;
     playerMode: PlayerMode;
-    maxPossibleScore: number;
-    score: number;
+    scoreAndAttemptsState: {
+        score: number;
+        maxPossibleScore: number;
+        attempts: number;
+        maxAttempts: number;
+    }
 }
 
 export interface ApiActiveChallenge extends ActiveChallenge {
