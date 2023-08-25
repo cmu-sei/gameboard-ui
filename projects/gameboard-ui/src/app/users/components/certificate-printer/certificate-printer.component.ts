@@ -12,7 +12,7 @@ import { PlayerMode } from '@/api/player-models';
   styleUrls: ['./certificate-printer.component.scss']
 })
 export class CertificatePrinterComponent implements OnInit {
-  protected title = "Gameboard Certificate";
+  protected title = "";
   protected imageUrl?: SafeUrl;
   protected isAutoprint = false;
   protected isDownloading = true;
@@ -36,6 +36,7 @@ export class CertificatePrinterComponent implements OnInit {
     // need to refined detection of other validation errors vs. unpublished, but this is what we have for now
     try {
       this.imageUrl = await firstValueFrom(this.certificatesService.getCertificateImage(mode, userId, awardedForEntityId));
+      this.title = `${mode} Certificate`;
     }
     catch (err) {
       this.isDownloading = false;
@@ -43,8 +44,9 @@ export class CertificatePrinterComponent implements OnInit {
     }
   }
 
-  protected handleError() {
-    this.isDownloading = false;
+  protected handleError(err: any) {
+    // this.isDownloading = false;
+    // console.log("err", err);
     throw new Error("Error loading the certificate image.");
   }
 

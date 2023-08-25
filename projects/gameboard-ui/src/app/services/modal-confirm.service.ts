@@ -20,7 +20,6 @@ export class ModalConfirmService implements OnDestroy {
     this.openConfirm({ ...config, hideCancel: true });
   }
 
-
   openConfirm(config: ModalConfirmConfig): void {
     this.bsModalRef = this.openWithDefaultStyles({ content: ModalConfirmComponent, context: config as ModalConfirmConfig, modalClasses: config.modalClasses });
   }

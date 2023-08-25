@@ -29,12 +29,13 @@ import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.m
 })
 export class ModalConfirmComponent implements IModalReady<ModalConfirmConfig> {
   context!: ModalConfirmConfig;
+  private isConfirmed = false;
 
   constructor(protected modalRef: BsModalRef) { }
 
   confirm() {
     if (this.context.onConfirm) {
-      console.log("confirmed");
+      this.isConfirmed = true;
       this.context.onConfirm();
     }
 
@@ -42,8 +43,8 @@ export class ModalConfirmComponent implements IModalReady<ModalConfirmConfig> {
   }
 
   cancel() {
-    console.log("canceled");
-    if (this.context.onCancel) {
+    // ensure that we don't do both cancel and confirm
+    if (!this.isConfirmed && this.context.onCancel) {
       this.context.onCancel();
     }
 
