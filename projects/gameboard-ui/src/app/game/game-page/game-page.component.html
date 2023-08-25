@@ -61,7 +61,7 @@
 
         <!-- if not session start -->
         <ng-container
-          *ngIf="(ctx.user.isDesigner || !ctx.game.registration.isAfter) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
+          *ngIf="(ctx.user.isDesigner || ctx.user.isTester || !ctx.game.registration.isAfter) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
           <div class="col panel">
             <h2>Enrollment</h2>
             <app-player-enroll [ctx]="ctx" (onEnroll)="onEnroll($event)"

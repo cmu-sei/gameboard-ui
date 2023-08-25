@@ -2,16 +2,18 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
+import { FontAwesomeService } from '@/services/font-awesome.service';
 import { GameContext } from '../../api/models';
-import { Player, TimeWindow } from '../../api/player-models';
+import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
 import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
-import { FontAwesomeService } from '../../services/font-awesome.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { UserService as LocalUserService } from "@/utility/user.service";
+import { UserService } from "@/api/user.service";
 
 @Component({
   selector: 'app-player-session',
@@ -36,10 +38,15 @@ export class PlayerSessionComponent implements OnDestroy {
   protected isDoubleChecking = false;
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
+  protected canAdminStart = false;
+  protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
+
   constructor(
+    protected faService: FontAwesomeService,
     private api: PlayerService,
-    private modalService: BsModalService,
-    protected faService: FontAwesomeService
+    private modalService: ModalConfirmService,
+    private localUserService: LocalUserService,
+    private userService: UserService,
   ) { }
 
   async ngOnInit() {
@@ -84,6 +91,10 @@ export class PlayerSessionComponent implements OnDestroy {
             onConfirm: () => this.confirmResetTeam(ctx.player)
           };
         }
+      }),
+      tap(ctx => {
+        const localUser = this.localUserService.user$.value;
+        this.canAdminStart = !!localUser && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
       })
     ).subscribe();
   }
@@ -98,19 +109,33 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   handleReset(p: Player): void {
-    this.api.resetSession({ player: p, unenrollTeam: true }).pipe(first()).subscribe(_ => {
-      this.onSessionReset.emit(p);
-    });
+    if (this.modalConfig) {
+      // this is a team game, do team confirmation
+      this.showConfirmTeamReset(p);
+    } else {
+      // it's an individual game, we've confirmed them to death enough
+      this.doReset(p);
+    }
   }
 
   showConfirmTeamReset(p: Player) {
-    this.modalService.show(ModalConfirmComponent, { initialState: { config: this.modalConfig } });
+    if (!this.modalConfig) {
+      throw new Error("Can't open confirm without config.");
+    }
+
+    this.modalService.openConfirm(this.modalConfig);
   }
 
   confirmResetTeam(p: Player): void {
-    this.modalService.hide(this.modalRef?.id);
+    this.modalService.hide();
     this.modalRef = undefined;
-    this.handleReset(p);
+    this.doReset(p);
+  }
+
+  private doReset(p: Player) {
+    this.api.resetSession({ player: p, unenrollTeam: true }).pipe(first()).subscribe(_ => {
+      this.onSessionReset.emit(p);
+    });
   }
 
   ngOnDestroy(): void {

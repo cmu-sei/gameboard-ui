@@ -55,7 +55,8 @@
 
       <app-error-div [errors]="errors"></app-error-div>
 
-      <ng-container *ngIf="ctx.player.session && ctx.player.session.isBefore && ctx.game.session.isDuring">
+      <ng-container
+        *ngIf="ctx.player.session && ctx.player.session.isBefore && (ctx.game.session.isDuring || canAdminStart)">
         <app-session-start-controls [ctx]="ctx" (onRequestStart)="handleStart(ctx.player)"></app-session-start-controls>
 
         <div class="card-text" *ngIf="!isDoubleChecking && !ctx.game.requireSynchronizedStart">

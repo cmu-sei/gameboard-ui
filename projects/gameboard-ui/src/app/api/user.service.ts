@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode } from './user-models';
+import { LogService } from '@/services/log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
+    private log: LogService,
     private config: ConfigService
   ) {
     this.url = config.apphost + 'api';
@@ -76,6 +78,18 @@ export class UserService {
 
   public announce(model: Announcement): Observable<any> {
     return this.http.post<any>(`${this.url}/announce`, model);
+  }
+
+  // records a login event for the currently authorized user
+  public updateLoginEvents(): Observable<void> {
+    this.log.logInfo("User login event recorded");
+    return this.http.put<void>(`${this.url}/user/login`, {});
+  }
+
+  public canEnrollAndPlayOutsideExecutionWindow(user: ApiUser) {
+    return user && (
+      user.isAdmin || user.isDesigner || user.isTester || user.isRegistrar
+    );
   }
 
   private mapToTree(list: string[]): TreeNode {

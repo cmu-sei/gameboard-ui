@@ -10,7 +10,8 @@ import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitat
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
-import { UserService } from '../../utility/user.service';
+import { UserService as LocalUserService } from '../../utility/user.service';
+import { UserService } from '@/api/user.service';
 
 @Component({
   selector: 'app-player-enroll',
@@ -31,6 +32,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   ctx$: Observable<GameContext>;
   ctxDelayed$: Observable<GameContext>;
 
+  protected canAdminEnroll = false;
   disallowedName: string | null = null;
   disallowedReason: string | null = null;
   protected managerRole = PlayerRole.manager;
@@ -49,7 +51,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     private api: PlayerService,
     private config: ConfigService,
     private hubService: NotificationService,
-    private localUser: UserService
+    private localUserService: LocalUserService,
+    private userService: UserService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
       map(i => this.ctx),
@@ -65,6 +68,15 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
             this.disallowedReason = gc.player.nameStatus;
           }
         }
+      }),
+      tap(ctx => {
+        // determine if we can admin enroll
+        const localUser = this.localUserService.user$.value;
+        this.canAdminEnroll = !(ctx?.player?.id) && !!localUser &&
+          (
+            this.ctx.game.registration.isDuring ||
+            this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser)
+          );
       })
     );
 
