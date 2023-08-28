@@ -8,9 +8,13 @@ export function buildUrl(...urlBits: string[]): string | null {
         url += bit.endsWith("/") ? bit : bit + "/";
     }
 
-    return url;
+    return url.substring(0, url.length - 1);
 }
 
 export function slug(input: string): string {
-    return input.replace(/[^a-zA-Z0-9]+/igm, '-').toLowerCase();
+    return input
+        .replace(/[^a-zA-Z0-9]+/igm, '-')
+        .replace(/-^/, "")
+        .replace(/$-/, "")
+        .toLowerCase();
 }
