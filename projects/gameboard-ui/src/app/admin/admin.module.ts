@@ -89,7 +89,7 @@ import { UserReportComponent } from './user-report/user-report.component';
           { path: 'designer/:id', component: GameEditorComponent },
           {
             path: "practice", component: PracticeComponent, children: [
-              { path: "", pathMatch: "full", redirectTo: "challenges" },
+              { path: "", pathMatch: "full", redirectTo: "settings" },
               { path: "challenges", component: PracticeChallengesComponent },
               { path: "settings", component: PracticeSettingsComponent },
             ]
