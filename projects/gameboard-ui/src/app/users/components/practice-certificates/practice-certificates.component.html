@@ -32,7 +32,7 @@
                             [certificate]="toPublishedViewModel(certificate)"
                             (publishStatusChange)="loadCertificates()"></app-certificate-publish-controls>
                         <a *ngIf="apiHost && localUserId" target="_blank" class="btn btn-info"
-                            [href]="('/user/' + localUserId + '/certificates/practice/' + certificate.challenge.challengeSpecId + '?autoprint=true')">
+                            [href]="'user/' + localUserId + '/certificates/practice/' + certificate.challenge.challengeSpecId + '?autoprint=true' | relativeToAbsoluteHref">
                             Open
                         </a>
                     </div>

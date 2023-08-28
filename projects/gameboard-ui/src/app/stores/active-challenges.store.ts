@@ -9,6 +9,7 @@ import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { PlayerService } from "@/api/player.service";
 import { DateTime } from "luxon";
 import { Challenge } from "@/api/board-models";
+import { PracticeService } from "@/services/practice.service";
 
 interface ActiveChallengesProps {
     user: SimpleEntity;
@@ -49,6 +50,7 @@ export class ActiveChallengesRepo implements OnDestroy {
     constructor(
         challengesService: ChallengesService,
         playerService: PlayerService,
+        practiceService: PracticeService,
         localUser: LocalUserService,
         private unsub: UnsubscriberService) {
 
@@ -61,7 +63,8 @@ export class ActiveChallengesRepo implements OnDestroy {
                     challengesService.challengeDeployStateChanged$,
                     playerService.playerSessionReset$,
                     playerService.playerSessionChanged$,
-                    playerService.teamSessionChanged$
+                    playerService.teamSessionChanged$,
+                    practiceService.practiceChallengeEnded$
                 )
             ]).pipe(
                 map(([challengesService]) => ({ challengesService })),

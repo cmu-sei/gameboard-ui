@@ -2,17 +2,10 @@ export function buildUrl(...urlBits: string[]): string | null {
     if (!urlBits?.length)
         return null;
 
-    let url = urlBits[0];
+    let url = "";
 
-    if (urlBits.length > 1) {
-        if (!url.endsWith('/'))
-            url += url + "/";
-
-        for (const bit of urlBits) {
-            url += bit.endsWith("/") ? bit : bit + "/";
-        }
-
-        return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
+    for (const bit of urlBits) {
+        url += bit.endsWith("/") ? bit : bit + "/";
     }
 
     return url;

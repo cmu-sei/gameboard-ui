@@ -53,7 +53,11 @@ export class CertificatePrinterComponent implements OnInit {
   protected handleLoad() {
     this.isDownloading = false;
 
-    if (this.isAutoprint)
-      this.windowService.print();
+    if (this.isAutoprint) {
+      // Unfortunately, we have to punt a little here and 
+      // give it an extra half second or so to render the loaded image (so that it doesn't
+      // to print a picture of the loading animation instead)
+      setTimeout(() => this.windowService.print(), 500);
+    }
   }
 }

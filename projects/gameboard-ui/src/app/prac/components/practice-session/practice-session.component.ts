@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { NewPlayer, PlayerMode } from '@/api/player-models';
+import { NewPlayer } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
 import { SpecSummary } from '@/api/spec-models';
 import { UserService as LocalUserService } from '@/utility/user.service';
+import { fa } from "@/services/font-awesome.service";
 import { PracticeService } from '@/services/practice.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
@@ -24,26 +25,27 @@ export class PracticeSessionComponent {
   authed$: Observable<boolean>;
   activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
 
+  protected fa = fa;
   protected playerContext: PlayerContext | null = null;
   protected isPlayingOtherChallenge = false;
   protected isStartingSession = false;
   protected isDeploying = false;
 
   constructor(
-    route: ActivatedRoute,
     private activeChallengesRepo: ActiveChallengesRepo,
     private modalService: ModalConfirmService,
     private localUser: LocalUserService,
     private playerService: PlayerService,
     private practiceService: PracticeService,
+    private route: ActivatedRoute,
     private routerService: RouterService,
     private unsub: UnsubscriberService
   ) {
     this.authed$ = localUser.user$.pipe(map(u => !!u));
 
     this.spec$ = route.params.pipe(
-      filter(p => !!p.cid),
-      switchMap(p => practiceService.searchChallenges({ term: p.cid })),
+      filter(p => !!p.specId),
+      switchMap(p => practiceService.searchChallenges({ term: p.specId })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );
 
@@ -69,9 +71,12 @@ export class PracticeSessionComponent {
           const previousChallenge = this.activePracticeChallenge$.value;
           this.activePracticeChallenge$.next(activeChallenge);
 
+          // expire the previous challenge if it's over
           if (previousChallenge?.session.isAfter()) {
             this.handleActiveChallengeExpired(previousChallenge);
           }
+
+          this.isPlayingOtherChallenge = (!!this.activePracticeChallenge$.value && this.activePracticeChallenge$.value?.spec.id !== this.route.snapshot.paramMap.get("specId"));
         })
     );
   }
@@ -106,7 +111,6 @@ export class PracticeSessionComponent {
       bodyContent: `If you continue, you'll end your session for practice challenge **${currentPracticeChallenge.spec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-
         await this.practiceService.endPracticeChallenge(currentPracticeChallenge.teamId);
         this.play(spec.gameId);
       }

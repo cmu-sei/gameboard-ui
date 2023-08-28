@@ -32,7 +32,7 @@ import { PracticeChallengeSolvedModalComponent } from './components/practice-cha
     RouterModule.forChild([
       {
         path: "", component: PracticePageComponent, children: [
-          { path: ':cid/:slug', component: PracticeSessionComponent },
+          { path: ':specId/:slug', component: PracticeSessionComponent },
           { path: '', pathMatch: 'full', component: PracticeChallengeListComponent }
         ]
       }

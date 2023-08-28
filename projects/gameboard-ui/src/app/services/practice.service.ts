@@ -2,26 +2,24 @@ import { GameService } from '@/api/game.service';
 import { PlayerMode } from '@/api/player-models';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, firstValueFrom, forkJoin, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom, forkJoin, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
 import { PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { PlayerService } from '@/api/player.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
 import { GameCardContext } from '@/api/game-models';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ConfigService } from '@/utility/config.service';
-import { PracticeModeCertificate } from '@/users/users.models';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
   private _isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
   public isEnabled$ = this._isEnabled$.pipe(map(isEnabled => !!isEnabled));
 
+  private _practiceChallengeEnded$ = new Subject<string>();
+  public practiceChallengeEnded$ = this._practiceChallengeEnded$.asObservable();
+
   constructor(
     private apiUrl: ApiUrlService,
-    private configService: ConfigService,
-    private domSanitizer: DomSanitizer,
     private gameService: GameService,
     private http: HttpClient,
     private logService: LogService,
@@ -34,12 +32,7 @@ export class PracticeService {
       sessionEnd: new Date(Date.parse("0001-01-01T00:00:00Z"))
     }));
 
-    activeChallengesStore.update(state => {
-      return {
-        ...state,
-        practice: []
-      };
-    });
+    this._practiceChallengeEnded$.next(teamId);
   }
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {

@@ -1,4 +1,15 @@
 <div class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/practice']" class="text-success">
+          <fa-icon [icon]="fa.arrowLeft"></fa-icon>
+          Back to the Practice Area
+        </a>
+      </li>
+    </ol>
+  </nav>
+
   <div *ngIf="spec$ | async as spec; else loading">
     <ng-container *ngIf="(authed$ | async); else unauthed">
       <markdown [data]="spec.text"></markdown>
@@ -26,6 +37,10 @@
   <div class="text-center">
     <app-spinner>Loading the challenge...</app-spinner>
   </div>
+</ng-template>
+
+<ng-template #breadcrumbNoSpec>
+  <li class="breadcrumb-item">...</li>
 </ng-template>
 
 <ng-template #starting let-challenge="challenge">
