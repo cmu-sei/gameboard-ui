@@ -1,10 +1,10 @@
 import { ReportKey } from '@/reports/reports-models';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
-import { ObjectService } from './object.service';
-import { LogService } from './log.service';
-import { VmState } from '@/api/board-models';
 import { BrowserService } from './browser.service';
+import { LogService } from './log.service';
+import { ObjectService } from './object.service';
+import { VmState } from '@/api/board-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { PlayerMode } from '@/api/player-models';
@@ -104,12 +104,6 @@ export class RouterService {
   }
 
   public updateQueryParams(update: QueryParamsUpdate): Promise<boolean> {
-    // if (this.router.getCurrentNavigation()) {
-    //   // router is currently performing navigation, don't mess with it
-    //   this.logService.logError("Navigation to query params flushed by the router service:", update);
-    //   return Promise.resolve(false);
-    // }
-
     const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...update.parameters });
 
     // delete requested keys (for example, if we're updating the `term` query param, we might need to reset paging)
