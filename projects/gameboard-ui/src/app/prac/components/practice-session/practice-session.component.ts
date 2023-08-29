@@ -25,6 +25,7 @@ export class PracticeSessionComponent {
   authed$: Observable<boolean>;
   activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
 
+  protected errors: any = [];
   protected fa = fa;
   protected playerContext: PlayerContext | null = null;
   protected isPlayingOtherChallenge = false;
@@ -85,14 +86,22 @@ export class PracticeSessionComponent {
   // longterm we should be using specId as the parameter for starting a practice sesh.
   async play(gameId: string): Promise<void> {
     const userId = this.localUser.user$.value?.id;
+    this.errors = [];
 
     if (!userId) {
       throw new Error("Can't start a practice challenge while not authenticated.");
     }
 
     this.isStartingSession = true;
-    const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId } as NewPlayer));
-    this.playerContext = { playerId: player.id, userId: player.userId };
+
+    try {
+      const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId } as NewPlayer));
+      this.playerContext = { playerId: player.id, userId: player.userId };
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
+
     this.isStartingSession = false;
   }
 
