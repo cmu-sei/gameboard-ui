@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { WindowService } from '@/services/window.service';
 import { CertificatesService } from '@/api/certificates.service';
 import { PlayerMode } from '@/api/player-models';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-certificate-printer',
@@ -20,6 +21,7 @@ export class CertificatePrinterComponent implements OnInit {
 
   constructor(
     private certificatesService: CertificatesService,
+    private logService: LogService,
     private route: ActivatedRoute,
     private windowService: WindowService) { }
 
@@ -45,9 +47,7 @@ export class CertificatePrinterComponent implements OnInit {
   }
 
   protected handleError(err: any) {
-    // this.isDownloading = false;
-    // console.log("err", err);
-    throw new Error("Error loading the certificate image.");
+    this.logService.logError("Error loading the certificate image.", err);
   }
 
   protected handleLoad() {
