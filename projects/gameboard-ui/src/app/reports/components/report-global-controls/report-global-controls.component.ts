@@ -30,22 +30,6 @@ export class ReportGlobalControlsComponent {
     });
   }
 
-  handleKnownIssuesClick() {
-    this.modal.openConfirm({
-      title: "Known issues",
-      bodyContent: `
-        We're aware of several issues with the current build of this screen and are addressing them as efficiently
-        possible. If you experience an issue NOT listed here, please let us know!
-
-        - The **Enrollment** report shows large numbers of players with no enroll date. This is expected, as we added the ability to track enroll date for this feature. This also causes the **Enrollment Over Time** graph on the report to appear blank.
-        - **The "Export to CSV" button** does not give visual feedback to indicate that it's creating the CSV when clicked. For now, wait 10-15 seconds for it to assemble the document, and if it doesn't, let us know. We'll be improving this experience soon.
-        - Some reports dump an error message into the browser console when run. The error doesn't affect accuracy or functionality, but we're working on eliminating it.
-        - The **Support** report's doughnut charts are currently computed based on the paged data, not the overall dataset which matches the criteria. This is not intended.
-      `,
-      renderBodyAsMarkdown: true
-    });
-  }
-
   async handleResetClick() {
     await this.routerService.deleteQueryParams();
   }
