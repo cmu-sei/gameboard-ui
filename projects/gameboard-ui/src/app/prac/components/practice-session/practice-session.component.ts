@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, firstValueFrom } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { NewPlayer } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
@@ -31,6 +31,7 @@ export class PracticeSessionComponent {
   protected isPlayingOtherChallenge = false;
   protected isStartingSession = false;
   protected isDeploying = false;
+  protected showSpecMarkdown = true;
 
   constructor(
     private activeChallengesRepo: ActiveChallengesRepo,
@@ -49,6 +50,18 @@ export class PracticeSessionComponent {
       switchMap(p => practiceService.searchChallenges({ term: p.specId })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );
+
+    // if we're actively playing the challenge on _this page_, we don't need to see
+    // the spec markdown, because the Play component will display a more extensive
+    // doc that may be transformed for the given challenge.
+    this.unsub.add(combineLatest([
+      this.spec$,
+      this.activePracticeChallenge$
+    ]).pipe(
+      map(([spec, activeChallenge]) => ({ spec, activeChallenge }))
+    ).subscribe(ctx => {
+      this.showSpecMarkdown = ctx.spec?.id !== ctx.activeChallenge?.spec?.id;
+    }));
 
     this.unsub.add(this.activeChallengesRepo.practiceChallengeCompleted$.subscribe(challenge => {
       this.handleActiveChallengeCompleted(challenge);
@@ -156,7 +169,10 @@ export class PracticeSessionComponent {
       cancelButtonText: "Back to the Practice Area",
       confirmButtonText: "Try again",
       onCancel: () => this.routerService.toPracticeArea(),
-      onConfirm: () => this.play(challenge.game.id),
+      onConfirm: async () => {
+        await this.routerService.toPracticeChallenge(challenge.spec);
+        await this.play(challenge.game.id);
+      },
     });
   }
 }

@@ -7,6 +7,7 @@ import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
+import { slug } from "@/tools/functions";
 import { PlayerMode } from '@/api/player-models';
 
 export interface QueryParamsUpdate {
@@ -63,6 +64,10 @@ export class RouterService {
 
   public toPracticeCertificates() {
     return this.router.navigateByUrl("/user/certificates/practice");
+  }
+
+  public toPracticeChallenge(challengeSpec: { id: string, name: string }) {
+    return this.router.navigateByUrl(`/practice/${challengeSpec.id}/${slug(challengeSpec.name)}`);
   }
 
   public toCertificatePrintable(mode: PlayerMode, challengeSpecOrGameId: string) {

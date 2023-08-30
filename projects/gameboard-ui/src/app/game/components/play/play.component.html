@@ -9,6 +9,10 @@
     </ng-container>
 
     <ng-container *ngIf="!isDeploying && !isUndeploying && challenge;">
+        <p class="challenge-document-text">
+            <markdown [data]="challenge.challengeDeployment.markdown"></markdown>
+        </p>
+
         <h3>Gamespace Resources</h3>
         <div class="vms-container my-4">
             <ul class="d-flex flex-wrap">

@@ -11,11 +11,12 @@
   </nav>
 
   <app-error-div [errors]="errors"></app-error-div>
+
   <div *ngIf="spec$ | async as spec; else loading">
     <ng-container *ngIf="(authed$ | async); else unauthed">
-      <markdown [data]="spec.text"></markdown>
+      <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
 
-      <div *ngIf="!isStartingSession" class="challenge-management-buttons my-5 d-flex justify-content-center">
+      <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
         <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
           btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec.gameId)" class="d-block">
           <span>Start Practice Session</span>
