@@ -1,7 +1,20 @@
-<app-spinner *ngIf="isDownloading">Loading your certificate...</app-spinner>
-<div class="gameboard-print" *ngIf="isPublished">
-    <img [src]="imageUrl" [alt]="isPublished ? title : ''" (load)="handleLoad()" (error)="handleError($event)" />
-</div>
-<div class="is-not-published" *ngIf="!isPublished">
-    This certificate either doesn't exist or has not been published by its owner.
+<div class="certificate-printer-component">
+    <app-spinner *ngIf="isDownloading">Loading your certificate...</app-spinner>
+
+    <div class="print-button-container" *ngIf="!isDownloading && isPublished">
+        <button type="button" class="btn btn-info print-button" (click)="handlePrintClick()">Print This
+            Certificate</button>
+    </div>
+
+    <div class="gameboard-print" *ngIf="isPublished; else notPublished">
+        <img class="certificate-img" [src]="imageUrl" [alt]="isPublished ? title : ''" (load)="handleLoad()"
+            (error)="handleError($event)" />
+    </div>
+
+    <ng-template #notPublished>
+        <div class="is-not-published">
+            This certificate either doesn't exist or has not been published by its owner.
+        </div>
+    </ng-template>
+
 </div>

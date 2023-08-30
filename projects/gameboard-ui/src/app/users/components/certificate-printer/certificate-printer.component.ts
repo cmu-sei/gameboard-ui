@@ -20,10 +20,10 @@ export class CertificatePrinterComponent implements OnInit {
   protected isPublished = true;
 
   constructor(
+    protected windowService: WindowService,
     private certificatesService: CertificatesService,
     private logService: LogService,
-    private route: ActivatedRoute,
-    private windowService: WindowService) { }
+    private route: ActivatedRoute) { }
 
   async ngOnInit(): Promise<void> {
     const userId = this.route.snapshot.paramMap.get("userId");
@@ -59,5 +59,11 @@ export class CertificatePrinterComponent implements OnInit {
       // to print a picture of the loading animation instead)
       setTimeout(() => this.windowService.print(), 500);
     }
+  }
+
+  protected handlePrintClick() {
+    setTimeout(() => {
+      this.windowService.print();
+    }, 500);
   }
 }

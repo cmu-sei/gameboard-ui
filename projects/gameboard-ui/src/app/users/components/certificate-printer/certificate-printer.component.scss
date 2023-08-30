@@ -1,37 +1,48 @@
 @media print {
+    * {
+        --webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
     body {
+        border-width: 0px;
         margin: 0mm !important;
+        padding: 0;
     }
 
     @page {
         size: letter landscape;
         margin: 0mm !important;
-        min-width: 768px;
+        padding: 0;
     }
 
     img {
-        width: 100vw;
+        width: 100%;
+        height: 100%;
     }
 
     html, body * {
         visibility: hidden;
     }
-
+    
     .gameboard-print {
-        display: block;
         visibility: visible;
+    }
+
+    .print-button { 
+        display: none;
+        visibility: hidden;
     }
 }
 
-* {
-    --webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-}
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+.certificate-printer-component {
+    position: relative;
 }
 
 .gameboard-print {
@@ -41,6 +52,14 @@
 
 img {
     height: 100vh;
+}
+
+.print-button-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top: 4px;
+    width: calc(100vw - 12px);
 }
 
 .is-not-published {
