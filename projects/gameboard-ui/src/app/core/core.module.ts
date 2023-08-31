@@ -24,6 +24,7 @@ import { LineChartComponent } from './components/line-chart/line-chart.component
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { MultiSelectComponent } from './components/multi-select/multi-select.component';
+import { PagerComponent } from './components/pager/pager.component';
 import { PlayerAvatarListComponent } from './components/player-avatar-list/player-avatar-list.component';
 import { PlayerAvatarComponent } from './components/player-avatar/player-avatar.component';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
@@ -61,6 +62,7 @@ import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
+import { MinPipe } from './pipes/min.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ApiUrlPipe,
@@ -78,10 +80,11 @@ const PUBLIC_DECLARATIONS = [
   ModalConfirmComponent,
   ModalConfirmDirective,
   MultiSelectComponent,
-  QueryParamModelDirective,
+  PagerComponent,
   PlayerAvatarComponent,
   PlayerAvatarListComponent,
   PlayerStatusComponent,
+  QueryParamModelDirective,
   ClockPipe,
   CountdownPipe,
   CountdownColorPipe,
@@ -123,6 +126,7 @@ const RELAYED_MODULES = [
 @NgModule({
   declarations: [
     ...PUBLIC_DECLARATIONS,
+    MinPipe,
   ],
   imports: [
     CommonModule,
