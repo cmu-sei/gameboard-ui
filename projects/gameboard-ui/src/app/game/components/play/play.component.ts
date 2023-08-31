@@ -120,7 +120,7 @@ export class PlayComponent {
 
   private async _buildLegacyContext(challenge: LocalActiveChallenge | null): Promise<LegacyContext> {
     // longterm, we'll replace this whole loading-a-board-player thing with something less dependent on prior architecture, but
-    // in order to get Practice Mode off the ground, we'll reuse this for now
+    // in order to get the Practice Area off the ground, we'll reuse this for now
     if (!challenge) {
       return {
         boardPlayer: null,

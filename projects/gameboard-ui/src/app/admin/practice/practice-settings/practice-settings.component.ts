@@ -21,7 +21,7 @@ export class PracticeSettingsComponent implements OnInit {
 
   private _startUpdate$ = new Subject<PracticeModeSettings>();
   protected certificateHtmlPlaceholder = [
-    "Enter an HTML template here which will be used to create certificates for Practice Mode. For each challenge they fully solve, players will be able to print a PDF of this certificate.",
+    "Enter an HTML template here which will be used to create certificates for the Practice Area. For each challenge they fully solve, players will be able to print a PDF of this certificate.",
     "You can use several variables to display information about the player's performance on the challenge by including these \"magic strings\" in your template.They include: ",
     `
       - {{playerName}} - The player's approved username
@@ -53,7 +53,7 @@ export class PracticeSettingsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.ctx = {
-      introTextPlaceholder: this.markdownHelpers.getMarkdownPlaceholderHelp(`Enter your "intro to Practice Mode" text here!`),
+      introTextPlaceholder: this.markdownHelpers.getMarkdownPlaceholderHelp(`Enter your "intro to the Practice Area" text here!`),
       settings: await firstValueFrom(this.practiceService.getSettings())
     };
   }
