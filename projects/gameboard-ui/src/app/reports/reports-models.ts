@@ -1,4 +1,3 @@
-import { ElementRef } from "@angular/core";
 import { PagingResults, SimpleEntity } from "../api/models";
 
 export interface ReportViewModel {
@@ -82,7 +81,7 @@ export enum ReportKey {
     ChallengesReport = "challenges",
     EnrollmentReport = "enrollment",
     PlayersReport = "players",
-    PracticeModeReport = "practice-mode",
+    PracticeAreaReport = "practice-area",
     SupportReport = "support"
 }
 

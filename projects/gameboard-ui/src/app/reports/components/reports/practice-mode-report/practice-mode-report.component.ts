@@ -116,7 +116,7 @@ export class PracticeModeReportComponent
     this.selectedParameters = parameters;
 
     return {
-      metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.PracticeModeReport)),
+      metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.PracticeAreaReport)),
       reportElementRef: elRef
     };
   }
