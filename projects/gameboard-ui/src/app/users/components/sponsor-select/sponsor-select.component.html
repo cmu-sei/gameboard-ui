@@ -1,0 +1,23 @@
+<div class="sponsor-select-component">
+    <p>
+        To participate in a game, you must select your organization. This organization will display on the
+        leaderboard alongside your name.
+    </p>
+    <p>
+        <em>
+            <strong>NOTE:</strong>
+            If your sponsor isn't represented here, please
+            <a href="/support/create" target="_blank">file a support ticket</a>.
+        </em>
+    </p>
+</div>
+
+<div *ngIf="localUser$ | async as localUser" class="sponsors-container">
+    <div *ngFor="let s of sponsors$ | async" class="card" [class.active]="localUser.sponsor===s.logo"
+        (click)="updateUser(localUser, s.logo)">
+        <div class="card-body p-1">
+            <div class="card-title">{{s.name || s.id}}</div>
+        </div>
+        <img class="card-img-bottom" [src]="s.logoUrl" [alt]="s.id">
+    </div>
+</div>

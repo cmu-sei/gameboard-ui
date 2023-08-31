@@ -9,16 +9,19 @@ import { PracticeCertificatesComponent } from './components/practice-certificate
 import { AuthGuard } from '@/utility/auth.guard';
 import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
 import { CertificatePublishControlsComponent } from './components/certificate-publish-controls/certificate-publish-controls.component';
+import { SponsorSelectComponent } from './components/sponsor-select/sponsor-select.component';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
+  CertificatePublishControlsComponent,
   CertificatePrinterComponent,
   CompetitiveCertificatesComponent,
   PracticeCertificatesComponent,
+  // SponsorSelectComponent,
 ];
 
 @NgModule({
-  declarations: [...DECLARED_COMPONENTS, CertificatePublishControlsComponent],
+  declarations: [...DECLARED_COMPONENTS],
   imports: [
     CommonModule,
     CoreModule,
