@@ -7,7 +7,7 @@
 
     <div class="input-container mx-1">
         <select class="form-control" name="hours" [(ngModel)]="ngModel.hours">
-            <option selected [ngValue]="0">[Hours]</option>
+            <option [ngValue]="null">[Hours]</option>
             <option [ngValue]="1">1</option>
             <option [ngValue]="2">2</option>
             <option [ngValue]="3">3</option>
@@ -36,7 +36,7 @@
 
     <div class="input-container ml-1">
         <select class="form-control" name="minutes" [(ngModel)]="ngModel.minutes">
-            <option selected [ngValue]="0">[Minutes]</option>
+            <option [ngValue]="null">[Minutes]</option>
             <option [ngValue]="5">5</option>
             <option [ngValue]="10">10</option>
             <option [ngValue]="15">15</option>
