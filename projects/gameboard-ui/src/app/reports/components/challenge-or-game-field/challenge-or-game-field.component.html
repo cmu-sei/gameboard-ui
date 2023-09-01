@@ -21,7 +21,7 @@
             ::
         </span>
         <span *ngIf="challengeName">
-            <app-parameter-change-link [config]="{ parameterChange: { game: game.id }, disable: disableLinks }">
+            <app-parameter-change-link [config]="{ parameterChange: { games: game.id }, disable: disableLinks }">
                 {{ game.name }}
             </app-parameter-change-link>
         </span>
