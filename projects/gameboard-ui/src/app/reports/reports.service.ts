@@ -6,6 +6,7 @@ import { PagingArgs, SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
 import { LogService } from '../services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
+import { ApiUser } from '@/api/user-models';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
@@ -15,6 +16,13 @@ export class ReportsService {
     private http: HttpClient,
     private logService: LogService
   ) { }
+
+  canAccessReporting(user: ApiUser | null) {
+    if (!user)
+      return false;
+
+    return user.isAdmin || user.isSupport || user.isRegistrar;
+  }
 
   async list(): Promise<ReportViewModel[]> {
     return await firstValueFrom(this.http.get<ReportViewModel[]>(this.apiUrlService.build("/reports")));
