@@ -87,7 +87,7 @@ export interface PracticeModeReportSponsorPerformance {
 }
 
 export interface PracticeModeReportByChallengePerformance {
-    players: string[];
+    players: SimpleEntity[];
     totalAttempts: number;
     scoreHigh: number;
     scoreAvg: number;
