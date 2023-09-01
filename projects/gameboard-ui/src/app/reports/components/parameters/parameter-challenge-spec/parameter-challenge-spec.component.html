@@ -1,0 +1,9 @@
+<div class="parameter-challenge-spec-component report-parameter" *ngIf="specs$ | async as specs">
+    <label for="spec" class="report-component-label">Challenge</label>
+    <select class="form-control form-select" name="spec" aria-label="Challenge select" [disabled]="!specs.length"
+        [(ngModel)]="ngModel">
+        <option [value]="undefined" selected>[any challenge]</option>
+        <option *ngFor="let spec of specs" [value]="spec.id">{{spec.name}}
+        </option>
+    </select>
+</div>

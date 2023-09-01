@@ -2,16 +2,15 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
-import { Player, TimeWindow } from '../../api/player-models';
+import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
-import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
-import { FontAwesomeService } from '../../services/font-awesome.service';
-import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { fa } from '../../services/font-awesome.service';
+import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
   selector: 'app-player-session',
@@ -31,42 +30,33 @@ export class PlayerSessionComponent implements OnDestroy {
   private ctxSub?: Subscription;
 
   // sets up the modal if it's a team game that needs confirmation
-  private modalRef?: BsModalRef;
   protected modalConfig?: ModalConfirmConfig;
   protected isDoubleChecking = false;
-  protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
+  protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
+  protected fa = fa;
 
   constructor(
     private api: PlayerService,
-    private modalService: BsModalService,
-    protected faService: FontAwesomeService
+    private modalService: ModalConfirmService,
   ) { }
 
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
       tap(ctx => {
-        let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
-
-        if (ctx) {
-          vm = {
-            player: {
-              id: ctx.player.id,
-              teamId: ctx.player.teamId,
-              session: ctx.player.session,
-              scoring: {
-                rank: ctx.player.rank,
-                score: ctx.player.score,
-                correctCount: ctx.player.correctCount,
-                partialCount: ctx.player.partialCount
-              }
-            },
-            game: {
-              isPracticeMode: ctx.game.isPracticeMode
+        this.performanceSummaryViewModel = !ctx ? undefined : {
+          player: {
+            id: ctx.player.id,
+            teamId: ctx.player.teamId,
+            session: ctx.player.session,
+            scoring: {
+              rank: ctx.player.rank,
+              score: ctx.player.score,
+              correctCount: ctx.player.correctCount,
+              partialCount: ctx.player.partialCount
             }
-          };
-        }
+          }
+        };
 
-        this.performanceSummaryViewModel$.next(vm);
         this.player$.next(ctx?.player);
       }),
       tap(ctx => {
@@ -104,12 +94,14 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   showConfirmTeamReset(p: Player) {
-    this.modalService.show(ModalConfirmComponent, { initialState: { config: this.modalConfig } });
+    if (!this.modalConfig)
+      throw new Error("Couldn't open the reset modal: no ModalConfig present.");
+
+    this.modalService.openConfirm(this.modalConfig);
   }
 
   confirmResetTeam(p: Player): void {
-    this.modalService.hide(this.modalRef?.id);
-    this.modalRef = undefined;
+    this.modalService.hide();
     this.handleReset(p);
   }
 

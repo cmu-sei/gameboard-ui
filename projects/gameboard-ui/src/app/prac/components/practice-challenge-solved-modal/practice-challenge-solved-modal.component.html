@@ -1,0 +1,31 @@
+<div class="practice-challenge-solved-modal" *ngIf="context">
+    <div class="modal-header">
+        <h2>Congratulations!</h2>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="handleModalClose()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body container">
+        <p>
+            You've successfully solved the challenge <strong>{{ context.challenge.spec.name }}!</strong>
+            Congratulations! Click
+            <a [href]="certificateUrl! | relativeToAbsoluteHref" target="_blank">here</a> to view a printable
+            certificate commemorating your achievement.
+        </p>
+
+        <p>
+            We'll take you back to the Practice Area so you can find a new challenge to conquer.
+        </p>
+
+        <hr />
+
+        <p>
+            <em class="gray-text">NOTE: </em>Your certificate displays the time you spent solving the challenge. This
+            time is based on your <strong>first</strong> completion of a given challenge. Subsequent attempts don't
+            change your solve time.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="handleModalClose()">Nice!</button>
+    </div>
+</div>

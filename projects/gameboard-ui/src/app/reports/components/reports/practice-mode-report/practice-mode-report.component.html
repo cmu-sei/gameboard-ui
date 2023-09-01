@@ -1,0 +1,61 @@
+<div class="practice-mode-report-component">
+    <app-report-parameters-container *ngIf="selectedParameters; else loading">
+        <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
+            [(ngModel)]="seriesQueryModel"></app-multi-select>
+        <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
+            [(ngModel)]="tracksQueryModel"></app-multi-select>
+        <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
+            [(ngModel)]="seasonsQueryModel"></app-multi-select>
+        <app-multi-select label="Games" name="games" ngDefaultControl [options]="games$ | async"
+            [itemTemplate]="multiSelectGame" [value]="getGameValue" [getSearchText]="getGameSearchText"
+            [(ngModel)]="gamesQueryModel">
+        </app-multi-select>
+        <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
+            [(ngModel)]="sponsorsQueryModel" [itemTemplate]="multiSelectSponsor" [getSearchText]="getSponsorSearchText"
+            [value]="getSponsorValue"></app-multi-select>
+        <app-parameter-date-range label="Practice Session Date" ngDefaultControl
+            [(ngModel)]="practiceDateQueryModel"></app-parameter-date-range>
+    </app-report-parameters-container>
+</div>
+
+<div class="report-body">
+    <app-report-stat-summary [stats]="overallStats"></app-report-stat-summary>
+    <hr />
+    <div class="mt-5">
+        <tabset>
+            <tab heading="Challenges" id="tab-by-challenge" (selectTab)="handleTabSelected('challenge')" #byChallenge>
+                <app-practice-mode-report-by-challenge *ngIf="selectedTab == 'challenge'"
+                    [parameters]="selectedParameters"
+                    (overallStatsUpdate)="handleOverallStatsUpdate($event)"></app-practice-mode-report-by-challenge>
+            </tab>
+
+            <tab heading="Players: Per-Challenge Performance" id="tab-by-player"
+                (selectTab)="handleTabSelected('player')" #byPlayer>
+                <app-practice-mode-report-by-user *ngIf="selectedTab == 'player'" [parameters]="selectedParameters"
+                    (overallStatsUpdate)="handleOverallStatsUpdate($event)"></app-practice-mode-report-by-user>
+            </tab>
+
+            <tab heading="Players: Practice vs. Competitive" id="tab-prac-v-comp"
+                (selectTab)="handleTabSelected('playerModePerformance')" #byPlayerModePerformance>
+                <app-practice-mode-report-by-player-mode-performance *ngIf="selectedTab == 'player-mode-performance'"
+                    [parameters]="selectedParameters" (overallStatsUpdate)="handleOverallStatsUpdate($event)">
+                </app-practice-mode-report-by-player-mode-performance>
+            </tab>
+        </tabset>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center mt-5">
+        <app-spinner class="d-block">Loading your report...</app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #multiSelectGame let-option>
+    {{ option.name }}
+</ng-template>
+
+
+<ng-template #multiSelectSponsor let-option>
+    {{ option.name }}
+</ng-template>

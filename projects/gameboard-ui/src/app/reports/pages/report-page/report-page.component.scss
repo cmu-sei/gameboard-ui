@@ -1,0 +1,120 @@
+@import "../../../../scss/variables";
+
+.report-page-component {
+    width: 1600px;
+    max-width: 95vw;
+    margin: 0 auto;
+}
+
+nav li {
+    font-size: 1.25rem;
+    margin-right: 0.25rem;
+    line-height: 2rem;
+}
+
+.about-filters-link {
+    font-size: 1.25rem;
+}
+
+.export-label {
+    font-size: 1.25rem;
+}
+
+.csv-export-button {
+    border-right: solid 1px #ffffff;
+}
+
+.pdf-export-button {
+    border-left: solid 1px #ffffff;
+}
+
+$subtleColor: #aaaaaa;
+$subtleSize: 0.9rem;
+
+::ng-deep {
+    hr {
+        border: solid 1px #bbbbbb;
+    }
+
+    table.gameboard-report {
+        width: 100%;
+
+        th,
+        td {
+            padding: 4px 8px;
+        }
+
+        /* override reboot.scss */
+        td p {
+            margin: 0;
+        }
+
+        .data-row {
+            border-bottom: dotted 1px #dddddd;
+            font-size: 1.1rem;
+
+            td {
+                padding: 1rem 0.5rem;
+            }
+        }
+
+        td.report-field.date {
+            text-align: center;
+        }
+
+        td.report-field.numerical {
+            text-align: center;
+        }
+
+        .headers-row {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: solid 1px #ffffff;
+
+            td:not(:first-of-type) {
+                border-left: solid 1px #ffffff;
+            }
+        }
+
+        .super-headers-row {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: solid 1px #ffffff;
+            border-top: solid 1px #ffffff;
+            text-transform: uppercase;
+
+            th:not(:first-of-type) {
+                border-left: solid 1px #ffffff;
+            }
+        }
+
+        .tooltipped-value {
+            border-bottom: dotted 1px $info;
+            color: $info;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .overflow-to-ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .subtle-color {
+        color: $subtleColor;
+    }
+
+    .subtle-info {
+        color: $subtleColor;
+        font-size: $subtleSize;
+        margin: 0;
+    }
+
+    .subtle-size {
+        font-size: $subtleSize;
+    }
+}

@@ -18,7 +18,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // internal components/services
 import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ClipspanComponent } from './components/clipspan/clipspan.component';
-import { ConfirmButtonComponent } from './components/confirm-button/confirm-button.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
@@ -29,33 +28,22 @@ import { InplaceEditorComponent } from './components/inplace-editor/inplace-edit
 import { LoginComponent } from './components/login/login.component';
 import { MessageBoardComponent } from './components/message-board/message-board.component';
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
-import { PagerComponent } from './components/pager/pager.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
 
 import { CamelspacePipe } from './pipes/camelspace.pipe';
-import { ClockPipe } from './pipes/clock.pipe';
-import { CountdownColorPipe } from './pipes/countdown-color.pipe';
-import { CountdownPipe } from './pipes/countdown.pipe';
 import { FormsModule } from '@angular/forms';
-import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
-import { ShortDatePipe } from './pipes/short-date.pipe';
 import { ShortTimePipe } from './pipes/short-time.pipe';
-import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
 
-import { NAVIGATOR } from './services/navigator.service';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 const components = [
   ClipspanComponent,
-  ConfirmButtonComponent,
   ErrorDivComponent,
-  SpinnerComponent,
   DropzoneComponent,
   ImageManagerComponent,
   GameCardComponent,
@@ -66,20 +54,13 @@ const components = [
   AgedDatePipe,
   UntilPipe,
   CamelspacePipe,
-  CountdownPipe,
-  CountdownColorPipe,
-  ShortDatePipe,
   ShortTimePipe,
   UntagPipe,
-  ClockPipe,
-  FriendlyTimePipe,
   SafeUrlPipe,
   ObserveOrderPipe,
   MatchesTermPipe,
-  TextToColorPipe,
   ImagestackComponent,
   MorphingTextComponent,
-  PagerComponent
 ];
 
 @NgModule({
@@ -88,7 +69,6 @@ const components = [
     ...components,
     ProgressbarModule,
   ],
-  providers: [{ provide: NAVIGATOR, useValue: navigator }],
   imports: [
     CommonModule,
     FormsModule,

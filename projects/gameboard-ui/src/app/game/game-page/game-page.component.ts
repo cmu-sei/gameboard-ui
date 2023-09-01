@@ -20,6 +20,7 @@ import { WindowService } from '../../services/window.service';
 import { BoardPlayer } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
   selector: 'app-game-page',
@@ -55,7 +56,7 @@ export class GamePageComponent implements OnDestroy {
     private hub: NotificationService,
     private apiGame: GameService,
     private gameHubService: GameHubService,
-    private modalService: BsModalService,
+    private modalConfirmService: ModalConfirmService,
     private windowService: WindowService
   ) {
     const user$ = localUser.user$.pipe(
@@ -226,17 +227,11 @@ export class GamePageComponent implements OnDestroy {
   }
 
   private showModal(resettingPlayerName: string): void {
-    this.modalService.show(
-      ModalConfirmComponent, {
-      initialState: {
-        config: {
-          title: "Session reset",
-          bodyContent: `Your session was reset by your teammate "${resettingPlayerName}". We'll take you back to the game page so you can re-enroll if you'd like to.`,
-          confirmButtonText: "Got it",
-          hideCancel: true
-        }
-      },
-      class: "modal-dialog-centered"
+    this.modalConfirmService.open({
+      title: "Session reset",
+      bodyContent: `Your session was reset by your teammate "${resettingPlayerName}". We'll take you back to the game page so you can re-enroll if you'd like to.`,
+      confirmButtonText: "Got it",
+      hideCancel: true
     });
   }
 }

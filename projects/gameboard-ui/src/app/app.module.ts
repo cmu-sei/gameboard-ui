@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -12,14 +12,13 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { Observable } from 'rxjs';
 import { ApiModule } from './api/api.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './utility/auth.interceptor';
-import { ConfigService, markedOptionsFactory } from './utility/config.service';
+import { ConfigService } from './utility/config.service';
 import { UserService as CurrentUserService } from './utility/user.service';
 import { UtilityModule } from './utility/utility.module';
 import { SupportPillComponent } from './support/support-pill/support-pill.component';
@@ -28,11 +27,15 @@ import { ModalConfirmService } from './services/modal-confirm.service';
 import { NotificationService } from './services/notification.service';
 import { AuthService } from './utility/auth.service';
 import { UserService } from './api/user.service';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { NAVIGATOR } from './services/navigator.service';
+import { AppNavComponent } from './nav/nav.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SupportPillComponent
+    SupportPillComponent,
+    AppNavComponent
   ],
   imports: [
     BrowserModule,
@@ -45,28 +48,21 @@ import { UserService } from './api/user.service';
     CoreModule,
     UtilityModule,
     TooltipModule.forRoot(),
+    TypeaheadModule.forRoot(),
     ButtonsModule.forRoot(),
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
-    MarkdownModule.forRoot({
-      loader: HttpClient,
-      markedOptions: {
-        provide: MarkedOptions,
-        useFactory: markedOptionsFactory,
-      },
-    }),
   ],
-  exports: [
-    ApiModule,
-    UtilityModule,
-    FontAwesomeModule,
-    ButtonsModule,
-    ModalModule,
-    BsDropdownModule,
-    MarkdownModule,
-    TooltipModule
-  ],
+  // exports: [
+  //   ApiModule,
+  //   UtilityModule,
+  //   FontAwesomeModule,
+  //   ButtonsModule,
+  //   ModalModule,
+  //   BsDropdownModule,
+  //   TooltipModule
+  // ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -96,6 +92,10 @@ import { UserService } from './api/user.service';
       ]
     },
     {
+      provide: NAVIGATOR,
+      useValue: navigator
+    },
+    {
       provide: ModalConfirmService,
       useFactory: (bsModalService: BsModalService) => new ModalConfirmService(bsModalService),
       deps: [BsModalService]
@@ -112,9 +112,6 @@ export function loadSettings(
     ;
 }
 
-export function register(
-  user: CurrentUserService
-): (() => Promise<void>) {
-  return (): Promise<void> => user.register()
-    ;
+export function register(user: CurrentUserService): (() => Promise<void>) {
+  return (): Promise<void> => user.register();
 }

@@ -51,7 +51,7 @@ export class DashboardComponent implements OnInit {
   faChartBar = faChartBar; // has feedback configured
   faCommentSlash = faCommentSlash; // doesn't have feedback configured
 
-  constructor (
+  constructor(
     private api: GameService,
     private clipboard: ClipboardService,
     private router: Router,
@@ -89,9 +89,6 @@ export class DashboardComponent implements OnInit {
   remove(game: Game): void {
     const index = this.games.indexOf(game);
     this.games.splice(index, 1);
-    // if (this.game === game) {
-    //   this.game = null;
-    // }
   }
 
   select(game: Game): void {

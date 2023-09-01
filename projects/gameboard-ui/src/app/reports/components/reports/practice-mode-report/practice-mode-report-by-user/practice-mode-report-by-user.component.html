@@ -1,0 +1,99 @@
+<div class="practice-mode-by-user-component" *ngIf="results; else loading">
+    <div *ngIf="results && results.records.length; else noRecords" class="results">
+        <table class="report-table table-hover gameboard-report">
+            <col span="2">
+            <colgroup span="6"></colgroup>
+            <!-- <colgroup span="3"></colgroup> -->
+
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col" colSpan="2"></th>
+                    <th scope="col" colSpan="2" class="group-header">Attempts</th>
+                    <th scope="col" colSpan="4" class="group-header">Best Attempt</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Player</td>
+                    <td>Challenge</td>
+                    <td>Total</td>
+                    <td>Most Recent</td>
+                    <td>Score</td>
+                    <td>Date</td>
+                    <td>Total Time</td>
+                    <td>Result</td>
+                </tr>
+
+                <tr class="data-row" *ngFor="let record of results.records">
+                    <!--PLAYER-->
+                    <td>
+                        <app-player-field
+                            [player]="{ userId: record.user.id, name: record.user.name, sponsor: record.user.sponsor }"></app-player-field>
+                    </td>
+                    <td>
+                        <app-challenge-or-game-field [challengeName]="record.challenge.name"
+                            [game]="record.challenge.game"></app-challenge-or-game-field>
+                    </td>
+
+                    <!--ATTEMPTS-->
+                    <td class="report-field numerical">
+                        <p [class.tooltipped-value]="record.attempts.length > 0"
+                            (click)="record.attempts.length && showAttemptsSummary(record)">
+                            {{ record.attempts.length }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{ (record.attempts | sort: "start":true)[0].start | shortdate }}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.user.hasScoringAttempt; else noValue">{{ (record.attempts | sort:
+                            "score":true)[0].score }}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.user.hasScoringAttempt; else noValue">
+                            {{ (record.attempts | sort: "score":true)[0].start | friendlyDateAndTime }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p *ngIf="record.user.hasScoringAttempt; else noValue">
+                            {{ (record.attempts | sort: "score":true)[0].durationMs | msToDuration }}
+                        </p>
+                    </td>
+                    <td class="report-field numerical">
+                        <ng-content
+                            *ngTemplateOutlet="(record.user.hasScoringAttempt ? attemptResult : noValue); context: { attempt: (record.attempts | sort: 'score':true)[0] }"></ng-content>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pager-container d-flex justify-content-end mt-4">
+        <div class="flex-grow-1"></div>
+        <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
+            (change)="handlePagingChange($event)"></app-select-pager>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <app-spinner>Loading the report...</app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noRecords>
+    <app-no-report-records></app-no-report-records>
+</ng-template>
+
+<ng-template #attemptResult let-attempt="attempt">
+    <span [class]="attempt.result | challengeResultColor">
+        <strong>
+            {{ attempt.result | challengeResultPretty }}
+        </strong>
+    </span>
+</ng-template>
+
+<ng-template #noValue>
+    <app-report-field-no-value></app-report-field-no-value>
+</ng-template>

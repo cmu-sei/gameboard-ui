@@ -7,12 +7,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { BoardPlayer, BoardSpec, Challenge, ChallengeGate, ChallengeResult, ChallengeSummary, ChallengeView, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
-import { TimeWindow } from './player-models';
+import { BoardPlayer, BoardSpec, Challenge, ChallengeResult, ChallengeSummary, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
+import { FeedbackTemplate } from './feedback-models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class BoardService {
   url = '';
 
@@ -24,7 +22,7 @@ export class BoardService {
     this.url = config.apphost + 'api';
   }
 
-  public list(filter: any): Observable<ChallengeSummary[]> {
+  public list(filter: any = ''): Observable<ChallengeSummary[]> {
     return this.http.get<ChallengeSummary[]>(this.url + '/challenges', { params: filter });
   }
 
@@ -48,14 +46,6 @@ export class BoardService {
 
   public launch(model: NewChallenge): Observable<Challenge> {
     return this.http.post<Challenge>(`${this.url}/challenge`, model);
-  }
-
-  public grade(model: SectionSubmission): Observable<Challenge> {
-    return this.http.put<Challenge>(`${this.url}/challenge/grade`, model);
-  }
-
-  public regrade(id: string): Observable<Challenge> {
-    return this.http.put<Challenge>(`${this.url}/challenge/regrade`, { id });
   }
 
   public start(model: ChangedChallenge): Observable<Challenge> {
@@ -115,8 +105,8 @@ export class BoardService {
       : s.disabled || s.locked ? 'black' : 'blue'
       ;
     if (!!s.instance) {
-      if (s.instance.result === 'success') { s.c = 'lime'; }
-      if (s.instance.result === 'partial') { s.c = 'yellow'; }
+      if (s.instance.result === ChallengeResult.Complete) { s.c = 'lime'; }
+      if (s.instance.result === ChallengeResult.Partial) { s.c = 'yellow'; }
     }
   }
 

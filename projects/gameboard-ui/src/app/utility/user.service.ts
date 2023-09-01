@@ -5,11 +5,11 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, of, timer } from 'rxjs';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
-import { NewUser, ApiUser } from '../api/user-models';
+import { ApiUser, UserOidcProfile } from '../api/user-models';
 import { UserService as ApiUserService } from '../api/user.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { ConfigService } from './config.service';
-import { LogService } from '../services/log.service';
+import { LogService } from '@/services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -32,15 +32,15 @@ export class UserService {
       auth.tokenState$
     ]).pipe(
       map(([i, r, t]) => t),
-      filter(t => t === AuthTokenState.valid),
-      switchMap(t => api.register(
-        auth.oidcUser?.profile as unknown as NewUser,
-        auth.auth_header()
-      ).pipe(
-        catchError(err => of(null))
-      )),
-      tap(() => this.init$.next(true)),
-    ).subscribe(p => this.user$.next(p));
+      filter(t => t === AuthTokenState.valid && !!auth.oidcUser?.profile),
+      map(tokenState => auth.oidcUser?.profile as unknown as UserOidcProfile),
+      switchMap(profile => api.tryCreate({
+        id: profile.sub
+      })),
+      catchError(err => of(null)),
+      filter(result => !!result),
+      tap(result => this.init$.next(true)),
+    ).subscribe(result => this.user$.next(result!.user));
 
     auth.tokenState$.pipe(
       filter(t => t === AuthTokenState.invalid),

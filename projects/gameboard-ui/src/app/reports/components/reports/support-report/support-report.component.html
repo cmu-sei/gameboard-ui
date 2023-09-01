@@ -1,0 +1,125 @@
+<div class="support-report-component">
+    <app-report-parameters-container>
+        <app-multi-select [(ngModel)]="statusesQueryModel" [options]="ticketStatuses$ | async" label="Statuses"
+            name="ticket-statuses" ngDefaultControl></app-multi-select>
+        <app-multi-select [(ngModel)]="labelsQueryModel" [options]="ticketLabels$ | async" label="Labels"
+            name="ticket-labels" ngDefaultControl></app-multi-select>
+        <app-parameter-date-range ngDefaultControl name="openedDateRange" [(ngModel)]="openedDateRangeModel"
+            label="Date ticket opened"></app-parameter-date-range>
+        <app-parameter-game-challengespec [(ngModel)]="gameChallengeSpecQueryModel"
+            ngDefaultControl></app-parameter-game-challengespec>
+        <app-parameter-timespan-picker [(ngModel)]="openedTimeSpanQueryModel" ngDefaultControl
+            label="Time since ticket was opened"></app-parameter-timespan-picker>
+        <app-parameter-timespan-picker [(ngModel)]="updatedTimeSpanQueryModel" ngDefaultControl
+            label="Time since ticket was updated"></app-parameter-timespan-picker>
+    </app-report-parameters-container>
+
+    <ng-container *ngIf="!isLoading; else loading">
+        <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else noRecords">
+            <tab heading="Summary Table" id="tab-summary-table">
+                <div class="report-body mt-4" #supportReport>
+                    <table class="report-table table-hover gameboard-report">
+                        <col>
+                        <colgroup span="4"></colgroup>
+                        <colgroup span="3"></colgroup>
+                        <col>
+
+                        <thead class="thead-light">
+                            <tr class="headers super-headers-row">
+                                <th scope="col" class="super-column-ticket-key"></th>
+                                <th scope="col" colspan="4" class="group-header super-column-about">About the ticket
+                                </th>
+                                <th scope="col" colspan="3" class="group-header super-column-creation-assignment">
+                                    Creation &amp; Assignment
+                                </th>
+                                <th scope="col super-column-actions"></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr class="headers headers-row">
+                                <td>Ticket</td>
+                                <td>Summary</td>
+                                <td>Status</td>
+                                <td>Labels</td>
+                                <td>Act. Count</td>
+                                <td>Assigned to</td>
+                                <td>Created</td>
+                                <td>Updated</td>
+                                <td></td>
+                            </tr>
+
+                            <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
+                                <td><a [routerLink]="['/support/tickets/' + record.key.toString()]"
+                                        target="_blank">{{record.prefixedKey}}</a></td>
+                                <td class="cell-summary m-1">
+                                    <p class="overflow-to-ellipsis">{{record.summary}}</p>
+
+                                    <p class="secondary-info-text mt-1" *ngIf="record.game || record.challenge">
+                                        <a *ngIf="record.game" [routerLink]="['/game/' + record.game.id]"
+                                            target="_blank">{{record.game.name}}</a>
+                                        <span class="game-challenge-spacer" *ngIf="record.game && record.challenge">
+                                            ::
+                                        </span>
+                                        {{record.challenge?.name}}
+                                    </p>
+                                </td>
+                                <td class="text-center" [innerHTML]="record.status | ticketStatusBadge"></td>
+                                <td>
+                                    <app-colored-text-chip *ngFor="let label of (record.labels || [])" [text]="label"
+                                        size="small"></app-colored-text-chip>
+                                    <span *ngIf="!record.labels?.length">--</span>
+                                </td>
+                                <td class="text-center">{{record.activityCount}}</td>
+                                <td class="text-center">{{record.assignedTo?.name}}</td>
+                                <td class="text-center">
+                                    <p>{{record.createdOn | shortdate}} @ {{record.createdOn | friendlyTime}}</p>
+                                    <p class="subtle-info">{{record.createdBy.name}}</p>
+                                </td>
+                                <td class="text-center">
+                                    <div *ngIf="record.updatedOn; else noValue">
+                                        {{record.updatedOn | shortdate}} @
+                                        {{record.updatedOn | friendlyTime}}
+                                        <p class="subtle-info">{{record.updatedBy?.name}}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <app-support-report-context-menu
+                                        [record]="record"></app-support-report-context-menu>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </tab>
+            <tab heading="Tickets by Status" id="tab-proportion-graphs" *ngIf="ctx">
+                <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center">
+                    <app-doughnut-chart [config]="ctx.statusChartConfig"></app-doughnut-chart>
+                </div>
+            </tab>
+            <tab heading="Tickets by Game & Challenge" *ngIf="ctx">
+                <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center flex-wrap">
+                    <app-doughnut-chart [config]="ctx.challengesChartConfig"></app-doughnut-chart>
+                </div>
+            </tab>
+            <tab heading="Tickets by Label" *ngIf="ctx">
+                <div class="chart-container full-width d-flex mt-5 justify-content-center align-items-center flex-wrap">
+                    <app-doughnut-chart *ngFor="let config of ctx.labelsChartConfigs" class="label-doughnut-chart"
+                        [config]="config"></app-doughnut-chart>
+                </div>
+            </tab>
+        </tabset>
+    </ng-container>
+
+    <div class="pager-container d-flex justify-content-end mt-4">
+        <div class="flex-grow-1"></div>
+        <app-select-pager [itemCount]="ctx?.results?.paging?.itemCount" [pageSize]="ctx?.results?.paging?.pageSize"
+            (change)="handlePagingChange($event)"></app-select-pager>
+    </div>
+</div>
+
+<ng-template #noRecords>
+    <app-no-report-records recordDescription="tickets"></app-no-report-records>
+</ng-template>
+<ng-template #noValue>--</ng-template>
+<ng-template #loading><app-spinner>Loading your report...</app-spinner></ng-template>

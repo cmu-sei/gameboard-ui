@@ -12,6 +12,7 @@ export const environment = {
     unityhost: '',
     tocfile: '',
     countdownStartSecondsAtMinute: 5,
+    custom_background: 'custom-bg-blue',
     isProduction: false,
     oidc: {
       client_id: 'gameboard-ui-dev',

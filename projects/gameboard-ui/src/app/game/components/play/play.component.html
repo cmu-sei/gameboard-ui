@@ -1,0 +1,74 @@
+<ng-container *ngIf="playerContext && challengeSpec">
+    <ng-container *ngIf="isDeploying">
+        <app-challenge-deploy-countdown *ngIf="isDeploying && challengeSpec"
+            [deploySeconds]="challengeSpec.averageDeploySeconds"></app-challenge-deploy-countdown>
+    </ng-container>
+
+    <ng-container *ngIf="isUndeploying">
+        <app-spinner>Stopping challenge resources...</app-spinner>
+    </ng-container>
+
+    <ng-container *ngIf="!isDeploying && !isUndeploying && challenge;">
+        <p class="challenge-document-text">
+            <markdown [data]="challenge.challengeDeployment.markdown"></markdown>
+        </p>
+
+        <h3>Gamespace Resources</h3>
+        <div class="vms-container my-4">
+            <ul class="d-flex flex-wrap">
+                <li *ngFor="let vm of challenge.challengeDeployment.vms">
+                    <a class="btn btn-sm btn-dark mr-2 d-block" [href]="vmUrls[vm.id] | safeurl" target="_blank"
+                        role="button">
+                        <fa-icon [icon]="fa.tv"></fa-icon>
+                        <span>{{vm.name}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="vm-controls-container my-4">
+            <app-confirm-button *ngIf="challenge.challengeDeployment.isDeployed"
+                btnClass="btn btn-sm btn-outline-warning mr-2"
+                (confirm)="undeploy(challenge.challengeDeployment.challengeId)">
+                <fa-icon [icon]="fa.trash"></fa-icon>
+                <span>Destroy</span>
+            </app-confirm-button>
+            <app-confirm-button *ngIf="!challenge.challengeDeployment.isDeployed"
+                btnClass="btn btn-sm btn-outline-warning" (confirm)="deploy(challenge.challengeDeployment.challengeId)">
+                <fa-icon [icon]="fa.bolt"></fa-icon>
+                <span>Deploy</span>
+            </app-confirm-button>
+        </div>
+
+        <div *ngIf="legacyContext.boardSpec?.instance?.state?.challenge?.questions?.length" class="my-5">
+            <h3>Challenge Questions</h3>
+            <app-gamespace-quiz [spec]="legacyContext.boardSpec!"
+                [session]="legacyContext.session!"></app-gamespace-quiz>
+        </div>
+
+        <div class="text-right m-4">
+            <div class="mb-1">
+                Need Challenge Support?
+                <span class="m-2 p-2">
+                    <a class="btn btn-info" target="_blank" [routerLink]="['/support/create']"
+                        [queryParams]="{cid: challenge.challengeDeployment.challengeId}">
+                        <span>Create Ticket</span>
+                    </a>
+                </span>
+            </div>
+            <div>
+                Support Code:
+                <app-clipspan class="text-info m-2 p-2">
+                    {{challenge.challengeDeployment.challengeId | slice:0:8}}
+                    {{challenge.spec.tag}}
+                </app-clipspan>
+            </div>
+        </div>
+
+        <div
+            *ngIf="legacyContext.boardSpec?.instance?.state?.challenge && legacyContext.boardPlayer?.game?.feedbackTemplate?.challenge?.length">
+            <app-feedback-form [boardPlayer]="legacyContext.boardPlayer!" [title]="'Challenge Feedback'"
+                [spec]="legacyContext.boardSpec!" [type]="'challenge'"></app-feedback-form>
+        </div>
+    </ng-container>
+</ng-container>

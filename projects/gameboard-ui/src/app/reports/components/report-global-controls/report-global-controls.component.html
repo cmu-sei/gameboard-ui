@@ -1,0 +1,15 @@
+<div class="report-export d-flex align-items-center mt-5">
+    <div class="flex-grow-1">
+        <span class="about-filters-link link-button" (click)="handleAboutFiltersClick()">[ About report filters ]</span>
+    </div>
+    <app-share-button class="d-block mr-2"
+        message="Copied a link to this report (and its filtering settings) to your clipboard."
+        tooltip="Copy a link to this report"></app-share-button>
+    <div class="mr-2">
+        <button class="btn btn-info btn-lg csv-export-button" (click)="exportRequestCsv.emit()" tabindex="0"
+            role="button">Export to CSV</button>
+    </div>
+    <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleResetClick()">
+        Reset Filters
+    </button>
+</div>

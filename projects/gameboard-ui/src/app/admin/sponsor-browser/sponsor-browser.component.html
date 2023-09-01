@@ -5,10 +5,7 @@
 <ng-container *ngIf="updated$ | async"></ng-container>
 <ng-container *ngIf="deleted$ | async"></ng-container>
 <ng-container *ngIf="dropped$ | async"></ng-container>
-<a class="btn btn-link" routerLink="../../">
-  <fa-icon [icon]="faArrowLeft"></fa-icon>
-  <span>Back</span>
-</a>
+
 <h4>Sponsors</h4>
 
 <app-dropzone (dropped)="dropped($event)">

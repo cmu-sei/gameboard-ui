@@ -1,0 +1,53 @@
+<label class="report-component-label">{{label}}</label>
+<div class="parameter-timespan-picker-component report-parameter d-flex full-width" *ngIf="ngModel">
+    <div class="input-container mr-1">
+        <input type="number" class="form-control" min="0" name="days" [ngModel]="ngModel.days" (input)="setDays($event)"
+            placeholder="[Days]">
+    </div>
+
+    <div class="input-container mx-1">
+        <select class="form-control" name="hours" [(ngModel)]="ngModel.hours">
+            <option [ngValue]="null">[Hours]</option>
+            <option [ngValue]="1">1</option>
+            <option [ngValue]="2">2</option>
+            <option [ngValue]="3">3</option>
+            <option [ngValue]="4">4</option>
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="6">6</option>
+            <option [ngValue]="7">7</option>
+            <option [ngValue]="8">8</option>
+            <option [ngValue]="9">9</option>
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="11">11</option>
+            <option [ngValue]="12">12</option>
+            <option [ngValue]="13">13</option>
+            <option [ngValue]="14">14</option>
+            <option [ngValue]="15">15</option>
+            <option [ngValue]="16">16</option>
+            <option [ngValue]="17">17</option>
+            <option [ngValue]="18">18</option>
+            <option [ngValue]="19">19</option>
+            <option [ngValue]="20">20</option>
+            <option [ngValue]="21">21</option>
+            <option [ngValue]="22">22</option>
+            <option [ngValue]="23">23</option>
+        </select>
+    </div>
+
+    <div class="input-container ml-1">
+        <select class="form-control" name="minutes" [(ngModel)]="ngModel.minutes">
+            <option [ngValue]="null">[Minutes]</option>
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="15">15</option>
+            <option [ngValue]="20">20</option>
+            <option [ngValue]="25">25</option>
+            <option [ngValue]="30">30</option>
+            <option [ngValue]="35">35</option>
+            <option [ngValue]="40">40</option>
+            <option [ngValue]="45">45</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="55">55</option>
+        </select>
+    </div>
+</div>

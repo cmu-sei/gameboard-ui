@@ -36,6 +36,7 @@
         "no-console": "error",
         "no-extra-boolean-cast": "off",
         "no-self-assign": "off",
+        "no-this-alias": "off",
         "no-var": "off",
         "prefer-const": "off",
         "semi": [

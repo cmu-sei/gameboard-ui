@@ -1,5 +1,10 @@
 $font-size: 4rem;
 
+@font-face {
+    font-family: "SourceCodePro";
+    src: url("../../../../assets/fonts/SourceCodePro.ttf") format("truetype");
+}
+
 :host {
     display: block;
     width: 100%;

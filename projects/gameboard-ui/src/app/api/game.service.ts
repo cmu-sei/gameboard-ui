@@ -24,7 +24,7 @@ export class GameService {
     this.url = config.apphost + 'api';
   }
 
-  public list(filter: any): Observable<Game[]> {
+  public list(filter: any = ''): Observable<Game[]> {
     return this.http.get<Game[]>(this.url + '/games', { params: filter }).pipe(
       map(r => {
         r.forEach(g => this.transform(g));
@@ -110,9 +110,9 @@ export class GameService {
   }
 
   // an abstracted definition for this rule. Does this game run
-  // in Gameboard or elsewhere? (currently can only be Unity)
+  // in Gameboard or elsewhere?
   public isExternalGame(g: Game): boolean {
-    return g.mode == "unity";
+    return g.mode !== "vm";
   }
 
   private tryCache(id: string, limit: number = 20): Game | null {
@@ -144,17 +144,13 @@ export class GameService {
   }
 
   private transform(game: Game): Game {
-    game.cardUrl = game.logo
-      ? `${this.config.imagehost}/${game.logo}`
-      : `${this.config.basehref}assets/card.png`;
-
     game.mapUrl = game.background
       ? `${this.config.imagehost}/${game.background}`
       : `${this.config.basehref}assets/map.png`;
 
     game.modeUrl = game.mode
-      ? `${this.config.basehref}assets/${game.mode}.png`
-      : `${this.config.basehref}assets/vm.png`;
+      ? `${this.config.basehref}assets/img/engineModeIcons/${game.mode}.png`
+      : `${this.config.basehref}assets/img/engineModeIcons/vm.png`;
 
     game.session = new TimeWindow(game.gameStart, game.gameEnd);
     game.registration = new TimeWindow(game.registrationOpen, game.registrationClose);

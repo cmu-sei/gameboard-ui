@@ -1,0 +1,51 @@
+<div class="multi-select-component" *ngIf="ngModel">
+    <label class="report-component-label">{{ label }}</label>
+    <div class="search-scroll-container d-flex flex-column">
+        <div class="search-container flex-grow-0 flex-shrink-0 mb-1"
+            *ngIf="(options?.length || 0) > showSearchBoxThreshold">
+            <div class="input-group">
+                <input type="text" class="form-control" autocomplete="off" [placeholder]="searchPlaceholder"
+                    [(ngModel)]="ngModel.searchText">
+
+                <div class="input-group-append" *ngIf="ngModel.searchText">
+                    <button type="button" class="btn btn-info" (click)="handleClearClicked()"
+                        tooltip="Clear this searchbox" placement="bottom">
+                        <fa-icon [icon]="fa.eraser"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-control scroll-container flex-grow-1">
+            <div *ngFor="let option of options; let i = index">
+                <ng-container *ngIf="getOptionVisibility(option)">
+                    <input class="checkbox-input" type="checkbox" [value]="option"
+                        [checked]="getOptionIsChecked(option)" [id]="'multi-select-' + uniqueId + '-' + i"
+                        (change)="handleCheckedChanged(option, $event)">
+                    <label class="checkbox-label pl-2" [for]="'multi-select-' + uniqueId + '-' + i">
+                        <ng-container *ngTemplateOutlet="itemTemplate; context:option | toTemplateContext">
+                        </ng-container>
+                    </label>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="ngModel.selectedValues.length && (options?.length || 0) > showSelectionSummaryThreshold"
+        class="d-flex align-items-center full-width mt-1">
+        <p class="flex-grow-1 m-0">
+            <strong>Selected: </strong>
+            {{ selectionSummary }}
+            <span class="over-threshold-note link-button" (click)="handleSelectedOverDisplayThresholdClicked()"
+                *ngIf="countSelectedOverDisplayThreshold > 0">
+                and {{countSelectedOverDisplayThreshold}} other
+                item{{ countSelectedOverDisplayThreshold != 1 ? "s": ""}}
+            </span>
+        </p>
+
+        <button type="button" class="btn btn-info ml-1" (click)="handleClearSelectionsClicked()">Clear</button>
+    </div>
+</div>
+
+<ng-template #defaultItemTemplate let-context>
+    {{ context }}
+</ng-template>

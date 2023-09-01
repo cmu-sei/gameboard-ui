@@ -1,6 +1,20 @@
 .form-group {
     padding-left: 0;
     padding-top: 0.5rem;
-    margin-bottom: 2rem;
     margin-top: 0.5rem;
+}
+
+.button-group-label {
+    border-width: 1px 2px 1px 1px;
+    border-color: #999 !important;
+}
+
+.button-toggle-group {
+    border: solid 1px #999;
+    border-radius: 0.2rem;
+}
+
+.button-toggle-group > button:not(:last-child) {
+    border-left: solid 1px #999;
+    border-right: solid 2px #999;
 }

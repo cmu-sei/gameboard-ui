@@ -8,6 +8,9 @@ export interface ApiUser {
   approvedName: string;
   sponsor: string;
   role: UserRole;
+  createdOn: Date;
+  lastLoginDate?: Date;
+  loginCount: number;
   isAdmin: boolean;
   isDirector: boolean;
   isRegistrar: boolean;
@@ -22,10 +25,6 @@ export interface ApiUser {
 
 export interface NewUser {
   id: string;
-  sub: string;
-  name: string;
-  username: string;
-  email: string;
 }
 
 export interface ChangedUser {
@@ -80,4 +79,19 @@ export interface TreeNode {
 export interface Announcement {
   teamId?: string;
   message: string;
+}
+
+export interface TryCreateUserResult {
+  isNewUser: boolean;
+  user: ApiUser;
+}
+
+// just use this for convenience during the authentication process (see the utiltiy user service).
+// There are other properties in the profile that may be useful, but just mapping the key ones right now
+export interface UserOidcProfile {
+  access_token: string;
+  id_token: string;
+  expiresAt: number;
+  scope: string;
+  sub: string;
 }

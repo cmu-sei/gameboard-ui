@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { UtilityModule } from '../utility/utility.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
-import { AuthGuard } from '../utility/auth.guard';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { MarkdownModule } from 'ngx-markdown';
@@ -24,9 +23,7 @@ import { CoreModule } from '../core/core.module';
     TicketFormComponent,
     TicketDetailsComponent,
     TicketListComponent,
-    SupportPageComponent
-  ],
-  exports: [
+    SupportPageComponent,
   ],
   imports: [
     CommonModule,

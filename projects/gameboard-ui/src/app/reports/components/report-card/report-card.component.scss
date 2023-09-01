@@ -1,0 +1,37 @@
+@import "../../../../scss/variables";
+
+a {
+    text-decoration: none;
+}
+
+.report-card-component {
+    background-color: #444444;
+    border: solid 1px #dedede;
+    filter: drop-shadow(0px 0px 8px #dedede);
+    padding: 1rem;
+}
+
+h1 {
+    color: $white;
+}
+
+h4 {
+    color: white;
+}
+
+p {
+    color: $white;
+}
+
+ul {
+    width: 100%;
+}
+
+li {
+    margin: 0 0.5rem 0.5rem 0;
+}
+
+.parameter-name {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}

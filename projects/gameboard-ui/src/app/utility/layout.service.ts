@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 export class LayoutService {
   public stickyMenu$ = new BehaviorSubject<boolean>(true);
 
-  constructor (@Inject(DOCUMENT) private document: Document) { }
+  constructor(@Inject(DOCUMENT) private document: Document) { }
 
   public getNavHeight(): number | undefined {
     const nav = this.document.getElementsByTagName("nav");

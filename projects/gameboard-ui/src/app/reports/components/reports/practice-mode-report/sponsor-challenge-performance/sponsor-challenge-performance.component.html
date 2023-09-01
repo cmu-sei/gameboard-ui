@@ -1,0 +1,80 @@
+<div class="sponsor-challenge-performance-component">
+    <div class="modal-header">
+        <div class="modal-title pull-left">
+            <h2>{{ context.challenge.name }}</h2>
+            <h4>Sponsor Performance</h4>
+        </div>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="report-table table-hover gameboard-report">
+            <col>
+            <colgroup span="2"></colgroup>
+            <colgroup span="2"></colgroup>
+            <colgroup span="3"></colgroup>
+
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col"></th>
+                    <th scope="col" colSpan="2" class="group-header">Engagement</th>
+                    <th scope="col" colSpan="2" class="group-header">Scoring</th>
+                    <th scope="col" colSpan="3" class="group-header">Solves</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Sponsor</td>
+                    <td>Player Count</td>
+                    <td>Total Attempts</td>
+                    <td>High</td>
+                    <td>Avg</td>
+                    <td>Complete</td>
+                    <td>Partial</td>
+                    <td>Zero</td>
+                </tr>
+                <tr class="data-row" *ngFor="let sponsorPerformance of context.sponsorPerformance">
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <app-player-avatar class="d-block mr-2"
+                                [avatarUri]="sponsorPerformance.sponsor.logoFileName | relativeImage"
+                                size="small"></app-player-avatar>
+
+                            <div class="sponsor-info flex-grow-1">
+                                <p class="name m-0">{{sponsorPerformance.sponsor.name}}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.players.length }}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.totalAttempts }}</p>
+                    </td>
+
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.scoreHigh }}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.scoreAvg | number:"1.0-2" }}</p>
+                    </td>
+
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.percentageCompleteSolved | percent }}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.percentagePartiallySolved | percent }}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{ sponsorPerformance.performance.percentageZeroScoreSolved | percent }}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="close()">OK</button>
+    </div>
+</div>

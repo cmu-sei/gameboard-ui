@@ -47,18 +47,14 @@ $value in $theme-colors {
   }
 }
 
-@font-face {
-  font-family: "SourceCodePro";
-  src: url("assets/fonts/SourceCodePro.ttf") format("truetype");
-}
-
 body {
   min-height: 100vh;
   scroll-behavior: smooth;
 }
 
-nav {
-  background-color: $body-bg;
+ol,
+ul {
+  padding-inline-start: 0;
 }
 
 app-root {
@@ -76,8 +72,20 @@ app-root {
   margin: 0 auto;
 }
 
+.font-weight-light {
+  font-weight: lighter;
+}
+
+.fs-08 {
+  font-size: 0.8rem;
+}
+
+.fs-09 {
+  font-size: 0.9rem;
+}
+
 .fs-10 {
-  font-size: 1reme;
+  font-size: 1rem;
 }
 
 .fs-11 {
@@ -89,11 +97,15 @@ app-root {
 }
 
 .fs-15 {
-  font-size: 1.5em;
+  font-size: 1.5rem;
 }
 
 .fs-20 {
   font-size: 2em;
+}
+
+.colorblind-danger {
+  color: lighten($danger, 20%);
 }
 
 .auto-h {
@@ -143,6 +155,10 @@ li {
   font-size: .875rem !important;
 }
 
+.nav-tabs {
+  margin: 1.5rem 0 2rem 0;
+}
+
 .untack > svg {
   transform: rotate(45deg);
 }
@@ -160,15 +176,19 @@ alert {
   }
 }
 
-app-spinner svg {
+.nav-tabs li {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
 
+app-spinner svg {
   rect,
   path {
     fill: theme-color("success");
   }
 }
 
-.grayText {
+.gray-text {
   color: #767676;
 }
 
@@ -196,6 +216,13 @@ app-spinner svg {
 .light-tooltip .tooltip-inner {
   background-color: white;
   color: black;
+}
+
+// override bootstrap tabs to play nice with custom backgrounds
+tabset a.nav-link.active {
+  border-color: #fff !important;
+  border-width: 1px 1px 0 1px;
+  border-bottom-color: transparent !important;
 }
 
 .custom-bg-red {
@@ -227,6 +254,13 @@ th[align="left"] {
   text-align: left;
 }
 
+// _reboot.scss does weird stuff to checkboxes apparently for the sake of IE10, so... just don't
+.form-control input[type="checkbox"] {
+  position: static;
+  padding: 0;
+  margin: 0;
+}
+
 th[align="right"] {
   text-align: right;
 }
@@ -235,6 +269,71 @@ th[align="center"] {
   text-align: center;
 }
 
+.color-foreground {
+  color: $foreground;
+}
+
 .cursor-pointer {
   cursor: pointer;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.gameboard-table {
+  width: 100%;
+
+  thead {
+    border-bottom: solid 1px $foreground;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    width: 100%;
+
+    th {
+      padding-bottom: 0.5rem;
+    }
+  }
+}
+
+.text-upper {
+  text-transform: uppercase;
+}
+
+.width-15 {
+  width: 15%;
+}
+
+.width-25 {
+  width: 25%;
+}
+
+.width-30 {
+  width: 30%;
+}
+
+.width-35 {
+  width: 35%;
+}
+
+.width-40 {
+  width: 40%;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.link-button {
+  color: theme-color("info");
+  cursor: pointer;
+}
+
+.ticket-status-badge {
+  font-size: 0.8rem;
+  line-height: 0.85rem;
 }

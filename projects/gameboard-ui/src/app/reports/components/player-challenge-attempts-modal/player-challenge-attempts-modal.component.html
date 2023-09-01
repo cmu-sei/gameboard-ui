@@ -1,0 +1,24 @@
+<ng-container *ngIf="context">
+    <div class="modal-header">
+        <div class="modal-title pull-left d-flex align-items-center">
+            <app-player-avatar [avatarUri]="context.player.sponsor.logoFileName | relativeImage" size="large"
+                class="d-block mr-4"></app-player-avatar>
+
+            <div>
+                <h2>{{ context.player.name }}</h2>
+                <h4>{{ context.subtitle }}</h4>
+                <h5 class="subtle-info" *ngIf="context.subtitleDetail">{{ context.subtitleDetail }}</h5>
+            </div>
+        </div>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="handleModalClose()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body container">
+        <app-challenge-attempt-summary class="my-3" [attempt]="attempt" *ngFor="let attempt of context.attempts"
+            [primaryData]="'date'"></app-challenge-attempt-summary>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="handleModalClose()">OK</button>
+    </div>
+</ng-container>

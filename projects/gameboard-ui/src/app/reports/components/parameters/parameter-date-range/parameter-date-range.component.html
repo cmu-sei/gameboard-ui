@@ -1,0 +1,30 @@
+<div *ngIf="ngModel">
+    <label class="report-component-label">{{label}}</label>
+    <div class="date-range-component d-flex">
+        <div class="date-input-container">
+            <div class="input-group">
+                <input type="datetime" class="form-control" name="dateStart" placeholder="Start date" autocomplete="off"
+                    [(ngModel)]="ngModel.dateStart" bsDatepicker>
+                <div class="input-group-append" *ngIf="ngModel.dateStart">
+                    <button type="button" class="btn btn-info" (click)="handleStartDateClear()"
+                        tooltip="Reset this date" placement="bottom">
+                        <fa-icon [icon]="fa.eraser"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="arrow-symbol"> → </div>
+        <div class="date-input-container">
+            <div class="input-group">
+                <input type="datetime" class="form-control" name="dateStart" placeholder="End date" autocomplete="off"
+                    [(ngModel)]="ngModel.dateEnd" bsDatepicker>
+                <div class="input-group-append" *ngIf="ngModel.dateEnd">
+                    <button type="button" class="btn btn-info" (click)="handleEndDateClear()" tooltip="Reset this date"
+                        placement="bottom">
+                        <fa-icon [icon]="fa.eraser"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
