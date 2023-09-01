@@ -89,6 +89,7 @@ const PUBLIC_DECLARATIONS = [
   CountdownPipe,
   CountdownColorPipe,
   FriendlyTimePipe,
+  MinPipe,
   PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,
@@ -125,8 +126,7 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS,
-    MinPipe,
+    ...PUBLIC_DECLARATIONS
   ],
   imports: [
     CommonModule,
