@@ -40,7 +40,7 @@ export class AppNavComponent implements OnInit {
 
     if (this.config.settings.custom_background) {
       this.document.body.classList.add(this.config.settings.custom_background);
-      this.customBackground = this.config.settings.custom_background;
+      this.customBackground = this.config.settings.custom_background || 'custom-bg-black';
     }
 
     this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));
