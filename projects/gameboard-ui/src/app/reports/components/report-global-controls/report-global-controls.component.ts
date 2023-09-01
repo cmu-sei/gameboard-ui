@@ -1,3 +1,4 @@
+import { ActiveReportService } from '@/reports/services/active-report.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 import { Component, EventEmitter, Output } from '@angular/core';
@@ -9,9 +10,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class ReportGlobalControlsComponent {
   @Output() exportRequestCsv = new EventEmitter<void>();
-  @Output() exportRequestPdf = new EventEmitter<void>();
 
   constructor(
+    private activeReportService: ActiveReportService,
     private modal: ModalConfirmService,
     private routerService: RouterService) { }
 
@@ -32,5 +33,6 @@ export class ReportGlobalControlsComponent {
 
   async handleResetClick() {
     await this.routerService.deleteQueryParams();
+    this.activeReportService.parametersReset$.next();
   }
 }

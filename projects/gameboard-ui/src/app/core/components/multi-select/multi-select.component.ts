@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { CustomInputComponent, createCustomInputControlValueAccessor } from '../custom-input/custom-input.component';
-import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Subscription } from 'rxjs';
+import { CustomInputComponent, createCustomInputControlValueAccessor } from '../custom-input/custom-input.component';
+import { fa } from "@/services/font-awesome.service";
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 
@@ -27,7 +28,7 @@ export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelec
   @ViewChild("defaultItemTemplate") defaultItemTemplate?: TemplateRef<TItem>;
 
   protected countSelectedOverDisplayThreshold = 0;
-  protected searchValue = "";
+  protected fa = fa;
   protected selectionSummary = "";
 
   private _ngModelChangeSub?: Subscription;
@@ -62,7 +63,7 @@ export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelec
       return;
     }
 
-    let summary = (this.options || [])
+    const summary = (this.options || [])
       .filter(o => selectedItemValues.some(s => s == this.value(o)))
       .map(i => this.getSearchText(i))
       .slice(0, MultiSelectComponent.selectedItemsDisplayedThreshold).join(", ");
@@ -87,18 +88,24 @@ export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelec
     this.ngModel.selectedValues = [...this.ngModel.selectedValues, option];
   }
 
+  handleClearClicked() {
+    if (this.ngModel) {
+      this.ngModel.searchText = undefined;
+    }
+  }
+
   getOptionIsChecked(option: TItem) {
     const optionValue = this.value(option);
     return this.ngModel && this.ngModel.selectedValues.some(o => this.value(o) === optionValue);
   }
 
   getOptionVisibility(option: TItem) {
-    if (!this.searchValue) {
+    if (!this.ngModel?.searchText) {
       return true;
     }
 
     const optionText = this.getSearchText(option).toLowerCase();
-    return optionText.indexOf(this.searchValue.toLowerCase()) >= 0;
+    return optionText.indexOf(this.ngModel.searchText.toLowerCase()) >= 0;
   }
 
   handleClearSelectionsClicked() {

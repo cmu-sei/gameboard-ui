@@ -83,6 +83,16 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     private modalService: ModalConfirmService,
     private reportService: EnrollmentReportService) {
     super();
+
+    this.unsub.add(
+      this.activeReportService.parametersReset$.subscribe(() => {
+        this.gamesQueryModel!.searchText = undefined;
+        this.seasonsQueryModel!.searchText = undefined;
+        this.seriesQueryModel!.searchText = undefined;
+        this.sponsorsQueryModel!.searchText = undefined;
+        this.tracksQueryModel!.searchText = undefined;
+      })
+    );
   }
 
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
