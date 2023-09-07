@@ -27,7 +27,8 @@ export class ReportGlobalControlsComponent {
         When you run a report, your browser will generate a link that represents your filter selections for the current report. If you want to share what you're seeing with another
         Gameboard user, you can copy the link in your browser's address bar (or click the "Copy" button) and send it to them.
       `,
-      renderBodyAsMarkdown: true
+      renderBodyAsMarkdown: true,
+      hideCancel: true
     });
   }
 
