@@ -1,4 +1,4 @@
-<div *ngIf="count > take" class="text-center">
+<div *ngIf="display === 'always' || count > take" class="text-center">
   <button [disabled]="skip===0" class="mr-1 btn btn-link text-warning btn-sm" (click)="prev()" aria-label="prev page">
     <span>prev</span>
   </button> |

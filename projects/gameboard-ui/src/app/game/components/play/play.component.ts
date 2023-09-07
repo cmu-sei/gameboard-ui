@@ -70,8 +70,7 @@ export class PlayComponent {
     }
 
     // if the player record has changed since the last autoboot, reset it
-    // (this happens if the player ends the session and restarts it from the same)
-    // page
+    // (this happens if the player ends the session and restarts it from the same page)
     if (this.playerContext && this.challengeSpec && this._autobootedForPlayerId !== this.playerContext.playerId) {
       this.deployStatusChanged.emit(true);
       this.isDeploying = true;

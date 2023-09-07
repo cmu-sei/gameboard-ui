@@ -13,9 +13,8 @@
                 <span>Support</span>
                 <app-support-pill></app-support-pill>
             </a>
-            <div class="d-flex align-items-center">
-                <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
-                    class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
+            <div *ngIf="canAccessReporting" class="d-flex align-items-center">
+                <a class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
                     Reports
                 </a>
 
