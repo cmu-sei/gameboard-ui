@@ -70,8 +70,7 @@ export class PlayComponent {
     }
 
     // if the player record has changed since the last autoboot, reset it
-    // (this happens if the player ends the session and restarts it from the same)
-    // page
+    // (this happens if the player ends the session and restarts it from the same page)
     if (this.playerContext && this.challengeSpec && this._autobootedForPlayerId !== this.playerContext.playerId) {
       this.deployStatusChanged.emit(true);
       this.isDeploying = true;
@@ -120,7 +119,7 @@ export class PlayComponent {
 
   private async _buildLegacyContext(challenge: LocalActiveChallenge | null): Promise<LegacyContext> {
     // longterm, we'll replace this whole loading-a-board-player thing with something less dependent on prior architecture, but
-    // in order to get Practice Mode off the ground, we'll reuse this for now
+    // in order to get the Practice Area off the ground, we'll reuse this for now
     if (!challenge) {
       return {
         boardPlayer: null,

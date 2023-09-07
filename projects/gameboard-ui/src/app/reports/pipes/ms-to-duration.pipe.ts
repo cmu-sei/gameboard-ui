@@ -27,12 +27,9 @@ export class MsToDurationPipe implements PipeTransform {
     if (minutes)
       retVals.push(`${minutes}m`);
 
-    // represent ms as a decimal value of seconds (e.g. "11.352s")
+    // by request, ignore ms and just round off here
     if (seconds)
-      retVals.push(`${seconds}${remaining ? `.${remaining}` : ""}s`);
-
-    // if (remaining)
-    //   retVals.push(`${remaining}ms`);
+      retVals.push(`${seconds}s`);
 
     return retVals.join(":");
   }

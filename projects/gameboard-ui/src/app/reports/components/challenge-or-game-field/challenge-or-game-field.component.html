@@ -3,7 +3,7 @@
         challengeName || game.name }}</p>
     <p class="game-info subtle-info" [class.fs-10]="fontSize == 'large'" [class.fs-09]="fontSize == 'small'">
         <span *ngIf="game.series">
-            <app-parameter-change-link [config]="{ parameterChange: { seasons: game.series}, disable: disableLinks }">
+            <app-parameter-change-link [config]="{ parameterChange: { series: game.series}, disable: disableLinks }">
                 {{ game.series }}
             </app-parameter-change-link>
             ::
@@ -21,7 +21,7 @@
             ::
         </span>
         <span *ngIf="challengeName">
-            <app-parameter-change-link [config]="{ parameterChange: { game: game.id }, disable: disableLinks }">
+            <app-parameter-change-link [config]="{ parameterChange: { games: game.id }, disable: disableLinks }">
                 {{ game.name }}
             </app-parameter-change-link>
         </span>

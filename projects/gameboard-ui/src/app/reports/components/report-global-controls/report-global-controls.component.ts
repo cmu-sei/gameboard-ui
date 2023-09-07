@@ -1,3 +1,4 @@
+import { ActiveReportService } from '@/reports/services/active-report.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 import { Component, EventEmitter, Output } from '@angular/core';
@@ -9,9 +10,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class ReportGlobalControlsComponent {
   @Output() exportRequestCsv = new EventEmitter<void>();
-  @Output() exportRequestPdf = new EventEmitter<void>();
 
   constructor(
+    private activeReportService: ActiveReportService,
     private modal: ModalConfirmService,
     private routerService: RouterService) { }
 
@@ -26,11 +27,13 @@ export class ReportGlobalControlsComponent {
         When you run a report, your browser will generate a link that represents your filter selections for the current report. If you want to share what you're seeing with another
         Gameboard user, you can copy the link in your browser's address bar (or click the "Copy" button) and send it to them.
       `,
-      renderBodyAsMarkdown: true
+      renderBodyAsMarkdown: true,
+      hideCancel: true
     });
   }
 
   async handleResetClick() {
     await this.routerService.deleteQueryParams();
+    this.activeReportService.parametersReset$.next();
   }
 }

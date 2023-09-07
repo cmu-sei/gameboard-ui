@@ -9,6 +9,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { ReportsService } from '@/reports/reports.service';
 
 @Component({
   selector: 'app-nav',
@@ -18,6 +19,7 @@ import { Observable } from 'rxjs';
 export class AppNavComponent implements OnInit {
   user$!: Observable<ApiUser | null>;
   toc$!: Observable<TocFile[]>;
+  canAccessReporting = false;
   customBackground = "";
   env: any;
   isPracticeModeEnabled = false;
@@ -28,6 +30,7 @@ export class AppNavComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document,
     public layoutService: LayoutService,
     private practiceService: PracticeService,
+    private reportsService: ReportsService,
     private toc: TocService,
     private title: Title,
     private unsub: UnsubscriberService
@@ -37,10 +40,11 @@ export class AppNavComponent implements OnInit {
     this.user$ = this.localUser.user$;
     this.toc$ = this.toc.toc$;
     this.title.setTitle(this.config.settings.appname || 'Gameboard');
+    this.canAccessReporting = this.reportsService.canAccessReporting(this.localUser.user$.value);
 
     if (this.config.settings.custom_background) {
       this.document.body.classList.add(this.config.settings.custom_background);
-      this.customBackground = this.config.settings.custom_background;
+      this.customBackground = this.config.settings.custom_background || 'custom-bg-black';
     }
 
     this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));

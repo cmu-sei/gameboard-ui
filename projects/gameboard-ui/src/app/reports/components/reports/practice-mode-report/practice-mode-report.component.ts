@@ -8,6 +8,8 @@ import { PracticeModeReportService } from '@/reports/components/reports/practice
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
+import { ActiveReportService } from '@/reports/services/active-report.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-practice-mode-report',
@@ -67,7 +69,19 @@ export class PracticeModeReportComponent
     paramName: "tracks"
   });
 
-  constructor(protected reportService: PracticeModeReportService) { super(); }
+  constructor(protected reportService: PracticeModeReportService) {
+    super();
+
+    this.unsub.add(
+      this.activeReportService.parametersReset$.subscribe(() => {
+        this.gamesQueryModel!.searchText = undefined;
+        this.seasonsQueryModel!.searchText = undefined;
+        this.seriesQueryModel!.searchText = undefined;
+        this.sponsorsQueryModel!.searchText = undefined;
+        this.tracksQueryModel!.searchText = undefined;
+      })
+    );
+  }
 
   protected handleOverallStatsUpdate(stats: PracticeModeReportOverallStats) {
     this.overallStats = [
@@ -116,7 +130,7 @@ export class PracticeModeReportComponent
     this.selectedParameters = parameters;
 
     return {
-      metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.PracticeModeReport)),
+      metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.PracticeAreaReport)),
       reportElementRef: elRef
     };
   }

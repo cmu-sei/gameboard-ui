@@ -91,14 +91,13 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
         component: ReportPageComponent,
         children: [
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
-          { path: 'practice-mode', component: PracticeModeReportComponent, title: "Practice Mode Report" },
+          { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
           { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]
       }
     ]),
     FontAwesomeModule,
     CoreModule,
-    // UtilityModule,
   ]
 })
 export class ReportsModule { }

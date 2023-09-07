@@ -3,8 +3,17 @@
     <div class="search-scroll-container d-flex flex-column">
         <div class="search-container flex-grow-0 flex-shrink-0 mb-1"
             *ngIf="(options?.length || 0) > showSearchBoxThreshold">
-            <input type="text" class="form-control full-width" [placeholder]="searchPlaceholder"
-                [(ngModel)]="searchValue">
+            <div class="input-group">
+                <input type="text" class="form-control" autocomplete="off" [placeholder]="searchPlaceholder"
+                    [(ngModel)]="ngModel.searchText">
+
+                <div class="input-group-append" *ngIf="ngModel.searchText">
+                    <button type="button" class="btn btn-info" (click)="handleClearClicked()"
+                        tooltip="Clear this searchbox" placement="bottom">
+                        <fa-icon [icon]="fa.eraser"></fa-icon>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="form-control scroll-container flex-grow-1">
             <div *ngFor="let option of options; let i = index">

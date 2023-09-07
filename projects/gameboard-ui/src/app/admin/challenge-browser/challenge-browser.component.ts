@@ -4,9 +4,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faEllipsisV, faInfoCircle, faSearch, faSyncAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, combineLatest, interval, merge, Observable, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Challenge, ChallengeSummary } from '../../api/board-models';
+import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
+import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
+import { ChallengeSummary } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { Search } from '../../api/models';
 import { ChallengesService } from '@/api/challenges.service';

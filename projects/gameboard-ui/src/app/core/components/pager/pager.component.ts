@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./pager.component.scss']
 })
 export class PagerComponent implements OnInit {
+  @Input() display: "always" | "ifPaging" = "ifPaging";
   @Input() skip = 0;
   @Input() take = 0;
   @Input() count = 0;

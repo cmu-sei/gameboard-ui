@@ -30,7 +30,6 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
   protected ticketLabels$ = this.reportService.getTicketLabels();
   protected ticketStatuses$ = this.reportService.getTicketStatuses();
 
-
   protected gameChallengeSpecQueryModel: GameChallengeSpecQueryModel | null = new GameChallengeSpecQueryModel();
   protected openedDateRangeModel: DateRangeQueryParamModel | null = null;
 
@@ -61,6 +60,13 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
       dateStartParamName: "openedDateStart",
       dateEndParamName: "openedDateEnd"
     });
+
+    this.unsub.add(
+      this.activeReportService.parametersReset$.subscribe(() => {
+        this.statusesQueryModel!.searchText = undefined;
+        this.labelsQueryModel!.searchText = undefined;
+      })
+    );
   }
 
   async updateView(parameters: SupportReportFlatParameters): Promise<ReportViewUpdate> {

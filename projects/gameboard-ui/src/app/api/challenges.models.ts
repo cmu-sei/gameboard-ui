@@ -17,6 +17,7 @@ export interface ActiveChallenge {
     challengeDeployment: {
         challengeId: string,
         isDeployed: boolean;
+        markdown: string;
         vms: VmState[]
     };
     teamId: string;

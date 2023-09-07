@@ -8,21 +8,21 @@
             <thead class="thead-light">
                 <tr class="headers super-headers-row">
                     <th scope="col"></th>
-                    <th scope="col" colSpan="5">Practice Mode</th>
+                    <th scope="col" colSpan="5">Practice Area</th>
                     <th scope="col" colSpan="5">Competitive Mode</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr class="headers headers-row">
-                    <td>Challenges</td>
+                    <td>Player</td>
                     <td>Last Played</td>
                     <td>Attempts</td>
                     <td>Zero / Partial / Complete</td>
                     <td>Avg. % Points Scored</td>
                     <td>Avg. Score Percentile</td>
                     <td>Last Played</td>
-                    <td>Challenges</td>
+                    <td>Attempts</td>
                     <td>Zero / Partial / Complete</td>
                     <td>Avg. % Points Scored</td>
                     <td>Avg. Score Percentile</td>
@@ -34,7 +34,7 @@
                             [player]="{ userId: record.player.id, name: record.player.name, sponsor: record.sponsor }"></app-player-field>
                     </td>
 
-                    <!--PRACTICE MODE STATS-->
+                    <!--PRACTICE Area STATS-->
                     <td class="report-field date">
                         <div *ngIf="record.practiceStats?.lastAttemptDate; else noValue">
                             <p>{{ record.practiceStats?.lastAttemptDate | shortdate }}</p>

@@ -28,7 +28,6 @@ import { InplaceEditorComponent } from './components/inplace-editor/inplace-edit
 import { LoginComponent } from './components/login/login.component';
 import { MessageBoardComponent } from './components/message-board/message-board.component';
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
-import { PagerComponent } from './components/pager/pager.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 
 import { CamelspacePipe } from './pipes/camelspace.pipe';
@@ -62,7 +61,6 @@ const components = [
   MatchesTermPipe,
   ImagestackComponent,
   MorphingTextComponent,
-  PagerComponent
 ];
 
 @NgModule({

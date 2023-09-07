@@ -14,6 +14,7 @@ export interface MultiSelectQueryParamModelConfig<T> {
 
 export class MultiSelectQueryParamModel<TOption> {
     config: MultiSelectQueryParamModelConfig<TOption>;
+    searchText?: string;
     options: TOption[] = [];
 
     private route: ActivatedRoute = inject(ActivatedRoute);

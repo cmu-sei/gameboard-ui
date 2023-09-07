@@ -8,8 +8,12 @@ export class AgedDatePipe implements PipeTransform {
     transform(date: any): string {
         let r = '';
         const n = new Date();
-        const t = new Date(date); // + " GMT");
+        const t = new Date(date);
         const tag = ['s', 'm', 'h', 'd'];
+
+        if (t.getFullYear() === 0) {
+            return "--";
+        }
 
         let d: number = n.valueOf() - t.valueOf();
         const a: number[] = [
