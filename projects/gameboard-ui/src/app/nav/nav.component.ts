@@ -8,7 +8,7 @@ import { LayoutService } from '@/utility/layout.service';
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
 
 @Component({
@@ -19,7 +19,7 @@ import { ReportsService } from '@/reports/reports.service';
 export class AppNavComponent implements OnInit {
   user$!: Observable<ApiUser | null>;
   toc$!: Observable<TocFile[]>;
-  canAccessReporting = false;
+  canAccessReporting$?: Observable<boolean>;
   customBackground = "";
   env: any;
   isPracticeModeEnabled = false;
@@ -40,15 +40,20 @@ export class AppNavComponent implements OnInit {
     this.user$ = this.localUser.user$;
     this.toc$ = this.toc.toc$;
     this.title.setTitle(this.config.settings.appname || 'Gameboard');
-    this.canAccessReporting = this.reportsService.canAccessReporting(this.localUser.user$.value);
 
     if (this.config.settings.custom_background) {
       this.document.body.classList.add(this.config.settings.custom_background);
       this.customBackground = this.config.settings.custom_background || 'custom-bg-black';
     }
 
-    this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));
+    // set availability of practice/reporting
+    this.canAccessReporting$ = this
+      .localUser
+      .user$
+      .pipe(map(u => this.reportsService.canAccessReporting(u)));
+
     this.isPracticeModeEnabled = await this.practiceService.isEnabled();
+    this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));
   }
 
   private updatePracticeModeEnabled(isEnabled: boolean) {

@@ -7,7 +7,6 @@ import { ApiUrlService } from './api-url.service';
 import { PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { PlayerService } from '@/api/player.service';
-import { activeChallengesStore } from '@/stores/active-challenges.store';
 import { GameCardContext } from '@/api/game-models';
 
 @Injectable({ providedIn: 'root' })
