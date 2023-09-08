@@ -9,7 +9,6 @@ import { PracticeCertificatesComponent } from './components/practice-certificate
 import { AuthGuard } from '@/utility/auth.guard';
 import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
 import { CertificatePublishControlsComponent } from './components/certificate-publish-controls/certificate-publish-controls.component';
-import { SponsorSelectComponent } from './components/sponsor-select/sponsor-select.component';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -17,7 +16,6 @@ const DECLARED_COMPONENTS = [
   CertificatePrinterComponent,
   CompetitiveCertificatesComponent,
   PracticeCertificatesComponent,
-  // SponsorSelectComponent,
 ];
 
 @NgModule({

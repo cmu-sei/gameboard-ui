@@ -30,13 +30,11 @@ import { UserService } from './api/user.service';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NAVIGATOR } from './services/navigator.service';
 import { AppNavComponent } from './components/nav/nav.component';
-import { SponsorSelectModalComponent } from './components/sponsor-select-modal/sponsor-select-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AppNavComponent,
-    // SponsorSelectModalComponent,
     SupportPillComponent,
   ],
   imports: [
