@@ -13,7 +13,7 @@
                 <span>Support</span>
                 <app-support-pill></app-support-pill>
             </a>
-            <div *ngIf="canAccessReporting" class="d-flex align-items-center">
+            <div *ngIf="canAccessReporting$ | async" class="d-flex align-items-center">
                 <a class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
                     Reports
                 </a>
