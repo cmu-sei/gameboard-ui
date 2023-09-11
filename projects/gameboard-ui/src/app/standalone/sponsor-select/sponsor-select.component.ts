@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Observable, firstValueFrom } from 'rxjs';
 import { Sponsor } from '@/api/sponsor-models';
 import { SponsorService } from '@/api/sponsor.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { ApiUser } from '@/api/user-models';
 import { UserService } from '@/api/user.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sponsor-select',
@@ -37,6 +37,7 @@ export class SponsorSelectComponent {
 
     // update the api
     const updatedUser = await firstValueFrom(this.api.update(u));
+    console.log("nexting local", updatedUser);
     this.localUserService.user$.next(updatedUser);
   }
 }

@@ -29,12 +29,15 @@ import { AuthService } from './utility/auth.service';
 import { UserService } from './api/user.service';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NAVIGATOR } from './services/navigator.service';
+
 import { AppNavComponent } from './components/nav/nav.component';
+import { SponsorSelectBannerComponent } from './components/sponsor-select-banner/sponsor-select-banner.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AppNavComponent,
+    SponsorSelectBannerComponent,
     SupportPillComponent,
   ],
   imports: [

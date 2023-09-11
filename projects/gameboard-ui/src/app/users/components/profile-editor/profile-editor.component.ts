@@ -14,7 +14,7 @@ import { UserService } from '../../../utility/user.service';
 @Component({
   selector: 'app-profile-editor',
   templateUrl: './profile-editor.component.html',
-  styleUrls: ['./profile-editor.component.scss']
+  styleUrls: ['./profile-editor.component.scss'],
 })
 export class ProfileEditorComponent {
   currentUser$: Observable<ApiUser | null>;

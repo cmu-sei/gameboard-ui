@@ -17,6 +17,7 @@
       <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
 
       <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
+
         <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
           btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec.gameId)" class="d-block">
           <span>Start Practice Session</span>

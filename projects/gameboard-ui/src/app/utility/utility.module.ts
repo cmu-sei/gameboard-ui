@@ -28,7 +28,6 @@ import { InplaceEditorComponent } from './components/inplace-editor/inplace-edit
 import { LoginComponent } from './components/login/login.component';
 import { MessageBoardComponent } from './components/message-board/message-board.component';
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
-import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { FormsModule } from '@angular/forms';
@@ -48,7 +47,6 @@ const components = [
   ImageManagerComponent,
   GameCardComponent,
   LoginComponent,
-  ProfileEditorComponent,
   MessageBoardComponent,
   InplaceEditorComponent,
   AgedDatePipe,

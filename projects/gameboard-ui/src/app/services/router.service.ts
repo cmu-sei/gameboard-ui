@@ -50,6 +50,10 @@ export class RouterService {
     return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
+  public getProfileUrl() {
+    return this.router.createUrlTree(["user", "profile"]).toString();
+  }
+
   public getReportRoute<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): UrlTree {
     return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }

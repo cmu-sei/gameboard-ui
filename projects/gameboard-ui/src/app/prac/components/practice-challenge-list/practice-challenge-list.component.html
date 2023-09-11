@@ -6,6 +6,13 @@
     </p>
 
     <ng-container *ngIf="list$ | async as list; else loading">
+        <ng-container *ngIf="!(hasSponsor$ | async)">
+            <alert type="warning">
+                You haven't selected your sponsoring organization yet - you'll need to before you can play practice
+                challenges. Head over to your profile to select your sponsor, then return here to play!
+            </alert>
+        </ng-container>
+
         <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
             <app-share-button class="d-block mr-1" size="small"
                 message="Copied a link to this search to your clipboard."
@@ -32,7 +39,12 @@
             </thead>
             <tbody>
                 <tr *ngFor="let c of list">
-                    <td class="align-middle"><a [routerLink]="[c.id, slug(c.name)]">{{c.name}}</a>
+                    <td class="align-middle">
+                        <a *ngIf="hasSponsor$ | async" [routerLink]="[c.id, slug(c.name)]">
+                            {{c.name}}
+                        </a>
+                        <p *ngIf="!(hasSponsor$ | async)" class="p-0 m-0 text-success cursor-pointer"
+                            tooltip="Come back after selecting your sponsor to play this challenge.">{{c.name}}</p>
                     </td>
                     <td class="align-middle">{{c.description}}</td>
                     <td>
@@ -46,8 +58,8 @@
             </tbody>
         </table>
 
-        <app-pager display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
-            (changed)="paged($event)"></app-pager>
+        <app-pager display="always" [skip]="skip || 0" [take]="take || 0" [count]="count" (changed)="paged($event)">
+        </app-pager>
     </ng-container>
 </div>
 
@@ -55,4 +67,8 @@
     <div class="text-center">
         <app-spinner>Loading practice challenges...</app-spinner>
     </div>
+</ng-template>
+
+<ng-template #challengeNameNoLink let-challengeName="challengeName">
+    <p>{{challengeName}}</p>
 </ng-template>

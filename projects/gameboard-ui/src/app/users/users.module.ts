@@ -9,6 +9,10 @@ import { PracticeCertificatesComponent } from './components/practice-certificate
 import { AuthGuard } from '@/utility/auth.guard';
 import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
 import { CertificatePublishControlsComponent } from './components/certificate-publish-controls/certificate-publish-controls.component';
+import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
+import { SponsorSelectComponent } from '@/standalone/sponsor-select/sponsor-select.component';
+import { ProfileHistoryComponent } from './components/profile-history/profile-history.component';
+import { UserPageComponent } from './components/user-page/user-page.component';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -16,23 +20,35 @@ const DECLARED_COMPONENTS = [
   CertificatePrinterComponent,
   CompetitiveCertificatesComponent,
   PracticeCertificatesComponent,
+  ProfileEditorComponent
 ];
 
 @NgModule({
-  declarations: [...DECLARED_COMPONENTS],
+  declarations: [...DECLARED_COMPONENTS, UserPageComponent],
   imports: [
     CommonModule,
     CoreModule,
     RouterModule.forChild([
+      { path: ":userId/certificates/:playerMode/:awardedForEntityId", component: CertificatePrinterComponent },
       {
-        path: 'certificates', component: CertificatesComponent, title: "Certificates", canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
-          { path: 'competitive', component: CompetitiveCertificatesComponent, title: "Competitive Certificates" },
-          { path: 'practice', component: PracticeCertificatesComponent, title: "Practice Certificates", canActivate: [practiceModeEnabledGuard] },
-          { path: '', pathMatch: 'full', redirectTo: 'competitive' }
+        path: '',
+        component: UserPageComponent,
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        children: [
+          {
+            path: 'certificates', component: CertificatesComponent, title: "Certificates", canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
+              { path: 'competitive', component: CompetitiveCertificatesComponent, title: "Competitive Certificates" },
+              { path: 'practice', component: PracticeCertificatesComponent, title: "Practice Certificates", canActivate: [practiceModeEnabledGuard] },
+              { path: '', pathMatch: 'full', redirectTo: 'competitive' }
+            ]
+          },
+          { path: 'profile', component: ProfileEditorComponent, title: "Profile" },
+          { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
         ]
       },
-      { path: ":userId/certificates/:playerMode/:awardedForEntityId", component: CertificatePrinterComponent },
     ]),
+    SponsorSelectComponent
   ]
 })
 export class UsersModule { }

@@ -19,7 +19,7 @@
       <ng-container *ngIf="!ctx.player.id">
         <div *ngIf="!ctx.user.name || !ctx.user.sponsor">
           Ready to play? Before you do, you'll need to visit your
-          <a [routerLink]="['/profile']">profile</a> to...
+          <a [routerLink]="['/user/profile']">profile</a> to...
 
           <ul class="profile-validation">
             <li *ngIf="!ctx.user.name">Make sure you've entered your name</li>
@@ -53,7 +53,7 @@
       </ng-container>
 
       <!-- enrollment controls -->
-      <ng-container *ngIf="!ctx.player.id">
+      <ng-container *ngIf="!ctx.player.id && ctx.user.sponsor">
         <div class="d-flex align-items-center justify-content-center mt-5"
           *ngIf="ctxDelayed$ | async as delay; else loading">
           <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">

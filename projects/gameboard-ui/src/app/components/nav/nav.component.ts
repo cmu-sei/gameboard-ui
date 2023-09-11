@@ -4,12 +4,12 @@ import { UserService as LocalUser } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ConfigService } from '@/utility/config.service';
-import { LayoutService } from '@/utility/layout.service';
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable, map } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-nav',
@@ -22,15 +22,17 @@ export class AppNavComponent implements OnInit {
   canAccessReporting$?: Observable<boolean>;
   customBackground = "";
   env: any;
-  isPracticeModeEnabled = false;
+
+  protected isPracticeModeEnabled = false;
+  protected profileUrl?: string;
 
   constructor(
     private localUser: LocalUser,
     private config: ConfigService,
     @Inject(DOCUMENT) private document: Document,
-    public layoutService: LayoutService,
     private practiceService: PracticeService,
     private reportsService: ReportsService,
+    private routerService: RouterService,
     private toc: TocService,
     private title: Title,
     private unsub: UnsubscriberService
@@ -40,6 +42,7 @@ export class AppNavComponent implements OnInit {
     this.user$ = this.localUser.user$;
     this.toc$ = this.toc.toc$;
     this.title.setTitle(this.config.settings.appname || 'Gameboard');
+    this.profileUrl = this.routerService.getProfileUrl();
 
     if (this.config.settings.custom_background) {
       this.document.body.classList.add(this.config.settings.custom_background);

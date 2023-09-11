@@ -20,6 +20,8 @@ export class PracticeChallengeListComponent {
   search$ = new BehaviorSubject<Search>({});
   appname = '';
   faSearch = faSearch;
+
+  protected hasSponsor$: Observable<boolean>;
   protected localUserId?: string;
   protected introTextMarkdown = "";
 
@@ -49,6 +51,7 @@ export class PracticeChallengeListComponent {
       map(results => results.results.items)
     );
 
+    this.hasSponsor$ = localUser.user$.pipe(map(u => !!u?.sponsor));
     this.unsub.add(
       route.queryParams.subscribe(params => this.search({ ...params } as Search))
     );
