@@ -51,10 +51,10 @@
         </ng-container>
 
         <!-- enrollment controls -->
-        <ng-container *ngIf="!ctx.player.id && ctx.user.sponsor">
+        <ng-container *ngIf="!ctx.player.id">
           <div class="d-flex align-items-center justify-content-center mt-5"
             *ngIf="ctxDelayed$ | async as delay; else loading">
-            <div *ngIf="canStandardEnroll" class="text-center">
+            <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
               <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
                 (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
                 <fa-icon [icon]="faEdit"></fa-icon>
@@ -62,7 +62,8 @@
               </app-confirm-button>
             </div>
 
-            <div *ngIf="canAdminEnroll" class="text-center">
+            <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
+              class="text-center">
               <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
                 <fa-icon [icon]="faEdit"></fa-icon>
                 <span>Admin Enroll</span>
@@ -74,8 +75,7 @@
         </ng-container>
 
         <!-- already enrolled -->
-        <ng-container
-          *ngIf="(isEnrolled$ | async) && ctx.player.session?.isBefore && (ctx.game.registration.isDuring || canAdminEnroll)">
+        <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore && ctx.game.registration.isDuring">
           <div *ngIf="isManager$ | async" class="form-group mb-0">
             <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
               <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
@@ -149,7 +149,7 @@
 
           <!-- unenroll -->
           <div
-            *ngIf="(!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
+            *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
             class="form-group text-center">
             <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
               <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
