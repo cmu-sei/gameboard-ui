@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { finalize, map, tap, delay, first } from 'rxjs/operators';
@@ -10,7 +10,8 @@ import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitat
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
-import { UserService } from '../../utility/user.service';
+import { UserService as LocalUserService } from '../../utility/user.service';
+import { UserService } from '@/api/user.service';
 
 @Component({
   selector: 'app-player-enroll',
@@ -31,6 +32,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   ctx$: Observable<GameContext>;
   ctxDelayed$: Observable<GameContext>;
 
+  protected canAdminEnroll = false;
+  protected canStandardEnroll = false;
   disallowedName: string | null = null;
   disallowedReason: string | null = null;
   protected managerRole = PlayerRole.manager;
@@ -49,7 +52,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     private api: PlayerService,
     private config: ConfigService,
     private hubService: NotificationService,
-    private localUser: UserService
+    private localUserService: LocalUserService,
+    private userService: UserService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
       map(i => this.ctx),
@@ -65,6 +69,23 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
             this.disallowedReason = gc.player.nameStatus;
           }
         }
+      }),
+      tap(ctx => {
+        const localUser = this.localUserService.user$.value;
+        const hasPlayerSession = (!ctx.player.id || !ctx.player.session || ctx.player?.session?.isBefore);
+
+        this.canAdminEnroll = !!localUser && !hasPlayerSession &&
+          (
+            this.ctx.game.registration.isDuring ||
+            this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser)
+          );
+
+        this.canStandardEnroll = !!localUser && !hasPlayerSession &&
+          ctx.game.registration.isDuring && (
+            !ctx.player.id ||
+            !ctx.player.session ||
+            ctx.player.session?.isBefore
+          );
       })
     );
 

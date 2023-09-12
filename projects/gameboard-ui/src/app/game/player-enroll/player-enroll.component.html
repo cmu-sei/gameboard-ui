@@ -1,6 +1,5 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
-
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
 
   <div class="card" *ngIf="ctx">
@@ -56,7 +55,7 @@
       <ng-container *ngIf="!ctx.player.id">
         <div class="d-flex align-items-center justify-content-center mt-5"
           *ngIf="ctxDelayed$ | async as delay; else loading">
-          <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
+          <div *ngIf="canStandardEnroll" class="text-center">
             <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
               (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
               <fa-icon [icon]="faEdit"></fa-icon>
@@ -64,8 +63,7 @@
             </app-confirm-button>
           </div>
 
-          <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
-            class="text-center">
+          <div *ngIf="canAdminEnroll" class="text-center">
             <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
               <fa-icon [icon]="faEdit"></fa-icon>
               <span>Admin Enroll</span>
@@ -164,7 +162,7 @@
 
         <ng-template *ngIf="!unenrollTooltip">
           <p class="small">
-            You can unenroll either the enrollment period ends or your game session
+            You can unenroll until either the enrollment period ends or your game session
             starts.
           </p>
         </ng-template>
@@ -177,4 +175,14 @@
   <div class="text-center">
     <app-spinner></app-spinner>
   </div>
+</ng-template>
+
+<ng-template #setNameAndSponsor let-user>
+  Ready to play? Before you do, you'll need to visit your
+  <a [routerLink]="['/profile']">profile</a> to...
+
+  <ul class="profile-validation">
+    <li *ngIf="!user.name">Make sure you've entered your name</li>
+    <li *ngIf="!user.sponsor">Select your sponsor</li>
+  </ul>
 </ng-template>

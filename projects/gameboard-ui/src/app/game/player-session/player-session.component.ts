@@ -7,7 +7,9 @@ import { first, tap } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { fa } from '../../services/font-awesome.service';
+import { UserService } from '@/api/user.service';
+import { UserService as LocalUserService } from "@/utility/user.service";
+import { fa } from '@/services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
@@ -26,18 +28,23 @@ export class PlayerSessionComponent implements OnDestroy {
   myCtx$!: Observable<GameContext | undefined>;
   player$ = new BehaviorSubject<Player | undefined>(undefined);
   playerObservable$ = this.player$.asObservable();
+  protected fa = fa;
 
   private ctxSub?: Subscription;
 
   // sets up the modal if it's a team game that needs confirmation
   protected modalConfig?: ModalConfirmConfig;
   protected isDoubleChecking = false;
+  protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
+
+  protected canAdminStart = false;
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
-  protected fa = fa;
 
   constructor(
     private api: PlayerService,
     private modalService: ModalConfirmService,
+    private localUserService: LocalUserService,
+    private userService: UserService,
   ) { }
 
   async ngOnInit() {
@@ -74,6 +81,10 @@ export class PlayerSessionComponent implements OnDestroy {
             onConfirm: () => this.confirmResetTeam(ctx.player)
           };
         }
+      }),
+      tap(ctx => {
+        const localUser = this.localUserService.user$.value;
+        this.canAdminStart = !!localUser && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
       })
     ).subscribe();
   }
@@ -88,9 +99,13 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   handleReset(p: Player): void {
-    this.api.resetSession({ player: p, unenrollTeam: true }).pipe(first()).subscribe(_ => {
-      this.onSessionReset.emit(p);
-    });
+    if (this.modalConfig) {
+      // this is a team game, do team confirmation
+      this.showConfirmTeamReset(p);
+    } else {
+      // it's an individual game, we've confirmed them to death enough
+      this.doReset(p);
+    }
   }
 
   showConfirmTeamReset(p: Player) {
@@ -102,7 +117,13 @@ export class PlayerSessionComponent implements OnDestroy {
 
   confirmResetTeam(p: Player): void {
     this.modalService.hide();
-    this.handleReset(p);
+    this.doReset(p);
+  }
+
+  private doReset(p: Player) {
+    this.api.resetSession({ player: p, unenrollTeam: true }).pipe(first()).subscribe(_ => {
+      this.onSessionReset.emit(p);
+    });
   }
 
   ngOnDestroy(): void {
