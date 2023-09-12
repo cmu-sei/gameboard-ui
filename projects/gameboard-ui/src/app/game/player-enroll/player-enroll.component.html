@@ -15,7 +15,7 @@
       <app-error-div [errors]="errors"></app-error-div>
 
       <!-- not yet enrolled -->
-      <ng-container *ngIf="!ctx.player.id">
+      <ng-container *ngIf="!(isEnrolled$ | async)">
         <div *ngIf="!ctx.user.name || !ctx.user.sponsor">
           Ready to play? Before you do, you'll need to visit your
           <a [routerLink]="['/profile']">profile</a> to...
@@ -26,7 +26,7 @@
           </ul>
         </div>
 
-        <ng-container *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
+        <ng-container *ngIf="!!(ctx.user.name && ctx.user.sponsor) && (canAdminEnroll || canStandardEnroll)">
           <!-- team -->
           <div *ngIf="ctx.game.allowTeam">
             <p>
@@ -49,10 +49,8 @@
             <markdown [data]="ctx.game.registrationMarkdown"></markdown>
           </div>
         </ng-container>
-      </ng-container>
 
-      <!-- enrollment controls -->
-      <ng-container *ngIf="!ctx.player.id">
+        <!-- enrollment controls -->
         <div class="d-flex align-items-center justify-content-center mt-5"
           *ngIf="ctxDelayed$ | async as delay; else loading">
           <div *ngIf="canStandardEnroll" class="text-center">
@@ -75,7 +73,8 @@
       </ng-container>
 
       <!-- already enrolled -->
-      <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore && ctx.game.registration.isDuring">
+      <ng-container
+        *ngIf="(isEnrolled$ | async) && ctx.player.session?.isBefore && (ctx.game.registration.isDuring || canAdminEnroll)">
         <div *ngIf="isManager$ | async" class="form-group mb-0">
           <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
             <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
@@ -112,8 +111,7 @@
 
         <!--In team games before we start, managers can generate invitations and rename the team-->
         <!--Non-managers can leave for different teams-->
-
-        <ng-container *ngIf="ctx.game.allowTeam && !ctx.player.session?.isDuring">
+        <ng-container *ngIf="ctx.game.allowTeam">
           <div class="form-group d-flex flex-column">
             <div class="mb-2" *ngIf="(isManager$ | async) || !(hasTeammates$ | async)">
               <span class="lead">Manager</span>, generate an invitation for your teammates.<br />
@@ -146,27 +144,26 @@
             </div>
           </ng-container>
         </ng-container>
-      </ng-container>
 
-      <!-- unenroll -->
-      <div
-        *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
-        class="form-group text-center">
-        <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
-          <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
-            [disabled]="!!unenrollTooltip">
-            <fa-icon [icon]="faTrash"></fa-icon>
-            <span>Unenroll</span>
-          </app-confirm-button>
+        <!-- unenroll -->
+        <div
+          *ngIf="(!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
+          class="form-group text-center">
+          <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
+            <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
+              [disabled]="!!unenrollTooltip">
+              <fa-icon [icon]="faTrash"></fa-icon>
+              <span>Unenroll</span>
+            </app-confirm-button>
+          </div>
+
+          <ng-template *ngIf="!unenrollTooltip">
+            <p class="small">
+              You can unenroll until either the enrollment period ends or your game session starts.
+            </p>
+          </ng-template>
         </div>
-
-        <ng-template *ngIf="!unenrollTooltip">
-          <p class="small">
-            You can unenroll until either the enrollment period ends or your game session
-            starts.
-          </p>
-        </ng-template>
-      </div>
+      </ng-container>
     </div>
   </div>
 </ng-container>

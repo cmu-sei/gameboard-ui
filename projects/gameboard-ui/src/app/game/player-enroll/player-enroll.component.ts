@@ -34,9 +34,10 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
 
   protected canAdminEnroll = false;
   protected canStandardEnroll = false;
-  disallowedName: string | null = null;
-  disallowedReason: string | null = null;
+  protected disallowedName: string | null = null;
+  protected disallowedReason: string | null = null;
   protected managerRole = PlayerRole.manager;
+  protected isEnrolled$: Observable<boolean>;
   protected isManager$ = new Subject<boolean>();
   protected hasTeammates$: Observable<boolean> = of(false);
   protected unenrollTooltip?: string;
@@ -72,7 +73,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       }),
       tap(ctx => {
         const localUser = this.localUserService.user$.value;
-        const hasPlayerSession = (!ctx.player.id || !ctx.player.session || ctx.player?.session?.isBefore);
+        const hasPlayerSession = (!!ctx.player.id && !!ctx.player.session && !ctx.player.session.isBefore);
 
         this.canAdminEnroll = !!localUser && !hasPlayerSession &&
           (
@@ -94,6 +95,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       delay(this.delayMs)
     );
 
+    this.isEnrolled$ = this.ctx$.pipe(map(ctx => !!ctx.player.id));
     this.hasTeammates$ = this.hubService.actors$.pipe(map(actors => actors.length > 1));
   }
 
