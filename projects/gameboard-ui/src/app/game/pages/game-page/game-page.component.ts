@@ -230,8 +230,8 @@ export class GamePageComponent implements OnDestroy {
     if (ctx.game.requireSynchronizedStart) {
       await this.gameHubService.joinGame(ctx.game.id);
 
-      // if the game is already going, they probably refreshed or left
-      // so move them along
+      // have to check if the game is already started and move them 
+      // to the game start page if so
       await this.handleLiveSyncStartSessionJoined(ctx);
 
       this.externalGameDeployStartSubscription = this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
@@ -283,7 +283,11 @@ export class GamePageComponent implements OnDestroy {
     }
 
     this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.playerId}) is ${startState.isReady ? "" : "not"} ready to start.`);
-    if (startState.isReady && ctx.game.session.isDuring && ctx.playerId) {
+
+    // NOTE: in https://github.com/cmu-sei/Gameboard/issues/249, we're tracking the fact that we really need a separate
+    // data structure to record properties of the external game, including a better way to determine if we should redirect
+    // a reloading/returning player to the game screen
+    if (startState.isReady && ctx.game.session.isDuring && ctx.game.session.endDate > this.minDate && ctx.playerId) {
       this.routerService.goToGameStartPage({ gameId: ctx.game.id, playerId: ctx.playerId });
     }
   }
