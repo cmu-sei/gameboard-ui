@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { GameService } from '../../../api/game.service';
 import { GameContext } from '../../../api/game-models';
@@ -9,7 +9,6 @@ import { FontAwesomeService } from '../../../services/font-awesome.service';
 import { SyncStartService } from '../../../services/sync-start.service';
 import { SyncStartGameState } from '../../game.models';
 import { GameHubService } from '@/services/signalR/game-hub.service';
-import { HubState } from '@/services/notification.service';
 import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
