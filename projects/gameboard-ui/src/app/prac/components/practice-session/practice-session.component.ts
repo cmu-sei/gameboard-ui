@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, combineLatest, firstValueFrom } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { NewPlayer } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
 import { SpecSummary } from '@/api/spec-models';
@@ -47,6 +47,9 @@ export class PracticeSessionComponent {
 
     this.spec$ = route.params.pipe(
       filter(p => !!p.specId),
+      map(p => p.specId),
+      distinctUntilChanged(),
+      tap(thing => console.log(thing)),
       switchMap(p => practiceService.searchChallenges({ term: p.specId })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );
