@@ -4,14 +4,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faCaretDown, faCaretRight, faExternalLinkAlt, faListOl } from '@fortawesome/free-solid-svg-icons';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, Subscription } from 'rxjs';
 import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '../../api/user-models';
 import { GameService } from '../../api/game.service';
 import { GameContext } from '../../api/models';
-import { HubEvent, HubEventAction, HubState, NotificationService } from '../../services/notification.service';
-import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
+import { HubEvent, HubEventAction, NotificationService } from '../../services/notification.service';
 import { Player, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
@@ -21,6 +19,7 @@ import { BoardPlayer } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { UserService } from '@/api/user.service';
 
 @Component({
   selector: 'app-game-page',
@@ -37,11 +36,11 @@ export class GamePageComponent implements OnDestroy {
   minDate = new Date(0);
 
   protected boardPlayer?: BoardPlayer;
+  protected canAdminEnroll$: Observable<boolean>;
   protected ctxIds: { userId?: string, gameId: string, playerId?: string } = { userId: '', gameId: '' };
   protected playerSubject$ = new BehaviorSubject<Player | undefined>(undefined);
 
   private isExternalGame = false;
-  private isSyncStartReady = false;
   private syncStartChangedSubscription?: Subscription;
   private syncStartGameStartedSubscription?: Subscription;
   private hubEventsSubcription: Subscription;
@@ -50,11 +49,12 @@ export class GamePageComponent implements OnDestroy {
   constructor(
     router: Router,
     route: ActivatedRoute,
+    apiGame: GameService,
     apiBoards: BoardService,
     apiPlayer: PlayerService,
     localUser: LocalUserService,
+    userService: UserService,
     private hub: NotificationService,
-    private apiGame: GameService,
     private gameHubService: GameHubService,
     private modalConfirmService: ModalConfirmService,
     private windowService: WindowService
@@ -62,6 +62,7 @@ export class GamePageComponent implements OnDestroy {
     const user$ = localUser.user$.pipe(
       map(u => !!u ? u : {} as ApiUser)
     );
+    this.canAdminEnroll$ = localUser.user$.pipe(map(u => !!u && userService.canEnrollAndPlayOutsideExecutionWindow(u)));
 
     const game$ = route.params.pipe(
       filter(p => !!p.id),
@@ -72,10 +73,6 @@ export class GamePageComponent implements OnDestroy {
         this.syncStartChangedSubscription?.unsubscribe();
 
         if (g.requireSynchronizedStart) {
-          this.syncStartChangedSubscription = this.gameHubService.syncStartChanged$.subscribe(state => {
-            this.isSyncStartReady = state.isReady;
-          });
-
           this.syncStartGameStartedSubscription = this.gameHubService.syncStartGameStarted$.subscribe(startState => {
             if (startState) {
               router.navigateByUrl(`/game/${startState.game.id}/sync-start`);
@@ -106,7 +103,7 @@ export class GamePageComponent implements OnDestroy {
           )
         );
       })
-    ).subscribe(done => {
+    ).subscribe(() => {
       const currentPlayer = this.playerSubject$.getValue();
       if (!currentPlayer?.id) {
         this.boardPlayer = undefined;

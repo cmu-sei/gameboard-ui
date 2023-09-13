@@ -82,6 +82,12 @@ export class UserService {
     return this.http.put<void>(`${this.url}/user/login`, {});
   }
 
+  public canEnrollAndPlayOutsideExecutionWindow(user: ApiUser) {
+    return user && (
+      user.isAdmin || user.isTester || user.isRegistrar
+    );
+  }
+
   private mapToTree(list: string[]): TreeNode {
     const root: TreeNode = { name: '', path: `${this.config.apphost}doc`, folders: [], files: [] };
     list.forEach(f => {
