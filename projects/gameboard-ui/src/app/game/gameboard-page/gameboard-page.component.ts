@@ -282,20 +282,26 @@ export class GameboardPageComponent implements OnDestroy {
   }
 
   private renderLaunchError(err: HttpErrorResponse | ApiError) {
-    let errorMsg = "";
+    let errorMsg: any = "";
 
     try {
-      if ("error" in err && err.error?.indexOf("GamespaceLimitReached")) {
-        errorMsg = "Unable to deploy resources for this challenge because you've reached the gamespace limit for the game. Complete or destroy the resources of other challenges to work on this one.";
+      if ("error" in err && err.error?.message) {
+        const loweredMessage = err.error.message.toLowerCase();
+        if (loweredMessage.indexOf("gamespace") >= 0) {
+          errorMsg = "Unable to deploy resources for this challenge because you've reached the gamespace limit for the game. Complete or destroy the resources of other challenges to work on this one.";
+        } else {
+          errorMsg = err.error.message;
+        }
       }
       else if (err.message) {
         errorMsg = err.message;
       } else {
-        errorMsg = JSON.stringify(err);
+        const stringified = JSON.stringify(err);
+        errorMsg = stringified == "{}" ? "Unspecified error" : stringified;
       }
     }
     catch (renderError: any) {
-      errorMsg = JSON.stringify(renderError || "Unspecified error");
+      errorMsg = renderError;
     }
 
     this.errors.push(errorMsg);
