@@ -15,6 +15,7 @@ import { UserService } from '../../utility/user.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { BrowserService } from '@/services/browser.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ApiError } from '@/api/models';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -280,11 +281,23 @@ export class GameboardPageComponent implements OnDestroy {
     this.select(spec);
   }
 
-  private renderLaunchError(err: HttpErrorResponse) {
-    if (err.error.indexOf("GamespaceLimitReached") >= 0) {
-      this.errors.push("Unable to deploy resources for this challenge because you've reached the gamespace limit for the game. Complete or destroy the resources of other challenges to work on this one.");
-    } else {
-      this.errors.push(err.error);
+  private renderLaunchError(err: HttpErrorResponse | ApiError) {
+    let errorMsg = "";
+
+    try {
+      if ("error" in err && err.error?.indexOf("GamespaceLimitReached")) {
+        errorMsg = "Unable to deploy resources for this challenge because you've reached the gamespace limit for the game. Complete or destroy the resources of other challenges to work on this one.";
+      }
+      else if (err.message) {
+        errorMsg = err.message;
+      } else {
+        errorMsg = JSON.stringify(err);
+      }
     }
+    catch (renderError: any) {
+      errorMsg = JSON.stringify(renderError || "Unspecified error");
+    }
+
+    this.errors.push(errorMsg);
   }
 }
