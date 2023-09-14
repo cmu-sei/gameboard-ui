@@ -49,7 +49,6 @@ export class PracticeSessionComponent {
       filter(p => !!p.specId),
       map(p => p.specId),
       distinctUntilChanged(),
-      // tap(thing => console.log(Math.random())),
       switchMap(p => practiceService.searchChallenges({ term: p.specId })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );

@@ -101,7 +101,6 @@ export class GameboardPageComponent implements OnDestroy {
         userId: usersvc.user$.value!.id
       })),
       catchError(err => {
-        console.log("err here", err);
         this.renderLaunchError(err);
         return of(null as unknown as Challenge);
       }),
