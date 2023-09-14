@@ -39,7 +39,7 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
     }
 
     // if we only have a player id, we need to resolve the gameId using the playerId
-    this.log.logInfo(`Checking UserIsPlayingGuard for game ${gameId}, user ${playerId}.`);
+    this.log.logWarning(`Checking UserIsPlayingGuard for game ${gameId}, user ${playerId}.`);
     let resolvedGameId = gameId;
     if (playerId) {
       const player = await firstValueFrom(this.playerService.retrieve(playerId));

@@ -283,13 +283,14 @@ export class GamePageComponent implements OnDestroy {
       return;
     }
 
-    this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.playerId}) is ${startState.isReady ? "" : "not"} ready to start.`);
+    this.logService.logWarning(`Game ${ctx.game.id} (player ${ctx.playerId}) is ${startState.isReady ? "" : "not"} ready to start.`);
 
     // NOTE: in https://github.com/cmu-sei/Gameboard/issues/249, we're tracking the fact that we really need a separate
     // data structure to record properties of the external game, including a better way to determine if we should redirect
     // a reloading/returning player to the game screen
 
     if (startState.isReady && ctx.game.session.isDuring && ctx.playerId) {
+      this.logService.logWarning(`Game ${ctx.game.id} (player ${ctx.playerId}) is starting...`);
       this.routerService.goToGameStartPage({ gameId: ctx.game.id, playerId: ctx.playerId });
     }
   }
