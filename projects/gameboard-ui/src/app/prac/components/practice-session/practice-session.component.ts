@@ -49,7 +49,7 @@ export class PracticeSessionComponent {
       filter(p => !!p.specId),
       map(p => p.specId),
       distinctUntilChanged(),
-      switchMap(p => practiceService.searchChallenges({ term: p.specId })),
+      switchMap(p => practiceService.searchChallenges({ term: p })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );
 
