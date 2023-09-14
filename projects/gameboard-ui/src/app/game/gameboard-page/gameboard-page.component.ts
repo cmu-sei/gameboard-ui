@@ -14,6 +14,7 @@ import { HubState, NotificationService } from '../../services/notification.servi
 import { UserService } from '../../utility/user.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { BrowserService } from '@/services/browser.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -100,7 +101,8 @@ export class GameboardPageComponent implements OnDestroy {
         userId: usersvc.user$.value!.id
       })),
       catchError(err => {
-        this.errors.push(err);
+        console.log("err here", err);
+        this.renderLaunchError(err);
         return of(null as unknown as Challenge);
       }),
       tap(c => this.deploying = false),
@@ -230,7 +232,7 @@ export class GameboardPageComponent implements OnDestroy {
     this.deploying = true;
     this.api.start(model.instance).pipe(
       catchError(e => {
-        this.errors.push(e);
+        this.renderLaunchError(e);
         return of({} as Challenge);
       })
     ).subscribe(
@@ -277,5 +279,13 @@ export class GameboardPageComponent implements OnDestroy {
 
   mousedown(e: MouseEvent, spec: BoardSpec) {
     this.select(spec);
+  }
+
+  private renderLaunchError(err: HttpErrorResponse) {
+    if (err.error.indexOf("GamespaceLimitReached") >= 0) {
+      this.errors.push("Unable to deploy resources for this challenge because you've reached the gamespace limit for the game. Complete or destroy the resources of other challenges to work on this one.");
+    } else {
+      this.errors.push(err.error);
+    }
   }
 }
