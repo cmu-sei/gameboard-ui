@@ -32,7 +32,6 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
       return false;
     }
 
-
     // need to know if the current user is the specified player
     const localUserId = this.localUserService.user$.value?.id;
     if (!localUserId) {
@@ -40,6 +39,7 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
     }
 
     // if we only have a player id, we need to resolve the gameId using the playerId
+    this.log.logInfo(`Checking UserIsPlayingGuard for game ${gameId}, user ${playerId}.`);
     let resolvedGameId = gameId;
     if (playerId) {
       const player = await firstValueFrom(this.playerService.retrieve(playerId));

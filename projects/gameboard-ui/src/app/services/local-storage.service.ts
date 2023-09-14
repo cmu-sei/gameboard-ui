@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { UserService } from '../utility/user.service';
 
 export enum StorageKey {
   Gameboard = "gameboard",
   UnityGameLink = "gameServerLink",
   UnityOidcLink = "oidcLink",
-  WantsGameHubConnections = "wantsGameHubConnections"
 }
 
 @Injectable({ providedIn: 'root' })

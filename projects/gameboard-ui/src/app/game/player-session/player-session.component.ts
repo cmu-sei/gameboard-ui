@@ -4,7 +4,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { GameContext } from '@/api/game-models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';

@@ -144,6 +144,7 @@ export class GamePageComponent implements OnDestroy {
         }
 
         if (playerEvent.hubEvent.action == HubEventAction.deleted) {
+          this.gameHubService.leaveGame(this.ctxIds.gameId);
           this.showModal(playerEvent.hubEvent.actingUser?.name);
           this.player$.next(null);
         }
@@ -245,8 +246,8 @@ export class GamePageComponent implements OnDestroy {
   }
 
   private async resetEnrollmentAndLeaveGame(player: Player) {
-    await this.hub.disconnect();
     await this.gameHubService.leaveGame(this.ctxIds.gameId);
+    await this.hub.disconnect();
 
     this.player$.next(null);
     this.externalGameDeployStartSubscription?.unsubscribe();

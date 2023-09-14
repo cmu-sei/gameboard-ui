@@ -10,6 +10,7 @@ import { SyncStartService } from '../../../services/sync-start.service';
 import { SyncStartGameState } from '../../game.models';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { HubConnectionState } from '@microsoft/signalr';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-session-start-controls',
@@ -38,6 +39,7 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     public faService: FontAwesomeService,
     private gameHubService: GameHubService,
     private gameService: GameService,
+    private logService: LogService,
     private playerService: PlayerService,
     private syncStartService: SyncStartService) { }
 
@@ -70,6 +72,7 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   }
 
   protected handleReadyUpdated(player: Player) {
+    this.logService.logWarning(`Player ${player.id} (user ${player.userId}) updating ready...`);
     this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }).pipe(first()).subscribe();
   }
 
