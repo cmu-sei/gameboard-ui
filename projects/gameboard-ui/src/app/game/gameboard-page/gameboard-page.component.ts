@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
@@ -49,12 +50,13 @@ export class GameboardPageComponent implements OnDestroy {
 
   constructor(
     route: ActivatedRoute,
+    title: Title,
+    usersvc: UserService,
     private browserService: BrowserService,
     private router: Router,
     private api: BoardService,
     private config: ConfigService,
     private hub: NotificationService,
-    usersvc: UserService
   ) {
 
     this.user$ = usersvc.user$;
@@ -75,6 +77,7 @@ export class GameboardPageComponent implements OnDestroy {
       )),
       tap(b => {
         this.ctx = b;
+        title.setTitle(`${b.game.name} | ${this.config.appName}`);
 
         this.performanceSummaryViewModel = {
           player: {
@@ -281,6 +284,8 @@ export class GameboardPageComponent implements OnDestroy {
     this.select(spec);
   }
 
+  // ugly temporary workaround for prettified gamespace error message
+  // (we're improving error rendering in general in https://github.com/cmu-sei/Gameboard/issues/155)
   private renderLaunchError(err: HttpErrorResponse | ApiError) {
     let errorMsg: any = "";
 

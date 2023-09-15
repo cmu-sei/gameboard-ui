@@ -110,6 +110,10 @@ export class ConfigService {
     return path;
   }
 
+  get appName(): string {
+    return this.settings.appname || "Gameboard";
+  }
+
   get gamebrainhost(): string {
     let path = this.settings.gamebrainhost || this.basehref;
     if (!path.endsWith('/')) {
