@@ -222,7 +222,7 @@ export class GameboardPageComponent implements OnDestroy {
     // stop gamespace
     this.deploying = true;
     if (!model.instance) { return; }
-    this.api.stop(model.instance).subscribe(
+    this.api.stop({ id: model.instance.id }).subscribe(
       c => this.syncOne(c)
     );
   }
@@ -233,7 +233,7 @@ export class GameboardPageComponent implements OnDestroy {
 
     // otherwise, start gamespace
     this.deploying = true;
-    this.api.start(model.instance).pipe(
+    this.api.start({ id: model.instance.id }).pipe(
       catchError(e => {
         this.renderLaunchError(e);
         return of({} as Challenge);
