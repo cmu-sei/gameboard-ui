@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
-import { firstValueFrom, tap } from 'rxjs';
+import { catchError, firstValueFrom, of, tap } from 'rxjs';
 import { LocalActiveChallenge } from '@/api/challenges.models';
 import { BoardPlayer, BoardSpec } from '@/api/board-models';
 import { BoardService } from '@/api/board.service';
@@ -35,6 +35,7 @@ export class PlayComponent {
   @Output() deployStatusChanged = new EventEmitter<boolean>();
 
   protected challenge: LocalActiveChallenge | null = null;
+  protected errors: any[] = [];
   protected fa = fa;
   protected legacyContext: LegacyContext = { boardPlayer: null, boardSpec: null, session: null };
   protected isDeploying = false;
@@ -72,21 +73,15 @@ export class PlayComponent {
     // if the player record has changed since the last autoboot, reset it
     // (this happens if the player ends the session and restarts it from the same page)
     if (this.playerContext && this.challengeSpec && this._autobootedForPlayerId !== this.playerContext.playerId) {
-      this.deployStatusChanged.emit(true);
-      this.isDeploying = true;
-      this.challenge = await firstValueFrom(this.challengesService.startPlaying({
-        specId: this.challengeSpec.id,
+      await this.deployChallenge({
+        challengeSpecId: this.challengeSpec.id,
         playerId: this.playerContext.playerId,
         userId: this.playerContext.userId
-      }));
-      this.isDeploying = false;
-      this.deployStatusChanged.emit(false);
-      this._autobootedForPlayerId = this.playerContext.playerId;
-      this.challengeStarted.emit();
+      });
     }
   }
 
-  protected async deploy(challengeId: string) {
+  protected async deployVms(challengeId: string) {
     if (!challengeId) {
       throw new Error("Can't deploy from the Play component without a challenge object.");
     }
@@ -98,7 +93,7 @@ export class PlayComponent {
     this.deployStatusChanged.emit(false);
   }
 
-  protected async undeploy(challengeId: string) {
+  protected async undeployVms(challengeId: string) {
     this.isUndeploying = true;
     await firstValueFrom(this.challengesService.undeploy({ id: challengeId }));
     this.isUndeploying = false;
@@ -115,6 +110,33 @@ export class PlayComponent {
     }
 
     return vmUrls;
+  }
+
+  private async deployChallenge(args: { challengeSpecId: string, playerId: string, userId: string }) {
+    this.errors = [];
+    this.deployStatusChanged.emit(true);
+    this.isDeploying = true;
+
+    this.challenge = await firstValueFrom(this.challengesService.startPlaying({
+      specId: args.challengeSpecId,
+      playerId: args.playerId,
+      userId: args.userId
+    })
+      .pipe(
+        catchError(err => {
+          this.errors.push(err);
+          return of(null);
+        })
+      ));
+
+    this.isDeploying = false;
+    this.deployStatusChanged.emit(false);
+
+    // if we succeeded in booting, let listeners know
+    if (this.challenge) {
+      this._autobootedForPlayerId = args.playerId;
+      this.challengeStarted.emit();
+    }
   }
 
   private async _buildLegacyContext(challenge: LocalActiveChallenge | null): Promise<LegacyContext> {

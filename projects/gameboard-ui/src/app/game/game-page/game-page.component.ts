@@ -20,6 +20,8 @@ import { BoardService } from '../../api/board.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { UserService } from '@/api/user.service';
+import { Title } from '@angular/platform-browser';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-game-page',
@@ -49,9 +51,11 @@ export class GamePageComponent implements OnDestroy {
   constructor(
     router: Router,
     route: ActivatedRoute,
+    title: Title,
     apiGame: GameService,
     apiBoards: BoardService,
     apiPlayer: PlayerService,
+    config: ConfigService,
     localUser: LocalUserService,
     userService: UserService,
     private hub: NotificationService,
@@ -110,7 +114,10 @@ export class GamePageComponent implements OnDestroy {
         return;
       }
 
-      apiBoards.load(currentPlayer!.id).pipe(first()).subscribe(b => this.boardPlayer = b);
+      apiBoards.load(currentPlayer!.id).pipe(first()).subscribe(b => {
+        this.boardPlayer = b;
+        title.setTitle(`${this.boardPlayer?.game.name} | ${config.appName}`);
+      });
     });
 
     // allow hub events to update the player subject

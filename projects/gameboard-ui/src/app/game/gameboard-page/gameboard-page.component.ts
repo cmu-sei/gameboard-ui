@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
 import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
@@ -14,6 +15,8 @@ import { HubState, NotificationService } from '../../services/notification.servi
 import { UserService } from '../../utility/user.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { BrowserService } from '@/services/browser.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ApiError } from '@/api/models';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -47,12 +50,13 @@ export class GameboardPageComponent implements OnDestroy {
 
   constructor(
     route: ActivatedRoute,
+    title: Title,
+    usersvc: UserService,
     private browserService: BrowserService,
     private router: Router,
     private api: BoardService,
     private config: ConfigService,
     private hub: NotificationService,
-    usersvc: UserService
   ) {
 
     this.user$ = usersvc.user$;
@@ -73,6 +77,7 @@ export class GameboardPageComponent implements OnDestroy {
       )),
       tap(b => {
         this.ctx = b;
+        title.setTitle(`${b.game.name} | ${this.config.appName}`);
 
         this.performanceSummaryViewModel = {
           player: {
@@ -100,7 +105,7 @@ export class GameboardPageComponent implements OnDestroy {
         userId: usersvc.user$.value!.id
       })),
       catchError(err => {
-        this.errors.push(err);
+        this.renderLaunchError(err);
         return of(null as unknown as Challenge);
       }),
       tap(c => this.deploying = false),
@@ -230,7 +235,7 @@ export class GameboardPageComponent implements OnDestroy {
     this.deploying = true;
     this.api.start(model.instance).pipe(
       catchError(e => {
-        this.errors.push(e);
+        this.renderLaunchError(e);
         return of({} as Challenge);
       })
     ).subscribe(
@@ -277,5 +282,33 @@ export class GameboardPageComponent implements OnDestroy {
 
   mousedown(e: MouseEvent, spec: BoardSpec) {
     this.select(spec);
+  }
+
+  // ugly temporary workaround for prettified gamespace error message
+  // (we're improving error rendering in general in https://github.com/cmu-sei/Gameboard/issues/155)
+  private renderLaunchError(err: HttpErrorResponse | ApiError) {
+    let errorMsg: any = "";
+
+    try {
+      if ("error" in err && err.error?.message) {
+        const loweredMessage = err.error.message.toLowerCase();
+        if (loweredMessage.indexOf("gamespace") >= 0) {
+          errorMsg = "Unable to deploy resources for this challenge because you've reached the gamespace limit for the game. Complete or destroy the resources of other challenges to work on this one.";
+        } else {
+          errorMsg = err.error.message;
+        }
+      }
+      else if (err.message) {
+        errorMsg = err.message;
+      } else {
+        const stringified = JSON.stringify(err);
+        errorMsg = stringified == "{}" ? "Unspecified error" : stringified;
+      }
+    }
+    catch (renderError: any) {
+      errorMsg = renderError;
+    }
+
+    this.errors.push(errorMsg);
   }
 }

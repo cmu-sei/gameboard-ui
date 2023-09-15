@@ -50,6 +50,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   viewing = 'edit';
   addedCount = 0;
 
+  protected hasZeroPointSpecs$: Observable<boolean>;
+
   constructor(
     private api: SpecService,
     private gameSvc: GameService,
@@ -62,6 +64,10 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
       tap(r => this.list = r),
     );
 
+    this.hasZeroPointSpecs$ = this.list$.pipe(
+      map(specList => specList.some(s => !s.disabled && (!s.points || s.points <= 0)))
+    );
+
     // Grabs external specs
     this.recentExternalSpecList$ = this.recentExternals$.pipe(
       debounceTime(500),
@@ -72,6 +78,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
           extSpec => {
             // Find the one in the local list that matches this one
             var item = this.list.find(i => i.externalId === extSpec.externalId);
+
             // Compare the name and description of each; if they aren't equal, update the challenge in the GB database
             if (item) {
               var tmpName = item.name;
@@ -96,7 +103,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     this.updated$ = this.updating$.pipe(
       debounceTime(500),
       filter(s => s.points === 0 || s.points > 0),
-      switchMap(s => api.update(s))
+      switchMap(s => api.update(s)),
+      tap(s => this.refresh())
     );
 
     this.deleted$ = this.deleting$.pipe(
