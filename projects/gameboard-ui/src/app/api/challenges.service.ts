@@ -53,7 +53,6 @@ export class ChallengesService {
       switchMap(c => this.getActiveChallenges(challenge.userId)),
       map(activeChallenges => {
         const startedChallenge = [...activeChallenges.competition, ...activeChallenges.practice].find(c => c.spec.id === specId);
-
         if (!startedChallenge)
           throw new Error(`Couldn't resolve the started challenge with specId ${specId}.`);
 

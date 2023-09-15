@@ -1,3 +1,5 @@
+<app-error-div [errors]="errors"></app-error-div>
+
 <ng-container *ngIf="playerContext && challengeSpec">
     <ng-container *ngIf="isDeploying">
         <app-challenge-deploy-countdown *ngIf="isDeploying && challengeSpec"
@@ -29,12 +31,13 @@
         <div class="vm-controls-container my-4">
             <app-confirm-button *ngIf="challenge.challengeDeployment.isDeployed"
                 btnClass="btn btn-sm btn-outline-warning mr-2"
-                (confirm)="undeploy(challenge.challengeDeployment.challengeId)">
+                (confirm)="undeployVms(challenge.challengeDeployment.challengeId)">
                 <fa-icon [icon]="fa.trash"></fa-icon>
                 <span>Destroy</span>
             </app-confirm-button>
             <app-confirm-button *ngIf="!challenge.challengeDeployment.isDeployed"
-                btnClass="btn btn-sm btn-outline-warning" (confirm)="deploy(challenge.challengeDeployment.challengeId)">
+                btnClass="btn btn-sm btn-outline-warning"
+                (confirm)="deployVms(challenge.challengeDeployment.challengeId)">
                 <fa-icon [icon]="fa.bolt"></fa-icon>
                 <span>Deploy</span>
             </app-confirm-button>
