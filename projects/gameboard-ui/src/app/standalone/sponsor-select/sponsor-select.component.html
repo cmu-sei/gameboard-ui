@@ -13,11 +13,11 @@
 </div>
 
 <div *ngIf="localUser$ | async as localUser" class="sponsors-container">
-    <div *ngFor="let s of sponsors$ | async" class="card" [class.active]="localUser.sponsor===s.logo"
-        (click)="updateUser(localUser, s.logo)">
+    <div *ngFor="let s of sponsors$ | async" class="card" [class.active]="localUser.sponsor.id===s.id"
+        (click)="updateUserSponsor(localUser, s)">
         <div class="card-body p-1">
             <div class="card-title">{{s.name || s.id}}</div>
         </div>
-        <img class="card-img-bottom" [src]="s.logoUrl" [alt]="s.id">
+        <img class="card-img-bottom" [src]="s | sponsorToLogoUri" [alt]="s.id">
     </div>
 </div>

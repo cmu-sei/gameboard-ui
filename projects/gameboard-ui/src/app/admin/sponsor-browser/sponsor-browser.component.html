@@ -19,17 +19,18 @@
   <div style="display: table-row-group">
     <div *ngFor="let s of sponsors" class="panel" style="display: table-row">
       <div style="display: table-cell; padding: 8px">
-        <img [src]="s.logoUrl" class="img-fluid">
+        <img [src]="s | sponsorToLogoUri" class="img-fluid">
         <span class="mx-2">{{s.id}}</span>
       </div>
       <div style="display: table-cell">
-        <input type="text" class="form-control mx-2" placeholder="title" [(ngModel)]="s.name" (blur)="update(s)">
+        <input type="text" class="form-control mx-2" placeholder="title" [(ngModel)]="s.name"
+          (blur)="update({ id: s.id,  name: s.name })">
         <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="delete(s)">
           <fa-icon [icon]="faTrash"></fa-icon>
           <span>Delete</span>
         </app-confirm-button>
       </div>
-  </div>
+    </div>
   </div>
 </ng-container>
 

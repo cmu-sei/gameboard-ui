@@ -5,6 +5,7 @@ import { RouterService } from '@/services/router.service';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { ApiUser } from '@/api/user-models';
+import { Sponsor } from '@/api/sponsor-models';
 
 @Component({
   selector: 'app-sponsor-select-banner',
@@ -22,7 +23,7 @@ import { ApiUser } from '@/api/user-models';
 export class SponsorSelectBannerComponent {
   protected appName = "Gameboard";
   protected profileUrl = "";
-  protected sponsor$: Observable<string | undefined>;
+  protected sponsor$: Observable<Sponsor | undefined>;
   protected user$: Observable<ApiUser | null>;
 
   constructor(
@@ -41,7 +42,6 @@ export class SponsorSelectBannerComponent {
     this.sponsor$ = localUserService
       .user$
       .pipe(
-        tap(u => console.log("sponsor?", u)),
         map(u => u?.sponsor)
       );
   }

@@ -6,12 +6,13 @@ import { SponsorService } from '@/api/sponsor.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { ApiUser } from '@/api/user-models';
 import { UserService } from '@/api/user.service';
+import { CoreModule } from '@/core/core.module';
 
 @Component({
   selector: 'app-sponsor-select',
   templateUrl: './sponsor-select.component.html',
   styleUrls: ['./sponsor-select.component.scss'],
-  imports: [CommonModule],
+  imports: [CommonModule, CoreModule],
   standalone: true
 })
 export class SponsorSelectComponent {
@@ -26,18 +27,10 @@ export class SponsorSelectComponent {
     this.sponsors$ = sponsorService.list();
   }
 
-  async updateUser(u: ApiUser | null, sponsorLogo: string): Promise<void> {
-    if (!u) {
-      throw new Error("Can't access user to update sponsor.");
-    }
-
-    if (sponsorLogo) {
-      u.sponsor = sponsorLogo;
-    }
-
-    // update the api
-    const updatedUser = await firstValueFrom(this.api.update(u));
-    console.log("nexting local", updatedUser);
-    this.localUserService.user$.next(updatedUser);
+  async updateUserSponsor(user: ApiUser, sponsor: Sponsor) {
+    await firstValueFrom(this.api.update({
+      id: user.id,
+      sponsorId: sponsor.id
+    }));
   }
 }

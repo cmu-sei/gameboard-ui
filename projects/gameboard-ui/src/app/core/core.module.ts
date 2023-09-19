@@ -61,8 +61,10 @@ import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
-import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
 import { MinPipe } from './pipes/min.pipe';
+import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
+import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
+import { SponsorLogoToLogoUriPipe } from './pipes/sponsor-logo-to-logo-uri.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ApiUrlPipe,
@@ -100,6 +102,8 @@ const PUBLIC_DECLARATIONS = [
   ShortDatePipe,
   SortPipe,
   SpinnerComponent,
+  SponsorToLogoUriPipe,
+  SponsorLogoToLogoUriPipe,
   TextToColorPipe,
   ToggleClassPipe,
   ToTemplateContextPipe,
@@ -126,7 +130,7 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
   ],
   imports: [
     CommonModule,

@@ -2,20 +2,19 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 export interface Sponsor {
- id: string;
- name: string;
- logo: string;
- approved: boolean;
- logoUrl: string;
+    id: string;
+    name: string;
+    logo: string;
 }
+
 export interface ChangedSponsor {
- id: string;
- name: string;
- logo: string;
- approved: boolean;
- logoUrl: string;
+    id: string;
+    name?: string;
+    logo?: string;
+    approved?: boolean;
 }
+
 export interface NewSponsor {
- id: string;
- name: string;
+    id: string;
+    name: string;
 }

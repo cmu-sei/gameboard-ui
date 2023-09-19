@@ -3,11 +3,9 @@
 
 import { Component } from '@angular/core';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, Observable, scheduled, Subject } from 'rxjs';
+import { asyncScheduler, firstValueFrom, Observable, scheduled, Subject } from 'rxjs';
 import { mergeAll, tap } from 'rxjs/operators';
-import { Sponsor } from '../../../api/sponsor-models';
-import { SponsorService } from '../../../api/sponsor.service';
-import { ApiUser } from '../../../api/user-models';
+import { ApiUser, ChangedUser } from '../../../api/user-models';
 import { UserService as ApiUserService } from '../../../api/user.service';
 import { UserService } from '../../../utility/user.service';
 
@@ -18,7 +16,6 @@ import { UserService } from '../../../utility/user.service';
 })
 export class ProfileEditorComponent {
   currentUser$: Observable<ApiUser | null>;
-  sponsors$: Observable<Sponsor[]>;
   updating$ = new Subject<ApiUser>();
   errors = [];
 
@@ -30,9 +27,7 @@ export class ProfileEditorComponent {
   constructor(
     private api: ApiUserService,
     private userSvc: UserService,
-    sponsorSvc: SponsorService
   ) {
-    this.sponsors$ = sponsorSvc.list('');
 
     this.currentUser$ = scheduled([
       userSvc.user$,
@@ -40,7 +35,6 @@ export class ProfileEditorComponent {
     ], asyncScheduler).pipe(
       mergeAll(),
       tap(user => {
-
         if (user?.nameStatus && user.nameStatus != "pending") {
           if (this.disallowedName == null) {
             this.disallowedName = user.name;
@@ -53,26 +47,30 @@ export class ProfileEditorComponent {
     this.userSvc.refresh();
   }
 
-  async updateUser(u: ApiUser | null, sponsorLogo: string): Promise<void> {
-    if (!u) {
-      throw new Error("Can't access user to update sponsor.");
-    }
+  async updateUserName(name: string): Promise<void> {
+    if (!this.userSvc.user$.value)
+      throw new Error("Can't update user name if not logged in.");
 
-    if (sponsorLogo) {
-      u.sponsor = sponsorLogo;
-    }
+    if (!name)
+      return;
 
+    // set name status in response
+    let nameStatus = "";
     // If the user's name isn't the disallowed one, mark it as pending
-    if (u.name != this.disallowedName) u.nameStatus = "pending";
+    if (name != this.disallowedName) nameStatus = "pending";
     // Otherwise, if there is a disallowed reason as well, mark it as that reason
-    else if (this.disallowedReason) u.nameStatus = this.disallowedReason;
+    else if (this.disallowedReason) nameStatus = this.disallowedReason;
 
     // update the api
-    const updatedUser = await this.api.update(u, this.disallowedName).toPromise();
+    const updatedUser = await firstValueFrom(this.api.update({
+      id: this.userSvc.user$.value.id,
+      name,
+      nameStatus
+    }, this.disallowedName));
     this.updating$.next(updatedUser!);
   }
 
-  refresh(u: ApiUser): void {
+  refresh(): void {
     this.userSvc.refresh();
   }
 }

@@ -40,7 +40,7 @@
         <div class="form-group w-25 d-inline-block">
             <label for="nameInput">Requested Display Name</label>
             <input id="nameInput" class="form-control" [(ngModel)]="currentUser.name"
-                (input)="updateUser(currentUser, currentUser.sponsor)" placeholder="display name" maxlength="64">
+                (input)="updateUserName(currentUser.name)" placeholder="display name" maxlength="64" required>
         </div>
         <ng-container>
             <div class="form-group w-25 d-inline-block">
@@ -49,7 +49,7 @@
             </div>
 
             <div class="form-group w-25 d-inline-block d-flex align-items-end">
-                <button class="btn btn-secondary" (click)="refresh(currentUser)">
+                <button class="btn btn-secondary" (click)="refresh()">
                     <fa-icon [icon]="faSync"></fa-icon>
                     <span>Refresh</span>
                 </button>

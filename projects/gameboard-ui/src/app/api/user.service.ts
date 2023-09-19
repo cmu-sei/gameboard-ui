@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult } from './user-models';
 import { LogService } from '@/services/log.service';
@@ -12,20 +12,15 @@ import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-
-  url = '';
-
   constructor(
     private apiUrl: ApiUrlService,
     private config: ConfigService,
     private http: HttpClient,
     private log: LogService
-  ) {
-    this.url = config.apphost + 'api';
-  }
+  ) { }
 
   public list(filter: any): Observable<ApiUser[]> {
-    return this.http.get<ApiUser[]>(this.url + '/users', { params: filter }).pipe(
+    return this.http.get<ApiUser[]>(this.apiUrl.build("users"), { params: filter }).pipe(
       map(r => {
         r.forEach(u => this.transform(u));
         return r;
@@ -34,13 +29,13 @@ export class UserService {
   }
 
   public retrieve(id: string): Observable<ApiUser> {
-    return this.http.get<ApiUser>(`${this.url}/user/${id}`).pipe(
+    return this.http.get<ApiUser>(this.apiUrl.build(`user/${id}`)).pipe(
       map(r => this.transform(r))
     );
   }
 
   public tryCreate(model: NewUser): Observable<TryCreateUserResult> {
-    return this.http.post<TryCreateUserResult>(`${this.url}/user`, model).pipe(
+    return this.http.post<TryCreateUserResult>(this.apiUrl.build("user"), model).pipe(
       map(r => {
         r.user = this.transform(r.user);
         return r;
@@ -49,37 +44,38 @@ export class UserService {
   }
 
   public update(model: ChangedUser, disallowedName: string | null = null): Observable<ApiUser> {
-    return this.http.put<any>(`${this.url}/user`, model).pipe(
-      map(() => this.transform(model as ApiUser, disallowedName)),
+    return this.http.put<any>(this.apiUrl.build("user"), model).pipe(
+      tap(r => console.log("r is", r)),
+      map(r => this.transform(r as ApiUser, disallowedName)),
     );
   }
 
   public delete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.url}/user/${id}`);
+    return this.http.delete<any>(this.apiUrl.build(`user/${id}`));
   }
 
   public logout(): Observable<any> {
-    return this.http.post<any>(`${this.url}/user/logout`, null);
+    return this.http.post<any>(this.apiUrl.build("user/logout"), null);
   }
 
   public ticket(): Observable<any> {
-    return this.http.post<any>(`${this.url}/user/ticket`, null);
+    return this.http.post<any>(this.apiUrl.build("user/ticket"), null);
   }
 
   public getDocs(): Observable<TreeNode> {
-    return this.http.get<string[]>(`${this.url}/docs`).pipe(
+    return this.http.get<string[]>(this.apiUrl.build("docs")).pipe(
       map(r => this.mapToTree(r))
     );
   }
 
   public announce(model: Announcement): Observable<any> {
-    return this.http.post<any>(`${this.url}/announce`, model);
+    return this.http.post<any>(this.apiUrl.build("announce"), model);
   }
 
   // records a login event for the currently authorized user
   public updateLoginEvents(): Observable<void> {
     this.log.logInfo("User login event recorded");
-    return this.http.put<void>(`${this.url}/user/login`, {});
+    return this.http.put<void>(this.apiUrl.build("user/login"), {});
   }
 
   public canEnrollAndPlayOutsideExecutionWindow(user: ApiUser) {
@@ -114,10 +110,6 @@ export class UserService {
   }
 
   private transform(user: ApiUser, disallowedName: string | null = null): ApiUser {
-    user.sponsorLogo = user.sponsor
-      ? `${this.config.imagehost}/${user.sponsor}`
-      : `${this.config.basehref}assets/sponsor.svg`;
-
     // If the user has no name status but they changed their name, it's pending approval
     if (!user.nameStatus && user.approvedName !== user.name) {
       user.nameStatus = 'pending';

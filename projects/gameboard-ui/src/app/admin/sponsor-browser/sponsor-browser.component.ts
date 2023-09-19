@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { faArrowLeft, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, from, merge, Observable, of, Subject } from 'rxjs';
 import { debounceTime, filter, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { SponsorService } from '../../api/sponsor.service';
   templateUrl: './sponsor-browser.component.html',
   styleUrls: ['./sponsor-browser.component.scss']
 })
-export class SponsorBrowserComponent implements OnInit {
+export class SponsorBrowserComponent {
   refresh$ = new BehaviorSubject<any>(true);
   source$: Observable<Sponsor[]>;
   source!: Sponsor[];
@@ -29,7 +29,7 @@ export class SponsorBrowserComponent implements OnInit {
   faTrash = faTrash;
   faArrowLeft = faArrowLeft;
 
-  newSponsor: NewSponsor = {id: '', name: ''};
+  newSponsor: NewSponsor = { id: '', name: '' };
 
   constructor(
     private api: SponsorService
@@ -64,9 +64,6 @@ export class SponsorBrowserComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-  }
-
   create(): void {
     this.creating$.next(this.newSponsor);
   }
@@ -76,7 +73,7 @@ export class SponsorBrowserComponent implements OnInit {
     this.newSponsor.name = '';
   }
 
-  update(s: Sponsor): void {
+  update(s: ChangedSponsor): void {
     this.updating$.next(s);
   }
 
