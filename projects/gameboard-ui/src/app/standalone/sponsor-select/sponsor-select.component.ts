@@ -32,5 +32,7 @@ export class SponsorSelectComponent {
       id: user.id,
       sponsorId: sponsor.id
     }));
+
+    this.localUserService.refresh();
   }
 }

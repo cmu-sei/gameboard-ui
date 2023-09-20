@@ -1,0 +1,8 @@
+@import "../../../../scss/variables";
+
+img {
+    border: dashed 1px $foreground;
+    border-radius: 50%;
+    height: 96px;
+    width: 96px;
+}

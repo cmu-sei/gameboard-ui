@@ -2,11 +2,12 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component } from '@angular/core';
-import { faArrowLeft, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, from, merge, Observable, of, Subject } from 'rxjs';
-import { debounceTime, filter, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { ChangedSponsor, NewSponsor, Sponsor } from '../../api/sponsor-models';
+import { fa } from "@/services/font-awesome.service";
+import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
+import { debounceTime, filter, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { ChangedSponsor, Sponsor } from '../../api/sponsor-models';
 import { SponsorService } from '../../api/sponsor.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-sponsor-browser',
@@ -17,60 +18,32 @@ export class SponsorBrowserComponent {
   refresh$ = new BehaviorSubject<any>(true);
   source$: Observable<Sponsor[]>;
   source!: Sponsor[];
-  creating$ = new Subject<NewSponsor>();
-  created$: Observable<Sponsor>;
   updating$ = new Subject<ChangedSponsor>();
   updated$: Observable<Sponsor>;
-  deleteing$ = new Subject<Sponsor>();
+  deleting$ = new Subject<Sponsor>();
   deleted$: Observable<any>;
-  dropping$ = new Subject<File[]>();
-  dropped$: Observable<Sponsor>;
-  faPlus = faPlus;
-  faTrash = faTrash;
-  faArrowLeft = faArrowLeft;
 
-  newSponsor: NewSponsor = { id: '', name: '' };
+  protected errors: any[] = [];
+  protected fa = fa;
 
   constructor(
-    private api: SponsorService
-  ) {
+    api: SponsorService,
+    private toastsService: ToastService) {
     this.source$ = this.refresh$.pipe(
       debounceTime(500),
       switchMap(() => api.list({})),
       tap(r => this.source = r)
     );
 
-    this.created$ = this.creating$.pipe(
-      filter(m => !!m.id),
-      switchMap(m => api.create(m)),
-      tap(r => this.source.unshift(r)),
-      tap(r => this.clear())
-    );
-
     this.updated$ = this.updating$.pipe(
       mergeMap(m => api.update(m))
     );
 
-    this.deleted$ = this.deleteing$.pipe(
+    this.deleted$ = this.deleting$.pipe(
       filter(m => !!m.id),
       switchMap(m => api.delete(m.id)),
       tap(r => this.refresh$.next(true))
     );
-
-    this.dropped$ = this.dropping$.pipe(
-      switchMap(l => from(l)),
-      mergeMap(f => api.upload(f), 3),
-      tap(() => this.refresh$.next(true))
-    );
-  }
-
-  create(): void {
-    this.creating$.next(this.newSponsor);
-  }
-
-  clear(): void {
-    this.newSponsor.id = '';
-    this.newSponsor.name = '';
   }
 
   update(s: ChangedSponsor): void {
@@ -78,7 +51,7 @@ export class SponsorBrowserComponent {
   }
 
   delete(s: Sponsor): void {
-    this.deleteing$.next(s);
+    this.deleting$.next(s);
   }
 
   remove(s: Sponsor): void {
@@ -88,7 +61,8 @@ export class SponsorBrowserComponent {
     this.source.splice(index, 1);
   }
 
-  dropped(files: File[]): void {
-    this.dropping$.next(files);
+  protected handleSponsorSaved(sponsor: Sponsor) {
+    this.toastsService.showMessage(`Saved sponsor ${sponsor.name}.`);
+    this.refresh$.next(true);
   }
 }

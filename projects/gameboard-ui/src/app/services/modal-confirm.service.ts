@@ -47,7 +47,6 @@ export class ModalConfirmService implements OnDestroy {
       backdrop: config.isBackdropStatic ? "static" : false,
       scrollable: true
     };
-    console.log(things);
 
     return this.bsModalService.show(config.content, {
       initialState: { context: { ...config.context } } as unknown as Partial<TComponent>,

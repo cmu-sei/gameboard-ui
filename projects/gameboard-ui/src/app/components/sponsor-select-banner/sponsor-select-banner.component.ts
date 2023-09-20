@@ -10,7 +10,7 @@ import { Sponsor } from '@/api/sponsor-models';
 @Component({
   selector: 'app-sponsor-select-banner',
   template: `
-    <div *ngIf="(user$ | async) && !(sponsor$ | async)"
+    <div *ngIf="(user$ | async) && (!(sponsor$ | async) || (user$ | async)!.hasDefaultSponsor)"
       class="sponsor-select-banner-component position-sticky width-100 bg-warning py-2 text-center">
       <strong>Heads up!</strong>
       You haven't selected your sponsoring organization. You'll need to do so before you play challenges on {{appName}}.

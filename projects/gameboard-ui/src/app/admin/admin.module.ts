@@ -44,6 +44,7 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { SponsorsModule } from '@/sponsors/sponsors.module';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,7 @@ import { UserReportComponent } from './user-report/user-report.component';
               { path: "settings", component: PracticeSettingsComponent },
             ]
           },
-          { path: 'registrar/sponsors', component: SponsorBrowserComponent },
+          { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Admin | Sponsors" },
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
           { path: 'registrar/players', component: PlayerNamesComponent },
           { path: 'registrar/:id', component: PlayerRegistrarComponent },
@@ -119,7 +120,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     ModalModule,
     TooltipModule,
     FontAwesomeModule,
-    // PracModule,
+    SponsorsModule,
   ]
 })
 export class AdminModule { }

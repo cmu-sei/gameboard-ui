@@ -68,9 +68,12 @@
 
 <ng-container *ngIf="source$ | async as list; else loading">
   <small class="text-warning d-block mx-2 mb-2">count: {{list.length}}</small>
-  <div *ngFor="let user of list" class="d-flex mb-1 p-3 flex-wrap align-items-baseline bg-secondary rounded">
+  <div *ngFor="let user of list" class="d-flex p-3 flex-wrap align-items-center bg-secondary rounded">
+    <div class="user-avatar-container mr-2">
+      <app-player-avatar [avatarUri]="user.sponsor | sponsorToLogoUri"></app-player-avatar>
+    </div>
     <div>
-      <span class="mr-2 fs-11">{{user.approvedName}}</span>
+      <span class="mr-2 fs-11">{{user.approvedName || user.name}}</span>
       <span class="text-muted">{{user.pendingName}}</span><br />
 
       <div class="d-flex align-items-center">

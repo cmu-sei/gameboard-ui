@@ -19,6 +19,7 @@ import 'chartjs-adapter-luxon';
 
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
+import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { GameCardImageComponent } from './components/game-card-image/game-card-image.component';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
@@ -73,6 +74,7 @@ const PUBLIC_DECLARATIONS = [
   ConfirmButtonComponent,
   CumulativeTimeClockComponent,
   DoughnutChartComponent,
+  DropzoneComponent,
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,

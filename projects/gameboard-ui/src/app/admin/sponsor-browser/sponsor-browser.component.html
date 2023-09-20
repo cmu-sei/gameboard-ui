@@ -1,41 +1,34 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<ng-container *ngIf="created$ | async"></ng-container>
 <ng-container *ngIf="updated$ | async"></ng-container>
 <ng-container *ngIf="deleted$ | async"></ng-container>
-<ng-container *ngIf="dropped$ | async"></ng-container>
+
+<app-error-div></app-error-div>
 
 <h4>Sponsors</h4>
 
-<app-dropzone (dropped)="dropped($event)">
-  <span> or drag sponsor images here. (Filename should be the sponsor key.)</span>
-  <br>
-  <span>Acceptable file types: .png, .jpeg, .jpg, .gif, .webp, .svg</span>
-</app-dropzone>
+<div class="new-sponsor-container my-4">
+  <h5>Create a New Sponsor</h5>
+  <app-sponsor-edit-form (sponsorSaved)="refresh$.next(true)"></app-sponsor-edit-form>
+</div>
+
+<hr class="mb-4" />
 
 <ng-container *ngIf="source$ | async as sponsors; else loading">
-  <br>
-  <div style="display: table-row-group">
-    <div *ngFor="let s of sponsors" class="panel" style="display: table-row">
-      <div style="display: table-cell; padding: 8px">
-        <img [src]="s | sponsorToLogoUri" class="img-fluid">
-        <span class="mx-2">{{s.id}}</span>
-      </div>
-      <div style="display: table-cell">
-        <input type="text" class="form-control mx-2" placeholder="title" [(ngModel)]="s.name"
-          (blur)="update({ id: s.id,  name: s.name })">
-        <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="delete(s)">
-          <fa-icon [icon]="faTrash"></fa-icon>
-          <span>Delete</span>
-        </app-confirm-button>
-      </div>
-    </div>
+  <h5>Existing Sponsors</h5>
+
+  <div *ngFor="let s of sponsors" class="d-flex flex-wrap align-items-center my-4">
+    <img [src]="s | sponsorToLogoUri" class="img-fluid d-block sponsor-avatar">
+    <input type="text" class="d-block form-control flex-grow-1 mx-2" placeholder="title" [(ngModel)]="s.name"
+      (blur)="update({ id: s.id,  name: s.name })">
+    <app-confirm-button btnClass="btn btn-danger d-block" (confirm)="delete(s)">
+      <fa-icon [icon]="fa.trash"></fa-icon>
+      <span>Delete</span>
+    </app-confirm-button>
   </div>
 </ng-container>
 
 <ng-template #loading>
-  <div class="text-center">
-    <app-spinner></app-spinner>
-  </div>
+  <app-spinner></app-spinner>
 </ng-template>

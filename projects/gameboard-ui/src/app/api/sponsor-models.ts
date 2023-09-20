@@ -11,10 +11,9 @@ export interface ChangedSponsor {
     id: string;
     name?: string;
     logo?: string;
-    approved?: boolean;
 }
 
 export interface NewSponsor {
-    id: string;
     name: string;
+    logoFile?: File;
 }

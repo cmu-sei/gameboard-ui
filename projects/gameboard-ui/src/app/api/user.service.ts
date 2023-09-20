@@ -45,7 +45,6 @@ export class UserService {
 
   public update(model: ChangedUser, disallowedName: string | null = null): Observable<ApiUser> {
     return this.http.put<any>(this.apiUrl.build("user"), model).pipe(
-      tap(r => console.log("r is", r)),
       map(r => this.transform(r as ApiUser, disallowedName)),
     );
   }

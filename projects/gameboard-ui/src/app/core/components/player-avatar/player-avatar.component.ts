@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { TimeWindow } from '../../../api/player-models';
+import { TimeWindow } from '@/api/player-models';
 
 @Component({
   selector: 'app-player-avatar',
@@ -20,8 +20,9 @@ export class PlayerAvatarComponent implements OnInit, OnChanges {
   @Input() enableSessionStatus = false;
 
   // this accommodates cases where we want to make sure that even though this avatar may be a single item, it
-  // may be in a list-like view with a PlayerAvatarListComponent, and we need to arrange the width such that 
+  // may be in a list-like view with a PlayerAvatarListComponent, and we need to arrange the width such that
   // it's equal to the width of the list component
+  // Ben, months later: ... or maybe just pass some styling semantics in here rather than talking about list views? 🤦
   @Input() maxAvatarsInListView?: number;
 
   protected avatarCountClass = '';

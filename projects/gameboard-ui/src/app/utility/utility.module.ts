@@ -18,7 +18,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // internal components/services
 import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ClipspanComponent } from './components/clipspan/clipspan.component';
-import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
 import { ImageManagerComponent } from './components/image-manager/image-manager.component';
@@ -43,7 +42,6 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 const components = [
   ClipspanComponent,
   ErrorDivComponent,
-  DropzoneComponent,
   ImageManagerComponent,
   GameCardComponent,
   LoginComponent,

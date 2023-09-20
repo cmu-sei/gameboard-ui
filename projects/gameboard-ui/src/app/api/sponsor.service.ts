@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { ChangedSponsor, NewSponsor, Sponsor } from './sponsor-models';
+import { MimeTypes } from '../../tools';
 
 @Injectable({ providedIn: 'root' })
 export class SponsorService {
@@ -18,6 +19,16 @@ export class SponsorService {
     this.url = config.apphost + 'api';
   }
 
+  public get allowedMimeTypes(): string[] {
+    return [
+      MimeTypes.Gif,
+      MimeTypes.Jpeg,
+      MimeTypes.Png,
+      MimeTypes.Svg,
+      MimeTypes.Webp
+    ];
+  }
+
   public list(search?: any): Observable<Sponsor[]> {
     return this.http.get<Sponsor[]>(this.url + '/sponsors', { params: search });
   }
@@ -27,11 +38,18 @@ export class SponsorService {
   }
 
   public create(model: NewSponsor): Observable<Sponsor> {
-    return this.http.post<Sponsor>(`${this.url}/sponsor`, model);
-  }
+    const formData = new FormData();
+    formData.append("name", model.name);
 
-  public createAll(model: ChangedSponsor[]): Observable<any> {
-    return this.http.post<any>(`${this.url}/sponsors`, model);
+    if (model.logoFile) {
+      if (this.allowedMimeTypes.indexOf(model.logoFile.type) < 0) {
+        throw new Error(`File type ${model.logoFile.type} isn't permitted for sponsor logos.`);
+      }
+
+      formData.append("logoFile", model.logoFile);
+    }
+
+    return this.http.post<Sponsor>(`${this.url}/sponsor`, formData);
   }
 
   public update(model: ChangedSponsor): Observable<any> {
@@ -44,11 +62,5 @@ export class SponsorService {
 
   public getDefaultLogoUri(): string {
     return `${this.config.basehref}assets/sponsor.svg`;
-  }
-
-  public upload(file: File): Observable<Sponsor> {
-    const payload: FormData = new FormData();
-    payload.append('file', file, file.name);
-    return this.http.post<Sponsor>(`${this.url}/sponsor/image`, payload);
   }
 }

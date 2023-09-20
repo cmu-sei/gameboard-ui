@@ -60,7 +60,7 @@
     <div class="w-75 d-inline-block">
         <h4>2. Select your sponsoring organization</h4>
 
-        <ng-container *ngIf="!currentUser.sponsor">
+        <ng-container *ngIf="!currentUser.sponsor || currentUser.hasDefaultSponsor">
             <br>
             <div class="alert alert-warning">
                 You'll need to select the organization sponsoring you before you play. Choose your organization below.

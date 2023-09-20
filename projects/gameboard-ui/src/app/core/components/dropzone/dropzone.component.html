@@ -4,10 +4,9 @@
 <div class="dropzone" [class.dropzone-active]="dropzone">
 
   <label [for]="inputId">
-    <input [id]="inputId" type="file" style="display:none;" (change)="filesSelected($event)">
+    <input [id]="inputId" type="file" style="display:none;" (change)="filesSelected($event)" [multiple]="allowMultiple">
     <span style="border-color:white" class="text-white" [class]="btnClass">Browse</span>
   </label>
 
   <ng-content></ng-content>
-
 </div>

@@ -1,11 +1,13 @@
 :host {
   margin: .25rem;
 }
+
 .dropzone-active {
   background-color: rgba(215, 154, 254, 0.5);
   border-radius: .25rem;
   border: .25rem dashed darkorchid!important ;
 }
+
 .dropzone {
   min-height: 200px;
   height: 100%;

@@ -10,7 +10,6 @@ import { PlayerService } from '../../api/player.service';
 import { NotificationService } from '../../services/notification.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
 import { SyncStartService } from '../../services/sync-start.service';
-import { SimpleEntity } from '../../api/models';
 import { HubConnectionState } from '@microsoft/signalr';
 import { LogService } from '../../services/log.service';
 

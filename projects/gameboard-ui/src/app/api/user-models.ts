@@ -8,6 +8,7 @@ export interface ApiUser {
   name: string;
   nameStatus: string;
   approvedName: string;
+  hasDefaultSponsor: boolean;
   sponsor: Sponsor;
   role: UserRole;
   createdOn: Date;
