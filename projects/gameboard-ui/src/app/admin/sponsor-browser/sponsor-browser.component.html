@@ -10,7 +10,7 @@
 
 <div class="new-sponsor-container my-4">
   <h5>Create a New Sponsor</h5>
-  <app-sponsor-edit-form (sponsorSaved)="refresh$.next(true)"></app-sponsor-edit-form>
+  <app-sponsor-edit-form (sponsorSaved)="handleSponsorSaved($event)"></app-sponsor-edit-form>
 </div>
 
 <hr class="mb-4" />

@@ -62,7 +62,7 @@ export class SponsorBrowserComponent {
   }
 
   protected handleSponsorSaved(sponsor: Sponsor) {
-    this.toastsService.showMessage(`Saved sponsor ${sponsor.name}.`);
+    this.toastsService.showMessage(`Saved sponsor "${sponsor.name}".`);
     this.refresh$.next(true);
   }
 }
