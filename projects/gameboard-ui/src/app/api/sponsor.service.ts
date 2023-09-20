@@ -33,10 +33,6 @@ export class SponsorService {
     return this.http.get<Sponsor[]>(this.url + '/sponsors', { params: search });
   }
 
-  public retrieve(id: string): Observable<Sponsor> {
-    return this.http.get<Sponsor>(`${this.url}/sponsor/${id}`);
-  }
-
   public create(model: NewSponsor): Observable<Sponsor> {
     const formData = new FormData();
     formData.append("name", model.name);
