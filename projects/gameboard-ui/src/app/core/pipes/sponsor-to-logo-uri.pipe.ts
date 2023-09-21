@@ -1,4 +1,3 @@
-import { Sponsor } from '@/api/sponsor-models';
 import { SponsorService } from '@/api/sponsor.service';
 import { ConfigService } from '@/utility/config.service';
 import { Pipe, PipeTransform } from '@angular/core';
@@ -9,9 +8,7 @@ export class SponsorToLogoUriPipe implements PipeTransform {
     private configService: ConfigService,
     private sponsorService: SponsorService) { }
 
-  transform(value: Sponsor | null | undefined): string {
-    return !!value?.logo ?
-      `${this.configService.imagehost}/${value.logo}` :
-      this.sponsorService.getDefaultLogoUri();
+  transform(value: { logo: string } | null | undefined): string {
+    return this.sponsorService.resolveAbsoluteSponsorLogoUri(value?.logo);
   }
 }

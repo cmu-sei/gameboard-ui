@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { GameSessionService } from '../services/game-session.service';
+import { GameSessionService } from '@/services/game-session.service';
 import { ConfigService } from '../utility/config.service';
 import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
@@ -70,7 +70,7 @@ export class PlayerService {
   }
 
   public resetSession(request: { player: Player, unenrollTeam: boolean }): Observable<any> {
-    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { isManualReset: true, unenrollTeam: request.unenrollTeam }).pipe(
+    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { unenrollTeam: request.unenrollTeam }).pipe(
       map(r => {
         delete request.player.session;
         return;
@@ -110,18 +110,11 @@ export class PlayerService {
   }
 
   public getTeam(id: string): Observable<Team> {
-    return this.http.get<Team>(`${this.url}/team/${id}`).pipe(
-      map(t => {
-        t.sponsorList = t.sponsorList.map(s => this.transformSponsorUrl(s));
-        return t;
-      })
-    );
+    return this.http.get<Team>(`${this.url}/team/${id}`);
   }
 
   public getTeams(id: string): Observable<TeamSummary[]> {
-    return this.http.get<TeamSummary[]>(`${this.url}/teams/${id}`).pipe(
-      map(result => result.map(t => this.transformSponsor(t)))
-    );
+    return this.http.get<TeamSummary[]>(`${this.url}/teams/${id}`);
   }
 
   public getTeamChallenges = (id: string): Observable<TeamChallenge[]> =>
@@ -148,9 +141,6 @@ export class PlayerService {
   }
 
   public transform(p: Player, disallowedName: string | null = null): Player {
-    p.sponsorLogo = this.transformSponsorUrl(p.sponsor);
-    p.sponsorList = p.sponsorList.map(s => this.transformSponsorUrl(s));
-
     // If the user has no name status but they changed their name, it's pending approval
     if (!p.nameStatus && p.approvedName !== p.name) {
       p.nameStatus = 'pending';
@@ -170,21 +160,7 @@ export class PlayerService {
   }
 
   private transformStanding(p: Standing): Standing {
-    p.sponsorLogo = p.sponsor
-      ? `${this.config.imagehost}/${p.sponsor}`
-      : `${this.config.basehref}assets/sponsor.svg`;
-
-    p.sponsorTooltip = p.sponsorList.map(s => s.split('.').reverse().pop()?.toUpperCase()).join(' | ');
-    p.sponsorList.forEach((s, i, a) => a[i] = `${this.config.imagehost}/${s}`);
     p.session = new TimeWindow(p.sessionBegin, p.sessionEnd);
     return p;
   }
-
-  private transformSponsor<T extends { sponsorLogo: string, sponsor: string }>(p: T): T {
-    p.sponsorLogo = this.transformSponsorUrl(p.sponsor);
-    return p;
-  }
-
-  private transformSponsorUrl = (sponsor: string): string =>
-    sponsor ? `${this.config.imagehost}/${sponsor}` : `${this.config.basehref}assets/sponsor.svg`;
 }

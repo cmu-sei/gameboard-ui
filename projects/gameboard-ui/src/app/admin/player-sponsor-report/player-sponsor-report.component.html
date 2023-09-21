@@ -63,7 +63,7 @@
         <div class="col-6 fw-bold font-weight-bold">Player Count</div>
       </div>
       <div class="row border-top p-3" *ngFor="let s of g.stats">
-        <div class="col-6"><img width="40" height="40" src="{{s.logo | sponsorLogoToLogoUri }}" /><span
+        <div class="col-6"><img width="40" height="40" src="{{s.logo | sponsorLogoFileNamesToUris }}" /><span
             class="pl-3">{{s.name}}</span></div>
         <div class="col-6">{{s.count}}</div>
       </div>
@@ -78,7 +78,7 @@
     <div class="col-6 fw-bold font-weight-bold">User Count</div>
   </div>
   <div class="row border-top p-3" *ngFor="let s of sponsorStats">
-    <div class="col-6"><img width="40" height="40" src="{{s.logo | sponsorLogoToLogoUri}}" /><span
+    <div class="col-6"><img width="40" height="40" src="{{s.logo | sponsorLogoFileNamesToUris}}" /><span
         class="pl-3">{{s.name}}</span>
     </div>
     <div class="col-6">{{s.count}}</div>

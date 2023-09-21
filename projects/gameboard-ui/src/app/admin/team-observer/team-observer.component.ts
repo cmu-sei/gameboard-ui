@@ -16,7 +16,7 @@ import { ConfigService } from '../../utility/config.service';
   templateUrl: './team-observer.component.html',
   styleUrls: ['./team-observer.component.scss']
 })
-export class TeamObserverComponent implements OnInit, OnDestroy {
+export class TeamObserverComponent implements OnDestroy {
   refresh$ = new BehaviorSubject<boolean>(true);
   game?: Game; // game info like team or individual
   table: Map<string, ObserveTeam> = new Map<string, ObserveTeam>(); // table of teams to display
@@ -46,6 +46,7 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
   faSortAlphaDown = faSortAlphaDown;
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
+
   constructor(
     route: ActivatedRoute,
     private api: BoardService,
@@ -99,9 +100,6 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
       if (updatedTeam.rank > this.maxRank)
         this.maxRank = updatedTeam.rank;
     }
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

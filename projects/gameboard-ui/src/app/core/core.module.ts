@@ -57,6 +57,7 @@ import { CumulativeTimeClockComponent } from './components/cumulative-time-clock
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { RouterModule } from '@angular/router';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
+
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
@@ -64,8 +65,11 @@ import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { MinPipe } from './pipes/min.pipe';
 import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
+import { SimpleEntitiesToTooltipPipe } from './pipes/simple-entities-to-tooltip.pipe';
 import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
 import { SponsorLogoToLogoUriPipe } from './pipes/sponsor-logo-to-logo-uri.pipe';
+import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
+import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ApiUrlPipe,
@@ -102,10 +106,12 @@ const PUBLIC_DECLARATIONS = [
   SelectPagerComponent,
   ShareButtonComponent,
   ShortDatePipe,
+  SimpleEntitiesToTooltipPipe,
   SortPipe,
   SpinnerComponent,
   SponsorToLogoUriPipe,
-  SponsorLogoToLogoUriPipe,
+  SponsorsToLogoUrisPipe,
+  SponsorLogoFileNamesToUrisPipe,
   TextToColorPipe,
   ToggleClassPipe,
   ToTemplateContextPipe,

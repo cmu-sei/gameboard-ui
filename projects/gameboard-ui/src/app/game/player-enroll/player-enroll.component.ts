@@ -3,8 +3,8 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Observable, of, Subject, Subscription, timer } from 'rxjs';
-import { finalize, map, tap, delay, first } from 'rxjs/operators';
+import { firstValueFrom, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { map, tap, delay, first } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -122,19 +122,20 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       });
   }
 
-  redeem(p: Player): void {
+  async redeem(p: Player): Promise<void> {
     const model = {
       playerId: p.id,
       code: this.token.split('/').pop()
     } as PlayerEnlistment;
 
-    const sub: Subscription = this.api.enlist(model).pipe(
-      tap(p => this.token = ''),
-      finalize(() => sub.unsubscribe())
-    ).subscribe(
-      p => this.enrolled(p),
-      err => this.errors.push(err)
-    );
+    try {
+      const enlistedPlayer = await firstValueFrom(this.api.enlist(model));
+      this.token = "";
+      this.enrolled(enlistedPlayer);
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   update(p: Player): void {

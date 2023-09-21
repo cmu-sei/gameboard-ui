@@ -17,7 +17,7 @@
     <tbody>
       <tr *ngFor="let c of list">
         <td>{{c.approvedName}}</td>
-        <td><img [src]="c.sponsorLogo" width="48px"></td>
+        <td><img [src]="c.sponsor | sponsorToLogoUri" width="48px"></td>
         <td>{{c.gameName}}</td>
         <td>{{c.rank}}</td>
         <td>{{c.score}}</td>

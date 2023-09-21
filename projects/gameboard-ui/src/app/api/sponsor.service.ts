@@ -13,8 +13,8 @@ export class SponsorService {
   url = '';
 
   constructor(
-    private http: HttpClient,
-    private config: ConfigService
+    private config: ConfigService,
+    private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
   }
@@ -56,7 +56,9 @@ export class SponsorService {
     return this.http.delete<any>(`${this.url}/sponsor/${id}`);
   }
 
-  public getDefaultLogoUri(): string {
-    return `${this.config.basehref}assets/sponsor.svg`;
+  public resolveAbsoluteSponsorLogoUri(logoFileName: string | undefined | null) {
+    return !!logoFileName ?
+      `${this.config.imagehost}/${logoFileName}` :
+      `${this.config.basehref}assets/sponsor.svg`;
   }
 }

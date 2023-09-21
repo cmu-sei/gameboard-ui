@@ -26,8 +26,8 @@
                 </div>
 
                 <div class="player-info d-flex mt-4 justify-content-center align-items-center">
-                    <app-player-avatar [avatarUri]=" ctx.player.sponsorLogo" [session]="ctx.player.session"
-                        [size]="'large'"></app-player-avatar>
+                    <app-player-avatar [avatarUri]=" ctx.player.sponsor | sponsorToLogoUri"
+                        [session]="ctx.player.session" [size]="'large'"></app-player-avatar>
                     <div
                         class="ml-4 mt-2 player-team-info d-flex flex-column justify-content-center align-items-center">
                         <h2>{{ctx.player.approvedName}}</h2>
