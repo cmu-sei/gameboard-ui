@@ -41,11 +41,13 @@
     <ng-container *ngIf="!tableView">
       <div class="dropzone col-3 card bg-transparent">
         <app-dropzone class="h-100 my-3" (dropped)="dropped($event)">
-          <pre class="overflow-hidden">Drag in a yaml game array or</pre>
-          <button class="btn btn-secondary btn-sm" (click)="create()">
-            <fa-icon [icon]="faPlus"></fa-icon>
-            <span>New Game</span>
-          </button>
+          <div class="dropzone-target">
+            <pre class="overflow-hidden">Drag in a yaml game array or</pre>
+            <button class="btn btn-secondary btn-sm" (click)="create()">
+              <fa-icon [icon]="faPlus"></fa-icon>
+              <span>New Game</span>
+            </button>
+          </div>
         </app-dropzone>
       </div>
 

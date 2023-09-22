@@ -1,8 +1,25 @@
 @import "../../../../scss/variables";
 
-img {
-    border: dashed 1px $foreground;
-    border-radius: 50%;
+img, .dropzone-target {
     height: 96px;
     width: 96px;
+}
+
+.dropzone-target {
+    border: dashed 1px $foreground;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 50%;
+
+    &.is-dropping {
+        border-color: $success;
+    }
+}
+
+.add-button {
+    font-size: 4rem;
+    margin-bottom: 8px;
 }

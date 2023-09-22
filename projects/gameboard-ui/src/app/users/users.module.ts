@@ -10,9 +10,9 @@ import { AuthGuard } from '@/utility/auth.guard';
 import { practiceModeEnabledGuard } from '@/prac/practice-mode-enabled.guard';
 import { CertificatePublishControlsComponent } from './components/certificate-publish-controls/certificate-publish-controls.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
-import { SponsorSelectComponent } from '@/standalone/sponsor-select/sponsor-select.component';
 import { ProfileHistoryComponent } from './components/profile-history/profile-history.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
+import { SponsorsModule } from '@/sponsors/sponsors.module';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -28,6 +28,7 @@ const DECLARED_COMPONENTS = [
   imports: [
     CommonModule,
     CoreModule,
+    SponsorsModule,
     RouterModule.forChild([
       { path: ":userId/certificates/:playerMode/:awardedForEntityId", component: CertificatePrinterComponent },
       {
@@ -48,7 +49,6 @@ const DECLARED_COMPONENTS = [
         ]
       },
     ]),
-    SponsorSelectComponent
   ]
 })
 export class UsersModule { }

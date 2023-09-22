@@ -1,8 +1,12 @@
 @import '../../../scss/variables';
 
-.wrapper {
-  // position: relative;
+.dropzone-target {
+  border: .25rem dashed lightgray;
+  border-radius: .25rem;
+  height: 346px;
+  padding: .25rem;
 }
+
 .overlay {
   position: absolute;
   top: 0rem;
@@ -12,10 +16,6 @@
   border-radius: .25rem;
   background-color: rgba(black, .8);
   z-index: 10;
-}
-.dropzone {
-  border-radius: 0;
-  border: 0;
 }
 
 .table-wrapper {

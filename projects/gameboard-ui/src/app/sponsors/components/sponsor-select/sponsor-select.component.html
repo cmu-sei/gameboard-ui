@@ -1,0 +1,30 @@
+<div class="sponsor-select-component">
+    <p>
+        To play challenges on {{ appName }} you'll need to select your sponsoring organization. Their logo will
+        appear next to your name on scoreboards.
+    </p>
+    <p>
+        Some sponsors house other sponsors within them (e.g. the Department of Defense contains the Army).
+        If you're sponsored by one of these entities, you're free to name either the Department of the Defense
+        or your specific branch as your sponsor.
+    </p>
+    <p>
+        <em>
+            <strong>NOTE:</strong>
+            If your sponsor isn't represented here, please
+            <a href="/support/create" target="_blank">file a support ticket</a>.
+        </em>
+    </p>
+</div>
+
+<div *ngIf="isAuthenticated$" class="sponsors-container mt-5">
+    <ng-container *ngIf="(sponsors$ | async) as sponsors">
+        <app-sponsor-with-children-picker class="my-4" *ngFor="let parentSponsor of sponsors.parentSponsors"
+            [parentSponsor]="parentSponsor"
+            [childSponsors]="parentSponsor.childSponsors"></app-sponsor-with-children-picker>
+
+        <!-- an extra for sponsors with no parent-->
+        <app-sponsor-with-children-picker [childSponsors]="sponsors.nonParentSponsors"
+            [isParentSelectable]="false"></app-sponsor-with-children-picker>
+    </ng-container>
+</div>

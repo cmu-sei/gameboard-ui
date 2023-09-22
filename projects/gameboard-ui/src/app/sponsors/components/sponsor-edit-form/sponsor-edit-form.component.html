@@ -1,21 +1,37 @@
 <div class="form-flex-container d-flex flex-wrap align-items-center">
-    <img *ngIf="previewSrc" class="d-block mr-2" [src]="previewSrc">
+    <div class="avatar-container mr-2">
+
+        <app-dropzone (dropped)="handleDrop($event)" [acceptMimeTypes]="allowMimeTypes">
+            <div class="dropzone-target">
+                <img *ngIf="previewSrc" class="d-block mr-2" [src]="previewSrc">
+                <div *ngIf="!previewSrc" class="add-button">+</div>
+            </div>
+        </app-dropzone>
+    </div>
     <div class="form-group m-0 p-0 flex-grow-1">
         <input type="text" class="form-control" id="name" placeholder="Sponsor name" required maxlength="200"
             [(ngModel)]="newSponsorRequest.name">
     </div>
-    <div class="save-button-container ml-2">
+
+    <div class="form-group px-0 mx-2 mt-2">
+        <select name="parentSponsorId" class="form-control" [(ngModel)]=" newSponsorRequest.parentSponsorId">
+            <option [ngValue]="undefined">[no parent sponsor]</option>
+            <option *ngFor="let eligibleParent of eligibleParentSponsors" [value]="eligibleParent.id">
+                {{eligibleParent.name}}
+            </option>
+        </select>
+    </div>
+
+    <div class="save-button-container">
         <button type="submit" class="btn btn-info" (click)="handleSave(newSponsorRequest)"
             [disabled]="!newSponsorRequest.name">Save</button>
     </div>
 </div>
-<div class="form-group m-0 p-0">
-    <app-dropzone (dropped)="handleDrop($event)" acceptMimeTypes="">
-        <span> or drag a logo for the sponsor here.</span>
 
-        <p>
-            You can use any of the following file types for sponsor logos:
-            <em>.png, .jpeg, .jpg, .gif, .webp,.svg</em>
-        </p>
-    </app-dropzone>
-</div>
+
+<!-- <span> or drag a logo for the sponsor here.</span>
+
+<p>
+    You can use any of the following file types for sponsor logos:
+    <em>.png, .jpeg, .jpg, .gif, .webp,.svg</em>
+</p> -->

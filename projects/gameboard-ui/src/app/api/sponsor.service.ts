@@ -5,14 +5,20 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { ChangedSponsor, NewSponsor, Sponsor } from './sponsor-models';
+import { ChangedSponsor, GetSponsorsByParentResponse, NewSponsor, Sponsor, SponsorWithParent } from './sponsor-models';
 import { MimeTypes } from '../../tools';
+import { ApiUrlService } from '@/services/api-url.service';
+
+export interface SponsorSearch {
+  hasParent?: boolean;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SponsorService {
   url = '';
 
   constructor(
+    private apiUrl: ApiUrlService,
     private config: ConfigService,
     private http: HttpClient
   ) {
@@ -29,13 +35,20 @@ export class SponsorService {
     ];
   }
 
-  public list(search?: any): Observable<Sponsor[]> {
-    return this.http.get<Sponsor[]>(this.url + '/sponsors', { params: search });
+  public list(search?: SponsorSearch): Observable<SponsorWithParent[]> {
+    return this.http.get<SponsorWithParent[]>(this.url + '/sponsors', { params: { ...(search || {}) } });
+  }
+
+  public listByParent(): Observable<GetSponsorsByParentResponse> {
+    return this.http.get<GetSponsorsByParentResponse>(this.apiUrl.build("sponsors/by-parent"));
   }
 
   public create(model: NewSponsor): Observable<Sponsor> {
     const formData = new FormData();
     formData.append("name", model.name);
+
+    if (model.parentSponsorId)
+      formData.append("parentSponsorId", model.parentSponsorId);
 
     if (model.logoFile) {
       if (this.allowedMimeTypes.indexOf(model.logoFile.type) < 0) {

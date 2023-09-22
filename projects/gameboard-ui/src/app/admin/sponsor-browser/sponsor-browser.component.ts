@@ -1,11 +1,11 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
-import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, Observable, Subject } from 'rxjs';
 import { debounceTime, filter, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { ChangedSponsor, Sponsor } from '../../api/sponsor-models';
+import { ChangedSponsor, Sponsor, SponsorWithParent } from '../../api/sponsor-models';
 import { SponsorService } from '../../api/sponsor.service';
 import { ToastService } from '@/utility/services/toast.service';
 
@@ -14,55 +14,42 @@ import { ToastService } from '@/utility/services/toast.service';
   templateUrl: './sponsor-browser.component.html',
   styleUrls: ['./sponsor-browser.component.scss']
 })
-export class SponsorBrowserComponent {
-  refresh$ = new BehaviorSubject<any>(true);
-  source$: Observable<Sponsor[]>;
-  source!: Sponsor[];
-  updating$ = new Subject<ChangedSponsor>();
-  updated$: Observable<Sponsor>;
-  deleting$ = new Subject<Sponsor>();
-  deleted$: Observable<any>;
-
+export class SponsorBrowserComponent implements OnInit {
   protected errors: any[] = [];
   protected fa = fa;
+  protected isLoading = false;
+  protected sponsors: SponsorWithParent[] = [];
 
   constructor(
-    api: SponsorService,
-    private toastsService: ToastService) {
-    this.source$ = this.refresh$.pipe(
-      debounceTime(500),
-      switchMap(() => api.list({})),
-      tap(r => this.source = r)
-    );
+    private api: SponsorService,
+    private toastsService: ToastService) { }
 
-    this.updated$ = this.updating$.pipe(
-      mergeMap(m => api.update(m))
-    );
-
-    this.deleted$ = this.deleting$.pipe(
-      filter(m => !!m.id),
-      switchMap(m => api.delete(m.id)),
-      tap(r => this.refresh$.next(true))
-    );
+  async ngOnInit(): Promise<void> {
+    await this.reload();
   }
 
-  update(s: ChangedSponsor): void {
-    this.updating$.next(s);
+  async update(s: ChangedSponsor): Promise<void> {
+    this.isLoading = true;
+    await firstValueFrom(this.api.update(s));
+    await this.reload();
+    this.isLoading = false;
   }
 
-  delete(s: Sponsor): void {
-    this.deleting$.next(s);
+  async delete(s: Sponsor): Promise<void> {
+    this.isLoading = true;
+    await firstValueFrom(this.api.delete(s.id));
+    await this.reload();
+    this.isLoading = false;
   }
 
-  remove(s: Sponsor): void {
-    const target = this.source.find(i => i.id === s.id);
-    if (!target) { return; }
-    const index = this.source.indexOf(target);
-    this.source.splice(index, 1);
+  async reload(): Promise<void> {
+    this.isLoading = true;
+    this.sponsors = await firstValueFrom(this.api.list());
+    this.isLoading = false;
   }
 
-  protected handleSponsorSaved(sponsor: Sponsor) {
+  protected async handleSponsorSaved(sponsor: Sponsor) {
     this.toastsService.showMessage(`Saved sponsor "${sponsor.name}".`);
-    this.refresh$.next(true);
+    await this.reload();
   }
 }

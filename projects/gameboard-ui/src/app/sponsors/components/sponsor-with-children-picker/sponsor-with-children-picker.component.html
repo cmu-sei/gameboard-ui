@@ -1,0 +1,19 @@
+<ng-container *ngIf="localUser$ | async as localUser;">
+    <div *ngIf="parentSponsor; else noParentHeader" class="parent-sponsor-button parent-header"
+        [class.cursor-pointer]="isParentSelectable" [class.active]="parentSponsor.id === localUser.sponsor.id"
+        (click)="isParentSelectable && updateUserSponsor(localUser, parentSponsor)" role="button">
+        <h2 class="parent-header">{{ parentSponsor.name }}</h2>
+        <img [src]="parentSponsor | sponsorToLogoUri" [alt]="parentSponsor.name">
+    </div>
+    <div *ngFor="let s of childSponsors" class="card" [class.active]="localUser.sponsor.id ===s.id"
+        (click)="updateUserSponsor(localUser, s)">
+        <div class="card-body p-1">
+            <div class="card-title">{{s.name || s.id}}</div>
+        </div>
+        <img class="card-img-bottom" [src]="s | sponsorToLogoUri" [alt]="s.id">
+    </div>
+</ng-container>
+
+<ng-template #noParentHeader>
+    <h2 class="parent-header no-parent">Other Sponsors</h2>
+</ng-template>
