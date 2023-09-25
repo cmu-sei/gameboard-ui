@@ -39,14 +39,17 @@
 
     <!-- Card view mode -->
     <ng-container *ngIf="!tableView">
-      <div class="dropzone col-3 card bg-transparent">
-        <app-dropzone class="h-100 my-3" (dropped)="dropped($event)">
-          <div class="dropzone-target">
-            <pre class="overflow-hidden">Drag in a yaml game array or</pre>
-            <button class="btn btn-secondary btn-sm" (click)="create()">
-              <fa-icon [icon]="faPlus"></fa-icon>
-              <span>New Game</span>
-            </button>
+      <div class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
+        <button class=" btn btn-info flex-grow-1 w-100" (click)="create()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          <span>New Game</span>
+        </button>
+
+        <p class="mt-2">OR</p>
+
+        <app-dropzone class="d-flex flex-grow-1 w-100" (dropped)="dropped($event)">
+          <div class="dropzone-target h-100">
+            <pre class="overflow-hidden">Drag in a yaml game array</pre>
           </div>
         </app-dropzone>
       </div>

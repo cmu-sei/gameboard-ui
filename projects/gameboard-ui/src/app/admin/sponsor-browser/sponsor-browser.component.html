@@ -1,28 +1,31 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<h4>Sponsors</h4>
-
 <app-error-div></app-error-div>
 
 <ng-container *ngIf="!isLoading; else loading">
   <div class="new-sponsor-container my-4">
-    <h5>Create a New Sponsor</h5>
+    <h4>Create a New Sponsor</h4>
     <app-sponsor-edit-form (sponsorSaved)="handleSponsorSaved($event)"></app-sponsor-edit-form>
   </div>
 
-  <ng-container *ngIf="sponsors.length">
+  <ng-container *ngIf="parentSponsors.length || nonParentSponsors.length">
     <hr class="mb-4" />
 
-    <h5>Existing Sponsors</h5>
-    <div *ngFor="let s of sponsors" class="d-flex flex-wrap align-items-center my-4">
-      <img [src]="s | sponsorToLogoUri" class="img-fluid d-block sponsor-avatar">
-      <input type="text" class="d-block form-control flex-grow-1 mx-2" placeholder="title" [(ngModel)]="s.name"
-        (blur)="update({ id: s.id,  name: s.name })">
-      <app-confirm-button btnClass="btn btn-danger d-block" (confirm)="delete(s)">
-        <fa-icon [icon]="fa.trash"></fa-icon>
-        <span>Delete</span>
-      </app-confirm-button>
+    <h4>Existing Sponsors</h4>
+    <div *ngFor="let s of parentSponsors" class="d-flex flex-wrap align-items-center my-4 root-sponsor-container">
+      <app-sponsor-admin-entry class="width-100 d-block" [sponsor]="s" (requestDelete)="delete(s)"
+        (requestRefresh)="reload()"></app-sponsor-admin-entry>
+
+      <div class="child-sponsors-container width-100 pl-5">
+        <app-sponsor-admin-entry *ngFor="let childSponsor of s.childSponsors" [sponsor]="childSponsor"
+          (requestDelete)="delete(childSponsor)" (requestRefresh)="reload()"></app-sponsor-admin-entry>
+      </div>
+    </div>
+
+    <div *ngFor="let nonParentSponsor of nonParentSponsors" class="root-sponsor-container">
+      <app-sponsor-admin-entry class="width-100 d-block" [sponsor]="nonParentSponsor"
+        (requestDelete)="delete(nonParentSponsor)" (requestRefresh)="reload()"></app-sponsor-admin-entry>
     </div>
   </ng-container>
 </ng-container>

@@ -1,9 +1,18 @@
 @import '../../../scss/variables';
 
+.new-game-controls {
+  height: 340px;
+  padding: .25rem;
+}
+
+::ng-deep app-dropzone .dropzone {
+  flex-grow: 1 !important;
+}
+
 .dropzone-target {
   border: .25rem dashed lightgray;
   border-radius: .25rem;
-  height: 346px;
+  height: 100%;
   padding: .25rem;
 }
 

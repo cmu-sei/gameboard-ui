@@ -15,6 +15,10 @@
 .active {
     background-color: lightgray !important;
     color: black;
+
+    h2 {
+        color: black;
+    }
 }
 
 .parent-header {
@@ -32,17 +36,15 @@
     color: $foreground;
     position: relative;
     padding: 0.5rem 0.5rem 0.5rem 100px;
-    transition: all 0.25s linear;
     margin: 24px 0;
 
     img {
-
         aspect-ratio: 1/1;
         border-radius: 50%;
         height: 96px;
         width: 96px;
         position: absolute;
         left: -16px;
-        top: -20px;
+        top: -16px;
     }
 }

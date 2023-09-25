@@ -36,6 +36,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   protected canStandardEnroll = false;
   protected disallowedName: string | null = null;
   protected disallowedReason: string | null = null;
+  protected hasSelectedSponsor = false;
   protected managerRole = PlayerRole.manager;
   protected isEnrolled$: Observable<boolean>;
   protected isManager$ = new Subject<boolean>();
@@ -87,6 +88,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
             !ctx.player.session ||
             ctx.player.session?.isBefore
           );
+
+        this.hasSelectedSponsor = !!ctx.user.sponsor?.id && !ctx.user.hasDefaultSponsor;
       })
     );
 

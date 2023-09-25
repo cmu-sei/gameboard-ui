@@ -44,25 +44,26 @@ export class SponsorService {
   }
 
   public create(model: NewSponsor): Observable<Sponsor> {
-    const formData = new FormData();
-    formData.append("name", model.name);
-
-    if (model.parentSponsorId)
-      formData.append("parentSponsorId", model.parentSponsorId);
-
-    if (model.logoFile) {
-      if (this.allowedMimeTypes.indexOf(model.logoFile.type) < 0) {
-        throw new Error(`File type ${model.logoFile.type} isn't permitted for sponsor logos.`);
-      }
-
-      formData.append("logoFile", model.logoFile);
-    }
-
-    return this.http.post<Sponsor>(`${this.url}/sponsor`, formData);
+    return this.http.post<Sponsor>(this.apiUrl.build("sponsor"), model);
   }
 
-  public update(model: ChangedSponsor): Observable<any> {
-    return this.http.put<any>(`${this.url}/sponsor`, model);
+  public setAvatar(sponsorId: string, avatarFile: File) {
+    if (!avatarFile) {
+      throw new Error(`Can't update sponsor ${sponsorId}'s avatar with falsey avatarFile.`);
+    }
+
+    if (this.allowedMimeTypes.indexOf(avatarFile.type) < 0) {
+      throw new Error(`File type ${avatarFile.type} isn't permitted for sponsor logos.`);
+    }
+
+    const formData = new FormData();
+    formData.append("avatarFile", avatarFile);
+
+    return this.http.put<void>(this.apiUrl.build(`sponsor/${sponsorId}/avatar`), formData);
+  }
+
+  public update(model: ChangedSponsor): Observable<Sponsor> {
+    return this.http.put<Sponsor>(`${this.url}/sponsor`, model);
   }
 
   public delete(id: string): Observable<any> {

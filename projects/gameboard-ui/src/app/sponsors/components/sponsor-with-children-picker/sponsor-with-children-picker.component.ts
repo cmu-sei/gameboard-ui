@@ -13,7 +13,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 export class SponsorWithChildrenPickerComponent implements OnInit {
   @Input() parentSponsor?: Sponsor;
   @Input() childSponsors?: Sponsor[];
-  @Input() isParentSelectable = true;
+  @Input() hideHeader = false;
 
   protected localUser$: Observable<ApiUser | null>;
 

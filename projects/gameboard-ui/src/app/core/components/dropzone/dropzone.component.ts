@@ -13,6 +13,7 @@ export class DropzoneComponent {
   @Input() btnClass = 'btn btn-outline-secondary btn-sm';
   @Input() allowMultiple = false;
   @Input() acceptMimeTypes: string[] = [];
+  @Input() clickToLaunchFilePicker = true;
   @Output() dropped = new EventEmitter<File[]>();
 
   protected isDropping = false;

@@ -5,6 +5,7 @@ export interface Sponsor {
     id: string;
     name: string;
     logo: string;
+    parentSponsorId?: string;
 }
 
 export interface SponsorWithParent extends Sponsor {
@@ -19,6 +20,13 @@ export interface ChangedSponsor {
     id: string;
     name?: string;
     logo?: string;
+    parentSponsorId?: string;
+}
+
+export interface UpsertSponsor {
+    id?: string;
+    name: string;
+    logoFile?: File;
     parentSponsorId?: string;
 }
 

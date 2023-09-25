@@ -1,23 +1,17 @@
 @import "../../../scss/variables";
 
+h4 {
+  margin-bottom: 1.5rem;
+}
+
 .panel {
   margin-bottom: .5rem;
 }
 
-img {
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  border: dashed 1px $foreground;
-  object-fit: cover;
-  width: 96px;
-  height: 96px;
-}
-
-input {
-  width: 300px;
-  display: inline;
-}
-
 hr {
   border: solid 1px $foreground;
+}
+
+.root-sponsor-container {
+  border-bottom: dashed 1px $foreground;
 }

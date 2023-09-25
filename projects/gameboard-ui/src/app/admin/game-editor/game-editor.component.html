@@ -116,12 +116,16 @@
             Select an image for the game card shown in the public-facing portion of the app. For best results, use an
             image with an aspect ratio of <strong>1:1.44</strong> (e.g. 750x1080).
           </p>
-          <app-dropzone inputId="logo-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event, 'card')">
-            <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
+          <app-dropzone inputId="logo-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event, 'card')"
+            [clickToLaunchFilePicker]="false">
+            <button class="btn btn-sm btn-warning mx-2" (click)="clearImage()">
               <fa-icon [icon]="faTrash"></fa-icon>
               <span>Reset</span>
             </button>
-            <app-game-card [game]="game"></app-game-card>
+
+            <div class="dropzone-target">
+              <app-game-card [game]="game"></app-game-card>
+            </div>
           </app-dropzone>
         </div>
 

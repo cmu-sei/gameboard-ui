@@ -1,0 +1,15 @@
+<div class="sponsor-edit-modal-wrapper" *ngIf="context">
+    <div class="modal-header">
+        <h2>Edit Sponsor "{{ context.editingSponsor.name }}"</h2>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="handleModalClose()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body container">
+        <app-sponsor-edit-form [existingSponsor]="context.editingSponsor"
+            (sponsorSaved)="handleSave()"></app-sponsor-edit-form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="handleModalClose()">Cancel</button>
+    </div>
+</div>

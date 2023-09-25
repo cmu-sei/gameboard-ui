@@ -25,6 +25,6 @@
 
         <!-- an extra for sponsors with no parent-->
         <app-sponsor-with-children-picker [childSponsors]="sponsors.nonParentSponsors"
-            [isParentSelectable]="false"></app-sponsor-with-children-picker>
+            [hideHeader]="!sponsors.parentSponsors.length"></app-sponsor-with-children-picker>
     </ng-container>
 </div>

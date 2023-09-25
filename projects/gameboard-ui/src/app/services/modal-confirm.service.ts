@@ -41,13 +41,6 @@ export class ModalConfirmService implements OnDestroy {
     if (this.bsModalRef)
       this.hide();
 
-    const things = {
-      initialState: { context: { ...config.context } } as unknown as Partial<TComponent>,
-      class: config.modalClasses?.join(" ") || "modal-dialog-centered",
-      backdrop: config.isBackdropStatic ? "static" : false,
-      scrollable: true
-    };
-
     return this.bsModalService.show(config.content, {
       initialState: { context: { ...config.context } } as unknown as Partial<TComponent>,
       class: config.modalClasses?.join(" ") || "modal-dialog-centered",
@@ -55,14 +48,6 @@ export class ModalConfirmService implements OnDestroy {
       ignoreBackdropClick: config.ignoreBackdropClick || false,
       scrollable: true
     } as ModalOptions<TComponent>);
-  }
-
-  private onHidden(onCancel?: Function, suppressOnCancel = false): void {
-    if (!suppressOnCancel && !!onCancel) {
-      onCancel();
-    }
-
-    this.cleanupModalRef();
   }
 
   private cleanupModalRef(): void {

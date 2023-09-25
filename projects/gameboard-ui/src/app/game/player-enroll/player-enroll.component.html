@@ -16,17 +16,17 @@
 
       <!-- not yet enrolled -->
       <ng-container *ngIf="!(isEnrolled$ | async)">
-        <div *ngIf="!ctx.user.name || !ctx.user.sponsor">
+        <div *ngIf="!ctx.user.name || !hasSelectedSponsor">
           Ready to play? Before you do, you'll need to visit your
           <a [routerLink]="['/user/profile']">profile</a> to...
 
           <ul class="profile-validation">
             <li *ngIf="!ctx.user.name">Make sure you've entered your name</li>
-            <li *ngIf="!ctx.user.sponsor">Select your sponsor</li>
+            <li *ngIf="!hasSelectedSponsor">Select your sponsor</li>
           </ul>
         </div>
 
-        <ng-container *ngIf="!!(ctx.user.name && ctx.user.sponsor) && (canAdminEnroll || canStandardEnroll)">
+        <ng-container *ngIf="!!ctx.user.name && hasSelectedSponsor && (canAdminEnroll || canStandardEnroll)">
           <!-- team -->
           <div *ngIf="ctx.game.allowTeam">
             <p>
@@ -48,30 +48,29 @@
             <alert type="info">By enrolling in {{ctx.game.name}}, you are accepting the following terms.</alert>
             <markdown [data]="ctx.game.registrationMarkdown"></markdown>
           </div>
-        </ng-container>
 
-        <!-- enrollment controls -->
-        <ng-container *ngIf="!ctx.player.id">
-          <div class="d-flex align-items-center justify-content-center mt-5"
-            *ngIf="ctxDelayed$ | async as delay; else loading">
-            <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
-              <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
-                (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-                <fa-icon [icon]="faEdit"></fa-icon>
-                <span>Enroll</span>
-              </app-confirm-button>
+          <!-- enrollment controls -->
+          <ng-container *ngIf="!ctx.player.id">
+            <div class="d-flex align-items-center justify-content-center mt-5"
+              *ngIf="ctxDelayed$ | async as delay; else loading">
+              <div class="text-center" *ngIf="!!(ctx.user.name && ctx.user.sponsor) && ctx.game.registration.isDuring">
+                <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
+                  (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                  <fa-icon [icon]="faEdit"></fa-icon>
+                  <span>Enroll</span>
+                </app-confirm-button>
+              </div>
+
+              <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
+                class="text-center">
+                <app-confirm-button btnClass="btn btn-warning btn-lg"
+                  (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                  <fa-icon [icon]="faEdit"></fa-icon>
+                  <span>Admin Enroll</span>
+                </app-confirm-button>
+              </div>
             </div>
-
-            <div *ngIf="ctx.user.isTester || (ctx.user.isRegistrar && !ctx.game.registration.isDuring)"
-              class="text-center">
-              <app-confirm-button btnClass="btn btn-warning btn-lg" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-                <fa-icon [icon]="faEdit"></fa-icon>
-                <span>Admin Enroll</span>
-              </app-confirm-button>
-            </div>
-
-            <app-error-div [errors]="errors"></app-error-div>
-          </div>
+          </ng-container>
         </ng-container>
       </ng-container>
 
