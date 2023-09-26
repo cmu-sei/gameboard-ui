@@ -9,9 +9,7 @@
         <app-multi-select label="Games" name="games" [options]="games$ | async" [(ngModel)]="gamesQueryModel"
             [itemTemplate]="multiSelectGame" [getSearchText]="displayGameName"
             [value]="getGameValue"></app-multi-select>
-        <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
-            [(ngModel)]="sponsorsQueryModel" [itemTemplate]="multiSelectSponsor" [getSearchText]="displaySponsorName"
-            [value]="getSponsorValue"></app-multi-select>
+        <app-parameter-sponsor name="sponsors" ngDefaultControl></app-parameter-sponsor>
         <app-parameter-date-range label="Enrollment Date" ngDefaultControl
             [(ngModel)]="enrollmentDateRangeModel"></app-parameter-date-range>
     </app-report-parameters-container>

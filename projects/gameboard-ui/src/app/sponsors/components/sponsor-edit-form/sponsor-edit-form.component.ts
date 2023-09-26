@@ -69,8 +69,6 @@ export class SponsorEditFormComponent implements OnInit, OnChanges {
       parentSponsorId: existingSponsor?.parentSponsorId || undefined
     };
 
-    console.log("upserted", this.upsertSponsorRequest);
-
     if (this.existingSponsor?.logo) {
       this.previewSrc = this.sponsorService.resolveAbsoluteSponsorLogoUri(this.existingSponsor.logo);
     }

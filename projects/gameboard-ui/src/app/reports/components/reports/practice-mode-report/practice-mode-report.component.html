@@ -10,9 +10,7 @@
             [itemTemplate]="multiSelectGame" [value]="getGameValue" [getSearchText]="getGameSearchText"
             [(ngModel)]="gamesQueryModel">
         </app-multi-select>
-        <app-multi-select label="Sponsors" name="sponsors" ngDefaultControl [options]="sponsors$ | async"
-            [(ngModel)]="sponsorsQueryModel" [itemTemplate]="multiSelectSponsor" [getSearchText]="getSponsorSearchText"
-            [value]="getSponsorValue"></app-multi-select>
+        <app-parameter-sponsor ngDefaultControl></app-parameter-sponsor>
         <app-parameter-date-range label="Practice Session Date" ngDefaultControl
             [(ngModel)]="practiceDateQueryModel"></app-parameter-date-range>
     </app-report-parameters-container>

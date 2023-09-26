@@ -1,15 +1,14 @@
-<!-- <div class="parameter-sponsor-component" *ngIf="ngModel">
+<div class="parameter-sponsor-component" *ngIf="allSponsors?.length">
     <label class="report-component-label">Sponsor</label>
     <div class="search-scroll-container d-flex flex-column">
-        <div class="search-container flex-grow-0 flex-shrink-0 mb-1"
-            *ngIf="(options?.length || 0) > showSearchBoxThreshold">
+        <div class="search-container flex-grow-0 flex-shrink-0 mb-1" *ngIf="showSearchBoxThreshold">
             <div class="input-group">
-                <input type="text" class="form-control" autocomplete="off" [placeholder]="searchPlaceholder"
-                    [(ngModel)]="ngModel.searchText">
+                <input type="text" class="form-control" autocomplete="off" placeholder="Search sponsors"
+                    [(ngModel)]="searchText">
 
-                <div class="input-group-append" *ngIf="ngModel.searchText">
-                    <button type="button" class="btn btn-info" (click)="handleClearClicked()"
-                        tooltip="Clear this search box" placement="bottom">
+                <div class="input-group-append" *ngIf="searchText">
+                    <button type="button" class="btn btn-info" (click)="searchText = ''" tooltip="Clear this search box"
+                        placement="bottom">
                         <fa-icon [icon]="fa.eraser"></fa-icon>
                     </button>
                 </div>
@@ -17,35 +16,47 @@
         </div>
 
         <div class="form-control scroll-container flex-grow-1">
-            <div *ngFor="let option of options; let i = index">
-                <ng-container *ngIf="getOptionVisibility(option)">
-                    <input class="checkbox-input" type="checkbox" [value]="option"
-                        [checked]="getOptionIsChecked(option)" [id]="'multi-select-' + uniqueId + '-' + i"
-                        (change)="handleCheckedChanged(option, $event)">
-                    <label class="checkbox-label pl-2" [for]="'multi-select-' + uniqueId + '-' + i">
-                        <ng-container *ngTemplateOutlet="itemTemplate; context:option | toTemplateContext">
-                        </ng-container>
+            <div *ngFor="let sponsor of allSponsors; let i = index">
+                <ng-container *ngIf="getOptionVisibility(sponsor)">
+                    <input class="checkbox-input" type="checkbox" [value]="sponsor"
+                        [checked]="getOptionIsChecked(sponsor)" [id]="'sponsor-select-' + sponsor.id"
+                        (change)="handleCheckedChanged(sponsor, $event)">
+                    <label class="checkbox-label pl-2" [for]="'sponsor-select-' + sponsor.id">
+                        {{ sponsor.name }}
                     </label>
                 </ng-container>
+
+                <div class="child-sponsors-container ml-4" *ngIf="sponsor.childSponsors.length">
+                    <ng-container *ngFor="let childSponsor of sponsor.childSponsors">
+                        <div *ngIf="getOptionVisibility(childSponsor)">
+                            <input class="checkbox-input" type="checkbox" [value]="childSponsor"
+                                [checked]="getOptionIsChecked(childSponsor)" [id]="'sponsor-select-' + childSponsor.id"
+                                (change)="handleCheckedChanged(childSponsor, $event)">
+                            <label class="checkbox-label pl-2" [for]="'sponsor-select-' + childSponsor.id">
+                                {{ childSponsor.name }}
+                            </label>
+                        </div>
+                    </ng-container>
+                </div>
             </div>
         </div>
     </div>
 
-    <div *ngIf="ngModel.selectedValues.length && (options?.length || 0) > showSelectionSummaryThreshold"
+    <div *ngIf="selectedSponsors.length && allSponsors.length > showSelectionSummaryThreshold"
         class="d-flex align-items-center full-width mt-1">
         <p class="flex-grow-1 m-0">
             <strong>Selected: </strong>
             {{ selectionSummary }}
             <span class="over-threshold-note link-button" (click)="handleSelectedOverDisplayThresholdClicked()"
                 *ngIf="countSelectedOverDisplayThreshold > 0">
-                and {{countSelectedOverDisplayThreshold}} other
+                and {{ countSelectedOverDisplayThreshold }} other
                 item{{ countSelectedOverDisplayThreshold != 1 ? "s": ""}}
             </span>
         </p>
 
-        <button type="button" class="btn btn-info ml-1" (click)="handleClearSelectionsClicked()">Clear</button>
+        <button type="button" class="btn btn-info ml-1" (click)="handleClearClicked()">Clear</button>
     </div>
-</div> -->
+</div>
 
 <ng-template #defaultItemTemplate let-context>
     {{ context }}

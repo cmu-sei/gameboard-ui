@@ -8,8 +8,6 @@ import { PracticeModeReportService } from '@/reports/components/reports/practice
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
-import { ActiveReportService } from '@/reports/services/active-report.service';
-import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-practice-mode-report',
@@ -58,12 +56,6 @@ export class PracticeModeReportComponent
     paramName: "series"
   });
 
-  protected sponsorsQueryModel: MultiSelectQueryParamModel<ReportSponsor> | null = new MultiSelectQueryParamModel<ReportSponsor>({
-    paramName: "sponsors",
-    options: firstValueFrom(this.reportsService.getSponsors()),
-    serializer: (value: ReportSponsor) => value.id,
-    deserializer: (value: string, options?: ReportSponsor[]) => options!.find(s => s.id === value) || null
-  });
 
   protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "tracks"
@@ -77,7 +69,6 @@ export class PracticeModeReportComponent
         this.gamesQueryModel!.searchText = undefined;
         this.seasonsQueryModel!.searchText = undefined;
         this.seriesQueryModel!.searchText = undefined;
-        this.sponsorsQueryModel!.searchText = undefined;
         this.tracksQueryModel!.searchText = undefined;
       })
     );
