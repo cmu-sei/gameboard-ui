@@ -83,12 +83,6 @@ export class UserService {
     );
   }
 
-  public canEnrollAndPlayOutsideExecutionWindow(user: ApiUser) {
-    return user && (
-      user.isAdmin || user.isTester || user.isRegistrar
-    );
-  }
-
   private mapToTree(list: string[]): TreeNode {
     const root: TreeNode = { name: '', path: `${this.config.apphost}doc`, folders: [], files: [] };
     list.forEach(f => {

@@ -170,8 +170,10 @@
         </ng-container>
 
         <!-- unenroll -->
-        <div <<<<<<< HEAD
-          *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"=======*ngIf="(!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)">
+        <div>
+          *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) &&
+          (!ctx.game.registration.isAfter || ctx.user.isTester)"=======*ngIf="(!ctx.player.session ||
+          ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)">
           >>>>>> next
           class="form-group text-center">
           <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
