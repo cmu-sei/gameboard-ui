@@ -36,8 +36,3 @@ export interface NewSponsor {
     parentSponsorId?: string;
 }
 
-export interface GetSponsorsByParentResponse {
-    defaultSponsor: Sponsor;
-    parentSponsors: SponsorWithChildSponsors[];
-    nonParentSponsors: Sponsor[];
-}

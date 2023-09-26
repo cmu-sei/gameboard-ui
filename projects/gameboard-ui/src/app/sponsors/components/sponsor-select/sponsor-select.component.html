@@ -18,13 +18,13 @@
 </div>
 
 <div *ngIf="isAuthenticated$" class="sponsors-container mt-5">
-    <ng-container *ngIf="(sponsors$ | async) as sponsors">
-        <app-sponsor-with-children-picker class="my-4" *ngFor="let parentSponsor of sponsors.parentSponsors"
+    <ng-container *ngIf="(ctx$ | async) as ctx">
+        <app-sponsor-with-children-picker class="my-4" *ngFor="let parentSponsor of ctx.parentSponsors"
             [parentSponsor]="parentSponsor"
             [childSponsors]="parentSponsor.childSponsors"></app-sponsor-with-children-picker>
 
         <!-- an extra for sponsors with no parent-->
-        <app-sponsor-with-children-picker [childSponsors]="sponsors.nonParentSponsors"
-            [hideHeader]="!sponsors.parentSponsors.length"></app-sponsor-with-children-picker>
+        <app-sponsor-with-children-picker [childSponsors]="ctx.nonParentSponsors"
+            [hideHeader]="!ctx.parentSponsors.length"></app-sponsor-with-children-picker>
     </ng-container>
 </div>

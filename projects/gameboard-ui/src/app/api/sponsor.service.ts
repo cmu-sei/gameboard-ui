@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { ChangedSponsor, GetSponsorsByParentResponse, NewSponsor, Sponsor, SponsorWithParent } from './sponsor-models';
+import { ChangedSponsor, NewSponsor, Sponsor, SponsorWithChildSponsors, SponsorWithParent } from './sponsor-models';
 import { MimeTypes } from '../../tools';
 import { ApiUrlService } from '@/services/api-url.service';
 
@@ -39,8 +39,8 @@ export class SponsorService {
     return this.http.get<SponsorWithParent[]>(this.url + '/sponsors', { params: { ...(search || {}) } });
   }
 
-  public listByParent(): Observable<GetSponsorsByParentResponse> {
-    return this.http.get<GetSponsorsByParentResponse>(this.apiUrl.build("sponsors/by-parent"));
+  public listWithChildren(): Observable<SponsorWithChildSponsors[]> {
+    return this.http.get<SponsorWithChildSponsors[]>(this.apiUrl.build("sponsors/with-children"));
   }
 
   public create(model: NewSponsor): Observable<Sponsor> {

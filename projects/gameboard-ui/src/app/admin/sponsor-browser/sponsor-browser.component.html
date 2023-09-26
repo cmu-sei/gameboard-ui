@@ -9,23 +9,18 @@
     <app-sponsor-edit-form (sponsorSaved)="handleSponsorSaved($event)"></app-sponsor-edit-form>
   </div>
 
-  <ng-container *ngIf="parentSponsors.length || nonParentSponsors.length">
+  <ng-container *ngIf="sponsors.length">
     <hr class="mb-4" />
 
     <h4>Existing Sponsors</h4>
-    <div *ngFor="let s of parentSponsors" class="d-flex flex-wrap align-items-center my-4 root-sponsor-container">
-      <app-sponsor-admin-entry class="width-100 d-block" [sponsor]="s" (requestDelete)="delete(s)"
-        (requestRefresh)="reload()"></app-sponsor-admin-entry>
+    <div *ngFor="let parentSponsor of sponsors" class="d-flex flex-wrap align-items-center my-4 root-sponsor-container">
+      <app-sponsor-admin-entry class="width-100 d-block" [sponsor]="parentSponsor"
+        (requestDelete)="delete(parentSponsor)" (requestRefresh)="reload()"></app-sponsor-admin-entry>
 
       <div class="child-sponsors-container width-100 pl-5">
-        <app-sponsor-admin-entry *ngFor="let childSponsor of s.childSponsors" [sponsor]="childSponsor"
+        <app-sponsor-admin-entry *ngFor="let childSponsor of parentSponsor.childSponsors" [sponsor]="childSponsor"
           (requestDelete)="delete(childSponsor)" (requestRefresh)="reload()"></app-sponsor-admin-entry>
       </div>
-    </div>
-
-    <div *ngFor="let nonParentSponsor of nonParentSponsors" class="root-sponsor-container">
-      <app-sponsor-admin-entry class="width-100 d-block" [sponsor]="nonParentSponsor"
-        (requestDelete)="delete(nonParentSponsor)" (requestRefresh)="reload()"></app-sponsor-admin-entry>
     </div>
   </ng-container>
 </ng-container>

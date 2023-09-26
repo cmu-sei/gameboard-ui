@@ -4,11 +4,9 @@
 import { Component, OnInit } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
 import { firstValueFrom } from 'rxjs';
-import { ChangedSponsor, Sponsor, SponsorWithChildSponsors, SponsorWithParent } from '../../api/sponsor-models';
+import { ChangedSponsor, Sponsor, SponsorWithChildSponsors } from '../../api/sponsor-models';
 import { SponsorService } from '../../api/sponsor.service';
 import { ToastService } from '@/utility/services/toast.service';
-import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { SponsorEditFormComponent } from '@/sponsors/components/sponsor-edit-form/sponsor-edit-form.component';
 
 @Component({
   selector: 'app-sponsor-browser',
@@ -19,8 +17,7 @@ export class SponsorBrowserComponent implements OnInit {
   protected errors: any[] = [];
   protected fa = fa;
   protected isLoading = false;
-  protected parentSponsors: SponsorWithChildSponsors[] = [];
-  protected nonParentSponsors: Sponsor[] = [];
+  protected sponsors: SponsorWithChildSponsors[] = [];
 
   constructor(
     private api: SponsorService,
@@ -46,11 +43,7 @@ export class SponsorBrowserComponent implements OnInit {
 
   async reload(): Promise<void> {
     this.isLoading = true;
-
-    const response = await firstValueFrom(this.api.listByParent());
-    this.parentSponsors = response.parentSponsors;
-    this.nonParentSponsors = response.nonParentSponsors;
-
+    this.sponsors = await firstValueFrom(this.api.listWithChildren());
     this.isLoading = false;
   }
 

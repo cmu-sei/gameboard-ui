@@ -7,10 +7,9 @@ import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
 import { NoReportRecordsComponent } from './components/no-report-records/no-report-records.component';
 import { ParameterChangeLinkComponent } from './components/parameter-change-link/parameter-change-link.component';
-import { ParameterChallengeSpecComponent } from './components/parameters/parameter-challenge-spec/parameter-challenge-spec.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
 import { ParameterGameChallengespecComponent } from './components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
-import { ParameterSeriesComponent } from './components/parameters/parameter-series/parameter-series.component';
+import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
 import { ParameterTicketLabelsComponent } from './components/parameters/parameter-ticket-labels/parameter-ticket-labels.component';
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
 import { ParameterTimespanPickerComponent } from './components/parameters/parameter-timespan-picker/parameter-timespan-picker.component';
@@ -49,11 +48,9 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
     EnrollmentReportComponent,
-    ParameterChallengeSpecComponent,
     MsToDurationPipe,
     ParameterGameChallengespecComponent,
     ParameterDateRangeComponent,
-    ParameterSeriesComponent,
     ParameterTicketLabelsComponent,
     ParameterTicketStatusComponent,
     ParameterTimespanPickerComponent,
@@ -78,6 +75,7 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
     PlayerModePerformanceSummaryComponent,
     ReportStatSummaryComponent,
     PlayerChallengeAttemptsModalComponent,
+    ParameterSponsorComponent,
   ],
   imports: [
     CommonModule,
