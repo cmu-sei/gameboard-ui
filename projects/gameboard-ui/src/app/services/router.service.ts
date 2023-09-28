@@ -21,7 +21,6 @@ export class RouterService {
     private browser: BrowserService,
     private config: ConfigService,
     private localUser: LocalUser,
-    private logService: LogService,
     public route: ActivatedRoute,
     public router: Router,
     private objectService: ObjectService) { }

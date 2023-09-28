@@ -32,7 +32,6 @@ import { PlayerNamesComponent } from './player-names/player-names.component';
 import { PlayerRegistrarComponent } from './player-registrar/player-registrar.component';
 import { PlayerSessionComponent } from './player-session/player-session.component';
 import { PlayerSponsorReportComponent } from './player-sponsor-report/player-sponsor-report.component';
-import { PracticeChallengesComponent } from './practice/practice-challenges/practice-challenges.component';
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
 import { PracticeComponent } from './practice/practice.component';
 import { PrereqsComponent } from './prereqs/prereqs.component';
@@ -45,6 +44,7 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
+import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +66,6 @@ import { SponsorsModule } from '@/sponsors/sponsors.module';
     PlayerSessionComponent,
     PlayerSponsorReportComponent,
     PracticeComponent,
-    PracticeChallengesComponent,
     PracticeSettingsComponent,
     PrereqsComponent,
     ReportPageComponent,
@@ -78,6 +77,7 @@ import { SponsorsModule } from '@/sponsors/sponsors.module';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
+    ChallengeSpecEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -91,7 +91,6 @@ import { SponsorsModule } from '@/sponsors/sponsors.module';
           {
             path: "practice", component: PracticeComponent, children: [
               { path: "", pathMatch: "full", redirectTo: "settings" },
-              { path: "challenges", component: PracticeChallengesComponent },
               { path: "settings", component: PracticeSettingsComponent },
             ]
           },

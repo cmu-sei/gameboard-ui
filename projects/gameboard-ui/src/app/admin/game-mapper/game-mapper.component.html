@@ -59,49 +59,19 @@
         <span>Sync with Source</span>
       </button>
 
-      <div *ngFor="let item of list$ | async; trackBy:trackById">
-        <div class="row align-items-center bg-secondary mb-2">
-          <div class="col-4">
-            {{item.name}}
-          </div>
-          <div class="col-1">
-            <div class="form-group form-check pb-0 pt-1">
-              <input type="checkbox" class="form-check-input" id="disabled-input-{{item.id}}" name="disabled"
-                [(ngModel)]="item.disabled" (ngModelChange)="updating$.next(item)">
-              <label for="disabled-input-{{item.id}}">Disabled</label>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group pb-0 pt-1">
-              <label for="slug-input-{{item.id}}">Support Key</label>
-              <input type="text" class="form-control" id="slug-input-{{item.id}}" name="slug" [(ngModel)]="item.tag"
-                (ngModelChange)="updating$.next(item)">
-              <small></small>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group pb-0 pt-1">
-              <label for="points-input-{{item.id}}">Points</label>
-              <input type="number" class="form-control" id="points-input-{{item.id}}" name="points"
-                [(ngModel)]="item.points" (ngModelChange)="updating$.next(item)">
-              <small></small>
-            </div>
-          </div>
-          <div class="col-3">
-            <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="deleting$.next(item)">
-              <fa-icon [icon]="faTrash"></fa-icon>
-              <span>Delete</span>
-            </app-confirm-button>
-          </div>
-        </div>
-      </div>
+      <ul class="spec-list mt-4">
+        <li *ngFor="let spec of list$ | async">
+          <app-challenge-spec-editor class="d-block mb-3" [spec]="spec"
+            [showSolutionGuide]="game.playerMode == 'practice'"></app-challenge-spec-editor>
+        </li>
+      </ul>
+
       <!-- pre reqs -->
       <app-prereqs [gameId]="game.id" [specs]="list"></app-prereqs>
     </div>
 
     <!-- search external specs -->
     <app-spec-browser [hidden]="viewing!=='search'"></app-spec-browser>
-
 
     <!-- edit spec map locations -->
     <div [hidden]="viewing!=='map'">

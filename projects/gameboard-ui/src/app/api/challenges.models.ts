@@ -2,7 +2,6 @@ import { ApiTimeWindow, LocalTimeWindow } from "@/core/models/api-time-window";
 import { PlayerMode } from "./player-models";
 import { VmState } from "./board-models";
 import { SimpleEntity } from "./models";
-import { NumberUnitLength } from "luxon";
 
 export interface ActiveChallenge {
     spec: {

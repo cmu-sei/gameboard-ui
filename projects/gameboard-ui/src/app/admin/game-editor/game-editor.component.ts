@@ -98,7 +98,7 @@ export class GameEditorComponent implements AfterViewInit {
           }
 
           if (this.needsPracticeModeEnabledRefresh) {
-            this.practiceService.gamePlayerModeChanged({ gameId: game.id, isPractice: game.isPracticeMode })
+            this.practiceService.gamePlayerModeChanged({ gameId: game.id, isPractice: game.isPracticeMode });
             this.needsPracticeModeEnabledRefresh = false;
           }
         }))
