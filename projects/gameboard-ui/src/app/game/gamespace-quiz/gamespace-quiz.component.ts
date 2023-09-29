@@ -27,10 +27,6 @@ export class GamespaceQuizComponent {
     private api: BoardService,
     private challengesService: ChallengesService) { }
 
-  ngOnInit() {
-    console.log("boardspec", this.spec);
-  }
-
   async submit(): Promise<void> {
     this.pending = true;
 

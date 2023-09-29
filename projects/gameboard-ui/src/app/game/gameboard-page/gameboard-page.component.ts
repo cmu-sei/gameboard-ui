@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +17,7 @@ import { GameboardPerformanceSummaryViewModel } from '../../core/components/game
 import { BrowserService } from '@/services/browser.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '@/api/models';
+import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -47,6 +48,8 @@ export class GameboardPageComponent implements OnDestroy {
   hubsub: Subscription;
   cid = '';
   performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
+
+  @ViewChild("startChallengeConfirmButton") protected startChallengeConfirmButton?: ConfirmButtonComponent;
 
   constructor(
     route: ActivatedRoute,
@@ -129,6 +132,8 @@ export class GameboardPageComponent implements OnDestroy {
           map(c => this.syncOne({ ...c, specId: s.id }))
         )
       ),
+      // don't persist the "confirming" state if they switch challenges (#178)
+      tap(c => this.startChallengeConfirmButton?.stopConfirming()),
       tap(s => this.selected = s)
     );
 
