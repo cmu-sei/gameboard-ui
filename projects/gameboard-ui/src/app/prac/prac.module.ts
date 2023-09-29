@@ -13,6 +13,7 @@ import { PracticeChallengeListComponent } from './components/practice-challenge-
 import { PracticeSessionComponent } from './components/practice-session/practice-session.component';
 import { PracticeChallengeStateSummaryComponent } from './components/practice-challenge-state-summary/practice-challenge-state-summary.component';
 import { PracticeChallengeSolvedModalComponent } from './components/practice-challenge-solved-modal/practice-challenge-solved-modal.component';
+import { SuggestedSearchesComponent } from './components/suggested-searches/suggested-searches.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { PracticeChallengeSolvedModalComponent } from './components/practice-cha
     PracticePageComponent,
     PracticeSessionComponent,
     PracticeChallengeSolvedModalComponent,
+    SuggestedSearchesComponent,
   ],
   imports: [
     CommonModule,

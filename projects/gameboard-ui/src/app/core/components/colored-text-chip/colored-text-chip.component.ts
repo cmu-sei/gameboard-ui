@@ -25,8 +25,10 @@ export class ColoredTextChipComponent {
 
   constructor(public faService: FontAwesomeService) { }
 
-  handleClick(text: string, id?: any) {
-    this.click.emit({ id, text });
+  handleClick(textChipEvent: ColoredTextChipEvent, event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.click.emit(textChipEvent);
   }
 
   handleSecondaryActionClick(text: string, id?: any) {

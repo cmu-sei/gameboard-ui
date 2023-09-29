@@ -15,8 +15,7 @@
       <!-- <div class="audience-item">t1-player3</div> -->
     </div>
 
-    <div *ngIf="state==='stopped'||state==='disconnected'" class="align-mm"
-      [class.hidden]="isConnected">
+    <div *ngIf="state==='stopped'||state==='disconnected'" class="align-mm" [class.hidden]="isConnected">
       <h1>{{shadowstate}}</h1>
       <button class="btn btn-lg" (click)="stateButtonClicked()">{{stateIcon}}</button>
     </div>
@@ -89,7 +88,7 @@
       </button>
     </div>
 
-      <!-- <div class="flex-h">
+    <!-- <div class="flex-h">
       <span>[Clipboard] </span>
       <button class="btn" (click)="showClipboard=!showClipboard">
         <i class="fa fa-clipboard fa-2x"></i> Show
@@ -136,6 +135,5 @@
       <textarea *ngIf="showClipboard" class="form-control" placeholder="Clipboard" rows="20"
         [(ngModel)]="cliptext"></textarea>
     </div>
-
   </div>
 </div>

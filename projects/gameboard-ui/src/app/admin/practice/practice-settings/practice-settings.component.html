@@ -1,10 +1,9 @@
 <ng-container *ngIf="ctx">
-    <div class="greeting-container mt-4">
-        <h2 class="mt-2">Practice Page Greeting</h2>
+    <div class="greeting-container settings-section mt-4">
+        <h2>Practice Page Greeting</h2>
         <p>
-            This text appears on the practice page to introduce players to playing in the Practice Area. Edit it below to
-            customize it
-            to your needs.
+            This text appears on the practice page to introduce players to playing in the Practice Area. Edit it below
+            to customize it to your needs.
         </p>
 
         <textarea class="form-control" [placeholder]="ctx.introTextPlaceholder"
@@ -12,12 +11,26 @@
             rows="5"></textarea>
     </div>
 
-    <div class="greeting-container">
-        <h2 class="mt-4">Certificate Template</h2>
+    <div class="suggested-searches-container settings-section">
+        <h2>Suggested searches</h2>
+
+        <p>
+            These search terms will appear on the homepage of the Practice Area, just below the greeting. You can use
+            these to direct players to useful or interesting subsets of the available practice challenges.
+        </p>
+
+        <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
+            [(ngModel)]="suggestedSearchesLineDelimited" rows="10">
+
+        </textarea>
+        <small><strong>NOTE:</strong> Enter one suggested search per line.</small>
+    </div>
+
+    <div class="greeting-container settings-section">
+        <h2>Certificate Template</h2>
         <p>
             Players are able to save certificates in PDF format for each practice challenge they fully complete. Use
-            this field
-            to customize the appearance of these certificates.
+            this field to customize the appearance of these certificates.
         </p>
 
         <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
@@ -28,8 +41,8 @@
         </button>
     </div>
 
-    <div class="concurrent-sessions-container">
-        <h2 class="mt-4">Session Limits</h2>
+    <div class="concurrent-sessions-container settings-section">
+        <h2>Session Limits</h2>
         <p>
             You can use the controls below to set limits on practice sessions, including how many can be active at once
             how long they are by default, and the max length that a player can play in a single practice session.

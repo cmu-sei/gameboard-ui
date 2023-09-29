@@ -13,6 +13,14 @@
             </alert>
         </ng-container>
 
+        <div class="suggested-searches-container my-4" *ngIf="suggestedSearches?.length">
+            <h2>Need a place to start?</h2>
+            Try some of these suggested searches:
+
+            <app-suggested-searches class="d-block mt-4" *ngIf="suggestedSearches?.length"
+                [searches]="suggestedSearches"></app-suggested-searches>
+        </div>
+
         <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
             <app-share-button class="d-block mr-1" size="small"
                 message="Copied a link to this search to your clipboard."
@@ -27,9 +35,10 @@
                 [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 
-        <app-pager [skip]="skip || 0" [take]="take || 0" [count]="count" (changed)="paged($event)"></app-pager>
+        <app-pager *ngIf="count > 0" [skip]="skip || 0" [take]="take || 0" [count]="count"
+            (changed)="paged($event)"></app-pager>
 
-        <table class="table">
+        <table class="table" *ngIf="count > 0; else noMatches">
             <thead>
                 <tr>
                     <th>Challenge</th>
@@ -58,7 +67,8 @@
             </tbody>
         </table>
 
-        <app-pager display="always" [skip]="skip || 0" [take]="take || 0" [count]="count" (changed)="paged($event)">
+        <app-pager *ngIf="count > 0" display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
+            (changed)="paged($event)">
         </app-pager>
     </ng-container>
 </div>
@@ -71,4 +81,10 @@
 
 <ng-template #challengeNameNoLink let-challengeName="challengeName">
     <p>{{challengeName}}</p>
+</ng-template>
+
+<ng-template #noMatches>
+    <div class="text-center mt-5">
+        No challenges meet your search criteria. Try again with a new search term.
+    </div>
 </ng-template>

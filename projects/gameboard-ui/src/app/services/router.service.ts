@@ -2,7 +2,6 @@ import { ReportKey } from '@/reports/reports-models';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { BrowserService } from './browser.service';
-import { LogService } from './log.service';
 import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
 import { ConfigService } from '@/utility/config.service';
@@ -63,6 +62,11 @@ export class RouterService {
 
   public toPracticeArea() {
     return this.router.navigateByUrl("/practice");
+  }
+
+  public toPracticeAreaWithSearch(search: string) {
+    const urlTree = this.router.createUrlTree(["practice"], { queryParams: { term: search } });
+    return this.router.navigateByUrl(urlTree);
   }
 
   public toPracticeCertificates() {
