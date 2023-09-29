@@ -76,11 +76,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
         const localUser = this.localUserService.user$.value;
         const hasPlayerSession = (!!ctx.player.id && !!ctx.player.session && !ctx.player.session.isBefore);
 
-        this.canAdminEnroll = !!localUser && !hasPlayerSession &&
-          (
-            this.ctx.game.registration.isDuring ||
-            this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser)
-          );
+        this.canAdminEnroll = !!localUser && !hasPlayerSession && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
 
         this.canStandardEnroll = !!localUser && !hasPlayerSession &&
           ctx.game.registration.isDuring && (
