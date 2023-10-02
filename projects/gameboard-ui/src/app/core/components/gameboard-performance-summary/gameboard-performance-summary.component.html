@@ -1,0 +1,49 @@
+<div class="gameboard-performance-summary-component" *ngIf="ctx; else loading">
+    <div class="text-info card-text mb-2">
+        <span
+            *ngIf="ctx.player.session && !ctx.player.session.isBefore && (ctx.player.session.isAfter || ((countdown$ | async) || 0 ) <= 0)">Game
+            Over
+        </span>
+        <span *ngIf="ctx.player.session?.isDuring">Time Remaining:
+            <span class="font-weight-bold" [class]="(countdown$ | async) || 0 | countdowncolor">
+                {{ (countdown$ | async) || 0 | countdown }}
+            </span>
+        </span>
+    </div>
+    <table class="table mt-2 text-center">
+        <tbody>
+            <tr>
+                <td *ngIf="ctx.player.scoring.rank">Rank</td>
+                <td>Score</td>
+                <td>Cumulative Time</td>
+                <td>Completes</td>
+                <td>Partials</td>
+            </tr>
+            <tr>
+                <td *ngIf="ctx.player.scoring.rank">{{ctx.player.scoring.rank}}</td>
+                <td>{{ctx.player.scoring.score}}</td>
+                <td>
+                    <app-cumulative-time-clock [session]="ctx.player.session"></app-cumulative-time-clock>
+                </td>
+                <td>{{ctx.player.scoring.correctCount}}</td>
+                <td>{{ctx.player.scoring.partialCount}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-container *ngIf="ctx.player.session?.isDuring">
+        <div *ngIf="hubState$ | async as hubstate" class="text-center mb-2">
+            <small *ngIf="!!hubstate.joined" class="text-success">
+                <fa-icon [icon]="fa.bolt"></fa-icon>
+                connected
+            </small>
+            <small *ngIf="!hubstate.joined" class="ml-2 text-danger">
+                <fa-icon [icon]="fa.exclamationTriangle"></fa-icon>
+                disconnected
+            </small>
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #loading>
+    <app-spinner></app-spinner>
+</ng-template>

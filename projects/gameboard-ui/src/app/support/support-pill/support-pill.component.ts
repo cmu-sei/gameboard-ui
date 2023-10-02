@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -8,9 +8,8 @@ import { NotificationService } from '../../services/notification.service';
 @Component({
   selector: 'app-support-pill',
   templateUrl: './support-pill.component.html',
-  styleUrls: ['./support-pill.component.scss']
 })
-export class SupportPillComponent implements OnInit, OnDestroy {
+export class SupportPillComponent implements OnDestroy {
   count = 0;
   watching = false;
   faPill = faExclamationCircle;
@@ -37,11 +36,7 @@ export class SupportPillComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit(): void {
-  }
-
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe());
   }
-
 }

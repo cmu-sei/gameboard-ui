@@ -2,16 +2,17 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { GameContext } from '@/api/game-models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { ModalConfirmComponent } from '../../core/components/modal/modal-confirm.component';
-import { ModalConfirmConfig } from '../../core/directives/modal-confirm.directive';
-import { FontAwesomeService } from '../../services/font-awesome.service';
-import { GameboardPerformanceSummaryViewModel } from '../components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { UserService } from '@/api/user.service';
+import { UserService as LocalUserService } from "@/utility/user.service";
+import { fa } from '@/services/font-awesome.service';
+import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
+import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
   selector: 'app-player-session',
@@ -28,20 +29,24 @@ export class PlayerSessionComponent implements OnDestroy {
   myCtx$!: Observable<GameContext | undefined>;
   player$ = new BehaviorSubject<Player | undefined>(undefined);
   playerObservable$ = this.player$.asObservable();
+  protected fa = fa;
 
   private ctxSub?: Subscription;
   private _isSyncStart = false;
 
   // sets up the modal if it's a team game that needs confirmation
-  private modalRef?: BsModalRef;
   protected modalConfig?: ModalConfirmConfig;
   protected isDoubleChecking = false;
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
+  protected canAdminStart = false;
+  protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
+
   constructor(
     private api: PlayerService,
-    private modalService: BsModalService,
-    protected faService: FontAwesomeService
+    private modalService: ModalConfirmService,
+    private localUserService: LocalUserService,
+    private userService: UserService,
   ) { }
 
   async ngOnInit() {
@@ -64,14 +69,10 @@ export class PlayerSessionComponent implements OnDestroy {
                 correctCount: ctx.player.correctCount,
                 partialCount: ctx.player.partialCount
               }
-            },
-            game: {
-              isPracticeMode: ctx.game.isPracticeMode,
             }
           };
         }
 
-        this.performanceSummaryViewModel$.next(vm);
         this.player$.next(ctx?.player);
       }),
       tap(ctx => {
@@ -89,6 +90,10 @@ export class PlayerSessionComponent implements OnDestroy {
             onConfirm: () => this.confirmResetTeam(ctx.player)
           };
         }
+      }),
+      tap(ctx => {
+        const localUser = this.localUserService.user$.value;
+        this.canAdminStart = !!localUser && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
       })
     ).subscribe();
   }
@@ -102,21 +107,31 @@ export class PlayerSessionComponent implements OnDestroy {
     this.onSessionStart.emit(startedPlayer);
   }
 
-  async handleReset(p: Player): Promise<void> {
-    this.isResetting = true;
-    await firstValueFrom(this.api.resetSession({ player: p, unenroll: !this._isSyncStart }));
-    delete p.session;
-    this.onSessionReset.emit();
+  handleReset(p: Player): void {
+    if (this.modalConfig) {
+      // this is a team game, do team confirmation
+      this.showConfirmTeamReset(p);
+    } else {
+      // it's an individual game, we've confirmed them to death enough
+      this.doReset(p);
+    }
   }
 
   showConfirmTeamReset(p: Player) {
-    this.modalService.show(ModalConfirmComponent, { initialState: { config: this.modalConfig } });
+    if (!this.modalConfig)
+      throw new Error("Couldn't open the reset modal: no ModalConfig present.");
+
+    this.modalService.openConfirm(this.modalConfig);
   }
 
   confirmResetTeam(p: Player): void {
-    this.modalService.hide(this.modalRef?.id);
-    this.modalRef = undefined;
-    this.handleReset(p);
+    this.modalService.hide();
+    this.doReset(p);
+  }
+
+  private async doReset(p: Player) {
+    await firstValueFrom(this.api.resetSession({ player: p, unenroll: true }));
+    this.onSessionReset.emit(p);
   }
 
   ngOnDestroy(): void {

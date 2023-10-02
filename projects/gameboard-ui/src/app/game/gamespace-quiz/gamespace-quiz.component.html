@@ -20,7 +20,7 @@
       <ng-container *ngIf="session && session.isDuring && state.isActive">
         <ng-container *ngIf="!this.pending && state.challenge.questions?.length">
           <app-confirm-button btnClass="btn btn-sm btn-secondary" (confirm)="submit()" [disabled]="!state.isActive">
-            <fa-icon [icon]="faSubmit"></fa-icon>
+            <fa-icon [icon]="fa.cloudUploadAlt"></fa-icon>
             <span>Submit</span>
           </app-confirm-button>
           <label class="pop-warning px-1 mx-2">

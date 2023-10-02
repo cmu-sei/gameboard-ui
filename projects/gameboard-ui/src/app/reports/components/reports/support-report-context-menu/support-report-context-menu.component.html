@@ -1,0 +1,25 @@
+<div class="btn-group" *ngIf="record" dropdown>
+    <button id="button-basic" dropdownToggle type="button" class="btn ctx-menu-button rounded-circle"
+        aria-controls="dropdown-basic">
+        <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <li role="menuitem">
+            <button class="dropdown-item btn" [routerLink]="['/support/tickets/' + record.key]">View This
+                Ticket</button>
+        </li>
+        <ng-container *ngIf="record.game">
+            <li role="menuitem" *ngIf="record.game">
+                <button class="dropdown-item btn" [routerLink]="['/game/' + record.game.id]">View This Game's
+                    Page</button>
+            </li>
+            <li class="divider dropdown-divider" *ngIf="record.game"></li>
+            <li role="menuitem" *ngIf="record.game">
+                <button class="dropdown-item btn" [routerLink]="['/reports/enrollment']"
+                    [queryParams]="{ games: record.game.id }">
+                    Scope the Enrollment report to this game
+                </button>
+            </li>
+        </ng-container>
+    </ul>
+</div>

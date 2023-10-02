@@ -1,8 +1,21 @@
 @import '../../../scss/variables';
 
-.wrapper {
-  // position: relative;
+.new-game-controls {
+  height: 340px;
+  padding: .25rem;
 }
+
+::ng-deep app-dropzone .dropzone {
+  flex-grow: 1 !important;
+}
+
+.dropzone-target {
+  border: .25rem dashed lightgray;
+  border-radius: .25rem;
+  height: 100%;
+  padding: .25rem;
+}
+
 .overlay {
   position: absolute;
   top: 0rem;
@@ -12,10 +25,6 @@
   border-radius: .25rem;
   background-color: rgba(black, .8);
   z-index: 10;
-}
-.dropzone {
-  border-radius: 0;
-  border: 0;
 }
 
 .table-wrapper {

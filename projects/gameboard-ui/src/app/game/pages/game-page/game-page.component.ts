@@ -3,26 +3,27 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
-import { ApiUser, PlayerRole } from '../../../api/user-models';
-import { GameService } from '../../../api/game.service';
-import { Game, GameContext } from '../../../api/game-models';
-import { HubEvent, HubEventAction, NotificationService } from '../../../services/notification.service';
-import { ModalConfirmComponent } from '../../../core/components/modal/modal-confirm.component';
-import { Player, TimeWindow } from '../../../api/player-models';
+import { ApiUser, PlayerRole } from '@/api/user-models';
+import { GameService } from '@/api/game.service';
+import { Game, GameContext } from '@/api/game-models';
+import { HubEvent, HubEventAction, NotificationService } from '@/services/notification.service';
+import { Player, TimeWindow } from '@/api/player-models';
 import { PlayerService } from '../../../api/player.service';
-import { UserService as LocalUserService } from '../../../utility/user.service';
-import { WindowService } from '../../../services/window.service';
-import { BoardPlayer } from '../../../api/board-models';
-import { BoardService } from '../../../api/board.service';
-import { FontAwesomeService } from '@/services/font-awesome.service';
+import { UserService as LocalUserService } from '@/utility/user.service';
+import { WindowService } from '@/services/window.service';
+import { BoardPlayer } from '@/api/board-models';
+import { BoardService } from '@/api/board.service';
+import { fa } from '@/services/font-awesome.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { LogService } from '@/services/log.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { RouterService } from '@/services/router.service';
 import { AppTitleService } from '@/services/app-title.service';
+import { UserService } from '@/api/user.service';
+import { ConfigService } from '@/utility/config.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 interface GameEnrollmentContext {
   game: Game;
@@ -41,7 +42,9 @@ export class GamePageComponent implements OnDestroy {
   hubState$: Observable<HubConnectionState> = this.gameHubService.hubState$;
 
   protected boardPlayer?: BoardPlayer;
+  protected canAdminEnroll$: Observable<boolean>;
   protected ctxIds: { userId?: string, gameId: string, playerId?: string } = { userId: '', gameId: '' };
+  protected fa = fa;
   protected player$ = new BehaviorSubject<Player | null>(null);
 
   private isExternalGame = false;
@@ -57,18 +60,21 @@ export class GamePageComponent implements OnDestroy {
     route: ActivatedRoute,
     apiBoards: BoardService,
     apiPlayer: PlayerService,
+    appTitle: AppTitleService,
+    config: ConfigService,
     localUser: LocalUserService,
-    public faService: FontAwesomeService,
+    userService: UserService,
     private apiGame: GameService,
     private hub: NotificationService,
     private logService: LogService,
     private gameHubService: GameHubService,
-    private modalService: BsModalService,
+    private modalService: ModalConfirmService,
     private routerService: RouterService,
     private titleService: AppTitleService,
     private windowService: WindowService
   ) {
     const user$ = localUser.user$.pipe(map(u => !!u ? u : {} as ApiUser));
+    this.canAdminEnroll$ = localUser.user$.pipe(map(u => !!u && userService.canEnrollAndPlayOutsideExecutionWindow(u)));
 
     const game$ = route.params.pipe(
       filter(p => !!p.id),
@@ -106,7 +112,10 @@ export class GamePageComponent implements OnDestroy {
         return;
       }
 
-      apiBoards.load(currentPlayer!.id).pipe(first()).subscribe(b => this.boardPlayer = b);
+      apiBoards.load(currentPlayer!.id).pipe(first()).subscribe(b => {
+        this.boardPlayer = b;
+        appTitle.set(`${this.boardPlayer?.game.name} | ${config.appName}`);
+      });;
     });
 
     // allow hub events to update the player subject
@@ -261,17 +270,11 @@ export class GamePageComponent implements OnDestroy {
   private showModal(resettingPlayerName?: string): void {
     const resetInitiator = resettingPlayerName ? `your teammate "${resettingPlayerName}"` : "an administrator";
 
-    this.modalService.show(
-      ModalConfirmComponent, {
-      initialState: {
-        config: {
-          title: "Session reset",
-          bodyContent: `Your session was reset by ${resetInitiator}. We'll take you back to the game page so you can re-enroll if you'd like to.`,
-          confirmButtonText: "Got it",
-          hideCancel: true
-        }
-      },
-      class: "modal-dialog-centered"
+    this.modalService.openConfirm({
+      title: "Session reset",
+      bodyContent: `Your session was reset by ${resetInitiator}. We'll take you back to the game page so you can re-enroll if you'd like to.`,
+      confirmButtonText: "Got it",
+      hideCancel: true,
     });
   }
 

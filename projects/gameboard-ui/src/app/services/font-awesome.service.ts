@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import {
+  IconDefinition,
   faArrowLeft,
-  faAward,
+  faArrowUp,
   faBolt,
   faCaretDown,
+  faCaretLeft,
   faCaretRight,
   faCaretUp,
   faCheck,
@@ -13,68 +15,98 @@ import {
   faChevronUp,
   faClipboard,
   faCloudUploadAlt,
+  faComments,
   faCopy,
   faEdit,
+  faEllipsisVertical,
+  faEraser,
+  faExclamationCircle,
   faExclamationTriangle,
   faExternalLink,
   faExternalLinkAlt,
+  faEyeSlash,
+  faFileDownload,
   faFilter,
   faGamepad,
   faListOl,
-  faLongArrowAltDown,
-  faMapMarker,
-  faSquare,
-  faStar,
-  faSyncAlt,
-  faEllipsisVertical,
   faGear,
   faInfoCircle,
   faList,
-  faTriangleExclamation,
+  faLongArrowAltDown,
+  faMapMarker,
+  faPaperclip,
+  faPlus,
   faSearch,
+  faShare,
+  faShareAlt,
+  faSquare,
+  faStar,
+  faSyncAlt,
+  faTimes,
   faToggleOff,
   faToggleOn,
   faTrash,
-  IconDefinition,
+  faTriangleExclamation,
+  faTv,
+  faUser,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
+
+export const fa = {
+  arrowDown: faLongArrowAltDown,
+  arrowLeft: faArrowLeft,
+  arrowUp: faArrowUp,
+  bolt: faBolt,
+  caretDown: faCaretDown,
+  caretLeft: faCaretLeft,
+  caretRight: faCaretRight,
+  caretUp: faCaretUp,
+  check: faCheck,
+  checkSquare: faCheckSquare,
+  chevronDown: faChevronDown,
+  chevronUp: faChevronUp,
+  clipboard: faClipboard,
+  cloudUploadAlt: faCloudUploadAlt,
+  comments: faComments,
+  copy: faCopy,
+  edit: faEdit,
+  ellipsisVertical: faEllipsisVertical,
+  eraser: faEraser,
+  exclamationCircle: faExclamationCircle,
+  exclamationTriangle: faExclamationTriangle,
+  externalLink: faExternalLink,
+  externalLinkAlt: faExternalLinkAlt,
+  eyeSlash: faEyeSlash,
+  fileDownload: faFileDownload,
+  filter: faFilter,
+  list: faList,
+  listOl: faListOl,
+  gamepad: faGamepad,
+  gear: faGear,
+  infoCircle: faInfoCircle,
+  mapMarker: faMapMarker,
+  paperclip: faPaperclip,
+  plus: faPlus,
+  search: faSearch,
+  share: faShare,
+  shareAlt: faShareAlt,
+  star: faStar,
+  square: faSquare,
+  sync: faSyncAlt,
+  times: faTimes,
+  toggleOff: faToggleOff,
+  toggleOn: faToggleOn,
+  trash: faTrash,
+  triangleExclamation: faTriangleExclamation,
+  tv: faTv,
+  user: faUser,
+  users: faUsers
+};
+
+export type FontAwesomeIcons = typeof fa;
 
 @Injectable({ providedIn: 'root' })
 export class FontAwesomeService {
-  arrowDown = faLongArrowAltDown;
-  arrowLeft = faArrowLeft;
-  award = faAward;
-  bolt = faBolt;
-  caretDown = faCaretDown;
-  caretRight = faCaretRight;
-  caretUp = faCaretUp;
-  check = faCheck;
-  checkSquare = faCheckSquare;
-  chevronDown = faChevronDown;
-  chevronUp = faChevronUp;
-  clipboard = faClipboard;
-  cloudUploadAlt = faCloudUploadAlt;
-  copy = faCopy;
-  edit = faEdit;
-  ellipsisVertical = faEllipsisVertical;
-  exclamationTriangle = faExclamationTriangle;
-  externalLink = faExternalLink;
-  externalLinkAlt = faExternalLinkAlt;
-  list = faList;
-  listOl = faListOl;
-  filter = faFilter;
-  gamepad = faGamepad;
-  gear = faGear;
-  infoCircle = faInfoCircle;
-  mapMarker = faMapMarker;
-  search = faSearch;
-  star = faStar;
-  square = faSquare;
-  sync = faSyncAlt;
-  toggleOff = faToggleOff;
-  toggleOn = faToggleOn;
-  trash = faTrash;
-  triangleExclamation = faTriangleExclamation;
-
   iconToSvg(icon: IconDefinition, width?: number, height?: number): SafeHtml {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width || 20}" height="${height || 20}" viewBox="0 0 384 512"><path d="${icon.icon[4].toString()}" /></svg>`;
   }

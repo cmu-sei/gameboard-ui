@@ -1,0 +1,10 @@
+@import "../../../../scss/variables";
+
+input[type=file] {
+  display: none;
+}
+
+::ng-deep .dropzone-active .dropzone-target {
+  background-color: rgba(215, 154, 254, 0.5);
+    border: .25rem dashed darkorchid !important;
+}

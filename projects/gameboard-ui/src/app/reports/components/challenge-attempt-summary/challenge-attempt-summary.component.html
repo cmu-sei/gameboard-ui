@@ -1,0 +1,36 @@
+<ng-container *ngIf="attempt">
+    <div class="d-flex justify-content-between align-items-center">
+        <ng-container
+            *ngTemplateOutlet="primaryData == 'challengeName' ? challengeName : attemptDate; context: { attempt }"></ng-container>
+
+        <div class="challenge-score-summary flex-shrink-0">
+            <div [class]="'fs-13 font-weight-bold ' + (attempt.result | challengeResultColor) ">{{
+                attempt.result |
+                challengeResultPretty }}</div>
+            <div class="subtle-size m-0 d-flex justify-content-between">
+                <div>
+                    <span class="subtle-color">Score: </span>
+                    {{ attempt.score }} / {{ attempt.maxPossibleScore }}
+                </div>
+
+                <div *ngIf="attempt.scorePercentile !== undefined">
+                    <span class="subtle-color">Percentile: </span>
+                    {{ attempt.scorePercentile | number:"1.0-2" }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+</ng-container>
+
+<ng-template #attemptDate let-attempt="attempt">
+    <div>
+        <div class="fs-13">{{ attempt.startDate | shortdate }}</div>
+        <div class="subtle-info"> {{ attempt.startDate | friendlyTime }} </div>
+    </div>
+</ng-template>
+
+<ng-template #challengeName let-attempt="attempt">
+    <app-challenge-or-game-field class="d-block" [challengeName]="attempt.challengeSpec.name" [game]="attempt.game"
+        [disableLinks]="true" fontSize="large"></app-challenge-or-game-field>
+</ng-template>

@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { HomePageComponent } from './home-page/home-page.component';
 import { RouterModule } from '@angular/router';
 import { OidcComponent } from './oidc/oidc.component';
-import { ProfileComponent } from './profile/profile.component';
 import { NewsComponent } from './news/news.component';
 import { LandingComponent } from './landing/landing.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
@@ -18,20 +17,17 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
-import { CertificateListComponent } from './certificate-list/certificate-list.component';
-import { ProfileHistoryComponent } from './profile-history/profile-history.component';
+import { ProfileHistoryComponent } from '../users/components/profile-history/profile-history.component';
 
 @NgModule({
   declarations: [
     HomePageComponent,
     OidcComponent,
-    ProfileComponent,
     NewsComponent,
     LandingComponent,
     ForbiddenComponent,
     LoginPageComponent,
     TocPageComponent,
-    CertificateListComponent,
     ProfileHistoryComponent,
   ],
   imports: [
@@ -42,9 +38,6 @@ import { ProfileHistoryComponent } from './profile-history/profile-history.compo
           { path: '', pathMatch: 'full', redirectTo: '/home' },
           { path: 'login', component: LoginPageComponent },
           { path: 'oidc', component: OidcComponent },
-          { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-          { path: 'profile/certificates', component: CertificateListComponent, canActivate: [AuthGuard] },
-          { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
           { path: 'doc/:id', component: TocPageComponent },
           { path: 'forbidden', component: ForbiddenComponent },
           { path: 'home', component: LandingComponent }

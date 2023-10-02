@@ -8,12 +8,47 @@ import { ApiUser } from "./user-models";
 export interface Search {
   term?: string;
   sort?: string;
+  sortDirection?: SortDirection;
   skip?: number;
   take?: number;
   filter?: string[];
 }
 
+export type SortDirection = "asc" | "desc";
+
+export interface GameContext {
+  game: Game;
+  player: Player;
+  user: ApiUser;
+}
+
+export interface GameEnrollmentContext {
+  game: Game;
+  user: ApiUser;
+  player: Player | undefined;
+}
+
+export interface PagingArgs {
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface PagingResults {
+  itemCount: number;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface PagedArray<T> {
+  items: T[];
+  paging: PagingResults;
+}
+
 export interface SimpleEntity {
   id: string;
   name: string;
+}
+
+export interface ApiError {
+  message: string;
 }

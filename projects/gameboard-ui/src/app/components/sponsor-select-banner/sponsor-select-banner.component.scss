@@ -1,0 +1,14 @@
+@media print {
+    nav {
+        display: none;
+    }
+}
+
+:host {
+    position: sticky;
+    top: 0;
+}
+
+a {
+    text-decoration: underline;
+}

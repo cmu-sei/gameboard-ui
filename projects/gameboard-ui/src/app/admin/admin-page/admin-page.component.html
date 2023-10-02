@@ -5,10 +5,19 @@
   <h1 class="admin-header mb-0">Administration</h1>
 </div>
 
-<main class="container mb-4 pb-4">
-
-  <router-outlet></router-outlet>
-
-</main>
+<div class="container mb-4 pb-4">
+  <nav class="my-2">
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['dashboard']">Games</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['practice']">Practice Area</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'users']">Users</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'players']">Players</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'sponsors']">Sponsors</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['support']">Challenges</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['report']">Reports</a>
+  </nav>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
 
 <footer class="p-4 mt-4"></footer>

@@ -9,7 +9,5 @@ export function logTap<T>(
     error?: ((e: any) => void) | null,
     complete?: (() => void) | null
 ): MonoTypeOperatorFunction<T> {
-    const logService = inject(LogService);
-
-    return (source) => source.pipe(tap(s => logService.logInfo(transform ? transform(s) : s)));
+    return (source) => source.pipe(tap(s => inject(LogService).logInfo(transform ? transform(s) : s)));
 }

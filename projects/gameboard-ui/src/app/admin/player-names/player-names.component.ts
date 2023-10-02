@@ -1,9 +1,9 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { faSearch, faFilter, faCheck, faArrowLeft, faTimes, faUndo } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, combineLatest, interval, Observable, scheduled, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, timer } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Player, PlayerSearch } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -13,7 +13,7 @@ import { PlayerService } from '../../api/player.service';
   templateUrl: './player-names.component.html',
   styleUrls: ['./player-names.component.scss']
 })
-export class PlayerNamesComponent implements OnInit {
+export class PlayerNamesComponent {
   refresh$ = new BehaviorSubject<boolean>(true);
   players$: Observable<Player[]>;
   source: Player[] = [];
@@ -51,9 +51,6 @@ export class PlayerNamesComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-  }
-
   toggleFilter(role: string): void {
     this.filter = this.filter !== role ? role : '';
     if (!!this.filter) {
@@ -69,8 +66,13 @@ export class PlayerNamesComponent implements OnInit {
     this.refresh$.next(true);
   }
 
-  update(model: Player): void {
-    this.api.update(model).subscribe();
+  async update(model: Player): Promise<void> {
+    await firstValueFrom(this.api.update({
+      id: model.id,
+      name: model.name,
+      approvedName: model.approvedName,
+      nameStatus: model.nameStatus
+    }));
   }
 
   approveName(model: Player): void {

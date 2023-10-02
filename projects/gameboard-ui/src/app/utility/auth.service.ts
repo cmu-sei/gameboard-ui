@@ -3,10 +3,11 @@
 
 import { Injectable } from '@angular/core';
 import { UserManager, UserManagerSettings, User, WebStorageStateStore, Log } from 'oidc-client-ts';
-import { BehaviorSubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { ConfigService, Settings } from './config.service';
 import { LogService } from '../services/log.service';
+import { UserService } from '@/api/user.service';
 
 export enum AuthTokenState {
   unknown = 'unknown' as any,
@@ -18,36 +19,36 @@ export enum AuthTokenState {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   mgr!: UserManager;
   authority = '';
   redirectUrl = '';
   lastCall = 0;
   renewIfActiveSeconds = 0;
-  oidcUser!: (User | null);
-  public tokenState$: BehaviorSubject<AuthTokenState> = new BehaviorSubject<AuthTokenState>(AuthTokenState.unknown);
+  oidcUser: (User | null) = null;
+
+  private _tokenState$ = new BehaviorSubject<AuthTokenState>(AuthTokenState.unknown);
+  tokenState$: Observable<AuthTokenState> = this._tokenState$.pipe(distinctUntilChanged());
 
   constructor(
     private config: ConfigService,
-    private log: LogService
+    private log: LogService,
+    private userService: UserService
   ) {
-    config.settings$.pipe(
-      filter(s => !!s.oidc.authority)
-    ).subscribe((s: Settings) => {
-
+    config.settings$.pipe(filter(s => !!s.oidc.authority)).subscribe((s: Settings) => {
       if (s.oidc.debug) {
         Log.setLevel(Log.DEBUG);
         Log.setLogger(console);
       }
 
-      this.authority = s.oidc?.authority?.
-        replace(/https?:\/\//, '').split('/').reverse().pop() || 'Identity Provider';
+      this.authority = s
+        .oidc?.authority?.replace(/https?:\/\//, '').split('/').reverse().pop() || 'Identity Provider';
 
       if (s.oidc.useLocalStorage) {
         (s.oidc.userStore as any) = new WebStorageStateStore({});
       }
 
       this.mgr = new UserManager(s.oidc || {} as UserManagerSettings);
+      this.mgr.events.addUserSignedIn(() => this.onUserSignedIn());
       this.mgr.events.addUserLoaded(user => this.onTokenLoaded(user));
       this.mgr.events.addUserUnloaded(() => this.onTokenUnloaded());
       this.mgr.events.addAccessTokenExpiring(e => this.onTokenExpiring());
@@ -59,14 +60,14 @@ export class AuthService {
   }
 
   isAuthenticated(): Promise<boolean> {
-    const state = this.tokenState$.getValue();
+    const state = this._tokenState$.getValue();
     return Promise.resolve(state === AuthTokenState.valid || state === AuthTokenState.expiring);
   }
 
-  access_token(): string {
+  access_token(): string | null {
     return ((this.oidcUser)
       ? this.oidcUser.access_token
-      : 'no_token');
+      : null);
   }
 
   auth_header(): string {
@@ -82,12 +83,12 @@ export class AuthService {
 
   private onTokenLoaded(user: (User | null)): void {
     this.oidcUser = user;
-    this.tokenState$.next(!!user ? AuthTokenState.valid : AuthTokenState.invalid);
+    this._tokenState$.next(!!user ? AuthTokenState.valid : AuthTokenState.invalid);
   }
 
   private onTokenUnloaded(): void {
     this.oidcUser = null;
-    this.tokenState$.next(AuthTokenState.invalid);
+    this._tokenState$.next(AuthTokenState.invalid);
   }
 
   private onTokenExpiring(): void {
@@ -96,11 +97,11 @@ export class AuthService {
     if (this.renewIfActiveSeconds > 0 && Date.now() - this.lastCall < (this.renewIfActiveSeconds * 1000)) {
       this.silentLogin();
     }
-    this.tokenState$.next(AuthTokenState.expiring);
+    this._tokenState$.next(AuthTokenState.expiring);
   }
 
   private onTokenExpired(): void {
-    this.tokenState$.next(AuthTokenState.expired);
+    this._tokenState$.next(AuthTokenState.expired);
     this.expireToken();
   }
 
@@ -112,25 +113,35 @@ export class AuthService {
     this.expireToken();
   }
 
+  private onUserSignedIn(): void {
+    this.log.logInfo("User signed in", this.oidcUser);
+  }
+
   externalLogin(url: string): void {
     const currentUrl = this.config.currentPath
       .replace(/login$/, '')
-      .replace(/forbidden$/, '')
-      ;
+      .replace(/forbidden$/, '');
 
     this.expireToken();
 
     this.mgr.signinRedirect({ state: this.redirectUrl || currentUrl })
-      .then(() => { })
+      .then(() => { this.log.logInfo("User authenticated", this.oidcUser); })
       .catch(err => this.log.logError(err));
   }
 
-  externalLoginCallback(url?: string): Promise<User> {
-    return this.mgr.signinRedirectCallback(url);
+  async externalLoginCallback(url?: string): Promise<User> {
+    const user = await this.mgr.signinRedirectCallback(url);
+
+    if (this.access_token()) {
+      // log the login event for the current user (we track date of last login and total login count)
+      await firstValueFrom(this.userService.updateLoginEvents());
+    }
+
+    return user;
   }
 
   logout(): void {
-    if (this.oidcUser) {
+    if (this.oidcUser && this._tokenState$.getValue() === AuthTokenState.valid) {
       this.mgr.signoutRedirect()
         .then(() => { })
         .catch(err => {
@@ -142,14 +153,6 @@ export class AuthService {
   silentLogin(): void {
     this.mgr.signinSilent()
       .catch(err => this.expireToken());
-  }
-
-  silentLoginCallback(): void {
-    this.mgr.signinSilentCallback();
-  }
-
-  clearStaleState(): void {
-    this.mgr.clearStaleState();
   }
 
   expireToken(): void {

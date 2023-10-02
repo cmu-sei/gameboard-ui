@@ -1,0 +1,36 @@
+<ng-container *ngIf="stats.length">
+    <alert type="dark" class="cursor-pointer" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseEvent"
+        (click)="isCollapsed = !isCollapsed">
+        <div class="stats-collapse height-animate">
+            <div class="expanded-view" *ngIf="!isCollapsed; else collapsedView">
+                <h2 class="text-center text-upper mb-5">Summary</h2>
+                <div *ngIf="importantStat" class="stat mb-5">
+                    <p class="value text-info">{{ importantStat.value }}</p>
+                    <p class="label">
+                        {{ importantStat.label | pluralizer:importantStat.value }}
+                        <span class="addl-info subtle-color" *ngIf="importantStat.additionalInfo">
+                            {{importantStat.additionalInfo}}</span>
+                    </p>
+                </div>
+                <ul class="overall-stats d-flex align-items-center justify-content-center mb-5">
+                    <div *ngFor="let stat of stats" class="stat">
+                        <p class="value text-info">{{ stat.value }}</p>
+                        <p class="label">
+                            {{ stat.label | pluralizer:stat.value }}
+                            <span class="addl-info subtle-color" *ngIf="stat.additionalInfo">
+                                {{stat.additionalInfo}}</span>
+                        </p>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </alert>
+</ng-container>
+
+<ng-template #collapsedView>
+    <ul class="d-flex">
+        <li *ngFor="let stat of allStats" class="d-block mr-4">
+            <strong>{{ stat.label | pluralizer:stat.value }}: </strong> <span class="text-info">{{stat.value}}</span>
+        </li>
+    </ul>
+</ng-template>

@@ -3,17 +3,6 @@
 
 <span *ngIf="created$ | async"></span>
 
-<!-- tools -->
-<div>
-
-  <a class="btn btn-link" [routerLink]="['../registrar', 'users']">Users</a>
-  <a class="btn btn-link" [routerLink]="['../registrar', 'players']">Players</a>
-  <a class="btn btn-link" [routerLink]="['../registrar', 'sponsors']">Sponsors</a>
-  <a class="btn btn-link" [routerLink]="['../support']">Challenges</a>
-  <a class="btn btn-link" [routerLink]="['../report']">Reports</a>
-
-</div>
-
 <!-- game browser -->
 <div class="row">
 
@@ -21,189 +10,203 @@
     <div class="input-group-prepend">
       <span id="search-label" class="input-group-text">Search</span>
     </div>
-    <input id="search-input" type="search" autocomplete="off" class="form-control border-0" [(ngModel)]="search.term" (input)="typing($event)"
-      aria-label="search term" aria-describedby="search-label" placeholder="Enter name, season, track, division, series, sponsor, key, mode, card text, or id">
+    <input id="search-input" type="search" autocomplete="off" class="form-control border-0" [(ngModel)]="search.term"
+      (input)="typing($event)" aria-label="search term" aria-describedby="search-label"
+      placeholder="Enter name, season, track, division, series, sponsor, key, mode, card text, or id">
   </div>
 
-  <!-- <div class=""> -->
-
-
-
-    <div *ngIf="tableView" class="col-4">
-      <button class="btn btn-secondary btn-sm" (click)="create()">
-        <fa-icon [icon]="faPlus"></fa-icon>
-        <span>New Game</span>
-      </button>
-    </div>
-    <div class="col-4 my-0 py-0" [class]="tableView ? 'offset-4' : 'offset-8'">
-      <div class="pb-0 pt-1 my-0 py-0">
-        <div class="text-white float-right auto-h d-flex align-items-center my-0 py-0">
-          <label class="py-0 my-0">Cards</label>
-          <label class="btn text-info my-0 py-0" btnCheckbox id="isPublished-input"
-                 name="isPublished" (click)="toggleViewMode()">
-            <fa-icon *ngIf="!tableView" [icon]="faToggleOff" size="lg"></fa-icon>
-            <fa-icon *ngIf="tableView" [icon]="faToggleOn" size="lg"></fa-icon>
-          </label>
-          <label class="py-0 my-0">Table</label>
-        </div>
+  <div *ngIf="tableView" class="col-4">
+    <button class="btn btn-secondary btn-sm" (click)="create()">
+      <fa-icon [icon]="faPlus"></fa-icon>
+      <span>New Game</span>
+    </button>
+  </div>
+  <div class="col-4 my-0 py-0" [class]="tableView ? 'offset-4' : 'offset-8'">
+    <div class="pb-0 pt-1 my-0 py-0">
+      <div class="text-white float-right auto-h d-flex align-items-center my-0 py-0">
+        <label class="py-0 my-0">Cards</label>
+        <label class="btn text-info my-0 py-0" btnCheckbox id="isPublished-input" name="isPublished"
+          (click)="toggleViewMode()">
+          <fa-icon *ngIf="!tableView" [icon]="faToggleOff" size="lg"></fa-icon>
+          <fa-icon *ngIf="tableView" [icon]="faToggleOn" size="lg"></fa-icon>
+        </label>
+        <label class="py-0 my-0">Table</label>
       </div>
     </div>
+  </div>
 
-    <ng-container *ngIf="games$ | async as games; else loading">
+  <ng-container *ngIf="games$ | async as games; else loading">
 
-      <!-- Card view mode -->
-      <ng-container *ngIf="!tableView">
-        <div class="dropzone col-3 card bg-transparent">
-          <app-dropzone class="h-100 my-3" (dropped)="dropped($event)">
-            <pre class="overflow-hidden">Drag in a yaml game array or</pre>
-            <button class="btn btn-secondary btn-sm" (click)="create()">
-              <fa-icon [icon]="faPlus"></fa-icon>
-              <span>New Game</span>
+    <!-- Card view mode -->
+    <ng-container *ngIf="!tableView">
+      <div class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
+        <button class=" btn btn-info flex-grow-1 w-100" (click)="create()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          <span>New Game</span>
+        </button>
+
+        <p class="mt-2">OR</p>
+
+        <app-dropzone class="d-flex flex-grow-1 w-100" (dropped)="dropped($event)">
+          <div class="dropzone-target h-100">
+            <pre class="overflow-hidden">Drag in a yaml game array</pre>
+          </div>
+        </app-dropzone>
+      </div>
+
+      <div class="wrapper col-3 my-3" *ngFor="let g of games; trackBy:trackById" (mouseenter)="on(g)"
+        (mouseleave)="off(g)" (focus)="on(g)" tabindex="0">
+
+        <app-game-card [game]="g"></app-game-card>
+
+        <div class="overlay d-flex flex-column justify-content-center align-items-center" *ngIf="hot===g">
+          <a class="btn btn-outline-info my-2" [routerLink]="['../registrar', g.id]">
+            <fa-icon [icon]="faUsers"></fa-icon>
+            <span>Players</span>
+          </a>
+          <a class="btn btn-outline-info my-2" [routerLink]="['../observer/challenges', g.id]">
+            <fa-icon [icon]="faTv"></fa-icon>
+            <span>Observe</span>
+          </a>
+          <a class="btn btn-outline-info my-2" [routerLink]="['../designer', g.id]">
+            <fa-icon [icon]="faCog"></fa-icon>
+            <span>Settings</span>
+          </a>
+          <div>
+            <button class="btn btn-outline-info btn-sm mx-1" (click)="clone(g)">
+              <fa-icon [icon]="faClone"></fa-icon>
+              <span>Clone</span>
             </button>
-          </app-dropzone>
-        </div>
-
-        <div class="wrapper col-3 my-3" *ngFor="let g of games; trackBy:trackById" (mouseenter)="on(g)"
-          (mouseleave)="off(g)" (focus)="on(g)" tabindex="0">
-
-          <app-game-card [game]="g"></app-game-card>
-
-          <div class="overlay d-flex flex-column justify-content-center align-items-center" *ngIf="hot===g">
-            <a class="btn btn-outline-info my-2" [routerLink]="['../registrar', g.id]">
-              <fa-icon [icon]="faUsers"></fa-icon>
-              <span>Players</span>
-            </a>
-            <a class="btn btn-outline-info my-2" [routerLink]="['../observer/challenges', g.id]">
-              <fa-icon [icon]="faTv"></fa-icon>
-              <span>Observe</span>
-            </a>
-            <a class="btn btn-outline-info my-2" [routerLink]="['../designer', g.id]">
-              <fa-icon [icon]="faCog"></fa-icon>
-              <span>Settings</span>
-            </a>
-            <div>
-              <button class="btn btn-outline-info btn-sm mx-1" (click)="clone(g)">
-                <fa-icon [icon]="faClone"></fa-icon>
-                <span>Clone</span>
-              </button>
-              <button class="btn btn-outline-info btn-sm mx-1" (click)="yaml(g)">
-                <fa-icon [icon]="faCopy"></fa-icon>
-                <span>yaml</span>
-              </button>
-              <button class="btn btn-outline-info btn-sm mx-1" (click)="json(g)">
-                <fa-icon [icon]="faCopy"></fa-icon>
-                <span>json</span>
-              </button>
-            </div>
-            <app-confirm-button btnClass="btn btn-outline-danger my-2" (confirm)="delete(g)">
-              <fa-icon [icon]="faTrash"></fa-icon>
-              <span>Delete</span>
-            </app-confirm-button>
+            <button class="btn btn-outline-info btn-sm mx-1" (click)="yaml(g)">
+              <fa-icon [icon]="faCopy"></fa-icon>
+              <span>yaml</span>
+            </button>
+            <button class="btn btn-outline-info btn-sm mx-1" (click)="json(g)">
+              <fa-icon [icon]="faCopy"></fa-icon>
+              <span>json</span>
+            </button>
           </div>
+          <app-confirm-button btnClass="btn btn-outline-danger my-2" (confirm)="delete(g)">
+            <fa-icon [icon]="faTrash"></fa-icon>
+            <span>Delete</span>
+          </app-confirm-button>
         </div>
-      </ng-container> <!-- End card view -->
+      </div>
+    </ng-container> <!-- End card view -->
 
-      <!-- Table view mode -->
-      <ng-container *ngIf="tableView">
-        <div class="col-12">
-          <div class="table-wrapper">
-            <table class="table mt-2 text-left">
-              <tbody>
-                <tr class="bg-dark">
-                  <td class="thin-col sticky-card sticky-header"></td>
-                  <td class="thin-col"></td>
-                  <td class="thin-col"></td>
-                  <td class="thin-col sticky-options sticky-header"></td>
-                  <td class="sticky-name sticky-header">Name</td>
-                  <td>Key</td>
-                  <td>Series</td>
-                  <td>Track</td>
-                  <td>Season</td>
-                  <td>Division</td>
-                  <td>Mode</td>
-                  <td class="date-col">Start Ex.</td>
-                  <td class="date-col">End Ex.</td>
-                  <td class="date-col">Start Reg.</td>
-                  <td class="date-col">End Reg.</td>
-                  <td class="text-right">Team Size</td>
-                  <td class="text-right">Sess. Duration</td>
-                  <td class="text-right">Sess. Limit</td>
-                  <td class="text-right">Space Limit</td>
-                  <td class="text-right">Max Attempts</td>
-                </tr>
-                <tr *ngFor="let game of games; trackBy:trackById">
-                  <td class="thin-col sticky-card sticky-cell"><img [src]="game.cardUrl" class="table-card"></td>
-                  <td class="thin-col">
-                    <div [tooltip]="game.isPublished ? 'Published' : 'Unpublished'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
-                      <fa-icon [icon]="game.isPublished ? faGlobe : faEyeSlash"></fa-icon>
+    <!-- Table view mode -->
+    <ng-container *ngIf="tableView">
+      <div class="col-12">
+        <div class="table-wrapper">
+          <table class="table mt-2 text-left">
+            <tbody>
+              <tr class="bg-dark">
+                <td class="thin-col sticky-card sticky-header"></td>
+                <td class="thin-col"></td>
+                <td class="thin-col"></td>
+                <td class="thin-col sticky-options sticky-header"></td>
+                <td class="sticky-name sticky-header">Name</td>
+                <td>Key</td>
+                <td>Series</td>
+                <td>Track</td>
+                <td>Season</td>
+                <td>Division</td>
+                <td>Mode</td>
+                <td class="date-col">Start Ex.</td>
+                <td class="date-col">End Ex.</td>
+                <td class="date-col">Start Reg.</td>
+                <td class="date-col">End Reg.</td>
+                <td class="text-right">Team Size</td>
+                <td class="text-right">Sess. Duration</td>
+                <td class="text-right">Sess. Limit</td>
+                <td class="text-right">Space Limit</td>
+                <td class="text-right">Max Attempts</td>
+              </tr>
+              <tr *ngFor="let game of games; trackBy:trackById">
+                <td class="thin-col sticky-card sticky-cell">
+                  <app-game-card-image [game]="game"></app-game-card-image>
+                </td>
+                <td class="thin-col">
+                  <div [tooltip]="game.isPublished ? 'Published' : 'Unpublished'" containerClass="light-tooltip"
+                    container="body" [adaptivePosition]="true" placement="top">
+                    <fa-icon [icon]="game.isPublished ? faGlobe : faEyeSlash"></fa-icon>
+                  </div>
+                  <div [tooltip]="game.allowReset ? 'Reset Allowed' : 'Reset Not Allowed'"
+                    containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                    <fa-icon [icon]="game.allowReset ? faUndo : faLock"></fa-icon>
+                  </div>
+                </td>
+                <td class="thin-col">
+                  <div [tooltip]="game.allowTeam ? 'Team' : 'Individual'" containerClass="light-tooltip"
+                    container="body" [adaptivePosition]="true" placement="top">
+                    <fa-icon [icon]="game.allowTeam ? faTeam : faUser"></fa-icon>
+                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="game.feedbackTemplate && (!!game.feedbackTemplate.challenge.length || !!game.feedbackTemplate.game.length) ? gameAcceptsFeedback : gameDoesntAcceptFeedback">
+                  </ng-container>
+                </td>
+                <td class="thin-col sticky-options sticky-cell">
+                  <div dropdown class="btn-group" container="body" #dropdown="bs-dropdown" [autoClose]="true"
+                    [insideClick]="true">
+                    <a class="btn btn-outline-info py-1 px-2" [routerLink]="['../designer', game.id]">
+                      <fa-icon [icon]="faCog" size="sm"></fa-icon>
+                    </a>
+                    <button dropdownToggle class="btn btn-outline-info py-1 px-2 dropdown-toggle dropdown-toggle-split"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div *dropdownMenu class="dropdown-menu">
+                      <a class="dropdown-item px-3" [routerLink]="['../registrar', game.id]"><fa-icon class="mr-1"
+                          [icon]="faUsers"></fa-icon>Players</a>
+                      <a class="dropdown-item px-3" [routerLink]="['../observer/challenges', game.id]"><fa-icon
+                          class="mr-1" [icon]="faTv"></fa-icon>Observe</a>
+                      <a class="dropdown-item px-3" [routerLink]="['/game', game.id]"><fa-icon class="mr-1"
+                          [icon]="faGamepad"></fa-icon>Lobby</a>
+                      <a class="dropdown-item px-3" [routerLink]="['../designer', game.id]"><fa-icon class="mr-1"
+                          [icon]="faCog"></fa-icon>Settings</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item px-3" (click)="clone(game)"><fa-icon class="mr-1"
+                          [icon]="faClone"></fa-icon>Clone</a>
+                      <a class="dropdown-item px-3" (click)="yaml(game); dropdown.isOpen = false;"><fa-icon class="mr-1"
+                          [icon]="faCopy"></fa-icon>YAML</a>
+                      <a class="dropdown-item px-3" (click)="json(game); dropdown.isOpen = false;"><fa-icon class="mr-1"
+                          [icon]="faCopy"></fa-icon>JSON</a>
+                      <div class="dropdown-divider"></div>
+                      <app-confirm-button btnClass="dropdown-item px-3" (confirm)="delete(game)">
+                        <fa-icon [icon]="faTrash"></fa-icon>
+                        <span>Delete</span>
+                      </app-confirm-button>
                     </div>
-                    <div [tooltip]="game.allowReset ? 'Reset Allowed' : 'Reset Not Allowed'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
-                      <fa-icon [icon]="game.allowReset ? faUndo : faLock"></fa-icon>
-                    </div>
-                  </td>
-                  <td class="thin-col">
-                    <div [tooltip]="game.allowTeam ? 'Team' : 'Individual'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
-                      <fa-icon [icon]="game.allowTeam ? faTeam : faUser"></fa-icon>
-                    </div>
-                    <div [tooltip]="!!game.feedbackTemplate.challenge.length || !!game.feedbackTemplate.game.length ? 'Accepts Feedback' : 'No Feedback'" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
-                      <fa-icon [icon]="!!game.feedbackTemplate.challenge.length || !!game.feedbackTemplate.game.length ? faChartBar : faCommentSlash"></fa-icon>
-                    </div>
-                  </td>
-                  <td class="thin-col sticky-options sticky-cell">
-                    <div dropdown class="btn-group" container="body" #dropdown="bs-dropdown" [autoClose]="true" [insideClick]="true">
-                      <a class="btn btn-outline-info py-1 px-2" [routerLink]="['../designer', game.id]">
-                        <fa-icon [icon]="faCog" size="sm"></fa-icon>
-                      </a>
-                      <button dropdownToggle class="btn btn-outline-info py-1 px-2 dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      </button>
-                      <div *dropdownMenu class="dropdown-menu">
-                        <a class="dropdown-item px-3" [routerLink]="['../registrar', game.id]"><fa-icon class="mr-1" [icon]="faUsers"></fa-icon>Players</a>
-                        <a class="dropdown-item px-3" [routerLink]="['../observer/challenges', game.id]"><fa-icon class="mr-1" [icon]="faTv"></fa-icon>Observe</a>
-                        <a class="dropdown-item px-3" [routerLink]="['/game', game.id]"><fa-icon class="mr-1" [icon]="faGamepad"></fa-icon>Lobby</a>
-                        <a class="dropdown-item px-3" [routerLink]="['../designer', game.id]"><fa-icon class="mr-1" [icon]="faCog"></fa-icon>Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item px-3" (click)="clone(game)"><fa-icon class="mr-1" [icon]="faClone"></fa-icon>Clone</a>
-                        <a class="dropdown-item px-3" (click)="yaml(game); dropdown.isOpen = false;"><fa-icon class="mr-1" [icon]="faCopy"></fa-icon>YAML</a>
-                        <a class="dropdown-item px-3" (click)="json(game); dropdown.isOpen = false;"><fa-icon class="mr-1" [icon]="faCopy"></fa-icon>JSON</a>
-                        <div class="dropdown-divider"></div>
-                        <app-confirm-button btnClass="dropdown-item px-3" (confirm)="delete(game)">
-                          <fa-icon [icon]="faTrash"></fa-icon>
-                          <span>Delete</span>
-                        </app-confirm-button>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="sticky-name sticky-cell name-col">
-                    <div class="pr-1 d-flex flex-column">
-                      <span>{{game.name}}</span>
-                      <small class="text-muted">{{game.id | slice:0:12}}</small>
-                    </div>
-                  </td>
-                  <td>{{game.key}}</td>
-                  <td>{{game.competition}}</td>
-                  <td>{{game.track}}</td>
-                  <td>{{game.season}}</td>
-                  <td>{{game.division}}</td>
-                  <td>{{game.mode}}</td>
-                  <td class="date-col">{{game.gameStart | shorttime}}</td>
-                  <td class="date-col">{{game.gameEnd | shorttime}}</td>
-                  <td class="date-col">{{game.registrationOpen | shorttime}}</td>
-                  <td class="date-col">{{game.registrationClose | shorttime}}</td>
-                  <td class="text-right">{{game.minTeamSize}}-{{game.maxTeamSize}}</td>
-                  <td class="text-right">{{game.sessionMinutes}}m</td>
-                  <td class="text-right">{{game.sessionLimit}}</td>
-                  <td class="text-right">{{game.gamespaceLimitPerSession}}</td>
-                  <td class="text-right">{{game.maxAttempts}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                  </div>
+                </td>
+                <td class="sticky-name sticky-cell name-col">
+                  <div class="pr-1 d-flex flex-column">
+                    <span>{{game.name}}</span>
+                    <small class="text-muted">{{game.id | slice:0:12}}</small>
+                  </div>
+                </td>
+                <td>{{game.key}}</td>
+                <td>{{game.competition}}</td>
+                <td>{{game.track}}</td>
+                <td>{{game.season}}</td>
+                <td>{{game.division}}</td>
+                <td>{{game.mode}}</td>
+                <td class="date-col">{{game.gameStart | shorttime}}</td>
+                <td class="date-col">{{game.gameEnd | shorttime}}</td>
+                <td class="date-col">{{game.registrationOpen | shorttime}}</td>
+                <td class="date-col">{{game.registrationClose | shorttime}}</td>
+                <td class="text-right">{{game.minTeamSize}}-{{game.maxTeamSize}}</td>
+                <td class="text-right">{{game.sessionMinutes}}m</td>
+                <td class="text-right">{{game.sessionLimit}}</td>
+                <td class="text-right">{{game.gamespaceLimitPerSession}}</td>
+                <td class="text-right">{{game.maxAttempts}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </ng-container> <!-- End table view -->
+      </div>
+    </ng-container> <!-- End table view -->
+  </ng-container>
 
-    </ng-container>
-
-  <!-- </div> -->
   <div class="my-4"></div>
 
   <div class="col-12 mt-4">
@@ -215,5 +218,18 @@
 <ng-template #loading>
   <div class="text-center w-100">
     <app-spinner></app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #gameAcceptsFeedback>
+  <div tooltip="Accepts Feedback" containerClass="light-tooltip" container="body" [adaptivePosition]="true"
+    placement="top">
+    <fa-icon [icon]="faChartBar"></fa-icon>
+  </div>
+</ng-template>
+
+<ng-template #gameDoesntAcceptFeedback>
+  <div tooltip="No Feedback" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+    <fa-icon [icon]="faCommentSlash"></fa-icon>
   </div>
 </ng-template>

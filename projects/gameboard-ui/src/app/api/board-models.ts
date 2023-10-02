@@ -70,15 +70,18 @@ export interface ChallengeEvent {
 export interface NewChallenge {
   specId: string;
   playerId: string;
-  variant: number;
+  userId: string;
+  variant?: number;
 }
 
 export interface ChangedChallenge {
   id: string;
 }
 
-export interface ChallengeResult {
-
+export enum ChallengeResult {
+  Complete = "success",
+  Partial = "partial",
+  None = "none"
 }
 
 export interface BoardGame {
@@ -145,7 +148,6 @@ export interface BoardPlayer {
   partialCount: number;
   isManager: boolean;
   isPractice: boolean;
-
   session: TimeWindow;
   game: BoardGame;
   challenges: Challenge[];
@@ -165,7 +167,6 @@ export interface GameState {
   endTime: string;
   expirationTime: string;
   isActive: boolean;
-  // players: Player[];
   vms: VmState[];
   challenge: ChallengeView;
 }

@@ -1,0 +1,45 @@
+import { Spec } from '@/api/spec-models';
+import { SpecService } from '@/api/spec.service';
+import { fa } from '@/services/font-awesome.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { slug } from '@/tools/functions';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Subject, debounceTime, filter, firstValueFrom, switchMap, tap } from 'rxjs';
+
+@Component({
+  selector: 'app-challenge-spec-editor',
+  templateUrl: './challenge-spec-editor.component.html',
+  styleUrls: ['./challenge-spec-editor.component.scss']
+})
+export class ChallengeSpecEditorComponent implements OnChanges {
+  @Input() spec?: Spec;
+  @Input() showSolutionGuide = false;
+  @Output() specUpdate = new EventEmitter<Spec>();
+
+  protected fa = fa;
+  protected slug = slug;
+  protected requestUpdateSpec$ = new Subject<Spec>();
+
+  constructor(
+    private specService: SpecService,
+    private unsub: UnsubscriberService) {
+    this.unsub.add(
+      this.requestUpdateSpec$.pipe(
+        debounceTime(500),
+        filter(s => s.points >= 0),
+        switchMap(s => this.specService.update(s)),
+        tap(s => this.specUpdate.emit(s)),
+      ).subscribe()
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.spec) {
+      throw new Error("The ChallengeSpecEditor requires a challenge spec.");
+    }
+  }
+
+  async handleSpecUpdated(spec: Spec) {
+    this.requestUpdateSpec$.next(spec);
+  }
+}

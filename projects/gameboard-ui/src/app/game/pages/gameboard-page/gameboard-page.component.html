@@ -11,7 +11,7 @@
     </span>
     <div class="spacer"></div>
     <div>
-      <app-gameboard-performance-summary [ctx$]="performanceSummaryViewModel$"
+      <app-gameboard-performance-summary [ctx]="performanceSummaryViewModel"
         (onRefreshRequest)="handleRefreshRequest($event)"></app-gameboard-performance-summary>
     </div>
   </div>
@@ -52,7 +52,7 @@
                     <input type="number" class="form-control" [(ngModel)]="variant">
                   </div>
                 </ng-container>
-                <app-confirm-button btnClass="btn btn-primary" (confirm)="launch(spec)">
+                <app-confirm-button btnClass="btn btn-primary" (confirm)="launch(spec)" #startChallengeConfirmButton>
                   <span>Start Challenge</span>
                 </app-confirm-button>
                 <div *ngIf="!ctx.isPractice">

@@ -18,7 +18,7 @@ export class OidcComponent {
   constructor(
     auth: AuthService,
     log: LogService,
-    router: Router
+    router: Router,
   ) {
 
     auth.externalLoginCallback().then(
@@ -28,8 +28,9 @@ export class OidcComponent {
         });
       },
       (err) => {
-        log.logError("Error on OIDC callback:", err);
-        this.message = (err.error || err).message;
+        const message = (err.error || err).message;
+        log.logError("Error on OIDC callback:", message, err);
+        this.message = message;
       }
     );
   }

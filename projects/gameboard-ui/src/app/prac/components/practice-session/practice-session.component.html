@@ -1,0 +1,57 @@
+<div class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/practice']" class="text-success">
+          <fa-icon [icon]="fa.arrowLeft"></fa-icon>
+          Back to the Practice Area
+        </a>
+      </li>
+    </ol>
+  </nav>
+
+  <app-error-div [errors]="errors"></app-error-div>
+
+  <div *ngIf="spec$ | async as spec; else loading">
+    <ng-container *ngIf="(authed$ | async); else unauthed">
+      <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
+
+      <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
+
+        <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
+          btnClass="btn btn-lg btn-info px-4" (confirm)="play(spec.gameId)" class="d-block">
+          <span>Start Practice Session</span>
+        </app-confirm-button>
+
+        <button *ngIf="isPlayingOtherChallenge" type="button" class="btn btn-lg btn-warning"
+          (click)="handleStartNewChallengeClick(spec)">
+          Stop your current challenge and play this one instead
+        </button>
+      </div>
+
+      <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
+        [playerContext]="playerContext" [autoPlay]="true"
+        (deployStatusChanged)="handleDeployStatusChanged($event)"></app-play>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center">
+    <app-spinner>Loading the challenge...</app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #breadcrumbNoSpec>
+  <li class="breadcrumb-item">...</li>
+</ng-template>
+
+<ng-template #starting let-challenge="challenge">
+  <div class="text-center">
+    <app-spinner>Starting your practice session...</app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #unauthed>
+  <app-login></app-login>
+</ng-template>

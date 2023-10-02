@@ -49,23 +49,4 @@ export class SpecService {
   public sync(id: string): Observable<any> {
     return this.http.post<any>(`${this.url}/challengespecs/sync/${id}`, null);
   }
-
-  public browse(filter: any): Observable<SpecSummary[]> {
-    return this.http.get<SpecSummary[]>(this.url + '/practice', { params: filter }).pipe(
-      map(r => {
-        r.forEach(g => this.transform(g));
-        return r;
-      })
-    );
-  }
-
-  private transform(b: SpecSummary): SpecSummary {
-
-    b.gameLogo = b.gameLogo
-      ? `${this.config.imagehost}/${b.gameLogo}`
-      : `${this.config.basehref}assets/card.png`
-      ;
-
-    return b;
-  }
 }

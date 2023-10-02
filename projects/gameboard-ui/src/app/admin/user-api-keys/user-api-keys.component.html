@@ -38,7 +38,7 @@
                 </td>
                 <td>{{ key.generatedOn | shortdate }}</td>
                 <td>
-                    <span *ngIf="!!key.expiresOn">{{key.expiresOn | shortdate}}</span>
+                    <span *ngIf="!!key.expiresOn; else noExpiresKey">{{key.expiresOn | shortdate}}</span>
                     <ng-template #noExpiresKey><em>Doesn't expire</em></ng-template>
                 </td>
                 <td>

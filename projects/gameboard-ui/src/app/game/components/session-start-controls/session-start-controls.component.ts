@@ -5,9 +5,9 @@ import { GameService } from '../../../api/game.service';
 import { GameContext } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
-import { FontAwesomeService } from '../../../services/font-awesome.service';
-import { SyncStartService } from '../../../services/sync-start.service';
-import { SyncStartGameState } from '../../game.models';
+import { fa } from '@/services/font-awesome.service';
+import { SyncStartService } from '@/services/sync-start.service';
+import { SyncStartGameState } from '@/game/game.models';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { LogService } from '@/services/log.service';
@@ -34,10 +34,10 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
   protected playerReadyPct = 0;
+  protected fa = fa;
 
   constructor(
-    public faService: FontAwesomeService,
-    private gameHubService: GameHubService,
+    private gameHub: GameHubService,
     private gameService: GameService,
     private logService: LogService,
     private playerService: PlayerService,
@@ -47,11 +47,11 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     if (this.ctx.game.requireSynchronizedStart) {
       this.gameService.getSyncStartState(this.ctx.game.id).pipe(first()).subscribe(state => this.handleNewSyncStartState(state));
 
-      this.gameHubStateSub = this.gameHubService.hubState$.subscribe(state => {
+      this.gameHubStateSub = this.gameHub.hubState$.subscribe(state => {
         this.isConnectedToGameHub = state == HubConnectionState.Connected;
       });
 
-      this.syncStartStateChangeSub = this.gameHubService.syncStartGameStateChanged$.subscribe(stateUpdate => {
+      this.syncStartStateChangeSub = this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
         this.handleNewSyncStartState(stateUpdate);
       });
     }

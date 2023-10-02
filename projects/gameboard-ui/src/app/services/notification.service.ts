@@ -76,9 +76,7 @@ export class NotificationService {
         pendingName: p.userName === p.userApprovedName ? p.userName : '',
         userNameStatus: p.nameStatus,
         session: p.sessionBegin && p.sessionEnd ? new TimeWindow(p.sessionBegin, p.sessionEnd) : undefined,
-        sponsorLogo: p.sponsor ?
-          `${this.config.imagehost}/${p.sponsor}`
-          : `${this.config.basehref}assets/sponsor.svg`
+        sponsor: p.sponsor,
       });
     });
 
@@ -195,7 +193,7 @@ export class NotificationService {
       return await this.connection.invoke(message, ...args);
     }
     catch (ex) {
-      this.log.logError("Error on message send:", message, args);
+      this.log.logError("Error on message send:", message, args, ex);
       throw ex;
     }
   }

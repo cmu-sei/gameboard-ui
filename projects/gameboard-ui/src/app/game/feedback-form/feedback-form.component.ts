@@ -4,11 +4,9 @@ import { BoardPlayer, BoardSpec } from '../../api/board-models';
 import { faCaretDown, faCaretRight, faCloudUploadAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subject, Subscription } from 'rxjs';
 import { FeedbackService } from '../../api/feedback.service';
-import { Feedback, QuestionType, FeedbackSubmission, FeedbackTemplate, FeedbackQuestion } from '../../api/feedback-models';
+import { Feedback, FeedbackSubmission, FeedbackQuestion } from '../../api/feedback-models';
 import { BoardGame } from '../../api/board-models';
 import { catchError, combineAll, debounceTime, delay, filter, first, map, mergeAll, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
-import { TimeWindow } from '../../api/player-models';
-import { Game } from '../../api/game-models';
 
 @Component({
   selector: 'app-feedback-form',

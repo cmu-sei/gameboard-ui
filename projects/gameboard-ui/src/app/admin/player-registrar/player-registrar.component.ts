@@ -4,14 +4,14 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
+import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, interval, Observable, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Player, PlayerSearch, ResetSessionRequest, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { FontAwesomeService } from '../../services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { UnityService } from '../../unity/unity.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
@@ -52,6 +52,7 @@ export class PlayerRegistrarComponent {
 
   manageTeamId?: string;
 
+  protected fa = fa;
   protected isLoading = false;
   protected showSessionStatus = true;
 
@@ -63,7 +64,6 @@ export class PlayerRegistrarComponent {
     private api: PlayerService,
     private boardApi: BoardService,
     private clipboard: ClipboardService,
-    protected faService: FontAwesomeService,
     private unityService: UnityService
   ) {
 

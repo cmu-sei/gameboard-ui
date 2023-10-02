@@ -7,13 +7,14 @@ import { Observable } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game, GameEngineMode } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { ConfigService } from '../../utility/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyValue } from '@angular/common';
 import { AppTitleService } from '@/services/app-title.service';
-import { FontAwesomeService } from '@/services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { PlayerMode } from '@/api/player-models';
 import { ToastService } from '@/utility/services/toast.service';
+import { PracticeService } from '@/services/practice.service';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -24,10 +25,12 @@ export class GameEditorComponent implements AfterViewInit {
   @Input() game!: Game;
   @ViewChild(NgForm) form!: FormGroup;
 
+  protected fa = fa;
   game$: Observable<Game>;
   loaded$!: Observable<Game>;
   updated$!: Observable<boolean>;
   dirty = false;
+  needsPracticeModeEnabledRefresh = false;
   refreshFeedback = false;
   feedbackMessage?: string = undefined;
   feedbackWarning: boolean = false;
@@ -52,13 +55,13 @@ export class GameEditorComponent implements AfterViewInit {
   };
 
   constructor(
-    // private router: Router,
+    private router: Router,
     private api: GameService,
     private config: ConfigService,
+    private practiceService: PracticeService,
+    private route: ActivatedRoute,
     private title: AppTitleService,
-    private toast: ToastService,
-    public fa: FontAwesomeService,
-    route: ActivatedRoute
+    private toast: ToastService
   ) {
 
     // one-time get list of all games for field suggestions
@@ -81,8 +84,10 @@ export class GameEditorComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.updated$ = this.form.valueChanges.pipe(
       filter(f => !this.form.pristine && (this.form.valid || false)),
-      tap(g => this.dirty = true),
-      tap(r => {
+      tap(values => {
+        this.dirty = true;
+        this.needsPracticeModeEnabledRefresh = values.playerMode !== this.game.playerMode;
+
         // the first time we flip to "External" mode, if the external game start url isn't specified,
         // default it to gamebrain's url in settings
         if (this.config.gamebrainhost && !this.game.externalGameStartupUrl && !this.defaultExternalGameStartUrlSuggested) {
@@ -93,12 +98,19 @@ export class GameEditorComponent implements AfterViewInit {
       debounceTime(500),
       switchMap(g => this.api.update(this.game)),
       tap(r => this.dirty = false),
-      filter(f => this.refreshFeedback),
+      filter(f => this.refreshFeedback || this.needsPracticeModeEnabledRefresh),
       switchMap(g => this.api.retrieve(this.game.id).pipe(
         tap(game => {
-          this.game.feedbackTemplate = game.feedbackTemplate;
-          this.updateFeedbackMessage();
-          this.refreshFeedback = false;
+          if (this.refreshFeedback) {
+            this.game.feedbackTemplate = game.feedbackTemplate;
+            this.updateFeedbackMessage();
+            this.refreshFeedback = false;
+          }
+
+          if (this.needsPracticeModeEnabledRefresh) {
+            this.practiceService.gamePlayerModeChanged({ gameId: game.id, isPractice: game.isPracticeMode });
+            this.needsPracticeModeEnabledRefresh = false;
+          }
         }))
       ),
       map(g => false)
@@ -140,7 +152,6 @@ export class GameEditorComponent implements AfterViewInit {
     this.api.uploadImage(this.game.id, type, files[0]).subscribe(
       r => {
         this.game.logo = r.filename;
-        this.game.cardUrl = `${this.config.imagehost}/${r.filename}`;
       }
     );
   }
@@ -149,7 +160,6 @@ export class GameEditorComponent implements AfterViewInit {
     this.api.deleteImage(this.game.id, 'card').subscribe(
       r => {
         this.game.logo = r.filename;
-        this.game.cardUrl = `${this.config.basehref}assets/card.png`;
       }
     );
   }
@@ -203,6 +213,7 @@ export class GameEditorComponent implements AfterViewInit {
     // order DESC by occurrence count
     if (a.value < b.value) return 1;
     if (a.value > b.value) return -1;
+
     // order ASC alphabetically by name for occurrence tie
     if (a.key < b.key) return -1;
     if (a.key > b.key) return 1;

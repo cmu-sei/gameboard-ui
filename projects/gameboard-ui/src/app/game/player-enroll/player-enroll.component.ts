@@ -3,13 +3,15 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Observable, of, Subject, Subscription, timer } from 'rxjs';
-import { finalize, map, tap, delay, first } from 'rxjs/operators';
-import { GameContext } from '../../api/game-models';
+import { firstValueFrom, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { map, tap, delay, first } from 'rxjs/operators';
+import { GameContext } from '../../api/models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
+import { UserService as LocalUserService } from '../../utility/user.service';
+import { UserService } from '@/api/user.service';
 
 @Component({
   selector: 'app-player-enroll',
@@ -31,9 +33,13 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   ctx$: Observable<GameContext>;
   ctxDelayed$: Observable<GameContext>;
 
-  disallowedName: string | null = null;
-  disallowedReason: string | null = null;
+  protected canAdminEnroll = false;
+  protected canStandardEnroll = false;
+  protected disallowedName: string | null = null;
+  protected disallowedReason: string | null = null;
+  protected hasSelectedSponsor = false;
   protected managerRole = PlayerRole.manager;
+  protected isEnrolled$: Observable<boolean>;
   protected isManager$ = new Subject<boolean>();
   protected hasTeammates$: Observable<boolean> = of(false);
   protected unenrollTooltip?: string;
@@ -48,7 +54,9 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   constructor(
     private api: PlayerService,
     private config: ConfigService,
-    private hubService: NotificationService
+    private hubService: NotificationService,
+    private localUserService: LocalUserService,
+    private userService: UserService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
       map(i => this.ctx),
@@ -64,6 +72,21 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
             this.disallowedReason = gc.player.nameStatus;
           }
         }
+      }),
+      tap(ctx => {
+        const localUser = this.localUserService.user$.value;
+        const hasPlayerSession = (!!ctx.player.id && !!ctx.player.session && !ctx.player.session.isBefore);
+
+        this.canAdminEnroll = !!localUser && !hasPlayerSession && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
+
+        this.canStandardEnroll = !!localUser && !hasPlayerSession &&
+          ctx.game.registration.isDuring && (
+            !ctx.player.id ||
+            !ctx.player.session ||
+            ctx.player.session?.isBefore
+          );
+
+        this.hasSelectedSponsor = !!ctx.user.sponsor?.id && !ctx.user.hasDefaultSponsor;
       })
     );
 
@@ -72,6 +95,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       delay(this.delayMs)
     );
 
+    this.isEnrolled$ = this.ctx$.pipe(map(ctx => !!ctx.player.id));
     this.hasTeammates$ = this.hubService.actors$.pipe(map(actors => actors.length > 1));
   }
 
@@ -98,21 +122,20 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       });
   }
 
-  redeem(p: Player): void {
+  async redeem(p: Player): Promise<void> {
     const model = {
       playerId: p.id,
       code: this.token.split('/').pop()
     } as PlayerEnlistment;
 
-    this.isEnrolling = true;
-    const sub: Subscription = this.api.enlist(model).pipe(
-      tap(p => this.token = ''),
-      finalize(() => sub.unsubscribe())
-    ).subscribe(
-      p => this.enrolled(p),
-      err => this.errors.push(err),
-      () => this.isEnrolling = false
-    );
+    try {
+      const enlistedPlayer = await firstValueFrom(this.api.enlist(model));
+      this.token = "";
+      this.enrolled(enlistedPlayer);
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   update(p: Player): void {

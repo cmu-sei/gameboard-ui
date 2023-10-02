@@ -3,9 +3,9 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { GameSessionService } from '../services/game-session.service';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { GameSessionService } from '@/services/game-session.service';
 import { ConfigService } from '../utility/config.service';
 import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, ResetSessionRequest, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
@@ -13,10 +13,22 @@ import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, 
 export class PlayerService {
   url = '';
 
+  private _playerSessionReset$ = new Subject<string>();
+  public readonly playerSessionReset$ = this._playerSessionReset$.asObservable();
+
+  private _playerSessionStarted$ = new Subject<string>();
+  public readonly playerSessionStarted$ = this._playerSessionStarted$.asObservable();
+
+  private _playerSessionChanged$ = new Subject<string>();
+  public readonly playerSessionChanged$ = this._playerSessionChanged$.asObservable();
+
+  private _teamSessionChanged$ = new Subject<string>();
+  public readonly teamSessionChanged$ = this._teamSessionChanged$.asObservable();
+
   constructor(
     private http: HttpClient,
     private config: ConfigService,
-    private gameSessionService: GameSessionService
+    private gameSessionService: GameSessionService,
   ) {
     this.url = config.apphost + 'api';
   }
@@ -52,16 +64,26 @@ export class PlayerService {
 
   public start(player: Player): Observable<Player> {
     return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
-      map(p => this.transform(p) as Player)
+      map(p => this.transform(p) as Player),
+      tap(p => this._playerSessionStarted$.next(p.id))
     );
   }
 
-  public resetSession(request: ResetSessionRequest): Observable<void> {
-    return this.http.post<void>(`${this.url}/team/${request.player.teamId}/session`, { unenroll: request.unenroll });
+  public resetSession(request: ResetSessionRequest): Observable<any> {
+    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { unenrollTeam: request.unenroll }).pipe(
+      map(r => {
+        delete request.player.session;
+        return;
+      }),
+      tap(_ => this._playerSessionReset$.next(request.player.id))
+    );
   }
 
-  public updateSession(model: SessionChangeRequest): Observable<any> {
-    return this.http.put<any>(`${this.url}/team/session`, model);
+  public updateSession(model: SessionChangeRequest): Observable<void> {
+    return this.http.put<any>(`${this.url}/team/session`, model).pipe(
+      tap(_ => this._teamSessionChanged$.next(model.teamId)),
+      tap(_ => this._playerSessionChanged$.next(model.teamId)),
+    );
   }
 
   public unenroll(id: string, asAdmin: boolean = false): Observable<void> {
@@ -88,18 +110,11 @@ export class PlayerService {
   }
 
   public getTeam(id: string): Observable<Team> {
-    return this.http.get<Team>(`${this.url}/team/${id}`).pipe(
-      map(t => {
-        t.sponsorList = t.sponsorList.map(s => this.transformSponsorUrl(s));
-        return t;
-      })
-    );
+    return this.http.get<Team>(`${this.url}/team/${id}`);
   }
 
   public getTeams(id: string): Observable<TeamSummary[]> {
-    return this.http.get<TeamSummary[]>(`${this.url}/teams/${id}`).pipe(
-      map(result => result.map(t => this.transformSponsor(t)))
-    );
+    return this.http.get<TeamSummary[]>(`${this.url}/teams/${id}`);
   }
 
   public getTeamChallenges = (id: string): Observable<TeamChallenge[]> =>
@@ -126,9 +141,6 @@ export class PlayerService {
   }
 
   public transform(p: Player, disallowedName: string | null = null): Player {
-    p.sponsorLogo = this.transformSponsorUrl(p.sponsor);
-    p.sponsorList = p.sponsorList.map(s => this.transformSponsorUrl(s));
-
     // If the user has no name status but they changed their name, it's pending approval
     if (!p.nameStatus && p.approvedName !== p.name) {
       p.nameStatus = 'pending';
@@ -148,21 +160,7 @@ export class PlayerService {
   }
 
   private transformStanding(p: Standing): Standing {
-    p.sponsorLogo = p.sponsor
-      ? `${this.config.imagehost}/${p.sponsor}`
-      : `${this.config.basehref}assets/sponsor.svg`;
-
-    p.sponsorTooltip = p.sponsorList.map(s => s.split('.').reverse().pop()?.toUpperCase()).join(' | ');
-    p.sponsorList.forEach((s, i, a) => a[i] = `${this.config.imagehost}/${s}`);
     p.session = new TimeWindow(p.sessionBegin, p.sessionEnd);
     return p;
   }
-
-  private transformSponsor<T extends { sponsorLogo: string, sponsor: string }>(p: T): T {
-    p.sponsorLogo = this.transformSponsorUrl(p.sponsor);
-    return p;
-  }
-
-  private transformSponsorUrl = (sponsor: string): string =>
-    sponsor ? `${this.config.imagehost}/${sponsor}` : `${this.config.basehref}assets/sponsor.svg`;
 }

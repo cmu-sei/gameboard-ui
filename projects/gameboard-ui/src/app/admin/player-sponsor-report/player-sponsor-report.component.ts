@@ -1,8 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Location, PlatformLocation } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FormGroup, NgForm } from '@angular/forms';
 import { Search } from '../../api/models';
@@ -10,13 +9,14 @@ import { ReportService } from '../../api/report.service';
 import { GameService } from '../../api/game.service';
 import { GameSponsorReport, SponsorReport, SponsorStat } from '../../api/report-models';
 import { Game } from '../../api/game-models';
+import { SponsorService } from '../../api/sponsor.service';
 
 @Component({
   selector: 'player-sponsor-user-report',
   templateUrl: './player-sponsor-report.component.html',
   styleUrls: ['./player-sponsor-report.component.scss']
 })
-export class PlayerSponsorReportComponent implements OnInit {
+export class PlayerSponsorReportComponent {
   @ViewChild(NgForm) form!: FormGroup;
   gameSponsorReport?: GameSponsorReport;
   sponsors?: SponsorReport;
@@ -30,7 +30,7 @@ export class PlayerSponsorReportComponent implements OnInit {
   constructor(
     private api: ReportService,
     private gameService: GameService,
-    private platform: PlatformLocation
+    private sponsorService: SponsorService
   ) {
     this.gameService.list(this.search).subscribe(
       r => {
@@ -40,7 +40,6 @@ export class PlayerSponsorReportComponent implements OnInit {
 
           this.api.gameSponsorReport(this.currentGame.id).subscribe(
             r => {
-              r.stats.forEach(gss => gss.stats.forEach(ss => ss.logo = api.getSponsorLogoUrl(ss.logo)));
               this.gameSponsorReport = r;
             }
           );
@@ -51,13 +50,9 @@ export class PlayerSponsorReportComponent implements OnInit {
     this.api.sponsorReport().subscribe(
       r => {
         this.sponsors = r;
-        r.stats.forEach(ss => ss.logo = api.getSponsorLogoUrl(ss.logo));
         this.sponsorStats = r.stats;
       }
     );
-  }
-
-  ngOnInit(): void {
   }
 
   updateGame(id: string) {
@@ -67,7 +62,6 @@ export class PlayerSponsorReportComponent implements OnInit {
       if (this.currentGame) {
         this.api.gameSponsorReport(this.currentGame.id).subscribe(
           r => {
-            r.stats.forEach(gss => gss.stats.forEach(ss => ss.logo = this.api.getSponsorLogoUrl(ss.logo)));
             this.gameSponsorReport = r;
           }
         );

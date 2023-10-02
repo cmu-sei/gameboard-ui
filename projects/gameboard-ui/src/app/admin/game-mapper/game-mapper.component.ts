@@ -9,7 +9,7 @@ import { GameService } from '../../api/game.service';
 import { ExternalSpec, NewSpec, Spec } from '../../api/spec-models';
 import { SpecService } from '../../api/spec.service';
 import { ConfigService } from '../../utility/config.service';
-import { FontAwesomeService } from '../../services/font-awesome.service';
+import { fa } from '@/services/font-awesome.service';
 import { ChallengeSpecScoringConfig, GameScoringConfig } from '@/services/scoring/scoring.models';
 import { ScoringService } from '@/services/scoring/scoring.service';
 
@@ -23,6 +23,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   @ViewChild('mapbox') mapboxRef!: ElementRef;
   @ViewChild('callout') calloutRef!: ElementRef;
 
+  protected fa = fa;
   mapbox!: HTMLDivElement;
   callout!: HTMLDivElement;
   specDrag: Spec | null = null;
@@ -48,18 +49,23 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   viewing = 'edit';
   addedCount = 0;
 
+  protected hasZeroPointSpecs$: Observable<boolean>;
+
   constructor(
     private api: SpecService,
     private gameSvc: GameService,
     private renderer: Renderer2,
     private config: ConfigService,
-    public faService: FontAwesomeService,
     scoringService: ScoringService
   ) {
     this.list$ = this.refresh$.pipe(
       debounceTime(500),
       switchMap(id => gameSvc.retrieveSpecs(id)),
       tap(r => this.list = r),
+    );
+
+    this.hasZeroPointSpecs$ = this.list$.pipe(
+      map(specList => specList.some(s => !s.disabled && (!s.points || s.points <= 0)))
     );
 
     this.gameBonusesConfig$ = this.refresh$.pipe(
@@ -112,7 +118,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     this.updated$ = this.updating$.pipe(
       debounceTime(500),
       filter(s => s.points === 0 || s.points > 0),
-      switchMap(s => api.update(s))
+      switchMap(s => api.update(s)),
+      tap(s => this.refresh())
     );
 
     this.deleted$ = this.deleting$.pipe(

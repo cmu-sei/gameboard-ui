@@ -4,6 +4,7 @@
 import { ChallengeResult } from "./board-models";
 import { Game } from "./game-models";
 import { Search, SimpleEntity } from "./models";
+import { Sponsor } from "./sponsor-models";
 
 export interface Player {
   id: string;
@@ -17,7 +18,7 @@ export interface Player {
   name: string;
   nameStatus: string;
   approvedName: string;
-  sponsor: string;
+  sponsor: Sponsor;
   role: PlayerRole;
   mode: PlayerMode;
   sessionBegin: Date;
@@ -32,8 +33,7 @@ export interface Player {
   isManager: boolean;
   isReady: boolean;
   advanced: boolean;
-  sponsorLogo: string;
-  sponsorList: string[];
+  teamSponsorLogos: string[];
   pendingName: string;
   checked: boolean;
 }
@@ -143,33 +143,6 @@ export interface ChangedPlayer {
   name: string;
   nameStatus: string;
   approvedName: string;
-  sponsor: string;
-  role: PlayerRole;
-}
-
-export interface ObservePlayer {
-  id: string;
-  teamId: string;
-  userId: string;
-  userName: string;
-  gameId: string;
-  name: string;
-  approvedName: string;
-  sponsor: string;
-  sessionBegin: Date;
-  sessionEnd: Date;
-  sessionMinutes: number;
-  rank: number;
-  score: number;
-  time: number;
-  correctCount: number;
-  partialCount: number;
-  sponsorLogo: string;
-  session: TimeWindow;
-
-  expanded: boolean;
-  pinned: boolean;
-  fullWidth: boolean;
 }
 
 export interface SelfChangedPlayer {
@@ -196,7 +169,6 @@ export interface ResetSessionRequest {
 export interface Standing {
   teamId: string;
   approvedName: string;
-  sponsor: string;
   sessionBegin: Date;
   sessionEnd: Date;
   rank: number;
@@ -205,10 +177,8 @@ export interface Standing {
   correctCount: number;
   partialCount: number;
   session: TimeWindow;
-  sponsorLogo: string;
   advanced: boolean;
-  sponsorList: string[];
-  sponsorTooltip: string;
+  sponsors: Sponsor[];
 }
 
 export interface TeamInvitation {
@@ -235,7 +205,7 @@ export interface Team {
   partialCount: number;
   challenges: TeamChallenge[];
   members: TeamMember[];
-  sponsorList: string[];
+  sponsors: SimpleEntity[];
 }
 
 export interface TeamChallenge {
@@ -262,10 +232,9 @@ export interface TeamPlayer {
   name: string;
   nameStatus: string;
   approvedName: string;
-  sponsor: string;
+  sponsor: Sponsor;
   role: PlayerRole;
   isManager: boolean;
-  sponsorLogo: string;
   pendingName: string;
 }
 
@@ -289,7 +258,6 @@ export interface ObserveTeam {
   teamId: string;
   approvedName: string;
   gameId: string;
-  sponsor: string;
   sessionBegin: Date;
   sessionEnd: Date;
   rank: number;
@@ -300,6 +268,7 @@ export interface ObserveTeam {
   members: ObserveTeamMember[];
   expanded: boolean;
   pinned: boolean;
+  sponsors: SimpleEntity[];
 }
 
 export interface ObserveTeamMember {
@@ -314,6 +283,7 @@ export interface PlayerCertificate {
   game: Game;
   player: Player;
   html: string;
+  publishedOn?: Date;
 }
 
 export interface PlayerSearch extends Search {

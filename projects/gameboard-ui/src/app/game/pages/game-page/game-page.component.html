@@ -11,7 +11,7 @@
     <div class="d-flex flex-column align-items-center">
       <a [routerLink]="['../', 'scores', ctx.game.id]" class="p-4">
         <span>
-          <fa-icon [icon]="faService.listOl"></fa-icon>
+          <fa-icon [icon]="fa.listOl"></fa-icon>
           <span>Scoreboard</span>
         </span>
       </a>
@@ -33,8 +33,7 @@
         <div class="col panel">
           <div tabindex="0" (click)="showCert = !showCert">
             <div class="d-flex align-items-center">
-              <fa-icon class="d-inline" [icon]="showCert ? faService.caretDown : faService.caretRight"
-                size="lg"></fa-icon>
+              <fa-icon class="d-inline" [icon]="showCert ? fa.caretDown : fa.caretRight" size="lg"></fa-icon>
               <span>
                 <h2 class="d-inline">Certificate</h2>
               </span>
@@ -62,7 +61,7 @@
 
         <!-- if not session start -->
         <ng-container
-          *ngIf="(ctx.user.isDesigner || !ctx.game.registration.isAfter) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
+          *ngIf="(!ctx.game.registration.isAfter || (canAdminEnroll$ | async)) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
           <div class="col panel">
             <h2>Enrollment</h2>
             <app-player-enroll [ctx]="ctx" (onEnroll)="onEnroll($event)"
@@ -83,7 +82,7 @@
           <span>Scoreboard</span>&nbsp;&nbsp;
           <a [routerLink]="['../', 'scores', ctx.game.id]">
             <small>
-              <fa-icon [icon]="faService.externalLinkAlt"></fa-icon>
+              <fa-icon [icon]="fa.externalLinkAlt"></fa-icon>
             </small>
           </a>
         </h2>

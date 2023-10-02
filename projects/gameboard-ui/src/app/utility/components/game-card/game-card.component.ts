@@ -1,47 +1,21 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { faUser, faUsers, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { BoardGame } from '../../../api/board-models';
-import { Game } from '../../../api/game-models';
-import { ConfigService } from '../../config.service';
-import { catchError } from 'rxjs/operators';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BoardGame } from '@/api/board-models';
+import { Game } from '@/api/game-models';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-game-card',
   templateUrl: './game-card.component.html',
   styleUrls: ['./game-card.component.scss']
 })
-export class GameCardComponent implements OnInit {
+export class GameCardComponent {
   @Input() game!: Game | BoardGame;
   @Output() selected = new EventEmitter<Game | BoardGame>();
 
-  faUser = faUser;
-  faUsers = faUsers;
-  faEyeSlash = faEyeSlash;
-
-  constructor(
-    private config: ConfigService
-  ) { }
-
-  ngOnInit(): void {
-    if (this.game) {
-      this.game.cardUrl = this.game.logo
-        ? `${this.config.imagehost}/${this.game.logo}`
-        : `${this.config.basehref}assets/card.png`
-      ;
-
-      this.game.modeUrl = this.game.mode
-        ? `${this.config.basehref}assets/img/${this.game.mode}.png`
-        : `${this.config.basehref}assets/img/vm.png`
-      ;
-    }
-  }
-
-  setModeUrlPath() {
-    this.game.modeUrl = '';
-  }
+  protected fa = fa;
 
   select(): void {
     this.selected.next(

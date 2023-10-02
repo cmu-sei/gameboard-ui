@@ -11,16 +11,16 @@
   <div class="col-2">
     <div class="d-flex flex-column">
       <button class="mb-1 btn btn-secondary" (click)="view('search')">
-        <fa-icon [icon]="faService.search"></fa-icon>
+        <fa-icon [icon]="fa.search"></fa-icon>
         <span>Search</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('edit')">
-        <fa-icon [icon]="faService.edit"></fa-icon>
+        <fa-icon [icon]="fa.edit"></fa-icon>
         <span>Edit</span>
         <span *ngIf="!!addedCount" class="ml-2 px-2 badge badge-info">{{addedCount}}</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('map')">
-        <fa-icon [icon]="faService.mapMarker"></fa-icon>
+        <fa-icon [icon]="fa.mapMarker"></fa-icon>
         <span>Map</span>
       </button>
       <ng-container *ngIf="viewing==='map'">
@@ -29,13 +29,16 @@
         </button>
         <app-dropzone inputId="map-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event)">
           <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
-            <fa-icon [icon]="faService.trash"></fa-icon>
+            <fa-icon [icon]="fa.trash"></fa-icon>
             <span>Reset</span>
           </button>
         </app-dropzone>
         <div class="form-group pb-1 pt-1">
+          <!-- <label for="logo-input">Map Image</label> -->
         </div>
-        <div>Alt-Drag (Option-Drag on Mac) to resize hotspots</div>
+        <div>
+          Alt+Drag (Option+Drag on Macs) to resize hotspots
+        </div>
       </ng-container>
     </div>
   </div>
@@ -44,17 +47,25 @@
 
     <!-- edit game specs -->
     <div [hidden]="viewing!=='edit'">
-      <h3>Specs</h3>
+      <h4>Challenge Specs</h4>
+
+      <alert *ngIf="hasZeroPointSpecs$ | async" type="warning" class="my-2">
+        At least one of this game's enabled challenge specs has a point value of <strong>zero</strong>. This makes it
+        impossible for Gameboard to determine when a challenge has been completed. We <strong>strongly</strong>
+        recommend assigning a non-zero point value to each challenge.
+      </alert>
 
       <button class="mt-2 mb-4 btn btn-sm btn-outline-info" (click)="sync()">
-        <fa-icon [icon]="faService.sync"></fa-icon>
+        <fa-icon [icon]="fa.sync"></fa-icon>
         <span>Sync with Source</span>
       </button>
 
-      <div *ngFor="let item of list$ | async; trackBy:trackById">
-        <app-game-challenge-spec-config class="d-block mb-2" [spec]="item" [scoringConfig]="specConfigMap[item.id]"
-          (deleted)="deleting$.next(item)" (updated)="updating$.next(item)"></app-game-challenge-spec-config>
-      </div>
+      <ul class="spec-list mt-4">
+        <li *ngFor="let spec of list$ | async">
+          <app-challenge-spec-editor class="d-block mb-3" [spec]="spec"
+            [showSolutionGuide]="game.playerMode == 'practice'"></app-challenge-spec-editor>
+        </li>
+      </ul>
 
       <!-- pre reqs -->
       <div class="prereqs-container my-5">

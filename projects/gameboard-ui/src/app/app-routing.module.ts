@@ -2,10 +2,12 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, TitleStrategy, provideRouter } from '@angular/router';
 import { HomePageComponent } from './home/home-page/home-page.component';
 import { AdminGuard } from './utility/admin.guard';
 import { AuthGuard } from './utility/auth.guard';
+import { GbTitleStrategy } from './services/gb-title-strategy';
+import { practiceModeEnabledGuard } from './prac/practice-mode-enabled.guard';
 
 const routes: Routes = [
   {
@@ -15,13 +17,18 @@ const routes: Routes = [
   },
   {
     path: 'game',
-    // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
     loadChildren: () => import('./game/game.module').then(m => m.GameModule)
   },
   {
-    path: 'prac',
-    // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
-    loadChildren: () => import('./prac/prac.module').then(m => m.PracModule)
+    path: 'practice',
+    canLoad: [practiceModeEnabledGuard], canActivate: [practiceModeEnabledGuard], canActivateChild: [practiceModeEnabledGuard],
+    loadChildren: () => import('./prac/prac.module').then(m => m.PracModule),
+    title: "Practice"
+  },
+  {
+    path: "user",
+    title: "User",
+    loadChildren: () => import("./users/users.module").then(m => m.UsersModule)
   },
   {
     path: 'support',
@@ -29,8 +36,12 @@ const routes: Routes = [
     loadChildren: () => import('./support/support.module').then(m => m.SupportModule)
   },
   {
+    path: 'reports',
+    canLoad: [AuthGuard], canActivate: [AuthGuard], canActivateChild: [AuthGuard],
+    loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
+  },
+  {
     path: '',
-    // canLoad: [AdminGuard], canActivate: [AdminGuard], canActivateChild: [AdminGuard],
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
   },
   { path: '', component: HomePageComponent, pathMatch: 'full' }
@@ -39,6 +50,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    {
+      provide: TitleStrategy,
+      useClass: GbTitleStrategy,
+    }
+  ]
 })
 export class AppRoutingModule { }

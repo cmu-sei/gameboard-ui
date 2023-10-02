@@ -1,0 +1,178 @@
+<a class="btn btn-link" routerLink="../">
+  <fa-icon [icon]="fa.arrowLeft"></fa-icon>
+  <span>Back</span>
+</a>
+
+<h4 class="mb-2">Support</h4>
+
+<form #form="ngForm" class="form-row" autocomplete="off">
+  <div class="col-6 input-group mb-4 align-items-center" *ngIf="true">
+    <div>
+      <select class="form-control" #selectGame (change)="updateGame(selectGame.value)">
+        <option value="all">All Tickets</option>
+        <option *ngFor="let g of games" value="{{g.id}}">{{g.name}}</option>
+      </select>
+      <small>See stats for all tickets, or filter tickets that are linked to a specific game</small>
+    </div>
+  </div>
+  <div class="col-6  d-flex flex-column">
+    <div class="input-group mb-1 justify-content-end">
+      <label for="startRange" class="m-0">Range Start: </label>&nbsp;
+      <input id="startRange" type="datetime-local" name="startRange" [max]="endRange" [(ngModel)]="startRange"
+        (change)="updateSearch()">
+    </div>
+    <div class="input-group justify-content-end">
+      <label for="startRange" class="m-0">Range End: </label>&nbsp;
+      <input id="startRange" type="datetime-local" name="endRange" [min]="startRange" [(ngModel)]="endRange"
+        (change)="updateSearch()">
+    </div>
+  </div>
+</form>
+
+<br>
+
+<div class="container table-dark border mb-4">
+  <div class="row">
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketDetailReport()">Export Ticket Detail
+          Report to CSV
+        </button>
+      </div>
+    </div>
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketDayStatsReport()">Export Ticket Day
+          Stats Report to CSV</button>
+      </div>
+    </div>
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketLabelStatsReport()">Export Ticket Label
+          Stats Report to CSV
+        </button>
+      </div>
+    </div>
+    <div class="col-3 p-2 font-weight-bold">
+      <div>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTicketChallengeStatsReport()">Export Ticket
+          Challenge Stats Report to CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-10 p-2">
+      <div class="section-header my-2" tabindex="0" (click)="showDays = !showDays">
+        <fa-icon [icon]="showDays ? fa.caretDown : fa.caretRight" size="lg"></fa-icon>
+        <span class="">
+          <h3 class="d-inline">Shifts
+          </h3>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" [hidden]="!showDays">
+    <table class="table mb-1" *ngIf="dayStats$ | async as report; else loading">
+      <thead class="thead-dark border-0 table-header">
+        <tr>
+          <th>Day</th>
+          <th class="text-center" *ngFor="let shift of report.shifts">{{shift[0]}}-{{shift[1]}} {{report.timezone}}</th>
+          <th class="text-center">Outside of Shifts</th>
+          <th class="text-center">Total Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stat of report.ticketDays">
+          <td>
+            <div class="font-weight-bold">{{stat.dayOfWeek}}</div>
+            <small>{{stat.date}}</small>
+          </td>
+          <td *ngFor="let count of stat.shiftCounts" class="text-center">
+            <div>{{count}}</div>
+          </td>
+          <td class="text-center">
+            <div>{{stat.outsideShiftCount}}</div>
+          </td>
+          <td class="text-center">
+            <div>{{stat.count}}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <small *ngIf="!startRange && !endRange">Showing the 7 most recent days. Use the date range setting above to list
+      different days here.</small>
+  </div>
+
+
+  <div class="row">
+    <div class="col-10 p-2">
+      <div class="section-header my-2" tabindex="0" (click)="showCategories = !showCategories">
+        <fa-icon [icon]="showCategories ? fa.caretDown : fa.caretRight" size="lg"></fa-icon>
+        <span class="">
+          <h3 class="d-inline">Categories</h3>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" [hidden]="!showCategories">
+    <div class="row">
+      <div class="col-6 col-lg-4 px-2">
+        <table class="table">
+          <thead class="thead-dark border-0 table-header">
+            <tr>
+              <th>Label</th>
+              <th class="text-right">Count</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="labelStats$ | async as stats; else loading">
+            <tr *ngFor="let stat of stats">
+              <td>
+                <span class="badge badge-pill text-black mr-2"
+                  [ngStyle]="stat.label | textToColor">{{stat.label}}</span>
+              </td>
+              <td>
+                <div class="text-right">{{stat.count}}</div>
+              </td>
+            </tr>
+            <small *ngIf="!stats.length">No results</small>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-6  col-lg-4 px-2">
+        <table class="table">
+          <thead class="thead-dark border-0 table-header">
+            <tr>
+              <th>Challenge</th>
+              <th class="text-right">Count</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="challengeStats$ | async as stats; else loading">
+            <tr *ngFor="let stat of stats">
+              <td>
+                <div>{{stat.challengeTag || '--'}}</div>
+                <small>{{stat.challengeName}}</small>
+              </td>
+              <td>
+                <div class="text-right">{{stat.count}}</div>
+              </td>
+            </tr>
+            <small *ngIf="!stats.length">No results</small>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #loading>
+  <div class="text-center">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>

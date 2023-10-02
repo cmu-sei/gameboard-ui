@@ -1,10 +1,6 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<a class="btn btn-link" routerLink="../../">
-  <fa-icon [icon]="faArrowLeft"></fa-icon>
-  <span>Back</span>
-</a>
 <h4>Players</h4>
 
 <ng-container *ngIf="players$ | async as players; else loading">
@@ -32,16 +28,17 @@
     </div>
   </div>
 
-  <small *ngIf="players.length === search.take" class="text-warning">Results limited to {{search.take}}. Refine search
-    term if necessary.</small>
+  <small *ngIf="players.length === search.take" class="text-warning">
+    Results limited to {{search.take}}. Refine search term if necessary.
+  </small>
   <hr />
 
   <small class="text-warning mx-2">count: {{players.length}}</small>
 
   <div *ngFor="let player of players; trackBy:trackById"
     class="d-flex mb-1 mx-2 p-2 flex-wrap align-items-center rounded">
-    <app-player-avatar-list [avatarUris]="player.sponsorList" [enableCaptainSessionStatusDisplay]="true"
-      [captainSession]="player.session"></app-player-avatar-list>
+    <app-player-avatar-list [avatarUris]="player.teamSponsorLogos | sponsorLogoFileNamesToUris"
+      [enableCaptainSessionStatusDisplay]="true" [captainSession]="player.session"></app-player-avatar-list>
     <div>
       <div class="player-info">
         <span class="mx-2">{{player.approvedName}}</span>

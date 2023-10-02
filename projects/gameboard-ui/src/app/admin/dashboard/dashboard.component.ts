@@ -92,9 +92,6 @@ export class DashboardComponent implements OnInit {
   remove(game: Game): void {
     const index = this.games.indexOf(game);
     this.games.splice(index, 1);
-    // if (this.game === game) {
-    //   this.game = null;
-    // }
   }
 
   select(game: Game): void {

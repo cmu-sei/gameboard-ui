@@ -1,0 +1,31 @@
+<div class="report-card-component cursor-hand" *ngIf="report">
+    <a class="d-block" [routerLink]="reportUrl">
+        <div class="title-container">
+            <h1>{{report.name}}</h1>
+        </div>
+
+        <p class="description">
+            {{report.description}}
+        </p>
+
+        <div class="notable-fields-container mt-4" *ngIf="report.exampleFields?.length">
+            <h4>Fields</h4>
+
+            <ul class="d-flex align-items-center flex-wrap">
+                <li class="d-inline-block" *ngFor="let field of report.exampleFields">
+                    <span class="parameter-name badge badge-info">{{field}}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="params-container mt-4" *ngIf="report.exampleParameters">
+            <h4>Filters</h4>
+
+            <ul class="d-flex align-items-center flex-wrap">
+                <li class="d-inline-block" *ngFor="let param of report.exampleParameters">
+                    <span class="parameter-name badge badge-info">{{param}}</span>
+                </li>
+            </ul>
+        </div>
+    </a>
+</div>

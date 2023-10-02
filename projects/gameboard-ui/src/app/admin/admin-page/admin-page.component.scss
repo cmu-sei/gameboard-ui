@@ -1,7 +1,16 @@
 a {
   font-size: 1.3rem;
 }
+
 .admin-header {
   padding-top: 1rem;
   padding-left: 2rem;
+}
+
+nav a:first-of-type {
+  padding-left: 0;
+}
+
+.active {
+  text-decoration: underline;
 }

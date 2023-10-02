@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Player, TimeWindow } from '../../../api/player-models';
-import { FontAwesomeService } from '../../../services/font-awesome.service';
+import { Player } from '../../../api/player-models';
+import { fa } from '@/services/font-awesome.service';
 import { GameSessionService } from '../../../services/game-session.service';
 import { ClipboardService } from '../../../utility/services/clipboard.service';
 import { ToastService } from '../../../utility/services/toast.service';
@@ -19,11 +19,11 @@ export class TeamAdminContextMenuComponent implements OnInit {
   @Output() onUnenrollRequest = new EventEmitter<Player>();
   @Output() onViewRequest = new EventEmitter<Player>();
 
-  isResettingSession = false;
+  protected fa = fa;
+  protected isResettingSession = false;
 
   constructor(
     private clipboardService: ClipboardService,
-    protected faService: FontAwesomeService,
     private gameSessionService: GameSessionService,
     private toastService: ToastService) { }
 

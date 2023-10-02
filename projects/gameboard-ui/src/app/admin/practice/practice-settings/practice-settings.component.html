@@ -1,0 +1,76 @@
+<ng-container *ngIf="ctx">
+    <div class="greeting-container settings-section mt-4">
+        <h2>Practice Page Greeting</h2>
+        <p>
+            This text appears on the practice page to introduce players to playing in the Practice Area. Edit it below
+            to customize it to your needs.
+        </p>
+
+        <textarea class="form-control" [placeholder]="ctx.introTextPlaceholder"
+            [(ngModel)]="ctx.settings.introTextMarkdown" (input)="handleSettingsChanged(ctx.settings)"
+            rows="5"></textarea>
+    </div>
+
+    <div class="suggested-searches-container settings-section">
+        <h2>Suggested searches</h2>
+
+        <p>
+            These search terms will appear on the homepage of the Practice Area, just below the greeting. You can use
+            these to direct players to useful or interesting subsets of the available practice challenges.
+        </p>
+
+        <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
+            [(ngModel)]="suggestedSearchesLineDelimited" rows="10">
+
+        </textarea>
+        <small><strong>NOTE:</strong> Enter one suggested search per line.</small>
+    </div>
+
+    <div class="greeting-container settings-section">
+        <h2>Certificate Template</h2>
+        <p>
+            Players are able to save certificates in PDF format for each practice challenge they fully complete. Use
+            this field to customize the appearance of these certificates.
+        </p>
+
+        <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
+            [placeholder]="certificateHtmlPlaceholder" [(ngModel)]="ctx.settings.certificateHtmlTemplate"
+            rows="5"></textarea>
+        <button type="button" class="btn btn-link text-info" (click)="handleShowCertificateTemplateHelp()">
+            How do I create a certificate template?
+        </button>
+    </div>
+
+    <div class="concurrent-sessions-container settings-section">
+        <h2>Session Limits</h2>
+        <p>
+            You can use the controls below to set limits on practice sessions, including how many can be active at once
+            how long they are by default, and the max length that a player can play in a single practice session.
+        </p>
+
+        <div class="concurrent-session-controls-container d-flex">
+            <div class="form-group pl-0">
+                <label for="maxConcurrentUsers">Maximum Concurrent Users</label>
+                <input type="number" class="form-control" name="maxConcurrentUsers"
+                    placeholder="Leave blank for no maximum" min="1" (input)="handleSettingsChanged(ctx.settings)"
+                    [(ngModel)]="ctx.settings.maxConcurrentPracticeSessions">
+            </div>
+
+            <div class="form-group">
+                <label for="defaultSessionLength">Default Session Length (in Minutes)</label>
+                <input type="number" class="form-control" name="defaultSessionLength" min="5" required
+                    (change)="handleSettingsChanged(ctx.settings)"
+                    [popover]="'The default session length is required and defaults to 60 minutes if unset.'"
+                    [isOpen]="!ctx.settings.defaultPracticeSessionLengthMinutes" placement="bottom" triggers=""
+                    [(ngModel)]="ctx.settings.defaultPracticeSessionLengthMinutes">
+            </div>
+
+            <div class="form-group">
+                <label for="maxSessionLength">Maximum Session Length (in Minutes)</label>
+                <input type="number" class="form-control" name="maxSessionLength"
+                    placeholder="Leave blank for no maximum" min="5" (change)="handleSettingsChanged(ctx.settings)"
+                    [(ngModel)]="ctx.settings.maxPracticeSessionLengthMinutes">
+            </div>
+        </div>
+    </div>
+</ng-container>

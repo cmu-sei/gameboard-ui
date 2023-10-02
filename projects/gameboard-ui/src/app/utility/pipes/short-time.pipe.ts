@@ -3,7 +3,6 @@ import { ConfigService } from '../config.service';
 
 @Pipe({ name: 'shorttime' })
 export class ShortTimePipe implements PipeTransform {
-
   constructor(private config: ConfigService) { }
 
   transform(date: any, timeZone = false, includeSeconds = false): string {
@@ -13,5 +12,4 @@ export class ShortTimePipe implements PipeTransform {
       ;
     return style.format(new Date(date));
   }
-
 }
