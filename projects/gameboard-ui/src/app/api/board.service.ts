@@ -8,7 +8,6 @@ import { map } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
 import { BoardPlayer, BoardSpec, Challenge, ChallengeResult, ChallengeSummary, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
-import { FeedbackTemplate } from './feedback-models';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
