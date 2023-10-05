@@ -4,7 +4,7 @@ import { Observable, Subject, map, switchMap, tap } from 'rxjs';
 import { Challenge, NewChallenge, SectionSubmission } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
-import { LocalActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
+import { ChallengeSolutionGuide, LocalActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
 import { LocalTimeWindow } from '@/core/models/api-time-window';
 import { PlayerMode } from './player-models';
 
@@ -83,5 +83,9 @@ export class ChallengesService {
     return this.http.put<Challenge>(this.apiUrl.build("challenge/regrade"), { id }).pipe(
       tap(challenge => this._challengeGraded$.next(challenge))
     );
+  }
+
+  public getSolutionGuide(challengeId: string): Observable<ChallengeSolutionGuide | null> {
+    return this.http.get<ChallengeSolutionGuide>(this.apiUrl.build(`challenge/${challengeId}/solution-guide`));
   }
 }

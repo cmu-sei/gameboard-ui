@@ -67,13 +67,14 @@ import { MinPipe } from './pipes/min.pipe';
 import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
 import { SimpleEntitiesToTooltipPipe } from './pipes/simple-entities-to-tooltip.pipe';
 import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
-import { SponsorLogoToLogoUriPipe } from './pipes/sponsor-logo-to-logo-uri.pipe';
 import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
 import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
+import { ChallengeSolutionGuideComponent } from './components/challenge-solution-guide/challenge-solution-guide.component';
 
 const PUBLIC_DECLARATIONS = [
   ApiUrlPipe,
   AssetPathPipe,
+  ChallengeSolutionGuideComponent,
   ColoredTextChipComponent,
   ConfirmButtonComponent,
   CumulativeTimeClockComponent,

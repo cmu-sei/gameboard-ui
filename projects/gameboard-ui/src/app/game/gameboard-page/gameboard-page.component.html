@@ -75,6 +75,9 @@
             <markdown *ngIf="spec.instance?.state?.challenge" [data]="spec.instance!.state.challenge.text || ''">
             </markdown>
 
+            <app-challenge-solution-guide *ngIf="spec.instance?.id"
+              [challengeId]="spec.instance!.id"></app-challenge-solution-guide>
+
             <ng-container *ngIf="!!spec.instance!.state && spec.instance!.state.isActive">
               <h3>Gamespace Resources</h3>
               <div *ngIf="!deploying && ctx.session.isDuring">
@@ -130,7 +133,6 @@
               <app-feedback-form [boardPlayer]="ctx" [title]="'Challenge Feedback'" [spec]="spec"
                 [type]="'challenge'"></app-feedback-form>
             </div>
-
           </ng-container>
         </div>
       </div>
