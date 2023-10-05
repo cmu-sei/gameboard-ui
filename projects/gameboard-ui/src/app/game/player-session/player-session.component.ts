@@ -13,6 +13,7 @@ import { fa } from '@/services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { TeamService } from '@/api/team.service';
 
 @Component({
   selector: 'app-player-session',
@@ -46,6 +47,7 @@ export class PlayerSessionComponent implements OnDestroy {
     private api: PlayerService,
     private modalService: ModalConfirmService,
     private localUserService: LocalUserService,
+    private teamService: TeamService,
     private userService: UserService,
   ) { }
 
@@ -130,7 +132,8 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   private async doReset(p: Player) {
-    await firstValueFrom(this.api.resetSession({ player: p, unenroll: true }));
+    await firstValueFrom(this.teamService.resetSession(p.teamId, { unenrollTeam: true }));
+    delete p.session;
     this.onSessionReset.emit(p);
   }
 

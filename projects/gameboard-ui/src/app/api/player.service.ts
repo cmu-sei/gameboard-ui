@@ -7,7 +7,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { GameSessionService } from '@/services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, ResetSessionRequest, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -66,16 +66,6 @@ export class PlayerService {
     return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
       map(p => this.transform(p) as Player),
       tap(p => this._playerSessionStarted$.next(p.id))
-    );
-  }
-
-  public resetSession(request: ResetSessionRequest): Observable<any> {
-    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { unenrollTeam: request.unenroll }).pipe(
-      map(r => {
-        delete request.player.session;
-        return;
-      }),
-      tap(_ => this._playerSessionReset$.next(request.player.id))
     );
   }
 

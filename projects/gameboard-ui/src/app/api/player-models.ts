@@ -161,11 +161,6 @@ export interface PlayerEnlistment {
   code: string;
 }
 
-export interface ResetSessionRequest {
-  player: Player;
-  unenroll: boolean;
-}
-
 export interface Standing {
   teamId: string;
   approvedName: string;

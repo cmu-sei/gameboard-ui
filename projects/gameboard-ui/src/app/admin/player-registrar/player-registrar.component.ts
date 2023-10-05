@@ -9,13 +9,15 @@ import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs
 import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { Player, PlayerSearch, ResetSessionRequest, TimeWindow } from '../../api/player-models';
+import { Player, PlayerSearch } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { UnityService } from '../../unity/unity.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 import { ManageManualChallengeBonusesModalComponent } from '../components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
+import { TeamService } from '@/api/team.service';
+import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 
 @Component({
   selector: 'app-player-registrar',
@@ -64,6 +66,7 @@ export class PlayerRegistrarComponent {
     private api: PlayerService,
     private boardApi: BoardService,
     private clipboard: ClipboardService,
+    private teamService: TeamService,
     private unityService: UnityService
   ) {
 
@@ -171,8 +174,8 @@ export class PlayerRegistrarComponent {
     await firstValueFrom(this.unityService.undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true }));
   }
 
-  resetSession(request: ResetSessionRequest): void {
-    this.api.resetSession(request).pipe(first()).subscribe(_ => {
+  resetSession(request: TeamAdminContextMenuSessionResetRequest): void {
+    this.teamService.resetSession(request.player.teamId, { unenrollTeam: request.unenrollTeam }).pipe(first()).subscribe(_ => {
       this.refresh$.next(true);
     });
   }
@@ -237,11 +240,11 @@ export class PlayerRegistrarComponent {
     );
   }
 
-  confirmReset(request: ResetSessionRequest) {
+  confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
     this.modalConfirmService.openConfirm({
       bodyContent: `
       Are you sure you want to reset the session for ${request.player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?
-      ${(!request.unenroll ? "" : `
+      ${(!request.unenrollTeam ? "" : `
         They'll also be unenrolled from the game.`)}
       `,
       title: `Reset ${request.player.approvedName}'s session?`,

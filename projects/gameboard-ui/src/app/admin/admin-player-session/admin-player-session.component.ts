@@ -5,9 +5,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
-import { Player, ResetSessionRequest, Team, TimeWindow } from '../../api/player-models';
+import { Player, Team, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { GameSessionService } from '../../services/game-session.service';
+import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 
 @Component({
   selector: 'app-admin-player-session',
@@ -18,7 +19,7 @@ export class PlayerSessionComponent implements OnInit {
   @Input() player!: Player;
   @Output() onManageManualBonusesRequest = new EventEmitter<string>();
   @Output() onUnenrollRequest = new EventEmitter<string>();
-  @Output() onResetSessionRequest = new EventEmitter<ResetSessionRequest>();
+  @Output() onResetSessionRequest = new EventEmitter<TeamAdminContextMenuSessionResetRequest>();
 
   team$!: Observable<Team>;
   team!: Team;
