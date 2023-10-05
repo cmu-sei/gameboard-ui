@@ -43,8 +43,6 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
 
-
-
 @NgModule({
   declarations: [
     AdminPageComponent,
@@ -78,6 +76,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
+    ChallengeSpecEditorComponent,
   ],
   imports: [
     CommonModule,

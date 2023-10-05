@@ -62,8 +62,8 @@
 
       <ul class="spec-list mt-4">
         <li *ngFor="let spec of list$ | async">
-          <app-challenge-spec-editor class="d-block mb-3" [spec]="spec" (specUpdate)="this.refresh()"
-            [showSolutionGuide]="game.playerMode == 'practice'"></app-challenge-spec-editor>
+          <app-challenge-spec-editor class="d-block mb-3" [spec]="spec"
+            (specUpdate)="this.refresh()"></app-challenge-spec-editor>
         </li>
       </ul>
 
