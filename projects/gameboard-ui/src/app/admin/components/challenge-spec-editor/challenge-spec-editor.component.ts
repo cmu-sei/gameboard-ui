@@ -19,6 +19,18 @@ export class ChallengeSpecEditorComponent implements OnChanges {
   protected fa = fa;
   protected slug = slug;
   protected requestUpdateSpec$ = new Subject<Spec>();
+  constructor(
+    private specService: SpecService,
+    private unsub: UnsubscriberService) {
+    this.unsub.add(
+      this.requestUpdateSpec$.pipe(
+        debounceTime(500),
+        filter(s => s.points >= 0),
+        switchMap(s => this.specService.update(s)),
+        tap(s => this.specUpdate.emit(s)),
+      ).subscribe()
+    );
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.spec) {
@@ -27,7 +39,7 @@ export class ChallengeSpecEditorComponent implements OnChanges {
   }
 
   protected handleSpecUpdated(spec: Spec) {
-    this.specUpdate.emit(spec);
+    this.requestUpdateSpec$.next(spec);
   }
 
   protected handleSpecDeleted(spec: Spec) {

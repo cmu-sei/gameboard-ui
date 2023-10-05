@@ -68,7 +68,6 @@ export class PlayerService {
       tap(p => this._playerSessionStarted$.next(p.id))
     );
   }
-
   public updateSession(model: SessionChangeRequest): Observable<void> {
     return this.http.put<any>(`${this.url}/team/session`, model).pipe(
       tap(_ => this._teamSessionChanged$.next(model.teamId)),
