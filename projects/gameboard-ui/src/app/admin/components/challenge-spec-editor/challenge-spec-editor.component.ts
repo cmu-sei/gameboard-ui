@@ -41,5 +41,6 @@ export class ChallengeSpecEditorComponent implements OnChanges {
 
   async handleSpecUpdated(spec: Spec) {
     this.requestUpdateSpec$.next(spec);
+    this.specUpdate.emit(spec);
   }
 }
