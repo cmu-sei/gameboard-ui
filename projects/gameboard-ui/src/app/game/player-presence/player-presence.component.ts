@@ -10,9 +10,9 @@ import { PlayerService } from '../../api/player.service';
 import { NotificationService } from '../../services/notification.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
 import { SyncStartService } from '../../services/sync-start.service';
-import { SimpleEntity } from '../../api/models';
 import { HubConnectionState } from '@microsoft/signalr';
 import { LogService } from '../../services/log.service';
+import { SponsorService } from '@/api/sponsor.service';
 
 interface PlayerPresenceContext {
   avatarUris: string[];
@@ -21,7 +21,6 @@ interface PlayerPresenceContext {
   allPlayers: HubPlayer[];
   player: HubPlayer;
   playerIsManager: boolean;
-  teamAvatar: string[],
   teamName: string;
 }
 
@@ -43,6 +42,7 @@ export class PlayerPresenceComponent implements OnInit {
     private hub: NotificationService,
     private log: LogService,
     private playerApi: PlayerService,
+    private sponsorService: SponsorService,
     private syncStartService: SyncStartService,
   ) { }
 
@@ -53,7 +53,6 @@ export class PlayerPresenceComponent implements OnInit {
       this.player$,
       this.gameHub.syncStartChanged$.pipe(startWith(null))
     ]).pipe(
-      // map(combo => combo as unknown as { 0: HubPlayer[], 1: HubPlayer, 2: SyncStartState }),
       map(combo => ({ hubState: combo[0], actors: combo[1], player: combo[2], syncStartState: combo[3] })),
       map(context => {
         if (!context.hubState || context.hubState.connectionState == HubConnectionState.Disconnected) {
@@ -67,14 +66,14 @@ export class PlayerPresenceComponent implements OnInit {
         }
 
         const actorInfo = this.findPlayerAndTeammates(context.player, context.actors);
+
         const ctx: PlayerPresenceContext = {
-          avatarUris: actorInfo.allPlayers.map(p => p.sponsorLogo),
+          avatarUris: actorInfo.allPlayers.map(p => this.sponsorService.resolveAbsoluteSponsorLogoUri(p.sponsor.logo)),
           hasTeammates: !!actorInfo.teammates.length,
           manager: actorInfo.manager,
           allPlayers: actorInfo.allPlayers,
           player: actorInfo.player,
           playerIsManager: !!actorInfo.manager && actorInfo.manager.id === actorInfo.player?.id,
-          teamAvatar: this.computeTeamAvatarList(actorInfo.allPlayers),
           teamName: actorInfo.manager?.approvedName || actorInfo.player?.approvedName || "",
         };
 
@@ -97,8 +96,6 @@ export class PlayerPresenceComponent implements OnInit {
   }
 
   private findPlayerAndTeammates(localPlayer: HubPlayer, players: HubPlayer[]) {
-    const player = players.find(p => p.id === localPlayer.id)!;
-
     // currently, the player's representation in the hub is incorrect for some reason - taking 
     // the object we have instead for now
     return {
@@ -107,13 +104,6 @@ export class PlayerPresenceComponent implements OnInit {
       allPlayers: players,
       manager: players.find(p => p.isManager)
     };
-  }
-
-  private computeTeamAvatarList(players: HubPlayer[]) {
-    if (!players?.length)
-      return [""];
-
-    return players.map(p => p.sponsorLogo);
   }
 
   protected promoteToManager(localPlayer: Player, playerId: string) {

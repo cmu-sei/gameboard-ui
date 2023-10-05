@@ -1,0 +1,12 @@
+<!-- Copyright 2021 Carnegie Mellon University. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root. -->
+
+<div class="dropzone cursor-pointer" (click)="clickToLaunchFilePicker && fileInput.click()"
+  [class.dropzone-active]="isDropping">
+  <button *ngIf="!clickToLaunchFilePicker" type="button" class="btn btn-sm btn-info"
+    (click)="fileInput.click()">Browse</button>
+
+  <ng-content></ng-content>
+</div>
+
+<input [id]="inputId" type="file" #fileInput (change)="filesSelected($event)" [multiple]="allowMultiple">

@@ -1,9 +1,9 @@
-import { RouterService } from "@/services/router.service";
-import { UnsubscriberService } from "@/services/unsubscriber.service";
-import { arraysEqual } from "@/tools/object-tools.lib";
 import { inject } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
+import { RouterService } from "@/services/router.service";
+import { UnsubscriberService } from "@/services/unsubscriber.service";
+import { arraysEqual } from "@/tools/object-tools.lib";
 
 export interface MultiSelectQueryParamModelConfig<T> {
     paramName: string;
@@ -15,13 +15,13 @@ export interface MultiSelectQueryParamModelConfig<T> {
 export class MultiSelectQueryParamModel<TOption> {
     config: MultiSelectQueryParamModelConfig<TOption>;
     searchText?: string;
-    options: TOption[] = [];
 
     private route: ActivatedRoute = inject(ActivatedRoute);
     private routerService: RouterService = inject(RouterService);
     private unsub: UnsubscriberService = inject(UnsubscriberService);
 
     private static QUERYSTRING_VALUE_DELIMITER = ",";
+    private resolvedOptions: TOption[] = [];
     private _model$ = new BehaviorSubject<TOption[]>([]);
     modelUpdate$ = this._model$.asObservable();
 
@@ -32,7 +32,7 @@ export class MultiSelectQueryParamModel<TOption> {
 
         if (this.config.options) {
             this.config.options.then(options => {
-                this.options = options;
+                this.resolvedOptions = options;
                 this.bindQueryParamsHandler();
             });
         } else {
@@ -49,32 +49,33 @@ export class MultiSelectQueryParamModel<TOption> {
 
         if (!arraysEqual(previousValue, currentValue)) {
             this._model$.next(values);
-            this.updateQueryParams(values);
+            this.updateQueryParams();
         }
     }
 
     private bindQueryParamsHandler() {
         this.unsub.add(
             this.route.queryParamMap.subscribe(paramMap => {
-                this.selectedValues = paramMap.has(this.config.paramName) ?
-                    paramMap.get(this.config.paramName)!
-                        .split(MultiSelectQueryParamModel.QUERYSTRING_VALUE_DELIMITER)
-                        .map(value => this.config.deserializer!(value, this.options))
-                        .filter(o => !!o) as TOption[] :
-                    [];
+                if (!paramMap.has(this.config.paramName) || !paramMap.get(this.config.paramName)) {
+                    this.selectedValues = this.selectedValues || [];
+                    return;
+                }
+
+                this.selectedValues = paramMap.get(this.config.paramName)!
+                    .split(MultiSelectQueryParamModel.QUERYSTRING_VALUE_DELIMITER)
+                    .map(value => this.config.deserializer!(value, this.resolvedOptions))
+                    .filter(o => !!o) as TOption[];
             })
         );
     }
 
-    private updateQueryParams(model: TOption[]) {
+    private updateQueryParams() {
         const params: Params = {};
         params[this.config.paramName] = this
             .selectedValues
             .map(v => this.config.serializer!(v))
             .join(MultiSelectQueryParamModel.QUERYSTRING_VALUE_DELIMITER);
 
-        this.routerService.updateQueryParams({
-            parameters: params
-        });
+        this.routerService.updateQueryParams({ parameters: params });
     }
 }

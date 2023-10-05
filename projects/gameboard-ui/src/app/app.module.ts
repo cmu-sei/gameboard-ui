@@ -29,13 +29,16 @@ import { AuthService } from './utility/auth.service';
 import { UserService } from './api/user.service';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NAVIGATOR } from './services/navigator.service';
-import { AppNavComponent } from './nav/nav.component';
+
+import { AppNavComponent } from './components/nav/nav.component';
+import { SponsorSelectBannerComponent } from './components/sponsor-select-banner/sponsor-select-banner.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    AppNavComponent,
+    SponsorSelectBannerComponent,
     SupportPillComponent,
-    AppNavComponent
   ],
   imports: [
     BrowserModule,
@@ -54,15 +57,6 @@ import { AppNavComponent } from './nav/nav.component';
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
   ],
-  // exports: [
-  //   ApiModule,
-  //   UtilityModule,
-  //   FontAwesomeModule,
-  //   ButtonsModule,
-  //   ModalModule,
-  //   BsDropdownModule,
-  //   TooltipModule
-  // ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -108,8 +102,7 @@ export class AppModule { }
 export function loadSettings(
   config: ConfigService,
 ): (() => Observable<any>) {
-  return (): Observable<any> => config.load()
-    ;
+  return (): Observable<any> => config.load();
 }
 
 export function register(user: CurrentUserService): (() => Promise<void>) {

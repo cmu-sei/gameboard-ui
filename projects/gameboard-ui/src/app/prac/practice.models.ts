@@ -16,4 +16,5 @@ export interface PracticeModeSettings {
     introTextMarkdown: string;
     maxConcurrentPracticeSessions: number | null;
     maxPracticeSessionLengthMinutes: number | null;
+    suggestedSearches: string[];
 }

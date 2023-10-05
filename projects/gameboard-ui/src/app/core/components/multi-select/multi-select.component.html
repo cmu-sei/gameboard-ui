@@ -9,12 +9,13 @@
 
                 <div class="input-group-append" *ngIf="ngModel.searchText">
                     <button type="button" class="btn btn-info" (click)="handleClearClicked()"
-                        tooltip="Clear this searchbox" placement="bottom">
+                        tooltip="Clear this search box" placement="bottom">
                         <fa-icon [icon]="fa.eraser"></fa-icon>
                     </button>
                 </div>
             </div>
         </div>
+
         <div class="form-control scroll-container flex-grow-1">
             <div *ngFor="let option of options; let i = index">
                 <ng-container *ngIf="getOptionVisibility(option)">

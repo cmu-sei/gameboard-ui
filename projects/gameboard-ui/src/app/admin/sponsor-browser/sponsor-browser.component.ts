@@ -2,11 +2,11 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, OnInit } from '@angular/core';
-import { faArrowLeft, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, from, merge, Observable, of, Subject } from 'rxjs';
-import { debounceTime, filter, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { ChangedSponsor, NewSponsor, Sponsor } from '../../api/sponsor-models';
+import { fa } from "@/services/font-awesome.service";
+import { firstValueFrom } from 'rxjs';
+import { ChangedSponsor, Sponsor, SponsorWithChildSponsors } from '../../api/sponsor-models';
 import { SponsorService } from '../../api/sponsor.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-sponsor-browser',
@@ -14,84 +14,41 @@ import { SponsorService } from '../../api/sponsor.service';
   styleUrls: ['./sponsor-browser.component.scss']
 })
 export class SponsorBrowserComponent implements OnInit {
-  refresh$ = new BehaviorSubject<any>(true);
-  source$: Observable<Sponsor[]>;
-  source!: Sponsor[];
-  creating$ = new Subject<NewSponsor>();
-  created$: Observable<Sponsor>;
-  updating$ = new Subject<ChangedSponsor>();
-  updated$: Observable<Sponsor>;
-  deleteing$ = new Subject<Sponsor>();
-  deleted$: Observable<any>;
-  dropping$ = new Subject<File[]>();
-  dropped$: Observable<Sponsor>;
-  faPlus = faPlus;
-  faTrash = faTrash;
-  faArrowLeft = faArrowLeft;
-
-  newSponsor: NewSponsor = {id: '', name: ''};
+  protected errors: any[] = [];
+  protected fa = fa;
+  protected isLoading = false;
+  protected sponsors: SponsorWithChildSponsors[] = [];
 
   constructor(
-    private api: SponsorService
-  ) {
-    this.source$ = this.refresh$.pipe(
-      debounceTime(500),
-      switchMap(() => api.list({})),
-      tap(r => this.source = r)
-    );
+    private api: SponsorService,
+    private toastsService: ToastService) { }
 
-    this.created$ = this.creating$.pipe(
-      filter(m => !!m.id),
-      switchMap(m => api.create(m)),
-      tap(r => this.source.unshift(r)),
-      tap(r => this.clear())
-    );
-
-    this.updated$ = this.updating$.pipe(
-      mergeMap(m => api.update(m))
-    );
-
-    this.deleted$ = this.deleteing$.pipe(
-      filter(m => !!m.id),
-      switchMap(m => api.delete(m.id)),
-      tap(r => this.refresh$.next(true))
-    );
-
-    this.dropped$ = this.dropping$.pipe(
-      switchMap(l => from(l)),
-      mergeMap(f => api.upload(f), 3),
-      tap(() => this.refresh$.next(true))
-    );
+  async ngOnInit(): Promise<void> {
+    await this.reload();
   }
 
-  ngOnInit(): void {
+  async update(s: ChangedSponsor): Promise<void> {
+    this.isLoading = true;
+    await firstValueFrom(this.api.update(s));
+    await this.reload();
+    this.isLoading = false;
   }
 
-  create(): void {
-    this.creating$.next(this.newSponsor);
+  async delete(s: Sponsor): Promise<void> {
+    this.isLoading = true;
+    await firstValueFrom(this.api.delete(s.id));
+    await this.reload();
+    this.isLoading = false;
   }
 
-  clear(): void {
-    this.newSponsor.id = '';
-    this.newSponsor.name = '';
+  async reload(): Promise<void> {
+    this.isLoading = true;
+    this.sponsors = await firstValueFrom(this.api.listWithChildren());
+    this.isLoading = false;
   }
 
-  update(s: Sponsor): void {
-    this.updating$.next(s);
-  }
-
-  delete(s: Sponsor): void {
-    this.deleteing$.next(s);
-  }
-
-  remove(s: Sponsor): void {
-    const target = this.source.find(i => i.id === s.id);
-    if (!target) { return; }
-    const index = this.source.indexOf(target);
-    this.source.splice(index, 1);
-  }
-
-  dropped(files: File[]): void {
-    this.dropping$.next(files);
+  protected async handleSponsorSaved(sponsor: Sponsor) {
+    this.toastsService.showMessage(`Saved sponsor "${sponsor.name}".`);
+    await this.reload();
   }
 }

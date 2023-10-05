@@ -42,3 +42,11 @@ export function pipeTapLog<T extends Subject<any>>(obs: T, message?: string): T 
 export function unique<T>(array: T[]): T[] {
     return array.filter((value, index, arr) => arr.indexOf(value) === index);
 }
+
+export enum MimeTypes {
+    Gif = "image/gif",
+    Jpeg = "image/jpeg",
+    Png = "image/png",
+    Svg = "image/svg+xml",
+    Webp = "image/webp"
+}

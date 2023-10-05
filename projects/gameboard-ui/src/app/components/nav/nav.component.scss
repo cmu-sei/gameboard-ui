@@ -1,0 +1,22 @@
+@media print {
+    nav {
+        display: none;
+    }
+}
+
+nav a {
+    font-size: 1.5rem;
+}
+
+.nav-items {
+    a {
+        display: block;
+    }
+}
+
+.badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    margin-left: -4px;
+    margin-right: 12px;
+}

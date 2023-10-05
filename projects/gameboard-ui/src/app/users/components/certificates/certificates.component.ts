@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
 import { PracticeService } from '@/services/practice.service';
 import { firstValueFrom } from 'rxjs';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-certificates',
@@ -11,8 +12,13 @@ import { firstValueFrom } from 'rxjs';
 export class CertificatesComponent implements OnInit {
   protected fa = fa;
   protected showTabs = false;
+  protected profileUrl: string;
 
-  constructor(private practiceService: PracticeService) { }
+  constructor(
+    private practiceService: PracticeService,
+    routerService: RouterService) {
+    this.profileUrl = routerService.getProfileUrl();
+  }
 
   async ngOnInit() {
     // the page defaults to competitive certificates through navigation. If

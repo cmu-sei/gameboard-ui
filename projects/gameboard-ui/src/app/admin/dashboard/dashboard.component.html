@@ -39,13 +39,18 @@
 
     <!-- Card view mode -->
     <ng-container *ngIf="!tableView">
-      <div class="dropzone col-3 card bg-transparent">
-        <app-dropzone class="h-100 my-3" (dropped)="dropped($event)">
-          <pre class="overflow-hidden">Drag in a yaml game array or</pre>
-          <button class="btn btn-secondary btn-sm" (click)="create()">
-            <fa-icon [icon]="faPlus"></fa-icon>
-            <span>New Game</span>
-          </button>
+      <div class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
+        <button class=" btn btn-info flex-grow-1 w-100" (click)="create()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          <span>New Game</span>
+        </button>
+
+        <p class="mt-2">OR</p>
+
+        <app-dropzone class="d-flex flex-grow-1 w-100" (dropped)="dropped($event)">
+          <div class="dropzone-target h-100">
+            <pre class="overflow-hidden">Drag in a yaml game array</pre>
+          </div>
         </app-dropzone>
       </div>
 
@@ -136,12 +141,9 @@
                     container="body" [adaptivePosition]="true" placement="top">
                     <fa-icon [icon]="game.allowTeam ? faTeam : faUser"></fa-icon>
                   </div>
-                  <div
-                    [tooltip]="!!game.feedbackTemplate.challenge.length || !!game.feedbackTemplate.game.length ? 'Accepts Feedback' : 'No Feedback'"
-                    containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
-                    <fa-icon
-                      [icon]="!!game.feedbackTemplate.challenge.length || !!game.feedbackTemplate.game.length ? faChartBar : faCommentSlash"></fa-icon>
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="game.feedbackTemplate && (!!game.feedbackTemplate.challenge.length || !!game.feedbackTemplate.game.length) ? gameAcceptsFeedback : gameDoesntAcceptFeedback">
+                  </ng-container>
                 </td>
                 <td class="thin-col sticky-options sticky-cell">
                   <div dropdown class="btn-group" container="body" #dropdown="bs-dropdown" [autoClose]="true"
@@ -216,5 +218,18 @@
 <ng-template #loading>
   <div class="text-center w-100">
     <app-spinner></app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #gameAcceptsFeedback>
+  <div tooltip="Accepts Feedback" containerClass="light-tooltip" container="body" [adaptivePosition]="true"
+    placement="top">
+    <fa-icon [icon]="faChartBar"></fa-icon>
+  </div>
+</ng-template>
+
+<ng-template #gameDoesntAcceptFeedback>
+  <div tooltip="No Feedback" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+    <fa-icon [icon]="faCommentSlash"></fa-icon>
   </div>
 </ng-template>

@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { UserManager, UserManagerSettings, User, WebStorageStateStore, Log, UserSignedInCallback } from 'oidc-client-ts';
+import { UserManager, UserManagerSettings, User, WebStorageStateStore, Log } from 'oidc-client-ts';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { ConfigService, Settings } from './config.service';

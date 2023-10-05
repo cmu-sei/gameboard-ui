@@ -1,0 +1,10 @@
+@import "../../../../scss/variables";
+
+img {
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: dashed 1px $foreground;
+    object-fit: cover;
+    width: 72px;
+    height: 72px;
+}

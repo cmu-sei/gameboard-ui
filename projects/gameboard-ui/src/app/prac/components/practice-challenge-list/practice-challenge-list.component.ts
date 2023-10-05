@@ -2,7 +2,6 @@ import { Search } from '@/api/models';
 import { SpecSummary } from '@/api/spec-models';
 import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
-import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -20,8 +19,11 @@ export class PracticeChallengeListComponent {
   search$ = new BehaviorSubject<Search>({});
   appname = '';
   faSearch = faSearch;
+
+  protected hasSponsor$: Observable<boolean>;
   protected localUserId?: string;
   protected introTextMarkdown = "";
+  protected suggestedSearches: string[] = [];
 
   term = "";
   count = 0;
@@ -35,10 +37,15 @@ export class PracticeChallengeListComponent {
     route: ActivatedRoute,
     private api: PracticeService,
     private localUser: LocalUserService,
-    private routerService: RouterService,
-    private unsub: UnsubscriberService,
+    private routerService: RouterService
   ) {
-    this.list$ = this.search$.pipe(
+
+    this.list$ = route.queryParams.pipe(
+      map(queryParams => ({
+        skip: queryParams.skip,
+        take: queryParams.take || PracticeChallengeListComponent.DEFAULT_PAGE_SIZE,
+        term: queryParams.term,
+      } as Search)),
       switchMap(m => api.searchChallenges(m)),
       tap(r => {
         this.count = r.results.paging.itemCount;
@@ -49,17 +56,14 @@ export class PracticeChallengeListComponent {
       map(results => results.results.items)
     );
 
-    this.unsub.add(
-      route.queryParams.subscribe(params => this.search({ ...params } as Search))
-    );
-
-    this.search({ ...route.snapshot.queryParams } as Search);
+    this.hasSponsor$ = localUser.user$.pipe(map(u => !!u?.sponsor && !u.hasDefaultSponsor));
   }
 
   async ngOnInit(): Promise<void> {
     this.localUserId = this.localUser.user$.value?.id;
     const settings = await firstValueFrom(this.api.getSettings());
     this.introTextMarkdown = settings.introTextMarkdown;
+    this.suggestedSearches = settings.suggestedSearches;
   }
 
   paged(s: number): void {
@@ -68,11 +72,5 @@ export class PracticeChallengeListComponent {
         skip: s, navigate: true
       }
     });
-  }
-
-  private search(search: Search) {
-    search.take = search.take || PracticeChallengeListComponent.DEFAULT_PAGE_SIZE;
-    search.term = search.term || "";
-    this.search$.next({ ...search });
   }
 }

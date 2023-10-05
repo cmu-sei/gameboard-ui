@@ -1,0 +1,38 @@
+<div class="form-flex-container d-flex flex-wrap align-items-center">
+    <div class="avatar-container mr-2">
+        <app-dropzone (dropped)="handleDrop($event)" [acceptMimeTypes]="allowMimeTypes">
+            <div class="dropzone-target">
+                <div *ngIf="!previewSrc; else previewSponsorAvatar" class="add-button">+</div>
+            </div>
+        </app-dropzone>
+    </div>
+    <div class="form-group m-0 p-0 flex-grow-1">
+        <input type="text" class="form-control" id="name" placeholder="Sponsor name" required maxlength="200"
+            [(ngModel)]="upsertSponsorRequest.name">
+    </div>
+
+    <div class="form-group px-0 mx-2 mt-2">
+        <select name="parentSponsorId" class="form-control" [(ngModel)]="upsertSponsorRequest.parentSponsorId">
+            <option [ngValue]="undefined">[no parent sponsor]</option>
+            <option *ngFor="let eligibleParent of eligibleParentSponsors" [value]="eligibleParent.id">
+                {{eligibleParent.name}}
+            </option>
+        </select>
+    </div>
+
+    <div class="save-button-container">
+        <button type="submit" class="btn btn-success" (click)="handleSave(upsertSponsorRequest)"
+            [disabled]="!upsertSponsorRequest.name">Save</button>
+    </div>
+</div>
+
+<ng-template #previewSponsorAvatar>
+    <img class="d-block mr-2" [src]="previewSrc">
+</ng-template>
+
+<p class="file-type-help fs-08 mt-3">
+    <strong>NOTE:</strong>
+    Sponsor logo files may be in any of the following formats:
+    <em>.png, .jpeg, .jpg, .gif, .webp,</em> and
+    <em>.svg</em>.
+</p>

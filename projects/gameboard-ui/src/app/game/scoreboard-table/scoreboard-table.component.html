@@ -16,7 +16,8 @@
       <tr *ngFor="let s of scores; trackBy:trackById">
         <td>{{s.rank}}</td>
         <td>
-          <app-imagestack [imagelist]="s.sponsorList" width="48px" [tooltip]="s.sponsorTooltip"></app-imagestack>
+          <app-imagestack [imagelist]="s.sponsors | sponsorsToLogoUris" width="48px"
+            [tooltip]="s.sponsors | simpleEntitiesToTooltip"></app-imagestack>
         </td>
         <td>
           <span *ngIf="s.advanced" class="text-success ml-2">

@@ -4,7 +4,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, iif, interval, Observable, of, scheduled, timer } from 'rxjs';
+import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, interval, Observable, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';

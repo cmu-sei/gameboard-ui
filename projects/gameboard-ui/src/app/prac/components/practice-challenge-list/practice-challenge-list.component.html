@@ -6,6 +6,21 @@
     </p>
 
     <ng-container *ngIf="list$ | async as list; else loading">
+        <ng-container *ngIf="!(hasSponsor$ | async)">
+            <alert type="warning">
+                You haven't selected your sponsoring organization yet - you'll need to before you can play practice
+                challenges. Head over to your profile to select your sponsor, then return here to play!
+            </alert>
+        </ng-container>
+
+        <div class="suggested-searches-container my-4" *ngIf="suggestedSearches?.length">
+            <h2>Need a place to start?</h2>
+            Try some of these suggested searches:
+
+            <app-suggested-searches class="d-block mt-4" *ngIf="suggestedSearches?.length"
+                [searches]="suggestedSearches"></app-suggested-searches>
+        </div>
+
         <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
             <app-share-button class="d-block mr-1" size="small"
                 message="Copied a link to this search to your clipboard."
@@ -20,9 +35,10 @@
                 [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 
-        <app-pager [skip]="skip || 0" [take]="take || 0" [count]="count" (changed)="paged($event)"></app-pager>
+        <app-pager *ngIf="count > 0" [skip]="skip || 0" [take]="take || 0" [count]="count"
+            (changed)="paged($event)"></app-pager>
 
-        <table class="table">
+        <table class="table" *ngIf="count > 0; else noMatches">
             <thead>
                 <tr>
                     <th>Challenge</th>
@@ -32,7 +48,12 @@
             </thead>
             <tbody>
                 <tr *ngFor="let c of list">
-                    <td class="align-middle"><a [routerLink]="[c.id, slug(c.name)]">{{c.name}}</a>
+                    <td class="align-middle">
+                        <a *ngIf="hasSponsor$ | async" [routerLink]="[c.id, slug(c.name)]">
+                            {{c.name}}
+                        </a>
+                        <p *ngIf="!(hasSponsor$ | async)" class="p-0 m-0 text-success cursor-pointer"
+                            tooltip="Come back after selecting your sponsor to play this challenge.">{{c.name}}</p>
                     </td>
                     <td class="align-middle">{{c.description}}</td>
                     <td>
@@ -46,13 +67,24 @@
             </tbody>
         </table>
 
-        <app-pager display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
-            (changed)="paged($event)"></app-pager>
+        <app-pager *ngIf="count > 0" display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
+            (changed)="paged($event)">
+        </app-pager>
     </ng-container>
 </div>
 
 <ng-template #loading>
     <div class="text-center">
         <app-spinner>Loading practice challenges...</app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #challengeNameNoLink let-challengeName="challengeName">
+    <p>{{challengeName}}</p>
+</ng-template>
+
+<ng-template #noMatches>
+    <div class="text-center mt-5">
+        No challenges meet your search criteria. Try again with a new search term.
     </div>
 </ng-template>

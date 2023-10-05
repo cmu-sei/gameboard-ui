@@ -8,6 +8,8 @@ export interface ModalConfig<TComponent, TContext> {
     content: ModalContent<TComponent>;
     context: TContext;
     modalClasses?: string[];
+    isBackdropStatic?: boolean;
+    ignoreBackdropClick?: boolean;
 }
 
 export type ModalContent<TComponent> = string | TemplateRef<any> | { new(...args: any[]): TComponent };

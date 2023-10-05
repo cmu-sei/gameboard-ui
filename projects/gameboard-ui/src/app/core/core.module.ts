@@ -19,6 +19,7 @@ import 'chartjs-adapter-luxon';
 
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
+import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { GameCardImageComponent } from './components/game-card-image/game-card-image.component';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
@@ -56,13 +57,19 @@ import { CumulativeTimeClockComponent } from './components/cumulative-time-clock
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { RouterModule } from '@angular/router';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
+
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { ClockPipe } from './pipes/clock.pipe';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
-import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
 import { MinPipe } from './pipes/min.pipe';
+import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
+import { SimpleEntitiesToTooltipPipe } from './pipes/simple-entities-to-tooltip.pipe';
+import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
+import { SponsorLogoToLogoUriPipe } from './pipes/sponsor-logo-to-logo-uri.pipe';
+import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
+import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ApiUrlPipe,
@@ -71,6 +78,7 @@ const PUBLIC_DECLARATIONS = [
   ConfirmButtonComponent,
   CumulativeTimeClockComponent,
   DoughnutChartComponent,
+  DropzoneComponent,
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,
@@ -98,8 +106,12 @@ const PUBLIC_DECLARATIONS = [
   SelectPagerComponent,
   ShareButtonComponent,
   ShortDatePipe,
+  SimpleEntitiesToTooltipPipe,
   SortPipe,
   SpinnerComponent,
+  SponsorToLogoUriPipe,
+  SponsorsToLogoUrisPipe,
+  SponsorLogoFileNamesToUrisPipe,
   TextToColorPipe,
   ToggleClassPipe,
   ToTemplateContextPipe,
@@ -126,7 +138,7 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
   ],
   imports: [
     CommonModule,

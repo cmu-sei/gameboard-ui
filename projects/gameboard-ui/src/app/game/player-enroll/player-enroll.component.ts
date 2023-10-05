@@ -3,8 +3,8 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Observable, of, Subject, Subscription, timer } from 'rxjs';
-import { finalize, map, tap, delay, first } from 'rxjs/operators';
+import { firstValueFrom, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { map, tap, delay, first } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -36,6 +36,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   protected canStandardEnroll = false;
   protected disallowedName: string | null = null;
   protected disallowedReason: string | null = null;
+  protected hasSelectedSponsor = false;
   protected managerRole = PlayerRole.manager;
   protected isEnrolled$: Observable<boolean>;
   protected isManager$ = new Subject<boolean>();
@@ -75,11 +76,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
         const localUser = this.localUserService.user$.value;
         const hasPlayerSession = (!!ctx.player.id && !!ctx.player.session && !ctx.player.session.isBefore);
 
-        this.canAdminEnroll = !!localUser && !hasPlayerSession &&
-          (
-            this.ctx.game.registration.isDuring ||
-            this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser)
-          );
+        this.canAdminEnroll = !!localUser && !hasPlayerSession && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
 
         this.canStandardEnroll = !!localUser && !hasPlayerSession &&
           ctx.game.registration.isDuring && (
@@ -87,6 +84,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
             !ctx.player.session ||
             ctx.player.session?.isBefore
           );
+
+        this.hasSelectedSponsor = !!ctx.user.sponsor?.id && !ctx.user.hasDefaultSponsor;
       })
     );
 
@@ -122,19 +121,20 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       });
   }
 
-  redeem(p: Player): void {
+  async redeem(p: Player): Promise<void> {
     const model = {
       playerId: p.id,
       code: this.token.split('/').pop()
     } as PlayerEnlistment;
 
-    const sub: Subscription = this.api.enlist(model).pipe(
-      tap(p => this.token = ''),
-      finalize(() => sub.unsubscribe())
-    ).subscribe(
-      p => this.enrolled(p),
-      err => this.errors.push(err)
-    );
+    try {
+      const enlistedPlayer = await firstValueFrom(this.api.enlist(model));
+      this.token = "";
+      this.enrolled(enlistedPlayer);
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   update(p: Player): void {

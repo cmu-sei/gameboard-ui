@@ -2,7 +2,10 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <div class="app-container">
-  <app-nav></app-nav>
+  <div class="sticky-content" [class.nonsticky]="!(stickyMenu$ | async)">
+    <app-sponsor-select-banner></app-sponsor-select-banner>
+    <app-nav></app-nav>
+  </div>
   <app-message-board></app-message-board>
   <router-outlet></router-outlet>
   <footer></footer>

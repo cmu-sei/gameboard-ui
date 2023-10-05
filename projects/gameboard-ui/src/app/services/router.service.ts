@@ -2,7 +2,6 @@ import { ReportKey } from '@/reports/reports-models';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { BrowserService } from './browser.service';
-import { LogService } from './log.service';
 import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
 import { ConfigService } from '@/utility/config.service';
@@ -21,7 +20,6 @@ export class RouterService {
     private browser: BrowserService,
     private config: ConfigService,
     private localUser: LocalUser,
-    private logService: LogService,
     public route: ActivatedRoute,
     public router: Router,
     private objectService: ObjectService) { }
@@ -50,6 +48,10 @@ export class RouterService {
     return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
+  public getProfileUrl() {
+    return this.router.createUrlTree(["user", "profile"]).toString();
+  }
+
   public getReportRoute<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): UrlTree {
     return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }
@@ -60,6 +62,11 @@ export class RouterService {
 
   public toPracticeArea() {
     return this.router.navigateByUrl("/practice");
+  }
+
+  public toPracticeAreaWithSearch(search: string) {
+    const urlTree = this.router.createUrlTree(["practice"], { queryParams: { term: search } });
+    return this.router.navigateByUrl(urlTree);
   }
 
   public toPracticeCertificates() {

@@ -6,6 +6,7 @@ export interface ExternalSpec {
   name: string;
   description: string;
   gameEngineType: GameEngineType;
+  solutionGuideUrl: string;
 }
 
 export interface SpecDetail extends ExternalSpec {
@@ -41,6 +42,7 @@ export interface SpecSummary {
   gameName: string;
   gameLogo: string;
   averageDeploySeconds: number;
+  solutionGuideUrl: string;
 }
 
 export enum GameEngineType {

@@ -33,4 +33,8 @@ export class ConfirmButtonComponent implements OnInit {
     }
     this.confirming = false;
   }
+
+  public stopConfirming() {
+    this.confirming = false;
+  }
 }

@@ -1,40 +1,30 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<ng-container *ngIf="created$ | async"></ng-container>
-<ng-container *ngIf="updated$ | async"></ng-container>
-<ng-container *ngIf="deleted$ | async"></ng-container>
-<ng-container *ngIf="dropped$ | async"></ng-container>
+<app-error-div></app-error-div>
 
-<h4>Sponsors</h4>
-
-<app-dropzone (dropped)="dropped($event)">
-  <span> or drag sponsor images here. (Filename should be the sponsor key.)</span>
-  <br>
-  <span>Acceptable file types: .png, .jpeg, .jpg, .gif, .webp, .svg</span>
-</app-dropzone>
-
-<ng-container *ngIf="source$ | async as sponsors; else loading">
-  <br>
-  <div style="display: table-row-group">
-    <div *ngFor="let s of sponsors" class="panel" style="display: table-row">
-      <div style="display: table-cell; padding: 8px">
-        <img [src]="s.logoUrl" class="img-fluid">
-        <span class="mx-2">{{s.id}}</span>
-      </div>
-      <div style="display: table-cell">
-        <input type="text" class="form-control mx-2" placeholder="title" [(ngModel)]="s.name" (blur)="update(s)">
-        <app-confirm-button btnClass="btn btn-outline-danger" (confirm)="delete(s)">
-          <fa-icon [icon]="faTrash"></fa-icon>
-          <span>Delete</span>
-        </app-confirm-button>
-      </div>
+<ng-container *ngIf="!isLoading; else loading">
+  <div class="new-sponsor-container my-4">
+    <h4>Create a New Sponsor</h4>
+    <app-sponsor-edit-form (sponsorSaved)="handleSponsorSaved($event)"></app-sponsor-edit-form>
   </div>
-  </div>
+
+  <ng-container *ngIf="sponsors.length">
+    <hr class="mb-4" />
+
+    <h4>Existing Sponsors</h4>
+    <div *ngFor="let parentSponsor of sponsors" class="d-flex flex-wrap align-items-center my-4 root-sponsor-container">
+      <app-sponsor-admin-entry class="width-100 d-block" [sponsor]="parentSponsor"
+        (requestDelete)="delete(parentSponsor)" (requestRefresh)="reload()"></app-sponsor-admin-entry>
+
+      <div class="child-sponsors-container width-100 pl-5">
+        <app-sponsor-admin-entry *ngFor="let childSponsor of parentSponsor.childSponsors" [sponsor]="childSponsor"
+          (requestDelete)="delete(childSponsor)" (requestRefresh)="reload()"></app-sponsor-admin-entry>
+      </div>
+    </div>
+  </ng-container>
 </ng-container>
 
 <ng-template #loading>
-  <div class="text-center">
-    <app-spinner></app-spinner>
-  </div>
+  <app-spinner></app-spinner>
 </ng-template>

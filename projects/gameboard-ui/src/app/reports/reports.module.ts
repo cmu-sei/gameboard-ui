@@ -3,15 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
-import { UtilityModule } from '../utility/utility.module';
 import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt-summary/challenge-attempt-summary.component';
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
 import { NoReportRecordsComponent } from './components/no-report-records/no-report-records.component';
 import { ParameterChangeLinkComponent } from './components/parameter-change-link/parameter-change-link.component';
-import { ParameterChallengeSpecComponent } from './components/parameters/parameter-challenge-spec/parameter-challenge-spec.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
 import { ParameterGameChallengespecComponent } from './components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
-import { ParameterSeriesComponent } from './components/parameters/parameter-series/parameter-series.component';
 import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
 import { ParameterTicketLabelsComponent } from './components/parameters/parameter-ticket-labels/parameter-ticket-labels.component';
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
@@ -51,11 +48,9 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
     EnrollmentReportComponent,
-    ParameterChallengeSpecComponent,
     MsToDurationPipe,
     ParameterGameChallengespecComponent,
     ParameterDateRangeComponent,
-    ParameterSeriesComponent,
     ParameterTicketLabelsComponent,
     ParameterTicketStatusComponent,
     ParameterTimespanPickerComponent,
@@ -66,7 +61,6 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
     ReportParametersContainerComponent,
     ReportSelectComponent,
     ReportsHomeComponent,
-    ParameterSponsorComponent,
     SupportReportComponent,
     SupportReportContextMenuComponent,
     PracticeModeReportComponent,
@@ -81,6 +75,7 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
     PlayerModePerformanceSummaryComponent,
     ReportStatSummaryComponent,
     PlayerChallengeAttemptsModalComponent,
+    ParameterSponsorComponent,
   ],
   imports: [
     CommonModule,

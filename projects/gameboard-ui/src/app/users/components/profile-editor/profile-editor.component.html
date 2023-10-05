@@ -1,0 +1,72 @@
+<!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
+<div *ngIf="currentUser$ | async as currentUser" class="container">
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-link" [routerLink]="['/', 'user', 'certificates']">Certificates</a>
+        <a class="btn btn-link" [routerLink]="['/', 'profile', 'history']">History</a>
+    </div>
+
+    <div class="w-75 d-inline-block">
+        <h4>1. Set your display name</h4>
+
+        <div>
+            Choose a <em>default</em> name for public display that is suitable for all audiences. This name will apply
+            to <em>all new games</em>, but you can customize it during registration.
+        </div>
+        <br>
+
+        <ng-container *ngIf="currentUser.name !== currentUser.approvedName">
+            <ng-container *ngIf="currentUser.nameStatus == 'pending' && currentUser.name != disallowedName">
+                <div class="alert alert-info">
+                    Your name is pending approval from an administrator. Return later or select 'Refresh' to see if it's
+                    been approved.
+
+                    {{currentUser.name}}
+                    {{currentUser.approvedName}}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="currentUser.nameStatus && currentUser.nameStatus != 'pending'">
+                <div class="alert alert-danger">
+                    Your name was rejected by an administrator for the following reason:<br>
+                    <strong>{{currentUser.nameStatus}}</strong><br>
+                    Please change it and try again.
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+
+    <div class="row">
+        <div class="form-group w-25 d-inline-block">
+            <label for="nameInput">Requested Display Name</label>
+            <input id="nameInput" class="form-control" [(ngModel)]="currentUser.name"
+                (input)="updateUserName(currentUser.name)" placeholder="display name" maxlength="64" required>
+        </div>
+        <ng-container>
+            <div class="form-group w-25 d-inline-block">
+                <label for="">Approved Display Name</label>
+                <span class="form-control bg-light text-dark">{{currentUser.approvedName}}</span>
+            </div>
+
+            <div class="form-group w-25 d-inline-block d-flex align-items-end">
+                <button class="btn btn-secondary" (click)="refresh()">
+                    <fa-icon [icon]="faSync"></fa-icon>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="w-75 d-inline-block">
+        <h4>2. Select your sponsoring organization</h4>
+
+        <ng-container *ngIf="!currentUser.sponsor || currentUser.hasDefaultSponsor">
+            <br>
+            <div class="alert alert-warning">
+                You'll need to select the organization sponsoring you before you play. Choose your organization below.
+            </div>
+        </ng-container>
+    </div>
+
+    <app-sponsor-select></app-sponsor-select>
+</div>

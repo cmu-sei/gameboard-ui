@@ -1,0 +1,36 @@
+<div class="challenge-spec-editor-component" *ngIf="spec">
+    <h2 class="m-0 p-0 fs-11">{{ spec.name }}</h2>
+    <hr class="my-2" />
+    <div class="spec-controls-container d-flex flex-wrap align-items-center">
+        <div class="form-group">
+            <label for="slug-input-{{spec.id}}">Support Key</label>
+            <input type="text" class="form-control" id="slug-input-{{spec.id}}" name="slug" [(ngModel)]="spec.tag"
+                [placeholder]="'Enter a support key (e.g. ' + slug(spec.name) + ')'"
+                (ngModelChange)="handleSpecUpdated(spec)">
+        </div>
+
+        <div class="form-group">
+            <label for="points-input-{{spec.id}}">Points</label>
+            <input type="number" class="form-control" id="points-input-{{spec.id}}" name="points"
+                placeholder="Enter a point value for this challenge" [(ngModel)]="spec.points"
+                (ngModelChange)="handleSpecUpdated(spec)">
+        </div>
+
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="disabled-input-{{spec.id}}" name="disabled"
+                [(ngModel)]="spec.disabled" (ngModelChange)="handleSpecUpdated(spec)">
+            <label for="disabled-input-{{spec.id}}">Disabled</label>
+        </div>
+
+        <div *ngIf="showSolutionGuide" class="form-group flex-grow-1">
+            <label for="guide-input-{{spec.id}}">Solution Guide URL</label>
+            <input type="text" class="form-control" id="guide-input-{{spec.id}}" name="guide"
+                placeholder="Enter the solution guide's URL" [(ngModel)]="spec.solutionGuideUrl"
+                (input)="handleSpecUpdated(spec)">
+        </div>
+    </div>
+    <hr class="my-2">
+    <div class="d-flex align-items-center justify-content-end">
+        <app-confirm-button btnClass="btn btn-sm btn-danger">Delete</app-confirm-button>
+    </div>
+</div>

@@ -4,68 +4,75 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { ChangedSponsor, NewSponsor, Sponsor } from './sponsor-models';
+import { ChangedSponsor, NewSponsor, Sponsor, SponsorWithChildSponsors, SponsorWithParent } from './sponsor-models';
+import { MimeTypes } from '../../tools';
+import { ApiUrlService } from '@/services/api-url.service';
+
+export interface SponsorSearch {
+  hasParent?: boolean;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SponsorService {
   url = '';
 
   constructor(
-    private http: HttpClient,
-    private config: ConfigService
+    private apiUrl: ApiUrlService,
+    private config: ConfigService,
+    private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
   }
 
-  public list(search?: any): Observable<Sponsor[]> {
-    return this.http.get<Sponsor[]>(this.url + '/sponsors', { params: search }).pipe(
-      map(r => {
-        r.forEach(g => this.transform(g));
-        return r;
-      })
-    );
+  public get allowedMimeTypes(): string[] {
+    return [
+      MimeTypes.Gif,
+      MimeTypes.Jpeg,
+      MimeTypes.Png,
+      MimeTypes.Svg,
+      MimeTypes.Webp
+    ];
   }
 
-  public retrieve(id: string): Observable<Sponsor> {
-    return this.http.get<Sponsor>(`${this.url}/sponsor/${id}`).pipe(
-      map(r => this.transform(r))
-    );
+  public list(search?: SponsorSearch): Observable<SponsorWithParent[]> {
+    return this.http.get<SponsorWithParent[]>(this.url + '/sponsors', { params: { ...(search || {}) } });
+  }
+
+  public listWithChildren(): Observable<SponsorWithChildSponsors[]> {
+    return this.http.get<SponsorWithChildSponsors[]>(this.apiUrl.build("sponsors/with-children"));
   }
 
   public create(model: NewSponsor): Observable<Sponsor> {
-    return this.http.post<Sponsor>(`${this.url}/sponsor`, model);
+    return this.http.post<Sponsor>(this.apiUrl.build("sponsor"), model);
   }
 
-  public createAll(model: ChangedSponsor[]): Observable<any> {
-    return this.http.post<any>(`${this.url}/sponsors`, model);
+  public setAvatar(sponsorId: string, avatarFile: File) {
+    if (!avatarFile) {
+      throw new Error(`Can't update sponsor ${sponsorId}'s avatar with falsey avatarFile.`);
+    }
+
+    if (this.allowedMimeTypes.indexOf(avatarFile.type) < 0) {
+      throw new Error(`File type ${avatarFile.type} isn't permitted for sponsor logos.`);
+    }
+
+    const formData = new FormData();
+    formData.append("avatarFile", avatarFile);
+
+    return this.http.put<void>(this.apiUrl.build(`sponsor/${sponsorId}/avatar`), formData);
   }
 
-  public update(model: Sponsor): Observable<any> {
-    return this.http.put<any>(`${this.url}/sponsor`, model);
+  public update(model: ChangedSponsor): Observable<Sponsor> {
+    return this.http.put<Sponsor>(`${this.url}/sponsor`, model);
   }
 
   public delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/sponsor/${id}`);
   }
 
-  public upload(file: File): Observable<Sponsor> {
-    const payload: FormData = new FormData();
-    payload.append('file', file, file.name);
-    return this.http.post<Sponsor>(`${this.url}/sponsor/image`, payload);
-  }
-
-  public getLogoUrl(logo: string): string {
-    const logoUrl = logo
-      ? `${this.config.imagehost}/${logo}`
-      : `${this.config.basehref}assets/sponsor.svg`
-      ;
-    return logoUrl;
-  }
-
-  private transform(sponsor: Sponsor): Sponsor {
-    sponsor.logoUrl = this.getLogoUrl(sponsor.logo);
-    return sponsor;
+  public resolveAbsoluteSponsorLogoUri(logoFileName: string | undefined | null) {
+    return !!logoFileName ?
+      `${this.config.imagehost}/${logoFileName}` :
+      `${this.config.basehref}assets/sponsor.svg`;
   }
 }

@@ -32,7 +32,6 @@ import { PlayerNamesComponent } from './player-names/player-names.component';
 import { PlayerRegistrarComponent } from './player-registrar/player-registrar.component';
 import { PlayerSessionComponent } from './player-session/player-session.component';
 import { PlayerSponsorReportComponent } from './player-sponsor-report/player-sponsor-report.component';
-import { PracticeChallengesComponent } from './practice/practice-challenges/practice-challenges.component';
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
 import { PracticeComponent } from './practice/practice.component';
 import { PrereqsComponent } from './prereqs/prereqs.component';
@@ -44,6 +43,8 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { SponsorsModule } from '@/sponsors/sponsors.module';
+import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,6 @@ import { UserReportComponent } from './user-report/user-report.component';
     PlayerSessionComponent,
     PlayerSponsorReportComponent,
     PracticeComponent,
-    PracticeChallengesComponent,
     PracticeSettingsComponent,
     PrereqsComponent,
     ReportPageComponent,
@@ -77,6 +77,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
+    ChallengeSpecEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -90,11 +91,10 @@ import { UserReportComponent } from './user-report/user-report.component';
           {
             path: "practice", component: PracticeComponent, children: [
               { path: "", pathMatch: "full", redirectTo: "settings" },
-              { path: "challenges", component: PracticeChallengesComponent },
               { path: "settings", component: PracticeSettingsComponent },
             ]
           },
-          { path: 'registrar/sponsors', component: SponsorBrowserComponent },
+          { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Admin | Sponsors" },
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
           { path: 'registrar/players', component: PlayerNamesComponent },
           { path: 'registrar/:id', component: PlayerRegistrarComponent },
@@ -119,7 +119,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     ModalModule,
     TooltipModule,
     FontAwesomeModule,
-    // PracModule,
+    SponsorsModule,
   ]
 })
 export class AdminModule { }

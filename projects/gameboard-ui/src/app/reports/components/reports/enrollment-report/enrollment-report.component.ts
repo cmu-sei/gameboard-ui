@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
-import { ReportResults, ReportResultsWithOverallStats, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
+import { ReportResultsWithOverallStats, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
 import { Observable, firstValueFrom, of } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
@@ -27,7 +27,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   games$ = this.reportsService.getGames();
   seasons$ = this.reportsService.getSeasons();
   series$ = this.reportsService.getSeries();
-  sponsors$ = this.reportsService.getSponsors();
   tracks$ = this.reportsService.getTracks();
 
   protected ctx$?: Observable<EnrollmentReportContext>;
@@ -67,13 +66,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     paramName: "series"
   });
 
-  protected sponsorsQueryModel: MultiSelectQueryParamModel<ReportSponsor> | null = new MultiSelectQueryParamModel<ReportSponsor>({
-    paramName: "sponsors",
-    options: firstValueFrom(this.reportsService.getSponsors()),
-    serializer: (value: ReportSponsor) => value.id,
-    deserializer: (value: string, options?: ReportSponsor[]) => options!.find(s => s.id === value) || null
-  });
-
   protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "tracks"
   });
@@ -89,7 +81,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
         this.gamesQueryModel!.searchText = undefined;
         this.seasonsQueryModel!.searchText = undefined;
         this.seriesQueryModel!.searchText = undefined;
-        this.sponsorsQueryModel!.searchText = undefined;
         this.tracksQueryModel!.searchText = undefined;
       })
     );
@@ -140,7 +131,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           scales: {
             x: {
               type: 'time',
-              // distribution: 'series',
               time: {
                 displayFormats: {
                   day: "MM/dd/yy",
