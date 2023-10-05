@@ -19,19 +19,6 @@ export class ChallengeSpecEditorComponent implements OnChanges {
   protected slug = slug;
   protected requestUpdateSpec$ = new Subject<Spec>();
 
-  constructor(
-    private specService: SpecService,
-    private unsub: UnsubscriberService) {
-    this.unsub.add(
-      this.requestUpdateSpec$.pipe(
-        debounceTime(500),
-        filter(s => s.points >= 0),
-        switchMap(s => this.specService.update(s)),
-        tap(s => this.specUpdate.emit(s)),
-      ).subscribe()
-    );
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.spec) {
       throw new Error("The ChallengeSpecEditor requires a challenge spec.");
@@ -39,7 +26,6 @@ export class ChallengeSpecEditorComponent implements OnChanges {
   }
 
   async handleSpecUpdated(spec: Spec) {
-    this.requestUpdateSpec$.next(spec);
     this.specUpdate.emit(spec);
   }
 }
