@@ -29,6 +29,7 @@ import { markedOptionsFactory } from './config/marked.config';
 // internal components/pipes/directives
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
+import { ChallengeSolutionGuideComponent } from './components/challenge-solution-guide/challenge-solution-guide.component';
 import { ClockPipe } from './pipes/clock.pipe';
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
@@ -67,7 +68,6 @@ import { SimpleEntitiesToTooltipPipe } from './pipes/simple-entities-to-tooltip.
 import { SortPipe } from './pipes/sort.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
-import { SponsorLogoToLogoUriPipe } from './pipes/sponsor-logo-to-logo-uri.pipe';
 import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
 import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
@@ -85,6 +85,7 @@ const PUBLIC_DECLARATIONS = [
   GbProgressBarComponent,
   ApiUrlPipe,
   AssetPathPipe,
+  ChallengeSolutionGuideComponent,
   ColoredTextChipComponent,
   ConfirmButtonComponent,
   CumulativeTimeClockComponent,

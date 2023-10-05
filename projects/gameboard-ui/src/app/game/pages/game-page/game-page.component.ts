@@ -90,7 +90,7 @@ export class GamePageComponent implements OnDestroy {
     ]).pipe(
       map(([routeParams, localUser]) => ({ gid: routeParams?.id, localUser: localUser })),
       switchMap(z => {
-        return apiPlayer.list({ gid: z.gid, uid: z.localUser?.id }).pipe(
+        return apiPlayer.list({ gid: z.gid, uid: z.localUser?.id, mode: 'Competition' }).pipe(
           map(
             p => {
               const defaultPlayer = { userId: z.localUser?.id } as unknown as Player;

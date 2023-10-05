@@ -15,16 +15,8 @@
             <markdown [data]="challenge.challengeDeployment.markdown"></markdown>
         </p>
 
-        <alert *ngIf="challenge.playerMode == 'practice' && challengeSpec.solutionGuideUrl"
-            class="solution-guide-alert my-4" type="info">
-            <h2>Need help?</h2>
-
-            <p>
-                We've created a step-by-step solution guide for this challenge. If you get stuck, you
-                can find it
-                <a [href]="challengeSpec.solutionGuideUrl" target="_blank">here</a>.
-            </p>
-        </alert>
+        <app-challenge-solution-guide
+            [challengeId]="challenge.challengeDeployment.challengeId"></app-challenge-solution-guide>
 
         <h3>Gamespace Resources</h3>
         <div class="vms-container my-4">

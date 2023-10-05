@@ -13,7 +13,6 @@ import { Subject, debounceTime, filter, firstValueFrom, switchMap, tap } from 'r
 })
 export class ChallengeSpecEditorComponent implements OnChanges {
   @Input() spec?: Spec;
-  @Input() showSolutionGuide = false;
   @Output() specUpdate = new EventEmitter<Spec>();
 
   protected fa = fa;

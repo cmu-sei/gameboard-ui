@@ -16,17 +16,24 @@
                 (ngModelChange)="handleSpecUpdated(spec)">
         </div>
 
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="disabled-input-{{spec.id}}" name="disabled"
-                [(ngModel)]="spec.disabled" (ngModelChange)="handleSpecUpdated(spec)">
-            <label for="disabled-input-{{spec.id}}">Disabled</label>
-        </div>
-
-        <div *ngIf="showSolutionGuide" class="form-group flex-grow-1">
+        <div class="form-group">
             <label for="guide-input-{{spec.id}}">Solution Guide URL</label>
             <input type="text" class="form-control" id="guide-input-{{spec.id}}" name="guide"
                 placeholder="Enter the solution guide's URL" [(ngModel)]="spec.solutionGuideUrl"
                 (input)="handleSpecUpdated(spec)">
+        </div>
+
+        <div class="form-check ml-2">
+            <input type="checkbox" class="form-check-input" id="guide-show-in-competitive-{{spec.id}}"
+                name="guide-in-competitive" [(ngModel)]="spec.showSolutionGuideInCompetitiveMode"
+                (input)="handleSpecUpdated(spec)">
+            <label for="guide-show-in-competitive-{{spec.id}}">Show Solution Guide in Competitive Mode</label>
+        </div>
+
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="disabled-input-{{spec.id}}" name="disabled"
+                [(ngModel)]="spec.disabled" (ngModelChange)="handleSpecUpdated(spec)">
+            <label for="disabled-input-{{spec.id}}">Disabled</label>
         </div>
     </div>
     <hr class="my-2">
