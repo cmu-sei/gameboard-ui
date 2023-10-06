@@ -13,7 +13,7 @@
             <label for="points-input-{{spec.id}}">Points</label>
             <input type="number" class="form-control" id="points-input-{{spec.id}}" name="points"
                 placeholder="Enter a point value for this challenge" [(ngModel)]="spec.points"
-                (ngModelChange)="handleSpecUpdated(spec)">
+                (input)="handleSpecUpdated(spec)">
         </div>
 
         <div class="form-group">

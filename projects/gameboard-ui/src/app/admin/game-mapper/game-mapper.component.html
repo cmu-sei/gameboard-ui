@@ -45,7 +45,7 @@
     <div [hidden]="viewing!=='edit'">
       <h4>Challenge Specs</h4>
 
-      <alert *ngIf="hasZeroPointSpecs$ | async" type="warning" class="my-2">
+      <alert *ngIf="hasZeroPointSpecs" type="warning" class="my-2">
         At least one of this game's enabled challenge specs has a point value of <strong>zero</strong>. This makes it
         impossible for Gameboard to determine when a challenge has been completed. We <strong>strongly</strong>
         recommend assigning a non-zero point value to each challenge.
@@ -59,7 +59,7 @@
       <ul class="spec-list mt-4">
         <li *ngFor="let spec of list$ | async">
           <app-challenge-spec-editor class="d-block mb-3" [spec]="spec" (specDelete)="this.deleting$.next(spec)"
-            (specUpdate)="this.updating$.next(spec)"></app-challenge-spec-editor>
+            (specUpdate)="handleSpecUpdated(spec)"></app-challenge-spec-editor>
         </li>
       </ul>
 

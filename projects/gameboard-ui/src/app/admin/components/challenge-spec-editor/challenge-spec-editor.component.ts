@@ -4,7 +4,7 @@ import { fa } from '@/services/font-awesome.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { slug } from '@/tools/functions';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Subject, debounceTime, filter, firstValueFrom, switchMap, tap } from 'rxjs';
+import { Subject, debounceTime, filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-challenge-spec-editor',
@@ -18,9 +18,20 @@ export class ChallengeSpecEditorComponent implements OnChanges {
 
   protected fa = fa;
   protected slug = slug;
-  protected requestUpdateSpec$ = new Subject<Spec>();
+  private requestUpdateSpec$ = new Subject<Spec>();
 
-  constructor() { }
+  constructor(
+    private specService: SpecService,
+    private unsub: UnsubscriberService) {
+    this.unsub.add(
+      this.requestUpdateSpec$.pipe(
+        debounceTime(500),
+        filter(s => s.points >= 0),
+        switchMap(s => this.specService.update(s)),
+        tap(s => this.specUpdate.emit(s)),
+      ).subscribe()
+    );
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.spec) {
@@ -29,7 +40,7 @@ export class ChallengeSpecEditorComponent implements OnChanges {
   }
 
   protected handleSpecUpdated(spec: Spec) {
-    this.specUpdate.emit(spec);
+    this.requestUpdateSpec$.next(spec);
   }
 
   protected handleSpecDeleted(spec: Spec) {
