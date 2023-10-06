@@ -36,6 +36,22 @@
             <label for="disabled-input-{{spec.id}}">Disabled</label>
         </div>
     </div>
+
+    <ng-container *ngIf="scoringConfig">
+        <hr class="my-2">
+        <div class="scoring-config-container">
+            <h6>Automatic Bonuses</h6>
+
+            <div class="bonuses-container mt-4">
+                <ol>
+                    <li *ngFor="let bonus of scoringConfig.possibleBonuses">
+                        {{bonus.description}} ({{ bonus.pointValue }})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </ng-container>
+
     <hr class="my-2">
     <div class="d-flex align-items-center justify-content-end">
         <app-confirm-button btnClass="btn btn-sm btn-danger"
