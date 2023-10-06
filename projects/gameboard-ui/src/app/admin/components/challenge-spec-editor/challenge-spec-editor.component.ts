@@ -4,7 +4,7 @@ import { fa } from '@/services/font-awesome.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { slug } from '@/tools/functions';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Subject, debounceTime, filter, firstValueFrom, switchMap, tap } from 'rxjs';
+import { Subject, debounceTime, filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-challenge-spec-editor',

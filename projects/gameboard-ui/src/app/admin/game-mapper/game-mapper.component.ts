@@ -49,7 +49,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   viewing = 'edit';
   addedCount = 0;
 
-  protected hasZeroPointSpecs$: Observable<boolean>;
+  protected hasZeroPointSpecs = false;
 
   constructor(
     private api: SpecService,
@@ -62,10 +62,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
       debounceTime(500),
       switchMap(id => gameSvc.retrieveSpecs(id)),
       tap(r => this.list = r),
-    );
-
-    this.hasZeroPointSpecs$ = this.list$.pipe(
-      map(specList => specList.some(s => !s.disabled && (!s.points || s.points <= 0)))
+      tap(r => this.checkForZeroPointActiveSpecs(r))
     );
 
     this.gameBonusesConfig$ = this.refresh$.pipe(
@@ -183,6 +180,14 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
   trackById(index: number, g: Spec): string {
     return g.id;
+  }
+
+  protected handleSpecUpdated(spec: Spec) {
+    this.checkForZeroPointActiveSpecs(this.list);
+  }
+
+  private checkForZeroPointActiveSpecs(specs: Spec[]) {
+    this.hasZeroPointSpecs = specs.some(s => s.points <= 0);
   }
 
   mousemove(e: MouseEvent) {
