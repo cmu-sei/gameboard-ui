@@ -3,6 +3,12 @@ import { PlayerMode } from "./player-models";
 import { VmState } from "./board-models";
 import { SimpleEntity } from "./models";
 
+export interface ChallengeSolutionGuide {
+    challengeSpecId: string;
+    showInCompetitiveMode: boolean;
+    url: string;
+}
+
 export interface ActiveChallenge {
     spec: {
         id: string;

@@ -7,6 +7,7 @@ export interface ExternalSpec {
   description: string;
   gameEngineType: GameEngineType;
   solutionGuideUrl: string;
+  showSolutionGuideInCompetitiveMode: boolean;
 }
 
 export interface SpecDetail extends ExternalSpec {
