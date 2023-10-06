@@ -108,7 +108,6 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     );
 
     this.deleted$ = this.deleting$.pipe(
-      tap(s => console.log("Delete", s)),
       switchMap(s => api.delete(s.id)),
       tap(() => this.refresh$.next(this.game.id))
     );
