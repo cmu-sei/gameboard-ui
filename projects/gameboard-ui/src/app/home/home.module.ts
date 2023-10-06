@@ -15,9 +15,7 @@ import { CoreModule } from '../core/core.module';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { FormsModule } from '@angular/forms';
-import { AuthGuard } from '../utility/auth.guard';
 import { TocPageComponent } from './toc-page/toc-page.component';
-import { ProfileHistoryComponent } from '../users/components/profile-history/profile-history.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +26,6 @@ import { ProfileHistoryComponent } from '../users/components/profile-history/pro
     ForbiddenComponent,
     LoginPageComponent,
     TocPageComponent,
-    ProfileHistoryComponent,
   ],
   imports: [
     CommonModule,

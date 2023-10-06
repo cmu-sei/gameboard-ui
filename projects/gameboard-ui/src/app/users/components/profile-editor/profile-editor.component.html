@@ -4,7 +4,7 @@
 <div *ngIf="currentUser$ | async as currentUser" class="container">
     <div class="d-flex justify-content-end">
         <a class="btn btn-link" [routerLink]="['/', 'user', 'certificates']">Certificates</a>
-        <a class="btn btn-link" [routerLink]="['/', 'profile', 'history']">History</a>
+        <a class="btn btn-link" [routerLink]="['/', 'user', 'profile', 'history']">History</a>
     </div>
 
     <div class="w-75 d-inline-block">
