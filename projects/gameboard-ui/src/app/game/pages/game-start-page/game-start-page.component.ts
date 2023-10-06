@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GameService } from '@/api/game.service';
 import { LogService } from '@/services/log.service';
 import { PlayerService } from '@/api/player.service';
 import { UserService } from '@/utility/user.service';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { Game, GameEngineMode } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { RouterService } from '@/services/router.service';
@@ -12,6 +12,7 @@ import { GameHubService } from '@/services/signalR/game-hub.service';
 import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
 import { ExternalGameService } from '@/services/external-game.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 interface GameLaunchContext {
   game: Game;
@@ -24,10 +25,9 @@ interface GameLaunchContext {
   templateUrl: './game-start-page.component.html',
   styleUrls: ['./game-start-page.component.scss']
 })
-export class GameStartPageComponent implements OnInit, OnDestroy {
+export class GameStartPageComponent implements OnInit {
   private gameId: string | null;
   private playerId: string | null;
-  private subs: Subscription[] = [];
 
   errors: string[] = [];
   gameLaunchCtx?: GameLaunchContext;
@@ -43,7 +43,8 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
     private localUser: UserService,
     private playerApi: PlayerService,
     private routerService: RouterService,
-    private titleService: AppTitleService) {
+    private titleService: AppTitleService,
+    private unsub: UnsubscriberService) {
     this.gameId = route.snapshot.paramMap.get("gameId") || null;
     this.playerId = route.snapshot.paramMap.get("playerId") || null;
   }
@@ -76,12 +77,6 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
     await this.launchGame({ game, player, localUserId });
   }
 
-  ngOnDestroy(): void {
-    for (const sub of this.subs) {
-      sub?.unsubscribe();
-    }
-  }
-
   handleGameReady(ctx: GameLaunchContext) {
     if (ctx.game.mode == GameEngineMode.Standard) {
       this.log.logInfo("Navigating to standard game", ctx.game.id);
@@ -98,6 +93,10 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
 
   private async launchGame(ctx: GameLaunchContext): Promise<void> {
     this.gameLaunchCtx = ctx;
+
+    if (!ctx.player.session?.isDuring) {
+      return;
+    }
 
     // if the player already has a session for the game and it's happening right now, move them along
     if (ctx.player.session?.isDuring) {
@@ -121,23 +120,23 @@ export class GameStartPageComponent implements OnInit, OnDestroy {
     }
 
     if (ctx.game.mode == GameEngineMode.External) {
-      this.subs.push(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.state = state));
-      this.subs.push(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state));
-      this.subs.push(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
+      this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.state = state));
+      this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state));
+      this.unsub.add(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
 
-      const externalGameLaunchEndedSub = this.gameHub.externalGameLaunchEnded$.subscribe(state => {
-        this.state = state;
+      this.unsub.add(
+        this.gameHub.externalGameLaunchEnded$.subscribe(state => {
+          this.state = state;
 
-        const team = state.teams.find(t => t.team.id === ctx.player.teamId);
-        if (!team) {
-          this.log.logError(`Couldn't find a team in state for player's team ("${ctx.player.teamId}").`);
-        }
+          const team = state.teams.find(t => t.team.id === ctx.player.teamId);
+          if (!team) {
+            this.log.logError(`Couldn't find a team in state for player's team ("${ctx.player.teamId}").`);
+          }
 
-        this.externalGameService.createLocalStorageKeys({ teamId: ctx.player.teamId, gameServerUrl: team!.headlessUrl });
-        this.handleGameReady(ctx);
-      });
-
-      this.subs.push(externalGameLaunchEndedSub);
+          this.externalGameService.createLocalStorageKeys({ teamId: ctx.player.teamId, gameServerUrl: team!.headlessUrl });
+          this.handleGameReady(ctx);
+        })
+      );
     }
   }
 }
