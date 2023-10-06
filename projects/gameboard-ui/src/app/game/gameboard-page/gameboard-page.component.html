@@ -70,7 +70,7 @@
               </div>
             </div>
 
-            <markdown [data]="spec.instance!.state.markdown || '' | relativeUrls:ctx.challengeDocUrl"></markdown>
+            <markdown [data]="spec.instance!.state.markdown || ''"></markdown>
 
             <markdown *ngIf="spec.instance?.state?.challenge" [data]="spec.instance!.state.challenge.text || ''">
             </markdown>
