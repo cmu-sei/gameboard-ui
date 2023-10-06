@@ -52,8 +52,6 @@ export class PlayerRegistrarComponent {
   advanceScores = false;
   autorefresh = true;
 
-  manageTeamId?: string;
-
   protected fa = fa;
   protected isLoading = false;
   protected showSessionStatus = true;
@@ -174,13 +172,15 @@ export class PlayerRegistrarComponent {
     await firstValueFrom(this.unityService.undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true }));
   }
 
-  resetSession(request: TeamAdminContextMenuSessionResetRequest): void {
+  private resetSession(request: TeamAdminContextMenuSessionResetRequest): void {
+    this.isLoading = true;
     this.teamService.resetSession(request.player.teamId, { unenrollTeam: request.unenrollTeam }).pipe(first()).subscribe(_ => {
       this.refresh$.next(true);
     });
   }
 
   unenroll(model: Player): void {
+    this.isLoading = true;
     this.api.unenroll(model.id, true).pipe(first()).subscribe(_ => {
       this.refresh$.next(true);
     });
@@ -240,7 +240,7 @@ export class PlayerRegistrarComponent {
     );
   }
 
-  confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
+  protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
     this.modalConfirmService.openConfirm({
       bodyContent: `
       Are you sure you want to reset the session for ${request.player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?
@@ -254,7 +254,7 @@ export class PlayerRegistrarComponent {
     });
   }
 
-  confirmUnenroll(player: Player) {
+  protected confirmUnenroll(player: Player) {
     this.modalConfirmService.openConfirm({
       bodyContent: `Are you sure you want to unenroll ${player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?`,
       title: `Unenroll ${player.approvedName}?`,
@@ -266,7 +266,7 @@ export class PlayerRegistrarComponent {
     });
   }
 
-  manageManualBonuses(player: Player) {
+  protected manageManualBonuses(player: Player) {
     this.bsModalService.show(ManageManualChallengeBonusesModalComponent, {
       class: "modal-xl",
       initialState: {
