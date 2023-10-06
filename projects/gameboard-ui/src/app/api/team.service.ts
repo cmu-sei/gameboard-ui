@@ -19,7 +19,7 @@ export class TeamService {
     }
 
     public resetSession(teamId: string, request: ResetTeamSessionRequest): Observable<void> {
-        return this.http.post<void>(this.apiUrl.build(`${teamId}/session`), request).pipe(
+        return this.http.post<void>(this.apiUrl.build(`/team/${teamId}/session`), request).pipe(
             tap(_ => this._teamSessionReset$.next(teamId))
         );
     }
