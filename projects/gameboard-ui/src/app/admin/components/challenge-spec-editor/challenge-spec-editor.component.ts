@@ -18,7 +18,7 @@ export class ChallengeSpecEditorComponent implements OnChanges {
 
   protected fa = fa;
   protected slug = slug;
-  protected requestUpdateSpec$ = new Subject<Spec>();
+  private requestUpdateSpec$ = new Subject<Spec>();
 
   constructor(
     private specService: SpecService,
