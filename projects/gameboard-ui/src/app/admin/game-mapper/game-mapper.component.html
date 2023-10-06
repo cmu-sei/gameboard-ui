@@ -33,9 +33,6 @@
             <span>Reset</span>
           </button>
         </app-dropzone>
-        <div class="form-group pb-1 pt-1">
-          <!-- <label for="logo-input">Map Image</label> -->
-        </div>
         <div>
           Alt+Drag (Option+Drag on Macs) to resize hotspots
         </div>
@@ -62,8 +59,8 @@
 
       <ul class="spec-list mt-4">
         <li *ngFor="let spec of list$ | async">
-          <app-challenge-spec-editor class="d-block mb-3" [spec]="spec"
-            (specUpdate)="this.refresh()"></app-challenge-spec-editor>
+          <app-challenge-spec-editor class="d-block mb-3" [spec]="spec" (specDelete)="this.deleting$.next(spec)"
+            (specUpdate)="this.updating$.next(spec)"></app-challenge-spec-editor>
         </li>
       </ul>
 

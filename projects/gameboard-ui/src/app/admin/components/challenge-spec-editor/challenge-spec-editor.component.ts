@@ -13,6 +13,7 @@ import { Subject, debounceTime, filter, firstValueFrom, switchMap, tap } from 'r
 })
 export class ChallengeSpecEditorComponent implements OnChanges {
   @Input() spec?: Spec;
+  @Output() specDelete = new EventEmitter<Spec>();
   @Output() specUpdate = new EventEmitter<Spec>();
 
   protected fa = fa;
@@ -25,7 +26,11 @@ export class ChallengeSpecEditorComponent implements OnChanges {
     }
   }
 
-  async handleSpecUpdated(spec: Spec) {
+  protected handleSpecUpdated(spec: Spec) {
     this.specUpdate.emit(spec);
+  }
+
+  protected handleSpecDeleted(spec: Spec) {
+    this.specDelete.emit(spec);
   }
 }
