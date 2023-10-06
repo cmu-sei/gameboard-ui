@@ -20,11 +20,13 @@ const DECLARED_COMPONENTS = [
   CertificatePrinterComponent,
   CompetitiveCertificatesComponent,
   PracticeCertificatesComponent,
-  ProfileEditorComponent
+  ProfileEditorComponent,
+  ProfileHistoryComponent,
+  UserPageComponent
 ];
 
 @NgModule({
-  declarations: [...DECLARED_COMPONENTS, UserPageComponent],
+  declarations: [...DECLARED_COMPONENTS],
   imports: [
     CommonModule,
     CoreModule,
