@@ -100,10 +100,11 @@ export class SignalRService {
     for (let handler of newEventHandlers) {
       this._eventHandlers[handler.eventType.toString()] = handler;
       connection.on(handler.eventType.toString(), ev => handler.handler(ev));
+      this.logger.logInfo(`Bound event ${handler.eventType.toString()} to`, handler.handler);
     }
   }
 
-  private async resolveOpenConnection(connection: HubConnection, attemptCount = 0, maxAttempts = 5, attemptIntervals: number[] = [2000, 3000, 3000, 5000, 10000]): Promise<void> {
+  private async resolveOpenConnection(connection: HubConnection, attemptCount = 0, maxAttempts = 5, attemptIntervals: number[] = this.AUTO_RECONNECT_INTERVALS): Promise<void> {
     await connection.start();
     if (connection.state === HubConnectionState.Connected) {
       this.handleConnected();

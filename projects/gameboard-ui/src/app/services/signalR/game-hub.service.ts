@@ -57,11 +57,11 @@ export class GameHubService {
     }
 
     await this.signalRService.sendMessage("LeaveGame", { gameId });
-    this._joinedGameIds.filter(g => g !== gameId);
+    this._joinedGameIds = this._joinedGameIds.filter(g => g !== gameId);
   }
 
   isConnectedToGame = (gameId: string) =>
-    this._joinedGameIds.indexOf(gameId) >= 0;
+    this._joinedGameIds.some(gId => gId === gameId);
 
   private handleGameJoined(ev: GameHubEvent<PlayerJoinedEvent>) {
     this.logService.logInfo("Joined the game", ev);
