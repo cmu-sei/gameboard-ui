@@ -1,5 +1,8 @@
 <alert *ngIf="guide" class="solution-guide-alert my-4" type="info">
-    <h2>Need help?</h2>
+    <h2>
+        <fa-icon [icon]="fa.book"></fa-icon>
+        <a [href]="guide.url" target="_blank">Solution Guide</a>
+    </h2>
 
     <p>
         We've created a step-by-step solution guide for this challenge. If you get stuck, you
