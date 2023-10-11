@@ -190,14 +190,17 @@ export class GamePageComponent implements OnDestroy {
       tap(c => { if (!c.game) { router.navigateByUrl("/"); } }),
       filter(c => !!c.game),
       tap(ctx => {
-        const isEnrolled = !!ctx.player.gameId;
         this.ctxIds.playerId = ctx.player.id;
 
         if (this.ctxIds.playerId || null !== this.enrolledPlayerId$.value || null) {
           this.enrolledPlayerId$.next(this.ctxIds.playerId || null);
         }
+
+        // join the team-up hub for this team/game
+        if (ctx.player.teamId) {
+          this.hub.init(ctx.player.teamId);
+        }
       }),
-      tap(c => { if (!c.game) { router.navigateByUrl("/"); } })
     );
 
     this.enrolledPlayerIdSub = combineLatest([game$, this.enrolledPlayerId$]).pipe(

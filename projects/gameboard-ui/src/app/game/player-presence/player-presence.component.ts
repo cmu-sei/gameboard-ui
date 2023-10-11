@@ -3,7 +3,7 @@
 
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
-import { first, map, startWith, tap } from 'rxjs/operators';
+import { first, map, startWith } from 'rxjs/operators';
 import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { HubPlayer, Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
