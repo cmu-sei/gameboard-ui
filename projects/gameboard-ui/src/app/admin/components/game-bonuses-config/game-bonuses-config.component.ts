@@ -13,17 +13,19 @@ import { GameScoringConfig } from '@/services/scoring/scoring.models';
   styleUrls: ['./game-bonuses-config.component.scss']
 })
 export class GameBonusesConfigComponent implements OnInit, OnChanges {
+  @Input() isEnabled = false;
   @Input() game?: Game;
   @Input() gameScoringConfig: GameScoringConfig | null = null;
   @Output() delete = new EventEmitter<string>();
   @Output() update = new EventEmitter<string>();
 
-  configInputsVisible = false;
-  hasBonusesConfigured = false;
-  isLoading = false;
-  textPlaceholder: string | null = null;
-  textPlaceholderRows = 8;
-  yamlIn?: string;
+  protected configInputsVisible = false;
+  protected errors: any[] = [];
+  protected hasBonusesConfigured = false;
+  protected isLoading = false;
+  protected textPlaceholder: string | null = null;
+  protected textPlaceholderRows = 8;
+  protected yamlIn?: string;
 
   constructor(
     private log: LogService,
@@ -50,7 +52,7 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.gameScoringConfig.currentValue) {
+    if (changes.gameScoringConfig?.currentValue) {
       const change = changes.gameScoringConfig;
       this.hasBonusesConfigured = (change.currentValue as unknown as GameScoringConfig).challengeSpecScoringConfigs.some(c => c.possibleBonuses.length);
       this.configInputsVisible = !this.hasBonusesConfigured;
@@ -72,13 +74,25 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
     }
 
     if (this.yamlIn) {
-      const config = this.yaml.parse<UpdateGameAutoChallengeBonusConfig>(this.yamlIn);
-      this.isLoading = true;
-      var gameConfig = await this.scoringService.updateGameAutoChallengeBonuses(this.game.id, config);
-      this.update.emit(this.game.id);
-      this.yamlIn = undefined;
-      this.isLoading = false;
-      this.toastsService.showMessage(`Configured ${gameConfig.challengeSpecScoringConfigs.length} challenges with ${gameConfig.challengeSpecScoringConfigs.map(c => c.possibleBonuses.length).reduce((prev, current) => prev + current)} total bonuses 👍`);
+      this.errors = [];
+
+      try {
+        const config = this.yaml.parse<UpdateGameAutoChallengeBonusConfig>(this.yamlIn);
+        this.isLoading = true;
+        var gameConfig = await this.scoringService.updateGameAutoChallengeBonuses(this.game.id, config);
+        this.update.emit(this.game.id);
+        this.yamlIn = undefined;
+        this.isLoading = false;
+
+        // compute how many specs actually got a bonus
+        const updatedSpecCount = gameConfig.challengeSpecScoringConfigs.filter(specConfig => specConfig.possibleBonuses.length > 0).length;
+
+        // and notify
+        this.toastsService.showMessage(`Configured ${updatedSpecCount} challenge${updatedSpecCount == 1 ? "" : "s"} with ${gameConfig.challengeSpecScoringConfigs.map(c => c.possibleBonuses.length).reduce((prev, current) => prev + current)} total bonuses 👍`);
+      }
+      catch (err: any) {
+        this.errors.push(err);
+      }
     }
   }
 

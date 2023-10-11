@@ -44,6 +44,12 @@ export interface PagedArray<T> {
   paging: PagingResults;
 }
 
+export interface PlayerWithAvatar {
+  id: string;
+  name: string;
+  avatarFile: string;
+}
+
 export interface SimpleEntity {
   id: string;
   name: string;

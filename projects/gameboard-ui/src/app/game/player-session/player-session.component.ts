@@ -27,13 +27,11 @@ export class PlayerSessionComponent implements OnDestroy {
 
   errors: any[] = [];
   isResetting = false;
-  myCtx$!: Observable<GameContext | undefined>;
   player$ = new BehaviorSubject<Player | undefined>(undefined);
   playerObservable$ = this.player$.asObservable();
   protected fa = fa;
 
   private ctxSub?: Subscription;
-  private _isSyncStart = false;
 
   // sets up the modal if it's a team game that needs confirmation
   protected modalConfig?: ModalConfirmConfig;
@@ -41,6 +39,7 @@ export class PlayerSessionComponent implements OnDestroy {
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
   protected canAdminStart = false;
+  protected countdown$ = new Observable<{ hours: number, minutes: number, seconds: number }>();
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
 
   constructor(
@@ -54,9 +53,6 @@ export class PlayerSessionComponent implements OnDestroy {
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
       tap(ctx => {
-        // record whether we're on sync start (to decide if we preserve teams across resets)
-        this._isSyncStart = ctx?.game.requireSynchronizedStart || false;
-
         let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
 
         if (ctx) {
@@ -75,6 +71,7 @@ export class PlayerSessionComponent implements OnDestroy {
           };
         }
 
+        this.performanceSummaryViewModel$.next(vm);
         this.player$.next(ctx?.player);
       }),
       tap(ctx => {
@@ -135,6 +132,7 @@ export class PlayerSessionComponent implements OnDestroy {
     await firstValueFrom(this.teamService.resetSession(p.teamId, { unenrollTeam: true }));
     delete p.session;
     this.onSessionReset.emit(p);
+    this.player$.next(p);
   }
 
   ngOnDestroy(): void {

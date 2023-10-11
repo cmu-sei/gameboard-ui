@@ -72,8 +72,17 @@
 
       <div class="bonus-config my-5">
         <h3>Automatic Bonuses</h3>
+
+        <p>
+          If configured, Gameboard can automatically award bonus points to competing teams and players
+          based on the order in which they solve a challenge. For example, the first team to solve a challenge might
+          earn an extra 100 points, while the second might earn an extra 50, and so on. To set this up, enter
+          a configuration in the YAML format described in the text box below.
+        </p>
+
         <app-game-bonuses-config [game]="game" *ngIf="game" [gameScoringConfig]="(gameBonusesConfig$ | async)"
-          (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"></app-game-bonuses-config>
+          (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"
+          [isEnabled]="!!(list$ | async)?.length"></app-game-bonuses-config>
       </div>
     </div>
 

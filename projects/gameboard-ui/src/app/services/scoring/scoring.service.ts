@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
-import { CreateManualChallengeBonus, TeamGameScoreSummary, UpdateGameAutoChallengeBonusConfig } from '../../api/scoring-models';
+import { ApiUrlService } from '@/services/api-url.service';
+import { CreateManualChallengeBonus, GameScore, TeamGameScoreSummary, UpdateGameAutoChallengeBonusConfig } from '../../api/scoring-models';
 import { ConfigService } from '../../utility/config.service';
 import { GameScoringConfig } from './scoring.models';
 
@@ -10,6 +11,7 @@ export class ScoringService {
   private API_ROOT = '';
 
   constructor(
+    private apiUrl: ApiUrlService,
     private http: HttpClient,
     config: ConfigService
   ) {
@@ -18,6 +20,10 @@ export class ScoringService {
 
   public deleteManualBonus(manualBonusId: string): Observable<void> {
     return this.http.delete<void>(`${this.API_ROOT}/bonus/manual/${manualBonusId}`);
+  }
+
+  public getGameScore(gameId: string): Observable<GameScore> {
+    return this.http.get<GameScore>(this.apiUrl.build(`game/${gameId}/score`));
   }
 
   public getGameScoringConfig(gameId: string): Observable<GameScoringConfig> {

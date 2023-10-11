@@ -1,4 +1,11 @@
-import { SimpleEntity } from "./models";
+import { PlayerWithAvatar, SimpleEntity } from "./models";
+
+export interface Score {
+    completionScore: number;
+    manualBonusScore: number;
+    bonusScore: number;
+    totalScore: number;
+}
 
 export interface CreateManualChallengeBonus {
     challengeId: string;
@@ -15,22 +22,30 @@ export interface ManualChallengeBonusViewModel {
     pointValue: number;
 }
 
+export interface GameScore {
+    game: SimpleEntity;
+    teams: GameScoreTeam[];
+}
+
+export interface GameScoreTeam {
+    team: SimpleEntity,
+    players: PlayerWithAvatar[];
+    rank: number;
+    challenges: TeamChallengeScoreSummary;
+}
+
 export interface TeamChallengeScoreSummary {
     challenge: SimpleEntity;
     spec: SimpleEntity;
     team: SimpleEntity;
-    scoreFromChallenge: number;
-    scoreFromManualBonuses: number;
-    totalScore: number;
+    score: Score;
     manualBonuses: ManualChallengeBonusViewModel[];
 }
 
 export interface TeamGameScoreSummary {
     game: SimpleEntity,
     team: SimpleEntity,
-    totalScore: number;
-    challengesScore: number;
-    manualBonusesScore: number;
+    score: Score,
     challengeScoreSummaries: TeamChallengeScoreSummary[];
 }
 

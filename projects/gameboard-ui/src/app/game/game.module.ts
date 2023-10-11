@@ -34,6 +34,7 @@ import { SessionStartControlsComponent } from './components/session-start-contro
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
+import { ScoreboardComponent } from './components/scoreboard/scoreboard.component';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -65,6 +66,7 @@ const MODULE_DECLARATIONS = [
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
+    ScoreboardComponent,
   ],
   imports: [
     CommonModule,

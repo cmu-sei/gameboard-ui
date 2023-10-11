@@ -148,6 +148,7 @@ export class GameService {
   }
 
   private transform(game: Game): Game {
+    game.isTeamGame = game.maxTeamSize > 1;
     game.mapUrl = game.background
       ? `${this.config.imagehost}/${game.background}`
       : `${this.config.basehref}assets/map.png`;

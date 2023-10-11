@@ -55,6 +55,7 @@ import { PagerComponent } from './components/pager/pager.component';
 import { PlayerAvatarComponent } from './components/player-avatar/player-avatar.component';
 import { PlayerAvatarListComponent } from './components/player-avatar-list/player-avatar-list.component';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
+import { PlayerWithAvatarsToAvatarUrlsPipe } from './pipes/player-with-avatars-to-sponsor-logo-urls.pipe';
 import { PluralizerPipe } from './pipes/pluralizer.pipe';
 import { QueryParamModelDirective } from './directives/query-param-model.directive';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
@@ -117,6 +118,7 @@ const PUBLIC_DECLARATIONS = [
   CountdownColorPipe,
   FriendlyTimePipe,
   MinPipe,
+  PlayerWithAvatarsToAvatarUrlsPipe,
   PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,

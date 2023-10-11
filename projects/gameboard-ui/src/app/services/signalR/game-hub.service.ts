@@ -28,6 +28,10 @@ export class GameHubService {
     private signalRService: SignalRService) { }
 
   async joinGame(gameId: string) {
+    if (!gameId) {
+      this.logService.logError("Can't join game with falsey id", gameId);
+    }
+
     await this.signalRService.connect(
       "hub/games",
       [

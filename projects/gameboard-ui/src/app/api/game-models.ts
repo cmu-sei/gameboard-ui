@@ -71,6 +71,7 @@ export interface Game extends GameDetail {
   mapUrl: string;
   modeUrl: string;
   isPracticeMode: boolean;
+  isTeamGame: boolean;
 }
 
 export interface NewGame extends GameDetail {

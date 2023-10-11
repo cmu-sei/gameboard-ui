@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <ng-container *ngIf="scoringConfig">
+    <ng-container *ngIf="scoringConfig && scoringConfig.possibleBonuses.length">
         <hr class="my-2">
         <div class="scoring-config-container">
             <h6>Automatic Bonuses</h6>
@@ -54,7 +54,8 @@
 
     <hr class="my-2">
     <div class="d-flex align-items-center justify-content-end">
-        <app-confirm-button btnClass="btn btn-sm btn-danger"
-            (confirm)="handleSpecDeleted(spec)">Delete</app-confirm-button>
+        <app-confirm-button btnClass="btn btn-sm btn-danger" (confirm)="handleSpecDeleted(spec)">
+            Remove This Challenge
+        </app-confirm-button>
     </div>
 </div>

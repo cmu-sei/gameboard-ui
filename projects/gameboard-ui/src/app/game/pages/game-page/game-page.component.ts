@@ -5,6 +5,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { HubConnectionState } from '@microsoft/signalr';
 import { ApiUser, PlayerRole } from '@/api/user-models';
 import { GameService } from '@/api/game.service';
 import { Game, GameContext } from '@/api/game-models';
@@ -18,16 +19,16 @@ import { BoardService } from '@/api/board.service';
 import { fa } from '@/services/font-awesome.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { LogService } from '@/services/log.service';
-import { HubConnectionState } from '@microsoft/signalr';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UserService } from '@/api/user.service';
 import { ConfigService } from '@/utility/config.service';
-import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 interface GameEnrollmentContext {
   game: Game;
   playerId: string | null;
+  // player: { playerId: string | null, teamId: string | null };
 }
 
 @Component({
@@ -115,7 +116,7 @@ export class GamePageComponent implements OnDestroy {
       apiBoards.load(currentPlayer!.id).pipe(first()).subscribe(b => {
         this.boardPlayer = b;
         appTitle.set(`${this.boardPlayer?.game.name} | ${config.appName}`);
-      });;
+      });
     });
 
     // allow hub events to update the player subject
@@ -237,20 +238,22 @@ export class GamePageComponent implements OnDestroy {
   }
 
   private async enrollAndJoinGame(ctx: GameEnrollmentContext) {
-    if (ctx.game.requireSynchronizedStart) {
+    if (ctx.game.requireSynchronizedStart || ctx.game.isTeamGame) {
       await this.gameHubService.joinGame(ctx.game.id);
 
-      // have to check if the game is already started and move them 
-      // to the game start page if so
-      await this.handleLiveSyncStartSessionJoined(ctx);
+      // if the game is sync start, we need to check if it's already going and move them along if so
+      // we also need to wire up a listener to move them along when an external game launches
+      if (ctx.game.requireSynchronizedStart) {
+        await this.handleLiveSyncStartSessionJoined(ctx);
 
-      this.externalGameDeployStartSubscription = this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
-        if (startState)
-          this.handleLiveSyncStartSessionJoined(ctx);
-      });
+        this.externalGameDeployStartSubscription = this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
+          if (startState)
+            this.handleLiveSyncStartSessionJoined(ctx);
+        });
+      }
     }
     else {
-      this.logService.logInfo(`Not joining the hub for game ${ctx.game.id} - it doesn't require sync start.`);
+      this.logService.logInfo(`Not joining the hub for game ${ctx.game.id} - it's not a team game AND it doesn't require sync start.`);
     }
   }
 
