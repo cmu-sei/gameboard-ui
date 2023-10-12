@@ -120,13 +120,12 @@ export class GameStartPageComponent implements OnInit {
     }
 
     if (ctx.game.mode == GameEngineMode.External) {
-      this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.state = state));
-      this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.state = state));
+      this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.updateGameStartState.bind(this)));
+      this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.updateGameStartState.bind(this)));
       this.unsub.add(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
-
       this.unsub.add(
         this.gameHub.externalGameLaunchEnded$.subscribe(state => {
-          this.state = state;
+          this.updateGameStartState(state);
 
           const team = state.teams.find(t => t.team.id === ctx.player.teamId);
           if (!team) {
@@ -138,5 +137,10 @@ export class GameStartPageComponent implements OnInit {
         })
       );
     }
+  }
+
+  private updateGameStartState(state: GameStartState) {
+    this.log.logWarning("Game start state update:", state);
+    this.state = state;
   }
 }

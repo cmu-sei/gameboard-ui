@@ -6,6 +6,7 @@ import { GameService } from '@/api/game.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { LayoutService } from '@/utility/layout.service';
 import { RouterService } from '@/services/router.service';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-external-game-page',
@@ -22,6 +23,7 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
   constructor(
     private gameService: GameService,
     private layoutService: LayoutService,
+    private log: LogService,
     private route: ActivatedRoute,
     private routerService: RouterService) { }
 
@@ -35,6 +37,8 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     if (!this.game.externalGameClientUrl) {
       this.errors.push(`Unable to resolve external game client Url ("${this.game.externalGameClientUrl}")`);
     }
+
+    this.log.logWarning("Launched external game iframe at", this.iframeSrcUrl);
 
     // we still don't know why, but we have to reload after hitting an iframe page
     // in order to prevent weird css bugs
