@@ -176,6 +176,10 @@ alert {
   }
 }
 
+a[routerLink] {
+  cursor: pointer;
+}
+
 .nav-tabs li {
   font-weight: bold;
   font-size: 1.2rem;

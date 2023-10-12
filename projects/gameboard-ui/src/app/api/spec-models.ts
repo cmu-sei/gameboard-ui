@@ -45,6 +45,7 @@ export interface SpecSummary {
   gameLogo: string;
   averageDeploySeconds: number;
   solutionGuideUrl: string;
+  tags?: string[];
 }
 
 export enum GameEngineType {

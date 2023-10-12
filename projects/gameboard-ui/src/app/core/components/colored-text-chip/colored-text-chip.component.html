@@ -1,5 +1,6 @@
 <span [class]="'badge badge-pill mr-2 px-2 py-1 mb-2 colored-text-chip-' + size" [class.click-target]="isClickable"
-    [ngStyle]="text | textToColor" (click)="isClickable && handleClick({text, id}, $event)">
+    [ngStyle]="(colorMode == 'colored' ? (text | textToColor) : { color: 'rgba(0, 0, 0, 0.9)', backgroundColor: '#eeeeee' })"
+    (click)="isClickable && handleClick({text, id}, $event)">
     <span class="text-container">{{text}}</span>&nbsp;
     <span *ngIf="enableSecondaryAction" class="btn p-0 m-0 border-0"
         (click)="enableSecondaryAction && handleSecondaryActionClick(text, id)" class="secondary-action cursor-pointer"

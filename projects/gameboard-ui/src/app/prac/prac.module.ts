@@ -34,8 +34,8 @@ import { SuggestedSearchesComponent } from './components/suggested-searches/sugg
     RouterModule.forChild([
       {
         path: "", component: PracticePageComponent, children: [
-          { path: ':specId/:slug', component: PracticeSessionComponent },
-          { path: '', pathMatch: 'full', component: PracticeChallengeListComponent }
+          { path: ":specId/:slug", component: PracticeSessionComponent },
+          { path: "", pathMatch: 'full', component: PracticeChallengeListComponent }
         ]
       }
     ]),

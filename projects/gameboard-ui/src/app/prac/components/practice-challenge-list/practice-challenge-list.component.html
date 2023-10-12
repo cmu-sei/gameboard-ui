@@ -27,7 +27,7 @@
                 [searches]="suggestedSearches"></app-suggested-searches>
         </div>
 
-        <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
+        <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0 mt-5">
             <app-share-button class="d-block mr-1" size="small"
                 message="Copied a link to this search to your clipboard."
                 tooltip="Copy a link to this search"></app-share-button>
@@ -61,7 +61,22 @@
                         <p *ngIf="!(canPlayPracticeChallenges$ | async)" class="p-0 m-0 text-success cursor-pointer"
                             tooltip="Come back after selecting your sponsor to play this challenge.">{{c.name}}</p>
                     </td>
-                    <td class="align-middle">{{c.description}}</td>
+                    <td class="align-middle">
+                        <div class="practice-challenge-description">
+                            {{c.description}}
+                        </div>
+
+                        <div *ngIf="c.tags?.length" class="practice-challenge-tags mt-2">
+                            <ul class="d-flex align-items-center flex-wrap">
+                                <li *ngFor="let tag of c.tags" class="d-block mr-1">
+                                    <a [routerLink]="['/practice']" [queryParams]="{ term: tag }">
+                                        <app-colored-text-chip colorMode="monochrome" size="small"
+                                            [text]="tag"></app-colored-text-chip>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
                     <td>
                         <div class="d-flex align-items-center">
                             <app-game-card-image [game]="{ id: c.gameId, name: c.gameName, logo: c.gameLogo }"

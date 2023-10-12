@@ -29,32 +29,29 @@
       <div class="input-group-prepend">
         <span id="search-label" class="input-group-text">Search</span>
       </div>
-      <input id="search-input" type="search" class="form-control"
-        [(ngModel)]="search.term" (input)="typing($event)"
+      <input id="search-input" type="search" class="form-control" [(ngModel)]="search.term" (input)="typing($event)"
         aria-label="search term" aria-describedby="search-label">
     </div>
 
-      <div class="row">
+    <div class="row">
 
-        <div class="dropzone">
-          <app-dropzone class="m-0" (dropped)="dropped($event)">
-            <pre>Drag in a yaml game array</pre>
-          </app-dropzone>
-        </div>
-
-        <app-game-card *ngFor="let g of games$ | async; trackBy:trackById"
-          [game]="g" (selected)="game=$event"
-          class="col-lg-3 col-md-4 col-6 mb-4">
-        </app-game-card>
-
+      <div class="dropzone">
+        <app-dropzone class="m-0" (dropped)="dropped($event)">
+          <pre>Drag in a yaml game array</pre>
+        </app-dropzone>
       </div>
+
+      <app-game-card *ngFor="let g of games$ | async; trackBy:trackById" [game]="g" (selected)="game=$event"
+        class="col-lg-3 col-md-4 col-6 mb-4">
+      </app-game-card>
+
+    </div>
 
 
   </div>
 
   <!-- game editor -->
   <div *ngIf="!!game">
-
     <app-game-editor [game]="game"></app-game-editor>
 
     <div class="text-center my-4">
@@ -78,7 +75,5 @@
         <span>Delete</span>
       </app-confirm-button>
     </div>
-
   </div>
-
 </div>

@@ -51,6 +51,10 @@ export class RouterService implements OnDestroy {
     return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
+  public getPracticeAreaWithSearchUrl(searchTerm: string) {
+    return this.router.createUrlTree(["practice"], { queryParams: { term: searchTerm } });
+  }
+
   public getProfileUrl() {
     return this.router.createUrlTree(["user", "profile"]).toString();
   }
@@ -68,8 +72,7 @@ export class RouterService implements OnDestroy {
   }
 
   public toPracticeAreaWithSearch(search: string) {
-    const urlTree = this.router.createUrlTree(["practice"], { queryParams: { term: search } });
-    return this.router.navigateByUrl(urlTree);
+    return this.router.navigateByUrl(this.getPracticeAreaWithSearchUrl(search));
   }
 
   public toPracticeCertificates() {

@@ -10,7 +10,6 @@ import { ParameterChangeLinkComponent } from './components/parameter-change-link
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
 import { ParameterGameChallengespecComponent } from './components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
 import { ParameterSponsorComponent } from './components/parameters/parameter-sponsor/parameter-sponsor.component';
-import { ParameterTicketLabelsComponent } from './components/parameters/parameter-ticket-labels/parameter-ticket-labels.component';
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
 import { ParameterTimespanPickerComponent } from './components/parameters/parameter-timespan-picker/parameter-timespan-picker.component';
 import { PlayerFieldComponent } from './components/player-field/player-field.component';
@@ -51,7 +50,6 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
     MsToDurationPipe,
     ParameterGameChallengespecComponent,
     ParameterDateRangeComponent,
-    ParameterTicketLabelsComponent,
     ParameterTicketStatusComponent,
     ParameterTimespanPickerComponent,
     ReportCardComponent,
