@@ -32,6 +32,11 @@ export class GameHubService {
       this.logService.logError("Can't join game with falsey id", gameId);
     }
 
+    if (this._joinedGameIds.some(gId => gId == gameId)) {
+      this.logService.logWarning(`Tried to join ${gameId} but was already connected.`, this.signalRService.connectionState);
+      return;
+    }
+
     await this.signalRService.connect(
       "hub/games",
       [
@@ -55,7 +60,7 @@ export class GameHubService {
   }
 
   async leaveGame(gameId: string) {
-    if (this._joinedGameIds.indexOf(gameId) < 0) {
+    if (!this._joinedGameIds.some(gId => gId == gameId)) {
       this.logService.logInfo(`Attempted to leave gameId ${gameId}, but this player is not in the game's group.`);
       return;
     }

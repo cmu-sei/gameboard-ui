@@ -140,7 +140,7 @@ export class SignalRService {
       return;
     }
 
-    this.logger.logInfo(`Sending message "${message}" with params:`, arg);
+    this.logger.logInfo(`Sending message "${message}" to connection "${this._connection?.baseUrl} => ${this._connection.connectionId}" with params:`, arg);
     await this._connection.invoke(message, arg);
     this.logger.logInfo(`Message "${message}" sent.`);
   }
