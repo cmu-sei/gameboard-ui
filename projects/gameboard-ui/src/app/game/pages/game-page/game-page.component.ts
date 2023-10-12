@@ -211,6 +211,9 @@ export class GamePageComponent implements OnDestroy {
     this.localUserSubscription?.unsubscribe();
     this.syncStartChangedSubscription?.unsubscribe();
     this.externalGameDeployStartSubscription?.unsubscribe();
+
+    if (this.ctxIds.gameId)
+      this.gameHubService.leaveGame(this.ctxIds.gameId);
   }
 
   protected onSessionStarted(player: Player): void {
