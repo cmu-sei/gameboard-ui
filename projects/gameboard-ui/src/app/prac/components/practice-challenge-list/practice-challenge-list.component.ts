@@ -1,12 +1,12 @@
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { BehaviorSubject, Observable, combineLatest, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { Search } from '@/api/models';
 import { SpecSummary } from '@/api/spec-models';
 import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { slug } from '@/tools/functions';
 
 @Component({
@@ -20,6 +20,7 @@ export class PracticeChallengeListComponent {
   appname = '';
   faSearch = faSearch;
 
+  protected canPlayPracticeChallenges$: Observable<boolean>;
   protected hasSponsor$: Observable<boolean>;
   protected localUserId?: string;
   protected introTextMarkdown = "";
@@ -57,6 +58,14 @@ export class PracticeChallengeListComponent {
     );
 
     this.hasSponsor$ = localUser.user$.pipe(map(u => !!u?.sponsor && !u.hasDefaultSponsor));
+
+    this.canPlayPracticeChallenges$ = combineLatest([
+      localUser.user$,
+      this.hasSponsor$
+    ]).pipe(
+      map(sponsorAndUser => ({ user: sponsorAndUser[0], hasSponsor: sponsorAndUser[1] })),
+      map(canPlayCtx => canPlayCtx.hasSponsor && !!canPlayCtx.user)
+    );
   }
 
   async ngOnInit(): Promise<void> {

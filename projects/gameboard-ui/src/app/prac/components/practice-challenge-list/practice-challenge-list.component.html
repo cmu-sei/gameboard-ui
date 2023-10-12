@@ -6,7 +6,13 @@
     </p>
 
     <ng-container *ngIf="list$ | async as list; else loading">
-        <ng-container *ngIf="!(hasSponsor$ | async)">
+        <ng-container *ngIf="!localUserId">
+            <alert type="warning">
+                You haven't logged in yet - you'll need to do so before you can play practice challenges.
+                <a routerLink="/login">Log in</a> to start honing your skills!
+            </alert>
+        </ng-container>
+        <ng-container *ngIf="localUserId && !(hasSponsor$ | async)">
             <alert type="warning">
                 You haven't selected your sponsoring organization yet - you'll need to before you can play practice
                 challenges. Head over to your profile to select your sponsor, then return here to play!
@@ -49,10 +55,10 @@
             <tbody>
                 <tr *ngFor="let c of list">
                     <td class="align-middle">
-                        <a *ngIf="hasSponsor$ | async" [routerLink]="[c.id, slug(c.name)]">
+                        <a *ngIf="canPlayPracticeChallenges$ | async" [routerLink]="[c.id, slug(c.name)]">
                             {{c.name}}
                         </a>
-                        <p *ngIf="!(hasSponsor$ | async)" class="p-0 m-0 text-success cursor-pointer"
+                        <p *ngIf="!(canPlayPracticeChallenges$ | async)" class="p-0 m-0 text-success cursor-pointer"
                             tooltip="Come back after selecting your sponsor to play this challenge.">{{c.name}}</p>
                     </td>
                     <td class="align-middle">{{c.description}}</td>

@@ -50,7 +50,7 @@ export class PracticeService {
     return this._isEnabled$.value!;
   }
 
-  listGames(): Observable<GameCardContext[]> {
+  public listGames(): Observable<GameCardContext[]> {
     return this.http.get<GameCardContext[]>(this.apiUrl.build('/practice/games'));
   }
 
