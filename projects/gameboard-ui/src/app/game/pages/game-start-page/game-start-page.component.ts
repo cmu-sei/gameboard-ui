@@ -83,7 +83,7 @@ export class GameStartPageComponent implements OnInit {
       this.routerService.goToGamePage(ctx.game.id);
       return;
     } else if (ctx.game.mode == GameEngineMode.External) {
-      this.log.logInfo("Navigating to external game", ctx.game.id);
+      this.log.logInfo("Navigating to external game", ctx.game.id, ctx.player.teamId);
       this.routerService.goToExternalGamePage(ctx.game.id, ctx.player.teamId);
       return;
     }
@@ -93,6 +93,7 @@ export class GameStartPageComponent implements OnInit {
 
   private async launchGame(ctx: GameLaunchContext): Promise<void> {
     this.gameLaunchCtx = ctx;
+    this.log.logInfo("Launching game with context", ctx);
 
     if (!ctx.player.session?.isDuring) {
       return;
