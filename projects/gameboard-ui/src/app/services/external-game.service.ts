@@ -35,8 +35,8 @@ export class ExternalGameService {
 
     const namespaceKeyName = this.computeNamespaceKey(game.teamId);
     this.storage.addArbitrary(namespaceKeyName, JSON.stringify({
-      [`oidcLink`]: oidcLink,
-      [`gameServerUrl`]: game.gameServerUrl,
+      [`${namespaceKeyName}:oidcLink`]: oidcLink,
+      [`${namespaceKeyName}:gameServerUrl`]: game.gameServerUrl,
     }));
   }
 

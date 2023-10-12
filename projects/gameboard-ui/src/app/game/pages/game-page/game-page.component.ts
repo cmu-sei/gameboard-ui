@@ -24,6 +24,7 @@ import { RouterService } from '@/services/router.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UserService } from '@/api/user.service';
 import { ConfigService } from '@/utility/config.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 interface GameEnrollmentContext {
   game: Game;
@@ -69,6 +70,7 @@ export class GamePageComponent implements OnDestroy {
     private modalService: ModalConfirmService,
     private routerService: RouterService,
     private titleService: AppTitleService,
+    private unsub: UnsubscriberService,
     private windowService: WindowService
   ) {
     const user$ = localUser.user$.pipe(map(u => !!u ? u : {} as ApiUser));
@@ -236,10 +238,12 @@ export class GamePageComponent implements OnDestroy {
       if (ctx.game.requireSynchronizedStart) {
         await this.handleLiveSyncStartSessionJoined(ctx);
 
-        this.externalGameDeployStartSubscription = this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
-          if (startState)
-            this.handleLiveSyncStartSessionJoined(ctx);
-        });
+        this.unsub.add(
+          this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
+            if (startState)
+              this.handleLiveSyncStartSessionJoined(ctx);
+          })
+        );
       }
     }
     else {
