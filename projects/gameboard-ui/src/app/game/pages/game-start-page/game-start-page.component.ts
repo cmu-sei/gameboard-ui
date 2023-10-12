@@ -120,8 +120,9 @@ export class GameStartPageComponent implements OnInit {
     }
 
     if (ctx.game.mode == GameEngineMode.External) {
-      this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.updateGameStartState.bind(this)));
-      this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.updateGameStartState.bind(this)));
+      this.log.logInfo("Wiring up game hub external game event listeners...", ctx)
+      this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.updateGameStartState.bind(this)(state)));
+      this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.updateGameStartState.bind(this)(state)));
       this.unsub.add(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
       this.unsub.add(
         this.gameHub.externalGameLaunchEnded$.subscribe(state => {
@@ -136,11 +137,13 @@ export class GameStartPageComponent implements OnInit {
           this.handleGameReady(ctx);
         })
       );
+
+      this.log.logInfo("External game event listeners wired.");
     }
   }
 
   private updateGameStartState(state: GameStartState) {
-    this.log.logWarning("Game start state update:", state);
+    this.log.logInfo("Game start state update:", state);
     this.state = state;
   }
 }
