@@ -95,22 +95,21 @@ export class GameStartPageComponent implements OnInit {
     this.gameLaunchCtx = ctx;
     this.log.logInfo("Launching game with context", ctx);
 
-    if (!ctx.player.session?.isDuring) {
-      return;
-    }
-
     // if the player already has a session for the game and it's happening right now, move them along
     if (ctx.player.session?.isDuring) {
+      this.log.logInfo("Player's session is already active, moving them to the game page", ctx.player);
       this.handleGameReady(ctx);
     }
 
     // if the game is non-sync-start and is standard-vm mode, just redirect to the game page
     if (!ctx.game.requireSynchronizedStart && ctx.game.mode == GameEngineMode.Standard) {
+      this.log.logInfo("Game is a standard VM game, moving to game page", ctx);
       this.handleGameReady(ctx);
       return;
     }
 
     // if the game is either sync-start or is an external game, we have work to do here
+    this.log.logInfo("Checking hub connection to game", ctx.game.id);
     if (!this.gameHub.isConnectedToGame(ctx.game.id)) {
       this.log.logInfo(`Not connected to game "${ctx.game.id}" - connecting now.`);
       await this.gameHub.joinGame(ctx.game.id);
