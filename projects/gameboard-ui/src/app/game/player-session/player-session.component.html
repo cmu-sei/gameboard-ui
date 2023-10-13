@@ -8,7 +8,6 @@
       <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)" class="text-info card-text d-flex mb-2">
         <div>
           <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
-          <span *ngIf="ctx.game.session.isDuring">Game window closes in </span>
           <span *ngIf="ctx.game.session.isAfter">Game window is closed </span>
         </div>
         <div class="ml-2">
@@ -71,12 +70,8 @@
       </ng-container>
 
       <div *ngIf="!ctx.player.session?.isBefore" class="text-center my-4">
-        <a *ngIf="ctx.game.mode != 'unity'" class="btn btn-primary btn-lg"
-          [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
-        <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
-          [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd.valueOf()]">
-          Continue to Cubespace
-        </a>
+        <a *ngIf="ctx.game.mode != 'unity'; else toCubespace; context: { $implicit: ctx }"
+          class="btn btn-primary btn-lg" [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
       </div>
 
       <div class="col d-flex justify-content-center" *ngIf="ctx.game.mapUrl">
@@ -88,4 +83,11 @@
 
 <ng-template #loading>
   <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #toCubespace let-ctx>
+  <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
+    [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd.valueOf()]">
+    Continue to Cubespace
+  </a>
 </ng-template>
