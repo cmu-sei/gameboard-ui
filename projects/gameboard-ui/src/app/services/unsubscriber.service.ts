@@ -5,8 +5,9 @@ import { Subscription } from 'rxjs';
 export class UnsubscriberService implements OnDestroy {
   private _subscriptions: Subscription[] = [];
 
-  add(sub: Subscription) {
-    this._subscriptions.push(sub);
+  add(...subs: Subscription[]) {
+    for (const sub of subs)
+      this._subscriptions.push(sub);
   }
 
   unsubscribeAll() {

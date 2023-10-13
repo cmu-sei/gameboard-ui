@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { SignalRService } from './signalr.service';
 import { GameStartState, GameHubEvent, GameHubEventType, PlayerJoinedEvent } from './game-hub.models';
-import { LogService } from '../log.service';
-import { Subject } from 'rxjs';
+import { LogService } from '@/services/log.service';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SyncStartGameState, SyncStartGameStartedState } from '@/game/game.models';
 
 @Injectable({ providedIn: 'root' })
@@ -11,32 +11,64 @@ export class GameHubService {
   private _externalGameLaunchEnded$ = new Subject<GameStartState>();
   private _externalGameLaunchFailure$ = new Subject<GameStartState>();
   private _externalGameLaunchProgressChanged$ = new Subject<GameStartState>();
+  private _gameJoined$ = new Subject<PlayerJoinedEvent>();
+  private _joinedGameIds$ = new BehaviorSubject<string[]>([]);
   private _syncStartGameStateChanged$ = new Subject<SyncStartGameState>();
   private _syncStartGameStarted$ = new Subject<SyncStartGameStartedState>();
-  private _joinedGameIds: string[] = [];
 
-  public hubState$ = this.signalRService.state$;
   public externalGameLaunchProgressChanged$ = this._externalGameLaunchProgressChanged$.asObservable();
   public externalGameLaunchStarted$ = this._externalGameLaunchStarted$.asObservable();
   public externalGameLaunchEnded$ = this._externalGameLaunchEnded$.asObservable();
   public externalGameLaunchFailure$ = this._externalGameLaunchFailure$.asObservable();
+  public gameJoined$ = this._gameJoined$.asObservable();
+  public hubState$ = this.signalRService.state$;
+  public joinedGameIds$ = this._joinedGameIds$.asObservable();
   public syncStartGameStateChanged$ = this._syncStartGameStateChanged$.asObservable();
   public syncStartGameStarted$ = this._syncStartGameStarted$.asObservable();
 
   constructor(
     private logService: LogService,
-    private signalRService: SignalRService) { }
+    @Inject(SignalRService) private signalRService: SignalRService) { }
+
+  async disconnect() {
+    await this.signalRService.disconnect();
+  }
 
   async joinGame(gameId: string) {
     if (!gameId) {
       this.logService.logError("Can't join game with falsey id", gameId);
     }
 
-    if (this._joinedGameIds.some(gId => gId == gameId)) {
+    if (this._joinedGameIds$.value.some(gId => gId == gameId)) {
       this.logService.logWarning(`Tried to join ${gameId} but was already connected.`, this.signalRService.connectionState);
       return;
     }
 
+    this.signalRService.sendMessage("JoinGame", { gameId });
+    this._joinedGameIds$.next([...this._joinedGameIds$.value, gameId]);
+  }
+
+  async leaveGame(gameId: string) {
+    if (!this._joinedGameIds$.value.some(gId => gId == gameId)) {
+      this.logService.logInfo(`Attempted to leave gameId ${gameId}, but this player is not in the game's group.`);
+      return;
+    }
+
+    await this.signalRService.sendMessage("LeaveGame", { gameId });
+    this._joinedGameIds$.next(this._joinedGameIds$.value.filter(g => g !== gameId));
+  }
+
+  isConnected() {
+    return this.signalRService.isConnnected();
+  }
+
+  isConnectedToGame = (gameId: string) => {
+    return this.signalRService.isConnnected() && this._joinedGameIds$.value.some(gId => gId === gameId);
+  };
+
+  // This should _only_ be called once per login by the 
+  // component which is managing all SignalR connections (GameboardSignalRHubsComponent)
+  public async connect() {
     await this.signalRService.connect(
       "hub/games",
       [
@@ -52,28 +84,13 @@ export class GameHubService {
         { eventType: GameHubEventType.ExternalGameLaunchEnd, handler: this.handleExternalGameLaunchEnded.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStateChanged, handler: this.handleSyncStartStateChanged.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStarting, handler: this.handleSyncStartGameStarting.bind(this) },
-        { eventType: GameHubEventType.YouJoined, handler: ev => this.logService.logInfo("You joined the game", ev) }
+        { eventType: GameHubEventType.YouJoined, handler: ev => this.handleGameJoined.bind(this) }
       ]);
-
-    this.signalRService.sendMessage("JoinGame", { gameId });
-    this._joinedGameIds.push(gameId);
   }
-
-  async leaveGame(gameId: string) {
-    if (!this._joinedGameIds.some(gId => gId == gameId)) {
-      this.logService.logInfo(`Attempted to leave gameId ${gameId}, but this player is not in the game's group.`);
-      return;
-    }
-
-    await this.signalRService.sendMessage("LeaveGame", { gameId });
-    this._joinedGameIds = this._joinedGameIds.filter(g => g !== gameId);
-  }
-
-  isConnectedToGame = (gameId: string) =>
-    this._joinedGameIds.some(gId => gId === gameId);
 
   private handleGameJoined(ev: GameHubEvent<PlayerJoinedEvent>) {
     this.logService.logInfo("Joined the game", ev);
+    this._gameJoined$.next(ev.data);
   }
 
   private handleExternalGameLaunchStarted(ev: GameHubEvent<GameStartState>) {

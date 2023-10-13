@@ -27,7 +27,7 @@ export class NotificationService {
   ticketEvents = new Subject<HubEvent>();
 
   constructor(
-    private config: ConfigService,
+    config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
     private log: LogService,

@@ -5,7 +5,6 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subscription } from 'rxjs';
 import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
-import { HubConnectionState } from '@microsoft/signalr';
 import { ApiUser, PlayerRole } from '@/api/user-models';
 import { GameService } from '@/api/game.service';
 import { Game, GameContext } from '@/api/game-models';
@@ -40,7 +39,6 @@ export class GamePageComponent implements OnDestroy {
   ctx$ = new Observable<GameContext | undefined>(undefined);
   showCert = false;
   minDate = new Date(0);
-  hubState$: Observable<HubConnectionState> = this.gameHubService.hubState$;
 
   protected boardPlayer?: BoardPlayer;
   protected canAdminEnroll$: Observable<boolean>;
