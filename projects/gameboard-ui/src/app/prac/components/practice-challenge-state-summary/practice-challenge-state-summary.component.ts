@@ -1,5 +1,4 @@
 import { LocalActiveChallenge } from '@/api/challenges.models';
-import { PlayerService } from '@/api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { LogService } from '@/services/log.service';
 import { PracticeService } from '@/services/practice.service';
@@ -10,6 +9,7 @@ import { DateTime } from 'luxon';
 import { Observable, combineLatest, filter, firstValueFrom, map, timer } from 'rxjs';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { slug } from '@/tools/functions';
+import { TeamService } from '@/api/team.service';
 
 @Component({
   selector: 'app-practice-challenge-state-summary',
@@ -29,8 +29,8 @@ export class PracticeChallengeStateSummaryComponent {
     activeChallengesRepo: ActiveChallengesRepo,
     localUserService: LocalUserService,
     private logService: LogService,
-    private playerService: PlayerService,
     private practiceService: PracticeService,
+    private teamService: TeamService,
     // have to keep "unsub" around so it gets ngDestroyed. 
     // this is an argument for an inherited base class, i think
     private unsub: UnsubscriberService) {
@@ -72,7 +72,7 @@ export class PracticeChallengeStateSummaryComponent {
     this.isChangingSessionEnd = true;
     const teamId = practiceChallenge.teamId;
     this.userActivePracticeChallenge = undefined;
-    await firstValueFrom(this.playerService.updateSession({
+    await firstValueFrom(this.teamService.extendSession({
       teamId,
       sessionEnd: new Date()
     }));
@@ -85,7 +85,7 @@ export class PracticeChallengeStateSummaryComponent {
     }
 
     this.isChangingSessionEnd = true;
-    await this.practiceService.endPracticeChallenge(this.userActivePracticeChallenge!.teamId);
+    await firstValueFrom(this.teamService.endSession({ teamId: this.userActivePracticeChallenge!.teamId }));
     this.isChangingSessionEnd = false;
   }
 }

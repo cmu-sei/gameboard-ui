@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import {
-  Component, OnInit, ViewChild, AfterViewInit,
+  Component, ViewChild, AfterViewInit,
   ElementRef, Input, Injector, HostListener, OnDestroy, Renderer2
 } from '@angular/core';
 import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
@@ -25,8 +25,7 @@ import { HubService } from '../hub.service';
     WmksConsoleService
   ]
 })
-export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
-
+export class ConsoleComponent implements AfterViewInit, OnDestroy {
   @Input() index = 0;
   @Input() viewOnly = false;
   @Input() request!: ConsoleRequest;
@@ -82,12 +81,7 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnInit(): void {
-
-  }
-
   ngAfterViewInit(): void {
-
     this.initHotspot();
 
     const el = this.consoleCanvas.nativeElement;
@@ -122,7 +116,6 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   changeState(state: string): void {
-
     if (state.startsWith('clip:')) {
       this.cliptext = state.substring(5);
       this.clipSvc.copyToClipboard(this.cliptext);
@@ -168,9 +161,8 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   reload(): void {
-
     this.changeState('loading');
-    this.api.action({...this.request, action: 'ticket'}).pipe(
+    this.api.action({ ...this.request, action: 'ticket' }).pipe(
       catchError((err: Error) => {
         // // testing
         // return of({
@@ -189,14 +181,12 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeState(
           msg.match(/forbidden/i) ? 'forbidden' : 'failed'
         );
-        // console.log(err);
       }
     );
 
   }
 
   create(info: ConsoleSummary): void {
-
     if (!info.id) {
       this.changeState('failed');
       return;
@@ -208,9 +198,7 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.vmId = info.id;
-
     this.isMock = !!(info.url.match(/mock/i));
-
     this.console = this.isMock
       ? this.injector.get(MockConsoleService)
       : this.injector.get(WmksConsoleService);
@@ -228,7 +216,7 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   start(): void {
     this.changeState('starting');
-    this.api.action({...this.request, action: 'reset'}).pipe(
+    this.api.action({ ...this.request, action: 'reset' }).pipe(
       finalize(() => this.reload())
     ).subscribe();
   }
@@ -255,7 +243,6 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   resolve(): void {
-    // this.console.resolve();
     this.request.fullbleed = !this.request.fullbleed;
     this.reload();
   }
@@ -269,7 +256,7 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setNet(net: string): void {
-    this.api.update(this.vmId, { key: 'net', value: net}).subscribe();
+    this.api.update(this.vmId, { key: 'net', value: net }).subscribe();
     // todo: show feedback
   }
 
@@ -286,7 +273,6 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initHotspot(): void {
-    // this.hotspot.x = window.innerWidth - this.hotspot.w;
     this.subs.push(
       fromEvent<MouseEvent>(document, 'mousemove').pipe(
         filter(_ => !this.request.observer),
@@ -322,7 +308,7 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
             this.titleSvc.setTitle(`console: ${c.vmName}`);
             this.reload();
           }
-        }, 
+        },
         (err) => {
           this.changeState('failed')
         }
@@ -332,7 +318,6 @@ export class ConsoleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
-    // this.hotspot.x = event.target.innerWidth - this.hotspot.w;
     this.console.refresh();
   }
 

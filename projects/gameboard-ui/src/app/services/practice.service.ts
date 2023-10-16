@@ -6,32 +6,19 @@ import { BehaviorSubject, Observable, Subject, firstValueFrom, forkJoin, map } f
 import { ApiUrlService } from './api-url.service';
 import { PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
-import { PlayerService } from '@/api/player.service';
 import { GameCardContext } from '@/api/game-models';
+import { TeamService } from '@/api/team.service';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
   private _isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
   public isEnabled$ = this._isEnabled$.pipe(map(isEnabled => !!isEnabled));
 
-  private _practiceChallengeEnded$ = new Subject<string>();
-  public practiceChallengeEnded$ = this._practiceChallengeEnded$.asObservable();
-
   constructor(
     private apiUrl: ApiUrlService,
     private gameService: GameService,
     private http: HttpClient,
-    private logService: LogService,
-    private playerService: PlayerService) {
-  }
-
-  async endPracticeChallenge(teamId: string) {
-    await firstValueFrom(this.playerService.updateSession({
-      teamId,
-      sessionEnd: new Date(Date.parse("0001-01-01T00:00:00Z"))
-    }));
-
-    this._practiceChallengeEnded$.next(teamId);
+    private logService: LogService) {
   }
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {

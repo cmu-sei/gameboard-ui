@@ -7,9 +7,7 @@ import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel, HubCo
 import { Subject, timer } from 'rxjs';
 import { ConsolePresence, ConsoleRequest } from './api.models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class HubService {
 
   peers$ = new Subject<ConsolePresence[]>();
@@ -25,9 +23,7 @@ export class HubService {
 
   init(console: ConsoleRequest): void {
     this.console = console;
-    this.buildConnection().then(
-      () => this.connect()
-    );
+    this.buildConnection().then(() => this.connect());
   }
 
   focus(): void {
@@ -43,9 +39,7 @@ export class HubService {
   }
 
   private buildConnection(): Promise<void> {
-
     return this.disconnect().finally(() => {
-
       this.connection = new HubConnectionBuilder()
         .withUrl(this.hub, {
           // accessTokenFactory: () => this.getTicket(),
@@ -76,7 +70,6 @@ export class HubService {
   }
 
   private connect(): void {
-
     this.connection.start()
       .then(() => this.focus())
       .catch(() => {
@@ -99,15 +92,15 @@ export class HubService {
       console.sessionId === this.console.sessionId &&
       console.name === this.console.name
     ) {
-        // add if not present
-        if (found < 0) {
-          this.peers.push(console);
-        }
+      // add if not present
+      if (found < 0) {
+        this.peers.push(console);
+      }
 
-        // acknowledge new party member
-        if (joined) {
-          this.connection.invoke('ackConsole', console);
-        }
+      // acknowledge new party member
+      if (joined) {
+        this.connection.invoke('ackConsole', console);
+      }
 
     } else {
 
@@ -115,11 +108,8 @@ export class HubService {
       if (found >= 0) {
         this.peers.splice(found, 1);
       }
-
     }
 
     this.peers$.next(this.peers);
-
   }
-
 }

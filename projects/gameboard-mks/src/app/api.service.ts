@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Location, PlatformLocation } from '@angular/common';
+import { PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interval, Observable, of } from 'rxjs';
@@ -9,9 +9,7 @@ import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { ConsoleActor, ConsoleRequest, ConsoleSummary, KeyValuePair, VmAnswer, VmOperation, VmOptions } from './api.models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ApiService {
   url = '';
   heartbeat$: Observable<boolean>;
@@ -65,10 +63,10 @@ export class ApiService {
   }
 
   blur(model: ConsoleRequest): Observable<any> {
-    return this.http.put<any>(this.url + `/challenge/console`, ({...model, name: ''}));
+    return this.http.put<any>(this.url + `/challenge/console`, ({ ...model, name: '' }));
   }
 
   findConsole(uid: string): Observable<ConsoleActor> {
-    return this.http.get<ConsoleActor>(this.url + `/challenge/consoleactor`, { params: {uid}});
+    return this.http.get<ConsoleActor>(this.url + `/challenge/consoleactor`, { params: { uid } });
   }
 }

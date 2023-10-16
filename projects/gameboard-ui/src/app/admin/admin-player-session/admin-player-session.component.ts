@@ -3,12 +3,13 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { first, tap } from 'rxjs/operators';
 import { Player, Team, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { GameSessionService } from '../../services/game-session.service';
 import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
+import { TeamService } from '@/api/team.service';
 
 @Component({
   selector: 'app-admin-player-session',
@@ -33,7 +34,8 @@ export class PlayerSessionComponent implements OnInit {
 
   constructor(
     private api: PlayerService,
-    private sessionService: GameSessionService
+    private sessionService: GameSessionService,
+    private teamService: TeamService
   ) { }
 
   ngOnInit(): void {
@@ -43,14 +45,13 @@ export class PlayerSessionComponent implements OnInit {
     );
   }
 
-  extend(team: Team): void {
-    this.api.updateSession({
-      teamId: team.teamId,
-      sessionEnd: team.sessionEnd
-    }).subscribe(
-      () => { },
-      (err) => this.errors.push(err)
-    );
+  async extend(team: Team): Promise<void> {
+    try {
+      await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: team.sessionEnd }));
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   toggleRawView(isExpanding: boolean): void {

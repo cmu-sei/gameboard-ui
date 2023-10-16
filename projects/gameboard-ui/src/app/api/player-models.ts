@@ -150,7 +150,11 @@ export interface SelfChangedPlayer {
   name: string;
 }
 
-export interface SessionChangeRequest {
+export interface SessionEndRequest {
+  teamId: string;
+}
+
+export interface SessionExtendRequest {
   teamId: string;
   sessionEnd: Date;
 }

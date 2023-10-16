@@ -7,9 +7,7 @@ import { DOCUMENT } from '@angular/common';
 @Injectable({ providedIn: 'root' })
 export class ClipboardService {
 
-    constructor(
-        @Inject(DOCUMENT) private dom: Document
-    ) { }
+    constructor(@Inject(DOCUMENT) private dom: Document) { }
 
     copyToClipboard(text: string): void {
         const el = this.dom.createElement('textarea') as HTMLTextAreaElement;
@@ -22,5 +20,4 @@ export class ClipboardService {
         this.dom.execCommand('copy');
         this.dom.body.removeChild(el);
     }
-
 }

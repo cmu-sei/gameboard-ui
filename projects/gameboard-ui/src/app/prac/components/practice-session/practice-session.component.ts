@@ -15,6 +15,7 @@ import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { PlayerContext } from '@/game/components/play/play.component';
 import { RouterService } from '@/services/router.service';
 import { PracticeChallengeSolvedModalComponent } from '../practice-challenge-solved-modal/practice-challenge-solved-modal.component';
+import { TeamService } from '@/api/team.service';
 
 @Component({
   selector: 'app-practice-session',
@@ -41,6 +42,7 @@ export class PracticeSessionComponent {
     private practiceService: PracticeService,
     private route: ActivatedRoute,
     private routerService: RouterService,
+    private teamService: TeamService,
     private unsub: UnsubscriberService
   ) {
     this.authed$ = localUser.user$.pipe(map(u => !!u));
@@ -135,7 +137,7 @@ export class PracticeSessionComponent {
       bodyContent: `If you continue, you'll end your session for practice challenge **${currentPracticeChallenge.spec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-        await this.practiceService.endPracticeChallenge(currentPracticeChallenge.teamId);
+        await firstValueFrom(this.teamService.endSession({ teamId: currentPracticeChallenge.teamId }));
         this.play(spec.gameId);
       }
     });
