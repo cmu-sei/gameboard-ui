@@ -178,7 +178,7 @@ export class ConfigService {
         }),
         tap(s => {
           if (!s || Object.keys(s).length == 0) {
-            this.log.logWarning(`Unable to load settings file from url ${this.basehref + this.url}`);
+            this.log.logError(`Unable to load settings file from url ${this.basehref + this.url}`);
           }
           if (s) {
             this.settings = { ...this.settings, ...s };

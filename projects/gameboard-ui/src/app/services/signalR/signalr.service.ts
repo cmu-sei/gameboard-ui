@@ -56,7 +56,7 @@ export class SignalRService {
       this.logger.logInfo(`Connection started with url`, connectToUrl);
     }
     else if (this._connection.state == HubConnectionState.Connecting || this._connection?.state == HubConnectionState.Reconnecting) {
-      this.logger.logWarning(`Connection with url ${connectToUrl} is in the Connecting state...`);
+      this.logger.logInfo(`Connection with url ${connectToUrl} is in the Connecting state...`);
     }
     else {
       this.logger.logError(`CRITICAL: The SignalR service was unable to join hub "${connectToUrl}".`);

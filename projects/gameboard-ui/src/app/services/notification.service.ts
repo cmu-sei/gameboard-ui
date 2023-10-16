@@ -161,7 +161,7 @@ export class NotificationService {
       }
     } catch (e) {
       if (this.connection.state !== HubConnectionState.Connected) {
-        this.log.logWarning(`Couldn't connect to the hub on group ${groupId}. State → `, this.state$.getValue());
+        this.log.logError(`Couldn't connect to the hub on group ${groupId}. State → `, this.state$.getValue());
       }
     }
   }

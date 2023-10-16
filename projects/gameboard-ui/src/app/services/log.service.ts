@@ -7,7 +7,7 @@ import { LogLevel } from '@microsoft/signalr';
 @Injectable({ providedIn: 'root' })
 export class LogService {
   // temporary for debugging - should be at error only
-  private readonly _logLevel: LogLevel = LogLevel.Information;
+  private readonly _logLevel: LogLevel = LogLevel.Warning;
 
   constructor() {
     if (!environment.production) {

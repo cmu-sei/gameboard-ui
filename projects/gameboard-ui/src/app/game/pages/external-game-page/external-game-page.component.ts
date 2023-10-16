@@ -38,10 +38,10 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
       this.errors.push(`Unable to resolve external game client Url ("${this.game.externalGameClientUrl}")`);
     }
 
-    this.log.logWarning("Launched external game iframe at", this.iframeSrcUrl);
+    this.log.logInfo("Launched external game iframe at", this.iframeSrcUrl);
 
     // we still don't know why, but we have to reload after hitting an iframe page
-    // in order to prevent weird css bugs
+    // in order to prevent weird css bugs after launching the unity client
     this.routerService.reloadOnNextNavigateEnd();
   }
 

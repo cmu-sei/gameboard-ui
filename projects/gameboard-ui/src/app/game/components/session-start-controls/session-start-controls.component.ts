@@ -68,7 +68,7 @@ export class SessionStartControlsComponent implements OnInit {
   }
 
   protected handleReadyUpdated(player: Player) {
-    this.logService.logWarning(`Player ${player.id} (user ${player.userId}) updating ready...`);
+    this.logService.logInfo(`Player ${player.id} (user ${player.userId}) updating ready...`);
     this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }).pipe(first()).subscribe();
   }
 
