@@ -6,7 +6,7 @@ import { catchError, firstValueFrom, of, tap } from 'rxjs';
 import { LocalActiveChallenge } from '@/api/challenges.models';
 import { BoardPlayer, BoardSpec } from '@/api/board-models';
 import { BoardService } from '@/api/board.service';
-import { TimeWindow } from '@/api/player-models';
+import { PlayerMode, TimeWindow } from '@/api/player-models';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { SpecSummary } from '@/api/spec-models';
@@ -106,7 +106,7 @@ export class PlayComponent {
       return vmUrls;
 
     for (let vm of challenge.challengeDeployment.vms) {
-      vmUrls[vm.id] = this.routerService.buildVmConsoleUrl(vm);
+      vmUrls[vm.id] = this.routerService.buildVmConsoleUrl(vm, challenge.playerMode == PlayerMode.practice);
     }
 
     return vmUrls;

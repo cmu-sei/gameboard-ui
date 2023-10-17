@@ -95,12 +95,12 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.parseUrl(`/support/tickets/${highlightTicketKey}`));
   }
 
-  public buildVmConsoleUrl(vm: VmState) {
+  public buildVmConsoleUrl(vm: VmState, isPractice = false) {
     if (!vm || !vm.isolationId || !vm.name) {
       throw new Error(`Can't launch a VM console without an isolationId and a name.`);
     }
 
-    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}`;
+    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}${isPractice ? "&l=true" : ""}`;
   }
 
   public toVmConsole(vm: VmState) {
