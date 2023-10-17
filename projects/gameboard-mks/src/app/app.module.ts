@@ -8,17 +8,19 @@ import { AppComponent } from './app.component';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { RouterModule } from '@angular/router';
 import { SpacesPipe } from './spaces.pipe';
-import { ConsoleComponent } from './console/console.component';
+import { ConsoleComponent } from './components/console/console.component';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
-import { SpinnerComponent } from './spinner/spinner.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { UserActivityListenerComponent } from './components/user-activity-listener/user-activity-listener.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SpacesPipe,
     ConsoleComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    UserActivityListenerComponent,
   ],
   imports: [
     BrowserModule,

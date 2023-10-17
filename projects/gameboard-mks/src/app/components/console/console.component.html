@@ -1,8 +1,18 @@
 <!-- Copyright 2021 Carnegie Mellon University. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root. -->
 
-<div class="console-wrapper">
+<!--Only here if requested via the querystring (done by Gameboard for practice challenges)-->
+<!--
+  NOTE: Even if the querystring is manipulated to turn this on for a competitive challenge, it won't
+  matter for the end user, functionally. The querystring parameter exists to eliminate unnecessary
+  API calls for competitive challenges - the API still only proactively extends practice sessions,
+  so turning this on via querystring hacking will just result in a maximum of an extra API call 
+  every minute.
+-->
+<app-user-activity-listener *ngIf="request.enableActivityListener"
+  (userAction)="handleUserActivity($event)"></app-user-activity-listener>
 
+<div class="console-wrapper">
   <div #consoleCanvas id="console-canvas-" [class.canvas]="!viewOnly" [class.embedded]="viewOnly"
     [class.mock-console-connected]="isMock && state==='connected'">
 
@@ -87,13 +97,6 @@
         <i class="fa fa-arrows-alt fa-2x"></i> {{net}}
       </button>
     </div>
-
-    <!-- <div class="flex-h">
-      <span>[Clipboard] </span>
-      <button class="btn" (click)="showClipboard=!showClipboard">
-        <i class="fa fa-clipboard fa-2x"></i> Show
-      </button>
-    </div> -->
 
     <div *ngIf="showClipboard">
       <div class="tools-text">

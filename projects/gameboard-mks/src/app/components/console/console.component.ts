@@ -6,15 +6,16 @@ import {
   ElementRef, Input, Injector, HostListener, OnDestroy, Renderer2
 } from '@angular/core';
 import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
-import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, of, Subject } from 'rxjs';
+import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, of, Subject, firstValueFrom } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { MockConsoleService } from './services/mock-console.service';
 import { WmksConsoleService } from './services/wmks-console.service';
 import { ConsoleService } from './services/console.service';
-import { ConsoleActor, ConsolePresence, ConsoleRequest, ConsoleSummary } from '../api.models';
-import { ApiService } from '../api.service';
-import { ClipboardService } from '../clipboard.service';
-import { HubService } from '../hub.service';
+import { ConsoleActor, ConsolePresence, ConsoleRequest, ConsoleSummary } from '../../api.models';
+import { ApiService } from '../../api.service';
+import { ClipboardService } from '../../clipboard.service';
+import { HubService } from '../../hub.service';
+import { UserActivityListenerEventType } from '../user-activity-listener/user-activity-listener.component';
 
 @Component({
   selector: 'app-console',
@@ -314,6 +315,10 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
         }
       )
     );
+  }
+
+  protected async handleUserActivity(ev: UserActivityListenerEventType) {
+    await firstValueFrom(this.api.userActivity(ev));
   }
 
   @HostListener('window:resize', ['$event'])
