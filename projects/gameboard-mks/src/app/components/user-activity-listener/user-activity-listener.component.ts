@@ -17,8 +17,6 @@ export class UserActivityListenerComponent {
     this._actionStreamSub = this._actionStream$
       .pipe(throttleTime(60000))
       .subscribe(ev => {
-        /* eslint-disable no-console */
-        console.info("User activity listener emitting", ev);
         this.userAction.emit(ev);
       });
   }
