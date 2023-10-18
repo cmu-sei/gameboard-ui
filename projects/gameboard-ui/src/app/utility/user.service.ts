@@ -3,13 +3,14 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, of, timer } from 'rxjs';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, firstValueFrom, of, timer } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, UserOidcProfile } from '../api/user-models';
 import { UserService as ApiUserService } from '../api/user.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { ConfigService } from './config.service';
 import { LogService } from '@/services/log.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -20,6 +21,7 @@ export class UserService {
   constructor(
     private auth: AuthService,
     private log: LogService,
+    private unsub: UnsubscriberService,
     api: ApiUserService,
     config: ConfigService,
     router: Router
@@ -56,6 +58,17 @@ export class UserService {
       this.user$.next(null);
       router.navigate(['/login']);
     });
+
+    // log the login event for the current user (we track date of last login and total login count)
+    this.unsub.add(
+      this.user$.pipe(
+        // when the user's id changes
+        distinctUntilChanged((prev, current) => (prev?.id || null) === (current?.id || null)),
+        // and when the user is truthy
+        filter(u => !!u),
+        // record a login event
+      ).subscribe(async u => await firstValueFrom(api.updateLoginEvents()))
+    );
   }
 
   logout(): void {
