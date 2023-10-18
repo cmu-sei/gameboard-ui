@@ -6,7 +6,6 @@
 @import "../../../node_modules/bootstrap/scss/functions";
 @import "../../../node_modules/bootstrap/scss/variables";
 @import "../../../node_modules/bootstrap/scss/mixins";
-
 @import "../../../node_modules/bootstrap/scss/code";
 @import "../../../node_modules/bootstrap/scss/root";
 @import "../../../node_modules/bootstrap/scss/reboot";
@@ -124,10 +123,24 @@ h5 {
   font-weight: 300;
 }
 
+/* In the majority of cases, we style <li>s in a custom way */
 li {
   list-style-type: none;
   padding: 0;
   margin: 0;
+}
+
+/* ... but for markdown we just go with the classics  */ 
+markdown ul li {
+  list-style-type: disc;
+  padding: unset;
+  margin-left: 1rem;
+}
+
+markdown ol li {
+  list-style-type: unset;
+  padding: unset;
+  margin-left: 1rem;
 }
 
 .spacer {
