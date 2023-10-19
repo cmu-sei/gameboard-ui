@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, filter, map, tap } from 'rxjs';
 import { LogService } from '@/services/log.service';
 import { RouterService } from '@/services/router.service';
 import { ConfigService } from '@/utility/config.service';
@@ -42,7 +42,8 @@ export class SponsorSelectBannerComponent {
     this.sponsor$ = localUserService
       .user$
       .pipe(
-        map(u => u?.sponsor)
+        map(u => u?.sponsor),
+        filter(s => !!s)
       );
   }
 }
