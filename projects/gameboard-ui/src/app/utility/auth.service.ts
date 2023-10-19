@@ -130,14 +130,7 @@ export class AuthService {
   }
 
   async externalLoginCallback(url?: string): Promise<User> {
-    const user = await this.mgr.signinRedirectCallback(url);
-
-    if (this.access_token()) {
-      // log the login event for the current user (we track date of last login and total login count)
-      await firstValueFrom(this.userService.updateLoginEvents());
-    }
-
-    return user;
+    return await this.mgr.signinRedirectCallback(url);
   }
 
   logout(): void {
