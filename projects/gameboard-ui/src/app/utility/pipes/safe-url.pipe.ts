@@ -8,6 +8,7 @@ export class SafeUrlPipe implements PipeTransform {
   transform(url?: string): SafeResourceUrl | undefined {
     if (!url)
       return url;
+
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

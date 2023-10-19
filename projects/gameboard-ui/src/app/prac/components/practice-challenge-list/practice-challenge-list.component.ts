@@ -8,6 +8,8 @@ import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { slug } from '@/tools/functions';
+import { ApiUser } from '@/api/user-models';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-practice-challenge-list',
@@ -20,10 +22,12 @@ export class PracticeChallengeListComponent {
   appname = '';
   faSearch = faSearch;
 
-  protected canPlayPracticeChallenges$: Observable<boolean>;
+  protected canPlayChallenges = false;
+  protected canPlayChallengesTooltip: string | null = null;
   protected hasSponsor$: Observable<boolean>;
-  protected localUserId?: string;
   protected introTextMarkdown = "";
+  protected localUser$: Observable<ApiUser | null>;
+  protected profileRouterLink: string;
   protected suggestedSearches: string[] = [];
 
   term = "";
@@ -35,10 +39,11 @@ export class PracticeChallengeListComponent {
   private static readonly DEFAULT_PAGE_SIZE = 100;
 
   constructor(
+    localUser: LocalUserService,
     route: ActivatedRoute,
     private api: PracticeService,
-    private localUser: LocalUserService,
-    private routerService: RouterService
+    private routerService: RouterService,
+    private unsub: UnsubscriberService
   ) {
 
     this.list$ = route.queryParams.pipe(
@@ -58,18 +63,29 @@ export class PracticeChallengeListComponent {
     );
 
     this.hasSponsor$ = localUser.user$.pipe(map(u => !!u?.sponsor && !u.hasDefaultSponsor));
+    this.localUser$ = localUser.user$;
+    this.profileRouterLink = this.routerService.getProfileUrl();
 
-    this.canPlayPracticeChallenges$ = combineLatest([
-      localUser.user$,
-      this.hasSponsor$
-    ]).pipe(
-      map(sponsorAndUser => ({ user: sponsorAndUser[0], hasSponsor: sponsorAndUser[1] })),
-      map(canPlayCtx => canPlayCtx.hasSponsor && !!canPlayCtx.user)
+    this.unsub.add(
+      combineLatest([
+        this.hasSponsor$,
+        this.localUser$
+      ]).pipe(
+        map((sponsorAndUser) => ({ hasSponsor: sponsorAndUser[0], hasLocalUser: !!sponsorAndUser[1] }))
+      ).subscribe(ctx => {
+        this.canPlayChallenges = ctx.hasLocalUser && ctx.hasSponsor;
+        this.canPlayChallengesTooltip = null;
+
+        if (!ctx.hasLocalUser) {
+          this.canPlayChallengesTooltip = "Come back after logging in to play this challenge.";
+        } else if (!ctx.hasSponsor) {
+          this.canPlayChallengesTooltip = "Come back after selecting your sponsor to play this challenge.";
+        }
+      })
     );
   }
 
   async ngOnInit(): Promise<void> {
-    this.localUserId = this.localUser.user$.value?.id;
     const settings = await firstValueFrom(this.api.getSettings());
     this.introTextMarkdown = settings.introTextMarkdown;
     this.suggestedSearches = settings.suggestedSearches;
