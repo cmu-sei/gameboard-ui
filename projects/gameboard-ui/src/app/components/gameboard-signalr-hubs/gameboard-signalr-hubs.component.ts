@@ -28,7 +28,7 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       this.localUser.user$.subscribe(u => this.handleLocalUserChanged.bind(this)(u))
     );
 
-    this.isDevMode = !environment.production || true;
+    this.isDevMode = !environment.production;
   }
 
   async ngOnDestroy(): Promise<void> {

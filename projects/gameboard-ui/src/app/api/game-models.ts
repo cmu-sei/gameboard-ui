@@ -124,8 +124,8 @@ export interface GameEnrollmentContext {
 }
 
 export enum GameStartPhase {
-  NotStarted,
-  Starting,
-  Started,
-  GameOver
+  NotStarted = "notStarted",
+  Starting = "starting",
+  Started = "started",
+  GameOver = "gameOver"
 }

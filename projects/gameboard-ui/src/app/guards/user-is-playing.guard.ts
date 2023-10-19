@@ -26,6 +26,7 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
   private async _canActivate(route: ActivatedRouteSnapshot) {
     const gameId = route.paramMap.get('gameId') || '';
     const playerId = route.paramMap.get('playerId' || '');
+    this.log.logInfo("Resolving UserIsPlayingGuard", gameId, playerId);
 
     // need either a game or a player to decide
     if (!gameId && !playerId) {
@@ -39,24 +40,26 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
     }
 
     // if we only have a player id, we need to resolve the gameId using the playerId
-    this.log.logWarning(`Checking UserIsPlayingGuard for game ${gameId}, user ${playerId}.`);
     let resolvedGameId = gameId;
-    if (playerId) {
+    if (!gameId && playerId) {
       const player = await firstValueFrom(this.playerService.retrieve(playerId));
 
       if (!player) {
         this.log.logError(`Couldn't resolve a gameId for player "${playerId}".`);
         return false;
       }
+      this.log.logInfo("Resolved player", player);
 
       if (player.userId !== localUserId) {
         this.log.logError(`The current user doesn't own playerId "${playerId}".`);
       }
 
       resolvedGameId = player.gameId;
+      this.log.logInfo("Resolved gameId as", resolvedGameId);
     }
 
     const result = await firstValueFrom(this.playerService.list({ gid: resolvedGameId, uid: localUserId }));
+    this.log.logInfo("Result from UserIsPlayingGuard", result.length > 0);
     return result.length > 0;
   }
 }
