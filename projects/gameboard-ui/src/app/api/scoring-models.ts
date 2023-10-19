@@ -23,8 +23,14 @@ export interface ManualChallengeBonusViewModel {
 }
 
 export interface GameScore {
-    game: SimpleEntity;
+    game: GameScoreGameInfo;
     teams: GameScoreTeam[];
+}
+
+export interface GameScoreGameInfo {
+    id: string;
+    name: string;
+    isTeamGame: boolean;
 }
 
 export interface GameScoreTeam {

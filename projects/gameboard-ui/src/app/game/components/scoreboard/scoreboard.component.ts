@@ -11,7 +11,6 @@ import { ScoringService } from '@/services/scoring/scoring.service';
 export class ScoreboardComponent implements OnChanges {
   @Input() gameId?: string;
 
-  protected isTeamGame = false;
   protected gameData: GameScore | null = null;
 
   constructor(private scoreService: ScoringService) { }

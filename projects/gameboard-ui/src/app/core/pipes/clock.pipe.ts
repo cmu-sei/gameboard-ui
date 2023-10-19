@@ -3,12 +3,13 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'clock'
-})
+@Pipe({ name: 'clock' })
 export class ClockPipe implements PipeTransform {
 
-  transform(value: number): string {
+  transform(value?: number): string | null {
+    if (!value)
+      return null;
+
     value = value / 1000;
     const h = Math.floor(value / 3600);
     const m = Math.floor((value - (h * 3600)) / 60);
