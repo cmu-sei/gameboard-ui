@@ -10,6 +10,7 @@ import { Observable, combineLatest, filter, firstValueFrom, map, timer } from 'r
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { slug } from '@/tools/functions';
 import { TeamService } from '@/api/team.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-practice-challenge-state-summary',
@@ -31,6 +32,7 @@ export class PracticeChallengeStateSummaryComponent {
     private logService: LogService,
     private practiceService: PracticeService,
     private teamService: TeamService,
+    private toastService: ToastService,
     // have to keep "unsub" around so it gets ngDestroyed. 
     // this is an argument for an inherited base class, i think
     private unsub: UnsubscriberService) {
@@ -76,7 +78,9 @@ export class PracticeChallengeStateSummaryComponent {
       teamId,
       sessionEnd: new Date()
     }));
+
     this.isChangingSessionEnd = false;
+    this.toastService.showMessage("Your practice session has been extended! Note that practice sessions extend to a maximum length of an hour.");
   }
 
   async endSession(practiceChallenge: LocalActiveChallenge): Promise<void> {
