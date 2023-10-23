@@ -10,7 +10,9 @@
             <th scope="col"></th>
             <th scope="col"> {{ gameData.game.isTeamGame ? "Team" : "Player" }} </th>
             <th scope="col">Challenge Performance</th>
-            <th scope="col">Play Time</th>
+            <th scope="col" [tooltip]="cumulativeTimeTooltip">
+                <span class="tooltipped-column-header">Cumulative Time</span>
+            </th>
             <th scope="col">Score</th>
         </tr>
     </thead>

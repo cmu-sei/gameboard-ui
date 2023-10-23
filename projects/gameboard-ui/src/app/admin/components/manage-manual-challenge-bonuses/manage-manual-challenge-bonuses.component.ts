@@ -32,6 +32,7 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
     this.scoresService.getTeamGameScore(teamId)
       .pipe(first())
       .subscribe(response => {
+        console.log("response", response.score);
         this.summary = response.score;
         this.startedChallenges = this.summary.challenges
           .map(s => ({ id: s.id, name: s.name }));
