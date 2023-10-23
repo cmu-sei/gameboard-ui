@@ -1,6 +1,7 @@
 import { Sponsor } from '@/api/sponsor-models';
 import { ApiUser } from '@/api/user-models';
 import { UserService } from '@/api/user.service';
+import { ToastService } from '@/utility/services/toast.service';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
@@ -19,7 +20,8 @@ export class SponsorWithChildrenPickerComponent implements OnInit {
 
   constructor(
     private api: UserService,
-    private localUserService: LocalUserService) {
+    private localUserService: LocalUserService,
+    private toastService: ToastService) {
     this.localUser$ = localUserService.user$.asObservable();
   }
 
@@ -35,6 +37,7 @@ export class SponsorWithChildrenPickerComponent implements OnInit {
       sponsorId: sponsor.id
     }));
 
+    this.toastService.showMessage(`Your sponsor has been changed to "${sponsor.name}".`)
     this.localUserService.refresh();
   }
 }

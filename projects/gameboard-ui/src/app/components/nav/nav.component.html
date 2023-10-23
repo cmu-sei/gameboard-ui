@@ -14,6 +14,7 @@
                 <span>Support</span>
                 <app-support-pill></app-support-pill>
             </a>
+            <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Profile</a>
             <div *ngIf="canAccessReporting$ | async" class="d-flex align-items-center">
                 <a class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
                     Reports
