@@ -74,8 +74,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
         if (!config)
           return;
 
-        for (let specConfig of config.challengeSpecScoringConfigs) {
-          this.specConfigMap[specConfig.challengeSpec.id] = specConfig;
+        for (let specConfig of config.specs) {
+          this.specConfigMap[specConfig.id] = specConfig;
         }
       })
     );

@@ -29,6 +29,8 @@ import { markedOptionsFactory } from './config/marked.config';
 // internal components/pipes/directives
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
+import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
+import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
 import { ChallengeSolutionGuideComponent } from './components/challenge-solution-guide/challenge-solution-guide.component';
 import { ClockPipe } from './pipes/clock.pipe';
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
@@ -50,12 +52,13 @@ import { MinPipe } from './pipes/min.pipe';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './components/modal/modal-confirm.directive';
 import { MultiSelectComponent } from './components/multi-select/multi-select.component';
+import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { NumbersToPercentage } from './pipes/numbers-to-percentage.pipe';
 import { PagerComponent } from './components/pager/pager.component';
 import { PlayerAvatarComponent } from './components/player-avatar/player-avatar.component';
+import { PlayerAvatarLegacyComponent } from './components/player-avatar-legacy/player-avatar-legacy.component';
 import { PlayerAvatarListComponent } from './components/player-avatar-list/player-avatar-list.component';
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
-import { PlayerWithAvatarsToAvatarUrlsPipe } from './pipes/player-with-avatars-to-sponsor-logo-urls.pipe';
 import { PluralizerPipe } from './pipes/pluralizer.pipe';
 import { QueryParamModelDirective } from './directives/query-param-model.directive';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
@@ -68,6 +71,7 @@ import { ShortDatePipe } from './pipes/short-date.pipe';
 import { SimpleEntitiesToTooltipPipe } from './pipes/simple-entities-to-tooltip.pipe';
 import { SortPipe } from './pipes/sort.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { SponsoredEntitiesToSponsorsPipe } from './pipes/sponsored-entities-to-sponsors.pipe';
 import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
 import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
 import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
@@ -87,6 +91,8 @@ const PUBLIC_DECLARATIONS = [
   GbProgressBarComponent,
   ApiUrlPipe,
   AssetPathPipe,
+  ChallengeResultColorPipe,
+  ChallengeResultPrettyPipe,
   ChallengeSolutionGuideComponent,
   ColoredTextChipComponent,
   ConfirmButtonComponent,
@@ -101,9 +107,11 @@ const PUBLIC_DECLARATIONS = [
   LongContentHiderComponent,
   ModalConfirmComponent,
   ModalConfirmDirective,
+  MsToDurationPipe,
   MultiSelectComponent,
   PagerComponent,
   PlayerAvatarComponent,
+  PlayerAvatarLegacyComponent,
   PlayerAvatarListComponent,
   PlayerStatusComponent,
   NumbersToPercentage,
@@ -119,7 +127,6 @@ const PUBLIC_DECLARATIONS = [
   CountdownColorPipe,
   FriendlyTimePipe,
   MinPipe,
-  PlayerWithAvatarsToAvatarUrlsPipe,
   PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,
@@ -131,6 +138,7 @@ const PUBLIC_DECLARATIONS = [
   SimpleEntitiesToTooltipPipe,
   SortPipe,
   SpinnerComponent,
+  SponsoredEntitiesToSponsorsPipe,
   SponsorToLogoUriPipe,
   SponsorsToLogoUrisPipe,
   SponsorLogoFileNamesToUrisPipe,

@@ -70,7 +70,7 @@
   <small class="text-warning d-block mx-2 mb-2">count: {{list.length}}</small>
   <div *ngFor="let user of list" class="d-flex p-3 flex-wrap align-items-center bg-secondary rounded">
     <div class="user-avatar-container mr-2">
-      <app-player-avatar [avatarUri]="user.sponsor | sponsorToLogoUri"></app-player-avatar>
+      <app-player-avatar-legacy [avatarUri]="user.sponsor | sponsorToLogoUri"></app-player-avatar-legacy>
     </div>
     <div>
       <span class="mr-2 fs-11">{{user.approvedName || user.name}}</span>

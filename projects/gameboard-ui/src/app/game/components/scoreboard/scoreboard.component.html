@@ -1,51 +1,76 @@
 <table *ngIf="gameData" class="table table-striped table-hover gameboard-table w-100">
     <col class="width-5">
-    <col class="width-30">
-    <col class="width-15">
-    <col class="width-30">
-    <col class="width-25">
+    <col>
+    <col>
+    <col>
+    <col>
 
     <thead class="thead-light">
         <tr class="headers">
             <th scope="col"></th>
             <th scope="col"> {{ gameData.game.isTeamGame ? "Team" : "Player" }} </th>
-            <th scope="col">Cumulative Time</th>
-            <th scope="col">Challenges</th>
+            <th scope="col">Challenge Performance</th>
+            <th scope="col">Play Time</th>
             <th scope="col">Score</th>
         </tr>
     </thead>
 
     <tbody>
-        <tr *ngFor="let teamScore of gameData.teams" class="data-row cursor-pointer">
+        <tr *ngFor="let teamScore of gameData.teams" class="data-row cursor-pointer"
+            (click)="handleRowClick(gameData.game, teamScore)">
             <td>
-                <div class="team-rank">{{teamScore.rank}}</div>
+                <div class="team-rank d-flex flex-column justify-content-center align-items-center">
+                    {{teamScore.rank}}
+                </div>
             </td>
             <td>
-                <div class="team-container d-flex">
-                    <app-player-avatar-list avatarSize="large"
-                        [avatarUris]="teamScore.players | playerWithAvatarsToAvatarUrls"
-                        avatarSize="small"></app-player-avatar-list>
+                <div class="team-container d-flex align-items-center">
+                    <app-player-avatar-list avatarSize="medium" class="d-block mr-2"
+                        [players]="teamScore.players"></app-player-avatar-list>
 
-                    <div class="team-names-container ml-2">
-                        <h5 class="fs-20">{{teamScore.team.name}}</h5>
-                        <ng-container *ngIf="gameData.game.isTeamGame">
+                    <div class="team-names-container ml-2 d-flex flex-column align-items-center justify-content-center">
+                        <h5 class="fs-20 m-0">{{teamScore.team.name}}</h5>
+                        <ng-container *ngIf="gameData.game.isTeamGame && teamScore.players.length > 1">
                             <hr />
-                            <ul class="player-names-list">
-                                <li *ngFor="let player of teamScore.players">{{ player.name }}</li>
+                            <ul class="player-names-list d-flex">
+                                <li *ngFor="let player of teamScore.players" class="mr-2">{{ player.name }}</li>
                             </ul>
                         </ng-container>
                     </div>
                 </div>
             </td>
             <td>
+                <div class="challenge-count"
+                    *ngIf="teamScore.challenges | teamChallengeScoresToChallengeResultTypeCount:'success'">
+                    <span class="text-success">{{ teamScore.challenges |
+                        teamChallengeScoresToChallengeResultTypeCount:"success" }}</span>
+                    <span class="challenge-count-desc"> complete</span>
+                </div>
 
+                <div class="challenge-count"
+                    *ngIf="teamScore.challenges | teamChallengeScoresToChallengeResultTypeCount:'partial'">
+                    <span class="text-info">{{ teamScore.challenges |
+                        teamChallengeScoresToChallengeResultTypeCount:"partial" }}</span>
+                    <span class="challenge-count-desc"> partial</span>
+                </div>
+
+                <div class="challenge-count" *ngIf="teamScore.challenges.length < gameData.game.specs.length">
+                    <span class="text-info">{{ gameData.game.specs.length - teamScore.challenges.length}}</span>
+                    <span class="challenge-count-desc"> unattempted</span>
+                </div>
             </td>
             <td>
-
+                <div class="playtime challenge-count">
+                    {{ teamScore.totalTimeMs | msToDuration }}
+                </div>
             </td>
             <td>
-
+                <span class="score">{{ teamScore.overallScore.totalScore }}</span>
             </td>
         </tr>
     </tbody>
 </table>
+
+<ng-template #teamIsPlaying>
+
+</ng-template>

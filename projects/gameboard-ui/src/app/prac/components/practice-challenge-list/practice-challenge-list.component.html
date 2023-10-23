@@ -68,8 +68,7 @@
                             <ul class="d-flex align-items-center flex-wrap">
                                 <li *ngFor="let tag of c.tags" class="d-block mr-1">
                                     <a [routerLink]="['/practice']" [queryParams]="{ term: tag }">
-                                        <app-colored-text-chip colorMode="monochrome" size="small"
-                                            [text]="tag"></app-colored-text-chip>
+                                        <app-colored-text-chip size="small" [text]="tag"></app-colored-text-chip>
                                     </a>
                                 </li>
                             </ul>

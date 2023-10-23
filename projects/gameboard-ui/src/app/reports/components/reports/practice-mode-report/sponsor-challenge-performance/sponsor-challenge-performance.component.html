@@ -38,9 +38,9 @@
                 <tr class="data-row" *ngFor="let sponsorPerformance of context.sponsorPerformance">
                     <td>
                         <div class="d-flex align-items-center">
-                            <app-player-avatar class="d-block mr-2"
+                            <app-player-avatar-legacy class="d-block mr-2"
                                 [avatarUri]="sponsorPerformance.sponsor.logoFileName | relativeImage"
-                                size="small"></app-player-avatar>
+                                size="small"></app-player-avatar-legacy>
 
                             <div class="sponsor-info flex-grow-1">
                                 <p class="name m-0">{{sponsorPerformance.sponsor.name}}</p>

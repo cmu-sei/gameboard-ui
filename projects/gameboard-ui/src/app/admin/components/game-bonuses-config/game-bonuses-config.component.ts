@@ -3,9 +3,8 @@ import { YamlService } from '../../../services/yaml.service';
 import { Game } from '../../../api/game-models';
 import { LogService } from '../../../services/log.service';
 import { ScoringService } from '../../../services/scoring/scoring.service';
-import { UpdateGameAutoChallengeBonusConfig } from '../../../api/scoring-models';
 import { ToastService } from '../../../utility/services/toast.service';
-import { GameScoringConfig } from '@/services/scoring/scoring.models';
+import { GameScoringConfig, UpdateGameAutoChallengeBonusConfig } from '@/services/scoring/scoring.models';
 
 @Component({
   selector: 'app-game-bonuses-config',
@@ -54,7 +53,7 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.gameScoringConfig?.currentValue) {
       const change = changes.gameScoringConfig;
-      this.hasBonusesConfigured = (change.currentValue as unknown as GameScoringConfig).challengeSpecScoringConfigs.some(c => c.possibleBonuses.length);
+      this.hasBonusesConfigured = (change.currentValue as unknown as GameScoringConfig).specs.some(c => c.possibleBonuses.length);
       this.configInputsVisible = !this.hasBonusesConfigured;
     }
   }
@@ -85,10 +84,10 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
         this.isLoading = false;
 
         // compute how many specs actually got a bonus
-        const updatedSpecCount = gameConfig.challengeSpecScoringConfigs.filter(specConfig => specConfig.possibleBonuses.length > 0).length;
+        const updatedSpecCount = gameConfig.specs.filter(specConfig => specConfig.possibleBonuses.length > 0).length;
 
         // and notify
-        this.toastsService.showMessage(`Configured ${updatedSpecCount} challenge${updatedSpecCount == 1 ? "" : "s"} with ${gameConfig.challengeSpecScoringConfigs.map(c => c.possibleBonuses.length).reduce((prev, current) => prev + current)} total bonuses 👍`);
+        this.toastsService.showMessage(`Configured ${updatedSpecCount} challenge${updatedSpecCount == 1 ? "" : "s"} with ${gameConfig.specs.map(c => c.possibleBonuses.length).reduce((prev, current) => prev + current)} total bonuses 👍`);
       }
       catch (err: any) {
         this.errors.push(err);

@@ -1,5 +1,5 @@
 <div class="manage-manual-challenge-bonuses-component m-4" *ngIf="summary">
-    <table *ngIf="summary.challengeScoreSummaries.length" class="table table-striped border-bottom border-info">
+    <table *ngIf="summary.challenges.length" class="table table-striped border-bottom border-info">
         <thead class="h5">
             <th scope="col" width="30%">Challenge</th>
             <th scope="col" width="10%"></th>
@@ -9,12 +9,12 @@
             <th scope="col" width="15%">Total score</th>
         </thead>
         <tbody>
-            <tr *ngFor="let challengeSummary of summary.challengeScoreSummaries">
+            <tr *ngFor="let challengeSummary of summary.challenges">
                 <td>
                     <div class="points-breakdown">
-                        <h6>{{challengeSummary.spec.name}}</h6>
+                        <h6>{{challengeSummary.name}}</h6>
 
-                        <ul *ngIf="challengeSummary.manualBonuses.length" class="mt-2">
+                        <ul *ngIf="challengeSummary.manualBonuses?.length" class="mt-2">
                             <li *ngFor="let manualBonus of challengeSummary.manualBonuses">
                                 <div class="bonus-description">
                                     {{ manualBonus.pointValue > 0 ? "+" : "-" }} {{ manualBonus.pointValue }}
@@ -31,7 +31,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="challenge-title-spacer" *ngIf="challengeSummary.manualBonuses.length"></div>
+                    <div class="challenge-title-spacer" *ngIf="challengeSummary.manualBonuses?.length"></div>
 
                     <div class="delete-bonus-button-container"
                         *ngFor="let manualBonus of challengeSummary.manualBonuses">

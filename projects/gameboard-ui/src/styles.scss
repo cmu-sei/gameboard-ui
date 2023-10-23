@@ -56,6 +56,26 @@ ul {
   padding-inline-start: 0;
 }
 
+/* In the majority of cases, we style <li>s in a custom way */
+li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ... but for markdown we just go with the classics  */
+markdown ul li {
+  list-style-type: disc;
+  padding: unset;
+  margin-left: 1rem;
+}
+
+markdown ol li {
+  list-style-type: unset;
+  padding: unset;
+  margin-left: 1rem;
+}
+
 app-root {
   display: block;
   min-height: 100vh;
@@ -91,6 +111,10 @@ app-root {
   font-size: 1.1rem;
 }
 
+.fs-12 {
+  font-size: 1.2rem;
+}
+
 .fs-13 {
   font-size: 1.3rem;
 }
@@ -123,24 +147,14 @@ h5 {
   font-weight: 300;
 }
 
-/* In the majority of cases, we style <li>s in a custom way */
-li {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+/* TABLE-Y STUFF */
+
+th[align="right"] {
+  text-align: right;
 }
 
-/* ... but for markdown we just go with the classics  */ 
-markdown ul li {
-  list-style-type: disc;
-  padding: unset;
-  margin-left: 1rem;
-}
-
-markdown ol li {
-  list-style-type: unset;
-  padding: unset;
-  margin-left: 1rem;
+th[align="center"] {
+  text-align: center;
 }
 
 .spacer {
@@ -284,14 +298,6 @@ th[align="left"] {
   position: static;
   padding: 0;
   margin: 0;
-}
-
-th[align="right"] {
-  text-align: right;
-}
-
-th[align="center"] {
-  text-align: center;
 }
 
 .color-foreground {

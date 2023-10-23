@@ -1,17 +1,15 @@
 import { ChallengeResult } from '@/api/board-models';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'challengeResultColor'
-})
+@Pipe({ name: 'challengeResultColor' })
 export class ChallengeResultColorPipe implements PipeTransform {
 
   transform(value: ChallengeResult): string {
-    if (!value || value == ChallengeResult.None) {
+    if (!value || value == "none") {
       return "colorblind-danger";
     }
 
-    if (value == ChallengeResult.Complete) {
+    if (value == "success") {
       return "text-success";
     }
 

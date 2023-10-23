@@ -16,6 +16,7 @@ import { Standing } from '../../../api/player-models';
 })
 export class ScoreboardPageComponent implements OnInit {
   game$: Observable<Game>;
+  isLegacyScoreboard = true;
 
   constructor(
     route: ActivatedRoute,

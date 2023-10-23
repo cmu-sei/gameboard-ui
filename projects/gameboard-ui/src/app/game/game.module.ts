@@ -27,14 +27,17 @@ import { PlayComponent } from './components/play/play.component';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
 import { PlayerSessionComponent } from './player-session/player-session.component';
+import { ScoreboardComponent } from './components/scoreboard/scoreboard.component';
 import { ScoreboardPageComponent } from './pages/scoreboard-page/scoreboard-page.component';
 import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
 import { SessionForecastComponent } from './session-forecast/session-forecast.component';
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
+import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
-import { ScoreboardComponent } from './components/scoreboard/scoreboard.component';
+import { ScoreboardTeamDetailModalComponent } from './components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -67,6 +70,8 @@ const MODULE_DECLARATIONS = [
   declarations: [
     ...MODULE_DECLARATIONS,
     ScoreboardComponent,
+    TeamChallengeScoresToChallengeResultTypeCountPipe,
+    ScoreboardTeamDetailModalComponent,
   ],
   imports: [
     CommonModule,

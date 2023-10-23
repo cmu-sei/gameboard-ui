@@ -104,8 +104,8 @@ export class BoardService {
       : s.disabled || s.locked ? 'black' : 'blue'
       ;
     if (!!s.instance) {
-      if (s.instance.result === ChallengeResult.Complete) { s.c = 'lime'; }
-      if (s.instance.result === ChallengeResult.Partial) { s.c = 'yellow'; }
+      if (s.instance.result === "success") { s.c = 'lime'; }
+      if (s.instance.result === "partial") { s.c = 'yellow'; }
     }
   }
 

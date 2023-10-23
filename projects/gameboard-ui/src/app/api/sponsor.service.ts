@@ -8,6 +8,7 @@ import { ConfigService } from '../utility/config.service';
 import { ChangedSponsor, NewSponsor, Sponsor, SponsorWithChildSponsors, SponsorWithParent } from './sponsor-models';
 import { MimeTypes } from '../../tools';
 import { ApiUrlService } from '@/services/api-url.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 export interface SponsorSearch {
   hasParent?: boolean;
@@ -20,6 +21,7 @@ export class SponsorService {
   constructor(
     private apiUrl: ApiUrlService,
     private config: ConfigService,
+    private domSanitizer: DomSanitizer,
     private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
@@ -74,5 +76,9 @@ export class SponsorService {
     return !!logoFileName ?
       `${this.config.imagehost}/${logoFileName}` :
       `${this.config.basehref}assets/sponsor.svg`;
+  }
+
+  public resolveAbsoluteSafeSponsorLogoUrl(logoFileName: string | undefined | null): SafeUrl {
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(this.resolveAbsoluteSponsorLogoUri(logoFileName));
   }
 }

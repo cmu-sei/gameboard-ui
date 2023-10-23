@@ -32,22 +32,16 @@ import { SupportReportComponent } from './components/reports/support-report/supp
 import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
-import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
-import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
-import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 
 @NgModule({
   declarations: [
     ArrayToCountPipe,
     ArrayFieldToClassPipe,
-    ChallengeResultColorPipe,
-    ChallengeResultPrettyPipe,
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
     EnrollmentReportComponent,
-    MsToDurationPipe,
     ParameterGameChallengespecComponent,
     ParameterDateRangeComponent,
     ParameterTicketStatusComponent,

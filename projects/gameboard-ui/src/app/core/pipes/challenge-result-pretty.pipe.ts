@@ -5,11 +5,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ChallengeResultPrettyPipe implements PipeTransform {
 
   transform(value: ChallengeResult): string {
-    if (!value || value == ChallengeResult.None) {
+    if (!value || value == "none") {
       return "No Score";
     }
 
-    if (value == ChallengeResult.Complete) {
+    if (value == "success") {
       return "Success";
     }
 

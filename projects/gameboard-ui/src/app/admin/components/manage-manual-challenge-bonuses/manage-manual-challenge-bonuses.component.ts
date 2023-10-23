@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { SimpleEntity } from '../../../api/models';
-import { CreateManualChallengeBonus, TeamGameScoreSummary } from '../../../api/scoring-models';
-import { ScoringService } from '../../../services/scoring/scoring.service';
+import { SimpleEntity } from '@/api/models';
+import { ScoringService } from '@/services/scoring/scoring.service';
+import { CreateManualChallengeBonus, TeamGameScore } from '@/services/scoring/scoring.models';
 
 @Component({
   selector: 'app-manage-manual-challenge-bonuses',
@@ -12,7 +12,7 @@ import { ScoringService } from '../../../services/scoring/scoring.service';
 export class ManageManualChallengeBonusesComponent implements OnInit {
   @Input() teamId!: string;
 
-  summary?: TeamGameScoreSummary;
+  summary?: TeamGameScore;
   startedChallenges: SimpleEntity[] = [];
   challengesStarted = 0;
 
@@ -31,13 +31,14 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
   private loadSummary(teamId: string) {
     this.scoresService.getTeamGameScore(teamId)
       .pipe(first())
-      .subscribe(summary => {
-        this.summary = summary;
-        this.startedChallenges = this.summary.challengeScoreSummaries.filter(s => !!s.challenge).map(s => s.challenge);
+      .subscribe(response => {
+        this.summary = response.score;
+        this.startedChallenges = this.summary.challenges
+          .map(s => ({ id: s.id, name: s.name }));
 
         this.newChallengeBonusModel = {
           description: '',
-          challengeId: summary.challengeScoreSummaries.length ? summary.challengeScoreSummaries[0].challenge.id : '',
+          challengeId: response.score.challenges.length ? response.score.challenges[0].id : '',
           pointValue: 1
         };
       });
