@@ -135,15 +135,13 @@ export class NotificationService {
       // if we're already connected...
       if (this.connection.state === HubConnectionState.Connected) {
         // and we're connected to the right group, do nothing
-        if (this.connection.connectionId) {
+        if (this.connection.connectionId == groupId) {
           return;
         }
 
-        // ... and we're connected to the wrong group, disconnect and then try again
-        if (this.connection.connectionId != groupId) {
-          await this.disconnect();
-          await this.maybeConnect(groupId);
-        }
+        // if we're connected to the wrong group, disconnect and then try again
+        await this.disconnect();
+        await this.maybeConnect(groupId);
       }
       // if we're not already connected...
       else {
@@ -327,6 +325,7 @@ export enum HubEventAction {
   created = 'created',
   updated = 'updated',
   deleted = 'deleted',
+  sessionExtended = 'sessionExtended',
   started = 'started',
   roleChanged = 'roleChanged',
   waiting = 'waiting'
