@@ -36,12 +36,16 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
   }
 
   private handleLocalUserChanged(u: ApiUser | null) {
+    this.log("Local user changed", u);
     // gamehub automatically manages repeated calls to connect/disconnect, so you won't
     // get duplicate connections if, for example, connect is called while it's already connected
     if (!u) {
+      this.log("Local user is logged out, disconnecting from hubs");
       this.gameHub.disconnect();
     }
     else {
+      this.log("Local user is logged in, connecting", u);
+
       // remove any existing handlers
       this.unsub.unsubscribeAll();
 
@@ -51,12 +55,13 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       // listen for interesting events to log
       this.unsub.add(
         this.gameHub.hubState$.subscribe(gameHubState => {
-          this.logService.logInfo("[GB GameHub]: Hub state is", gameHubState);
+          this.log("[GB GameHub]: Hub state is", gameHubState);
         }),
 
         combineLatest([this.gameHub.hubState$, this.gameHub.joinedGameIds$]).pipe(
           map(([hubState, joinedGameIds]) => ({ hubState, joinedGameIds }))
         ).subscribe(ctx => {
+          this.log("Game hub state change:", ctx);
           this.statusLightState = this.hubStateToStatusLightState(ctx.hubState);
           this.tooltip = this.buildTooltip(ctx);
         })
@@ -88,5 +93,9 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
     }
 
     return tooltip;
+  }
+
+  private log(...args: any[]) {
+    this.logService.logInfo("[GB GameHub]: ", ...args);
   }
 }
