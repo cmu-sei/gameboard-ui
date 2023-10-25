@@ -10,7 +10,7 @@
           <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
           <span *ngIf="ctx.game.session.isAfter">Game window is closed </span>
         </div>
-        <div class="ml-2">
+        <div *ngIf="!ctx.game?.session?.isDuring" class="ml-2">
           {{ctx.game.session.countdown | countdown}}
         </div>
       </div>
@@ -23,8 +23,9 @@
               <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
             </div>
 
-            <div [class]="'ml-2 ' + (ctx.player.session?.countdown | countdowncolor)">
-              {{ctx.player.session?.countdown | countdown}}
+            <div *ngIf="ctx.player.session?.isDuring && (timeRemainings$ | async)"
+              [class]="'ml-2 ' + (((timeRemainings$ | async) || 0) | countdowncolor)">
+              {{ ((timeRemainings$ | async) || 0) | countdown }}
             </div>
             <div class="spacer"></div>
 

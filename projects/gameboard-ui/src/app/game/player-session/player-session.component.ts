@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, firstValueFrom, interval, Observable, of, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { GameContext } from '@/api/game-models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -41,6 +41,7 @@ export class PlayerSessionComponent implements OnDestroy {
   protected canAdminStart = false;
   protected countdown$ = new Observable<{ hours: number, minutes: number, seconds: number }>();
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
+  protected timeRemainings$?: Observable<number>;
 
   constructor(
     private api: PlayerService,
@@ -93,6 +94,16 @@ export class PlayerSessionComponent implements OnDestroy {
       tap(ctx => {
         const localUser = this.localUserService.user$.value;
         this.canAdminStart = !!localUser && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
+      }),
+      // set up countdown
+      tap(ctx => {
+        if (ctx?.player.session)
+          this.timeRemainings$ = interval(1000).pipe(
+            map(() => (ctx.player.session!.endDate.getTime() - Date.now()))
+          );
+
+        else
+          this.timeRemainings$ = of(0);
       })
     ).subscribe();
   }
