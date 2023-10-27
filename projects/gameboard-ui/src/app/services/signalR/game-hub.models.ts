@@ -42,8 +42,7 @@ export interface GameStartState {
     game: SimpleEntity;
     challengesCreated: GameStartStateChallenge[];
     challengesTotal: number;
-    gamespacesDeployed: GameState[];
-    gamespaceIdsStarted?: string[];
+    gamespacesStarted: GameState[];
     gamespacesTotal: number;
     players: GameStartStatePlayer[];
     teams: GameStartStateTeam[];

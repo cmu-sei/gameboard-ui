@@ -120,7 +120,7 @@ export class GameStartPageComponent implements OnInit {
     }
 
     if (ctx.game.mode == GameEngineMode.External) {
-      this.log.logInfo("Wiring up game hub external game event listeners...", ctx)
+      this.log.logInfo("Wiring up game hub external game event listeners...", ctx);
       this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.updateGameStartState.bind(this)(state)));
       this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.updateGameStartState.bind(this)(state)));
       this.unsub.add(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
