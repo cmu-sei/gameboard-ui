@@ -43,6 +43,7 @@ export interface GameStartState {
     challengesCreated: GameStartStateChallenge[];
     challengesTotal: number;
     gamespacesDeployed: GameState[];
+    gamespaceIdsStarted?: string[];
     gamespacesTotal: number;
     players: GameStartStatePlayer[];
     teams: GameStartStateTeam[];

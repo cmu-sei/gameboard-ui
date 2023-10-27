@@ -17,6 +17,12 @@
                         <app-progress-bar
                             [percentage]="state.gamespacesDeployed.length | numbersToPercentage:state.gamespacesTotal"></app-progress-bar>
                     </div>
+
+                    <div class="step-container full-width my-4" *ngIf="state.gamespaceIdsStarted">
+                        <h2>Starting gamespaces...</h2>
+                        <app-progress-bar
+                            [percentage]="state.gamespaceIdsStarted.length| numbersToPercentage:state.gamespacesTotal"></app-progress-bar>
+                    </div>
                 </ng-container>
 
                 <ng-template #countdown>
