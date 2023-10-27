@@ -374,21 +374,6 @@
           </div>
           <small>permission for players to reset their game session</small>
         </div>
-
-        <div class="form-group pb-0 pt-1">
-          <label class="mb-0" for="sync-start-toggle">Require Synchronized Start</label>
-          <div class="form-control auto-h d-flex align-items-center">
-            <label>No</label>
-            <label class="btn text-info" btnCheckbox [btnCheckboxTrue]="true" [btnCheckboxFalse]="false" tabindex="0"
-              [ngModelOptions]="{updateOn: 'change'}" id="sync-start-toggle" name="syncStartToggle"
-              [(ngModel)]="game.requireSynchronizedStart">
-              <fa-icon *ngIf="!game.requireSynchronizedStart" [icon]="fa.toggleOff" size="lg"></fa-icon>
-              <fa-icon *ngIf="game.requireSynchronizedStart" [icon]="fa.toggleOn" size="lg"></fa-icon>
-            </label>
-            <label>Yes</label>
-          </div>
-          <small>Requires all registered players to mark themselves ready before any player's session can start</small>
-        </div>
       </div>
 
       <div class="col-lg-6 col-sm-12">
