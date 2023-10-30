@@ -141,10 +141,12 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   private async doReset(p: Player) {
+    this.isResetting = true;
     await firstValueFrom(this.teamService.resetSession(p.teamId, { unenrollTeam: true }));
     delete p.session;
     this.onSessionReset.emit(p);
     this.player$.next(p);
+    this.isResetting = false;
   }
 
   ngOnDestroy(): void {

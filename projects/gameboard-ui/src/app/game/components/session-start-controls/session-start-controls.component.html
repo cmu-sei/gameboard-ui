@@ -36,7 +36,8 @@
         <ng-container *ngIf="ctx.game.requireSynchronizedStart">
             <button *ngIf="isConnectedToGameHub; else connectingToHub" btnCheckbox class="btn btn-lg mr-4"
                 [class.btn-outline-success]="!ctx.player.isReady" [class.btn-danger]="ctx.player.isReady"
-                [(ngModel)]="ctx.player.isReady" (click)="handleReadyUpdated(ctx.player)">
+                [class.btn-secondary]="isReadyingUp" [(ngModel)]="ctx.player.isReady"
+                (click)="handleReadyUpdated(ctx.player)" [disabled]="isReadyingUp">
                 <span>{{ ctx.player.isReady ? "Cancel - I'm not ready" : "I'm ready!" }}</span>
             </button>
         </ng-container>

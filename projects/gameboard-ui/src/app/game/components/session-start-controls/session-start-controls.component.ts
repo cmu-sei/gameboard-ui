@@ -27,6 +27,7 @@ export class SessionStartControlsComponent implements OnInit {
   protected isDoubleChecking = false;
   protected isGameSyncStartReady = false;
   protected isConnectedToGameHub = false;
+  protected isReadyingUp = false;
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
   protected playerReadyPct = 0;
@@ -67,9 +68,11 @@ export class SessionStartControlsComponent implements OnInit {
     this.onRequestStart.emit(player);
   }
 
-  protected handleReadyUpdated(player: Player) {
+  protected async handleReadyUpdated(player: Player) {
+    this.isReadyingUp = true;
     this.logService.logInfo(`Player ${player.id} (user ${player.userId}) updating ready...`);
-    this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }).pipe(first()).subscribe();
+    await firstValueFrom(this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }));
+    this.isReadyingUp = false;
   }
 
   private handleNewSyncStartState(state: SyncStartGameState) {
