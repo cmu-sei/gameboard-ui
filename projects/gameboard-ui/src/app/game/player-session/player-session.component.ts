@@ -39,9 +39,9 @@ export class PlayerSessionComponent implements OnDestroy {
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
   protected canAdminStart = false;
-  protected countdown$ = new Observable<{ hours: number, minutes: number, seconds: number }>();
+  protected hasTimeRemaining = false;
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
-  protected timeRemainings$?: Observable<number>;
+  protected timeRemainingMs$?: Observable<number>;
 
   constructor(
     private api: PlayerService,
@@ -98,12 +98,13 @@ export class PlayerSessionComponent implements OnDestroy {
       // set up countdown
       tap(ctx => {
         if (ctx?.player.session)
-          this.timeRemainings$ = interval(1000).pipe(
-            map(() => (ctx.player.session!.endDate.getTime() - Date.now()))
+          this.timeRemainingMs$ = interval(1000).pipe(
+            map(() => (ctx.player.session!.endDate.getTime() - Date.now())),
+            tap(remainingMs => this.hasTimeRemaining = remainingMs > 0)
           );
 
         else
-          this.timeRemainings$ = of(0);
+          this.timeRemainingMs$ = of(0);
       })
     ).subscribe();
   }

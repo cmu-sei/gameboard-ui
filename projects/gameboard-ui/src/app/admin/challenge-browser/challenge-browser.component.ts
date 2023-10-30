@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faEllipsisV, faInfoCircle, faSearch, faSyncAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
@@ -16,7 +16,7 @@ import { ChallengesService } from '@/api/challenges.service';
   templateUrl: './challenge-browser.component.html',
   styleUrls: ['./challenge-browser.component.scss']
 })
-export class ChallengeBrowserComponent implements OnInit {
+export class ChallengeBrowserComponent {
   refresh$ = new BehaviorSubject<boolean>(true);
   challenges$: Observable<ChallengeSummary[]>;
   challenges: ChallengeSummary[] = [];
@@ -24,8 +24,6 @@ export class ChallengeBrowserComponent implements OnInit {
   archiveMap = new Map<string, ChallengeSummary>(); // alternative to calling `/audit` endpoint
   search: Search = { term: '', take: 100 };
   selected?: ChallengeSummary;
-  // audited$: Observable<any>;
-  // auditing$ = new Subject<ChallengeSummary>();
   selectedAudit!: any;
   errors: any[] = [];
 
@@ -80,17 +78,6 @@ export class ChallengeBrowserComponent implements OnInit {
         });
       }),
     );
-
-    // this.audited$ = this.auditing$.pipe(
-    //   debounceTime(500),
-    //   distinctUntilChanged(),
-    //   switchMap(c => api.audit(c.id)),
-    //   tap(r => this.selectedAudit = r)
-    // );
-
-  }
-
-  ngOnInit(): void {
   }
 
   select(c: ChallengeSummary): void {

@@ -20,12 +20,14 @@
           <div class="d-flex text-info card-text">
             <div>
               <span *ngIf="ctx.player.session?.isAfter">Session ended </span>
-              <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
+              <span *ngIf="ctx.player.session?.isDuring && (timeRemainingMs$ | async)">
+                Time Remaining:
+              </span>
             </div>
 
-            <div *ngIf="ctx.player.session?.isDuring && (timeRemainings$ | async)"
-              [class]="'ml-2 ' + (((timeRemainings$ | async) || 0) | countdowncolor)">
-              {{ ((timeRemainings$ | async) || 0) | countdown }}
+            <div *ngIf="ctx.player.session?.isDuring && hasTimeRemaining"
+              [class]="'ml-2 ' + (((timeRemainingMs$ | async) || 0) | countdowncolor)">
+              {{ ((timeRemainingMs$ | async) || 0) | countdown }}
             </div>
             <div class="spacer"></div>
 
