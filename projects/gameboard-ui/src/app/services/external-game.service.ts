@@ -23,13 +23,6 @@ export class ExternalGameService {
 
   public createLocalStorageKeys(game: ExternalGameActive) {
     this.log.logInfo("Resolving OIDC storage keys...");
-    const storageKey = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
-    const oidcUserToken = this.storage.getArbitrary(storageKey);
-
-    if (oidcUserToken == null) {
-      this.reportError("You don't seem to have an OIDC token. (If this is a playtest, try relogging. Sorry 🙁)", game.teamId);
-    }
-
     const oidcLink = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
     this.log.logInfo("User OIDC resolved: ", oidcLink);
 
