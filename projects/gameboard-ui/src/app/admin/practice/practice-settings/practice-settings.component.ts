@@ -56,7 +56,7 @@ export class PracticeSettingsComponent implements OnInit {
     this.suggestedSearchesLineDelimited = this.ctx.settings.suggestedSearches.join("\n");
   }
 
-  handleShowCertificateTemplateHelp() {
+  protected handleShowCertificateTemplateHelp() {
     this.modalService.open({
       title: "Creating a certificate template",
       bodyContent: this.certificateHtmlPlaceholder,
@@ -65,7 +65,24 @@ export class PracticeSettingsComponent implements OnInit {
     });
   }
 
-  handleSettingsChanged(settings: PracticeModeSettings) {
+  protected handleShowSuggestedSearchesNote() {
+    this.modalService.open({
+      title: "About suggested searches & tags",
+      bodyContent: `
+        In addition to directing players to specific collections of challenges, the Suggested Searches
+        feature also acts as a filter on the challenge "tags" which are displayed in the list of practice
+        challenges.
+
+        When a challenge is created, the challenge designer may optionally apply tags to it. Some tags
+        are descriptive of the skills necessary to solve the challenge, while others are used for internal
+        tracking only. Only tags which match values from the Suggested Searches list will be displayed
+        to the player when browsing the Practice Area.
+      `,
+      renderBodyAsMarkdown: true
+    });
+  }
+
+  protected handleSettingsChanged(settings: PracticeModeSettings) {
     settings.suggestedSearches = !this.suggestedSearchesLineDelimited ? [] : this.suggestedSearchesLineDelimited.split("\n").map(entry => entry.trim());
     this._startUpdate$.next(settings);
   }

@@ -19,6 +19,12 @@
             these to direct players to useful or interesting subsets of the available practice challenges.
         </p>
 
+        <p>
+            These terms also "filter" the list of tags applied to the challenges.
+            <span class="link-button" role="button" (click)="handleShowSuggestedSearchesNote()">Click here</span>
+            for more information.
+        </p>
+
         <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
             [(ngModel)]="suggestedSearchesLineDelimited" rows="10">
 
