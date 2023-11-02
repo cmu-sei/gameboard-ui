@@ -177,7 +177,8 @@ export interface Standing {
   partialCount: number;
   session: TimeWindow;
   advanced: boolean;
-  sponsors: Sponsor[];
+  sponsor: Sponsor;
+  teamSponsors: Sponsor[];
 }
 
 export interface TeamInvitation {
