@@ -173,9 +173,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   }
 
   sync(): void {
-    this.api.sync(this.game.id).subscribe(
-      () => this.refresh()
-    );
+    this.api.sync(this.game.id).subscribe(() => this.refresh());
   }
 
   trackById(index: number, g: Spec): string {
@@ -183,6 +181,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   }
 
   protected handleSpecUpdated(spec: Spec) {
+    this.list = [...this.list.filter(s => s.id !== spec.id), spec];
     this.checkForZeroPointActiveSpecs(this.list);
   }
 

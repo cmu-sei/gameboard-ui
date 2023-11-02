@@ -55,11 +55,10 @@ export class GameEditorComponent implements AfterViewInit {
   };
 
   constructor(
-    private router: Router,
+    route: ActivatedRoute,
     private api: GameService,
     private config: ConfigService,
     private practiceService: PracticeService,
-    private route: ActivatedRoute,
     private title: AppTitleService,
     private toast: ToastService
   ) {

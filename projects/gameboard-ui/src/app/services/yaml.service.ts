@@ -13,7 +13,7 @@ export class YamlService {
     private log: LogService) { }
 
   async loadSample(name: string): Promise<string | null> {
-    const requestUrl = `${this.config.absoluteUrl}assets/yaml/${name}/sample.gameboard.yaml`;
+    const requestUrl = `${this.config.absoluteUrl}assets/yaml/${name}.sample.yaml`;
     const response = await firstValueFrom(this.http.get(requestUrl, { responseType: 'text' }));
 
     if (!response) {

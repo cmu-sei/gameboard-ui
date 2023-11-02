@@ -42,6 +42,7 @@ export class ChallengeSpecEditorComponent implements OnChanges {
   }
 
   protected handleSpecUpdated(spec: Spec) {
+    spec.points = spec.points || 0;
     this.requestUpdateSpec$.next(spec);
   }
 

@@ -38,7 +38,7 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
       return;
     }
 
-    const yamlKey = "game-automatic-bonuses";
+    const yamlKey = "auto-bonuses";
     const sample = await this.yaml.loadSample(yamlKey);
 
     if (sample) {
