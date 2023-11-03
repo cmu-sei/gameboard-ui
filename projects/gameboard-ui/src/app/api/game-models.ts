@@ -129,3 +129,11 @@ export enum GameStartPhase {
   Started = "started",
   GameOver = "gameOver"
 }
+
+export type DeployStatus = "notStarted" | "deploying" | "deployed";
+
+export interface GetExternalTeamDataResponse {
+  teamId: string;
+  externalUrl: string;
+  deployStatus: DeployStatus;
+}

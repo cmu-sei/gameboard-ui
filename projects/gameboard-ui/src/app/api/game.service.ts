@@ -71,8 +71,8 @@ export class GameService {
     );
   }
 
-  public getStartPhase(gameId: string): Observable<GameStartPhase> {
-    return this.http.get<GameStartPhase>(`${this.url}/game/${gameId}/start-phase`);
+  public getStartPhase(gameId: string, teamId: string): Observable<GameStartPhase> {
+    return this.http.get<GameStartPhase>(`${this.url}/game/${gameId}/start-phase/${teamId}`);
   }
 
   public getSyncStartState(gameId: string): Observable<SyncStartGameState> {

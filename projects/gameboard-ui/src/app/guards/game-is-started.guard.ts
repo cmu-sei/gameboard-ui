@@ -27,28 +27,28 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
   }
 
   private async _canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
-    const playerId = route.paramMap.get("playerId") || '';
-    const gameId = route.paramMap.get("gameId") || '';
-
-    // can't make a decision without a playerId and a gameId, sorry/not sorry
-    if (!playerId && !gameId) {
-      this.log.logError("Can't resolve GameIsStarted guard without player id or game id");
-      return false;
-    }
-
-    let resolvedGameId = gameId;
-    if (!resolvedGameId) {
-      const player = await firstValueFrom(this.playerService.retrieve(playerId));
-      resolvedGameId = player.gameId;
-    }
-    this.log.logInfo("Resolved gameId for GameIsStartedGuard", gameId);
-
     // if the user is admin/tester, they can ignore start phase restrictions
     const localUser = this.localUserService.user$.getValue();
     if (localUser && (localUser.isAdmin || localUser.isTester)) {
       return true;
     }
 
-    return await firstValueFrom(this.gameService.getStartPhase(resolvedGameId).pipe(map(phase => phase == GameStartPhase.Started)));
+    const playerId = route.paramMap.get("playerId") || '';
+    const gameId = route.paramMap.get("gameId") || '';
+
+    // can't make a decision without a playerId (because we need their team and game)
+    if (!playerId) {
+      this.log.logError("Can't resolve GameIsStarted guard without playerId");
+      return false;
+    }
+
+    let resolvedGameId = gameId;
+    const player = await firstValueFrom(this.playerService.retrieve(playerId));
+    if (!resolvedGameId) {
+      resolvedGameId = player.gameId;
+    }
+    this.log.logInfo("Resolved gameId for GameIsStartedGuard", gameId);
+
+    return await firstValueFrom(this.gameService.getStartPhase(resolvedGameId, player.teamId).pipe(map(phase => phase == GameStartPhase.Started)));
   }
 }

@@ -4,13 +4,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subscription } from 'rxjs';
-import { filter, first, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '@/api/user-models';
 import { GameService } from '@/api/game.service';
-import { Game, GameContext } from '@/api/game-models';
+import { Game, GameContext, GameStartPhase } from '@/api/game-models';
 import { HubEvent, HubEventAction, NotificationService } from '@/services/notification.service';
 import { Player, TimeWindow } from '@/api/player-models';
-import { PlayerService } from '../../../api/player.service';
+import { PlayerService } from '@/api/player.service';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { WindowService } from '@/services/window.service';
 import { BoardPlayer } from '@/api/board-models';
@@ -22,12 +22,11 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UserService } from '@/api/user.service';
-import { ConfigService } from '@/utility/config.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 interface GameEnrollmentContext {
   game: Game;
-  player: { id: string | null, teamId: string | null };
+  player: { id: string, teamId: string };
 }
 
 @Component({
@@ -58,7 +57,6 @@ export class GamePageComponent implements OnDestroy {
     apiBoards: BoardService,
     apiPlayer: PlayerService,
     appTitle: AppTitleService,
-    config: ConfigService,
     localUser: LocalUserService,
     userService: UserService,
     private apiGame: GameService,
@@ -103,17 +101,15 @@ export class GamePageComponent implements OnDestroy {
           )
         );
       })
-    ).subscribe(done => {
+    ).subscribe(async done => {
       const currentPlayer = this.player$.getValue();
       if (!currentPlayer?.id) {
         this.boardPlayer = undefined;
         return;
       }
 
-      apiBoards.load(currentPlayer!.id).pipe(first()).subscribe(b => {
-        this.boardPlayer = b;
-        appTitle.set(`${this.boardPlayer?.game.name} | ${config.appName}`);
-      });
+      this.boardPlayer = await firstValueFrom(apiBoards.load(currentPlayer.id));
+      appTitle.set(`${this.boardPlayer.game.name}`);
     });
 
     // allow hub events to update the player subject
@@ -176,31 +172,27 @@ export class GamePageComponent implements OnDestroy {
           player: c.player = c.player || { userId: c.user.id } as Player
         };
       }),
-      tap(c => {
-        // listen for game hub events to enable synchronized start stuff if needed
-        if (c.player.gameId && c.game.requireSynchronizedStart) {
-          this.gameHubService.joinGame(c.player.gameId);
-        }
-        else
-          this.gameHubService.leaveGame(c.game.id);
-      }),
       tap(c => { if (!c.game) { router.navigateByUrl("/"); } }),
       filter(c => !!c.game),
       tap(async ctx => {
+        if (!ctx.player)
+          return;
+
         this.ctxIds.playerId = ctx.player.id;
 
         // join the team-up hub for this team/game
-        if (ctx.player.teamId) {
-          this.hub.init(ctx.player.teamId);
-        }
+        await this.hub.init(ctx.player.teamId);
 
-        if (ctx.game && ctx.player?.id) {
-          await this.maybeJoinGameHub({
+        // if appropriate to the game execution period and modes,
+        // join the hub that coordinates across everyone playing this game
+        // (for sync start, external game launch, etc.)
+        if (ctx.game.isLive && (ctx.game.requireSynchronizedStart || this.isExternalGame)) {
+          await this.joinGameHub({
             game: ctx.game,
             player: ctx.player
           });
         }
-      }),
+      })
     );
   }
 
@@ -230,25 +222,31 @@ export class GamePageComponent implements OnDestroy {
     this.resetEnrollmentAndLeaveGame(player);
   }
 
-  private async maybeJoinGameHub(ctx: GameEnrollmentContext) {
-    if (ctx.game.requireSynchronizedStart || ctx.game.isTeamGame) {
-      await this.gameHubService.joinGame(ctx.game.id);
+  private async joinGameHub(ctx: GameEnrollmentContext) {
+    await this.gameHubService.joinGame(ctx.game.id);
 
-      // if the game is sync start, we need to check if it's already going and move them along if so
-      // we also need to wire up a listener to move them along when an external game launches
-      if (ctx.game.requireSynchronizedStart) {
-        await this.handleLiveSyncStartSessionJoined(ctx);
+    // if the game is sync start, we need to check if it's already going and move them along if so
+    // we also need to wire up a listener to move them along when an external game launches
+    if (ctx.game.requireSynchronizedStart) {
+      // first, set up a listener such that if the externalGameLaunchStarted event happens, we redirect the player
+      // to the game start screen
+      this.unsub.add(
+        // if the game gets launched, off we go
+        this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
+          if (startState) {
+            // delete any existing local storage stuff
+            this.redirectToExternalGameLoadingPage(ctx);
+          }
+        })
+      );
 
-        this.unsub.add(
-          this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
-            if (startState)
-              this.handleLiveSyncStartSessionJoined(ctx);
-          })
-        );
+      // then we need to manually check if they've already started and redirect if so
+      const gameStartPhase = await firstValueFrom(this.apiGame.getStartPhase(ctx.game.id, ctx.player.teamId));
+      this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.player.id}) is at start phase "${gameStartPhase}".`);
+
+      if (gameStartPhase == GameStartPhase.Started || gameStartPhase == GameStartPhase.Starting) {
+        this.redirectToExternalGameLoadingPage(ctx);
       }
-    }
-    else {
-      this.logService.logInfo(`Not joining the hub for game ${ctx.game.id} - it's not a team game AND it doesn't require sync start.`);
     }
   }
 
@@ -276,23 +274,8 @@ export class GamePageComponent implements OnDestroy {
     });
   }
 
-  private async handleLiveSyncStartSessionJoined(ctx: GameEnrollmentContext) {
-    const startState = await firstValueFrom(this.apiGame.getSyncStartState(ctx.game.id));
-
-    if (!ctx?.game?.session || !ctx.player.id || !startState) {
-      this.logService.logError(`Couldn't enroll and join game "${ctx.game.id}". Start state was undefined or had no player id.`, startState, this.ctxIds.playerId);
-      return;
-    }
-
-    this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.player.id}) is ${startState.isReady ? "" : "not"} ready to start.`);
-
-    // NOTE: in https://github.com/cmu-sei/Gameboard/issues/249, we're tracking the fact that we really need a separate
-    // data structure to record properties of the external game, including a better way to determine if we should redirect
-    // a reloading/returning player to the game screen
-
-    if (startState.isReady && ctx.game.session.isDuring && ctx.player.id) {
-      this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.player.id}) is starting...`);
-      this.routerService.goToGameStartPage({ gameId: ctx.game.id, playerId: ctx.player.id });
-    }
+  private redirectToExternalGameLoadingPage(ctx: GameEnrollmentContext) {
+    this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.player.id}) is ready for redirect...`);
+    this.routerService.goToGameStartPage({ gameId: ctx.game.id, playerId: ctx.player.id });
   }
 }

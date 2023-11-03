@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 export enum StorageKey {
+  ExternalGameOidc = "oidcLink",
+  ExternalGameUrl = "gameServerUrl",
   Gameboard = "gameboard",
   UnityGameLink = "gameServerLink",
   UnityOidcLink = "oidcLink",

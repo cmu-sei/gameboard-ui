@@ -22,10 +22,10 @@ interface GameLaunchContext {
 
 @Component({
   selector: 'app-game-start-page',
-  templateUrl: './game-start-page.component.html',
-  styleUrls: ['./game-start-page.component.scss']
+  templateUrl: './external-game-loading-page.component.html',
+  styleUrls: ['./external-game-loading-page.component.scss']
 })
-export class GameStartPageComponent implements OnInit {
+export class ExternalGameLoadingPageComponent implements OnInit {
   private gameId: string | null;
   private playerId: string | null;
 
@@ -127,13 +127,6 @@ export class GameStartPageComponent implements OnInit {
       this.unsub.add(
         this.gameHub.externalGameLaunchEnded$.subscribe(state => {
           this.updateGameStartState(state);
-
-          const team = state.teams.find(t => t.team.id === ctx.player.teamId);
-          if (!team) {
-            this.log.logError(`Couldn't find a team in state for player's team ("${ctx.player.teamId}").`);
-          }
-
-          this.externalGameService.createLocalStorageKeys({ teamId: ctx.player.teamId, gameServerUrl: team!.headlessUrl });
           this.handleGameReady(ctx);
         })
       );
