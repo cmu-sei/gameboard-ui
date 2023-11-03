@@ -9,7 +9,6 @@ import { ConfigService } from '../utility/config.service';
 import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
 import { HubPlayer, Player, TimeWindow } from '../api/player-models';
-import { GameHubEvent } from './signalR/game-hub.service';
 import { LogService } from './log.service';
 
 @Injectable({ providedIn: 'root' })
@@ -17,12 +16,10 @@ export class NotificationService {
   public connection: HubConnection;
 
   private teamId$ = new Subject<string>();
-  private _gameHubEvents$ = new Subject<GameHubEvent>();
 
   state$ = new BehaviorSubject<HubState>({ id: '', connectionState: HubConnectionState.Disconnected, joined: false });
   actors$ = new BehaviorSubject<Array<HubPlayer>>([]);
   announcements = new Subject<HubEvent>();
-  gameHubEvents$ = this._gameHubEvents$.asObservable();
   teamEvents = new Subject<HubEvent>();
   challengeEvents = new Subject<HubEvent>();
   playerEvents = new Subject<HubEvent>();
@@ -30,7 +27,7 @@ export class NotificationService {
   ticketEvents = new Subject<HubEvent>();
 
   constructor(
-    private config: ConfigService,
+    config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
     private log: LogService,
@@ -124,8 +121,6 @@ export class NotificationService {
     connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
     connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
     connection.on('playerEvent', e => this.onPlayerEvent(e));
-    connection.on('gameHubEvent', e => this._gameHubEvents$.next(e));
-    connection.on('synchronizedGameStartedEvent', e => this._gameHubEvents$.next(e));
 
     return connection;
   }
@@ -140,15 +135,13 @@ export class NotificationService {
       // if we're already connected...
       if (this.connection.state === HubConnectionState.Connected) {
         // and we're connected to the right group, do nothing
-        if (this.connection.connectionId) {
+        if (this.connection.connectionId == groupId) {
           return;
         }
 
-        // ... and we're connected to the wrong group, disconnect and then try again
-        if (this.connection.connectionId != groupId) {
-          await this.disconnect();
-          await this.maybeConnect(groupId);
-        }
+        // if we're connected to the wrong group, disconnect and then try again
+        await this.disconnect();
+        await this.maybeConnect(groupId);
       }
       // if we're not already connected...
       else {
@@ -166,7 +159,7 @@ export class NotificationService {
       }
     } catch (e) {
       if (this.connection.state !== HubConnectionState.Connected) {
-        this.log.logWarning(`Couldn't connect to the hub on group ${groupId}. State → `, this.state$.getValue());
+        this.log.logError(`Couldn't connect to the hub on group ${groupId}. State → `, this.state$.getValue());
       }
     }
   }
@@ -246,7 +239,7 @@ export class NotificationService {
   }
 
   private async onTeamEvent(e: HubEvent): Promise<void> {
-    await this.maybeUpdateTeammates(e.model.teamId, e.action);
+    await this.maybeUpdateTeammates(e.model.id, e.action);
     this.teamEvents.next(e);
     this.postState({});
   }
@@ -332,6 +325,7 @@ export enum HubEventAction {
   created = 'created',
   updated = 'updated',
   deleted = 'deleted',
+  sessionExtended = 'sessionExtended',
   started = 'started',
   roleChanged = 'roleChanged',
   waiting = 'waiting'

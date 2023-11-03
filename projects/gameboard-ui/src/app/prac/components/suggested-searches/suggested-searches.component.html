@@ -1,4 +1,6 @@
 <div class="suggested-searches-component d-flex flex-wrap w-100">
-    <app-colored-text-chip *ngFor="let search of searches" [text]="search" [isClickable]="true" size="small"
-        (click)="handleSearchClick($event)"></app-colored-text-chip>
+    <a *ngFor="let search of searches" [routerLink]="['/practice']" [queryParams]="{ term: search }">
+        <app-colored-text-chip [text]="search" colorMode="monochrome"
+            (click)="handleSearchClick($event)"></app-colored-text-chip>
+    </a>
 </div>

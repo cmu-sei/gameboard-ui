@@ -1,6 +1,7 @@
 import { Spec } from '@/api/spec-models';
 import { SpecService } from '@/api/spec.service';
 import { fa } from '@/services/font-awesome.service';
+import { ChallengeSpecScoringConfig } from '@/services/scoring/scoring.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { slug } from '@/tools/functions';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
@@ -13,6 +14,7 @@ import { Subject, debounceTime, filter, switchMap, tap } from 'rxjs';
 })
 export class ChallengeSpecEditorComponent implements OnChanges {
   @Input() spec?: Spec;
+  @Input() scoringConfig?: ChallengeSpecScoringConfig;
   @Output() specDelete = new EventEmitter<Spec>();
   @Output() specUpdate = new EventEmitter<Spec>();
 
@@ -40,6 +42,7 @@ export class ChallengeSpecEditorComponent implements OnChanges {
   }
 
   protected handleSpecUpdated(spec: Spec) {
+    spec.points = spec.points || 0;
     this.requestUpdateSpec$.next(spec);
   }
 

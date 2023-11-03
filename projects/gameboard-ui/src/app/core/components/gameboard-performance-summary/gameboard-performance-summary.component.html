@@ -4,7 +4,7 @@
             *ngIf="ctx.player.session && !ctx.player.session.isBefore && (ctx.player.session.isAfter || ((countdown$ | async) || 0 ) <= 0)">Game
             Over
         </span>
-        <span *ngIf="ctx.player.session?.isDuring">Time Remaining:
+        <span *ngIf="ctx.player.session?.isDuring && (countdown$ | async)">Time Remaining:
             <span class="font-weight-bold" [class]="(countdown$ | async) || 0 | countdowncolor">
                 {{ (countdown$ | async) || 0 | countdown }}
             </span>

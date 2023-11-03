@@ -44,6 +44,18 @@ export interface PagedArray<T> {
   paging: PagingResults;
 }
 
+export interface PlayerWithSponsor {
+  id: string;
+  name: string;
+  sponsor: SimpleSponsor;
+}
+
+export interface SimpleSponsor {
+  id: string;
+  name: string;
+  logo: string;
+}
+
 export interface SimpleEntity {
   id: string;
   name: string;

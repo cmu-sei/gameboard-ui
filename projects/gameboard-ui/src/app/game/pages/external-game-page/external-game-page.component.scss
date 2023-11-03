@@ -1,0 +1,29 @@
+.external-game-page-component {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 50px);
+}
+
+iframe {
+    height: 100%;
+    width: 100%;
+}
+
+.external-host-container {
+    aspect-ratio: 16 /10 !important;
+    display: flex;
+    flex-grow: 1;
+    max-height: 100vh;
+    width: 100%;
+}
+
+.connecting-to-host {
+    flex-shrink: 1;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    text-align: center;
+
+    p {
+        margin: 0;
+    }
+}

@@ -1,5 +1,7 @@
 <nav [class]="customBackground">
     <div class="nav-items d-flex align-items-center justify-content-end">
+        <app-gameboard-signalr-hubs></app-gameboard-signalr-hubs>
+        <div class="flex-grow-1"></div>
         <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/home']">Home</a>
         <ng-container *ngIf="(toc$ | async)?.length">
             <a *ngFor="let t of toc$ | async" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
@@ -7,12 +9,12 @@
         </ng-container>
         <a *ngIf="isPracticeModeEnabled" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
             [routerLink]="['practice']">Practice</a>
-        <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Profile</a>
-        <ng-container *ngIf="user$ | async as user">
+        <ng-container *ngIf="user$ | async as user; else unauthed">
             <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['support']">
                 <span>Support</span>
                 <app-support-pill></app-support-pill>
             </a>
+            <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Profile</a>
             <div *ngIf="canAccessReporting$ | async" class="d-flex align-items-center">
                 <a class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
                     Reports
@@ -20,9 +22,16 @@
 
                 <span class="badge badge-info">[BETA]</span>
             </div>
-            <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
-                class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/admin']">Admin</a>
-            <a class="btn btn-link text-success mx-1" (click)="logout()">Logout</a>
+            <ng-container *ngIf="(user$ | async)?.id">
+                <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
+                    class="btn btn-link text-success mx-1" routerLinkActive="text-info"
+                    [routerLink]="['/admin']">Admin</a>
+                <a class="btn btn-link text-success mx-1" (click)="logout()">Log out</a>
+            </ng-container>
         </ng-container>
     </div>
 </nav>
+
+<ng-template #unauthed>
+    <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Log in</a>
+</ng-template>

@@ -11,6 +11,7 @@ import { GameService } from '../../api/game.service';
 import { Search } from '../../api/models';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 import * as YAML from 'yaml';
+import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -55,7 +56,8 @@ export class DashboardComponent implements OnInit {
     private api: GameService,
     private clipboard: ClipboardService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private titleService: AppTitleService,
   ) {
     this.games$ = this.refresh$.pipe(
       debounceTime(250),
@@ -74,6 +76,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.set("Admin");
   }
 
   create(): void {

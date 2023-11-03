@@ -1,0 +1,44 @@
+h3 {
+    font-size: 0.9rem;
+    font-weight: bolder;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+h4 {
+    font-size: 0.9;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.team-detail-section {
+    margin-bottom: 1rem;
+}
+
+.subtle-text {
+    color: #aaaaaa;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+
+.score-component, .score-plus, .score-equals {
+    margin: 0 0.5rem;
+}
+
+.score-value, .score-plus, .score-equals {
+    line-height: 1.8rem;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.score-total {
+    font-size: 3rem;
+}
+
+.challenge-results-table td {
+    vertical-align: middle;
+}

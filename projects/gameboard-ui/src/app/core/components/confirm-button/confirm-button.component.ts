@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -9,9 +9,10 @@ import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './confirm-button.component.html',
   styleUrls: ['./confirm-button.component.scss'],
 })
-export class ConfirmButtonComponent implements OnInit {
+export class ConfirmButtonComponent {
   @Input() btnClass = 'btn btn-info btn-sm';
   @Input() cancelButtonClass = 'btn btn-outline-secondary';
+  @Input() componentContainerClass = '';
   @Input() disabled = false;
   @Output() confirm = new EventEmitter<boolean>();
   @Output() cancel = new EventEmitter<boolean>();
@@ -19,11 +20,6 @@ export class ConfirmButtonComponent implements OnInit {
   confirming = false;
   faCheck = faCheck;
   faTimes = faTimes;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   continue(yes?: boolean): void {
     if (!!yes) {

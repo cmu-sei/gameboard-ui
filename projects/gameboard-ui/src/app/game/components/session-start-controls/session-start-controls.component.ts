@@ -1,32 +1,33 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { GameService } from '../../../api/game.service';
-import { GameContext } from '../../../api/models';
+import { GameContext } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { fa } from '@/services/font-awesome.service';
-import { GameHubService } from '../../../services/signalR/game-hub.service';
-import { SyncStartService } from '../../../services/sync-start.service';
-import { SyncStartState } from '../../game.models';
+import { SyncStartService } from '@/services/sync-start.service';
+import { SyncStartGameState } from '@/game/game.models';
+import { GameHubService } from '@/services/signalR/game-hub.service';
+import { LogService } from '@/services/log.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-session-start-controls',
   templateUrl: './session-start-controls.component.html',
   styleUrls: ['./session-start-controls.component.scss']
 })
-export class SessionStartControlsComponent implements OnInit, OnDestroy {
+export class SessionStartControlsComponent implements OnInit {
   @Input() ctx!: GameContext;
 
   // TODO: ultimately pull these into this component
   @Output() onDoubleCheckChanged = new EventEmitter<boolean>();
   @Output() onRequestStart = new EventEmitter();
 
-  private gameHubSub?: Subscription;
-
-  protected START_DISABLED_TOOLTIP = "We're still waiting for all registered players to ready up. Once they do, you can start your session.";
   protected isDoubleChecking = false;
   protected isGameSyncStartReady = false;
+  protected isConnectedToGameHub = false;
+  protected isReadyingUp = false;
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
   protected playerReadyPct = 0;
@@ -35,20 +36,27 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
   constructor(
     private gameHub: GameHubService,
     private gameService: GameService,
+    private logService: LogService,
     private playerService: PlayerService,
-    private syncStartService: SyncStartService) { }
+    private syncStartService: SyncStartService,
+    private unsub: UnsubscriberService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (this.ctx.game.requireSynchronizedStart) {
-      this.gameService.getSyncStartState(this.ctx.game.id).pipe(first()).subscribe(this.handleNewSyncStartState);
-      this.gameHubSub = this.gameHub.syncStartChanged$.subscribe(stateUpdate => {
-        this.handleNewSyncStartState(stateUpdate);
-      });
-    }
-  }
+      // update stuff state of the game hub on init
+      this.handleNewSyncStartState(await firstValueFrom(this.gameService.getSyncStartState(this.ctx.game.id)));
+      this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id);
 
-  ngOnDestroy(): void {
-    this.gameHubSub?.unsubscribe();
+      // when the hub updates, maintain state
+      this.unsub.add(
+        this.gameHub.joinedGameIds$.subscribe(gameIds => {
+          this.isConnectedToGameHub = gameIds.some(gId => gId == this.ctx.game.id);
+        }),
+        this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
+          this.handleNewSyncStartState(stateUpdate);
+        })
+      );
+    }
   }
 
   protected handleDoubleCheckRequest(isDoubleChecking: boolean) {
@@ -60,11 +68,14 @@ export class SessionStartControlsComponent implements OnInit, OnDestroy {
     this.onRequestStart.emit(player);
   }
 
-  protected handleReadyUpdated(player: Player) {
-    this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }).pipe(first()).subscribe();
+  protected async handleReadyUpdated(player: Player) {
+    this.isReadyingUp = true;
+    this.logService.logInfo(`Player ${player.id} (user ${player.userId}) updating ready...`);
+    await firstValueFrom(this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }));
+    this.isReadyingUp = false;
   }
 
-  private handleNewSyncStartState(state: SyncStartState) {
+  private handleNewSyncStartState(state: SyncStartGameState) {
     this.isGameSyncStartReady = state.isReady;
 
     if (!state || !state.teams.length) {

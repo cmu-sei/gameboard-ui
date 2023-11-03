@@ -14,11 +14,11 @@
     <div class="game-front d-flex justify-content-end p-3">
       <h6 class="text-white mt-0">
         <span *ngIf="!game.isPublished" class="badge badge-pill badge-unpublished game-type mr-1">
-          <fa-icon [icon]="faEyeSlash"></fa-icon>
+          <fa-icon [icon]="fa.eyeSlash"></fa-icon>
         </span>
         <span class="badge badge-pill badge-tag badge-dark game-type">
           {{ game.key }}
-          <fa-icon [icon]="game.allowTeam ? faUsers : faUser"></fa-icon>
+          <fa-icon [icon]="game.allowTeam ? fa.users : fa.user"></fa-icon>
         </span>
       </h6>
     </div>

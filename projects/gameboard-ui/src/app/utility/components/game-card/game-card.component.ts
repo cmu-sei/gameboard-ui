@@ -1,11 +1,10 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { faUser, faUsers, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { BoardGame } from '../../../api/board-models';
-import { Game } from '../../../api/game-models';
-import { ConfigService } from '../../config.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BoardGame } from '@/api/board-models';
+import { Game } from '@/api/game-models';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-game-card',
@@ -16,9 +15,7 @@ export class GameCardComponent {
   @Input() game!: Game | BoardGame;
   @Output() selected = new EventEmitter<Game | BoardGame>();
 
-  faUser = faUser;
-  faUsers = faUsers;
-  faEyeSlash = faEyeSlash;
+  protected fa = fa;
 
   select(): void {
     this.selected.next(

@@ -5,8 +5,9 @@
   <div *ngIf="ctx.player" class="team-leader d-flex align-items-center align-content-center">
     <app-player-avatar-list *ngIf="ctx.hasTeammates" [avatarUris]="ctx.avatarUris" [captainSession]="ctx.player.session"
       class="d-inline-block mr-4 my-2"></app-player-avatar-list>
-    <app-player-avatar *ngIf="!ctx.hasTeammates" [avatarUri]="ctx.player.sponsor | sponsorToLogoUri"
-      [enableSessionStatus]="true" [session]="ctx.player.session" class="d-inline-block mr-4 my-2"></app-player-avatar>
+    <app-player-avatar-legacy *ngIf="!ctx.hasTeammates" [avatarUri]="ctx.player.sponsor | sponsorToLogoUri"
+      [enableSessionStatus]="true" [session]="ctx.player.session"
+      class="d-inline-block mr-4 my-2"></app-player-avatar-legacy>
     <div class="mr-2 team-leader-name">
       <p class="team-header">{{ ctx.hasTeammates ? "Team" : "Player" }}</p>
       <p class="team-leader-name-text">
@@ -21,8 +22,8 @@
       <li *ngFor="let teamMember of ctx.allPlayers"
         class="d-flex justify-content-center align-items-center align-content-center">
         <div class="avatar-status-container mr-4">
-          <app-player-avatar [avatarUri]="teamMember.sponsor | sponsorToLogoUri" [size]="'medium'"
-            [maxAvatarsInListView]="ctx.allPlayers.length" class="mr-4"></app-player-avatar>
+          <app-player-avatar-legacy [avatarUri]="teamMember.sponsor | sponsorToLogoUri" [size]="'medium'"
+            [maxAvatarsInListView]="ctx.allPlayers.length" class="mr-4"></app-player-avatar-legacy>
         </div>
         <div class="player-name mr-auto align-middle fs-11 mb-4">
           <p class="m-0">{{teamMember.userApprovedName}}</p>

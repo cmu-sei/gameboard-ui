@@ -5,6 +5,11 @@ import { GameSessionService } from '../../../services/game-session.service';
 import { ClipboardService } from '../../../utility/services/clipboard.service';
 import { ToastService } from '../../../utility/services/toast.service';
 
+export interface TeamAdminContextMenuSessionResetRequest {
+  player: Player;
+  unenrollTeam: boolean;
+}
+
 @Component({
   selector: 'app-team-admin-context-menu',
   templateUrl: './team-admin-context-menu.component.html',
@@ -15,7 +20,7 @@ export class TeamAdminContextMenuComponent implements OnInit {
   @Input() isViewing = false;
 
   @Output() onBonusManageRequest = new EventEmitter<Player>();
-  @Output() onSessionResetRequest = new EventEmitter<Player>();
+  @Output() onSessionResetRequest = new EventEmitter<TeamAdminContextMenuSessionResetRequest>();
   @Output() onUnenrollRequest = new EventEmitter<Player>();
   @Output() onViewRequest = new EventEmitter<Player>();
 

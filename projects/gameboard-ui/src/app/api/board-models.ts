@@ -78,11 +78,13 @@ export interface ChangedChallenge {
   id: string;
 }
 
-export enum ChallengeResult {
-  Complete = "success",
-  Partial = "partial",
-  None = "none"
-}
+// export enum ChallengeResult {
+//   Complete = "success",
+//   Partial = "partial",
+//   None = "none"
+// }
+
+export type ChallengeResult = "success" | "partial" | "none";
 
 export interface BoardGame {
   id: string;

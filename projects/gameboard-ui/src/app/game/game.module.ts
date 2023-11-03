@@ -4,35 +4,40 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UtilityModule } from '../utility/utility.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthGuard } from '../utility/auth.guard';
-import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
-import { GameInfoComponent } from './game-info/game-info.component';
-import { PlayerSessionComponent } from './player-session/player-session.component';
-import { AlertModule } from 'ngx-bootstrap/alert';
-import { ButtonsModule } from 'ngx-bootstrap/buttons';
-import { GamePageComponent } from './game-page/game-page.component';
-import { GameboardPageComponent } from './gameboard-page/gameboard-page.component';
-import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
-import { MarkdownModule } from 'ngx-markdown';
-import { SessionForecastComponent } from './session-forecast/session-forecast.component';
-import { ScoreboardPageComponent } from './scoreboard-page/scoreboard-page.component';
-import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
-import { PlayerPresenceComponent } from './player-presence/player-presence.component';
-import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { CertificateComponent } from './certificate/certificate.component';
-import { UnityModule } from '../unity/unity.module';
-import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { CoreModule } from '../core/core.module';
-import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
-import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
-import { SyncStartPageComponent } from './components/sync-start-page/sync-start-page.component';
-import { SyncStartGuard } from '../guards/sync-start.guard';
-import { PlayComponent } from './components/play/play.component';
+import { UnityModule } from '../unity/unity.module';
+import { UtilityModule } from '../utility/utility.module';
+
+import { AuthGuard } from '../utility/auth.guard';
+import { CertificateComponent } from './certificate/certificate.component';
 import { ChallengeDeployCountdownComponent } from './components/challenge-deploy-countdown/challenge-deploy-countdown.component';
+import { ExternalGamePageComponent } from './pages/external-game-page/external-game-page.component';
+import { ExternalSyncGameGuard } from '@/guards/external-sync-game.guard';
+import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
+import { GameboardPageComponent } from './pages/gameboard-page/gameboard-page.component';
+import { GameInfoComponent } from './game-info/game-info.component';
+import { GameIsStarted } from '@/guards/game-is-started.guard';
+import { GamePageComponent } from './pages/game-page/game-page.component';
+import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
+import { GameStartPageComponent } from './pages/game-start-page/game-start-page.component';
+import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
+import { PlayComponent } from './components/play/play.component';
+import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
+import { PlayerPresenceComponent } from './player-presence/player-presence.component';
+import { PlayerSessionComponent } from './player-session/player-session.component';
+import { ScoreboardComponent } from './components/scoreboard/scoreboard.component';
+import { ScoreboardPageComponent } from './pages/scoreboard-page/scoreboard-page.component';
+import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
+import { SessionForecastComponent } from './session-forecast/session-forecast.component';
+import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
+import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
+import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
+import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
+import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
+import { ScoreboardTeamDetailModalComponent } from './components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -51,32 +56,37 @@ const MODULE_DECLARATIONS = [
   SessionStartControlsComponent,
   ScoreboardPageComponent,
   ScoreboardTableComponent,
-  SyncStartPageComponent,
+  PlayerPresenceComponent,
+  FeedbackFormComponent,
+  CertificateComponent,
+  HubStateToPlayerStatusPipe,
+  SessionStartControlsComponent,
+  SessionStartCountdownComponent,
+  GameStartPageComponent,
+  ExternalGamePageComponent
 ];
 
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
+    ScoreboardComponent,
+    TeamChallengeScoresToChallengeResultTypeCountPipe,
+    ScoreboardTeamDetailModalComponent,
   ],
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild([
-      { path: 'board/:playerId/:cid', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
-      { path: 'board/:playerId', canActivate: [AuthGuard, SyncStartGuard], component: GameboardPageComponent },
-      { path: ':gameId/sync-start', canActivate: [AuthGuard, SyncStartGuard], component: SyncStartPageComponent },
-      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard], component: UnityBoardComponent },
+      { path: 'board/:playerId/:cid', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
+      { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
+      { path: ':gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: GameStartPageComponent },
+      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard, UserIsPlayingGuard], component: UnityBoardComponent },
+      { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalSyncGameGuard], component: ExternalGamePageComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),
     CoreModule,
     UtilityModule,
-    FontAwesomeModule,
-    AlertModule,
-    MarkdownModule,
-    ButtonsModule,
-    ModalModule,
     UnityModule
   ],
   exports: [

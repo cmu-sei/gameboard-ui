@@ -166,10 +166,10 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
     switch (challengeStatus) {
       case "partial":
-        challenges = record.challenges.filter(c => c.result == ChallengeResult.Partial);
+        challenges = record.challenges.filter(c => c.result == "partial");
         break;
       case "complete":
-        challenges = record.challenges.filter(c => c.result == ChallengeResult.Complete);
+        challenges = record.challenges.filter(c => c.result == "success");
         break;
       default:
         challenges = record.challenges;

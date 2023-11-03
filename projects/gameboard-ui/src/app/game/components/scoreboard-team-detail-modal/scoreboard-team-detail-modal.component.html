@@ -1,0 +1,119 @@
+<ng-container *ngIf="context">
+    <div class="modal-header">
+        <div class="modal-title pull-left">
+            <h3>
+                <span class="subtle-text">
+                    {{ isTeam ? "Team" : "Player" }} Score:
+                </span>
+                {{ context.game.name }}
+            </h3>
+            <h2>{{context.teamData.team.name}}</h2>
+        </div>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="handleModalClose()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body container">
+        <div class="team-detail-section">
+            <h4>Player{{ context.teamData.players.length == 1 ? "" : "s" }}</h4>
+
+            <div class="player-list">
+                <ul class="d-flex align-items-center justify-content-center">
+                    <li *ngFor="let player of context.teamData.players">
+                        <div class="player-detail-container text-center mx-3">
+                            <app-player-avatar [player]="player" size="large"></app-player-avatar>
+                            <div class="player-name">{{ player.name }}</div>
+                            <div class="sponsor-name">{{ player.sponsor.name }}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="team-detail-section">
+            <h4>Score</h4>
+
+            <div class="score-breakdown d-flex align-items-center justify-content-center my-4">
+                <div class="score-component">
+                    <div class="score-value">{{ context.teamData.overallScore.completionScore }}</div>
+                    <div class="score-label">Challenge Points</div>
+                </div>
+
+                <ng-container *ngIf="context.teamData.overallScore.bonusScore">
+                    <div class="score-plus">+</div>
+                    <div class="score-component">
+                        <div class="score-value">{{ context.teamData.overallScore.bonusScore }}</div>
+                        <div class="score-label">Bonus Points</div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="context.teamData.overallScore.manualBonusScore">
+                    <div class="score-plus">+</div>
+                    <div class="score-component">
+                        <div class="score-value">{{ context.teamData.overallScore.bonusScore }}</div>
+                        <div class="score-label">Admin Adjustment</div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="hasBonuses">
+                    <div class="score-equals">=</div>
+                    <div class="score-value score-total text-success">
+                        {{ context.teamData.overallScore.totalScore }}
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="team-detail-section">
+            <h4>Challenges</h4>
+
+            <table class="challenge-results-table table table-striped gameboard-table w-100 mt-3">
+                <col>
+                <col>
+                <col>
+
+                <thead class="thead-light">
+                    <tr class="headers">
+                        <th scope="col">Challenge</th>
+                        <th scope="col">Result</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let challenge of context.teamData.challenges">
+                        <td>
+                            {{challenge.name}}
+                        </td>
+                        <td [class]="challenge.result | challengeResultColor">
+                            {{ challenge.result | challengeResultPretty }}
+                        </td>
+                        <td>
+                            <ul>
+                                <li>{{ challenge.score.completionScore }} challenge points</li>
+                                <li *ngIf="challenge.score.bonusScore">{{ challenge.score.bonusScore }} bonus points
+                                </li>
+                                <li *ngIf="challenge.score.manualBonusScore">{{ challenge.score.manualBonusScore}} admin
+                                    adjustment </li>
+                            </ul>
+
+                            <hr>
+                            <p>{{challenge.score.totalScore}} points</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="handleModalClose()">OK</button>
+    </div>
+</ng-container>
+
+<ng-template #scoreBreakdownNoBonuses>
+    <div>{{ context.teamData.overallScore.totalScore }}</div>
+</ng-template>
+
+<ng-template #scoreBreakdownWithBonuses>
+
+</ng-template>

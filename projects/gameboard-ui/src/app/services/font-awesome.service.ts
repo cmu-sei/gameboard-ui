@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import {
   IconDefinition,
@@ -18,17 +18,23 @@ import {
   faCloudUploadAlt,
   faComments,
   faCopy,
+  faEdit,
   faEllipsisVertical,
   faEraser,
   faExclamationCircle,
   faExclamationTriangle,
   faExternalLink,
+  faExternalLinkAlt,
   faEyeSlash,
   faFileDownload,
   faFilter,
+  faGamepad,
+  faListOl,
   faGear,
+  faInfoCircle,
   faList,
   faLongArrowAltDown,
+  faMapMarker,
   faPaperclip,
   faPlus,
   faSearch,
@@ -65,16 +71,22 @@ export const fa = {
   cloudUploadAlt: faCloudUploadAlt,
   comments: faComments,
   copy: faCopy,
+  edit: faEdit,
   ellipsisVertical: faEllipsisVertical,
   eraser: faEraser,
   exclamationCircle: faExclamationCircle,
   exclamationTriangle: faExclamationTriangle,
   externalLink: faExternalLink,
+  externalLinkAlt: faExternalLinkAlt,
   eyeSlash: faEyeSlash,
   fileDownload: faFileDownload,
   filter: faFilter,
   list: faList,
+  listOl: faListOl,
+  gamepad: faGamepad,
   gear: faGear,
+  infoCircle: faInfoCircle,
+  mapMarker: faMapMarker,
   paperclip: faPaperclip,
   plus: faPlus,
   search: faSearch,
@@ -97,8 +109,6 @@ export type FontAwesomeIcons = typeof fa;
 
 @Injectable({ providedIn: 'root' })
 export class FontAwesomeService {
-  icons = fa;
-
   iconToSvg(icon: IconDefinition, width?: number, height?: number): SafeHtml {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width || 20}" height="${height || 20}" viewBox="0 0 384 512"><path d="${icon.icon[4].toString()}" /></svg>`;
   }

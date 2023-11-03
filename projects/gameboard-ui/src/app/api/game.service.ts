@@ -5,10 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { SyncStartState } from '../game/game.models';
+import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, Game, GameEngineMode, GameGroup, GameStartPhase, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 
@@ -71,8 +71,12 @@ export class GameService {
     );
   }
 
-  public getSyncStartState(gameId: string): Observable<SyncStartState> {
-    return this.http.get<SyncStartState>(`${this.url}/game/${gameId}/ready`);
+  public getStartPhase(gameId: string): Observable<GameStartPhase> {
+    return this.http.get<GameStartPhase>(`${this.url}/game/${gameId}/start-phase`);
+  }
+
+  public getSyncStartState(gameId: string): Observable<SyncStartGameState> {
+    return this.http.get<SyncStartGameState>(`${this.url}/game/${gameId}/ready`);
   }
 
   public retrieveSpecs(id: string): Observable<Spec[]> {
@@ -112,7 +116,7 @@ export class GameService {
   // an abstracted definition for this rule. Does this game run
   // in Gameboard or elsewhere?
   public isExternalGame(g: Game): boolean {
-    return g.mode !== "vm";
+    return g.mode === GameEngineMode.Cubespace || g.mode === GameEngineMode.External;
   }
 
   private tryCache(id: string, limit: number = 20): Game | null {
@@ -144,6 +148,7 @@ export class GameService {
   }
 
   private transform(game: Game): Game {
+    game.isTeamGame = game.maxTeamSize > 1;
     game.mapUrl = game.background
       ? `${this.config.imagehost}/${game.background}`
       : `${this.config.basehref}assets/map.png`;

@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { SimpleEntity } from '../../../api/models';
-import { CreateManualChallengeBonus, TeamGameScoreSummary } from '../../../api/scoring-models';
-import { ScoringService } from '../../../services/scoring.service';
+import { SimpleEntity } from '@/api/models';
+import { ScoringService } from '@/services/scoring/scoring.service';
+import { CreateManualChallengeBonus, TeamGameScore, TeamGameScoreQueryResponse } from '@/services/scoring/scoring.models';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-manage-manual-challenge-bonuses',
@@ -12,9 +13,8 @@ import { ScoringService } from '../../../services/scoring.service';
 export class ManageManualChallengeBonusesComponent implements OnInit {
   @Input() teamId!: string;
 
-  summary?: TeamGameScoreSummary;
-  startedChallenges: SimpleEntity[] = [];
-  challengesStarted = 0;
+  protected hasStartedChallenges = false;
+  protected teamScoreData?: TeamGameScoreQueryResponse;
 
   newChallengeBonusModel: CreateManualChallengeBonus = {
     description: '',
@@ -24,23 +24,23 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
 
   constructor(private scoresService: ScoringService) { }
 
-  ngOnInit(): void {
-    this.loadSummary(this.teamId);
+  async ngOnInit(): Promise<void> {
+    await this.loadSummary(this.teamId);
   }
 
-  private loadSummary(teamId: string) {
-    this.scoresService.getTeamGameScore(teamId)
-      .pipe(first())
-      .subscribe(summary => {
-        this.summary = summary;
-        this.startedChallenges = this.summary.challengeScoreSummaries.filter(s => !!s.challenge).map(s => s.challenge);
+  private async loadSummary(teamId: string) {
+    const scoreData = await firstValueFrom(this.scoresService.getTeamGameScore(teamId));
+    this.teamScoreData = scoreData
+    this.hasStartedChallenges = scoreData.score.challenges.length > 0;
+    // this.summary = response.score;
+    // this.startedChallenges = this.summary.challenges
+    //   .map(s => ({ id: s.id, name: s.name }));
 
-        this.newChallengeBonusModel = {
-          description: '',
-          challengeId: summary.challengeScoreSummaries.length ? summary.challengeScoreSummaries[0].challenge.id : '',
-          pointValue: 1
-        };
-      });
+    // this.newChallengeBonusModel = {
+    //   description: '',
+    //   challengeId: response.score.challenges.length ? response.score.challenges[0].id : '',
+    //   pointValue: 1
+    // };;
   }
 
   handleDelete(manualbonusId: string) {

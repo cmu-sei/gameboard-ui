@@ -6,14 +6,16 @@
             </div>
         </app-dropzone>
     </div>
-    <div class="form-group m-0 p-0 flex-grow-1">
-        <input type="text" class="form-control" id="name" placeholder="Sponsor name" required maxlength="200"
+    <div class="form-group input-with-label p-0 flex-grow-1">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter a sponsor name" required maxlength="200"
             [(ngModel)]="upsertSponsorRequest.name">
     </div>
 
-    <div class="form-group px-0 mx-2 mt-2">
+    <div class="form-group px-0 mx-2 input-with-label">
+        <label for="parentSponsorId">Parent Sponsor</label>
         <select name="parentSponsorId" class="form-control" [(ngModel)]="upsertSponsorRequest.parentSponsorId">
-            <option [ngValue]="undefined">[no parent sponsor]</option>
+            <option [ngValue]="undefined">--</option>
             <option *ngFor="let eligibleParent of eligibleParentSponsors" [value]="eligibleParent.id">
                 {{eligibleParent.name}}
             </option>

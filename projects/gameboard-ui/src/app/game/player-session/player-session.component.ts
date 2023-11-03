@@ -2,9 +2,9 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
-import { first, tap } from 'rxjs/operators';
-import { GameContext } from '../../api/models';
+import { BehaviorSubject, firstValueFrom, interval, Observable, of, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { GameContext } from '@/api/game-models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { UserService } from '@/api/user.service';
@@ -13,6 +13,7 @@ import { fa } from '@/services/font-awesome.service';
 import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { TeamService } from '@/api/team.service';
 
 @Component({
   selector: 'app-player-session',
@@ -25,7 +26,7 @@ export class PlayerSessionComponent implements OnDestroy {
   @Output() onSessionReset = new EventEmitter<Player>();
 
   errors: any[] = [];
-  myCtx$!: Observable<GameContext | undefined>;
+  isResetting = false;
   player$ = new BehaviorSubject<Player | undefined>(undefined);
   playerObservable$ = this.player$.asObservable();
   protected fa = fa;
@@ -38,32 +39,40 @@ export class PlayerSessionComponent implements OnDestroy {
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
   protected canAdminStart = false;
+  protected hasTimeRemaining = false;
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
+  protected timeRemainingMs$?: Observable<number>;
 
   constructor(
     private api: PlayerService,
     private modalService: ModalConfirmService,
     private localUserService: LocalUserService,
+    private teamService: TeamService,
     private userService: UserService,
   ) { }
 
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
       tap(ctx => {
-        this.performanceSummaryViewModel = !ctx ? undefined : {
-          player: {
-            id: ctx.player.id,
-            teamId: ctx.player.teamId,
-            session: ctx.player.session,
-            scoring: {
-              rank: ctx.player.rank,
-              score: ctx.player.score,
-              correctCount: ctx.player.correctCount,
-              partialCount: ctx.player.partialCount
-            }
-          }
-        };
+        let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
 
+        if (ctx) {
+          vm = {
+            player: {
+              id: ctx.player.id,
+              teamId: ctx.player.teamId,
+              session: ctx.player.session,
+              scoring: {
+                rank: ctx.player.rank,
+                score: ctx.player.score,
+                correctCount: ctx.player.correctCount,
+                partialCount: ctx.player.partialCount
+              }
+            }
+          };
+        }
+
+        this.performanceSummaryViewModel$.next(vm);
         this.player$.next(ctx?.player);
       }),
       tap(ctx => {
@@ -85,6 +94,17 @@ export class PlayerSessionComponent implements OnDestroy {
       tap(ctx => {
         const localUser = this.localUserService.user$.value;
         this.canAdminStart = !!localUser && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
+      }),
+      // set up countdown
+      tap(ctx => {
+        if (ctx?.player.session)
+          this.timeRemainingMs$ = interval(1000).pipe(
+            map(() => (ctx.player.session!.endDate.getTime() - Date.now())),
+            tap(remainingMs => this.hasTimeRemaining = remainingMs > 0)
+          );
+
+        else
+          this.timeRemainingMs$ = of(0);
       })
     ).subscribe();
   }
@@ -120,10 +140,13 @@ export class PlayerSessionComponent implements OnDestroy {
     this.doReset(p);
   }
 
-  private doReset(p: Player) {
-    this.api.resetSession({ player: p, unenrollTeam: true }).pipe(first()).subscribe(_ => {
-      this.onSessionReset.emit(p);
-    });
+  private async doReset(p: Player) {
+    this.isResetting = true;
+    await firstValueFrom(this.teamService.resetSession(p.teamId, { unenrollTeam: true }));
+    delete p.session;
+    this.onSessionReset.emit(p);
+    this.player$.next(p);
+    this.isResetting = false;
   }
 
   ngOnDestroy(): void {

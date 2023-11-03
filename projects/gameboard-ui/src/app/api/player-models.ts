@@ -150,7 +150,11 @@ export interface SelfChangedPlayer {
   name: string;
 }
 
-export interface SessionChangeRequest {
+export interface SessionEndRequest {
+  teamId: string;
+}
+
+export interface SessionExtendRequest {
   teamId: string;
   sessionEnd: Date;
 }
@@ -173,7 +177,8 @@ export interface Standing {
   partialCount: number;
   session: TimeWindow;
   advanced: boolean;
-  sponsors: Sponsor[];
+  sponsor: Sponsor;
+  teamSponsors: Sponsor[];
 }
 
 export interface TeamInvitation {
@@ -234,12 +239,11 @@ export interface TeamPlayer {
 }
 
 export interface TeamState {
-  teamId: string;
+  id: string;
   name: string;
-  approvedName: string;
-  sessionBegin: Date;
-  sessionEnd: Date;
-  actor: { userId: string };
+  sessionBegin: Date,
+  sessionEnd: Date,
+  actor: SimpleEntity
 }
 
 export interface TeamSummary {

@@ -26,6 +26,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   errors: any[] = [];
   code = '';
   invitation = '';
+  isEnrolling = false;
   token = '';
   delayMs = 2000;
 
@@ -155,18 +156,27 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
 
   protected handleEnroll(userId: string, gameId: string): void {
     const model = { userId, gameId } as NewPlayer;
+    this.isEnrolling = true;
+
     this.api.create(model).pipe(first()).subscribe(p => {
       this.enrolled(p);
     });
   }
 
-  protected handleUnenroll(p: Player): void {
-    this.api.unenroll(p.id).pipe(first()).subscribe(_ => {
+  protected async handleUnenroll(p: Player): Promise<void> {
+    this.errors = [];
+
+    try {
+      await firstValueFrom(this.api.unenroll(p.id));
       this.onUnenroll.emit(p);
-    });
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   private enrolled(p: Player): void {
+    this.isEnrolling = false;
     this.onEnroll.emit(p);
   }
 

@@ -1,6 +1,6 @@
 import { ReportKey } from '@/reports/reports-models';
-import { Injectable } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
+import { Injectable, OnDestroy } from '@angular/core';
+import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { BrowserService } from './browser.service';
 import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
@@ -13,9 +13,12 @@ export interface QueryParamsUpdate {
   parameters: Params,
   resetParams?: string[]
 }
+import { Subscription, filter } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class RouterService {
+export class RouterService implements OnDestroy {
+  private _navEndSub?: Subscription;
+
   constructor(
     private browser: BrowserService,
     private config: ConfigService,
@@ -48,6 +51,10 @@ export class RouterService {
     return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
+  public getPracticeAreaWithSearchUrl(searchTerm: string) {
+    return this.router.createUrlTree(["practice"], { queryParams: { term: searchTerm } });
+  }
+
   public getProfileUrl() {
     return this.router.createUrlTree(["user", "profile"]).toString();
   }
@@ -65,8 +72,7 @@ export class RouterService {
   }
 
   public toPracticeAreaWithSearch(search: string) {
-    const urlTree = this.router.createUrlTree(["practice"], { queryParams: { term: search } });
-    return this.router.navigateByUrl(urlTree);
+    return this.router.navigateByUrl(this.getPracticeAreaWithSearchUrl(search));
   }
 
   public toPracticeCertificates() {
@@ -89,26 +95,16 @@ export class RouterService {
     return this.router.navigateByUrl(this.router.parseUrl(`/support/tickets/${highlightTicketKey}`));
   }
 
-  public buildVmConsoleUrl(vm: VmState) {
+  public buildVmConsoleUrl(vm: VmState, isPractice = false) {
     if (!vm || !vm.isolationId || !vm.name) {
       throw new Error(`Can't launch a VM console without an isolationId and a name.`);
     }
 
-    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}`;
+    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}${isPractice ? "&l=true" : ""}`;
   }
 
   public toVmConsole(vm: VmState) {
     this.browser.showTab(this.buildVmConsoleUrl(vm));
-  }
-
-  public tryGoBack() {
-    const prevUrl = this.router.getCurrentNavigation()?.previousNavigation?.initialUrl;
-    if (prevUrl) {
-      this.router.navigateByUrl(prevUrl);
-    }
-    else {
-      this.router.navigateByUrl("/");
-    }
   }
 
   public deleteQueryParams(): Promise<boolean> {
@@ -128,5 +124,37 @@ export class RouterService {
     const updatedParams = { ...cleanParams, ...update.parameters };
     const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: updatedParams });
     return this.router.navigateByUrl(urlTree);
+  }
+
+  public goToExternalGamePage(gameId: string, teamId: string) {
+    this.router.navigateByUrl(`/game/external/${gameId}/${teamId}`);
+  }
+
+  public getGamePageUrlTree(gameId: string): UrlTree {
+    return this.router.parseUrl(`/game/${gameId}`);
+  }
+
+  public goToGamePage(gameId: string) {
+    this.router.navigateByUrl(this.getGamePageUrlTree(gameId));
+  }
+
+  public getGameStartPageUrlTree(ctx: { gameId: string, playerId: string }) {
+    return this.router.parseUrl(`/game/${ctx.gameId}/start/${ctx.playerId}`);
+  }
+
+  public goToGameStartPage(ctx: { gameId: string, playerId: string }) {
+    this.router.navigateByUrl(this.getGameStartPageUrlTree(ctx));
+  }
+
+  public reloadOnNextNavigateEnd() {
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(e => {
+      window.location = window.location;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._navEndSub?.unsubscribe();
   }
 }

@@ -8,10 +8,9 @@
       <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)" class="text-info card-text d-flex mb-2">
         <div>
           <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
-          <span *ngIf="ctx.game.session.isDuring">Game window closes in </span>
           <span *ngIf="ctx.game.session.isAfter">Game window is closed </span>
         </div>
-        <div class="ml-2">
+        <div *ngIf="!ctx.game?.session?.isDuring" class="ml-2">
           {{ctx.game.session.countdown | countdown}}
         </div>
       </div>
@@ -21,16 +20,19 @@
           <div class="d-flex text-info card-text">
             <div>
               <span *ngIf="ctx.player.session?.isAfter">Session ended </span>
-              <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
+              <span *ngIf="ctx.player.session?.isDuring && (timeRemainingMs$ | async)">
+                Time Remaining:
+              </span>
             </div>
 
-            <div [class]="'ml-2 ' + (ctx.player.session?.countdown | countdowncolor)">
-              {{ctx.player.session?.countdown | countdown}}
+            <div *ngIf="ctx.player.session?.isDuring && hasTimeRemaining"
+              [class]="'ml-2 ' + (((timeRemainingMs$ | async) || 0) | countdowncolor)">
+              {{ ((timeRemainingMs$ | async) || 0) | countdown }}
             </div>
             <div class="spacer"></div>
 
-            <app-confirm-button *ngIf="ctx.game.allowReset" class="mx-2" btnClass="btn btn-sm pop-warning"
-              (confirm)="handleReset(ctx.player)">
+            <app-confirm-button *ngIf="ctx.game.allowReset && !isResetting" class="mx-2"
+              btnClass="btn btn-sm pop-warning" (confirm)="handleReset(ctx.player)">
               <fa-icon [icon]="fa.trash"></fa-icon>
               <span>Reset Session</span>
             </app-confirm-button>
@@ -71,12 +73,8 @@
       </ng-container>
 
       <div *ngIf="!ctx.player.session?.isBefore" class="text-center my-4">
-        <a *ngIf="ctx.game.mode != 'unity'" class="btn btn-primary btn-lg"
+        <a *ngIf="ctx.game.mode != 'unity'; else toCubespace" class="btn btn-primary btn-lg"
           [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
-        <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
-          [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd.valueOf()]">
-          Continue to Cubespace
-        </a>
       </div>
 
       <div class="col d-flex justify-content-center" *ngIf="ctx.game.mapUrl">
@@ -84,6 +82,14 @@
       </div>
     </div>
   </div>
+
+  <ng-template #toCubespace>
+    <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
+      [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd.valueOf()]">
+      Continue to Cubespace
+    </a>
+  </ng-template>
+
 </ng-container>
 
 <ng-template #loading>

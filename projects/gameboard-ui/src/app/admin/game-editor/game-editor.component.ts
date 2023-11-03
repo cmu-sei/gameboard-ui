@@ -3,14 +3,18 @@
 
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
-import { faArrowLeft, faCaretDown, faCaretRight, faCloudUploadAlt, faCopy, faGamepad, faToggleOff, faToggleOn, faTrash, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Game } from '../../api/game-models';
+import { Game, GameEngineMode } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyValue } from '@angular/common';
+import { AppTitleService } from '@/services/app-title.service';
+import { fa } from '@/services/font-awesome.service';
+import { PlayerMode } from '@/api/player-models';
+import { ToastService } from '@/utility/services/toast.service';
 import { PracticeService } from '@/services/practice.service';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -21,6 +25,7 @@ export class GameEditorComponent implements AfterViewInit {
   @Input() game!: Game;
   @ViewChild(NgForm) form!: FormGroup;
 
+  protected fa = fa;
   game$: Observable<Game>;
   loaded$!: Observable<Game>;
   updated$!: Observable<boolean>;
@@ -31,6 +36,12 @@ export class GameEditorComponent implements AfterViewInit {
   feedbackWarning: boolean = false;
   viewing = 1;
   showCertificateInfo = false;
+  showExternalGameFields = false;
+  externalGameServerUrlBase = this.config.gamebrainhost;
+
+  // the first time we flip the mode to external, suggest the gamebrainhost endpoint as the external startup
+  // url
+  private defaultExternalGameStartUrlSuggested = false;
 
   // store unique values of each game field with their frequencies for ordered suggestion lists
   suggestions = {
@@ -38,27 +49,18 @@ export class GameEditorComponent implements AfterViewInit {
     track: new Map<string, number>(),
     season: new Map<string, number>(),
     division: new Map<string, number>(),
-    mode: new Map<string, number>(),
     cardText1: new Map<string, number>(),
     cardText2: new Map<string, number>(),
     cardText3: new Map<string, number>()
   };
 
-  faCaretDown = faCaretDown;
-  faCaretRight = faCaretRight;
-  faToggleOn = faToggleOn;
-  faToggleOff = faToggleOff;
-  faCopy = faCopy;
-  faTrash = faTrash;
-  faSave = faCloudUploadAlt;
-  faGo = faGamepad;
-  faArrowLeft = faArrowLeft;
-  faInfoCircle = faInfoCircle;
-
   constructor(
+    route: ActivatedRoute,
     private api: GameService,
+    private config: ConfigService,
     private practiceService: PracticeService,
-    route: ActivatedRoute
+    private title: AppTitleService,
+    private toast: ToastService
   ) {
 
     // one-time get list of all games for field suggestions
@@ -72,22 +74,29 @@ export class GameEditorComponent implements AfterViewInit {
       switchMap(id => api.retrieve(id)),
       tap(g => {
         this.game = g;
+        this.title.set(`Edit "${g.name}"`);
         this.updateFeedbackMessage();
       })
     );
   }
 
   ngAfterViewInit(): void {
-
     this.updated$ = this.form.valueChanges.pipe(
       filter(f => !this.form.pristine && (this.form.valid || false)),
       tap(values => {
         this.dirty = true;
         this.needsPracticeModeEnabledRefresh = values.playerMode !== this.game.playerMode;
+
+        // the first time we flip to "External" mode, if the external game start url isn't specified,
+        // default it to gamebrain's url in settings
+        if (this.config.gamebrainhost && !this.game.externalGameStartupUrl && !this.defaultExternalGameStartUrlSuggested) {
+          this.game.externalGameStartupUrl = `${this.config.gamebrainhost}admin/deploy`;
+          this.defaultExternalGameStartUrlSuggested = true;
+        }
       }),
       debounceTime(500),
       switchMap(g => this.api.update(this.game)),
-      tap(() => this.dirty = false),
+      tap(r => this.dirty = false),
       filter(f => this.refreshFeedback || this.needsPracticeModeEnabledRefresh),
       switchMap(g => this.api.retrieve(this.game.id).pipe(
         tap(game => {
@@ -111,6 +120,29 @@ export class GameEditorComponent implements AfterViewInit {
     this.refreshFeedback = true;
   }
 
+  handleNonGameModeControlClicked(isDisabled: boolean) {
+    if (isDisabled)
+      this.showExternalModeToast(true);
+  }
+
+  handleModeChange(event: Event) {
+    const gameMode = ((event?.target as any).value as GameEngineMode);
+    this.game.mode = gameMode;
+
+    if (gameMode == GameEngineMode.External) {
+      this.showExternalModeToast();
+    }
+  }
+
+  showExternalModeToast(reduceDuration?: boolean) {
+    this.game.playerMode = PlayerMode.competition;
+    this.game.requireSynchronizedStart = true;
+    this.toast.show({
+      text: `Because this game is now in Exernal mode, "Player Mode" is locked to "Competition" and "Require Synchronized Start" is locked to on.`,
+      duration: reduceDuration ? 5000 : 8000
+    });
+  }
+
   show(i: number): void {
     this.viewing = i !== this.viewing ? i : 0;
   }
@@ -131,7 +163,6 @@ export class GameEditorComponent implements AfterViewInit {
     );
   }
 
-
   addSuggestions(games: Game[]) {
     // add properties of each game into respective map to record distinct values and maintain counts
     for (const game of games) {
@@ -139,7 +170,6 @@ export class GameEditorComponent implements AfterViewInit {
       this.countGameField(this.suggestions.track, game.track);
       this.countGameField(this.suggestions.season, game.season);
       this.countGameField(this.suggestions.division, game.division);
-      this.countGameField(this.suggestions.mode, game.mode);
       this.countGameField(this.suggestions.cardText1, game.cardText1);
       this.countGameField(this.suggestions.cardText1, game.cardText1);
       this.countGameField(this.suggestions.cardText1, game.cardText1);

@@ -19,13 +19,14 @@
             "I'm ready" below. If you're all set to play, be sure to ready up so everyone can start playing!
         </p>
 
-        <div class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
+        <div *ngIf="isConnectedToGameHub; else connectingToHub"
+            class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
             <progressbar class="flex-grow-1" [animate]="true" [value]="playerReadyPct" [max]="100" [ariaValueMin]="0"
                 [ariaValueMax]="100" type="info">
                 <strong>{{playerReadyPct}}%</strong>
             </progressbar>
 
-            <p class="ml-4">
+            <p class="player-ready-count-text ml-4 flex-shrink-1">
                 {{ playerReadyCount }} / {{ playerReadyCount + playerNotReadyCount }} players ready
             </p>
         </div>
@@ -33,9 +34,10 @@
 
     <div class="d-flex align-items-center justify-content-center" *ngIf="!isDoubleChecking">
         <ng-container *ngIf="ctx.game.requireSynchronizedStart">
-            <button btnCheckbox class="btn btn-lg mr-4" [class.btn-outline-success]="!ctx.player.isReady"
-                [class.btn-danger]="ctx.player.isReady" [(ngModel)]="ctx.player.isReady"
-                (click)="handleReadyUpdated(ctx.player)">
+            <button *ngIf="isConnectedToGameHub; else connectingToHub" btnCheckbox class="btn btn-lg mr-4"
+                [class.btn-outline-success]="!ctx.player.isReady" [class.btn-danger]="ctx.player.isReady"
+                [class.btn-secondary]="isReadyingUp" [(ngModel)]="ctx.player.isReady"
+                (click)="handleReadyUpdated(ctx.player)" [disabled]="isReadyingUp">
                 <span>{{ ctx.player.isReady ? "Cancel - I'm not ready" : "I'm ready!" }}</span>
             </button>
         </ng-container>
@@ -46,7 +48,7 @@
             <span>Start Session</span>
         </app-confirm-button>
 
-        <ng-container *ngIf="ctx.user.isRegistrar || ctx.user.isAdmin">
+        <ng-container *ngIf="(ctx.user.isRegistrar || ctx.user.isAdmin) && ctx.game.mode !== 'external'">
             <div class="text-center ml-4">
                 <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="onRequestStart.emit(ctx.player)">
                     <fa-icon [icon]="fa.bolt"></fa-icon>
@@ -82,3 +84,7 @@
         </div>
     </div>
 </div>
+
+<ng-template #connectingToHub>
+    <app-spinner>Connecting to the game...</app-spinner>
+</ng-template>

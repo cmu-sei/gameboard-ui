@@ -6,7 +6,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { faTrash, faPaperclip, faUpload, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { SupportService } from '../../../api/support.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-image-manager',

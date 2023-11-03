@@ -6,12 +6,12 @@
 @import "../../../node_modules/bootstrap/scss/functions";
 @import "../../../node_modules/bootstrap/scss/variables";
 @import "../../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/bootstrap/scss/code";
 @import "../../../node_modules/bootstrap/scss/root";
 @import "../../../node_modules/bootstrap/scss/reboot";
+@import "../../../node_modules/bootstrap/scss/grid";
 @import "../../../node_modules/bootstrap/scss/type";
 @import "../../../node_modules/bootstrap/scss/images";
-@import "../../../node_modules/bootstrap/scss/code";
-@import "../../../node_modules/bootstrap/scss/grid";
 @import "../../../node_modules/bootstrap/scss/tables";
 @import "../../../node_modules/bootstrap/scss/forms";
 @import "../../../node_modules/bootstrap/scss/buttons";
@@ -56,6 +56,26 @@ ul {
   padding-inline-start: 0;
 }
 
+/* In the majority of cases, we style <li>s in a custom way */
+li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ... but for markdown we just go with the classics  */
+markdown ul li {
+  list-style-type: disc;
+  padding: unset;
+  margin-left: 1rem;
+}
+
+markdown ol li {
+  list-style-type: unset;
+  padding: unset;
+  margin-left: 1rem;
+}
+
 app-root {
   display: block;
   min-height: 100vh;
@@ -91,6 +111,10 @@ app-root {
   font-size: 1.1rem;
 }
 
+.fs-12 {
+  font-size: 1.2rem;
+}
+
 .fs-13 {
   font-size: 1.3rem;
 }
@@ -123,24 +147,14 @@ h5 {
   font-weight: 300;
 }
 
-/* In the majority of cases, we style <li>s in a custom way */
-li {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+/* TABLE-Y STUFF */
+
+th[align="right"] {
+  text-align: right;
 }
 
-/* ... but for markdown we just go with the classics  */ 
-markdown ul li {
-  list-style-type: disc;
-  padding: unset;
-  margin-left: 1rem;
-}
-
-markdown ol li {
-  list-style-type: unset;
-  padding: unset;
-  margin-left: 1rem;
+th[align="center"] {
+  text-align: center;
 }
 
 .spacer {
@@ -189,6 +203,10 @@ alert {
   }
 }
 
+a[routerLink] {
+  cursor: pointer;
+}
+
 .nav-tabs li {
   font-weight: bold;
   font-size: 1.2rem;
@@ -229,6 +247,10 @@ app-spinner svg {
 .light-tooltip .tooltip-inner {
   background-color: white;
   color: black;
+}
+
+hr.light {
+  border-color: #dddddd;
 }
 
 // override bootstrap tabs to play nice with custom backgrounds
@@ -278,20 +300,25 @@ th[align="left"] {
   margin: 0;
 }
 
-th[align="right"] {
-  text-align: right;
-}
-
-th[align="center"] {
-  text-align: center;
-}
-
 .color-foreground {
   color: $foreground;
 }
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.page-width {
+  width: 1380px;
+  max-width: 100%;
+}
+
+.page-min-height {
+  min-height: 85vh;
+}
+
+.flex-basis-50 {
+  flex-basis: 50%;
 }
 
 .full-width {
@@ -317,8 +344,20 @@ th[align="center"] {
   text-transform: uppercase;
 }
 
+.width-5 {
+  width: 5%;
+}
+
+.width-10 {
+  width: 10%;
+}
+
 .width-15 {
   width: 15%;
+}
+
+.width-20 {
+  width: 20%;
 }
 
 .width-25 {

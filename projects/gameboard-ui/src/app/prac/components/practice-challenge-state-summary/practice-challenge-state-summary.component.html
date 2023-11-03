@@ -1,6 +1,6 @@
 <ng-container *ngIf="userActivePracticeChallenge === undefined; else resolved">
     <app-spinner></app-spinner>
-    Finding your challenge...
+    {{ isChangingSessionEnd ? "Updating your session..." : "Finding your challenge..." }}
 </ng-container>
 
 <ng-template #resolved>
@@ -44,9 +44,10 @@
             </tbody>
         </table>
 
-        <ng-container *ngIf="!isChangingSessionEnd; else changingSessionEnd">
+        <ng-container *ngIf="!isChangingSessionEnd">
             <div class="text-center">
-                <app-confirm-button btnClass="btn btn-info btn-sm"
+                <app-confirm-button btnClass="btn btn-info btn-sm" [tooltip]="extendTooltip"
+                    [disabled]="((msRemaining$ | async) || 0) > msInAnHour"
                     (confirm)="extendSession(userActivePracticeChallenge)">
                     Extend Session
                 </app-confirm-button>
@@ -57,8 +58,4 @@
             </div>
         </ng-container>
     </ng-container>
-</ng-template>
-
-<ng-template #changingSessionEnd>
-    <app-spinner>Updating your session...</app-spinner>
 </ng-template>

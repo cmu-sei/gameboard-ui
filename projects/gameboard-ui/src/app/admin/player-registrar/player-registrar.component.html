@@ -19,7 +19,7 @@
       <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control"
         (input)="refresh$.next(true)">
     </div>
-    <div>
+    <div *ngIf="!isLoading; else loading">
       <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleFilter('active')">
         <fa-icon [hidden]="filter!=='active'" [icon]="fa.filter"></fa-icon>
         <span>active-only</span>
@@ -71,129 +71,131 @@
     </div>
   </div>
 
-  <small *ngIf="source.length === 100" class="text-warning">
-    Results limited to 100. Refine search term if
-    necessary.
-  </small>
-  <hr />
+  <ng-container *ngIf="!isLoading">
+    <small *ngIf="source.length === 100" class="text-warning">
+      Results limited to 100. Refine search term if necessary.
+    </small>
+    <hr />
 
-  <div class="mb-2 d-flex align-items-baseline">
-    <small class="text-warning mx-2">count: {{ctx.players.length}}</small>
-    <ng-container *ngIf="ctx.players.length">
-      <small class="text-warning mx-2">selected: {{selected.length}}</small>
-      <button *ngIf="selected.length" class="btn btn-sm btn-outline-warning py-0 mx-2"
-        (click)="clearSelected()">x</button>
-      <span class="text-warning"> | </span>
-      <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="exportCsv(ctx.players)">
-        <fa-icon [icon]="fa.copy"></fa-icon>
-        <span>csv</span>
-      </button>
-      <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="exportMailMeta(ctx.players)">
-        <fa-icon [icon]="fa.copy"></fa-icon>
-        <span>mail</span>
-      </button>
-      <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="rerank(ctx.game.id)">
-        <fa-icon [icon]="fa.arrowDown"></fa-icon>
-        <span>rerank</span>
-      </button>
-      <button *ngIf="selected.length" class="btn btn-sm btn-outline-warning py-0 ml-2"
-        (click)="advanceOptions=!advanceOptions">
-        <fa-icon [icon]="fa.star"></fa-icon>
-        <span>advance</span>
-      </button>
-      <span class="spacer"></span>
-      <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
-        role="button">
-        <fa-icon [icon]="fa.sync"></fa-icon>
-        <span>{{autorefresh ? 'auto' : 'off'}}</span>
-      </label>
-    </ng-container>
-  </div>
+    <div class="mb-2 d-flex align-items-baseline">
+      <small class="text-warning mx-2">count: {{ctx.players.length}}</small>
+      <ng-container *ngIf="ctx.players.length">
+        <small class="text-warning mx-2">selected: {{selected.length}}</small>
+        <button *ngIf="selected.length" class="btn btn-sm btn-outline-warning py-0 mx-2"
+          (click)="clearSelected()">x</button>
+        <span class="text-warning"> | </span>
+        <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="exportCsv(ctx.players)">
+          <fa-icon [icon]="fa.copy"></fa-icon>
+          <span>csv</span>
+        </button>
+        <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="exportMailMeta(ctx.players)">
+          <fa-icon [icon]="fa.copy"></fa-icon>
+          <span>mail</span>
+        </button>
+        <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="rerank(ctx.game.id)">
+          <fa-icon [icon]="fa.arrowDown"></fa-icon>
+          <span>rerank</span>
+        </button>
+        <button *ngIf="selected.length" class="btn btn-sm btn-outline-warning py-0 ml-2"
+          (click)="advanceOptions=!advanceOptions">
+          <fa-icon [icon]="fa.star"></fa-icon>
+          <span>advance</span>
+        </button>
+        <span class="spacer"></span>
+        <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
+          role="button">
+          <fa-icon [icon]="fa.sync"></fa-icon>
+          <span>{{autorefresh ? 'auto' : 'off'}}</span>
+        </label>
+      </ng-container>
+    </div>
 
-  <div *ngIf="advanceOptions && selected.length">
-    <button class="btn btn-secondary btn-sm m-1" (click)="advanceScores=!advanceScores">
-      <fa-icon [icon]="advanceScores ? fa.checkSquare : fa.square"></fa-icon>
-      <span>With Scores</span>
-    </button>
-    <div *ngFor="let g of ctx.futures" class="m-1">
-      <app-confirm-button btnClass="btn btn-sm btn-outline-info" (confirm)="advanceSelected(g.id)">
-        <span>Advance to {{g.name}}</span>
-      </app-confirm-button>
-    </div>
-  </div>
-
-  <div *ngFor="let player of ctx.players; trackBy:trackById"
-    class="d-flex mb-1 mx-2 p-2 flex-wrap align-items-center rounded" [class.bg-secondary]="!player.checked"
-    [class.pop-success]="player.checked">
-    <div class="mx-2">
-      <button class="btn btn-secondary btn-sm" (click)="toggleSelected(player)">
-        <fa-icon [icon]="player.checked ? fa.checkSquare : fa.square"></fa-icon>
+    <div *ngIf="advanceOptions && selected.length">
+      <button class="btn btn-secondary btn-sm m-1" (click)="advanceScores=!advanceScores">
+        <fa-icon [icon]="advanceScores ? fa.checkSquare : fa.square"></fa-icon>
+        <span>With Scores</span>
       </button>
-    </div>
-    <app-player-avatar-list class="cursor-pointer" (click)="view(player)"
-      [avatarUris]="player.teamSponsorLogos | sponsorLogoFileNamesToUris"
-      [enableCaptainSessionStatusDisplay]="showSessionStatus"
-      [captainSession]="player.session"></app-player-avatar-list>
-    <div class="ml-2">
-      <span *ngIf="player.advanced" class="text-success ml-2">
-        <fa-icon [icon]="fa.star"></fa-icon>
-      </span>
-      <span class="cursor-pointer" (click)="view(player)">{{player.approvedName}}</span>
-      <span class="text-muted">{{player.pendingName}}</span><br />
-      <small class="text-muted">
-        <span>player: </span>&nbsp;
-        <app-clipspan class="mr-2">{{player.id | slice:0:8}}</app-clipspan>
-        <span>team: </span>&nbsp;
-        <app-clipspan class="mr-2">{{player.teamId | slice:0:8}}</app-clipspan>
-      </small>
-    </div>
-    <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1"
-      (click)="approveName(player)">
-      <fa-icon [icon]="fa.check"></fa-icon>
-      <span>Approve</span>
-    </button>
-    <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(player)">
-      <fa-icon [icon]="fa.check"></fa-icon>
-      <span>Disapprove</span>
-    </button>
-    <div class="spacer"></div>
-    <div class="cursor-pointer" [class.text-success]="player.session?.isDuring" (click)="view(player)">
-      {{player.rank}} |
-      {{player.score}} |
-      {{player.time | clock}} |
-      {{player.correctCount}} |
-      {{player.partialCount}} |
-      {{player.session?.countdown | countdown }}
-    </div>
-    <div>
-      <button class="btn rounded-circle ml-4" (click)="view(player)">
-        <fa-icon [icon]="viewed === player ? fa.chevronUp : fa.chevronDown"></fa-icon>
-      </button>
-
-      <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
-        (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset(player)"
-        (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
-      </app-team-admin-context-menu>
-    </div>
-    <div *ngIf="viewed === player" class="col-12">
-      <div class="form-group">
-        <label class="mb-0" for="name-input">Approved Name</label>
-        <input id="name-input" class="form-control" type="text" [(ngModel)]="player.approvedName"
-          (change)="update(player)">
+      <div *ngFor="let g of ctx.futures" class="m-1">
+        <app-confirm-button btnClass="btn btn-sm btn-outline-info" (confirm)="advanceSelected(g.id)">
+          <span>Advance to {{g.name}}</span>
+        </app-confirm-button>
       </div>
-      <div class="form-group">
-        <label class="mb-0" for="reason-input">Disapproved Reason</label>
-        <input id="reason-input" class="form-control" type="text" [(ngModel)]="player.nameStatus"
-          (change)="update(player)">
-        <small> <button *ngFor="let reason of reasons" class="btn btn-link btn-sm"
-            (click)="player.nameStatus = reason; update(player)">
-            {{reason}}
-          </button></small>
-      </div>
-      <app-player-session [id]="player.teamId" (onManageManualBonusesRequest)="manageManualBonuses(player)"
-        (onResetSessionRequest)="resetSession(player)" (onUnenrollRequest)="unenroll(player)"></app-player-session>
     </div>
-  </div>
+
+    <div *ngFor="let player of ctx.players; trackBy:trackById"
+      class="d-flex mb-1 mx-2 p-2 flex-wrap align-items-center rounded" [class.bg-secondary]="!player.checked"
+      [class.pop-success]="player.checked">
+      <div class="mx-2">
+        <button class="btn btn-secondary btn-sm" (click)="toggleSelected(player)">
+          <fa-icon [icon]="player.checked ? fa.checkSquare : fa.square"></fa-icon>
+        </button>
+      </div>
+      <app-player-avatar-list class="cursor-pointer" (click)="view(player)"
+        [avatarUris]="player.teamSponsorLogos | sponsorLogoFileNamesToUris"
+        [showSessionStatusWidget]="showSessionStatus" [captainSession]="player.session"></app-player-avatar-list>
+      <div class="ml-2">
+        <span *ngIf="player.advanced" class="text-success ml-2">
+          <fa-icon [icon]="fa.star"></fa-icon>
+        </span>
+        <span class="cursor-pointer" (click)="view(player)">{{player.approvedName}}</span>
+        <span class="text-muted">{{player.pendingName}}</span><br />
+        <small class="text-muted">
+          <span>player: </span>&nbsp;
+          <app-clipspan class="mr-2">{{player.id | slice:0:8}}</app-clipspan>
+          <span>team: </span>&nbsp;
+          <app-clipspan class="mr-2">{{player.teamId | slice:0:8}}</app-clipspan>
+        </small>
+      </div>
+      <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1"
+        (click)="approveName(player)">
+        <fa-icon [icon]="fa.check"></fa-icon>
+        <span>Approve</span>
+      </button>
+      <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(player)">
+        <fa-icon [icon]="fa.check"></fa-icon>
+        <span>Disapprove</span>
+      </button>
+      <div class="spacer"></div>
+      <div class="cursor-pointer" [class.text-success]="player.session?.isDuring" (click)="view(player)">
+        {{player.rank}} |
+        {{player.score}} |
+        {{player.time | clock}} |
+        {{player.correctCount}} |
+        {{player.partialCount}} |
+        {{player.session?.countdown | countdown }}
+      </div>
+      <div>
+        <button class="btn rounded-circle ml-4" (click)="view(player)">
+          <fa-icon [icon]="viewed === player ? fa.chevronUp : fa.chevronDown"></fa-icon>
+        </button>
+
+        <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
+          (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset($event)"
+          (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
+        </app-team-admin-context-menu>
+      </div>
+      <div *ngIf="viewed === player" class="col-12">
+        <div class="form-group">
+          <label class="mb-0" for="name-input">Approved Name</label>
+          <input id="name-input" class="form-control" type="text" [(ngModel)]="player.approvedName"
+            (change)="update(player)">
+        </div>
+        <div class="form-group">
+          <label class="mb-0" for="reason-input">Disapproved Reason</label>
+          <input id="reason-input" class="form-control" type="text" [(ngModel)]="player.nameStatus"
+            (change)="update(player)">
+          <small> <button *ngFor="let reason of reasons" class="btn btn-link btn-sm"
+              (click)="player.nameStatus = reason; update(player)">
+              {{reason}}
+            </button></small>
+        </div>
+        <app-admin-player-session [player]="player" (onManageManualBonusesRequest)="manageManualBonuses(player)"
+          (onResetSessionRequest)="confirmReset($event)"
+          (onUnenrollRequest)="unenroll(player)"></app-admin-player-session>
+      </div>
+    </div>
+  </ng-container>
+
 </ng-container>
 
 <ng-template #loading>

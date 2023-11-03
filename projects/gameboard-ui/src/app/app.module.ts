@@ -32,6 +32,9 @@ import { NAVIGATOR } from './services/navigator.service';
 
 import { AppNavComponent } from './components/nav/nav.component';
 import { SponsorSelectBannerComponent } from './components/sponsor-select-banner/sponsor-select-banner.component';
+import { GameboardSignalRHubsComponent } from './components/gameboard-signalr-hubs/gameboard-signalr-hubs.component';
+import { SignalRService } from './services/signalR/signalr.service';
+import { LogService } from './services/log.service';
 
 @NgModule({
   declarations: [
@@ -39,6 +42,7 @@ import { SponsorSelectBannerComponent } from './components/sponsor-select-banner
     AppNavComponent,
     SponsorSelectBannerComponent,
     SupportPillComponent,
+    GameboardSignalRHubsComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,6 +78,11 @@ import { SponsorSelectBannerComponent } from './components/sponsor-select-banner
       useFactory: register,
       deps: [CurrentUserService],
       multi: true
+    },
+    {
+      provide: SignalRService,
+      useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
+      deps: [ConfigService, LogService, UserService],
     },
     {
       provide: [NotificationService],

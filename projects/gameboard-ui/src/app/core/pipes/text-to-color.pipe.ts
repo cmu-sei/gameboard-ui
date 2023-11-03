@@ -13,13 +13,13 @@ export class TextToColorPipe implements PipeTransform {
     const hex = this.textToRgb.rgbToHex(rgb);
 
     // calculate brightness of background color rgb
-    let brightness = Math.sqrt(
+    const brightness = Math.sqrt(
       0.299 * (rgb.r * rgb.r) +
       0.587 * (rgb.g * rgb.g) +
       0.114 * (rgb.b * rgb.b)
     );
 
-    let color = brightness > 120 ? 'black' : 'white';
+    const color = brightness > 120 ? 'black' : 'white';
     return { 'background-color': hex, 'color': color };
   }
 }

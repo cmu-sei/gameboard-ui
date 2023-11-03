@@ -1,4 +1,3 @@
-import { FontAwesomeService } from '@/services/font-awesome.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { fa } from "@/services/font-awesome.service";
@@ -20,10 +19,9 @@ export class ColoredTextChipComponent {
   @Input() enableSecondaryAction = false;
   @Input() secondaryActionIcon: IconDefinition = fa.times;
   @Input() size: "small" | "medium" | "large" = "medium";
+  @Input() colorMode: "colored" | "monochrome" = "colored";
   @Output() click = new EventEmitter<ColoredTextChipEvent>();
   @Output() secondaryActionClick = new EventEmitter<ColoredTextChipEvent>();
-
-  constructor(public faService: FontAwesomeService) { }
 
   handleClick(textChipEvent: ColoredTextChipEvent, event: MouseEvent) {
     event.stopPropagation();

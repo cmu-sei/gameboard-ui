@@ -6,10 +6,17 @@
     </p>
 
     <ng-container *ngIf="list$ | async as list; else loading">
-        <ng-container *ngIf="!(hasSponsor$ | async)">
+        <ng-container *ngIf="!(localUser$ | async)">
+            <alert type="warning">
+                You haven't logged in yet - you'll need to do so before you can play practice challenges.
+                <a [routerLink]="profileRouterLink">Log in</a> to start honing your skills!
+            </alert>
+        </ng-container>
+        <ng-container *ngIf="(localUser$ | async) && !(hasSponsor$ | async)">
             <alert type="warning">
                 You haven't selected your sponsoring organization yet - you'll need to before you can play practice
-                challenges. Head over to your profile to select your sponsor, then return here to play!
+                challenges. Head over to <a [routerLink]="profileRouterLink">your profile</a> to select your sponsor,
+                then return here to play!
             </alert>
         </ng-container>
 
@@ -21,7 +28,7 @@
                 [searches]="suggestedSearches"></app-suggested-searches>
         </div>
 
-        <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0">
+        <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0 mt-5">
             <app-share-button class="d-block mr-1" size="small"
                 message="Copied a link to this search to your clipboard."
                 tooltip="Copy a link to this search"></app-share-button>
@@ -49,13 +56,24 @@
             <tbody>
                 <tr *ngFor="let c of list">
                     <td class="align-middle">
-                        <a *ngIf="hasSponsor$ | async" [routerLink]="[c.id, slug(c.name)]">
-                            {{c.name}}
-                        </a>
-                        <p *ngIf="!(hasSponsor$ | async)" class="p-0 m-0 text-success cursor-pointer"
-                            tooltip="Come back after selecting your sponsor to play this challenge.">{{c.name}}</p>
+                        <ng-container
+                            *ngTemplateOutlet="canPlayChallenges ? canPlayChallengesItemTemplate : cantPlayChallengesItemTemplate; context: { $implicit: c }"></ng-container>
                     </td>
-                    <td class="align-middle">{{c.description}}</td>
+                    <td class="align-middle">
+                        <div class="practice-challenge-description">
+                            {{c.description}}
+                        </div>
+
+                        <div *ngIf="c.tags?.length" class="practice-challenge-tags mt-2">
+                            <ul class="d-flex align-items-center flex-wrap">
+                                <li *ngFor="let tag of c.tags" class="d-block mr-1">
+                                    <a [routerLink]="['/practice']" [queryParams]="{ term: tag }">
+                                        <app-colored-text-chip size="small" [text]="tag"></app-colored-text-chip>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
                     <td>
                         <div class="d-flex align-items-center">
                             <app-game-card-image [game]="{ id: c.gameId, name: c.gameName, logo: c.gameLogo }"
@@ -79,8 +97,17 @@
     </div>
 </ng-template>
 
-<ng-template #challengeNameNoLink let-challengeName="challengeName">
-    <p>{{challengeName}}</p>
+<ng-template #canPlayChallengesItemTemplate let-challenge>
+    <a [routerLink]="[challenge.id, slug(challenge.name)]">
+        {{challenge.name}}
+    </a>
+</ng-template>
+
+<ng-template #cantPlayChallengesItemTemplate let-challenge>
+    <p *ngIf="!canPlayChallenges" class="p-0 m-0 text-success cursor-pointer"
+        [tooltip]="canPlayChallengesTooltip || ''">
+        {{challenge.name}}
+    </p>
 </ng-template>
 
 <ng-template #noMatches>

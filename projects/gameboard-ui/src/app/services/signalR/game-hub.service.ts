@@ -1,130 +1,119 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { HubConnectionState } from '@microsoft/signalr';
-import { BehaviorSubject, combineLatest, firstValueFrom, Subject, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { SynchronizedGameStartedState, SyncStartState } from '../../game/game.models';
-import { LocalStorageService, StorageKey } from '../local-storage.service';
-import { LogService } from '../log.service';
-import { HubState, NotificationService } from '../notification.service';
-import { GameService } from '../../api/game.service';
-
-export interface GameHubEvent {
-    gameId: string;
-    eventType: GameHubEventType;
-    data: any;
-}
-
-enum GameHubEventType {
-    SyncStartGameStarting = "syncStartGameStarting",
-    SyncStartStateChanged = "syncStartStateChanged"
-}
+import { Inject, Injectable } from '@angular/core';
+import { SignalRService } from './signalr.service';
+import { GameStartState, GameHubEvent, GameHubEventType, PlayerJoinedEvent } from './game-hub.models';
+import { LogService } from '@/services/log.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { SyncStartGameState, SyncStartGameStartedState } from '@/game/game.models';
 
 @Injectable({ providedIn: 'root' })
-export class GameHubService implements OnDestroy {
-    private gameHubEventsSub?: Subscription;
-    private manageJoinGameRequestSub?: Subscription;
+export class GameHubService {
+  private _externalGameLaunchStarted$ = new Subject<GameStartState>();
+  private _externalGameLaunchEnded$ = new Subject<GameStartState>();
+  private _externalGameLaunchFailure$ = new Subject<GameStartState>();
+  private _externalGameLaunchProgressChanged$ = new Subject<GameStartState>();
+  private _gameJoined$ = new Subject<PlayerJoinedEvent>();
+  private _joinedGameIds$ = new BehaviorSubject<string[]>([]);
+  private _syncStartGameStateChanged$ = new Subject<SyncStartGameState>();
+  private _syncStartGameStarted$ = new Subject<SyncStartGameStartedState>();
 
-    private _syncStartStateChanged$ = new Subject<SyncStartState>();
-    private _syncStartGameStarted$ = new Subject<SynchronizedGameStartedState>();
-    private _manualRefresh$ = new Subject<void>();
+  public externalGameLaunchProgressChanged$ = this._externalGameLaunchProgressChanged$.asObservable();
+  public externalGameLaunchStarted$ = this._externalGameLaunchStarted$.asObservable();
+  public externalGameLaunchEnded$ = this._externalGameLaunchEnded$.asObservable();
+  public externalGameLaunchFailure$ = this._externalGameLaunchFailure$.asObservable();
+  public gameJoined$ = this._gameJoined$.asObservable();
+  public hubState$ = this.signalRService.state$;
+  public joinedGameIds$ = this._joinedGameIds$.asObservable();
+  public syncStartGameStateChanged$ = this._syncStartGameStateChanged$.asObservable();
+  public syncStartGameStarted$ = this._syncStartGameStarted$.asObservable();
 
-    public syncStartChanged$ = this._syncStartStateChanged$.asObservable();
-    public syncStartGameStarted$ = this._syncStartGameStarted$.asObservable();
-    public joinGameRequest$ = new BehaviorSubject<string | null>(null);
+  constructor(
+    private logService: LogService,
+    @Inject(SignalRService) private signalRService: SignalRService) { }
 
-    // TODO: someday, refactor core connection stuff into a the signalr service and create federated services for each channel type
-    // constructor(private signalr: SignalrService) {
-    //     this.signalr.gameHubEvents$.subscribe(ev => {
-    //         switch (ev.data.eventType) {
-    //             case GameHubEventType.PlayerReadyStateChanged:
-    //                 this.handlePlayerReadyStateChanged(ev.data);
-    //                 return;
-    //             default:
-    //                 return;
-    //         }
-    //     });
-    // }
+  async disconnect() {
+    await this.signalRService.disconnect();
+  }
 
-    constructor(
-        private gameService: GameService,
-        private localStorageService: LocalStorageService,
-        private logger: LogService,
-        private notificationService: NotificationService) {
-
-        combineLatest([
-            this._manualRefresh$,
-            notificationService.state$
-        ]).pipe(
-            map(([_, hubServiceState]) => ({ hubServiceState })),
-            tap(ctx => this.maybeJoinGames(ctx.hubServiceState))
-        ).subscribe();
-
-        this.gameHubEventsSub = notificationService.gameHubEvents$.subscribe(ev => {
-            switch (ev.eventType) {
-                case GameHubEventType.SyncStartStateChanged:
-                    this._syncStartStateChanged$.next(ev.data as SyncStartState);
-                    return;
-                case GameHubEventType.SyncStartGameStarting:
-                    this._syncStartGameStarted$.next(ev.data as SynchronizedGameStartedState);
-                    return;
-                default:
-                    return;
-            }
-        });
+  async joinGame(gameId: string) {
+    if (!gameId) {
+      this.logService.logError("Can't join game with falsey id", gameId);
     }
 
-    public joinGame(gameId: string) {
-        if (!gameId) {
-            this.logger.logError("Can't join a blank GameId.");
-            return;
-        }
-
-        // push the game into our local storage list to join and let our pipeline know it has work to do
-        const gamesJoined = this.loadGameHubConnections();
-        if (gamesJoined.indexOf(gameId) < 0) {
-            gamesJoined.push(gameId);
-            this.localStorageService.add(StorageKey.WantsGameHubConnections, JSON.stringify(gamesJoined));
-        }
-
-        this._manualRefresh$.next();
+    if (this._joinedGameIds$.value.some(gId => gId == gameId)) {
+      this.logService.logWarning(`Tried to join ${gameId} but was already connected.`, this.signalRService.connectionState);
+      return;
     }
 
-    public leaveGame(gameId: string) {
-        if (this.notificationService.state$.getValue().connectionState === HubConnectionState.Connected)
-            this.notificationService.sendMessage("LeaveChannel", gameId);
+    this.signalRService.sendMessage("JoinGame", { gameId });
+    this._joinedGameIds$.next([...this._joinedGameIds$.value, gameId]);
+  }
 
-        this.removeFromPendingGameHubConnections(gameId);
+  async leaveGame(gameId: string) {
+    if (!this._joinedGameIds$.value.some(gId => gId == gameId)) {
+      this.logService.logInfo(`Attempted to leave gameId ${gameId}, but this player is not in the game's group.`);
+      return;
     }
 
-    private loadGameHubConnections(): string[] {
-        return JSON.parse(this.localStorageService.get(StorageKey.WantsGameHubConnections) || '[]');
-    }
+    await this.signalRService.sendMessage("LeaveGame", { gameId });
+    this._joinedGameIds$.next(this._joinedGameIds$.value.filter(g => g !== gameId));
+  }
 
-    private async maybeJoinGames(hubState: HubState) {
-        const gameIdsToJoin = this.loadGameHubConnections();
-        if (hubState.connectionState === HubConnectionState.Connected && gameIdsToJoin.length) {
-            for (let gameId of gameIdsToJoin) {
-                // join the channel
-                const game = await firstValueFrom(this.gameService.retrieve(gameId));
+  isConnected() {
+    return this.signalRService.isConnnected();
+  }
 
-                if (game.requireSynchronizedStart) {
-                    const state = await this.notificationService.sendMessage<SyncStartState>("JoinGame", gameId);
-                    this._syncStartStateChanged$.next(state);
-                }
-            }
-        }
-    }
+  isConnectedToGame = (gameId: string) => {
+    return this.signalRService.isConnnected() && this._joinedGameIds$.value.some(gId => gId === gameId);
+  };
 
-    private removeFromPendingGameHubConnections(gameId: string) {
-        const gameIdsToJoin: string[] = this
-            .loadGameHubConnections()
-            .filter(g => g !== gameId);
+  // This should _only_ be called once per login by the 
+  // component which is managing all SignalR connections (GameboardSignalRHubsComponent)
+  public async connect() {
+    await this.signalRService.connect(
+      "hub/games",
+      [
+        { eventType: GameHubEventType.PlayerJoined, handler: this.handleGameJoined.bind(this) },
+        { eventType: GameHubEventType.ExternalGameChallengesDeployStart, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameChallengesDeployProgressChange, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameChallengesDeployEnd, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameGamespacesDeployStart, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameGamespacesDeployProgressChange, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameGamespacesDeployEnd, handler: this.handleExternalGameLaunchProgressChanged.bind(this) },
+        { eventType: GameHubEventType.ExternalGameLaunchStart, handler: this.handleExternalGameLaunchStarted.bind(this) },
+        { eventType: GameHubEventType.ExternalGameLaunchFailure, handler: this.handleExternalGameLaunchFailure.bind(this) },
+        { eventType: GameHubEventType.ExternalGameLaunchEnd, handler: this.handleExternalGameLaunchEnded.bind(this) },
+        { eventType: GameHubEventType.SyncStartGameStateChanged, handler: this.handleSyncStartStateChanged.bind(this) },
+        { eventType: GameHubEventType.SyncStartGameStarting, handler: this.handleSyncStartGameStarting.bind(this) },
+        { eventType: GameHubEventType.YouJoined, handler: ev => this.handleGameJoined.bind(this) }
+      ]);
+  }
 
-        this.localStorageService.add(StorageKey.WantsGameHubConnections, JSON.stringify(gameIdsToJoin));
-    }
+  private handleGameJoined(ev: GameHubEvent<PlayerJoinedEvent>) {
+    this.logService.logInfo("Joined the game", ev);
+    this._gameJoined$.next(ev.data);
+  }
 
-    ngOnDestroy(): void {
-        this.gameHubEventsSub?.unsubscribe();
-        this.manageJoinGameRequestSub?.unsubscribe();
-    }
+  private handleExternalGameLaunchStarted(ev: GameHubEvent<GameStartState>) {
+    this._externalGameLaunchStarted$.next(ev.data);
+  }
+
+  private handleExternalGameLaunchEnded(ev: GameHubEvent<GameStartState>) {
+    this._externalGameLaunchEnded$.next(ev.data);
+  }
+
+  private handleExternalGameLaunchFailure(ev: GameHubEvent<GameStartState>) {
+    this._externalGameLaunchFailure$.next(ev.data);
+  }
+
+  private handleExternalGameLaunchProgressChanged(ev: GameHubEvent<GameStartState>) {
+    this._externalGameLaunchProgressChanged$.next(ev.data);
+  }
+
+  private handleSyncStartStateChanged(ev: GameHubEvent<SyncStartGameState>) {
+    this._syncStartGameStateChanged$.next(ev.data);
+  }
+
+  private handleSyncStartGameStarting(ev: GameHubEvent<SyncStartGameStartedState>) {
+    this._syncStartGameStarted$.next(ev.data);
+  }
 }

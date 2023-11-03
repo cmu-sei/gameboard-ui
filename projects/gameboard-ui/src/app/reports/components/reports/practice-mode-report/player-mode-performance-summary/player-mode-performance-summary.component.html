@@ -1,8 +1,8 @@
 <div class="sponsor-challenge-performance-component" *ngIf="context.summary; else loading">
     <div class="modal-header">
         <div class="modal-title pull-left d-flex align-items-center">
-            <app-player-avatar [avatarUri]="context.summary.player.sponsor.logoFileName | relativeImage" size="large"
-                class="d-block mr-4"></app-player-avatar>
+            <app-player-avatar-legacy [avatarUri]="context.summary.player.sponsor.logoFileName | relativeImage"
+                size="large" class="d-block mr-4"></app-player-avatar-legacy>
 
             <div>
                 <h2>{{ context.summary.player.name }}</h2>

@@ -3,7 +3,7 @@
 
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
-import { first, map, startWith, tap } from 'rxjs/operators';
+import { first, map, startWith } from 'rxjs/operators';
 import { faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { HubPlayer, Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
@@ -51,7 +51,7 @@ export class PlayerPresenceComponent implements OnInit {
       this.hub.state$,
       this.hub.actors$,
       this.player$,
-      this.gameHub.syncStartChanged$.pipe(startWith(null))
+      this.gameHub.syncStartGameStateChanged$.pipe(startWith(null))
     ]).pipe(
       map(combo => ({ hubState: combo[0], actors: combo[1], player: combo[2], syncStartState: combo[3] })),
       map(context => {

@@ -57,7 +57,7 @@ export class MultiSelectQueryParamModel<TOption> {
         this.unsub.add(
             this.route.queryParamMap.subscribe(paramMap => {
                 if (!paramMap.has(this.config.paramName) || !paramMap.get(this.config.paramName)) {
-                    this.selectedValues = this.selectedValues || [];
+                    this.selectedValues = [];
                     return;
                 }
 

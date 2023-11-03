@@ -7,7 +7,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { GameSessionService } from '@/services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, SessionChangeRequest, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -19,15 +19,9 @@ export class PlayerService {
   private _playerSessionStarted$ = new Subject<string>();
   public readonly playerSessionStarted$ = this._playerSessionStarted$.asObservable();
 
-  private _playerSessionChanged$ = new Subject<string>();
-  public readonly playerSessionChanged$ = this._playerSessionChanged$.asObservable();
-
-  private _teamSessionChanged$ = new Subject<string>();
-  public readonly teamSessionChanged$ = this._teamSessionChanged$.asObservable();
-
   constructor(
+    config: ConfigService,
     private http: HttpClient,
-    private config: ConfigService,
     private gameSessionService: GameSessionService,
   ) {
     this.url = config.apphost + 'api';
@@ -66,23 +60,6 @@ export class PlayerService {
     return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
       map(p => this.transform(p) as Player),
       tap(p => this._playerSessionStarted$.next(p.id))
-    );
-  }
-
-  public resetSession(request: { player: Player, unenrollTeam: boolean }): Observable<any> {
-    return this.http.post<void>(`${this.url}/player/${request.player.id}/session`, { unenrollTeam: request.unenrollTeam }).pipe(
-      map(r => {
-        delete request.player.session;
-        return;
-      }),
-      tap(_ => this._playerSessionReset$.next(request.player.id))
-    );
-  }
-
-  public updateSession(model: SessionChangeRequest): Observable<void> {
-    return this.http.put<any>(`${this.url}/team/session`, model).pipe(
-      tap(_ => this._teamSessionChanged$.next(model.teamId)),
-      tap(_ => this._playerSessionChanged$.next(model.teamId)),
     );
   }
 
@@ -154,7 +131,7 @@ export class PlayerService {
       ? p.name + (!!p.nameStatus ? `...${p.nameStatus}` : '...pending')
       : '';
 
-    this.gameSessionService.transformSession(p, p.sessionBegin, p.sessionEnd);
+    this.gameSessionService.addSession(p, p.sessionBegin, p.sessionEnd);
 
     return p;
   }
