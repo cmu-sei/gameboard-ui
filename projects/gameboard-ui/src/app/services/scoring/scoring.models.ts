@@ -83,7 +83,7 @@ export interface TeamGameScoreQueryResponse {
 export interface TeamGameScore {
     game: SimpleEntity,
     team: SimpleEntity,
-    score: Score,
+    overallScore: Score,
     challenges: TeamScoreChallenge[];
 }
 

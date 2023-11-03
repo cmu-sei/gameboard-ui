@@ -1,5 +1,5 @@
-<div class="manage-manual-challenge-bonuses-component m-4" *ngIf="summary">
-    <table *ngIf="summary.challenges.length" class="table table-striped border-bottom border-info">
+<div class="manage-manual-challenge-bonuses-component m-4" *ngIf="teamScoreData">
+    <table *ngIf="hasStartedChallenges" class="table table-striped border-bottom border-info">
         <thead class="h5">
             <th scope="col" width="30%">Challenge</th>
             <th scope="col" width="10%"></th>
@@ -9,7 +9,7 @@
             <th scope="col" width="15%">Total score</th>
         </thead>
         <tbody>
-            <tr *ngFor="let challengeSummary of summary.challenges">
+            <tr *ngFor="let challengeSummary of teamScoreData.score.challenges">
                 <td>
                     <div class="points-breakdown">
                         <h6>{{challengeSummary.name}}</h6>
@@ -56,27 +56,28 @@
             <tr class="table-info h6">
                 <td></td>
                 <td></td>
-                <td>{{summary.score.completionScore}}</td>
-                <td>{{summary.score.bonusScore}}</td>
-                <td>{{summary.score.manualBonusScore}}</td>
-                <td>{{summary.score.totalScore}}</td>
+                <td>{{teamScoreData.score.overallScore.completionScore}}</td>
+                <td>{{teamScoreData.score.overallScore.bonusScore}}</td>
+                <td>{{teamScoreData.score.overallScore.manualBonusScore}}</td>
+                <td>{{teamScoreData.score.overallScore.totalScore}}</td>
             </tr>
         </tbody>
     </table>
 
     <ng-template #noBonuses>
         <div class="text-secondary">
-            {{summary.team.name}} hasn't been awarded any bonuses for this game. To give them one, use the form below.
+            {{teamScoreData.score.team.name}} hasn't been awarded any bonuses for this game. To give them one, use the
+            form below.
         </div>
     </ng-template>
 
     <div class="add-bonus-container mt-5">
         <h3 class="mt-3 mb-2">Add a bonus</h3>
-        <form #newBonusForm (submit)="onSubmit()" *ngIf="startedChallenges.length">
+        <form #newBonusForm (submit)="onSubmit()" *ngIf="hasStartedChallenges">
             <div class="form-group w-100">
                 <select class="form-control form-control-lg w-100" name="challengeId"
                     aria-label="Select challenge for bonus" [(ngModel)]="newChallengeBonusModel.challengeId" required>
-                    <option *ngFor="let challenge of startedChallenges" [value]="challenge.id">
+                    <option *ngFor="let challenge of teamScoreData.score.challenges" [value]="challenge.id">
                         {{ challenge.name }}
                     </option>
                 </select>
