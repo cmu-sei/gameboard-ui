@@ -43,7 +43,7 @@ export class ExternalGameService {
     const teamNamespaceKeyName = this.computeNamespaceKey(teamId);
     const existingValue = JSON.parse(this.storage.getArbitrary(teamNamespaceKeyName) || "{}");
 
-    if (existingValue.oidcLink && existingValue.gameServerUrl) {
+    if (existingValue[StorageKey.ExternalGameOidc] && existingValue[StorageKey.ExternalGameUrl]) {
       this.log.logInfo("Found deploy data.", existingValue);
       return existingValue;
     }

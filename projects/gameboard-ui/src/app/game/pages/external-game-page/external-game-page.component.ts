@@ -8,6 +8,7 @@ import { LayoutService } from '@/utility/layout.service';
 import { RouterService } from '@/services/router.service';
 import { LogService } from '@/services/log.service';
 import { ExternalGameService } from '@/services/external-game.service';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-external-game-page',
@@ -22,6 +23,7 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
   isProduction = true;
 
   constructor(
+    private config: ConfigService,
     private externalGameService: ExternalGameService,
     private gameService: GameService,
     private layoutService: LayoutService,
@@ -40,10 +42,10 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     }
 
     // load game data and local storage stuff before we launch the iframe
-    this.game = await this.resolveGame(this.route.snapshot.paramMap.get('gameId'));
     await this.externalGameService.createLocalStorageKeys(teamId);
+    this.game = await this.resolveGame(this.route.snapshot.paramMap.get('gameId'));
 
-    this.iframeWindowTitle = `${this.game.name} (External Gameboard Game)`;
+    this.iframeWindowTitle = `${this.game.name} (External ${this.config.appName} Game)`;
     this.iframeSrcUrl = `${this.game.externalGameClientUrl}?teamId=${teamId}`;
     this.layoutService.stickyMenu$.next(false);
 
