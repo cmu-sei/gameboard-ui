@@ -78,17 +78,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
   }
 
   handleGameReady(ctx: GameLaunchContext) {
-    if (ctx.game.mode == GameEngineMode.Standard) {
-      this.log.logInfo("Navigating to standard game", ctx.game.id);
-      this.routerService.goToGamePage(ctx.game.id);
-      return;
-    } else if (ctx.game.mode == GameEngineMode.External) {
-      this.log.logInfo("Navigating to external game", ctx.game.id, ctx.player.teamId);
-      this.routerService.goToExternalGamePage(ctx.game.id, ctx.player.teamId);
-      return;
+    if (ctx.game.mode != GameEngineMode.External) {
+      throw new Error(`Can't access games with mode "${ctx.game.mode}" from this page. `);
     }
 
-    throw new Error(`Game engine mode "${ctx.game.mode}" not implemented.`);
+    this.log.logInfo("Navigating to external game", ctx.game.id, ctx.player.teamId);
+    this.routerService.goToExternalGamePage(ctx.game.id, ctx.player.teamId);
   }
 
   private async launchGame(ctx: GameLaunchContext): Promise<void> {
