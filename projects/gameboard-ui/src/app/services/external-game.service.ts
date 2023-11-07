@@ -25,18 +25,6 @@ export class ExternalGameService {
     private storage: LocalStorageService,
     private log: LogService) { }
 
-  // public createLocalStorageKeys(game: ExternalGameActive) {
-  //   this.log.logInfo("Resolving OIDC storage keys...");
-  //   const oidcLink = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
-  //   this.log.logInfo("User OIDC resolved: ", oidcLink);
-
-  //   const namespaceKeyName = this.computeNamespaceKey(game.teamId);
-  //   this.storage.addArbitrary(namespaceKeyName, JSON.stringify({
-  //     ["oidcLink"]: oidcLink,
-  //     ["gameServerUrl"]: game.gameServerUrl,
-  //   }));
-  // }
-
   public async createLocalStorageKeys(teamId: string): Promise<void> {
     // first check if we've already got info for this team
     this.log.logInfo("Checking for existing deploy data in local storage...");
