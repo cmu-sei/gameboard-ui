@@ -70,7 +70,7 @@ export class SessionStartControlsComponent implements OnInit {
 
   protected async handleReadyUpdated(player: Player) {
     this.isReadyingUp = true;
-    this.logService.logInfo(`Player ${player.id} (user ${player.userId}) updating ready...`);
+    this.logService.logInfo(`Player ${player.id} (user ${player.userId}) updating ready (${player.isReady})...`);
     await firstValueFrom(this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }));
     this.isReadyingUp = false;
   }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subject, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of, timer } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { calculateCountdown, TimeWindow } from '../../../api/player-models';
 import { fa } from '@/services/font-awesome.service';
 import { HubState, NotificationService } from '../../../services/notification.service';
@@ -29,6 +29,7 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
   @Output() onRefreshRequest = new EventEmitter<string>();
 
   countdown$?: Observable<number | undefined>;
+  isCountdownOver = false;
   hubState$: BehaviorSubject<HubState>;
   protected fa = fa;
 
@@ -51,7 +52,10 @@ export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
       of(this.ctx)
     ]).pipe(
       map(([timer, ctx]) => ctx),
-      map(ctx => calculateCountdown(ctx?.player.session))
+      map(ctx => calculateCountdown(ctx?.player.session)),
+      tap(countdownRemaining => {
+        this.isCountdownOver = (countdownRemaining || 0) <= 0;
+      })
     );
   }
 }
