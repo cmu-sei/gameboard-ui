@@ -73,8 +73,8 @@
       </ng-container>
 
       <div *ngIf="!ctx.player.session?.isBefore" class="text-center my-4">
-        <a *ngIf="ctx.game.mode != 'unity'; else toCubespace" class="btn btn-primary btn-lg"
-          [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
+        <app-continue-to-gameboard-button
+          [context]="{ player: ctx.player, gameId: ctx.game.id, gameMode: ctx.game.mode}"></app-continue-to-gameboard-button>
       </div>
 
       <div class="col d-flex justify-content-center" *ngIf="ctx.game.mapUrl">

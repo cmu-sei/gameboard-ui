@@ -239,14 +239,6 @@ export class GamePageComponent implements OnDestroy {
           }
         })
       );
-
-      // then we need to manually check if they've already started and redirect if so
-      const gameStartPhase = await firstValueFrom(this.apiGame.getStartPhase(ctx.game.id, ctx.player.teamId));
-      this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.player.id}) is at start phase "${gameStartPhase}".`);
-
-      if (gameStartPhase == GameStartPhase.Started || gameStartPhase == GameStartPhase.Starting) {
-        this.redirectToExternalGameLoadingPage(ctx);
-      }
     }
   }
 

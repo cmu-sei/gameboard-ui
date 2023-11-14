@@ -130,6 +130,10 @@ export class RouterService implements OnDestroy {
     this.router.navigateByUrl(`/game/external/${gameId}/${teamId}`);
   }
 
+  public getGameboardPageUrlTree(playerId: string): UrlTree {
+    return this.router.createUrlTree(["game", "board", playerId]);
+  }
+
   public getGamePageUrlTree(gameId: string): UrlTree {
     return this.router.parseUrl(`/game/${gameId}`);
   }
@@ -144,6 +148,10 @@ export class RouterService implements OnDestroy {
 
   public goToGameStartPage(ctx: { gameId: string, playerId: string }) {
     this.router.navigateByUrl(this.getGameStartPageUrlTree(ctx));
+  }
+
+  public getUnityBoardUrlTree(ctx: { gameId: string, playerId: string, teamId: string; sessionEnd: number }) {
+    return this.router.createUrlTree(["game", "unity-board", ctx.gameId, ctx.playerId, ctx.teamId, ctx.sessionEnd]);
   }
 
   public reloadOnNextNavigateEnd() {
