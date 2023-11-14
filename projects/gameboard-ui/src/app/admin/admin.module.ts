@@ -42,6 +42,7 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,6 @@ import { UserReportComponent } from './user-report/user-report.component';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
-    ChallengeSpecEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -87,6 +87,7 @@ import { UserReportComponent } from './user-report/user-report.component';
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           { path: 'designer/:id', component: GameEditorComponent },
+          { path: "game/:gameId/external", component: ExternalGameAdminComponent },
           {
             path: "practice", component: PracticeComponent, children: [
               { path: "", pathMatch: "full", redirectTo: "settings" },

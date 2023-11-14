@@ -68,6 +68,11 @@
             <fa-icon [icon]="faTv"></fa-icon>
             <span>Observe</span>
           </a>
+          <a class="btn btn-outline-info my-2" *ngIf="g.mode == 'external'"
+            [routerLink]="['../game', g.id, 'external']">
+            <fa-icon [icon]="fa.rocket"></fa-icon>
+            <span>Deployment</span>
+          </a>
           <a class="btn btn-outline-info my-2" [routerLink]="['../designer', g.id]">
             <fa-icon [icon]="faCog"></fa-icon>
             <span>Settings</span>

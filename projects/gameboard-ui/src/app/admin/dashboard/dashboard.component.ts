@@ -4,6 +4,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { fa } from '@/services/font-awesome.service';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap, mergeMap } from 'rxjs/operators';
 import { Game, NewGame } from '../../api/game-models';
@@ -31,6 +32,7 @@ export class DashboardComponent implements OnInit {
   search: Search = { term: '' };
   hot!: Game | null;
 
+  fa = fa;
   faArrowLeft = faArrowLeft;
   faPlus = faPlus;
   faCopy = faCopy;
