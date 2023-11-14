@@ -37,6 +37,7 @@ import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
 import { ScoreboardTeamDetailModalComponent } from './components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+import { ContinueToGameboardButtonComponent } from './components/continue-to-gameboard-button/continue-to-gameboard-button.component';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -71,6 +72,7 @@ const MODULE_DECLARATIONS = [
     ScoreboardComponent,
     TeamChallengeScoresToChallengeResultTypeCountPipe,
     ScoreboardTeamDetailModalComponent,
+    ContinueToGameboardButtonComponent,
   ],
   imports: [
     CommonModule,
