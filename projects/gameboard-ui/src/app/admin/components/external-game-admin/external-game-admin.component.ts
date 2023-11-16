@@ -37,6 +37,7 @@ export interface ExternalGameAdminChallenge {
 
 export interface ExternalGameAdminContext {
   game: SimpleEntity;
+  isPreDeploying: boolean;
   specs: SimpleEntity[];
   hasNonStandardSessionWindow: boolean;
   teams: ExternalGameAdminTeam[];
@@ -49,6 +50,7 @@ export interface ExternalGameAdminContext {
 })
 export class ExternalGameAdminComponent implements OnInit {
   private gameId: string | null = null;
+  private autoUpdateInterval = 30000;
   protected ctx$?: Observable<ExternalGameAdminContext>;
   protected context?: ExternalGameAdminContext;
   protected errors: any[] = [];
@@ -66,7 +68,7 @@ export class ExternalGameAdminComponent implements OnInit {
 
         if (gameIdParam && this.gameId != gameIdParam) {
           this.gameId = gameIdParam;
-          this.ctx$ = timer(0, 60000).pipe(
+          this.ctx$ = timer(0, this.autoUpdateInterval).pipe(
             switchMap(() => this.externalGameService.getAdminContext(gameIdParam)),
             catchError((err, caught) => {
               this.errors.push(err);
