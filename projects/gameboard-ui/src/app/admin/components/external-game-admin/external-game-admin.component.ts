@@ -40,6 +40,8 @@ export interface ExternalGameAdminContext {
   isPreDeploying: boolean;
   specs: SimpleEntity[];
   hasNonStandardSessionWindow: boolean;
+  startTime?: DateTime;
+  endTime?: DateTime;
   teams: ExternalGameAdminTeam[];
 }
 
