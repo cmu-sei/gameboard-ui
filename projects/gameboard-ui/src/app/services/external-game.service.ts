@@ -6,6 +6,7 @@ import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { GetExternalTeamDataResponse } from '@/api/game-models';
+import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
 
 export interface ExternalGameActive {
   gameServerUrl: string;
@@ -62,8 +63,16 @@ export class ExternalGameService {
     this.log.logInfo("Local storage keys cleared.");
   }
 
+  public getAdminContext(gameId: string): Observable<ExternalGameAdminContext> {
+    return this.httpClient.get<ExternalGameAdminContext>(this.apiUrl.build(`/admin/games/external/${gameId}`));
+  }
+
   public getExternalTeamData(teamId: string): Observable<GetExternalTeamDataResponse> {
     return this.httpClient.get<GetExternalTeamDataResponse>(this.apiUrl.build(`/games/external/team/${teamId}`));
+  }
+
+  public preDeployAll(gameId: string) {
+    return this.httpClient.post<void>(this.apiUrl.build(`admin/games/external/${gameId}/pre-deploy`), {});
   }
 
   private computeNamespaceKey = (teamId: string): string => `externalGame:${teamId}`;

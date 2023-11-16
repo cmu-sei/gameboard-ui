@@ -1,1 +1,109 @@
-<p>external-game-admin works!</p>
+<div class="external-game-admin-component py-2" *ngIf="ctx$ | async as context; else loading">
+    <h2 class="text-upper fs-10 m-0 p-0">External Game</h2>
+    <h1>{{context.game.name}}</h1>
+    <hr class="light" />
+
+    <div class="w-100">
+        <app-error-div [errors]="errors"></app-error-div>
+
+        <div *ngIf="context.teams.length
+        " class="global-controls-container my-2 d-flex align-items-center justify-content-end">
+            <app-confirm-button btnClass="btn btn-lg btn-info" (confirm)="handlePreDeployAllClick(context.game.id)">
+                Predeploy all
+            </app-confirm-button>
+        </div>
+
+        <alert *ngIf="context.hasNonStandardSessionWindow" type="warning" class="my-4">
+            <h3>Warning</h3>
+
+            <p>
+                This game has been deployed and started, but there are multiple "start" and "end" dates
+                among challenges and player sessions. You may need to use the session align tool to ensure
+                these line up (coming soon™).
+            </p>
+        </alert>
+
+        <div *ngIf="context.teams.length; else noTeams"
+            class="teams-data-container my-4 d-flex flex-wrap justify-content-start">
+            <div *ngFor="let team of context.teams" class="card team-card mr-2 mb-2">
+                <div class="team-avatars-container">
+                    <app-player-avatar-list [players]="team.players"></app-player-avatar-list>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{team.name}}</h4>
+
+                    <div class="card-text mb-4">
+                        <div class="card-section mb-4">
+                            <h5>Players</h5>
+
+                            <ul class="player-list">
+                                <li *ngFor="let player of team.players"
+                                    class="d-flex align-items-center justify-content-begin">
+                                    <app-player-avatar [player]="player" size="tiny"></app-player-avatar>
+                                    <app-status-light [state]="player.status | externalGamePlayerStatusToStatusLight"
+                                        [tooltip]="player.status"></app-status-light>
+
+                                    <div [tooltip]="player.user.name">{{player.name}}</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card-section">
+                            <h5>Challenges</h5>
+
+                            <table class="w-100">
+                                <col>
+                                <col>
+                                <col>
+
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th></th>
+                                        <th>Created</th>
+                                        <th>Deployed</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr *ngFor="let spec of context.specs">
+                                        <td>{{spec.name}}</td>
+                                        <td>
+                                            {{((spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated ?
+                                            "Yes" : "No")}}
+                                        </td>
+                                        <td>
+                                            {{((spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed
+                                            ? "Yes" : "No")}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                    <a href="#" class="btn btn-primary"
+                        [class.disabled]="!(team.challenges | externalTeamChallengesToIsPredeployable)">Predeploy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noChallenges>
+    <em>No challenges deployed</em>
+</ng-template>
+
+<ng-template #noTeams>
+    <div class="text-center my-4">
+        <em>No players or teams are currently enrolled in this game.</em>
+    </div>
+</ng-template>
+
+<ng-template #loading>
+    <div class="w-100 d-flex align-items-center justify-content-center">
+        <app-spinner>
+            <h1>Loading game data...</h1>
+        </app-spinner>
+    </div>
+</ng-template>

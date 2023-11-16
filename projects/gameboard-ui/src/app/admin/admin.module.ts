@@ -43,6 +43,10 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
+import { ExternalGamePlayerStatusToStatusLightPipe } from './pipes/external-game-player-status-to-status-light.pipe';
+import { ExternalTeamToChallengeCreatedPipe } from './pipes/external-team-to-challenge-created.pipe';
+import { ExternalTeamChallengesToIsPredeployablePipe } from './pipes/external-team-challenges-to-is-predeployable.pipe';
+import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challenge.pipe';
 
 @NgModule({
   declarations: [
@@ -53,6 +57,11 @@ import { ExternalGameAdminComponent } from './components/external-game-admin/ext
     ChallengeReportComponent,
     ChallengeSpecEditorComponent,
     DashboardComponent,
+    ExternalGameAdminComponent,
+    ExternalGamePlayerStatusToStatusLightPipe,
+    ExternalSpecIdToChallengePipe,
+    ExternalTeamToChallengeCreatedPipe,
+    ExternalTeamChallengesToIsPredeployablePipe,
     FeedbackReportComponent,
     GameDesignerComponent,
     GameEditorComponent,

@@ -1,0 +1,23 @@
+h2 {
+    letter-spacing: 0.3rem;
+}
+
+.team-card {
+    width: 30%;
+}
+
+.team-avatars-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+}
+
+tr {
+    border-bottom: dashed 1px #dedede;
+}
+
+td, th {
+    padding: 2px 4px;
+}

@@ -12,13 +12,11 @@ type SignalRHubEventHandlerCollection = { [eventType: string]: SignalRHubEventHa
 export class SignalRService {
   private readonly AUTO_RECONNECT_INTERVALS = [1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000];
 
-  private _channelJoined$ = new Subject<string>();
   private _connection?: HubConnection;
   private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
   private _events$ = new BehaviorSubject<SignalRHubEventHandler<any> | null>(null);
   private _eventHandlers: SignalRHubEventHandlerCollection = {};
 
-  public channelJoined$ = this._channelJoined$.asObservable();
   public events$ = this._events$.asObservable();
   public state$ = this._connectionState$.asObservable();
 
@@ -75,8 +73,14 @@ export class SignalRService {
   }
 
   public async sendMessage<T>(message: string, arg: T) {
-    if (!this._connection || this._connection.state !== HubConnectionState.Connected) {
-      this.logger.logError(`Can't send message "${message}" with parameters ${arg}. The hub is not connected (State: "${this._connection?.state}").`);
+    if (!this._connection) {
+      this.logger.logError(this.formatForlog(`Can't send message ${message} with parameters ${arg}. The connection has not been created.`));
+      return;
+    }
+
+    if (this._connection.state !== HubConnectionState.Connected) {
+      this.logger.logWarning(`Can't send message "${message}" with parameters ${arg}. The hub is not connected (State: "${this._connection?.state}"). Attempting to connect...`);
+      await this.resolveOpenConnection(this._connection);
       return;
     }
 
@@ -88,7 +92,17 @@ export class SignalRService {
   private buildConnection(url: string, eventHandlers: SignalRHubEventHandler<any>[]): HubConnection {
     const connection = new HubConnectionBuilder()
       .withUrl(url, {
-        accessTokenFactory: () => firstValueFrom(this.userService.ticket().pipe(map(r => r?.ticket))),
+        accessTokenFactory: () => {
+          let authResult: any = null;
+          try {
+            authResult = firstValueFrom(this.userService.ticket().pipe(map(r => r?.ticket)));
+          }
+          catch (err: any) {
+            this._connectionState$.next(this._connection?.state || HubConnectionState.Disconnected);
+          }
+
+          return authResult;
+        },
         transport: HttpTransportType.WebSockets,
         skipNegotiation: true,
         headers: { "Content-Type": "application/json" }
@@ -142,12 +156,9 @@ export class SignalRService {
     return await this.resolveOpenConnection(connection, remainingIntervals);
   }
 
-  private handleConnected(channelId?: string) {
-    this.logger.logInfo(`SignalR Service | Connected ${(channelId ? `channel id "${channelId}"` : "")}`);
+  private handleConnected(connectionId?: string) {
+    this.logger.logInfo(`SignalR Service | Connected ${(connectionId ? `connection id "${connectionId}"` : "")}`);
     this.updateState();
-
-    if (channelId)
-      this._channelJoined$.next(channelId);
   }
 
   private handleClose(err?: Error) {

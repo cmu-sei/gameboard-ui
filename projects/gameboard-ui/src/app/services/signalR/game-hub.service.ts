@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { SignalRService } from './signalr.service';
 import { GameStartState, GameHubEvent, GameHubEventType, PlayerJoinedEvent } from './game-hub.models';
 import { LogService } from '@/services/log.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, tap } from 'rxjs';
 import { SyncStartGameState, SyncStartGameStartedState } from '@/game/game.models';
 
 @Injectable({ providedIn: 'root' })
@@ -44,6 +44,7 @@ export class GameHubService {
       return;
     }
 
+    this.logService.logInfo(`Game hub is joining game ${gameId}...`);
     this.signalRService.sendMessage("JoinGame", { gameId });
     this._joinedGameIds$.next([...this._joinedGameIds$.value, gameId]);
   }
@@ -110,6 +111,7 @@ export class GameHubService {
   }
 
   private handleSyncStartStateChanged(ev: GameHubEvent<SyncStartGameState>) {
+    this.logService.logInfo("Sync start state changed:", ev.data);
     this._syncStartGameStateChanged$.next(ev.data);
   }
 
