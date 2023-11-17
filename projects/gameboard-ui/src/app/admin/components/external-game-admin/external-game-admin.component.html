@@ -1,6 +1,9 @@
 <div class="external-game-admin-component py-2" *ngIf="ctx$ | async as context; else loading">
     <h2 class="text-upper fs-10 m-0 p-0">External Game</h2>
     <h1>{{context.game.name}}</h1>
+    <h3 class="sync-session-date fs-12" *ngIf="sessionDateDescription">
+        {{sessionDateDescription}}
+    </h3>
     <hr class="light" />
 
     <div class="w-100">
@@ -71,8 +74,12 @@
 
                                 <tbody>
                                     <tr *ngFor="let spec of context.specs">
-                                        <td [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
-                                            {{spec.name}}</td>
+                                        <td>
+                                            <span placement="top"
+                                                [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
+                                                {{spec.name}}
+                                            </span>
+                                        </td>
                                         <td>
                                             {{((spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated ?
                                             "Yes" : "No")}}

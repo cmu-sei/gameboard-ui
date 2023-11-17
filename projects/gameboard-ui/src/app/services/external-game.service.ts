@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { LocalStorageService, StorageKey } from './local-storage.service';
 import { ConfigService } from '@/utility/config.service';
 import { LogService } from './log.service';
-import { Observable, Subject, firstValueFrom } from 'rxjs';
+import { Observable, Subject, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { GetExternalTeamDataResponse } from '@/api/game-models';
 import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
+import { DateTime } from 'luxon';
 
 export interface ExternalGameActive {
   gameServerUrl: string;
@@ -64,7 +65,15 @@ export class ExternalGameService {
   }
 
   public getAdminContext(gameId: string): Observable<ExternalGameAdminContext> {
-    return this.httpClient.get<ExternalGameAdminContext>(this.apiUrl.build(`/admin/games/external/${gameId}`));
+    return this.httpClient.get<ExternalGameAdminContext>(this.apiUrl.build(`/admin/games/external/${gameId}`)).pipe(
+      // fix dates to be date objects and not dumb strings
+      map(ctx => {
+        ctx.startTime = !!ctx.startTime ? DateTime.fromISO(ctx.startTime!.toString()) : undefined;
+        ctx.endTime = !!ctx.endTime ? DateTime.fromISO(ctx.startTime!.toString()) : undefined;
+
+        return ctx;
+      })
+    );
   }
 
   public getExternalTeamData(teamId: string): Observable<GetExternalTeamDataResponse> {

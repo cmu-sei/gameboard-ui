@@ -8,6 +8,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Observable, Subject, catchError, combineLatest, filter, firstValueFrom, map, startWith, switchMap, tap, timer } from 'rxjs';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ActivatedRoute } from '@angular/router';
+import { FriendlyDatesService } from '@/services/friendly-dates.service';
 
 export type ExternalGameAdminPlayerStatus = "notConnected" | "notReady" | "ready";
 
@@ -62,11 +63,13 @@ export class ExternalGameAdminComponent implements OnInit {
   protected canDeploy = false;
   protected deployAllTooltip = "";
   protected fa = fa;
+  protected sessionDateDescription = "";
 
   constructor(
     private route: ActivatedRoute,
     private appTitleService: AppTitleService,
     private externalGameService: ExternalGameService,
+    private friendlyDates: FriendlyDatesService,
     private unsub: UnsubscriberService) { }
 
   ngOnInit(): void {
@@ -105,6 +108,7 @@ export class ExternalGameAdminComponent implements OnInit {
         return caught;
       }),
       tap(ctx => {
+        // do some fiddly computations to dealing with them in the template
         this.appTitleService.set(`${ctx.game.name} : External Game`);
         this.canDeploy = ctx.overallDeployStatus == 'notStarted';
 
@@ -114,6 +118,20 @@ export class ExternalGameAdminComponent implements OnInit {
         else if (ctx.overallDeployStatus == "deployed") {
           this.deployAllTooltip = "All of this game's resources have been deployed.";
         }
+
+        this.sessionDateDescription = "";
+        if (ctx.startTime && ctx.endTime) {
+          // if they have the same day/month year, just show the date once
+          if (ctx.startTime.hasSame(ctx.endTime, 'day')) {
+            const dateDescription = this.friendlyDates.toFriendlyDate(ctx.startTime.toJSDate());
+            this.sessionDateDescription = `${dateDescription}, ${this.friendlyDates.toFriendlyTime(ctx.startTime.toJSDate())} - ${this.friendlyDates.toFriendlyTime(ctx.endTime.toJSDate())}`;
+          }
+          else {
+            this.sessionDateDescription = `${this.friendlyDates.toFriendlyDateAndTime(ctx.startTime.toJSDate())} - ${this.friendlyDates.toFriendlyDateAndTime(ctx.endTime.toJSDate())}`;
+          }
+        }
+
+        return ctx;
       })
     );
   }
