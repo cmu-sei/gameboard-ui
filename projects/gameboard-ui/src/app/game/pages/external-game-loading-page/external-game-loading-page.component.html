@@ -3,7 +3,10 @@
     <div class="page-container page-width mt-5 d-flex flex-column align-items-center justify-content-center">
         <app-error-div [errors]="errors" *ngIf="errors.length"></app-error-div>
         <ng-container *ngIf="!errors.length">
-            <h1 *ngIf="!launchCompleted">Launching {{gameLaunchCtx.game.name}}</h1>
+            <div *ngIf="!launchCompleted">
+                <h3>Launching</h3>
+                <h1>{{gameLaunchCtx.game.name}}</h1>
+            </div>
             <ng-container *ngIf="state; else loading">
                 <ng-container *ngIf="!launchCompleted; else countdown">
                     <div class="step-container full-width my-4">
