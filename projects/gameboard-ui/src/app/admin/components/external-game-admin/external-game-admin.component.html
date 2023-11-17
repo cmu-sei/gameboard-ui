@@ -95,8 +95,9 @@
                         </div>
 
                     </div>
-                    <a href="#" class="btn btn-primary"
-                        [class.disabled]="!(team.challenges | externalTeamChallengesToIsPredeployable)">Predeploy</a>
+                    <button type="button" href="#" class="btn btn-info"
+                        (click)="handlePreDeployTeamClick(context.game.id, team.id)"
+                        [class.disabled]="!(team.challenges | externalTeamChallengesToIsPredeployable)">Predeploy</button>
                 </div>
             </div>
         </div>

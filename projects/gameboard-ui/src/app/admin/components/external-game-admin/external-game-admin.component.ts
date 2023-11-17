@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Observable, Subject, catchError, combineLatest, filter, firstValueFrom, map, startWith, switchMap, tap, timer } from 'rxjs';
+import { Observable, Subject, catchError, combineLatest, filter, first, firstValueFrom, map, startWith, switchMap, tap, timer } from 'rxjs';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ActivatedRoute } from '@angular/router';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
@@ -90,6 +90,15 @@ export class ExternalGameAdminComponent implements OnInit {
   protected async handlePreDeployAllClick(gameId: string) {
     try {
       await firstValueFrom(this.externalGameService.preDeployAll(gameId));
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
+  }
+
+  protected async handlePreDeployTeamClick(gameId: string, teamId: string) {
+    try {
+      await firstValueFrom(this.externalGameService.preDeployTeams(gameId, teamId));
     }
     catch (err: any) {
       this.errors.push(err);
