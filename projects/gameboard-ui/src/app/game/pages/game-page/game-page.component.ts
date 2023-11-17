@@ -224,23 +224,17 @@ export class GamePageComponent implements OnDestroy {
   }
 
   private async joinGameHub(ctx: GameEnrollmentContext) {
+    // note that this should (currently) only happen if the game is BOTH sync start AND external
     await this.gameHubService.joinGame(ctx.game.id);
 
-    // if the game is sync start, we need to check if it's already going and move them along if so
-    // we also need to wire up a listener to move them along when an external game launches
-    if (ctx.game.requireSynchronizedStart) {
-      // first, set up a listener such that if the externalGameLaunchStarted event happens, we redirect the player
-      // to the game start screen
-      this.unsub.add(
-        // if the game gets launched, off we go
-        this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
-          if (startState) {
-            // delete any existing local storage stuff
-            this.redirectToExternalGameLoadingPage(ctx);
-          }
-        })
-      );
-    }
+    // wire up listeners to move the player along when sync start is ready
+    this.unsub.add(
+      this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
+        if (startState) {
+          this.redirectToExternalGameLoadingPage(ctx);
+        }
+      }),
+    );
   }
 
   private async resetEnrollmentAndLeaveGame(player: Player) {

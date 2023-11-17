@@ -15,6 +15,7 @@ export class GameHubService {
   private _joinedGameIds$ = new BehaviorSubject<string[]>([]);
   private _syncStartGameStateChanged$ = new Subject<SyncStartGameState>();
   private _syncStartGameStarted$ = new Subject<SyncStartGameStartedState>();
+  private _syncStartGameStarting$ = new Subject<SyncStartGameState>();
 
   public externalGameLaunchProgressChanged$ = this._externalGameLaunchProgressChanged$.asObservable();
   public externalGameLaunchStarted$ = this._externalGameLaunchStarted$.asObservable();
@@ -25,6 +26,7 @@ export class GameHubService {
   public joinedGameIds$ = this._joinedGameIds$.asObservable();
   public syncStartGameStateChanged$ = this._syncStartGameStateChanged$.asObservable();
   public syncStartGameStarted$ = this._syncStartGameStarted$.asObservable();
+  public syncStartGameStarting$ = this._syncStartGameStarting$.asObservable();
 
   constructor(
     private logService: LogService,
@@ -84,6 +86,7 @@ export class GameHubService {
         { eventType: GameHubEventType.ExternalGameLaunchFailure, handler: this.handleExternalGameLaunchFailure.bind(this) },
         { eventType: GameHubEventType.ExternalGameLaunchEnd, handler: this.handleExternalGameLaunchEnded.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStateChanged, handler: this.handleSyncStartStateChanged.bind(this) },
+        { eventType: GameHubEventType.SyncStartGameStarted, handler: this.handleSyncStartGameStarted.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStarting, handler: this.handleSyncStartGameStarting.bind(this) },
         { eventType: GameHubEventType.YouJoined, handler: ev => this.handleGameJoined.bind(this) }
       ]);
@@ -115,7 +118,11 @@ export class GameHubService {
     this._syncStartGameStateChanged$.next(ev.data);
   }
 
-  private handleSyncStartGameStarting(ev: GameHubEvent<SyncStartGameStartedState>) {
+  private handleSyncStartGameStarted(ev: GameHubEvent<SyncStartGameStartedState>) {
     this._syncStartGameStarted$.next(ev.data);
+  }
+
+  private handleSyncStartGameStarting(ev: GameHubEvent<SyncStartGameState>) {
+    this.logService.logInfo("Sync start game starting...", ev.data);
   }
 }
