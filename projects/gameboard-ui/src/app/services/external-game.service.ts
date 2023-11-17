@@ -69,7 +69,7 @@ export class ExternalGameService {
       // fix dates to be date objects and not dumb strings
       map(ctx => {
         ctx.startTime = !!ctx.startTime ? DateTime.fromISO(ctx.startTime!.toString()) : undefined;
-        ctx.endTime = !!ctx.endTime ? DateTime.fromISO(ctx.startTime!.toString()) : undefined;
+        ctx.endTime = !!ctx.endTime ? DateTime.fromISO(ctx.endTime!.toString()) : undefined;
 
         return ctx;
       })

@@ -121,13 +121,19 @@ export class ExternalGameAdminComponent implements OnInit {
 
         this.sessionDateDescription = "";
         if (ctx.startTime && ctx.endTime) {
+          // conver to js dates since our friendly dates service uses those and not luxon (for some godforsaken reason...)
+          // ...
+          // i'm kidding. it's my fault. i did it.
+          const startTime = ctx.startTime.toJSDate();
+          const endTime = ctx.endTime.toJSDate();
+
           // if they have the same day/month year, just show the date once
           if (ctx.startTime.hasSame(ctx.endTime, 'day')) {
-            const dateDescription = this.friendlyDates.toFriendlyDate(ctx.startTime.toJSDate());
-            this.sessionDateDescription = `${dateDescription}, ${this.friendlyDates.toFriendlyTime(ctx.startTime.toJSDate())} - ${this.friendlyDates.toFriendlyTime(ctx.endTime.toJSDate())}`;
+            const dateDescription = this.friendlyDates.toFriendlyDate(startTime);
+            this.sessionDateDescription = `${dateDescription}, ${this.friendlyDates.toFriendlyTime(startTime)} - ${this.friendlyDates.toFriendlyTime(endTime)}`;
           }
           else {
-            this.sessionDateDescription = `${this.friendlyDates.toFriendlyDateAndTime(ctx.startTime.toJSDate())} - ${this.friendlyDates.toFriendlyDateAndTime(ctx.endTime.toJSDate())}`;
+            this.sessionDateDescription = `${this.friendlyDates.toFriendlyDateAndTime(startTime)} - ${this.friendlyDates.toFriendlyDateAndTime(endTime)}`;
           }
         }
 
