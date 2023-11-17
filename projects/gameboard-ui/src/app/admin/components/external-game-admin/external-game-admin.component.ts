@@ -89,6 +89,7 @@ export class ExternalGameAdminComponent implements OnInit {
 
   protected async handlePreDeployAllClick(gameId: string) {
     try {
+      this.bindOverallDeployStatus("deploying");
       await firstValueFrom(this.externalGameService.preDeployAll(gameId));
     }
     catch (err: any) {
@@ -98,6 +99,7 @@ export class ExternalGameAdminComponent implements OnInit {
 
   protected async handlePreDeployTeamClick(gameId: string, teamId: string) {
     try {
+      this.bindOverallDeployStatus("deploying");
       await firstValueFrom(this.externalGameService.preDeployTeams(gameId, teamId));
     }
     catch (err: any) {
@@ -107,6 +109,17 @@ export class ExternalGameAdminComponent implements OnInit {
 
   protected async handlePlayerReadyStateChanged(playerId: string) {
     this.forceRefresh$.next();
+  }
+
+  private bindOverallDeployStatus(overallDeployStatus: DeployStatus) {
+    this.canDeploy = overallDeployStatus == "notStarted";
+
+    if (overallDeployStatus == "deploying") {
+      this.deployAllTooltip = "Resources are being deployed for this game. Hang tight...";
+    }
+    else if (overallDeployStatus == "deployed") {
+      this.deployAllTooltip = "All of this game's resources have been deployed.";
+    }
   }
 
   private load(gameId: string) {
@@ -119,14 +132,7 @@ export class ExternalGameAdminComponent implements OnInit {
       tap(ctx => {
         // do some fiddly computations to dealing with them in the template
         this.appTitleService.set(`${ctx.game.name} : External Game`);
-        this.canDeploy = ctx.overallDeployStatus == 'notStarted';
-
-        if (ctx.overallDeployStatus == "deploying") {
-          this.deployAllTooltip = "Resources are being deployed for this game. Hang tight...";
-        }
-        else if (ctx.overallDeployStatus == "deployed") {
-          this.deployAllTooltip = "All of this game's resources have been deployed.";
-        }
+        this.bindOverallDeployStatus(ctx.overallDeployStatus);
 
         this.sessionDateDescription = "";
         if (ctx.startTime && ctx.endTime) {
