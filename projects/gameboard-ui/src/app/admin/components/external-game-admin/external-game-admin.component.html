@@ -8,9 +8,9 @@
 
         <div *ngIf="context.teams.length
         " class="global-controls-container my-2 d-flex align-items-center justify-content-end">
-            <app-confirm-button btnClass="btn btn-lg btn-info" [disabled]="context.isPreDeploying"
+            <app-confirm-button btnClass="btn btn-lg btn-info" [disabled]="canDeploy"
                 (confirm)="handlePreDeployAllClick(context.game.id)"
-                [tooltip]="context.isPreDeploying ? 'Resources are being deployed for this game. Hang tight...' : ''">
+                [tooltip]="context.overallDeployStatus == 'deploying' ? 'Resources are being deployed for this game. Hang tight...' : ''">
                 Predeploy all
             </app-confirm-button>
         </div>

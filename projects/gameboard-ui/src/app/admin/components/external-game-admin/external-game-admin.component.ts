@@ -37,7 +37,7 @@ export interface ExternalGameAdminChallenge {
 
 export interface ExternalGameAdminContext {
   game: SimpleEntity;
-  isPreDeploying: boolean;
+  overallDeployStatus: DeployStatus;
   specs: SimpleEntity[];
   hasNonStandardSessionWindow: boolean;
   startTime?: DateTime;
@@ -53,9 +53,12 @@ export interface ExternalGameAdminContext {
 export class ExternalGameAdminComponent implements OnInit {
   private gameId: string | null = null;
   private autoUpdateInterval = 30000;
+
   protected ctx$?: Observable<ExternalGameAdminContext>;
   protected context?: ExternalGameAdminContext;
   protected errors: any[] = [];
+  protected canDeploy = false;
+  protected deployAllTooltip = "";
 
   constructor(
     private route: ActivatedRoute,
@@ -76,7 +79,17 @@ export class ExternalGameAdminComponent implements OnInit {
               this.errors.push(err);
               return caught;
             }),
-            tap(ctx => this.appTitleService.set(`${ctx.game.name} : External Game`))
+            tap(ctx => {
+              this.appTitleService.set(`${ctx.game.name} : External Game`);
+              this.canDeploy = ctx.overallDeployStatus == 'notStarted';
+
+              if (ctx.overallDeployStatus == "deploying") {
+                this.deployAllTooltip = "Resources are being deployed for this game. Hang tight...";
+              }
+              else if (ctx.overallDeployStatus == "deployed") {
+                this.deployAllTooltip = "All of this game's resources have been deployed.";
+              }
+            })
           );
         }
       })
