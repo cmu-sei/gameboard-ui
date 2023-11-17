@@ -6,8 +6,8 @@
     <div class="w-100">
         <app-error-div [errors]="errors"></app-error-div>
 
-        <div *ngIf="context.teams.length
-        " class="global-controls-container my-2 d-flex align-items-center justify-content-end">
+        <div *ngIf="context.teams.length"
+            class="global-controls-container my-2 d-flex align-items-center justify-content-end">
             <app-confirm-button btnClass="btn btn-lg btn-info" [disabled]="canDeploy"
                 (confirm)="handlePreDeployAllClick(context.game.id)"
                 [tooltip]="context.overallDeployStatus == 'deploying' ? 'Resources are being deployed for this game. Hang tight...' : ''">
@@ -43,7 +43,10 @@
                                     class="d-flex align-items-center justify-content-begin">
                                     <app-player-avatar [player]="player" size="tiny"></app-player-avatar>
                                     <app-status-light [state]="player.status | externalGamePlayerStatusToStatusLight"
-                                        [tooltip]="player.status"></app-status-light>
+                                        [tooltip]="player.status | externalGamePlayerStatusToFriendly"></app-status-light>
+                                    <app-external-game-admin-player-context-menu
+                                        (playerReadyStateChanged)="handlePlayerReadyStateChanged($event.playerId)"
+                                        [player]="{ id: player.id, name: player.name, isSyncStartReady: player.status == 'ready'}"></app-external-game-admin-player-context-menu>
 
                                     <div [tooltip]="player.user.name">{{player.name}}</div>
                                 </li>
@@ -68,7 +71,8 @@
 
                                 <tbody>
                                     <tr *ngFor="let spec of context.specs">
-                                        <td>{{spec.name}}</td>
+                                        <td [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
+                                            {{spec.name}}</td>
                                         <td>
                                             {{((spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated ?
                                             "Yes" : "No")}}

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DeployStatus } from '@/api/game-models';
 import { SimpleEntity, SimpleSponsor } from '@/api/models';
 import { DateTime } from 'luxon';
+import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Observable, catchError, firstValueFrom, switchMap, tap, timer } from 'rxjs';
+import { Observable, Subject, catchError, combineLatest, filter, firstValueFrom, map, startWith, switchMap, tap, timer } from 'rxjs';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -53,12 +54,14 @@ export interface ExternalGameAdminContext {
 export class ExternalGameAdminComponent implements OnInit {
   private gameId: string | null = null;
   private autoUpdateInterval = 30000;
+  private forceRefresh$ = new Subject<void>();
 
   protected ctx$?: Observable<ExternalGameAdminContext>;
   protected context?: ExternalGameAdminContext;
   protected errors: any[] = [];
   protected canDeploy = false;
   protected deployAllTooltip = "";
+  protected fa = fa;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,32 +71,17 @@ export class ExternalGameAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.unsub.add(
-      this.route.paramMap.subscribe(params => {
-        const gameIdParam = params.get("gameId");
-
-        if (gameIdParam && this.gameId != gameIdParam) {
-          this.gameId = gameIdParam;
-          this.ctx$ = timer(0, this.autoUpdateInterval).pipe(
-            switchMap(() => this.externalGameService.getAdminContext(gameIdParam)),
-            catchError((err, caught) => {
-              this.errors.push(err);
-              return caught;
-            }),
-            tap(ctx => {
-              this.appTitleService.set(`${ctx.game.name} : External Game`);
-              this.canDeploy = ctx.overallDeployStatus == 'notStarted';
-
-              if (ctx.overallDeployStatus == "deploying") {
-                this.deployAllTooltip = "Resources are being deployed for this game. Hang tight...";
-              }
-              else if (ctx.overallDeployStatus == "deployed") {
-                this.deployAllTooltip = "All of this game's resources have been deployed.";
-              }
-            })
-          );
-        }
-      })
+      combineLatest([
+        this.route.paramMap,
+        timer(0, this.autoUpdateInterval),
+        this.forceRefresh$
+      ]).pipe(
+        map(([params, tick, _]) => params?.get("gameId")),
+        filter(gameId => !!gameId)
+      ).subscribe(gameId => this.load(gameId!))
     );
+
+    this.forceRefresh$.next();
   }
 
   protected async handlePreDeployAllClick(gameId: string) {
@@ -103,5 +91,30 @@ export class ExternalGameAdminComponent implements OnInit {
     catch (err: any) {
       this.errors.push(err);
     }
+  }
+
+  protected async handlePlayerReadyStateChanged(playerId: string) {
+    this.forceRefresh$.next();
+  }
+
+  private load(gameId: string) {
+    this.gameId = gameId;
+    this.ctx$ = this.externalGameService.getAdminContext(gameId).pipe(
+      catchError((err, caught) => {
+        this.errors.push(err);
+        return caught;
+      }),
+      tap(ctx => {
+        this.appTitleService.set(`${ctx.game.name} : External Game`);
+        this.canDeploy = ctx.overallDeployStatus == 'notStarted';
+
+        if (ctx.overallDeployStatus == "deploying") {
+          this.deployAllTooltip = "Resources are being deployed for this game. Hang tight...";
+        }
+        else if (ctx.overallDeployStatus == "deployed") {
+          this.deployAllTooltip = "All of this game's resources have been deployed.";
+        }
+      })
+    );
   }
 }

@@ -18,6 +18,13 @@ import { ChallengeObserverComponent } from './challenge-observer/challenge-obser
 import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
+import { ExternalGameAdminPlayerContextMenuComponent } from './components/external-game-admin-player-context-menu/external-game-admin-player-context-menu.component';
+import { ExternalGamePlayerStatusToStatusLightPipe } from './pipes/external-game-player-status-to-status-light.pipe';
+import { ExternalTeamToChallengeCreatedPipe } from './pipes/external-team-to-challenge-created.pipe';
+import { ExternalTeamChallengesToIsPredeployablePipe } from './pipes/external-team-challenges-to-is-predeployable.pipe';
+import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challenge.pipe';
+import { ExternalGamePlayerStatusToFriendlyPipe } from './pipes/external-game-player-status-to-friendly.pipe';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
 import { GameDesignerComponent } from './game-designer/game-designer.component';
@@ -42,11 +49,6 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
-import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
-import { ExternalGamePlayerStatusToStatusLightPipe } from './pipes/external-game-player-status-to-status-light.pipe';
-import { ExternalTeamToChallengeCreatedPipe } from './pipes/external-team-to-challenge-created.pipe';
-import { ExternalTeamChallengesToIsPredeployablePipe } from './pipes/external-team-challenges-to-is-predeployable.pipe';
-import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challenge.pipe';
 
 @NgModule({
   declarations: [
@@ -58,8 +60,10 @@ import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challe
     ChallengeSpecEditorComponent,
     DashboardComponent,
     ExternalGameAdminComponent,
+    ExternalGameAdminPlayerContextMenuComponent,
     ExternalGamePlayerStatusToStatusLightPipe,
     ExternalSpecIdToChallengePipe,
+    ExternalGamePlayerStatusToFriendlyPipe,
     ExternalTeamToChallengeCreatedPipe,
     ExternalTeamChallengesToIsPredeployablePipe,
     FeedbackReportComponent,
@@ -107,9 +111,9 @@ import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challe
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
           { path: 'registrar/players', component: PlayerNamesComponent },
           { path: 'registrar/:id', component: PlayerRegistrarComponent },
-          { path: 'observer/challenges/:id', component: ChallengeObserverComponent },
+          { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
-          { path: 'report', component: ReportPageComponent },
+          { path: 'report', component: ReportPageComponent, title: "Admin | Reports" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },
