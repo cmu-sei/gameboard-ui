@@ -86,7 +86,7 @@ export class ExternalGameService {
   }
 
   public preDeployTeams(gameId: string, ...teamIds: string[]) {
-    return this.httpClient.post<void>(this.apiUrl.build(`admin/games/external/${gameId}/pre-deploy`), { teamIds });
+    return this.httpClient.post<void>(this.apiUrl.build(`admin/games/external/${gameId}/pre-deploy`), { teamIds: teamIds });
   }
 
   private computeNamespaceKey = (teamId: string): string => `externalGame:${teamId}`;
