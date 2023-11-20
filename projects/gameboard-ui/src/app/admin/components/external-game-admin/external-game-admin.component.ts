@@ -53,8 +53,7 @@ export interface ExternalGameAdminContext {
   styleUrls: ['./external-game-admin.component.scss']
 })
 export class ExternalGameAdminComponent implements OnInit {
-  private gameId: string | null = null;
-  private autoUpdateInterval = 30000;
+  private autoUpdateInterval = 15000;
   private forceRefresh$ = new Subject<void>();
 
   protected ctx$?: Observable<ExternalGameAdminContext>;
@@ -123,7 +122,6 @@ export class ExternalGameAdminComponent implements OnInit {
   }
 
   private load(gameId: string) {
-    this.gameId = gameId;
     this.ctx$ = this.externalGameService.getAdminContext(gameId).pipe(
       catchError((err, caught) => {
         this.errors.push(err);
