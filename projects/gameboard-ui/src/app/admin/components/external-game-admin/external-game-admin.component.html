@@ -81,12 +81,22 @@
                                             </span>
                                         </td>
                                         <td>
-                                            {{((spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated ?
-                                            "Yes" : "No")}}
+                                            <span
+                                                [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated"
+                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated">
+                                                {{((spec.id |
+                                                externalSpecIdToChallenge:team.challenges)!.challengeCreated ? "Yes" :
+                                                "No")}}
+                                            </span>
                                         </td>
                                         <td>
-                                            {{((spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed
-                                            ? "Yes" : "No")}}
+                                            <span
+                                                [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed"
+                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed">
+                                                {{((spec.id |
+                                                externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed
+                                                ? "Yes" : "No")}}
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
