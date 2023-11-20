@@ -5,8 +5,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { fa } from '@/services/font-awesome.service';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
-import { debounceTime, switchMap, tap, mergeMap } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Observable, firstValueFrom } from 'rxjs';
+import { debounceTime, switchMap, tap, mergeMap, catchError } from 'rxjs/operators';
 import { Game, NewGame } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Search } from '../../api/models';
@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit {
   preferenceKey = 'admin.dashboard.game.viewer.mode'; // key to save toggle in local storage
   tableView: boolean; // true = table, false = cards
 
+  protected errors: any[] = [];
   search: Search = { term: '' };
   hot!: Game | null;
 
@@ -85,10 +86,14 @@ export class DashboardComponent implements OnInit {
     this.creating$.next({ name: 'NewGame' } as Game);
   }
 
-  delete(game: Game): void {
-    this.api.delete(game.id).subscribe(
-      () => this.remove(game)
-    );
+  async delete(game: Game): Promise<void> {
+    try {
+      await firstValueFrom(this.api.delete(game.id));
+      this.remove(game);
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   remove(game: Game): void {

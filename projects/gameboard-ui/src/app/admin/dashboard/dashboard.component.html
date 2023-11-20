@@ -35,6 +35,10 @@
     </div>
   </div>
 
+  <div class="component-errors">
+    <app-error-div [errors]="errors"></app-error-div>
+  </div>
+
   <ng-container *ngIf="games$ | async as games; else loading">
 
     <!-- Card view mode -->
