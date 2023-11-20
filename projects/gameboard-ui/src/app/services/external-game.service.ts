@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { GetExternalTeamDataResponse } from '@/api/game-models';
 import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
 import { DateTime } from 'luxon';
+import { ApiDateService } from './api-date.service';
 
 export interface ExternalGameActive {
   gameServerUrl: string;
@@ -21,6 +22,7 @@ export class ExternalGameService {
   errors$ = this._errors$.asObservable();
 
   constructor(
+    private apiDateService: ApiDateService,
     private apiUrl: ApiUrlService,
     private config: ConfigService,
     private httpClient: HttpClient,
@@ -66,10 +68,9 @@ export class ExternalGameService {
 
   public getAdminContext(gameId: string): Observable<ExternalGameAdminContext> {
     return this.httpClient.get<ExternalGameAdminContext>(this.apiUrl.build(`/admin/games/external/${gameId}`)).pipe(
-      // fix dates to be date objects and not dumb strings
       map(ctx => {
-        ctx.startTime = !!ctx.startTime ? DateTime.fromISO(ctx.startTime!.toString()) : undefined;
-        ctx.endTime = !!ctx.endTime ? DateTime.fromISO(ctx.endTime!.toString()) : undefined;
+        ctx.startTime = this.apiDateService.toDateTime(ctx.startTime?.toString()) || undefined;
+        ctx.endTime = this.apiDateService.toDateTime(ctx.endTime?.toString()) || undefined;
 
         return ctx;
       })
