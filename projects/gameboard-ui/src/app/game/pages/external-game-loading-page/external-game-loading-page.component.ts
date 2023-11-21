@@ -78,6 +78,11 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     await this.launchGame({ game, player, localUserId });
   }
 
+  protected handleErrorDismissed(error: any) {
+    if (this.gameId)
+      this.routerService.goToGamePage(this.gameId);
+  }
+
   handleGameReady(ctx: GameLaunchContext) {
     if (ctx.game.mode != GameEngineMode.External) {
       throw new Error(`Can't access games with mode "${ctx.game.mode}" from this page. `);

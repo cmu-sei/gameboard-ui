@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-error-div',
@@ -10,6 +10,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ErrorDivComponent {
   @Input() errors!: any[];
+  @Output() dismissed = new EventEmitter<any>();
 
   constructor() { }
 
@@ -18,5 +19,7 @@ export class ErrorDivComponent {
     if (i >= 0) {
       this.errors.splice(i, 1);
     }
+
+    this.dismissed.emit(e);
   }
 }
