@@ -16,7 +16,6 @@ h3.sync-session-date {
 }
 
 .team-avatars-container {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,4 +32,9 @@ td, th {
 
 .not-deployed {
     color: #888888;
+}
+
+app-deployment-admin-team-context-menu, app-external-game-admin-player-context-menu {
+    display: block;
+    margin-top: -12px;
 }

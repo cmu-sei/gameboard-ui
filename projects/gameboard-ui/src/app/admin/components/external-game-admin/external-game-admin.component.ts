@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Observable, Subject, catchError, combineLatest, filter, first, firstValueFrom, map, startWith, switchMap, tap, timer } from 'rxjs';
+import { Observable, Subject, catchError, combineLatest, filter, firstValueFrom, map, tap, timer } from 'rxjs';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ActivatedRoute } from '@angular/router';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
@@ -17,6 +17,7 @@ export interface ExternalGameAdminTeam {
   name: string;
   sponsors: SimpleSponsor[];
   deployStatus: DeployStatus;
+  isReady: boolean;
   players: {
     id: string;
     name: string;
@@ -53,7 +54,7 @@ export interface ExternalGameAdminContext {
   styleUrls: ['./external-game-admin.component.scss']
 })
 export class ExternalGameAdminComponent implements OnInit {
-  private autoUpdateInterval = 15000;
+  private autoUpdateInterval = 60000;
   private forceRefresh$ = new Subject<void>();
 
   protected ctx$?: Observable<ExternalGameAdminContext>;
@@ -107,6 +108,10 @@ export class ExternalGameAdminComponent implements OnInit {
   }
 
   protected async handlePlayerReadyStateChanged(playerId: string) {
+    this.forceRefresh$.next();
+  }
+
+  protected async handleTeamReadyStateChanged(teamId: string) {
     this.forceRefresh$.next();
   }
 

@@ -35,23 +35,25 @@
                     <app-player-avatar-list [players]="team.players"></app-player-avatar-list>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">{{team.name}}</h4>
+                    <div class="d-flex align-items-center">
+                        <h4 class="card-title flex-grow w-100">{{team.name}}</h4>
+                        <app-deployment-admin-team-context-menu class="d-block" [team]="team" [isReady]="team.isReady"
+                            (teamReadyStateToggled)="handleTeamReadyStateChanged(team.id)"></app-deployment-admin-team-context-menu>
+                    </div>
 
                     <div class="card-text mb-4">
                         <div class="card-section mb-4">
                             <h5>Players</h5>
 
                             <ul class="player-list">
-                                <li *ngFor="let player of team.players"
-                                    class="d-flex align-items-center justify-content-begin">
+                                <li *ngFor="let player of team.players" class="d-flex align-items-center w-100">
                                     <app-player-avatar [player]="player" size="tiny"></app-player-avatar>
                                     <app-status-light [state]="player.status | externalGamePlayerStatusToStatusLight"
                                         [tooltip]="player.status | externalGamePlayerStatusToFriendly"></app-status-light>
+                                    <div class="flex-grow-1">{{player.name}}</div>
                                     <app-external-game-admin-player-context-menu
                                         (playerReadyStateChanged)="handlePlayerReadyStateChanged($event.playerId)"
                                         [player]="{ id: player.id, name: player.name, isSyncStartReady: player.status == 'ready'}"></app-external-game-admin-player-context-menu>
-
-                                    <div [tooltip]="player.user.name">{{player.name}}</div>
                                 </li>
                             </ul>
                         </div>

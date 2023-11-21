@@ -7,7 +7,6 @@ import { ApiUrlService } from './api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { GetExternalTeamDataResponse } from '@/api/game-models';
 import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
-import { DateTime } from 'luxon';
 import { ApiDateService } from './api-date.service';
 
 export interface ExternalGameActive {

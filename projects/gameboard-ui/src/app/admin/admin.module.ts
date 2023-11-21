@@ -49,6 +49,7 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { DeploymentAdminTeamContextMenuComponent } from './components/deployment-admin-team-context-menu/deployment-admin-team-context-menu.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
+    DeploymentAdminTeamContextMenuComponent,
   ],
   imports: [
     CommonModule,

@@ -4,6 +4,7 @@ import { PlayerService } from '@/api/player.service';
 import { firstValueFrom } from 'rxjs';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { SyncStartService } from '@/services/sync-start.service';
 
 export interface ExternalGameAdminPlayerContextMenuData {
   id: string;
@@ -24,7 +25,7 @@ export class ExternalGameAdminPlayerContextMenuComponent implements OnChanges {
 
   constructor(
     private clipboardService: ClipboardService,
-    private playerService: PlayerService,
+    private syncStartService: SyncStartService,
     private toastService: ToastService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -39,7 +40,7 @@ export class ExternalGameAdminPlayerContextMenuComponent implements OnChanges {
 
   protected async togglePlayerReadyStatusClicked(playerId: string, currentIsReady: boolean) {
     const isReady = !currentIsReady;
-    await firstValueFrom(this.playerService.updateIsSyncStartReady(playerId, { isReady }));
+    await firstValueFrom(this.syncStartService.updatePlayerReadyState(playerId, { isReady }));
     this.playerReadyStateChanged.emit({ playerId, isReady });
   }
 }
