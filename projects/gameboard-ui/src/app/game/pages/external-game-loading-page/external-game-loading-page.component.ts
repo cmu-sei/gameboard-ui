@@ -71,6 +71,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
 
     if (player.userId != localUserId) {
       this.log.logError("Can't start game - the playerId does not belong to the currently-authenticated user.");
+      return;
     }
 
     this.titleService.set(`Starting "${game.name}"...`);

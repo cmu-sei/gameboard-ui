@@ -54,7 +54,7 @@ export interface ExternalGameAdminContext {
   styleUrls: ['./external-game-admin.component.scss']
 })
 export class ExternalGameAdminComponent implements OnInit {
-  private autoUpdateInterval = 60000;
+  private autoUpdateInterval = 30000;
   private forceRefresh$ = new Subject<void>();
 
   protected ctx$?: Observable<ExternalGameAdminContext>;

@@ -3,7 +3,7 @@
     <div class="page-container page-width mt-5 d-flex flex-column align-items-center justify-content-center">
         <app-error-div [errors]="errors" *ngIf="errors.length"></app-error-div>
         <ng-container *ngIf="!errors.length">
-            <div *ngIf="!launchCompleted">
+            <div *ngIf="!launchCompleted" class="text-center">
                 <h3>Launching</h3>
                 <h1>{{gameLaunchCtx.game.name}}</h1>
             </div>
