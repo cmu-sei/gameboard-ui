@@ -112,11 +112,19 @@ export class RouterService implements OnDestroy {
   }
 
   public getExternalGamePageUrlTree(gameId: string, teamId: string) {
-    return this.router.parseUrl(`/game/external/${gameId}/${teamId}`);
+    return this.router.createUrlTree(["game", "external", gameId, teamId]);
   }
 
   public goToExternalGamePage(gameId: string, teamId: string) {
     this.router.navigateByUrl(this.getExternalGamePageUrlTree(gameId, teamId));
+  }
+
+  public getExternalGameLoadingPageUrlTree(ctx: { gameId: string, playerId: string }) {
+    return this.router.createUrlTree(["game", "external", ctx.gameId, "start", ctx.playerId]);
+  }
+
+  public goToExternalGameLoadingPage(ctx: { gameId: string, playerId: string }) {
+    this.router.navigateByUrl(this.getExternalGameLoadingPageUrlTree(ctx));
   }
 
   public getGameboardPageUrlTree(playerId: string): UrlTree {
@@ -129,14 +137,6 @@ export class RouterService implements OnDestroy {
 
   public goToGamePage(gameId: string) {
     this.router.navigateByUrl(this.getGamePageUrlTree(gameId));
-  }
-
-  public getExternalGameLoadingPageUrlTree(ctx: { gameId: string, playerId: string }) {
-    return this.router.createUrlTree(["game", "external", ctx.gameId, "start", ctx.playerId]);
-  }
-
-  public goToExternalGameLoadingPage(ctx: { gameId: string, playerId: string }) {
-    this.router.navigateByUrl(this.getExternalGameLoadingPageUrlTree(ctx));
   }
 
   public getUnityBoardUrlTree(ctx: { gameId: string, playerId: string, teamId: string; sessionEnd: number }) {
