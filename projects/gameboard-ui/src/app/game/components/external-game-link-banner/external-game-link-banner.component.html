@@ -1,5 +1,4 @@
-<alert type="warning" *ngIf="isExternalGameReady$ | async">
-    Your game has started! Head <a [href]="teamLinkToExternalGame">here</a>
+<alert type="warning" *ngIf="isExternalGameReady$ | async" class="p-2">
+    Your game has started! Head <a [routerLink]="teamLinkToExternalGame">here</a>
     to start playing!
-
 </alert>
