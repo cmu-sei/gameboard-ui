@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { GameEngineMode, GameStartPhase } from '@/api/game-models';
+import { GameEngineMode, GamePlayState } from '@/api/game-models';
 import { Player } from '@/api/player-models';
 import { RouterService } from '@/services/router.service';
 import { firstValueFrom } from 'rxjs';
@@ -65,11 +65,11 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
     this.buttonText = "Continue to Cubespace";
     this.buttonUrl = this
       .routerService
-      .getGameStartPageUrlTree({ gameId: context.gameId, playerId: context.player.id })
+      .getExternalGameLoadingPageUrlTree({ gameId: context.gameId, playerId: context.player.id })
       .toString();
 
     // this is only enabled if the game is started or starting
-    const gameStartPhase = await firstValueFrom(this.gameService.getStartPhase(context.gameId, context.player.teamId));
-    this.isEnabled = gameStartPhase == GameStartPhase.Started || gameStartPhase == GameStartPhase.Starting;
+    const playState = await firstValueFrom(this.gameService.getGamePlayState(context.gameId, context.player.teamId));
+    this.isEnabled = playState == GamePlayState.Started || playState == GamePlayState.Starting;
   }
 }

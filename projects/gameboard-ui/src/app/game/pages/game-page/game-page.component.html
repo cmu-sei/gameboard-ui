@@ -59,7 +59,7 @@
           </div>
         </ng-container>
 
-        <!-- if not session start -->
+        <!-- if session hasn't started -->
         <ng-container
           *ngIf="(!ctx.game.registration.isAfter || (canAdminEnroll$ | async)) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
           <div class="col panel">

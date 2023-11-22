@@ -1,4 +1,4 @@
-import { GameStartPhase } from '@/api/game-models';
+import { GamePlayState } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { PlayerService } from '@/api/player.service';
 import { LogService } from '@/services/log.service';
@@ -49,6 +49,6 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
     }
     this.log.logInfo("Resolved gameId for GameIsStartedGuard", gameId);
 
-    return await firstValueFrom(this.gameService.getStartPhase(resolvedGameId, player.teamId).pipe(map(phase => phase == GameStartPhase.Started)));
+    return await firstValueFrom(this.gameService.getGamePlayState(resolvedGameId, player.teamId).pipe(map(phase => phase == GamePlayState.Started)));
   }
 }

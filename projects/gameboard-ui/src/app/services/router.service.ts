@@ -111,23 +111,12 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.createUrlTree([this.getCurrentPathBase()]));
   }
 
-  public updateQueryParams(update: QueryParamsUpdate): Promise<boolean> {
-    const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...update.parameters });
-
-    // delete requested keys (for example, if we're updating the `term` query param, we might need to reset paging)
-    if (update.resetParams?.length) {
-      for (const resetParam of update.resetParams) {
-        delete cleanParams[resetParam];
-      }
-    }
-
-    const updatedParams = { ...cleanParams, ...update.parameters };
-    const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: updatedParams });
-    return this.router.navigateByUrl(urlTree);
+  public getExternalGamePageUrlTree(gameId: string, teamId: string) {
+    return this.router.parseUrl(`/game/external/${gameId}/${teamId}`);
   }
 
   public goToExternalGamePage(gameId: string, teamId: string) {
-    this.router.navigateByUrl(`/game/external/${gameId}/${teamId}`);
+    this.router.navigateByUrl(this.getExternalGamePageUrlTree(gameId, teamId));
   }
 
   public getGameboardPageUrlTree(playerId: string): UrlTree {
@@ -142,12 +131,12 @@ export class RouterService implements OnDestroy {
     this.router.navigateByUrl(this.getGamePageUrlTree(gameId));
   }
 
-  public getGameStartPageUrlTree(ctx: { gameId: string, playerId: string }) {
-    return this.router.parseUrl(`/game/${ctx.gameId}/start/${ctx.playerId}`);
+  public getExternalGameLoadingPageUrlTree(ctx: { gameId: string, playerId: string }) {
+    return this.router.parseUrl(`/game/external/${ctx.gameId}/start/${ctx.playerId}`);
   }
 
-  public goToGameStartPage(ctx: { gameId: string, playerId: string }) {
-    this.router.navigateByUrl(this.getGameStartPageUrlTree(ctx));
+  public goToExternalGameLoadingPage(ctx: { gameId: string, playerId: string }) {
+    this.router.navigateByUrl(this.getExternalGameLoadingPageUrlTree(ctx));
   }
 
   public getUnityBoardUrlTree(ctx: { gameId: string, playerId: string, teamId: string; sessionEnd: number }) {
@@ -160,6 +149,21 @@ export class RouterService implements OnDestroy {
     ).subscribe(e => {
       window.location = window.location;
     });
+  }
+
+  public updateQueryParams(update: QueryParamsUpdate): Promise<boolean> {
+    const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...update.parameters });
+
+    // delete requested keys (for example, if we're updating the `term` query param, we might need to reset paging)
+    if (update.resetParams?.length) {
+      for (const resetParam of update.resetParams) {
+        delete cleanParams[resetParam];
+      }
+    }
+
+    const updatedParams = { ...cleanParams, ...update.parameters };
+    const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: updatedParams });
+    return this.router.navigateByUrl(urlTree);
   }
 
   ngOnDestroy(): void {

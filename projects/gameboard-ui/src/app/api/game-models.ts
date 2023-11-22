@@ -123,7 +123,8 @@ export interface GameEnrollmentContext {
   player: Player | undefined;
 }
 
-export enum GameStartPhase {
+export enum GamePlayState {
+  NotRegistered = "notRegistered",
   NotStarted = "notStarted",
   Starting = "starting",
   Started = "started",

@@ -57,6 +57,9 @@
 
       <app-error-div [errors]="errors"></app-error-div>
 
+      <app-external-game-link-banner [gameId]="ctx.game.id"
+        [teamId]="ctx.player.teamId"></app-external-game-link-banner>
+
       <ng-container
         *ngIf="ctx.player.session && ctx.player.session.isBefore && (ctx.game.session.isDuring || canAdminStart)">
         <app-session-start-controls [ctx]="ctx" (onRequestStart)="handleStart(ctx.player)"></app-session-start-controls>
@@ -82,14 +85,6 @@
       </div>
     </div>
   </div>
-
-  <ng-template #toCubespace>
-    <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
-      [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd.valueOf()]">
-      Continue to Cubespace
-    </a>
-  </ng-template>
-
 </ng-container>
 
 <ng-template #loading>

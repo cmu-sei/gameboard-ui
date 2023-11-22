@@ -7,7 +7,7 @@ import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subs
 import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '@/api/user-models';
 import { GameService } from '@/api/game.service';
-import { Game, GameContext, GameStartPhase } from '@/api/game-models';
+import { Game, GameContext, GamePlayState } from '@/api/game-models';
 import { HubEvent, HubEventAction, NotificationService } from '@/services/notification.service';
 import { Player, TimeWindow } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
@@ -43,15 +43,17 @@ export class GamePageComponent implements OnDestroy {
   protected canAdminEnroll$: Observable<boolean>;
   protected ctxIds: { userId?: string, gameId: string, playerId?: string } = { userId: '', gameId: '' };
   protected fa = fa;
+  protected isExternalGame = false;
   protected player$ = new BehaviorSubject<Player | null>(null);
 
-  private isExternalGame = false;
+  private needsReloadOnUnenroll = false;
   private syncStartChangedSubscription?: Subscription;
   private externalGameDeployStartSubscription?: Subscription;
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
 
   constructor(
+    apiGame: GameService,
     router: Router,
     route: ActivatedRoute,
     apiBoards: BoardService,
@@ -59,7 +61,6 @@ export class GamePageComponent implements OnDestroy {
     appTitle: AppTitleService,
     localUser: LocalUserService,
     userService: UserService,
-    private apiGame: GameService,
     private hub: NotificationService,
     private logService: LogService,
     private gameHubService: GameHubService,
@@ -76,7 +77,8 @@ export class GamePageComponent implements OnDestroy {
       filter(p => !!p.id),
       switchMap(p => apiGame.retrieve(p.id)),
       tap(g => this.ctxIds.gameId = g.id),
-      tap(g => this.isExternalGame = apiGame.isExternalGame(g)),
+      tap(g => this.needsReloadOnUnenroll = apiGame.isNonStandardEngineMode(g)),
+      tap(g => this.isExternalGame = g.mode == "external"),
       tap(g => this.titleService.set(g.name)),
     );
 
@@ -245,7 +247,7 @@ export class GamePageComponent implements OnDestroy {
     this.externalGameDeployStartSubscription?.unsubscribe();
     this.syncStartChangedSubscription?.unsubscribe();
 
-    if (this.isExternalGame) {
+    if (this.needsReloadOnUnenroll) {
       this.windowService.get().location.reload();
     }
   }
@@ -263,6 +265,6 @@ export class GamePageComponent implements OnDestroy {
 
   private redirectToExternalGameLoadingPage(ctx: GameEnrollmentContext) {
     this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.player.id}) is ready for redirect...`);
-    this.routerService.goToGameStartPage({ gameId: ctx.game.id, playerId: ctx.player.id });
+    this.routerService.goToExternalGameLoadingPage({ gameId: ctx.game.id, playerId: ctx.player.id });
   }
 }

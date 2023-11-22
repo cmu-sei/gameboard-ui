@@ -1,12 +1,17 @@
-import { GameEngineMode } from '@/api/game-models';
+import { GameEngineMode, GamePlayState } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
+import { PlayerService } from '@/api/player.service';
+import { LogService } from '@/services/log.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
-  constructor(private gameService: GameService) { }
+  constructor(
+    private gameService: GameService,
+    private logService: LogService,
+    private playerService: PlayerService) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -21,11 +26,21 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
 
   private async _canActivate(route: ActivatedRouteSnapshot) {
     const gameId = route.paramMap.get('gameId') || '';
-    if (!gameId) {
+    const playerId = route.paramMap.get('playerId') || "";
+
+    if (!gameId || !playerId) {
+      this.logService.logWarning("Can't activate ExternalSyncGameGuard for gameId + playerId", gameId, playerId);
       return false;
     }
 
+    // try to bail out early if someone's trying to hit this route for an ineligible game
     const game = await firstValueFrom(this.gameService.retrieve(gameId));
-    return (game.requireSynchronizedStart && game.mode == GameEngineMode.External);
+    if (!game.requireSynchronizedStart || game.mode !== GameEngineMode.External)
+      return false;
+
+    const player = await firstValueFrom(this.playerService.retrieve(playerId));
+    const playState = await firstValueFrom(this.gameService.getGamePlayState(gameId, player.teamId));
+
+    return (playState == GamePlayState.Started);
   }
 }
