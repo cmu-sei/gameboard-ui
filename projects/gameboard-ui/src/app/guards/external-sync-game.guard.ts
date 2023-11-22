@@ -3,6 +3,7 @@ import { GameService } from '@/api/game.service';
 import { PlayerService } from '@/api/player.service';
 import { LogService } from '@/services/log.service';
 import { Injectable } from '@angular/core';
+import { UserService as LocalUserService } from '@/utility/user.service';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 
@@ -10,6 +11,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
   constructor(
     private gameService: GameService,
+    private localUserService: LocalUserService,
     private logService: LogService,
     private playerService: PlayerService) { }
 
@@ -26,10 +28,11 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
 
   private async _canActivate(route: ActivatedRouteSnapshot) {
     const gameId = route.paramMap.get('gameId') || '';
-    const playerId = route.paramMap.get('playerId') || "";
+    const teamId = route.paramMap.get('teamId') || "";
+    const userId = this.localUserService.user$.value?.id;
 
-    if (!gameId || !playerId) {
-      this.logService.logWarning("Can't activate ExternalSyncGameGuard for gameId + playerId", gameId, playerId);
+    if (!gameId || !teamId || !userId) {
+      this.logService.logWarning("Can't activate ExternalSyncGameGuard for gameId, teamId, userId", gameId, teamId, userId);
       return false;
     }
 
@@ -38,9 +41,12 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
     if (!game.requireSynchronizedStart || game.mode !== GameEngineMode.External)
       return false;
 
-    const player = await firstValueFrom(this.playerService.retrieve(playerId));
-    const playState = await firstValueFrom(this.gameService.getGamePlayState(gameId, player.teamId));
+    const team = await firstValueFrom(this.playerService.getTeam(teamId));
+    if (!team.members.some(m => m.userId == userId)) {
+      return false;
+    }
 
-    return (playState == GamePlayState.Started);
+    const playState = await firstValueFrom(this.gameService.getGamePlayState(gameId, teamId));
+    return playState == GamePlayState.Started;
   }
 }

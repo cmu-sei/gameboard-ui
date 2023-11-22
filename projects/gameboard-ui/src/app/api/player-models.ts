@@ -222,6 +222,7 @@ export interface TeamMember {
   id: string;
   approvedName: string;
   role: PlayerRole;
+  userId: string;
 }
 
 export interface TeamPlayer {
