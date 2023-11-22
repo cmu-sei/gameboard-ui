@@ -36,7 +36,6 @@ export class ExternalGameLoadingPageComponent implements OnInit {
 
   constructor(
     route: ActivatedRoute,
-    private externalGameService: ExternalGameService,
     private gameApi: GameService,
     private gameHub: GameHubService,
     private log: LogService,

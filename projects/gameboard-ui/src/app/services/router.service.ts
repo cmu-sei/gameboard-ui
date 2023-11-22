@@ -132,7 +132,7 @@ export class RouterService implements OnDestroy {
   }
 
   public getExternalGameLoadingPageUrlTree(ctx: { gameId: string, playerId: string }) {
-    return this.router.parseUrl(`/game/external/${ctx.gameId}/start/${ctx.playerId}`);
+    return this.router.createUrlTree(["game", "external", ctx.gameId, "start", ctx.playerId]);
   }
 
   public goToExternalGameLoadingPage(ctx: { gameId: string, playerId: string }) {
