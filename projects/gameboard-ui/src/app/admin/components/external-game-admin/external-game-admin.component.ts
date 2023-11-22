@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Observable, Subject, catchError, combineLatest, filter, firstValueFrom, map, tap, timer } from 'rxjs';
+import { Observable, Subject, catchError, combineLatest, debounceTime, filter, firstValueFrom, map, tap, timer } from 'rxjs';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ActivatedRoute } from '@angular/router';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
@@ -79,6 +79,9 @@ export class ExternalGameAdminComponent implements OnInit {
         timer(0, this.autoUpdateInterval),
         this.forceRefresh$
       ]).pipe(
+        // this is just here because server failures makes timer go off
+        // like 3x a second
+        debounceTime(5000),
         map(([params, tick, _]) => params?.get("gameId")),
         filter(gameId => !!gameId)
       ).subscribe(gameId => this.load(gameId!))

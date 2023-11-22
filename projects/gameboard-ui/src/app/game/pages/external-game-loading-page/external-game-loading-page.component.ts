@@ -5,7 +5,7 @@ import { LogService } from '@/services/log.service';
 import { PlayerService } from '@/api/player.service';
 import { UserService } from '@/utility/user.service';
 import { firstValueFrom } from 'rxjs';
-import { Game, GameEngineMode } from '../../../api/game-models';
+import { Game, GameEngineMode, GamePlayState } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
@@ -97,19 +97,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     this.log.logInfo("Launching game with context", ctx);
 
     // if the player already has a session for the game and it's happening right now, move them along
-    if (ctx.player.session?.isDuring) {
-      this.log.logInfo("Player's session is already active, moving them to the game page", ctx.player);
+    const playState = await firstValueFrom(this.gameApi.getGamePlayState(ctx.game.id, ctx.player.teamId));
+    if (playState == GamePlayState.Started) {
+      this.log.logInfo("The game is already started - move them to the game page", ctx.player);
       this.handleGameReady(ctx);
     }
 
-    // if the game is non-sync-start and is standard-vm mode, just redirect to the game page
-    if (!ctx.game.requireSynchronizedStart && ctx.game.mode == GameEngineMode.Standard) {
-      this.log.logInfo("Game is a standard VM game, moving to game page", ctx);
-      this.handleGameReady(ctx);
-      return;
-    }
-
-    // if the game is either sync-start or is an external game, we have work to do here
     this.log.logInfo("Checking hub connection to game", ctx.game.id);
     if (!this.gameHub.isConnectedToGame(ctx.game.id)) {
       this.log.logInfo(`Not connected to game "${ctx.game.id}" - connecting now.`);
