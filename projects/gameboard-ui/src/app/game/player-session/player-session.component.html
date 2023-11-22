@@ -57,9 +57,6 @@
 
       <app-error-div [errors]="errors"></app-error-div>
 
-      <app-external-game-link-banner [gameId]="ctx.game.id"
-        [teamId]="ctx.player.teamId"></app-external-game-link-banner>
-
       <ng-container
         *ngIf="ctx.player.session && ctx.player.session.isBefore && (ctx.game.session.isDuring || canAdminStart)">
         <app-session-start-controls [ctx]="ctx" (onRequestStart)="handleStart(ctx.player)"></app-session-start-controls>

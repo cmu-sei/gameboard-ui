@@ -21,6 +21,9 @@
     </div>
   </div>
 
+  <app-external-game-link-banner *ngIf="ctx?.player?.teamId && ctx?.game?.id" [gameId]="ctx.game.id"
+    [teamId]="ctx.player.teamId"></app-external-game-link-banner>
+
   <div class="container-fluid">
     <div class="p-4">
       <markdown [data]="ctx.game.gameMarkdown"></markdown>

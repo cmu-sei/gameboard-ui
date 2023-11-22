@@ -83,8 +83,8 @@ const MODULE_DECLARATIONS = [
       { path: 'board/:playerId/:cid', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
-      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard, UserIsPlayingGuard], component: UnityBoardComponent },
       { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalSyncGameGuard], component: ExternalGamePageComponent },
+      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard, UserIsPlayingGuard], component: UnityBoardComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),

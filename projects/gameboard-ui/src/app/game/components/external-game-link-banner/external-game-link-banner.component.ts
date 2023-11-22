@@ -27,7 +27,7 @@ export class ExternalGameLinkBannerComponent implements OnInit {
 
     this.teamLinkToExternalGame = this
       .routerService
-      .getExternalGamePageUrlTree(this.gameId!, this.teamId!)
+      .getExternalGamePageUrlTree({ gameId: this.gameId!, teamId: this.teamId! })
       .toString();
 
     this.isExternalGameReady$ = combineLatest([

@@ -111,12 +111,12 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.createUrlTree([this.getCurrentPathBase()]));
   }
 
-  public getExternalGamePageUrlTree(gameId: string, teamId: string) {
-    return this.router.createUrlTree(["game", "external", gameId, teamId]);
+  public getExternalGamePageUrlTree(ctx: { gameId: string, teamId: string }) {
+    return this.router.createUrlTree(["game", "external", ctx.gameId, ctx.teamId]);
   }
 
   public goToExternalGamePage(gameId: string, teamId: string) {
-    this.router.navigateByUrl(this.getExternalGamePageUrlTree(gameId, teamId));
+    this.router.navigateByUrl(this.getExternalGamePageUrlTree({ gameId, teamId }));
   }
 
   public getExternalGameLoadingPageUrlTree(ctx: { gameId: string, playerId: string }) {
