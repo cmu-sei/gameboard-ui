@@ -36,7 +36,7 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     const teamId = this.route.snapshot.paramMap.get('teamId');
 
     if (!teamId) {
-      this.errors.push("We couldn't locate your team. Try heading back to Home and rejoining the game.")
+      this.errors.push("We couldn't locate your team. Try heading back to Home and rejoining the game.");
       this.log.logError("Couldn't resolve the teamID parameter from the route.");
       return;
     }
