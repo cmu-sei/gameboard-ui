@@ -11,7 +11,6 @@ import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
-import { ExternalGameService } from '@/services/external-game.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 interface GameLaunchContext {

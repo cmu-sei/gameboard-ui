@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DeployStatus } from '@/api/game-models';
+import { ExternalGameAdminOverallDeployStatus, ExternalGameTeamDeployStatus } from '@/api/game-models';
 import { SimpleEntity, SimpleSponsor } from '@/api/models';
 import { DateTime } from 'luxon';
 import { fa } from '@/services/font-awesome.service';
@@ -16,7 +16,7 @@ export interface ExternalGameAdminTeam {
   id: string;
   name: string;
   sponsors: SimpleSponsor[];
-  deployStatus: DeployStatus;
+  deployStatus: ExternalGameTeamDeployStatus;
   isReady: boolean;
   players: {
     id: string;
@@ -40,7 +40,7 @@ export interface ExternalGameAdminChallenge {
 
 export interface ExternalGameAdminContext {
   game: SimpleEntity;
-  overallDeployStatus: DeployStatus;
+  overallDeployStatus: ExternalGameAdminOverallDeployStatus;
   specs: SimpleEntity[];
   hasNonStandardSessionWindow: boolean;
   startTime?: DateTime;
@@ -118,8 +118,8 @@ export class ExternalGameAdminComponent implements OnInit {
     this.forceRefresh$.next();
   }
 
-  private bindOverallDeployStatus(overallDeployStatus: DeployStatus) {
-    this.canDeploy = overallDeployStatus == "notStarted";
+  private bindOverallDeployStatus(overallDeployStatus: ExternalGameAdminOverallDeployStatus) {
+    this.canDeploy = overallDeployStatus == "notStarted" || overallDeployStatus == "partiallyDeployed";
 
     if (overallDeployStatus == "deploying") {
       this.deployAllTooltip = "Resources are being deployed for this game. Hang tight...";
