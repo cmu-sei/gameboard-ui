@@ -64,6 +64,14 @@ export interface EnrollmentReportRecord {
     score?: number;
 }
 
+export interface EnrollmentReportByGameRecord {
+    game: ReportGame;
+    playerCount: number;
+    sponsors: ReportSponsor[];
+    topSponsor: ReportSponsor;
+    topSponsorPlayerCount: number;
+}
+
 export interface EnrollmentReportStatSummary {
     distinctGameCount: number;
     distinctPlayerCount: number;

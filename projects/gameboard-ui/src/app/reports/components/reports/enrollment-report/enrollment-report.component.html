@@ -131,6 +131,12 @@
                     <app-line-chart id="enrollmentTrend" [config]="ctx.chartConfig"></app-line-chart>
                 </div>
             </tab>
+
+            <tab heading="By Game" id="tab-by-game">
+                <div class="by-game-container mt-4">
+                    <app-enrollment-report-by-game [parameters]="selectedParameters"></app-enrollment-report-by-game>
+                </div>
+            </tab>
         </tabset>
     </ng-container>
 </div>
@@ -157,8 +163,4 @@
 
 <ng-template #multiSelectGame let-context>
     <span class="game-name">{{ context.name }}</span>
-</ng-template>
-
-<ng-template #multiSelectSponsor let-context>
-    <span class="sponsor-name">{{ context.name }}</span>
 </ng-template>

@@ -1,0 +1,59 @@
+<ng-container *ngIf="results; else loading">
+    <div *ngIf="results && results.records.length; else noRecords" class="results">
+        <table class="report-table table-hover gameboard-report">
+            <col>
+            <colgroup span="3"></colgroup>
+
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col" class="group-header game-column">Game</th>
+                    <th scope="col" colSpan="3" class="group-header">Enrollment</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Game</td>
+                    <td>Total Players</td>
+                    <td>Total Sponsors</td>
+                    <td>Top Sponsor</td>
+                </tr>
+
+                <tr class="data-row" *ngFor="let record of results.records">
+                    <td>
+                        <app-challenge-or-game-field [game]="record.game"></app-challenge-or-game-field>
+                    </td>
+
+                    <!--ENROLLMENT-->
+                    <td class="report-field numerical">
+                        {{record.playerCount}}
+                    </td>
+                    <td class="report-field numerical">
+                        <p>{{record.sponsors.length}}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <app-parameter-change-link *ngIf="record.topSponsor"
+                            [config]="{ parameterChange: { sponsors: record.topSponsor.id} }">
+                            <app-player-avatar-legacy class="d-block mr-2"
+                                [avatarUri]="record.topSponsor.logoFileName | relativeImage"
+                                [tooltip]="record.topSponsor.name" size="small"></app-player-avatar-legacy>
+                        </app-parameter-change-link>
+                        <small class="subtle-info">{{record.topSponsorPlayerCount}} {{ "player" |
+                            pluralizer:record.topSponsorPlayerCount
+                            }}</small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <app-spinner>Loading the report...</app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noRecords>
+    <app-no-report-records></app-no-report-records>
+</ng-template>

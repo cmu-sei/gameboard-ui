@@ -4,7 +4,6 @@ import { ReportResultsWithOverallStats, ReportSponsor, ReportViewUpdate } from '
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
 import { Observable, firstValueFrom, of } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
-import { ChallengeResult } from '@/api/board-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
@@ -38,6 +37,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
   protected results?: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
   protected leadingSponsorStat?: ReportSummaryStat;
+  protected selectedParameters: EnrollmentReportFlatParameters | null = null;
   protected stats: ReportSummaryStat[] = [];
 
   // parameter query models
@@ -93,6 +93,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     }
 
     this.isLoading = true;
+    this.selectedParameters = parameters;
     this.results = await firstValueFrom(this.reportService.getReportData(parameters));
     const lineChartResults = await this.reportService.getTrendData(parameters);
 
@@ -103,6 +104,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
         additionalInfo: `(${this.results.overallStats.sponsorWithMostPlayers.distinctPlayerCount} players)`
       } :
       undefined;
+
     this.stats = [
       { label: "Game", value: this.results.overallStats.distinctGameCount },
       { label: "Player", value: this.results.overallStats.distinctPlayerCount },

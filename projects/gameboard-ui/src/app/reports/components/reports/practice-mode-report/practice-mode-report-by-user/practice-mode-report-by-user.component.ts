@@ -6,7 +6,6 @@ import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 import { PagingArgs } from '@/api/models';
-import { LogService } from '@/services/log.service';
 import { PlayerChallengeAttempts, PlayerChallengeAttemptsModalComponent } from '@/reports/components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 
 @Component({
@@ -22,7 +21,6 @@ export class PracticeModeReportByUserComponent implements OnChanges {
 
 
   constructor(
-    private log: LogService,
     private modalService: ModalConfirmService,
     private reportService: PracticeModeReportService,
     private routerService: RouterService) {
