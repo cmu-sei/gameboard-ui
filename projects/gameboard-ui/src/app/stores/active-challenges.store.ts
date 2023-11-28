@@ -90,13 +90,6 @@ export class ActiveChallengesRepo implements OnDestroy {
         return this.resolveActivePracticeChallenge(activeChallengesStore.value);
     }
 
-    search(predicate: ActiveChallengesPredicate): LocalActiveChallenge[] {
-        return [
-            ...(activeChallengesStore.state.practice.filter(predicate) || []),
-            ...(activeChallengesStore.state.competition.filter(predicate) || [])
-        ];
-    }
-
     private checkActiveChallengesForEnd() {
         const challenges = [...activeChallengesStore.state.practice];
 
@@ -117,6 +110,9 @@ export class ActiveChallengesRepo implements OnDestroy {
         // and grading attempts, and notify appropriate subjects
         const activePracticeChallenge = this.resolveActivePracticeChallenge(activeChallengesStore.state);
         if (activePracticeChallenge?.challengeDeployment.challengeId === challenge.id) {
+            // no matter what, update the activeChallenge thing in state with the deploy state of the 
+            // challenge's gamespace
+            activePracticeChallenge.challengeDeployment.isDeployed = challenge.state.isActive;
             let removeChallengeFromState = false;
 
             if (challenge.score >= challenge.points) {

@@ -18,7 +18,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // internal components/services
 import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ClipspanComponent } from './components/clipspan/clipspan.component';
-import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
 import { ImageManagerComponent } from './components/image-manager/image-manager.component';
 import { ImagestackComponent } from './components/imagestack/imagestack.component';
@@ -28,7 +27,6 @@ import { LoginComponent } from './components/login/login.component';
 import { MessageBoardComponent } from './components/message-board/message-board.component';
 import { MorphingTextComponent } from './components/morphing-text/morphing-text.component';
 
-import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { FormsModule } from '@angular/forms';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
 import { ObserveOrderPipe } from './pipes/observe-order.pipe';
@@ -41,7 +39,6 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 const components = [
   ClipspanComponent,
-  ErrorDivComponent,
   ImageManagerComponent,
   GameCardComponent,
   LoginComponent,
@@ -49,7 +46,6 @@ const components = [
   InplaceEditorComponent,
   AgedDatePipe,
   UntilPipe,
-  CamelspacePipe,
   ShortTimePipe,
   UntagPipe,
   SafeUrlPipe,

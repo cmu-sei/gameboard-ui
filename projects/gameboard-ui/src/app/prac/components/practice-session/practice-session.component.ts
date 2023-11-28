@@ -35,11 +35,11 @@ export class PracticeSessionComponent {
   protected showSpecMarkdown = true;
 
   constructor(
+    practiceService: PracticeService,
     private activeChallengesRepo: ActiveChallengesRepo,
     private modalService: ModalConfirmService,
     private localUser: LocalUserService,
     private playerService: PlayerService,
-    private practiceService: PracticeService,
     private route: ActivatedRoute,
     private routerService: RouterService,
     private teamService: TeamService,
@@ -156,7 +156,7 @@ export class PracticeSessionComponent {
       content: PracticeChallengeSolvedModalComponent,
       context: {
         challenge
-      }
+      },
     });
   }
 

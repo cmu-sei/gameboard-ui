@@ -1,21 +1,29 @@
-import { Component, OnInit, ViewChild, Input, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, Input, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
-import { BoardPlayer, BoardSpec } from '../../api/board-models';
+import { firstValueFrom, Observable, of, Subject, Subscription } from 'rxjs';
+import { catchError, debounceTime, delay, filter, first, tap } from 'rxjs/operators';
 import { faCaretDown, faCaretRight, faCloudUploadAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { Observable, of, Subject, Subscription } from 'rxjs';
-import { FeedbackService } from '../../api/feedback.service';
-import { Feedback, FeedbackSubmission, FeedbackQuestion } from '../../api/feedback-models';
-import { BoardGame } from '../../api/board-models';
-import { catchError, combineAll, debounceTime, delay, filter, first, map, mergeAll, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { BoardGame, BoardPlayer, BoardSpec } from '@/api/board-models';
+import { FeedbackService } from '@/api/feedback.service';
+import { Feedback, FeedbackSubmission, FeedbackQuestion } from '@/api/feedback-models';
+
+export type MiniBoardSpec = {
+  id: string,
+  instance?: {
+    id: string,
+    state: { isActive: boolean }
+  },
+}
 
 @Component({
   selector: 'app-feedback-form',
   templateUrl: './feedback-form.component.html',
   styleUrls: ['./feedback-form.component.scss']
 })
-export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class FeedbackFormComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() boardPlayer?: BoardPlayer;
-  @Input() spec?: BoardSpec;
+  @Input() hideIfFeedbackProvidedPreviously = false;
+  @Input() spec?: MiniBoardSpec;
   @Input() title!: string;
   @Input() type!: 'challenge' | 'game';
   @ViewChild(NgForm) form!: FormGroup;
@@ -30,8 +38,9 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
 
   errors: any[] = [];
   game?: BoardGame;
+  isForceHidden = false;
+  show = false;
   submitPending: boolean = false;
-  show: boolean = false;
 
   refreshSpec$ = new Subject<BoardSpec>();
   status: string = "";
@@ -48,16 +57,13 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
     };
   }
 
-  ngOnInit(): void {
-    this.load(this.boardPlayer, this.spec, this.type);
-  }
-
   ngAfterViewInit(): void {
     this.autosaveInit();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.load(this.boardPlayer, this.spec, this.type);
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    await this.load(this.boardPlayer, this.spec, this.type);
+    this.isForceHidden = (this.feedbackForm?.submitted || false) && this.hideIfFeedbackProvidedPreviously;
   }
 
   ngOnDestroy(): void {
@@ -70,7 +76,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
       // swap in the answers from user submitted response object, but only answers
       feedback.questions.forEach((question) => {
         // templateMap holds references to feedback form question objects, mapped by id
-        let questionTemplate = this.templateMap.get(question.id);
+        const questionTemplate = this.templateMap.get(question.id);
         if (questionTemplate)
           questionTemplate.answer = question.answer;
       });
@@ -205,70 +211,75 @@ export class FeedbackFormComponent implements OnInit, AfterViewInit, OnChanges, 
     return Array.from(new Array(max), (x, i) => i + min);
   }
 
-  private load(boardPlayer?: BoardPlayer, spec?: BoardSpec, type?: "challenge" | "game") {
+  private async load(boardPlayer?: BoardPlayer, spec?: MiniBoardSpec, type?: "challenge" | "game") {
     // clear form
     this.form?.reset();
     this.status = "";
     this.errors = [];
 
-    if (!boardPlayer || !spec || !type)
+    if (!boardPlayer || !type)
       return;
 
-    this.game = boardPlayer.game;
+    if (type == "challenge") {
+      if (!spec) {
+        throw new Error("Can't load challenge-level feedback without a spec.");
+      }
 
-    if (type === "challenge") {
-      this.loadChallenge(boardPlayer, spec);
+      await this.loadChallenge(boardPlayer, spec);
       return;
     }
 
-    this.loadGame(boardPlayer, spec);
+    await this.loadGame(boardPlayer);
   }
 
-  private loadChallenge(boardPlayer: BoardPlayer, spec: BoardSpec) {
+  private async loadChallenge(boardPlayer: BoardPlayer, spec: MiniBoardSpec) {
     this.setTemplate(boardPlayer.game.feedbackTemplate.challenge);
 
     if (!spec) {
       return;
     }
 
-    this.api.retrieve({
-      challengeSpecId: spec.id,
-      challengeId: spec.instance?.id,
-      gameId: boardPlayer.gameId
-    }).pipe(
-      first(),
-      tap(feedback => {
-        if (feedback)
-          this.updateFeedback(feedback);
+    try {
+      const feedback = await firstValueFrom(
+        this.api.retrieve({
+          challengeSpecId: spec.id,
+          challengeId: spec.instance?.id,
+          gameId: boardPlayer.gameId
+        })
+      );
 
-        // behavior for whether to hide form on load based on challenge status or already submitted
-        this.show = !this.spec?.instance?.state.isActive;
+      if (feedback)
+        this.updateFeedback(feedback);
 
-        if (feedback?.submitted) {
-          this.show = false;
-        }
-      })
-    ).subscribe();
+      // behavior for whether to hide form on load based on challenge status or already submitted
+      this.show = !this.spec?.instance?.state.isActive;
+
+      if (feedback?.submitted) {
+        this.show = false;
+      }
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
-  private loadGame(boardPlayer: BoardPlayer, spec: BoardSpec) {
+  private async loadGame(boardPlayer: BoardPlayer) {
     this.setTemplate(boardPlayer.game.feedbackTemplate.game);
 
     if (!boardPlayer) {
       return;
     }
 
-    this.api.retrieve({ gameId: boardPlayer.gameId })
-      .pipe(first()).subscribe(
-        feedback => {
-          this.updateFeedback(feedback);
+    try {
+      const feedback = await firstValueFrom(this.api.retrieve({ gameId: boardPlayer.gameId }));
 
-          if (boardPlayer.session.isAfter)
-            this.show = true;
-          if (feedback?.submitted)
-            this.show = false;
-        },
-        (err: any) => { }
-      );
+      if (boardPlayer.session.isAfter)
+        this.show = true;
+      if (feedback?.submitted)
+        this.show = false;
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 }
