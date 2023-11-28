@@ -70,11 +70,5 @@
                 </app-clipspan>
             </div>
         </div>
-
-        <div
-            *ngIf="legacyContext.boardSpec?.instance?.state?.challenge && legacyContext.boardPlayer?.game?.feedbackTemplate?.challenge?.length">
-            <app-feedback-form [boardPlayer]="legacyContext.boardPlayer!" [title]="'Challenge Feedback'"
-                [spec]="legacyContext.boardSpec!" [type]="'challenge'"></app-feedback-form>
-        </div>
     </ng-container>
 </ng-container>

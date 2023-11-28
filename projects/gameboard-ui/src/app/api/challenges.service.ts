@@ -75,7 +75,7 @@ export class ChallengesService {
 
   public grade(model: SectionSubmission): Observable<Challenge> {
     return this.http.put<Challenge>(this.apiUrl.build("challenge/grade"), model).pipe(
-      tap(challenge => this._challengeGraded$.next(challenge))
+      tap(challenge => this._challengeGraded$.next(challenge)),
     );
   }
 

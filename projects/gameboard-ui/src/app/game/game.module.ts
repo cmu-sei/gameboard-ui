@@ -18,7 +18,6 @@ import { ExternalGameLinkBannerComponent } from './components/external-game-link
 import { ExternalGameLoadingPageComponent } from './pages/external-game-loading-page/external-game-loading-page.component';
 import { ExternalGamePageComponent } from './pages/external-game-page/external-game-page.component';
 import { ExternalSyncGameGuard } from '@/guards/external-sync-game.guard';
-import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
 import { GameboardPageComponent } from './pages/gameboard-page/gameboard-page.component';
 import { GameInfoComponent } from './game-info/game-info.component';
 import { GameIsStarted } from '@/guards/game-is-started.guard';
@@ -45,7 +44,6 @@ const MODULE_DECLARATIONS = [
   ChallengeDeployCountdownComponent,
   ExternalGameLoadingPageComponent,
   ExternalGamePageComponent,
-  FeedbackFormComponent,
   GameInfoComponent,
   GamePageComponent,
   GameboardPageComponent,
@@ -60,7 +58,6 @@ const MODULE_DECLARATIONS = [
   ScoreboardPageComponent,
   ScoreboardTableComponent,
   PlayerPresenceComponent,
-  FeedbackFormComponent,
   CertificateComponent,
   HubStateToPlayerStatusPipe,
   SessionStartControlsComponent,

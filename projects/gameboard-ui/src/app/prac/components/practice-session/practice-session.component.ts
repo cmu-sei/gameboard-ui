@@ -156,7 +156,7 @@ export class PracticeSessionComponent {
       content: PracticeChallengeSolvedModalComponent,
       context: {
         challenge
-      }
+      },
     });
   }
 
