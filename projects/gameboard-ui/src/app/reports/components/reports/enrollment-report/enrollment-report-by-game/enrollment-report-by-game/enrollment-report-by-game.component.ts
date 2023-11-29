@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EnrollmentReportByGameRecord, EnrollmentReportByGameSponsor, EnrollmentReportFlatParameters } from '@/reports/components/reports/enrollment-report/enrollment-report.models';
 import { ReportGame, ReportResults } from '@/reports/reports-models';
 import { EnrollmentReportService } from '../../enrollment-report.service';
@@ -13,7 +13,7 @@ import { RouterService } from '@/services/router.service';
   templateUrl: './enrollment-report-by-game.component.html',
   styleUrls: ['./enrollment-report-by-game.component.scss']
 })
-export class EnrollmentReportByGameComponent implements OnChanges {
+export class EnrollmentReportByGameComponent implements OnInit {
   @Input() parameters!: EnrollmentReportFlatParameters | null;
 
   protected results: ReportResults<EnrollmentReportByGameRecord> | null = null;
@@ -23,7 +23,7 @@ export class EnrollmentReportByGameComponent implements OnChanges {
     private modalService: ModalConfirmService,
     private routerService: RouterService) { }
 
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+  async ngOnInit(): Promise<void> {
     await this.loadData(this.parameters);
   }
 
