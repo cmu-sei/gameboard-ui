@@ -137,9 +137,7 @@
 
             <tab heading="Enrollment Over Time" id="tab-trend-line" [active]="selectedParameters?.tab == 'trend'"
                 (selectTab)="handleTabClick('trend')">
-                <div class="trend-line-container mt-4">
-                    <app-line-chart id="enrollmentTrend" [config]="ctx.chartConfig"></app-line-chart>
-                </div>
+                <app-enrollment-report-trend [parameters]="selectedParameters"></app-enrollment-report-trend>
             </tab>
 
             <tab heading="By Game" id="tab-by-game" [active]="selectedParameters?.tab == 'game'"

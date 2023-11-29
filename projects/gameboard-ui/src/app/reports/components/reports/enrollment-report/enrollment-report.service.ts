@@ -36,14 +36,16 @@ export class EnrollmentReportService {
     return this.http.get<ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", pagedParameters));
   }
 
-  async getTrendData(parameters: EnrollmentReportFlatParameters): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
+  async getTrendData(parameters: EnrollmentReportFlatParameters | null): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
     // ignore paging/tab parameters for the line chart
-    const trendFriendlyParams = { ...parameters, pageNumber: undefined, pageSize: undefined };
-    delete trendFriendlyParams.tab;
+    const trendParams = { ...(parameters || {}) };
+    delete trendParams.tab;
+    delete trendParams.pageNumber;
+    delete trendParams.pageSize;
 
     return await firstValueFrom(this
       .http
-      .get<{ [dateString: string]: EnrollmentReportLineChartGroup }>(this.apiUrl.build("reports/enrollment/trend", trendFriendlyParams))
+      .get<{ [dateString: string]: EnrollmentReportLineChartGroup }>(this.apiUrl.build("reports/enrollment/trend", trendParams))
       .pipe(
         map(results => {
           const mapped = new Map<DateTime, EnrollmentReportLineChartGroup>();
