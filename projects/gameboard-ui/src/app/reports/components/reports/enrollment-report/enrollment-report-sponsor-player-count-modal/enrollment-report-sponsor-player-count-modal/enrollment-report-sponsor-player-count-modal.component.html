@@ -12,7 +12,7 @@
         </button>
     </div>
     <div class="modal-body container d-flex flex-wrap align-items-center justify-content-start">
-        <div class="d-flex flex-column align-items-center mr-3 sponsor-container"
+        <div class="d-flex flex-column align-items-center mr-3 mb-3 sponsor-container"
             *ngFor=" let sponsor of context.sponsors">
             <app-player-avatar-legacy [avatarUri]="sponsor.logoFileName | relativeImage"
                 [tooltip]="sponsor.name"></app-player-avatar-legacy>

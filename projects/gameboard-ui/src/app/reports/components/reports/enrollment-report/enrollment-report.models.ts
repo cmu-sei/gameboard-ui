@@ -65,10 +65,17 @@ export interface EnrollmentReportRecord {
 }
 
 export interface EnrollmentReportByGameRecord {
-    game: ReportGame;
+    game: EnrollmentReportByGameGame;
     playerCount: number;
     sponsors: EnrollmentReportByGameSponsor[];
     topSponsor: EnrollmentReportByGameSponsor;
+}
+
+export interface EnrollmentReportByGameGame extends ReportGame {
+    executionOpen: Date;
+    executionClosed: Date;
+    registrationOpen: Date;
+    registrationClosed: Date;
 }
 
 export interface EnrollmentReportByGameSponsor {

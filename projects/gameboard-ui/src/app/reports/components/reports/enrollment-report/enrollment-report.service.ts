@@ -17,7 +17,18 @@ export class EnrollmentReportService {
   getByGameData(parameters: EnrollmentReportFlatParameters | null): Observable<ReportResults<EnrollmentReportByGameRecord>> {
     parameters = parameters || {};
     const pagedParameters = this.reportsService.applyDefaultPaging(parameters);
-    return this.http.get<ReportResults<EnrollmentReportByGameRecord>>(this.apiUrl.build("reports/enrollment/by-game", pagedParameters));
+    return this.http.get<ReportResults<EnrollmentReportByGameRecord>>(this.apiUrl.build("reports/enrollment/by-game", pagedParameters)).pipe(
+      map(results => {
+        for (const record of results.records) {
+          record.game.executionClosed = this.reportsService.queryStringEncodedDateToDate(record.game.executionClosed as any)!;
+          record.game.executionOpen = this.reportsService.queryStringEncodedDateToDate(record.game.executionOpen as any)!;
+          record.game.registrationClosed = this.reportsService.queryStringEncodedDateToDate(record.game.registrationClosed as any)!;
+          record.game.registrationOpen = this.reportsService.queryStringEncodedDateToDate(record.game.registrationOpen as any)!;
+        }
+
+        return results;
+      })
+    );
   }
 
   getReportData(parameters: EnrollmentReportFlatParameters): Observable<ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>> {

@@ -3,7 +3,6 @@ import { EnrollmentReportByGameRecord, EnrollmentReportByGameSponsor, Enrollment
 import { ReportGame, ReportResults } from '@/reports/reports-models';
 import { EnrollmentReportService } from '../../enrollment-report.service';
 import { firstValueFrom } from 'rxjs';
-import { RouterService } from '@/services/router.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { EnrollmentReportSponsorPlayerCountModalComponent, EnrollmentReportSponsorPlayerCountModalContext } from '../../enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
 
@@ -19,8 +18,7 @@ export class EnrollmentReportByGameComponent implements OnChanges {
 
   constructor(
     private enrollmentReportService: EnrollmentReportService,
-    private modalService: ModalConfirmService,
-    private routerService: RouterService) { }
+    private modalService: ModalConfirmService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     await this.loadData(this.parameters);
