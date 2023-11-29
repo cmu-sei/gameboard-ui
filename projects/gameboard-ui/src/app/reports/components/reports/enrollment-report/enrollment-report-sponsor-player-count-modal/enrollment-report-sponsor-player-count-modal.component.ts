@@ -2,7 +2,7 @@ import { SimpleEntity } from '@/api/models';
 import { IModalReady } from '@/core/components/modal/modal.models';
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { EnrollmentReportByGameSponsor } from '../../enrollment-report.models';
+import { EnrollmentReportByGameSponsor } from '../enrollment-report.models';
 
 export interface EnrollmentReportSponsorPlayerCountModalContext {
   game: SimpleEntity;

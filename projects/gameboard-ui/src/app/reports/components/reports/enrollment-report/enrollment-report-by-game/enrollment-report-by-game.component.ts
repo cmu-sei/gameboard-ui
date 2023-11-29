@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { EnrollmentReportByGameRecord, EnrollmentReportByGameSponsor, EnrollmentReportFlatParameters } from '@/reports/components/reports/enrollment-report/enrollment-report.models';
 import { ReportGame, ReportResults } from '@/reports/reports-models';
-import { EnrollmentReportService } from '../../enrollment-report.service';
+import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
 import { firstValueFrom } from 'rxjs';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { EnrollmentReportSponsorPlayerCountModalComponent, EnrollmentReportSponsorPlayerCountModalContext } from '../../enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
+import { EnrollmentReportSponsorPlayerCountModalComponent, EnrollmentReportSponsorPlayerCountModalContext } from '../enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
 import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
 

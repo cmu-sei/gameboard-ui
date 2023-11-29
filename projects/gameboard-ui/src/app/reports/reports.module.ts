@@ -5,6 +5,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
 import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt-summary/challenge-attempt-summary.component';
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
+import { EnrollmentReportByGameComponent } from './components/reports/enrollment-report/enrollment-report-by-game/enrollment-report-by-game.component';
+import { EnrollmentReportSponsorPlayerCountModalComponent } from './components/reports/enrollment-report/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
 import { NoReportRecordsComponent } from './components/no-report-records/no-report-records.component';
 import { ParameterChangeLinkComponent } from './components/parameter-change-link/parameter-change-link.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
@@ -34,8 +36,6 @@ import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
-import { EnrollmentReportByGameComponent } from './components/reports/enrollment-report/enrollment-report-by-game/enrollment-report-by-game/enrollment-report-by-game.component';
-import { EnrollmentReportSponsorPlayerCountModalComponent } from './components/reports/enrollment-report/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +44,8 @@ import { EnrollmentReportSponsorPlayerCountModalComponent } from './components/r
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
     EnrollmentReportComponent,
+    EnrollmentReportByGameComponent,
+    EnrollmentReportSponsorPlayerCountModalComponent,
     ParameterGameChallengespecComponent,
     ParameterDateRangeComponent,
     ParameterTicketStatusComponent,
@@ -70,8 +72,6 @@ import { EnrollmentReportSponsorPlayerCountModalComponent } from './components/r
     ReportStatSummaryComponent,
     PlayerChallengeAttemptsModalComponent,
     ParameterSponsorComponent,
-    EnrollmentReportByGameComponent,
-    EnrollmentReportSponsorPlayerCountModalComponent,
   ],
   imports: [
     CommonModule,
