@@ -20,7 +20,8 @@
         <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results.records.length"
             [importantStat]="leadingSponsorStat" [stats]="stats"></app-report-stat-summary>
         <tabset *ngIf="ctx.results.records.length; else noRecords">
-            <tab heading="Summary Table" id="tab-summary-table" [active]="selectedParameters?.tab == 'summary'"
+            <tab heading="Summary Table" id="tab-summary-table"
+                [active]="selectedParameters?.tab == 'summary' || !selectedParameters?.tab"
                 (selectTab)="handleTabClick('summary')">
                 <div class="results">
                     <table class="report-table table-hover gameboard-report">

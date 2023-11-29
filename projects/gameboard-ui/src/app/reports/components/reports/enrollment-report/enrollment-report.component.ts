@@ -40,7 +40,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
   protected results?: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
   protected leadingSponsorStat?: ReportSummaryStat;
-  protected selectedParameters: EnrollmentReportFlatParameters | null = null;
+  protected selectedParameters: EnrollmentReportFlatParameters | null = { tab: "summary" };
   protected stats: ReportSummaryStat[] = [];
 
   // parameter query models

@@ -5,6 +5,8 @@ import { EnrollmentReportService } from '../../enrollment-report.service';
 import { firstValueFrom } from 'rxjs';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { EnrollmentReportSponsorPlayerCountModalComponent, EnrollmentReportSponsorPlayerCountModalContext } from '../../enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
+import { PagingArgs } from '@/api/models';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-enrollment-report-by-game',
@@ -18,10 +20,15 @@ export class EnrollmentReportByGameComponent implements OnChanges {
 
   constructor(
     private enrollmentReportService: EnrollmentReportService,
-    private modalService: ModalConfirmService) { }
+    private modalService: ModalConfirmService,
+    private routerService: RouterService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     await this.loadData(this.parameters);
+  }
+
+  protected handlePagingChange(request: PagingArgs) {
+    this.routerService.updateQueryParams({ parameters: { ...request } });
   }
 
   protected handleSponsorsCountClick(game: ReportGame, sponsors: EnrollmentReportByGameSponsor[]) {
