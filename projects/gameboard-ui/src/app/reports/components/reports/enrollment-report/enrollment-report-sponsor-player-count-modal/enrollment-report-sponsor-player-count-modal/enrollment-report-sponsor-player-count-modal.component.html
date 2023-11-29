@@ -11,7 +11,7 @@
             <span aria-hidden="true" class="visually-hidden">&times;</span>
         </button>
     </div>
-    <div class="modal-body container d-flex flex-wrap">
+    <div class="modal-body container d-flex flex-wrap align-items-center justify-content-start">
         <div class="d-flex flex-column align-items-center mr-3 sponsor-container"
             *ngFor=" let sponsor of context.sponsors">
             <app-player-avatar-legacy [avatarUri]="sponsor.logoFileName | relativeImage"

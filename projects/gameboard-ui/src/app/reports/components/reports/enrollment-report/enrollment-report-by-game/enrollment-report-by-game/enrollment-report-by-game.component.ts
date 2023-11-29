@@ -31,8 +31,9 @@ export class EnrollmentReportByGameComponent implements OnChanges {
       content: EnrollmentReportSponsorPlayerCountModalComponent,
       context: {
         game: { id: game.id, name: game.name },
-        sponsors: sponsors
-      }
+        sponsors: sponsors,
+      },
+      modalClasses: ["modal-xl"]
     });
   }
 
