@@ -1,0 +1,32 @@
+<div class="sponsor-challenge-performance-component" *ngIf="context; else loading">
+    <div class="modal-header">
+        <div class="modal-title pull-left d-flex align-items-center">
+
+            <div>
+                <h2>{{ context.game.name }}</h2>
+                <h4>Players per Sponsor</h4>
+            </div>
+        </div>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body container d-flex flex-wrap">
+        <div class="d-flex flex-column align-items-center mr-3 sponsor-container"
+            *ngFor=" let sponsor of context.sponsors">
+            <app-player-avatar-legacy [avatarUri]="sponsor.logoFileName | relativeImage"
+                [tooltip]="sponsor.name"></app-player-avatar-legacy>
+            <span class="d-block">{{sponsor.name}}</span>
+            <span class="subtle-info">
+                {{ sponsor.playerCount }} {{ "player" | pluralizer:sponsor.playerCount }}
+            </span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="close()">OK</button>
+    </div>
+</div>
+
+<ng-template #loading>
+    <app-spinner>Loading sponsor info...</app-spinner>
+</ng-template>

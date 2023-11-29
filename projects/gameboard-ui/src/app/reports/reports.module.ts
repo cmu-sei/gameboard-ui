@@ -35,6 +35,7 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 import { EnrollmentReportByGameComponent } from './components/reports/enrollment-report/enrollment-report-by-game/enrollment-report-by-game/enrollment-report-by-game.component';
+import { EnrollmentReportSponsorPlayerCountModalComponent } from './components/reports/enrollment-report/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { EnrollmentReportByGameComponent } from './components/reports/enrollment
     PlayerChallengeAttemptsModalComponent,
     ParameterSponsorComponent,
     EnrollmentReportByGameComponent,
+    EnrollmentReportSponsorPlayerCountModalComponent,
   ],
   imports: [
     CommonModule,

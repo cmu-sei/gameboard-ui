@@ -29,7 +29,8 @@
                         {{record.playerCount}}
                     </td>
                     <td class="report-field numerical">
-                        <p>{{record.sponsors.length}}</p>
+                        <p class="tooltipped-value" (click)="handleSponsorsCountClick(record.game, record.sponsors)">
+                            {{ record.sponsors.length }}</p>
                     </td>
                     <td class="report-field numerical">
                         <app-parameter-change-link *ngIf="record.topSponsor"
@@ -38,9 +39,9 @@
                                 [avatarUri]="record.topSponsor.logoFileName | relativeImage"
                                 [tooltip]="record.topSponsor.name" size="small"></app-player-avatar-legacy>
                         </app-parameter-change-link>
-                        <small class="subtle-info">{{record.topSponsorPlayerCount}} {{ "player" |
-                            pluralizer:record.topSponsorPlayerCount
-                            }}</small>
+                        <small class="subtle-info">
+                            {{record.topSponsor.playerCount}} {{ "player" | pluralizer:record.topSponsor.playerCount }}
+                        </small>
                     </td>
                 </tr>
             </tbody>

@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters } from '@/reports/components/reports/enrollment-report/enrollment-report.models';
-import { ReportResults } from '@/reports/reports-models';
+import { EnrollmentReportByGameRecord, EnrollmentReportByGameSponsor, EnrollmentReportFlatParameters } from '@/reports/components/reports/enrollment-report/enrollment-report.models';
+import { ReportGame, ReportResults } from '@/reports/reports-models';
 import { EnrollmentReportService } from '../../enrollment-report.service';
 import { firstValueFrom } from 'rxjs';
-import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { EnrollmentReportSponsorPlayerCountModalComponent, EnrollmentReportSponsorPlayerCountModalContext } from '../../enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
 
 @Component({
   selector: 'app-enrollment-report-by-game',
@@ -18,10 +19,21 @@ export class EnrollmentReportByGameComponent implements OnChanges {
 
   constructor(
     private enrollmentReportService: EnrollmentReportService,
+    private modalService: ModalConfirmService,
     private routerService: RouterService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     await this.loadData(this.parameters);
+  }
+
+  protected handleSponsorsCountClick(game: ReportGame, sponsors: EnrollmentReportByGameSponsor[]) {
+    this.modalService.openComponent<EnrollmentReportSponsorPlayerCountModalComponent, EnrollmentReportSponsorPlayerCountModalContext>({
+      content: EnrollmentReportSponsorPlayerCountModalComponent,
+      context: {
+        game: { id: game.id, name: game.name },
+        sponsors: sponsors
+      }
+    });
   }
 
   private async loadData(parameters: EnrollmentReportFlatParameters | null) {
