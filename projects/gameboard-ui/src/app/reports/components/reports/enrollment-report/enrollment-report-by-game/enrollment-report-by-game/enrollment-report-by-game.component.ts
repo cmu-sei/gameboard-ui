@@ -36,6 +36,6 @@ export class EnrollmentReportByGameComponent implements OnChanges {
   }
 
   private async loadData(parameters: EnrollmentReportFlatParameters | null) {
-    this.results = await firstValueFrom(this.enrollmentReportService.getByGameData(this.parameters));
+    this.results = await firstValueFrom(this.enrollmentReportService.getByGameData(parameters));
   }
 }

@@ -20,7 +20,8 @@
         <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results.records.length"
             [importantStat]="leadingSponsorStat" [stats]="stats"></app-report-stat-summary>
         <tabset *ngIf="ctx.results.records.length; else noRecords">
-            <tab heading="Summary Table" id="tab-summary-table">
+            <tab heading="Summary Table" id="tab-summary-table" [active]="selectedParameters?.tab == 'summary'"
+                (selectTab)="handleTabClick('summary')">
                 <div class="results">
                     <table class="report-table table-hover gameboard-report">
                         <colgroup span="3"></colgroup>
@@ -124,27 +125,30 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="pager-container d-flex justify-content-end mt-4">
+                    <div class="flex-grow-1"></div>
+                    <app-select-pager [itemCount]="results?.paging?.itemCount"
+                        [pageSize]="results?.paging?.pageSize || 20"
+                        (change)="handlePagingChange($event)"></app-select-pager>
+                </div>
             </tab>
 
-            <tab heading="Enrollment Over Time" id="tab-trend-line">
+            <tab heading="Enrollment Over Time" id="tab-trend-line" [active]="selectedParameters?.tab == 'trend'"
+                (selectTab)="handleTabClick('trend')">
                 <div class="trend-line-container mt-4">
                     <app-line-chart id="enrollmentTrend" [config]="ctx.chartConfig"></app-line-chart>
                 </div>
             </tab>
 
-            <tab heading="By Game" id="tab-by-game">
+            <tab heading="By Game" id="tab-by-game" [active]="selectedParameters?.tab == 'game'"
+                (selectTab)="handleTabClick('game')">
                 <div class="by-game-container mt-4">
                     <app-enrollment-report-by-game [parameters]="selectedParameters"></app-enrollment-report-by-game>
                 </div>
             </tab>
         </tabset>
     </ng-container>
-</div>
-
-<div class="pager-container d-flex justify-content-end mt-4">
-    <div class="flex-grow-1"></div>
-    <app-select-pager [itemCount]="results?.paging?.itemCount" [pageSize]="results?.paging?.pageSize || 20"
-        (change)="handlePagingChange($event)"></app-select-pager>
 </div>
 
 <ng-template #loading>

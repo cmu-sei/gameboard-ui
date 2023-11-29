@@ -157,8 +157,11 @@ export class ParameterSponsorComponent implements OnInit {
     );
 
     const params: Params = {};
-    params[this.queryParamName] = validSponsorIds.join(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
+    if (validSponsorIds.length) {
+      params[this.queryParamName] = validSponsorIds.join(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
+    }
+
     await this.routerService.updateQueryParams({ parameters: params });
-    this.updateSelectionSummary(this.selectedSponsors);
+    this.updateSelectionSummary(value);
   }
 }

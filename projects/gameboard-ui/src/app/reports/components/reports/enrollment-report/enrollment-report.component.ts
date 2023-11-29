@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
+import { Component, ViewChild } from '@angular/core';
+import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord, EnrollmentReportStatSummary, EnrollmentReportTab } from './enrollment-report.models';
 import { ReportResultsWithOverallStats, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
 import { Observable, firstValueFrom, of } from 'rxjs';
@@ -11,6 +11,7 @@ import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 
 interface EnrollmentReportContext {
   results: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
@@ -23,6 +24,8 @@ interface EnrollmentReportContext {
   styleUrls: ['./enrollment-report.component.scss']
 })
 export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters, EnrollmentReportParameters> {
+  @ViewChild('reportTabs', { static: false }) reportTabs?: TabsetComponent;
+
   games$ = this.reportsService.getGames();
   seasons$ = this.reportsService.getSeasons();
   series$ = this.reportsService.getSeries();
@@ -161,6 +164,12 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
       metaData: this.results.metaData,
       pagingResults: this.results.paging,
     };
+  }
+
+  protected handleTabClick(tab: EnrollmentReportTab) {
+    if (tab != this.selectedParameters?.tab) {
+      this.routerService.updateQueryParams({ parameters: { tab } });
+    }
   }
 
   protected showChallengesDetail(record: EnrollmentReportRecord, challengeStatus: "deployed" | "partial" | "complete") {
