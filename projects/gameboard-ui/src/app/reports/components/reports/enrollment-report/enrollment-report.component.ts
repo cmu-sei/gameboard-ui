@@ -8,7 +8,7 @@ import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
-import { TabsetComponent } from 'ngx-bootstrap/tabs';
+import { deepEquals } from '@/tools/object-tools.lib';
 
 interface EnrollmentReportContext {
   stats$: Observable<EnrollmentReportSummaryStats>
@@ -25,8 +25,6 @@ interface EnrollmentReportSummaryStats {
   styleUrls: ['./enrollment-report.component.scss']
 })
 export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters, EnrollmentReportParameters> {
-  @ViewChild('reportTabs', { static: false }) reportTabs?: TabsetComponent;
-
   games$ = this.reportsService.getGames();
   seasons$ = this.reportsService.getSeasons();
   series$ = this.reportsService.getSeries();
@@ -87,16 +85,19 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
-    // TODO: figure out why "this.reportService" is undefined sometimes but not others
-    if (!this.reportService) {
-      return null as unknown as ReportViewUpdate;
+    // if the parameters are identical except paging/tabs, we don't need to reload stats
+    const areDeepEqual = deepEquals(
+      { ...parameters, pageNumber: undefined, pageSize: undefined, tab: undefined },
+      { ...this.selectedParameters, pageNumber: undefined, pageSize: undefined, tab: undefined }
+    );
+
+    if (!this.ctx?.stats$ || !areDeepEqual) {
+      this.ctx = {
+        stats$: this.loadSummaryStats(parameters)
+      };
     }
 
-    console.log("selected parameters", parameters);
     this.selectedParameters = parameters;
-    this.ctx = {
-      stats$: this.loadSummaryStats(parameters)
-    };
 
     return {
       metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.EnrollmentReport)),
@@ -105,7 +106,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
   protected handleTabClick(tab: EnrollmentReportTab) {
     if (tab != this.selectedParameters?.tab) {
-      this.routerService.updateQueryParams({ parameters: { tab } });
+      this.routerService.updateQueryParams({ parameters: { tab }, resetParams: ["pageNumber"] });
     }
   }
 
