@@ -42,7 +42,7 @@ export class GameHubService {
     }
 
     if (this._joinedGameIds$.value.some(gId => gId == gameId)) {
-      this.logService.logWarning(`Tried to join ${gameId} but was already connected.`, this.signalRService.connectionState);
+      this.logService.logWarning(`Tried to join ${gameId} but was already connected.`);
       return;
     }
 

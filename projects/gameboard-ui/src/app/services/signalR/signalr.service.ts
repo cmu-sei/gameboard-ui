@@ -178,6 +178,7 @@ export class SignalRService {
   }
 
   private updateState(): void {
+    this.logger.logInfo(`Hub ${this._connection?.connectionId} is in state ${this._connection?.state}`);
     this._connectionState$.next(this._connection?.state || HubConnectionState.Disconnected);
   }
 }
