@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportStatSummary, EnrollmentReportTab } from './enrollment-report.models';
 import { ReportKey, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
-import { Observable, first, firstValueFrom, map, of } from 'rxjs';
+import { Observable, first, firstValueFrom, map } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
 import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
