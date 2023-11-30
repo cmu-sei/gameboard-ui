@@ -33,7 +33,7 @@ export class SignalRService {
     const connectToUrl = `${this.config.apphost}${hubUrl}`;
     this.logger.logInfo(this.formatForlog(`Connecting to SignalR hub at ${connectToUrl}...`));
 
-    if (this._connection?.baseUrl === hubUrl) {
+    if (this._connection?.baseUrl === hubUrl && this._connection?.state == HubConnectionState.Connected) {
       this.logger.logInfo(this.formatForlog(`Already connected to hub at "${connectToUrl}".`));
       return;
     }
@@ -66,7 +66,6 @@ export class SignalRService {
   }
 
   public async disconnect(): Promise<void> {
-
     this.logger.logInfo("Disconnecting from hub at ", this._connection?.baseUrl);
     this._connection?.stop();
     this.logger.logInfo("Disconnected from", this._connection?.baseUrl);
@@ -81,7 +80,7 @@ export class SignalRService {
     if (this._connection.state !== HubConnectionState.Connected) {
       this.logger.logWarning(`Can't send message "${message}" with parameters ${arg}. The hub is not connected (State: "${this._connection?.state}"). Attempting to connect...`);
       await this.resolveOpenConnection(this._connection);
-      return;
+      this.logger.logWarning(`Connected. Now sending message: "${message}."`);
     }
 
     this.logger.logInfo(this.formatForlog(`Sending message "${message}" to connection "${this._connection?.baseUrl} => ${this._connection.connectionId}" with params:`, arg));
