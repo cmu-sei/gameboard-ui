@@ -177,7 +177,10 @@ export class GamePageComponent implements OnDestroy {
       tap(c => { if (!c.game) { router.navigateByUrl("/"); } }),
       filter(c => !!c.game),
       tap(async ctx => {
-        if (!ctx.player)
+        // NOTE: even if they haven't enrolled, they have a ctx.player object. 
+        // we have to make sure they actually have an id in order to confirm enrollment
+        // and do things like join the game hub
+        if (!ctx.player.id)
           return;
 
         this.ctxIds.playerId = ctx.player.id;
@@ -188,7 +191,7 @@ export class GamePageComponent implements OnDestroy {
         // if appropriate to the game execution period and modes,
         // join the hub that coordinates across everyone playing this game
         // (for sync start, external game launch, etc.)
-        if (ctx.game.isLive && (ctx.game.requireSynchronizedStart || this.isExternalGame)) {
+        if (ctx.game.requireSynchronizedStart || this.isExternalGame) {
           this.logService.logInfo("This is an external or sync-start game. Joining the game hub...");
           await this.joinGameHub({
             game: ctx.game,
