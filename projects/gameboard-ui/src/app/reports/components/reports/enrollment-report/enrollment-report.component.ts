@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportStatSummary, EnrollmentReportTab } from './enrollment-report.models';
 import { ReportKey, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
-import { Observable, first, firstValueFrom, map } from 'rxjs';
+import { Observable, first, firstValueFrom, map, of } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
 import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
@@ -111,6 +111,11 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   private loadSummaryStats(parameters: EnrollmentReportFlatParameters): Observable<EnrollmentReportSummaryStats> {
+    // still very confused about why this is sometimes null, but it appears not to affect the experience or performance.
+    if (!this.reportService) {
+      return of({ importantStat: { label: "--", value: "--" }, otherStats: [] });
+    }
+
     return this.reportService.getSummaryStats(parameters).pipe(
       map(stats => {
         const leadingSponsorStat: ReportSummaryStat = {
