@@ -31,9 +31,13 @@ export class EnrollmentReportService {
     );
   }
 
-  getReportData(parameters: EnrollmentReportFlatParameters): Observable<ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>> {
+  getReportData(parameters: EnrollmentReportFlatParameters): Observable<ReportResults<EnrollmentReportRecord>> {
     const pagedParameters = this.reportsService.applyDefaultPaging(parameters);
-    return this.http.get<ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", pagedParameters));
+    return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", pagedParameters));
+  }
+
+  getSummaryStats(parameters: EnrollmentReportFlatParameters): Observable<EnrollmentReportStatSummary> {
+    return this.http.get<EnrollmentReportStatSummary>(this.apiUrl.build("reports/enrollment/stats", parameters));
   }
 
   async getTrendData(parameters: EnrollmentReportFlatParameters | null): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {

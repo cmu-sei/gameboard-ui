@@ -52,7 +52,6 @@ export class PracticeModeReportComponent
     paramName: "series"
   });
 
-
   protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "tracks"
   });

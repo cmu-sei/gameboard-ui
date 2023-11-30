@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { EnrollmentReportByGameRecord, EnrollmentReportByGameSponsor, EnrollmentReportFlatParameters } from '@/reports/components/reports/enrollment-report/enrollment-report.models';
 import { ReportGame, ReportResults } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
@@ -13,9 +13,10 @@ import { RouterService } from '@/services/router.service';
   templateUrl: './enrollment-report-by-game.component.html',
   styleUrls: ['./enrollment-report-by-game.component.scss']
 })
-export class EnrollmentReportByGameComponent implements OnInit {
+export class EnrollmentReportByGameComponent implements OnChanges {
   @Input() parameters!: EnrollmentReportFlatParameters | null;
 
+  protected isLoading = false;
   protected results: ReportResults<EnrollmentReportByGameRecord> | null = null;
 
   constructor(
@@ -23,7 +24,10 @@ export class EnrollmentReportByGameComponent implements OnInit {
     private modalService: ModalConfirmService,
     private routerService: RouterService) { }
 
-  async ngOnInit(): Promise<void> {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (!changes.parameters)
+      return;
+
     await this.loadData(this.parameters);
   }
 
@@ -43,6 +47,8 @@ export class EnrollmentReportByGameComponent implements OnInit {
   }
 
   private async loadData(parameters: EnrollmentReportFlatParameters | null) {
+    this.isLoading = true;
     this.results = await firstValueFrom(this.enrollmentReportService.getByGameData(parameters));
+    this.isLoading = false;
   }
 }

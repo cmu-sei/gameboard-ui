@@ -37,6 +37,7 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 import { EnrollmentReportTrendComponent } from './components/reports/enrollment-report/enrollment-report-trend/enrollment-report-trend.component';
+import { EnrollmentReportSummaryComponent } from './components/reports/enrollment-report/enrollment-report-summary/enrollment-report-summary.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { EnrollmentReportTrendComponent } from './components/reports/enrollment-
     PlayerChallengeAttemptsModalComponent,
     ParameterSponsorComponent,
     EnrollmentReportTrendComponent,
+    EnrollmentReportSummaryComponent,
   ],
   imports: [
     CommonModule,
