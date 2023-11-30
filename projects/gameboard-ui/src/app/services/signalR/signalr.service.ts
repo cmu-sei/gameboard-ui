@@ -137,7 +137,9 @@ export class SignalRService {
   }
 
   private async resolveOpenConnection(connection: HubConnection, attemptIntervals: number[] = this.AUTO_RECONNECT_INTERVALS): Promise<void> {
-    await connection.start();
+    if (connection.state == HubConnectionState.Disconnected) {
+      await connection.start();
+    }
 
     if (connection.state === HubConnectionState.Connected) {
       this.logger.logInfo("Connected to SignalR hub at", connection.baseUrl);
@@ -172,7 +174,7 @@ export class SignalRService {
   }
 
   private formatForlog(...params: any[]): any[] {
-    return [`[GB SignalRService]:`, ...params];
+    return ["[GB SignalRService]:", ...params];
   }
 
   private updateState(): void {
