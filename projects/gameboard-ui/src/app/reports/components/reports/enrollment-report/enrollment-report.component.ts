@@ -115,8 +115,9 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
       map(stats => {
         const leadingSponsorStat: ReportSummaryStat = {
           label: "Leading Sponsor",
-          value: stats.sponsorWithMostPlayers!.sponsor.name,
-          additionalInfo: `(${stats.sponsorWithMostPlayers!.distinctPlayerCount} players)`
+          value: stats.sponsorWithMostPlayers?.sponsor?.name || "--",
+          additionalInfo: stats.sponsorWithMostPlayers ?
+            `(${stats.sponsorWithMostPlayers!.distinctPlayerCount} players)` : ""
         };
 
         const otherStats = [
