@@ -1,0 +1,26 @@
+<ng-container>
+    <h1>Notifications</h1>
+
+    <p>
+        You can use the Notifications system to post general announcements to players. When they log in, they'll see
+        a banner for each notification you create (as long as the date is within the start and end date you can
+        optionally configure below). Once a player dismisses a notification, they won't see it again.
+    </p>
+
+    <div class="notification-controls-container my-4">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-lg btn-info" (click)="handleCreateNotificationClick()">
+                &plus; Create Notification
+            </button>
+        </div>
+
+        <hr class="light" />
+    </div>
+    <div class="container">
+
+    </div>
+</ng-container>
+
+<ng-template #noNotifications>
+    <p class="text-center">You haven't created any notifications yet. Use the button above to add one!</p>
+</ng-template>

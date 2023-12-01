@@ -12,12 +12,15 @@ import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { UtilityModule } from '../utility/utility.module';
 
 import { AdminPageComponent } from './admin-page/admin-page.component';
+import { AdminSystemNotificationsComponent } from './admin-system-notifications/admin-system-notifications.component';
 import { AnnounceComponent } from './announce/announce.component';
 import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
 import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
 import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
+import { CreateEditSystemNotificationModalComponent } from './components/create-edit-system-notification-modal/create-edit-system-notification-modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { DeploymentAdminTeamContextMenuComponent } from './components/deployment-admin-team-context-menu/deployment-admin-team-context-menu.component';
 import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
 import { ExternalGameAdminPlayerContextMenuComponent } from './components/external-game-admin-player-context-menu/external-game-admin-player-context-menu.component';
 import { ExternalGamePlayerStatusToStatusLightPipe } from './pipes/external-game-player-status-to-status-light.pipe';
@@ -49,17 +52,18 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
-import { DeploymentAdminTeamContextMenuComponent } from './components/deployment-admin-team-context-menu/deployment-admin-team-context-menu.component';
 
 @NgModule({
   declarations: [
     AdminPageComponent,
+    AdminSystemNotificationsComponent,
     AnnounceComponent,
     ChallengeBrowserComponent,
     ChallengeObserverComponent,
     ChallengeReportComponent,
     ChallengeSpecEditorComponent,
     DashboardComponent,
+    DeploymentAdminTeamContextMenuComponent,
     ExternalGameAdminComponent,
     ExternalGameAdminPlayerContextMenuComponent,
     ExternalGamePlayerStatusToStatusLightPipe,
@@ -91,7 +95,7 @@ import { DeploymentAdminTeamContextMenuComponent } from './components/deployment
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
-    DeploymentAdminTeamContextMenuComponent,
+    CreateEditSystemNotificationModalComponent,
   ],
   imports: [
     CommonModule,
@@ -122,6 +126,7 @@ import { DeploymentAdminTeamContextMenuComponent } from './components/deployment
           { path: 'report/feedback', component: FeedbackReportComponent },
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
+          { path: "notifications", component: AdminSystemNotificationsComponent },
           { path: 'support', component: ChallengeBrowserComponent }
         ]
       },

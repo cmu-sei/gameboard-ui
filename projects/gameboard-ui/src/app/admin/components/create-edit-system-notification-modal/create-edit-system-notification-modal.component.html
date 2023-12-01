@@ -1,0 +1,28 @@
+<div *ngIf="context?.model" class="create-edit-system-notifications-modal-component">
+    <div class="modal-header">
+        <h2 class="modal-title pull-left">
+            {{ !!context?.model?.id ? "Create" : "Edit" }}
+            System Notification
+        </h2>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-info active">
+                <input type="radio" name="options" id="generalInfo" autocomplete="off" checked> Active
+            </label>
+            <label class="btn btn-warning">
+                <input type="radio" name="options" id="warning" autocomplete="off"> Radio
+            </label>
+            <label class="btn btn-danger">
+                <input type="radio" name="options" id="emergency" autocomplete="off"> Radio
+            </label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="handleSave(context!.model!)"></button>
+    </div>
+</div>
