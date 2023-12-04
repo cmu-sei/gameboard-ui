@@ -17,7 +17,7 @@
         <hr class="light" />
     </div>
 
-    <table *ngIf="context" class="mt-5">
+    <table class="mt-5">
         <col> <!--notification text-->
         <col> <!--type-->
         <col> <!--dates-->
@@ -35,7 +35,7 @@
         </thead>
 
         <tbody>
-            <tr class="data-row" *ngFor="let notification of (context.notifications$ | async)">
+            <tr class="data-row" *ngFor="let notification of (notifications$ | async)">
                 <td class="notification-content-cell">
                     <div class="fs-11">{{notification.title}}</div>
                     <p class="notification-content m-0">{{ notification.markdownContent }}</p>
@@ -50,7 +50,7 @@
                     </span>
                 </td>
 
-                <td class="text-center">
+                <td>
                     <span *ngIf="notification.startsOn || notification.endsOn; else noValue">
                         {{ notification.startsOn ? (notification.startsOn | shortdate ) : "?" }}
                         -

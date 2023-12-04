@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 
 export interface CreatedEditSystemNotificationModalContext {
   model: CreateEditSystemNotification;
+  onSave: () => void;
 }
 
 @Component({
@@ -27,7 +28,8 @@ export class CreateEditSystemNotificationModalComponent implements OnInit {
           title: "",
           markdownContent: "",
           notificationType: "generalInfo"
-        }
+        },
+        onSave: () => new Promise(() => { })
       };
     }
   }
@@ -42,6 +44,7 @@ export class CreateEditSystemNotificationModalComponent implements OnInit {
     else
       await firstValueFrom(this.systemNotificationsService.createNotification(model));
 
+    this.context?.onSave();
     this.close();
   }
 
@@ -50,5 +53,9 @@ export class CreateEditSystemNotificationModalComponent implements OnInit {
       throw new Error("Can't set the type - no notification is being created.");
 
     this.context.model.notificationType = type;
+  }
+
+  protected isValid(model: CreateEditSystemNotification): boolean {
+    return !!model.title && !!model.markdownContent;
   }
 }

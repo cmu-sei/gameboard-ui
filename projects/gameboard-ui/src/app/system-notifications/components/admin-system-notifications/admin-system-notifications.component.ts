@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, startWith, switchMap, tap } from 'rxjs';
 import { AdminViewSystemNotification } from '@/system-notifications/system-notifications.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { CreateEditSystemNotificationModalComponent, CreatedEditSystemNotificationModalContext } from '../create-edit-system-notification-modal/create-edit-system-notification-modal.component';
 import { SystemNotificationsService } from '@/system-notifications/system-notifications.service';
-
-interface AdminSystemNotificationsContext {
-  notifications$?: Observable<AdminViewSystemNotification[]>
-}
+import { AppTitleService } from '@/services/app-title.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-notifications',
@@ -15,14 +13,28 @@ interface AdminSystemNotificationsContext {
   styleUrls: ['./admin-system-notifications.component.scss']
 })
 export class AdminSystemNotificationsComponent implements OnInit {
-  context?: AdminSystemNotificationsContext;
+  private _forceLoad$ = new Subject<boolean>();
+  protected notifications$: Observable<AdminViewSystemNotification[]>;
 
   constructor(
+    private appTitleService: AppTitleService,
     private modalService: ModalConfirmService,
-    private systemNotificationsService: SystemNotificationsService) { }
+    private systemNotificationsService: SystemNotificationsService,
+    private unsub: UnsubscriberService) {
+
+    this.notifications$ = this._forceLoad$.pipe(
+      startWith(true),
+      switchMap(() => this.systemNotificationsService.getAllNotifications()),
+    );
+
+    this.unsub.add(
+      this.notifications$.subscribe()
+    );
+  }
 
   ngOnInit(): void {
-    this.context = this.load();
+    this.appTitleService.set("System Notifications | Admin");
+    this._forceLoad$.next(true);
   }
 
   protected handleCreateNotificationClick() {
@@ -33,7 +45,8 @@ export class AdminSystemNotificationsComponent implements OnInit {
           markdownContent: "",
           notificationType: "generalInfo",
           title: ""
-        }
+        },
+        onSave: () => this._forceLoad$.next(true)
       }
     });
   }
@@ -42,12 +55,9 @@ export class AdminSystemNotificationsComponent implements OnInit {
     this.modalService.openComponent<CreateEditSystemNotificationModalComponent, CreatedEditSystemNotificationModalContext>({
       content: CreateEditSystemNotificationModalComponent,
       context: {
-        model: { ...notification }
+        model: { ...notification },
+        onSave: () => this._forceLoad$.next(true)
       }
     });
-  }
-
-  private load(): AdminSystemNotificationsContext {
-    return { notifications$: this.systemNotificationsService.getAllNotifications() };
   }
 }

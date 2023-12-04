@@ -27,12 +27,13 @@ export class SystemNotificationsComponent {
   }
 
   protected async handleClicked(notification: ViewSystemNotification) {
-    // tODO: show modal
     this.modalService.openConfirm({
       title: notification.title,
       bodyContent: notification.markdownContent,
-      renderBodyAsMarkdown: true
+      renderBodyAsMarkdown: true,
+      hideCancel: true
     });
+
     await firstValueFrom(this.systemNotificationsService.logInteraction(notification.id, "sawFull"));
   }
 }
