@@ -1,5 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faComments, faPaperclip, faSearch, faExclamationCircle, faFileDownload } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, timer, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, switchMap, map, tap, first } from 'rxjs/operators';
 import { ReportService } from '../../api/report.service';
@@ -17,7 +16,7 @@ import { fa } from '@/services/font-awesome.service';
   templateUrl: './ticket-list.component.html',
   styleUrls: ['./ticket-list.component.scss']
 })
-export class TicketListComponent implements OnInit, OnDestroy {
+export class TicketListComponent implements OnDestroy {
   subs: Subscription[] = [];
   refresh$ = new BehaviorSubject<any>(true);
   ctx$: Observable<{ tickets: TicketSummary[]; nextTicket: TicketSummary[]; canManage: boolean; }>;
@@ -117,9 +116,6 @@ export class TicketListComponent implements OnInit, OnDestroy {
         }
       )
     );
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

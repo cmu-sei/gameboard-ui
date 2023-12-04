@@ -1,4 +1,4 @@
-import { SimpleEntity } from "./models";
+import { SimpleEntity } from "../api/models";
 
 export type SystemNotificationType = "generalInfo" | "warning" | "emergency";
 
@@ -19,4 +19,9 @@ export interface ViewSystemNotification {
     endsOn?: Date;
     notificationType: SystemNotificationType;
     createdBy: SimpleEntity;
+}
+
+export interface AdminViewSystemNotification extends ViewSystemNotification {
+    calloutViewCount: number;
+    fullViewCount: number;
 }

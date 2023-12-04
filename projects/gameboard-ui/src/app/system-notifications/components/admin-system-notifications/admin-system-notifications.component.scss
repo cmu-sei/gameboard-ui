@@ -1,0 +1,20 @@
+.notification-content-cell {
+    width: 35%;
+}
+
+.notification-content {
+    color: #dedede;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 35vw;
+}
+
+td, th {
+    margin: 4px 0;
+    border-bottom: solid 1px #dedede;
+}
+
+tbody td {
+    padding: 4px;
+}

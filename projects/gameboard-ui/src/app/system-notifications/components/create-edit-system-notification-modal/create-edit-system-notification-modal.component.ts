@@ -1,11 +1,11 @@
-import { CreateEditSystemNotification, SystemNotificationType } from '@/api/system-notifications.models';
-import { SystemNotificationsService } from '@/api/system-notifications.service';
+import { CreateEditSystemNotification, SystemNotificationType } from '@/system-notifications/system-notifications.models';
+import { SystemNotificationsService } from '@/system-notifications/system-notifications.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 export interface CreatedEditSystemNotificationModalContext {
-  model?: CreateEditSystemNotification;
+  model: CreateEditSystemNotification;
 }
 
 @Component({
@@ -21,13 +21,15 @@ export class CreateEditSystemNotificationModalComponent implements OnInit {
     private systemNotificationsService: SystemNotificationsService) { }
 
   ngOnInit() {
-    this.context = this.context || {
-      model: {
-        title: "",
-        markdownContent: "",
-        notificationType: "generalInfo"
-      }
-    };
+    if (!this.context || !Object.keys(this.context).length) {
+      this.context = {
+        model: {
+          title: "",
+          markdownContent: "",
+          notificationType: "generalInfo"
+        }
+      };
+    }
   }
 
   protected close() {
@@ -41,5 +43,12 @@ export class CreateEditSystemNotificationModalComponent implements OnInit {
       await firstValueFrom(this.systemNotificationsService.createNotification(model));
 
     this.close();
+  }
+
+  protected handleTypeClick(type: SystemNotificationType) {
+    if (!this.context)
+      throw new Error("Can't set the type - no notification is being created.");
+
+    this.context.model.notificationType = type;
   }
 }

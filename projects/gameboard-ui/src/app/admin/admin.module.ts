@@ -12,13 +12,11 @@ import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { UtilityModule } from '../utility/utility.module';
 
 import { AdminPageComponent } from './admin-page/admin-page.component';
-import { AdminSystemNotificationsComponent } from './admin-system-notifications/admin-system-notifications.component';
 import { AnnounceComponent } from './announce/announce.component';
 import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
 import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
 import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
-import { CreateEditSystemNotificationModalComponent } from './components/create-edit-system-notification-modal/create-edit-system-notification-modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DeploymentAdminTeamContextMenuComponent } from './components/deployment-admin-team-context-menu/deployment-admin-team-context-menu.component';
 import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
@@ -47,16 +45,17 @@ import { ReportPageComponent } from './report-page/report-page.component';
 import { SpecBrowserComponent } from './spec-browser/spec-browser.component';
 import { SponsorBrowserComponent } from './sponsor-browser/sponsor-browser.component';
 import { SupportReportLegacyComponent } from './support-report-legacy/support-report-legacy.component';
+import { SystemNotificationsModule } from '@/system-notifications/system-notifications.module';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
 import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 
 @NgModule({
   declarations: [
     AdminPageComponent,
-    AdminSystemNotificationsComponent,
     AnnounceComponent,
     ChallengeBrowserComponent,
     ChallengeObserverComponent,
@@ -95,7 +94,6 @@ import { UserReportComponent } from './user-report/user-report.component';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
-    CreateEditSystemNotificationModalComponent,
   ],
   imports: [
     CommonModule,
@@ -135,6 +133,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     ApiModule,
     UtilityModule,
     SponsorsModule,
+    SystemNotificationsModule,
   ]
 })
 export class AdminModule { }

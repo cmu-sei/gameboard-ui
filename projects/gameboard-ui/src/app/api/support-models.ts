@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Challenge, ChallengeOverview, ChallengeSummary } from "./board-models";
-import { Player, PlayerOverview } from "./player-models";
+import { PlayerOverview } from "./player-models";
 import { UserSummary } from "./user-models";
 
 export interface Ticket {

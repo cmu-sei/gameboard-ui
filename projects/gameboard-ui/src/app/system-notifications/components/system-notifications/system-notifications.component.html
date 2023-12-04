@@ -1,0 +1,6 @@
+<div class="notificatons-container">
+    <alert *ngFor="let notification of (notifications$ | async)"
+        [type]="notification.notificationType | notificationTypeToAlertType" (onClose)="handleClosed(notification)">
+        <h2 (click)="handleClicked(notification)">{{notification.title}}</h2>
+    </alert>
+</div>

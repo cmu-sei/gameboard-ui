@@ -1,0 +1,58 @@
+<div *ngIf="context" class="create-edit-system-notifications-modal-component">
+    <div class="modal-header">
+        <h2 class="modal-title pull-left">
+            {{ !!context.model.id ? "Create" : "Edit" }}
+            System Notification
+        </h2>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title"
+                [(ngModel)]="context.model.title" required="true">
+        </div>
+
+        <div class="form-group">
+            <label for="markdown-content">Content (allows markdown)</label>
+            <textarea class="form-control" id="markdown-content" name="markdown-content" rows="5"
+                placeholder="What do you want to tell your players?"
+                [(ngModel)]="context.model.markdownContent"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="title" class="d-block">Type</label>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn" [class.btn-info]="context.model.notificationType == 'generalInfo'"
+                    [class.btn-info-outline]="context.model.notificationType != 'generalInfo'"
+                    [class.active]="context.model.notificationType == 'generalInfo'">
+                    <input type="radio" name="options" id="generalInfo" autocomplete="off"
+                        [checked]="context.model.notificationType == 'generalInfo'"
+                        (click)="handleTypeClick('generalInfo')">
+                    General Info
+                </label>
+                <label class="btn btn-warning" [class.active]="context.model.notificationType == 'warning'"
+                    [class.btn-warning]="context.model.notificationType == 'warning'"
+                    [class.btn-warning-outline]="context.model.notificationType != 'warning'">
+                    <input type="radio" name="options" id="warning" autocomplete="off"
+                        [checked]="context.model.notificationType == 'warning'" (click)="handleTypeClick('warning')">
+                    Warning
+                </label>
+                <label class="btn btn-danger" [class.active]="context.model.notificationType == 'emergency'"
+                    [class.btn-danger]="context.model.notificationType == 'emergency'"
+                    [class.btn-danger-outline]="context.model.notificationType != 'emergency'">
+                    <input type="radio" name="options" id="emergency" autocomplete="off"
+                        [checked]="context.model.notificationType == 'emergency'"
+                        (click)="handleTypeClick('emergency')">
+                    Emergency
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="handleSave(context!.model!)">Save</button>
+    </div>
+</div>
