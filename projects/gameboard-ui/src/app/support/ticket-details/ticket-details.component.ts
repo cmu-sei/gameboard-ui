@@ -18,6 +18,7 @@ import { ClipboardService } from "../../utility/services/clipboard.service";
 import { ToastService } from '../../utility/services/toast.service';
 import { fa } from '../../services/font-awesome.service';
 import { LogService } from '../../services/log.service';
+import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -83,6 +84,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   selectedIndex: number = 0;
 
   constructor(
+    appTitleService: AppTitleService,
     private api: SupportService,
     private clipboard: ClipboardService,
     private logService: LogService,
@@ -114,6 +116,9 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
         this.savingContent = false;
         this.changedTicket = { ...t };
         this.id = t.id;
+
+        // set the page title
+        appTitleService.set(`${t.fullKey} | Support`);
       }),
       tap(t => {
         this.currentLabels.clear();
@@ -360,7 +365,11 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
 
   selectAssignToMe() {
     if (!!this.currentUser) {
-      this.changedTicket!.assignee = { id: this.currentUser.id, approvedName: this.currentUser.approvedName } as UserSummary;
+      this.changedTicket!.assignee = {
+        id: this.currentUser.id,
+        approvedName: this.currentUser.approvedName,
+        isSupportPersonnel: true
+      };
       this.changedTicket!.assigneeId = this.currentUser.id;
       this.changed$.next(this.changedTicket!);
     }

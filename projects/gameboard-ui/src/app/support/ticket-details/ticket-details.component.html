@@ -151,8 +151,9 @@
                   </span>
                 </div>
               </div>
-              <div class="card-body" [class.bg-light]="activity.user.id != ctx.ticket.creatorId"
-                [class.text-dark]="activity.user.id != ctx.ticket.creatorId">
+              <div class="card-body"
+                [class.bg-light]="activity.user.isSupportPersonnel && !ctx.ticket.creator?.isSupportPersonnel"
+                [class.text-dark]="activity.user.isSupportPersonnel && !ctx.ticket.creator?.isSupportPersonnel">
                 <app-long-content-hider>
                   <p class="card-text">
                     <app-render-links-in-text [text]="activity.message"></app-render-links-in-text>
