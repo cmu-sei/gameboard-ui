@@ -27,14 +27,6 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
     private routerService: RouterService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    // then we need to manually check if they've already started and redirect if so
-    // const gameStartPhase = await firstValueFrom(this.apiGame.getStartPhase(ctx.game.id, ctx.player.teamId));
-    // this.logService.logInfo(`Game ${ctx.game.id} (player ${ctx.player.id}) is at start phase "${gameStartPhase}".`);
-
-    // if (gameStartPhase == GameStartPhase.Started || gameStartPhase == GameStartPhase.Starting) {
-    //   this.redirectToExternalGameLoadingPage(ctx);
-    // }
-
     if (changes.context && !!this.context) {
       switch (this.context.gameMode) {
         case "vm":
@@ -69,7 +61,7 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
       .toString();
 
     // this is only enabled if the game is started or starting
-    const playState = await firstValueFrom(this.gameService.getGamePlayState(context.gameId, context.player.teamId));
+    const playState = await firstValueFrom(this.gameService.getGamePlayState(context.gameId));
     this.isEnabled = playState == GamePlayState.Started || playState == GamePlayState.Starting;
   }
 }

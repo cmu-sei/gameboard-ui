@@ -46,7 +46,7 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
       return false;
     }
 
-    const playState = await firstValueFrom(this.gameService.getGamePlayState(gameId, teamId));
+    const playState = await firstValueFrom(this.gameService.getGamePlayState(gameId));
     return playState == GamePlayState.Started;
   }
 }

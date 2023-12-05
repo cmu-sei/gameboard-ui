@@ -95,7 +95,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     this.log.logInfo("Launching game with context", ctx);
 
     // if the player already has a session for the game and it's happening right now, move them along
-    const playState = await firstValueFrom(this.gameApi.getGamePlayState(ctx.game.id, ctx.player.teamId));
+    const playState = await firstValueFrom(this.gameApi.getGamePlayState(ctx.game.id));
     if (playState == GamePlayState.Started) {
       this.log.logInfo("The game is already started - move them to the game page", ctx.player);
       this.handleGameReady(ctx);

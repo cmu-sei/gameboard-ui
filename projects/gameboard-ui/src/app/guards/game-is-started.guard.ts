@@ -49,6 +49,6 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
     }
     this.log.logInfo("Resolved gameId for GameIsStartedGuard", gameId);
 
-    return await firstValueFrom(this.gameService.getGamePlayState(resolvedGameId, player.teamId).pipe(map(phase => phase == GamePlayState.Started)));
+    return await firstValueFrom(this.gameService.getGamePlayState(resolvedGameId).pipe(map(phase => phase == GamePlayState.Started)));
   }
 }

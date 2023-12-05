@@ -32,7 +32,7 @@ export class ExternalGameLinkBannerComponent implements OnInit {
 
     this.isExternalGameReady$ = combineLatest([
       this.gameService.retrieve(this.gameId),
-      this.gameService.getGamePlayState(this.gameId, this.teamId)
+      this.gameService.getGamePlayState(this.gameId)
     ]).pipe(
       map(([game, playState]) => ({ mode: game.mode, playState })),
       map(modeAndPlayState => modeAndPlayState.mode == GameEngineMode.External && modeAndPlayState.playState == GamePlayState.Started)
