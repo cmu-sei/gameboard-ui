@@ -17,7 +17,7 @@
         <hr class="light" />
     </div>
 
-    <table class="mt-5">
+    <table class="mt-5 w-100" *ngIf="(notifications$ | async)?.length; else noNotifications">
         <col> <!--notification text-->
         <col> <!--type-->
         <col> <!--dates-->

@@ -1,13 +1,10 @@
-.notification-content-cell {
-    width: 35%;
-}
 
 .notification-content {
     color: #bababa;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 35vw;
+    max-width: 25vw;
 }
 
 td, th {
