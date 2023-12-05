@@ -25,9 +25,11 @@
         <div class="form-group">
             <label for="available-from">Availability dates</label>
             <div class="d-flex align-content-middle">
-                <input type="date" class="form-control" id="available-from" [(ngModel)]="context.model.startsOn">
+                <input type="datetime" class="form-control" id="available-from" [(ngModel)]="context.model.startsOn"
+                    bsDatepicker>
                 <div class="mx-2">&dash;</div>
-                <input type="date" class="form-control" id="available-to" [(ngModel)]="context.model.endsOn">
+                <input type="datetime" class="form-control" id="available-to" [(ngModel)]="context.model.endsOn"
+                    bsDatepicker>
             </div>
             <small>
                 Availability dates aren't required. If set, the notification will only be shown to players

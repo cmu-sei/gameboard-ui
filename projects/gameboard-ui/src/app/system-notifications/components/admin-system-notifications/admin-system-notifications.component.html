@@ -64,8 +64,10 @@
                 </td>
 
                 <td>
-                    <button type="button" class="btn btn-info"
+                    <button type="button" class="btn btn-sm btn-info mr-2"
                         (click)="handleEditNotificationClick(notification)">Edit</button>
+                    <app-confirm-button btnClass="btn btn-sm btn-danger"
+                        (confirm)="handleDelete(notification.id)">Delete</app-confirm-button>
                 </td>
             </tr>
         </tbody>

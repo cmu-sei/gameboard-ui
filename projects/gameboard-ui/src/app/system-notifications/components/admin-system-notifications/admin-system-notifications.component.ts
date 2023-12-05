@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject, startWith, switchMap, tap } from 'rxjs';
+import { Observable, Subject, firstValueFrom, startWith, switchMap } from 'rxjs';
 import { AdminViewSystemNotification } from '@/system-notifications/system-notifications.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { CreateEditSystemNotificationModalComponent, CreatedEditSystemNotificationModalContext } from '../create-edit-system-notification-modal/create-edit-system-notification-modal.component';
@@ -24,7 +24,7 @@ export class AdminSystemNotificationsComponent implements OnInit {
 
     this.notifications$ = this._forceLoad$.pipe(
       startWith(true),
-      switchMap(() => this.systemNotificationsService.getAllNotifications()),
+      switchMap(() => this.systemNotificationsService.getAllNotifications())
     );
 
     this.unsub.add(
@@ -59,5 +59,10 @@ export class AdminSystemNotificationsComponent implements OnInit {
         onSave: () => this._forceLoad$.next(true)
       }
     });
+  }
+
+  protected async handleDelete(id: string) {
+    await firstValueFrom(this.systemNotificationsService.deleteNotification(id));
+    this._forceLoad$.next(true);
   }
 }
