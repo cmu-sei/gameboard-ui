@@ -72,7 +72,7 @@ export class GameService {
   }
 
   public getGamePlayState(gameId: string): Observable<GamePlayState> {
-    return this.http.get<GamePlayState>(`${this.url}/game/${gameId}/play-state}`);
+    return this.http.get<GamePlayState>(`${this.url}/game/${gameId}/play-state`);
   }
 
   public getSyncStartState(gameId: string): Observable<SyncStartGameState> {

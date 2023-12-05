@@ -154,13 +154,18 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected handleEnroll(userId: string, gameId: string): void {
+  protected async handleEnroll(userId: string, gameId: string): Promise<void> {
     const model = { userId, gameId } as NewPlayer;
     this.isEnrolling = true;
+    this.errors = [];
 
-    this.api.create(model).pipe(first()).subscribe(p => {
-      this.enrolled(p);
-    });
+    try {
+      const player = await firstValueFrom(this.api.create(model));
+      this.enrolled(player);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
   }
 
   protected async handleUnenroll(p: Player): Promise<void> {
