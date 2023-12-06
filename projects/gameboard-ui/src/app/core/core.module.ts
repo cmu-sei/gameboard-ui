@@ -40,6 +40,8 @@ import { CountdownPipe } from './pipes/countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
+import { ErrorDivComponent } from './components/error-div/error-div.component';
+import { FeedbackFormComponent } from './components/feedback-form/feedback-form.component';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
@@ -86,11 +88,13 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { CamelspacePipe } from './pipes/camelspace.pipe';
 
 const PUBLIC_DECLARATIONS = [
   GbProgressBarComponent,
   ApiUrlPipe,
   AssetPathPipe,
+  CamelspacePipe,
   ChallengeResultColorPipe,
   ChallengeResultPrettyPipe,
   ChallengeSolutionGuideComponent,
@@ -99,6 +103,8 @@ const PUBLIC_DECLARATIONS = [
   CumulativeTimeClockComponent,
   DoughnutChartComponent,
   DropzoneComponent,
+  ErrorDivComponent,
+  FeedbackFormComponent,
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,

@@ -11,7 +11,11 @@ export class FriendlyDatesService {
       return "";
     }
 
-    return transformed.toLocaleDateString();
+    return transformed.toLocaleDateString(this.localeService.getLocale(), {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit"
+    });
   }
 
   toFriendlyTime(date?: Date) {

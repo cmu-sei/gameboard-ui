@@ -7,9 +7,7 @@ import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { Feedback, FeedbackReportDetails, FeedbackSubmission } from './feedback-models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FeedbackService {
   url = '';
 
@@ -21,16 +19,14 @@ export class FeedbackService {
   }
 
   public list(search: any): Observable<FeedbackReportDetails[]> {
-    return this.http.get<FeedbackReportDetails[]>(`${this.url}/feedback/list`, {params: search});
+    return this.http.get<FeedbackReportDetails[]>(`${this.url}/feedback/list`, { params: search });
   }
 
   public retrieve(search: any): Observable<Feedback> {
-    return this.http.get<Feedback>(`${this.url}/feedback`, {params: search});
+    return this.http.get<Feedback>(`${this.url}/feedback`, { params: search });
   }
 
   public submit(model: FeedbackSubmission): Observable<Feedback> {
     return this.http.put<Feedback>(`${this.url}/feedback/submit`, model);
   }
-
-
 }

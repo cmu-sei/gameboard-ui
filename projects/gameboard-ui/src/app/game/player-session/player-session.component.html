@@ -73,8 +73,8 @@
       </ng-container>
 
       <div *ngIf="!ctx.player.session?.isBefore" class="text-center my-4">
-        <a *ngIf="ctx.game.mode != 'unity'; else toCubespace" class="btn btn-primary btn-lg"
-          [routerLink]="['../board', ctx.player.id]">Continue to Gameboard</a>
+        <app-continue-to-gameboard-button
+          [context]="{ player: ctx.player, gameId: ctx.game.id, gameMode: ctx.game.mode}"></app-continue-to-gameboard-button>
       </div>
 
       <div class="col d-flex justify-content-center" *ngIf="ctx.game.mapUrl">
@@ -82,14 +82,6 @@
       </div>
     </div>
   </div>
-
-  <ng-template #toCubespace>
-    <a *ngIf="ctx.game.mode == 'unity'" class="btn btn-primary bgn-lg"
-      [routerLink]="['../unity-board', ctx.player.gameId, ctx.player.id, ctx.player.teamId, ctx.player.sessionEnd.valueOf()]">
-      Continue to Cubespace
-    </a>
-  </ng-template>
-
 </ng-container>
 
 <ng-template #loading>

@@ -1,21 +1,22 @@
 import { Component } from '@angular/core';
-import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
-import { ReportResultsWithOverallStats, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
+import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportStatSummary, EnrollmentReportTab } from './enrollment-report.models';
+import { ReportKey, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
-import { Observable, firstValueFrom, of } from 'rxjs';
+import { Observable, first, firstValueFrom, map, of } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
-import { ChallengeResult } from '@/api/board-models';
-import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
-import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
 import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
+import { deepEquals } from '@/tools/object-tools.lib';
 
 interface EnrollmentReportContext {
-  results: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
-  chartConfig: LineChartConfig;
+  stats$: Observable<EnrollmentReportSummaryStats>
+}
+
+interface EnrollmentReportSummaryStats {
+  importantStat: ReportSummaryStat;
+  otherStats: ReportSummaryStat[];
 }
 
 @Component({
@@ -29,16 +30,15 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   series$ = this.reportsService.getSeries();
   tracks$ = this.reportsService.getTracks();
 
-  protected ctx$?: Observable<EnrollmentReportContext>;
+  protected ctx?: EnrollmentReportContext;
   protected displayGameName = (s: SimpleEntity) => s.name;
   protected getGameValue = (s: SimpleEntity) => s.id;
   protected displaySponsorName = (s: ReportSponsor) => s.name;
   protected getSponsorValue = (s: ReportSponsor) => s.id;
-  protected isLoading = false;
 
-  protected results?: ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>;
   protected leadingSponsorStat?: ReportSummaryStat;
-  protected stats: ReportSummaryStat[] = [];
+  protected selectedParameters: EnrollmentReportFlatParameters | null = { tab: "summary" };
+  protected summaryStats?: EnrollmentReportStatSummary;
 
   // parameter query models
   protected enrollmentDateRangeModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
@@ -71,8 +71,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   });
 
   constructor(
-    private markdownHelpersService: MarkdownHelpersService,
-    private modalService: ModalConfirmService,
     private reportService: EnrollmentReportService) {
     super();
 
@@ -87,123 +85,61 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   async updateView(parameters: EnrollmentReportFlatParameters): Promise<ReportViewUpdate> {
-    // TODO: figure out why "this.reportService" is undefined sometimes but not others
-    if (!this.reportService) {
-      return null as unknown as ReportViewUpdate;
+    // if the parameters are identical except paging/tabs, we don't need to reload stats
+    const areDeepEqual = deepEquals(
+      { ...parameters, pageNumber: undefined, pageSize: undefined, tab: undefined },
+      { ...this.selectedParameters, pageNumber: undefined, pageSize: undefined, tab: undefined }
+    );
+
+    if (!this.ctx?.stats$ || !areDeepEqual) {
+      this.ctx = {
+        stats$: this.loadSummaryStats(parameters)
+      };
     }
 
-    this.isLoading = true;
-    this.results = await firstValueFrom(this.reportService.getReportData(parameters));
-    const lineChartResults = await this.reportService.getTrendData(parameters);
-
-    this.leadingSponsorStat = this.results.overallStats.sponsorWithMostPlayers ?
-      {
-        label: "Leading Sponsor",
-        value: this.results.overallStats.sponsorWithMostPlayers?.sponsor.name,
-        additionalInfo: `(${this.results.overallStats.sponsorWithMostPlayers.distinctPlayerCount} players)`
-      } :
-      undefined;
-    this.stats = [
-      { label: "Game", value: this.results.overallStats.distinctGameCount },
-      { label: "Player", value: this.results.overallStats.distinctPlayerCount },
-      { label: "Team", value: this.results.overallStats.distinctTeamCount },
-      { label: "Sponsor", value: this.results.overallStats.distinctSponsorCount }
-    ]
-      .filter(e => !!e)
-      .map(e => e as ReportSummaryStat);
-
-    this.isLoading = false;
-
-    this.ctx$ = of({
-      chartConfig: {
-        type: 'line',
-        data: {
-          labels: Array.from(lineChartResults.keys()).map(k => k as any),
-          datasets: [
-            {
-              label: "Enrolled players",
-              data: Array.from(lineChartResults.values()).map(g => g.totalCount),
-              backgroundColor: 'blue',
-            },
-          ]
-        },
-        options: {
-          scales: {
-            x: {
-              type: 'time',
-              time: {
-                displayFormats: {
-                  day: "MM/dd/yy",
-                },
-                tooltipFormat: 'DD',
-                unit: "day"
-              },
-              title: {
-                display: true,
-                text: "Enrollment Date"
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: "Players Enrolled"
-              }
-            }
-          }
-        }
-      },
-      results: this.results,
-    });
+    this.selectedParameters = parameters;
 
     return {
-      metaData: this.results.metaData,
-      pagingResults: this.results.paging,
+      metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.EnrollmentReport)),
     };
   }
 
-  protected showChallengesDetail(record: EnrollmentReportRecord, challengeStatus: "deployed" | "partial" | "complete") {
-    let challenges: { name: string, score?: number, maxPossiblePoints: number }[] = [];
-
-    switch (challengeStatus) {
-      case "partial":
-        challenges = record.challenges.filter(c => c.result == "partial");
-        break;
-      case "complete":
-        challenges = record.challenges.filter(c => c.result == "success");
-        break;
-      default:
-        challenges = record.challenges;
+  protected handleTabClick(tab: EnrollmentReportTab) {
+    if (tab != this.selectedParameters?.tab) {
+      this.routerService.updateQueryParams({ parameters: { tab }, resetParams: ["pageNumber"] });
     }
-
-    this.modalService.open({
-      bodyContent: this
-        .markdownHelpersService
-        .arrayToBulletList(challenges.map(c => `${c.name} (${c.score || "--"}/${c.maxPossiblePoints}) possible points`)),
-      renderBodyAsMarkdown: true,
-      title: `${record.player.name}: Challenges ${challengeStatus.substring(0, 1).toUpperCase()}${challengeStatus.substring(1)}`,
-    });
   }
 
-  protected showScoreBreakdown(record: EnrollmentReportRecord) {
-    const scoreItems: { points: number, source: string }[] = [];
-
-    for (const challenge of record.challenges) {
-      if (challenge.score)
-        scoreItems.push({ points: challenge.score, source: `**${challenge.name}**, ${challenge.result.toString()} solve` });
-
-      if (challenge.manualChallengeBonuses?.length) {
-        for (const bonus of challenge.manualChallengeBonuses) {
-          scoreItems.push({ points: bonus.points, source: `**Manual bonus**, ${bonus.description}` });
-        }
-      }
+  private loadSummaryStats(parameters: EnrollmentReportFlatParameters): Observable<EnrollmentReportSummaryStats> {
+    // still very confused about why this is sometimes null, but it appears not to affect the experience or performance.
+    if (!this.reportService) {
+      return of({ importantStat: { label: "--", value: "--" }, otherStats: [] });
     }
 
-    this.modalService.open({
-      bodyContent: this
-        .markdownHelpersService
-        .arrayToBulletList(scoreItems.map(i => `${i.points} (${i.source})`)),
-      renderBodyAsMarkdown: true,
-      title: `${record.player.name}: Score Breakdown`
-    });
+    return this.reportService.getSummaryStats(parameters).pipe(
+      map(stats => {
+        const leadingSponsorStat: ReportSummaryStat = {
+          label: "Leading Sponsor",
+          value: stats.sponsorWithMostPlayers?.sponsor?.name || "--",
+          additionalInfo: stats.sponsorWithMostPlayers ?
+            `(${stats.sponsorWithMostPlayers!.distinctPlayerCount} players)` : ""
+        };
+
+        const otherStats = [
+          { label: "Game", value: stats.distinctGameCount },
+          { label: "Player", value: stats.distinctPlayerCount },
+          { label: "Team", value: stats.distinctTeamCount },
+          { label: "Sponsor", value: stats.distinctSponsorCount }
+        ]
+          .filter(e => !!e)
+          .map(e => e! as ReportSummaryStat);
+
+        return {
+          importantStat: leadingSponsorStat,
+          otherStats
+        };
+      }),
+      first(),
+    );
   }
 }

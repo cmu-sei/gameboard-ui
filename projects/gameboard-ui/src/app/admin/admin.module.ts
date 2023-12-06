@@ -18,6 +18,14 @@ import { ChallengeObserverComponent } from './challenge-observer/challenge-obser
 import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { DeploymentAdminTeamContextMenuComponent } from './components/deployment-admin-team-context-menu/deployment-admin-team-context-menu.component';
+import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
+import { ExternalGameAdminPlayerContextMenuComponent } from './components/external-game-admin-player-context-menu/external-game-admin-player-context-menu.component';
+import { ExternalGamePlayerStatusToStatusLightPipe } from './pipes/external-game-player-status-to-status-light.pipe';
+import { ExternalTeamToChallengeCreatedPipe } from './pipes/external-team-to-challenge-created.pipe';
+import { ExternalTeamChallengesToIsPredeployablePipe } from './pipes/external-team-challenges-to-is-predeployable.pipe';
+import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challenge.pipe';
+import { ExternalGamePlayerStatusToFriendlyPipe } from './pipes/external-game-player-status-to-friendly.pipe';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
 import { GameDesignerComponent } from './game-designer/game-designer.component';
@@ -37,11 +45,13 @@ import { ReportPageComponent } from './report-page/report-page.component';
 import { SpecBrowserComponent } from './spec-browser/spec-browser.component';
 import { SponsorBrowserComponent } from './sponsor-browser/sponsor-browser.component';
 import { SupportReportLegacyComponent } from './support-report-legacy/support-report-legacy.component';
+import { SystemNotificationsModule } from '@/system-notifications/system-notifications.module';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
 import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +62,14 @@ import { UserReportComponent } from './user-report/user-report.component';
     ChallengeReportComponent,
     ChallengeSpecEditorComponent,
     DashboardComponent,
+    DeploymentAdminTeamContextMenuComponent,
+    ExternalGameAdminComponent,
+    ExternalGameAdminPlayerContextMenuComponent,
+    ExternalGamePlayerStatusToStatusLightPipe,
+    ExternalSpecIdToChallengePipe,
+    ExternalGamePlayerStatusToFriendlyPipe,
+    ExternalTeamToChallengeCreatedPipe,
+    ExternalTeamChallengesToIsPredeployablePipe,
     FeedbackReportComponent,
     GameDesignerComponent,
     GameEditorComponent,
@@ -76,7 +94,6 @@ import { UserReportComponent } from './user-report/user-report.component';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
-    ChallengeSpecEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -87,6 +104,7 @@ import { UserReportComponent } from './user-report/user-report.component';
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           { path: 'designer/:id', component: GameEditorComponent },
+          { path: "game/:gameId/external", component: ExternalGameAdminComponent },
           {
             path: "practice", component: PracticeComponent, children: [
               { path: "", pathMatch: "full", redirectTo: "settings" },
@@ -97,15 +115,16 @@ import { UserReportComponent } from './user-report/user-report.component';
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
           { path: 'registrar/players', component: PlayerNamesComponent },
           { path: 'registrar/:id', component: PlayerRegistrarComponent },
-          { path: 'observer/challenges/:id', component: ChallengeObserverComponent },
+          { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
-          { path: 'report', component: ReportPageComponent },
+          { path: 'report', component: ReportPageComponent, title: "Admin | Reports" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },
           { path: 'report/feedback', component: FeedbackReportComponent },
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
+          { path: "notifications", component: AdminSystemNotificationsComponent },
           { path: 'support', component: ChallengeBrowserComponent }
         ]
       },
@@ -114,6 +133,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     ApiModule,
     UtilityModule,
     SponsorsModule,
+    SystemNotificationsModule,
   ]
 })
 export class AdminModule { }

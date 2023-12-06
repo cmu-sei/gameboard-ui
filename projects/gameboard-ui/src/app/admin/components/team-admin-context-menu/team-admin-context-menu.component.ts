@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Player } from '../../../api/player-models';
+import { Player } from '@/api/player-models';
 import { fa } from '@/services/font-awesome.service';
-import { GameSessionService } from '../../../services/game-session.service';
-import { ClipboardService } from '../../../utility/services/clipboard.service';
-import { ToastService } from '../../../utility/services/toast.service';
+import { GameSessionService } from '@/services/game-session.service';
+import { ClipboardService } from '@/utility/services/clipboard.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 export interface TeamAdminContextMenuSessionResetRequest {
   player: Player;

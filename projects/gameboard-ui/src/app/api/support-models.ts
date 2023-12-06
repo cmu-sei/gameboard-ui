@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Challenge, ChallengeOverview, ChallengeSummary } from "./board-models";
-import { Player, PlayerOverview } from "./player-models";
+import { PlayerOverview } from "./player-models";
 import { UserSummary } from "./user-models";
 
 export interface Ticket {
@@ -29,9 +29,9 @@ export interface Ticket {
   attachments: string[];
   attachmentFiles: AttachmentFile[]
 
-  requester?: UserSummary;
-  assignee?: UserSummary;
-  creator?: UserSummary;
+  requester?: TicketUser;
+  assignee?: TicketUser;
+  creator?: TicketUser;
   challenge?: ChallengeOverview;
   player?: PlayerOverview;
 
@@ -126,8 +126,8 @@ export interface TicketActivity {
   attachments: string[];
   attachmentFiles: AttachmentFile[]
 
-  user: UserSummary;
-  assignee: UserSummary;
+  user: TicketUser;
+  assignee: TicketUser;
 }
 
 export interface TicketDayReport {
@@ -184,4 +184,10 @@ export interface TicketNotification {
   teamId: string;
   status: string;
   lastUpdated: string;
+}
+
+export interface TicketUser {
+  id: string;
+  approvedName: string;
+  isSupportPersonnel: boolean;
 }

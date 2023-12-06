@@ -24,14 +24,10 @@
         <span>Map</span>
       </button>
       <ng-container *ngIf="viewing==='map'">
-        <button btnCheckbox class="btn btn-outline-info" [(ngModel)]="showGrid">
+        <button btnCheckbox class="btn btn-outline-info my-2" [(ngModel)]="showGrid">
           <span>Show Grid</span>
         </button>
         <app-dropzone inputId="map-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event)">
-          <button class="btn btn-sm btn-outline-warning mx-2" (click)="clearImage()">
-            <fa-icon [icon]="fa.trash"></fa-icon>
-            <span>Reset</span>
-          </button>
         </app-dropzone>
         <div>
           Alt+Drag (Option+Drag on Macs) to resize hotspots
@@ -91,32 +87,38 @@
 
     <!-- edit spec map locations -->
     <div [hidden]="viewing!=='map'">
-      <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.mapbox-hover]="!!specHover">
-        <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
-          <span>{{this.specHover?.name}}</span><br />
-          <span>Points: {{this.specHover?.points}}</span>
-        </div>
-        <svg viewBox="0 0 100 100" (mousemove)="mousemove($event)">
-          <svg:image [attr.href]="this.game.mapUrl" width="100" height="100" />
+      <app-dropzone (dropped)="upload($event)" [clickToLaunchFilePicker]="false">
+        <button class="btn btn-sm btn-warning ml-2 mb-2" (click)="clearImage()">
+          <fa-icon [icon]="fa.trash"></fa-icon>
+          <span>Reset</span>
+        </button>
+        <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.mapbox-hover]="!!specHover">
+          <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
+            <span>{{this.specHover?.name}}</span><br />
+            <span>Points: {{this.specHover?.points}}</span>
+          </div>
+          <svg viewBox="0 0 100 100" (mousemove)="mousemove($event)">
+            <svg:image [attr.href]="this.game.mapUrl" width="100" height="100" />
 
-          <ng-container *ngIf="showGrid">
-            <ng-container *ngFor="let i of [0,10,20,30,40,50,60,70,80,90,100]">
-              <svg:line [attr.x1]=i y1=0 [attr.x2]=i y2=100 stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
-              </svg:line>
-              <svg:line x1=0 [attr.y1]=i x2=100 [attr.y2]=i stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
-              </svg:line>
+            <ng-container *ngIf="showGrid">
+              <ng-container *ngFor="let i of [0,10,20,30,40,50,60,70,80,90,100]">
+                <svg:line [attr.x1]=i y1=0 [attr.x2]=i y2=100 stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
+                </svg:line>
+                <svg:line x1=0 [attr.y1]=i x2=100 [attr.y2]=i stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
+                </svg:line>
+              </ng-container>
             </ng-container>
-          </ng-container>
 
-          <ng-container *ngFor="let c of list">
-            <a class="mapbox-dot" (mousedown)="mousedrag($event, c)" (mouseup)="mousedrag($event, c)"
-              (mouseenter)="mouseenter($event, c)" (mouseleave)="mouseleave($event, c)">
-              <svg:circle [attr.cx]="c.x *100" [attr.cy]="c.y*100" [attr.r]="c.r*100" [attr.fill]="c.c"></svg:circle>
-            </a>
+            <ng-container *ngFor="let c of list">
+              <a class="mapbox-dot" (mousedown)="mousedrag($event, c)" (mouseup)="mousedrag($event, c)"
+                (mouseenter)="mouseenter($event, c)" (mouseleave)="mouseleave($event, c)">
+                <svg:circle [attr.cx]="c.x *100" [attr.cy]="c.y*100" [attr.r]="c.r*100" [attr.fill]="c.c"></svg:circle>
+              </a>
 
-          </ng-container>
-        </svg>
-      </div>
+            </ng-container>
+          </svg>
+        </div>
+      </app-dropzone>
     </div>
   </div>
 </div>

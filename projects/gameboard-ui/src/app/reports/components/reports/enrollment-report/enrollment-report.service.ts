@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { EnrollmentReportFlatParameters, EnrollmentReportLineChartGroup, EnrollmentReportParameters, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
-import { Observable, firstValueFrom, map, tap } from 'rxjs';
-import { ReportResults, ReportResultsWithOverallStats } from '../../../reports-models';
-import { ReportsService } from '../../../reports.service';
+import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters, EnrollmentReportLineChartGroup, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
+import { Observable, firstValueFrom, map, } from 'rxjs';
+import { ReportResults, ReportResultsWithOverallStats } from '@/reports/reports-models';
+import { ReportsService } from '@/reports/reports.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '@/services/api-url.service';
 import { DateTime } from 'luxon';
@@ -14,19 +14,42 @@ export class EnrollmentReportService {
     private http: HttpClient,
     private reportsService: ReportsService) { }
 
-  getReportData(parameters: EnrollmentReportFlatParameters): Observable<ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>> {
+  getByGameData(parameters: EnrollmentReportFlatParameters | null): Observable<ReportResults<EnrollmentReportByGameRecord>> {
+    parameters = parameters || {};
     const pagedParameters = this.reportsService.applyDefaultPaging(parameters);
-    return this.http.get<ReportResultsWithOverallStats<EnrollmentReportStatSummary, EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", pagedParameters));
+    return this.http.get<ReportResults<EnrollmentReportByGameRecord>>(this.apiUrl.build("reports/enrollment/by-game", pagedParameters)).pipe(
+      map(results => {
+        for (const record of results.records) {
+          record.game.executionClosed = this.reportsService.queryStringEncodedDateToDate(record.game.executionClosed as any)!;
+          record.game.executionOpen = this.reportsService.queryStringEncodedDateToDate(record.game.executionOpen as any)!;
+          record.game.registrationClosed = this.reportsService.queryStringEncodedDateToDate(record.game.registrationClosed as any)!;
+          record.game.registrationOpen = this.reportsService.queryStringEncodedDateToDate(record.game.registrationOpen as any)!;
+        }
+
+        return results;
+      })
+    );
   }
 
-  getTrendData(parameters: EnrollmentReportFlatParameters): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
-    // ignore paging parameters for the line chart
-    parameters.pageNumber = undefined;
-    parameters.pageSize = undefined;
+  getReportData(parameters: EnrollmentReportFlatParameters): Observable<ReportResults<EnrollmentReportRecord>> {
+    const pagedParameters = this.reportsService.applyDefaultPaging(parameters);
+    return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", pagedParameters));
+  }
 
-    return firstValueFrom(this
+  getSummaryStats(parameters: EnrollmentReportFlatParameters): Observable<EnrollmentReportStatSummary> {
+    return this.http.get<EnrollmentReportStatSummary>(this.apiUrl.build("reports/enrollment/stats", parameters));
+  }
+
+  async getTrendData(parameters: EnrollmentReportFlatParameters | null): Promise<Map<DateTime, EnrollmentReportLineChartGroup>> {
+    // ignore paging/tab parameters for the line chart
+    const trendParams = { ...(parameters || {}) };
+    delete trendParams.tab;
+    delete trendParams.pageNumber;
+    delete trendParams.pageSize;
+
+    return await firstValueFrom(this
       .http
-      .get<{ [dateString: string]: EnrollmentReportLineChartGroup }>(this.apiUrl.build("reports/enrollment/trend", parameters))
+      .get<{ [dateString: string]: EnrollmentReportLineChartGroup }>(this.apiUrl.build("reports/enrollment/trend", trendParams))
       .pipe(
         map(results => {
           const mapped = new Map<DateTime, EnrollmentReportLineChartGroup>();

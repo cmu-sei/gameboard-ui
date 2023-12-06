@@ -1,0 +1,83 @@
+<ng-container>
+    <h1 class="mt-3">Notifications</h1>
+
+    <p>
+        You can use the Notifications system to post general announcements to players. When they log in, they'll see
+        a banner for each notification you create (as long as the date is within the start and end date you can
+        optionally configure below). Once a player dismisses a notification, they won't see it again.
+    </p>
+
+    <div class="notification-controls-container my-4">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-lg btn-info" (click)="handleCreateNotificationClick()">
+                &plus; Create Notification
+            </button>
+        </div>
+
+        <hr class="light" />
+    </div>
+
+    <table class="mt-5 w-100" *ngIf="(notifications$ | async)?.length; else noNotifications">
+        <col> <!--notification text-->
+        <col> <!--type-->
+        <col> <!--dates-->
+        <col> <!--views-->
+        <col> <!--edit-->
+
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Notification</th>
+                <th scope="col">Type</th>
+                <th scope="col">Visible Dates</th>
+                <th scope="col">Views</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr class="data-row" *ngFor="let notification of (notifications$ | async)">
+                <td class="notification-content-cell">
+                    <div class="fs-11">{{notification.title}}</div>
+                    <p class="notification-content m-0">{{ notification.markdownContent }}</p>
+                </td>
+
+                <td>
+                    <span class="badge text-capitalize"
+                        [class.badge-info]="notification.notificationType == 'generalInfo'"
+                        [class.badge-warning]="notification.notificationType == 'warning'"
+                        [class.badge-danger]="notification.notificationType == 'emergency'">
+                        {{notification.notificationType | systemNotificationTypeToText}}
+                    </span>
+                </td>
+
+                <td>
+                    <span *ngIf="notification.startsOn || notification.endsOn; else noValue">
+                        {{ notification.startsOn ? (notification.startsOn | shortdate ) : "?" }}
+                        -
+                        {{ notification.endsOn ? (notification.endsOn | shortdate ) : "?" }}
+                    </span>
+                </td>
+
+                <td>
+                    <div><strong>{{notification.calloutViewCount}}</strong> callout views</div>
+                    <div><strong>{{notification.fullViewCount}}</strong> full views</div>
+                </td>
+
+                <td>
+                    <button type="button" class="btn btn-sm btn-info mr-2"
+                        (click)="handleEditNotificationClick(notification)">Edit</button>
+                    <app-confirm-button btnClass="btn btn-sm btn-danger"
+                        (confirm)="handleDelete(notification.id)">Delete</app-confirm-button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+
+<ng-template #noNotifications>
+    <p class="text-center">You haven't created any notifications yet. Use the button above to add one!</p>
+</ng-template>
+
+<ng-template #noValue>
+    <p class="text-center">--</p>
+</ng-template>

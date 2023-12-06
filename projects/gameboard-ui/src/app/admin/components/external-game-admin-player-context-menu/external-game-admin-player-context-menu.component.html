@@ -1,0 +1,18 @@
+<div class="btn-group" *ngIf="player" dropdown>
+    <button [id]="'external-game-admin-context-menu-' + player.id" dropdownToggle type="button"
+        class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic"
+        tooltip="{{ 'Additional actions for ' + player.name }}">
+        <fa-icon [icon]="fa.ellipsisVertical"></fa-icon>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <li role="menuitem">
+            <button class="dropdown-item btn"
+                (click)="togglePlayerReadyStatusClicked(player.id, player.isSyncStartReady)">
+                {{ (player.isSyncStartReady ? "Unready " : "Ready ") + player.name }}
+            </button>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="copy(player.id, 'player ID')">Copy player ID</button>
+        </li>
+    </ul>
+</div>

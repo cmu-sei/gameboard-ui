@@ -8,7 +8,7 @@ import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, GameEngineMode, GameGroup, GameStartPhase, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, Game, GameEngineMode, GameGroup, GamePlayState, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 
@@ -71,8 +71,8 @@ export class GameService {
     );
   }
 
-  public getStartPhase(gameId: string): Observable<GameStartPhase> {
-    return this.http.get<GameStartPhase>(`${this.url}/game/${gameId}/start-phase`);
+  public getGamePlayState(gameId: string): Observable<GamePlayState> {
+    return this.http.get<GamePlayState>(`${this.url}/game/${gameId}/play-state`);
   }
 
   public getSyncStartState(gameId: string): Observable<SyncStartGameState> {
@@ -115,7 +115,7 @@ export class GameService {
 
   // an abstracted definition for this rule. Does this game run
   // in Gameboard or elsewhere?
-  public isExternalGame(g: Game): boolean {
+  public isNonStandardEngineMode(g: Game): boolean {
     return g.mode === GameEngineMode.Cubespace || g.mode === GameEngineMode.External;
   }
 

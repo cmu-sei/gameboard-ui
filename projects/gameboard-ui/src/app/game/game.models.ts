@@ -23,5 +23,12 @@ export interface SyncStartGameStartedState {
     game: SimpleEntity;
     sessionBegin: Date;
     sessionEnd: Date;
-    teams: { teamId: string, players: SimpleEntity[] }[];
+    teams: {
+        teamId: string,
+        players: {
+            id: string,
+            name: string,
+            userId: string
+        }[]
+    }[];
 }

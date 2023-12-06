@@ -1,0 +1,11 @@
+<div class="notificatons-container">
+    <alert *ngFor="let notification of notifications" [dismissible]="true"
+        [type]="notification.notificationType | notificationTypeToAlertType" (onClose)="handleClosed(notification)">
+        <div class="container" (click)="handleClicked(notification)">
+            <h2 class="fs-11 m-0 cursor-pointer">
+                {{notification.title}}
+            </h2>
+            <small class="d-block fs-08 cursor-pointer text-upper font-bold">[more info]</small>
+        </div>
+    </alert>
+</div>

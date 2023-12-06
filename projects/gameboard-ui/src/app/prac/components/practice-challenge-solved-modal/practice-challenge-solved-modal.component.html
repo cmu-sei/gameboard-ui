@@ -9,11 +9,18 @@
         <p>
             You've successfully solved the challenge <strong>{{ context.challenge.spec.name }}!</strong>
             Congratulations!
+
             <span *ngIf="isCertificateConfigured">
                 Click <a [href]="certificateUrl! | relativeToAbsoluteHref" target="_blank">here</a> to view a printable
                 certificate commemorating your achievement.
             </span>
         </p>
+
+        <div class="feedback-container my-4">
+            <app-feedback-form *ngIf="feedbackFormContext" [boardPlayer]="feedbackFormContext.boardPlayer"
+                title="Practice Challenge Feedback" [spec]="feedbackFormContext.boardSpec"
+                [hideIfFeedbackProvidedPreviously]="true" type="challenge"></app-feedback-form>
+        </div>
 
         <p>
             We'll take you back to the Practice Area so you can find a new challenge to conquer.

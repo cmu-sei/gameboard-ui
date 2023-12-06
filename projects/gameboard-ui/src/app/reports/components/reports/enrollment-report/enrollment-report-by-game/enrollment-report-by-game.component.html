@@ -1,0 +1,87 @@
+<ng-container *ngIf="results; else loading">
+    <div *ngIf="results && results.records.length; else noRecords" class="results">
+        <table class="report-table table-hover gameboard-report">
+            <colgroup span="5"></colgroup>
+            <colgroup span="3"></colgroup>
+
+            <thead class="thead-light">
+                <tr class="headers super-headers-row">
+                    <th scope="col" colspan="5" class="group-header game-column">Game</th>
+                    <th scope="col" colSpan="3" class="group-header">Enrollment</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="headers headers-row">
+                    <td>Game</td>
+                    <td>Registration Open</td>
+                    <td>Registration Closed</td>
+                    <td>Execution Start</td>
+                    <td>Execution End</td>
+                    <td>Total Players</td>
+                    <td>Total Sponsors</td>
+                    <td>Top Sponsor</td>
+                </tr>
+
+                <tr class="data-row" *ngFor="let record of results.records">
+                    <!--GAME-->
+                    <td>
+                        <app-challenge-or-game-field [game]="record.game"></app-challenge-or-game-field>
+                    </td>
+                    <td class="report-field date">
+                        <p>{{record.game.registrationOpen | shortdate}}</p>
+                        <p class="subtle-info">{{record.game.registrationOpen | friendlyTime}}</p>
+                    </td>
+                    <td class="report-field date">
+                        <p>{{record.game.registrationClosed | shortdate}}</p>
+                        <p class="subtle-info">{{record.game.registrationClosed | friendlyTime}}</p>
+                    </td>
+                    <td class="report-field date">
+                        <p>{{record.game.executionOpen | shortdate}}</p>
+                        <p class="subtle-info">{{record.game.executionOpen | friendlyTime}}</p>
+                    </td>
+                    <td class="report-field date">
+                        <p>{{record.game.executionClosed | shortdate}}</p>
+                        <p class="subtle-info">{{record.game.executionClosed | friendlyTime}}</p>
+                    </td>
+
+                    <!--ENROLLMENT-->
+                    <td class="report-field numerical">
+                        {{record.playerCount}}
+                    </td>
+                    <td class="report-field numerical">
+                        <p class="tooltipped-value" (click)="handleSponsorsCountClick(record.game, record.sponsors)">
+                            {{ record.sponsors.length }}</p>
+                    </td>
+                    <td class="report-field numerical">
+                        <app-parameter-change-link *ngIf="record.topSponsor"
+                            [config]="{ parameterChange: { sponsors: record.topSponsor.id} }">
+                            <app-player-avatar-legacy class="d-block mr-2"
+                                [avatarUri]="record.topSponsor.logoFileName | relativeImage"
+                                [tooltip]="record.topSponsor.name" size="small"></app-player-avatar-legacy>
+                        </app-parameter-change-link>
+                        <small class="subtle-info">
+                            {{record.topSponsor.playerCount}} {{ "player" | pluralizer:record.topSponsor.playerCount }}
+                        </small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pager-container d-flex justify-content-end mt-4">
+            <div class="flex-grow-1"></div>
+            <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
+                (change)="handlePagingChange($event)"></app-select-pager>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+    <div class="page-height d-flex flex-column align-items-center justify-content-center">
+        <app-spinner>Loading the report...</app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noRecords>
+    <app-no-report-records></app-no-report-records>
+</ng-template>

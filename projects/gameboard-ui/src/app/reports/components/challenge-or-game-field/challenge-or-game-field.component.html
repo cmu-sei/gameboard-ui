@@ -14,7 +14,7 @@
             </app-parameter-change-link>
             ::
         </span>
-        <span *ngIf="game.track; else noValue">
+        <span *ngIf="game.track">
             <app-parameter-change-link [config]="{ parameterChange: { tracks: game.track }, disable: disableLinks }">
                 {{ game.track }}
             </app-parameter-change-link>
@@ -27,7 +27,3 @@
         </span>
     </p>
 </div>
-
-<ng-template #noValue>
-    <app-report-field-no-value></app-report-field-no-value>
-</ng-template>

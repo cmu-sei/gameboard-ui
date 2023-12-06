@@ -1,0 +1,17 @@
+<div class="btn-group" *ngIf="team" dropdown>
+    <button [id]="'external-game-admin-context-menu-' + team.id" dropdownToggle type="button"
+        class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic"
+        tooltip="Additional actions for this team">
+        <fa-icon [icon]="fa.ellipsisVertical"></fa-icon>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleTeamReadyStatusToggled(team, isReady)">
+                {{ (isReady ? "Unready" : "Ready") + " Team \"" + team.name + "\"" }}
+            </button>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleCopyClicked(team.id)">Copy team ID</button>
+        </li>
+    </ul>
+</div>

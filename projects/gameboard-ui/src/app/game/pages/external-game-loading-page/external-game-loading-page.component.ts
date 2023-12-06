@@ -5,13 +5,12 @@ import { LogService } from '@/services/log.service';
 import { PlayerService } from '@/api/player.service';
 import { UserService } from '@/utility/user.service';
 import { firstValueFrom } from 'rxjs';
-import { Game, GameEngineMode } from '../../../api/game-models';
+import { Game, GameEngineMode, GamePlayState } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
-import { ExternalGameService } from '@/services/external-game.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 interface GameLaunchContext {
@@ -22,10 +21,10 @@ interface GameLaunchContext {
 
 @Component({
   selector: 'app-game-start-page',
-  templateUrl: './game-start-page.component.html',
-  styleUrls: ['./game-start-page.component.scss']
+  templateUrl: './external-game-loading-page.component.html',
+  styleUrls: ['./external-game-loading-page.component.scss']
 })
-export class GameStartPageComponent implements OnInit {
+export class ExternalGameLoadingPageComponent implements OnInit {
   private gameId: string | null;
   private playerId: string | null;
 
@@ -36,7 +35,6 @@ export class GameStartPageComponent implements OnInit {
 
   constructor(
     route: ActivatedRoute,
-    private externalGameService: ExternalGameService,
     private gameApi: GameService,
     private gameHub: GameHubService,
     private log: LogService,
@@ -71,24 +69,25 @@ export class GameStartPageComponent implements OnInit {
 
     if (player.userId != localUserId) {
       this.log.logError("Can't start game - the playerId does not belong to the currently-authenticated user.");
+      return;
     }
 
     this.titleService.set(`Starting "${game.name}"...`);
     await this.launchGame({ game, player, localUserId });
   }
 
+  protected handleErrorDismissed(error: any) {
+    if (this.gameId)
+      this.routerService.goToGamePage(this.gameId);
+  }
+
   handleGameReady(ctx: GameLaunchContext) {
-    if (ctx.game.mode == GameEngineMode.Standard) {
-      this.log.logInfo("Navigating to standard game", ctx.game.id);
-      this.routerService.goToGamePage(ctx.game.id);
-      return;
-    } else if (ctx.game.mode == GameEngineMode.External) {
-      this.log.logInfo("Navigating to external game", ctx.game.id, ctx.player.teamId);
-      this.routerService.goToExternalGamePage(ctx.game.id, ctx.player.teamId);
-      return;
+    if (ctx.game.mode != GameEngineMode.External) {
+      throw new Error(`Can't access games with mode "${ctx.game.mode}" from this page. `);
     }
 
-    throw new Error(`Game engine mode "${ctx.game.mode}" not implemented.`);
+    this.log.logInfo("Navigating to external game", ctx.game.id, ctx.player.teamId);
+    this.routerService.goToExternalGamePage(ctx.game.id, ctx.player.teamId);
   }
 
   private async launchGame(ctx: GameLaunchContext): Promise<void> {
@@ -96,19 +95,12 @@ export class GameStartPageComponent implements OnInit {
     this.log.logInfo("Launching game with context", ctx);
 
     // if the player already has a session for the game and it's happening right now, move them along
-    if (ctx.player.session?.isDuring) {
-      this.log.logInfo("Player's session is already active, moving them to the game page", ctx.player);
+    const playState = await firstValueFrom(this.gameApi.getGamePlayState(ctx.game.id));
+    if (playState == GamePlayState.Started) {
+      this.log.logInfo("The game is already started - move them to the game page", ctx.player);
       this.handleGameReady(ctx);
     }
 
-    // if the game is non-sync-start and is standard-vm mode, just redirect to the game page
-    if (!ctx.game.requireSynchronizedStart && ctx.game.mode == GameEngineMode.Standard) {
-      this.log.logInfo("Game is a standard VM game, moving to game page", ctx);
-      this.handleGameReady(ctx);
-      return;
-    }
-
-    // if the game is either sync-start or is an external game, we have work to do here
     this.log.logInfo("Checking hub connection to game", ctx.game.id);
     if (!this.gameHub.isConnectedToGame(ctx.game.id)) {
       this.log.logInfo(`Not connected to game "${ctx.game.id}" - connecting now.`);
@@ -127,13 +119,6 @@ export class GameStartPageComponent implements OnInit {
       this.unsub.add(
         this.gameHub.externalGameLaunchEnded$.subscribe(state => {
           this.updateGameStartState(state);
-
-          const team = state.teams.find(t => t.team.id === ctx.player.teamId);
-          if (!team) {
-            this.log.logError(`Couldn't find a team in state for player's team ("${ctx.player.teamId}").`);
-          }
-
-          this.externalGameService.createLocalStorageKeys({ teamId: ctx.player.teamId, gameServerUrl: team!.headlessUrl });
           this.handleGameReady(ctx);
         })
       );

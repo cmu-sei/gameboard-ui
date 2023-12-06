@@ -4,12 +4,18 @@
 .avatar-container {
     aspect-ratio: 1 / 1;
     background: no-repeat center center;
+    background-color: #dadada;
     background-size: cover;
     border: dashed 1px #dadada;
     border-radius: 50%;
     clip-path: circle(50% at 50% 50%);
     display: inline-block;
     object-fit: cover;
+}
+
+.avatar-size-tiny .avatar-container {    
+    height: 18px;
+    width: 18px;
 }
 
 .avatar-size-medium .status-light {

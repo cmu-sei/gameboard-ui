@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { PracticeModeReportParameters, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters, PracticeModeReportOverallStats } from './practice-mode-report.models';
 import { ReportKey, ReportResults, ReportSponsor } from '@/reports/reports-models';
 import { Observable, firstValueFrom } from 'rxjs';
@@ -16,10 +16,6 @@ import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary
 })
 export class PracticeModeReportComponent
   extends ReportComponentBase<PracticeModeReportFlatParameters, PracticeModeReportParameters> {
-  @ViewChild("byChallenge") byChallengeElementRef?: ElementRef<HTMLElement>;
-  @ViewChild("byPlayer") byPlayerElementRef?: ElementRef<HTMLElement>;
-  @ViewChild("byPlayerModePerformance") byPlayerModePerformanceElementRef?: ElementRef<HTMLElement>;
-
   protected overallStats: ReportSummaryStat[] = [];
   protected games$: Observable<SimpleEntity[]> = this.reportsService.getGames();
   protected seasons$: Observable<string[]> = this.reportsService.getSeasons();
@@ -55,7 +51,6 @@ export class PracticeModeReportComponent
   protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "series"
   });
-
 
   protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "tracks"
@@ -105,24 +100,10 @@ export class PracticeModeReportComponent
         break;
     }
 
-    const elRef = (() => {
-      switch (parameters.grouping) {
-        case PracticeModeReportGrouping.challenge:
-          return this.byChallengeElementRef;
-        case PracticeModeReportGrouping.player:
-          return this.byPlayerElementRef;
-        case PracticeModeReportGrouping.playerModePerformance:
-          return this.byPlayerModePerformanceElementRef;
-        default:
-          return undefined;
-      }
-    })();
-
     this.selectedParameters = parameters;
 
     return {
       metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.PracticeAreaReport)),
-      reportElementRef: elRef
     };
   }
 }

@@ -325,6 +325,10 @@ th[align="left"] {
   width: 100%;
 }
 
+.font-bold {
+  font-weight: bold !important;
+}
+
 .gameboard-table {
   width: 100%;
 
@@ -338,6 +342,10 @@ th[align="left"] {
       padding-bottom: 0.5rem;
     }
   }
+}
+
+.text-capitalize {
+  text-transform: capitalize;
 }
 
 .text-upper {

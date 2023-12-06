@@ -1,7 +1,6 @@
 import { SimpleEntity } from "@/api/models";
 import { SignalRHubEventType } from "./signalr-hub.models";
 import { GameEngineType } from "@/api/spec-models";
-import { GameState } from "@/api/board-models";
 
 export interface GameHubEvent<T> {
     gameId: string;
@@ -20,6 +19,7 @@ export class GameHubEventType implements SignalRHubEventType {
     static ExternalGameLaunchEnd = "externalGameLaunchEnd";
     static ExternalGameLaunchFailure = "externalGameLaunchFailure";
     static PlayerJoined = "playerJoined";
+    static SyncStartGameStarted = "syncStartGameStarted";
     static SyncStartGameStarting = "syncStartGameStarting";
     static SyncStartGameStateChanged = "syncStartGameStateChanged";
     static VerifyAllPlayersConnectedStart = "verifyAllPlayersConnectedStart";
@@ -40,13 +40,10 @@ export interface YouJoinedEvent {
 
 export interface GameStartState {
     game: SimpleEntity;
-    challengesCreated: GameStartStateChallenge[];
+    challengesCreated: number;
     challengesTotal: number;
-    gamespacesStarted: GameState[];
+    gamespacesStarted: number;
     gamespacesTotal: number;
-    players: GameStartStatePlayer[];
-    teams: GameStartStateTeam[];
-    overallProgress: number;
 
     startTime: Date,
     now: Date,

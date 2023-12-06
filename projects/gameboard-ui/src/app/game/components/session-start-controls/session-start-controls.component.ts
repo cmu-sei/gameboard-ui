@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { GameService } from '../../../api/game.service';
 import { GameContext } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
@@ -37,7 +36,6 @@ export class SessionStartControlsComponent implements OnInit {
     private gameHub: GameHubService,
     private gameService: GameService,
     private logService: LogService,
-    private playerService: PlayerService,
     private syncStartService: SyncStartService,
     private unsub: UnsubscriberService) { }
 
@@ -70,8 +68,9 @@ export class SessionStartControlsComponent implements OnInit {
 
   protected async handleReadyUpdated(player: Player) {
     this.isReadyingUp = true;
-    this.logService.logInfo(`Player ${player.id} (user ${player.userId}) updating ready...`);
-    await firstValueFrom(this.playerService.updateIsSyncStartReady(player.id, { isReady: player.isReady }));
+    this.logService.logInfo(`Player ${player.id} (user ${player.userId}) updating ready (${player.isReady})...`);
+    await firstValueFrom(this.syncStartService.updatePlayerReadyState(player.id, { isReady: player.isReady }));
+    this.logService.logInfo(`Player ${player.id} (user ${player.userId}) is now ${player.isReady ? "" : "NOT "}ready.`);
     this.isReadyingUp = false;
   }
 

@@ -35,6 +35,7 @@ import { SponsorSelectBannerComponent } from './components/sponsor-select-banner
 import { GameboardSignalRHubsComponent } from './components/gameboard-signalr-hubs/gameboard-signalr-hubs.component';
 import { SignalRService } from './services/signalR/signalr.service';
 import { LogService } from './services/log.service';
+import { SystemNotificationsModule } from './system-notifications/system-notifications.module';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { LogService } from './services/log.service';
     AppRoutingModule,
     ApiModule,
     FontAwesomeModule,
+    SystemNotificationsModule,
     CoreModule,
     UtilityModule,
     TooltipModule.forRoot(),

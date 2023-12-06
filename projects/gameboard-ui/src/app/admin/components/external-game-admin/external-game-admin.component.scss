@@ -1,0 +1,40 @@
+h1 {
+    margin: 0;
+}
+
+h2 {
+    letter-spacing: 0.3rem;
+}
+
+h3.sync-session-date {
+    margin: 0;
+    padding: 0;
+}
+
+.team-card {
+    flex-basis: 48%;
+}
+
+.team-avatars-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+}
+
+tr {
+    border-bottom: dashed 1px #dedede;
+}
+
+td, th {
+    padding: 2px 4px;
+}
+
+.not-deployed {
+    color: #888888;
+}
+
+app-deployment-admin-team-context-menu, app-external-game-admin-player-context-menu {
+    display: block;
+    margin-top: -12px;
+}

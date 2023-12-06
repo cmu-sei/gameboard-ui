@@ -111,6 +111,46 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.createUrlTree([this.getCurrentPathBase()]));
   }
 
+  public getExternalGamePageUrlTree(ctx: { gameId: string, teamId: string }) {
+    return this.router.createUrlTree(["game", "external", ctx.gameId, ctx.teamId]);
+  }
+
+  public goToExternalGamePage(gameId: string, teamId: string) {
+    this.router.navigateByUrl(this.getExternalGamePageUrlTree({ gameId, teamId }));
+  }
+
+  public getExternalGameLoadingPageUrlTree(ctx: { gameId: string, playerId: string }) {
+    return this.router.createUrlTree(["game", "external", ctx.gameId, "start", ctx.playerId]);
+  }
+
+  public goToExternalGameLoadingPage(ctx: { gameId: string, playerId: string }) {
+    this.router.navigateByUrl(this.getExternalGameLoadingPageUrlTree(ctx));
+  }
+
+  public getGameboardPageUrlTree(playerId: string): UrlTree {
+    return this.router.createUrlTree(["game", "board", playerId]);
+  }
+
+  public getGamePageUrlTree(gameId: string): UrlTree {
+    return this.router.parseUrl(`/game/${gameId}`);
+  }
+
+  public goToGamePage(gameId: string) {
+    this.router.navigateByUrl(this.getGamePageUrlTree(gameId));
+  }
+
+  public getUnityBoardUrlTree(ctx: { gameId: string, playerId: string, teamId: string; sessionEnd: number }) {
+    return this.router.createUrlTree(["game", "unity-board", ctx.gameId, ctx.playerId, ctx.teamId, ctx.sessionEnd]);
+  }
+
+  public reloadOnNextNavigateEnd() {
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(e => {
+      window.location = window.location;
+    });
+  }
+
   public updateQueryParams(update: QueryParamsUpdate): Promise<boolean> {
     const cleanParams = this.objectService.cloneTruthyAndZeroKeys({ ...this.route.snapshot.queryParams, ...update.parameters });
 
@@ -124,34 +164,6 @@ export class RouterService implements OnDestroy {
     const updatedParams = { ...cleanParams, ...update.parameters };
     const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: updatedParams });
     return this.router.navigateByUrl(urlTree);
-  }
-
-  public goToExternalGamePage(gameId: string, teamId: string) {
-    this.router.navigateByUrl(`/game/external/${gameId}/${teamId}`);
-  }
-
-  public getGamePageUrlTree(gameId: string): UrlTree {
-    return this.router.parseUrl(`/game/${gameId}`);
-  }
-
-  public goToGamePage(gameId: string) {
-    this.router.navigateByUrl(this.getGamePageUrlTree(gameId));
-  }
-
-  public getGameStartPageUrlTree(ctx: { gameId: string, playerId: string }) {
-    return this.router.parseUrl(`/game/${ctx.gameId}/start/${ctx.playerId}`);
-  }
-
-  public goToGameStartPage(ctx: { gameId: string, playerId: string }) {
-    this.router.navigateByUrl(this.getGameStartPageUrlTree(ctx));
-  }
-
-  public reloadOnNextNavigateEnd() {
-    this.router.events.pipe(
-      filter(e => e instanceof NavigationEnd)
-    ).subscribe(e => {
-      window.location = window.location;
-    });
   }
 
   ngOnDestroy(): void {

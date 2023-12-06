@@ -10,6 +10,8 @@ import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
 import { HubPlayer, Player, TimeWindow } from '../api/player-models';
 import { LogService } from './log.service';
+import { LocalStorageService } from './local-storage.service';
+import { ExternalGameService } from './external-game.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -30,6 +32,7 @@ export class NotificationService {
     config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
+    private externalGameService: ExternalGameService,
     private log: LogService,
   ) {
     this.connection = this.getConnection(`${config.apphost}hub`);
@@ -278,6 +281,12 @@ export class NotificationService {
     }
   }
 
+  private maybeClearExternalGameLocalStorage(teamId: string, action: HubEventAction) {
+    if (action === HubEventAction.sessionReset) {
+      this.externalGameService.clearLocalStorageKeys(teamId);
+    }
+  }
+
   private async resolveOpenConnection(channelId: string, connection: HubConnection, attemptCount = 0, maxAttempts = 5): Promise<void> {
     if (attemptCount >= maxAttempts) {
       throw new Error("Couldn't connect to the SignalR hub.");
@@ -326,6 +335,7 @@ export enum HubEventAction {
   updated = 'updated',
   deleted = 'deleted',
   sessionExtended = 'sessionExtended',
+  sessionReset = 'sessionReset',
   started = 'started',
   roleChanged = 'roleChanged',
   waiting = 'waiting'

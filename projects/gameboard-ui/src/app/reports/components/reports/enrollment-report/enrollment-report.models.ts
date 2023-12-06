@@ -2,6 +2,8 @@ import { ChallengeResult } from "@/api/board-models";
 import { PagingArgs, SimpleEntity } from "@/api/models";
 import { ReportDateRange, ReportGame, ReportSponsor } from "@/reports/reports-models";
 
+export type EnrollmentReportTab = "summary" | "trend" | "game";
+
 export interface EnrollmentReportFlatParameters {
     enrollDateStart?: string;
     enrollDateEnd?: string;
@@ -10,6 +12,7 @@ export interface EnrollmentReportFlatParameters {
     seasons?: string
     series?: string;
     sponsors?: string;
+    tab?: EnrollmentReportTab;
     tracks?: string;
 }
 
@@ -19,6 +22,7 @@ export interface EnrollmentReportParameters {
     seasons: string[];
     series: string[];
     sponsors: SimpleEntity[];
+    tab?: EnrollmentReportTab;
     tracks: string[];
 }
 
@@ -62,6 +66,27 @@ export interface EnrollmentReportRecord {
     challengesPartiallySolvedCount: number,
     challengesCompletelySolvedCount: number,
     score?: number;
+}
+
+export interface EnrollmentReportByGameRecord {
+    game: EnrollmentReportByGameGame;
+    playerCount: number;
+    sponsors: EnrollmentReportByGameSponsor[];
+    topSponsor: EnrollmentReportByGameSponsor;
+}
+
+export interface EnrollmentReportByGameGame extends ReportGame {
+    executionOpen: Date;
+    executionClosed: Date;
+    registrationOpen: Date;
+    registrationClosed: Date;
+}
+
+export interface EnrollmentReportByGameSponsor {
+    id: string;
+    name: string;
+    logoFileName: string;
+    playerCount: string;
 }
 
 export interface EnrollmentReportStatSummary {
