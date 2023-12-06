@@ -20,7 +20,7 @@ export class GamespaceQuizComponent {
   @Output() graded = new EventEmitter<boolean>();
 
   pending = false;
-  errors: Error[] = [];
+  errors: any[] = [];
   protected fa = fa;
 
   constructor(
@@ -29,6 +29,7 @@ export class GamespaceQuizComponent {
 
   async submit(): Promise<void> {
     this.pending = true;
+    this.errors = [];
 
     const submission = {
       id: this.spec.instance!.id,
@@ -36,20 +37,16 @@ export class GamespaceQuizComponent {
       questions: this.spec.instance!.state.challenge?.questions?.map(q => ({ answer: q.answer })),
     };
 
-    await firstValueFrom(this.challengesService.grade(submission).pipe(
-      catchError((err, caughtChallenge) => {
-        this.errors.push(err);
-        return caughtChallenge;
-      }),
-      tap(c => {
-        if (c) {
-          this.spec.instance = c;
-          this.api.setColor(this.spec);
-          this.graded.emit(true);
-        }
+    try {
+      const gradedChallenge = await firstValueFrom(this.challengesService.grade(submission));
+      this.spec.instance = gradedChallenge;
+      this.api.setColor(this.spec);
+      this.graded.emit(true);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
 
-        this.pending = false;
-      })
-    ));
+    this.pending = false;
   }
 }
