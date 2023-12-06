@@ -6,7 +6,7 @@ import { fa } from "@/services/font-awesome.service";
 import { BoardSpec } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { TimeWindow } from '../../api/player-models';
-import { catchError, firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { ChallengesService } from '@/api/challenges.service';
 
 @Component({
