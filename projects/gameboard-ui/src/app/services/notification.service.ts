@@ -10,7 +10,6 @@ import { AuthService, AuthTokenState } from '../utility/auth.service';
 import { UserService } from '../api/user.service';
 import { HubPlayer, Player, TimeWindow } from '../api/player-models';
 import { LogService } from './log.service';
-import { LocalStorageService } from './local-storage.service';
 import { ExternalGameService } from './external-game.service';
 
 @Injectable({ providedIn: 'root' })
@@ -139,6 +138,7 @@ export class NotificationService {
       if (this.connection.state === HubConnectionState.Connected) {
         // and we're connected to the right group, do nothing
         if (this.connection.connectionId == groupId) {
+          this.log.logInfo(`Team (notification) hub is already connected to team ${groupId}.`);
           return;
         }
 

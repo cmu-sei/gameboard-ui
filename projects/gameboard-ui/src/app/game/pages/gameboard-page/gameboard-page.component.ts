@@ -12,13 +12,14 @@ import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '@/api/
 import { BoardService } from '@/api/board.service';
 import { ApiUser } from '@/api/user-models';
 import { ConfigService } from '@/utility/config.service';
-import { HubState, NotificationService } from '@/services/notification.service';
+import { NotificationService } from '@/services/notification.service';
 import { UserService } from '@/utility/user.service';
 import { GameboardPerformanceSummaryViewModel } from '@/core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { BrowserService } from '@/services/browser.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '@/api/models';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -45,8 +46,6 @@ export class GameboardPageComponent implements OnDestroy {
   deploying = false;
   variant = 0;
   user$: Observable<ApiUser | null>;
-  hubstate$: Observable<HubState>;
-  hubsub: Subscription;
   cid = '';
   performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
 
@@ -61,11 +60,14 @@ export class GameboardPageComponent implements OnDestroy {
     private api: BoardService,
     private config: ConfigService,
     private hub: NotificationService,
+    private unsub: UnsubscriberService
   ) {
 
     this.user$ = usersvc.user$;
-    this.hubstate$ = hub.state$;
-    this.hubsub = hub.challengeEvents.subscribe(ev => this.syncOne(ev.model as Challenge));
+
+    this.unsub.add(
+      hub.challengeEvents.subscribe(ev => this.syncOne(ev.model as Challenge))
+    );
 
     this.fetch$ = merge(
       route.params.pipe(
@@ -155,13 +157,10 @@ export class GameboardPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (!this.hubsub.closed) {
-      this.hubsub.unsubscribe();
-    }
     if (this.fetch$) { this.fetch$.unsubscribe(); }
   }
 
-  startHub(b: BoardPlayer): void {
+  private startHub(b: BoardPlayer): void {
     if (b.session.isDuring) {
       this.hub.init(b.teamId);
     }

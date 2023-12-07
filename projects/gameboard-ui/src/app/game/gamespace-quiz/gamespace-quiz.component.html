@@ -10,8 +10,13 @@
       [class.pop-info]="!q.isGraded" [class.pop-success]="q.isGraded && q.isCorrect"
       [class.pop-warning]="q.isGraded && !q.isCorrect">
       <label>{{i+1}}. ({{q.weight}}) {{q.text}}</label>
-      <input class="form-control" [readonly]="q.isCorrect" [(ngModel)]="q.answer">
+      <input class="form-control" [readonly]="q.isCorrect" [(ngModel)]="q.answer"
+        (input)="handleAnswerInput({ challengeId: state.id, sectionIndex: state.challenge.sectionIndex, questions: state.challenge.questions})">
       <small [hidden]="!q.example">Example answer: {{q.example}}</small>
+      <small *ngIf="pastSubmissions">
+        <strong>Your previous answers: </strong>
+        {{ i | indexToSubmittedAnswer:pastSubmissions }}
+      </small>
     </div>
 
     <app-error-div [errors]="errors"></app-error-div>
@@ -27,6 +32,7 @@
             {{state.challenge.attempts + 1}} of {{state.challenge.maxAttempts}}
           </label>
         </ng-container>
+
         <div *ngIf="!!this.pending" class="small-spinner">
           <app-spinner></app-spinner>
         </div>

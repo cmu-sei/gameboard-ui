@@ -43,6 +43,24 @@ export interface LocalActiveChallenge extends ActiveChallenge {
     session: LocalTimeWindow;
 }
 
+export interface ChallengeSubmissionAnswers {
+    questionSetIndex: number;
+    answers: string[];
+}
+
+export interface ChallengeSubmissionViewModel {
+    sectionIndex: number;
+    answers: string[];
+    submittedOn: Date;
+}
+
+export interface GetChallengeSubmissionsResponse {
+    challengeId: string;
+    teamId: string;
+    pendingAnswers: ChallengeSubmissionAnswers;
+    submittedAnswers: ChallengeSubmissionViewModel[];
+}
+
 export interface UserApiActiveChallenges {
     user: SimpleEntity;
     competition: ApiActiveChallenge[];

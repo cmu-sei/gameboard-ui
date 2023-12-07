@@ -4,7 +4,7 @@ import { Observable, Subject, map, switchMap, tap } from 'rxjs';
 import { Challenge, NewChallenge, SectionSubmission } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { activeChallengesStore } from '@/stores/active-challenges.store';
-import { ChallengeSolutionGuide, LocalActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
+import { ChallengeSolutionGuide, ChallengeSubmissionAnswers, GetChallengeSubmissionsResponse, LocalActiveChallenge, UserActiveChallenges, UserApiActiveChallenges } from './challenges.models';
 import { LocalTimeWindow } from '@/core/models/api-time-window';
 import { PlayerMode } from './player-models';
 
@@ -87,5 +87,13 @@ export class ChallengesService {
 
   public getSolutionGuide(challengeId: string): Observable<ChallengeSolutionGuide | null> {
     return this.http.get<ChallengeSolutionGuide>(this.apiUrl.build(`challenge/${challengeId}/solution-guide`));
+  }
+
+  public getSubmissions(challengeId: string): Observable<GetChallengeSubmissionsResponse> {
+    return this.http.get<GetChallengeSubmissionsResponse>(this.apiUrl.build(`challenge/${challengeId}/submissions`));
+  }
+
+  public savePendingSubmission(challengeId: string, submission: ChallengeSubmissionAnswers) {
+    return this.http.put(this.apiUrl.build(`challenge/${challengeId}/submissions/pending`), submission);
   }
 }
