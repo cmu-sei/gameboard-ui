@@ -3,14 +3,20 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'indexToSubmittedAnswer' })
 export class IndexToSubmittedAnswerPipe implements PipeTransform {
-  transform(index: number, arg: ChallengeSubmissionViewModel[]): string {
-    if (index < 0 || !arg || !arg.length) {
+  transform(index: number, submissions: ChallengeSubmissionViewModel[], hideLastResponse = false): string {
+    if (index < 0 || !submissions || !submissions.length) {
       throw new Error("Can't use IndexToSubmittedAnswer pipe without an index and submitted answers.");
     }
 
-    if (index > arg.length)
-      throw new Error(`Can't use IndexToSubmittedAnswer pipe with an out-of-range index (${index}, ${arg.length})`);
+    if (index > submissions.length)
+      throw new Error(`Can't use IndexToSubmittedAnswer pipe with an out-of-range index (${index}, ${submissions.length})`);
 
-    return arg.map(submission => `"${submission.answers[index]}"`).join(", ");
+    // the final submitted answer may be the correct answer (if they got the question right). We show that elsewhere, so hide
+    // it if requested
+    let displayedSubmissions = [...submissions];
+    if (hideLastResponse)
+      displayedSubmissions = displayedSubmissions.slice(0, displayedSubmissions.length - 1);
+
+    return displayedSubmissions.map(submission => `${submission.answers[index] ? `"${submission.answers[index]}"` : "(no response)"}`).join(", ");
   }
 }

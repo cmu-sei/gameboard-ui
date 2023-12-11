@@ -2,7 +2,7 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root. -->
 
 <ng-container *ngIf="spec.instance?.state as state">
-  <ng-container *ngIf="!!state.challenge">
+  <ng-container *ngIf="!!state.challenge && pendingAnswers">
 
     <markdown [data]="state.challenge.sectionText"></markdown>
 
@@ -10,13 +10,27 @@
       [class.pop-info]="!q.isGraded" [class.pop-success]="q.isGraded && q.isCorrect"
       [class.pop-warning]="q.isGraded && !q.isCorrect">
       <label>{{i+1}}. ({{q.weight}}) {{q.text}}</label>
-      <input class="form-control" [readonly]="q.isCorrect" [(ngModel)]="q.answer"
-        (input)="handleAnswerInput({ challengeId: state.id, sectionIndex: state.challenge.sectionIndex, questions: state.challenge.questions})">
-      <small [hidden]="!q.example">Example answer: {{q.example}}</small>
-      <small *ngIf="pastSubmissions">
-        <strong>Your previous answers: </strong>
-        {{ i | indexToSubmittedAnswer:pastSubmissions }}
-      </small>
+
+      <!--This is shown if the user hasn't correctly answered the question-->
+      <div *ngIf="!q.isCorrect">
+        <input *ngIf="!q.isCorrect" class="form-control" [disabled]="q.isCorrect || session.isAfter"
+          [(ngModel)]="pendingAnswers.answers[i]"
+          (input)="handleAnswerInput({ challengeId: state.id, sectionIndex: pendingAnswers.questionSetIndex, answers: pendingAnswers.answers})">
+        <small [hidden]="!q.example">Example answer: {{q.example}}</small>
+      </div>
+
+      <!-- if they have, show this-->
+      <div *ngIf="q.isCorrect">
+        {{ q.answer }}
+      </div>
+
+      <div *ngIf="pastSubmissions.length">
+        <small>
+          <strong>Previous attempts: </strong>
+          <!--If the question has been answered correctly, don't show the last historical entry for it (because we display it above)-->
+          {{ i | indexToSubmittedAnswer:pastSubmissions:q.isCorrect }}
+        </small>
+      </div>
     </div>
 
     <app-error-div [errors]="errors"></app-error-div>
@@ -36,7 +50,10 @@
         <div *ngIf="!!this.pending" class="small-spinner">
           <app-spinner></app-spinner>
         </div>
-        <span>(Session ends in {{session.countdown | countdown}})</span>
+        <span *ngIf="this.session.endDate">
+          <strong><app-countdown [countdownTo]="this.session.endDate.valueOf()"></app-countdown></strong>
+          remaining
+        </span>
       </ng-container>
       <div class="spacer"></div>
       <div>Score: {{state.challenge.score}} of {{state.challenge.maxPoints}}</div>

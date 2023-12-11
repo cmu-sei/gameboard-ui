@@ -57,7 +57,7 @@ export interface ChallengeSubmissionViewModel {
 export interface GetChallengeSubmissionsResponse {
     challengeId: string;
     teamId: string;
-    pendingAnswers: ChallengeSubmissionAnswers;
+    pendingAnswers: ChallengeSubmissionAnswers | null;
     submittedAnswers: ChallengeSubmissionViewModel[];
 }
 

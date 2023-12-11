@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GameSessionService } from '../services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { BoardPlayer, BoardSpec, Challenge, ChallengeSummary, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, SectionSubmission, VmConsole } from './board-models';
+import { BoardPlayer, BoardSpec, Challenge, ChallengeResult, ChallengeSummary, ChangedChallenge, ConsoleActor, NewChallenge, ObserveChallenge, VmConsole } from './board-models';
+import { NowService } from '@/services/now.service';
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
@@ -16,7 +17,8 @@ export class BoardService {
   constructor(
     private http: HttpClient,
     private config: ConfigService,
-    private gameSessionService: GameSessionService
+    private gameSessionService: GameSessionService,
+    private nowService: NowService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -96,6 +98,29 @@ export class BoardService {
     this.gameSessionService.addSession(b, b.sessionBegin, b.sessionEnd);
 
     return b;
+  }
+
+  getChallengeColor(challengeInfo: { id: string, endTime?: Date, isDisabled: boolean, isLocked: boolean, result: ChallengeResult }) {
+    if (!challengeInfo.endTime) {
+      return "white";
+    }
+
+    if (challengeInfo.isDisabled || challengeInfo.isLocked) {
+      return "black";
+    }
+
+    if (challengeInfo.result == "success") {
+      return "lime";
+    }
+
+    if (challengeInfo.result == "partial") {
+      return "yellow";
+    }
+
+    if (challengeInfo.endTime < this.nowService.now())
+      return "red";
+
+    return "blue";
   }
 
   setColor(s: BoardSpec): void {
