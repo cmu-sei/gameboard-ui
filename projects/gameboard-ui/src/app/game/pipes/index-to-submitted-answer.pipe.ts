@@ -1,5 +1,6 @@
 import { ChallengeSubmissionViewModel } from '@/api/challenges.models';
 import { Pipe, PipeTransform } from '@angular/core';
+import { unique } from 'projects/gameboard-ui/src/tools';
 
 @Pipe({ name: 'indexToSubmittedAnswer' })
 export class IndexToSubmittedAnswerPipe implements PipeTransform {
@@ -17,6 +18,9 @@ export class IndexToSubmittedAnswerPipe implements PipeTransform {
     if (hideLastResponse)
       displayedSubmissions = displayedSubmissions.slice(0, displayedSubmissions.length - 1);
 
-    return displayedSubmissions.map(submission => `${submission.answers[index] ? `"${submission.answers[index]}"` : "(no response)"}`).join(", ");
+    return unique(
+      displayedSubmissions
+        .map(submission => `${submission.answers[index] ? `"${submission.answers[index]}"` : "(no response)"}`)
+    ).join(", ");
   }
 }
