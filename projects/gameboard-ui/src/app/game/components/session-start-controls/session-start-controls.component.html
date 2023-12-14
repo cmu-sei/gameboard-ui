@@ -35,9 +35,9 @@
     <div class="d-flex align-items-center justify-content-center" *ngIf="!isDoubleChecking">
         <ng-container *ngIf="ctx.game.requireSynchronizedStart">
             <button *ngIf="isConnectedToGameHub; else connectingToHub" btnCheckbox class="btn btn-lg mr-4"
+                [disabled]="isReadyingUp || !isConnectedToGameHub || playerReadyPct == 100"
                 [class.btn-outline-success]="!ctx.player.isReady" [class.btn-danger]="ctx.player.isReady"
-                [class.btn-secondary]="isReadyingUp" [(ngModel)]="ctx.player.isReady"
-                (click)="handleReadyUpdated(ctx.player)" [disabled]="isReadyingUp">
+                [class.btn-secondary]="isReadyingUp" (click)="handleReadyUpdated(ctx.player)">
                 <span>{{ ctx.player.isReady ? "Cancel - I'm not ready" : "I'm ready!" }}</span>
             </button>
         </ng-container>
