@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters, EnrollmentReportLineChartGroup, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
 import { Observable, firstValueFrom, map, } from 'rxjs';
-import { ReportResults, ReportResultsWithOverallStats } from '@/reports/reports-models';
+import { ReportResults } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '@/services/api-url.service';

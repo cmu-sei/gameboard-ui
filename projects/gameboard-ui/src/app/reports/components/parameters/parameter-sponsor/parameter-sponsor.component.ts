@@ -161,7 +161,7 @@ export class ParameterSponsorComponent implements OnInit {
       params[this.queryParamName] = validSponsorIds.join(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
     }
 
-    await this.routerService.updateQueryParams({ parameters: params });
+    await this.routerService.updateQueryParams({ parameters: params, resetParams: ["pageNumber", "pageSize"] });
     this.updateSelectionSummary(value);
   }
 }

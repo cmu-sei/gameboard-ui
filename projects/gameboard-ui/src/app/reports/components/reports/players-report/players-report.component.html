@@ -1,0 +1,96 @@
+<div class="players-report-component">
+    <app-report-parameters-container>
+        <app-parameter-date-range label="Signup Date" ngDefaultControl
+            [(ngModel)]="createdDateQueryModel"></app-parameter-date-range>
+        <app-parameter-date-range label="Last Played Date" ngDefaultControl
+            [(ngModel)]="lastPlayedDateQueryModel"></app-parameter-date-range>
+        <app-parameter-sponsor name="sponsors" ngDefaultControl></app-parameter-sponsor>
+    </app-report-parameters-container>
+
+    <ng-container *ngIf="!ctx.isLoading; else loading">
+        <div class="report-body mt-4">
+            <table class="report-table table-hover gameboard-report">
+                <colgroup span="3"></colgroup>
+                <colgroup span="2"></colgroup>
+                <colgroup span="4"></colgroup>
+
+                <thead class="thead-light">
+                    <tr class="headers super-headers-row">
+                        <th scope="col" colspan="3" class="group-header">Player</th>
+                        <th scope="col" colspan="2" class="group-header">
+                            Deployed Challenges
+                        </th>
+                        <th scope="col" colspan="4" class="group-header">
+                            Participation
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="headers headers-row">
+                        <td>Player</td>
+                        <td>Created On</td>
+                        <td>Last Played On</td>
+                        <td>Competitive</td>
+                        <td>Practice</td>
+                        <td>Games</td>
+                        <td>Series</td>
+                        <td>Seasons</td>
+                        <td>Tracks</td>
+                    </tr>
+
+                    <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <app-player-field class="d-block"
+                                    [player]="{ userId: record.user.id, name: record.user.name, sponsor: record.sponsor }"></app-player-field>
+                            </div>
+                        </td>
+                        <td class="report-field date">
+                            <ng-container *ngIf="record.createdOn else noValue">
+                                <p>{{ record.createdOn | shortdate }}</p>
+                                <p class="subtle-info">{{ record.createdOn| friendlyTime }}</p>
+                            </ng-container>
+                        </td>
+                        <td class="report-field date">
+                            <ng-container *ngIf="record.lastPlayedOn else noValue">
+                                <p>{{ record.lastPlayedOn | shortdate }}</p>
+                                <p class="subtle-info">{{ record.lastPlayedOn | friendlyTime }}</p>
+                            </ng-container>
+                        </td>
+                        <td class="report-field numerical">
+                            {{ record.deployedCompetitiveChallengesCount }}
+                        </td>
+                        <td class="report-field numerical">
+                            {{ record.deployedPracticeChallengesCount }}
+                        </td>
+                        <td class="report-field numerical">
+                            {{ record.distinctSeriesPlayedCount }}
+                        </td>
+                        <td class="report-field numerical">
+                            {{ record.distinctTracksPlayedCount }}
+                        </td>
+                        <td class="report-field numerical">
+                            {{ record.distinctSeasonsPlayedCount }}
+                        </td>
+                        <td class="report-field numerical">
+                            {{ record.distinctGamesPlayedCount }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+
+    <div class="pager-container d-flex justify-content-end mt-4">
+        <div class="flex-grow-1"></div>
+        <app-select-pager [itemCount]="ctx.results?.paging?.itemCount" [pageSize]="ctx.results?.paging?.pageSize"
+            (change)="handlePagingChange($event)"></app-select-pager>
+    </div>
+</div>
+
+<ng-template #noRecords>
+    <app-no-report-records recordDescription="players"></app-no-report-records>
+</ng-template>
+<ng-template #noValue>--</ng-template>
+<ng-template #loading><app-spinner>Loading your report...</app-spinner></ng-template>
