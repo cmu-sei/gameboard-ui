@@ -1,5 +1,6 @@
 import { PagingArgs, SimpleEntity } from "@/api/models";
 import { ReportDateRange, ReportSponsor } from "@/reports/reports-models";
+import { ReportSummaryStat } from "../../report-stat-summary/report-stat-summary.component";
 
 export interface PlayersReportFlatParameters {
     createdDateStart?: string;
@@ -33,4 +34,12 @@ export interface PlayersReportRecord {
     distinctSeriesPlayedCount: number;
     distinctTracksPlayedCount: number;
     distinctSeasonsPlayedCount: number;
+}
+
+export interface PlayersReportStatSummary {
+    userCount: number;
+    usersWithCompletedCompetitiveChallengeCount: number;
+    usersWithCompletedPracticeChallengeCount: number;
+    usersWithDeployedCompetitiveChallengeCount: number;
+    usersWithDeployedPracticeChallengeCount: number;
 }

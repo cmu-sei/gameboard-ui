@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ReportComponentBase } from '../report-base.component';
-import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord } from './players-report.models';
-import { ReportKey, ReportResults, ReportViewUpdate } from '@/reports/reports-models';
+import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord, PlayersReportStatSummary } from './players-report.models';
+import { ReportKey, ReportResultsWithOverallStats, ReportViewUpdate } from '@/reports/reports-models';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { PlayersReportService } from './players-report.service';
 import { firstValueFrom } from 'rxjs';
@@ -10,7 +10,7 @@ import { SimpleEntity } from '@/api/models';
 
 interface PlayersReportContext {
   isLoading: boolean;
-  results?: ReportResults<PlayersReportRecord>;
+  results?: ReportResultsWithOverallStats<PlayersReportStatSummary, PlayersReportRecord>;
   selectedParameters: PlayersReportFlatParameters;
 }
 
