@@ -14,6 +14,6 @@ export class PlayersReportService {
 
   getReportData(parameters: PlayersReportFlatParameters) {
     parameters = this.reportsService.applyDefaultPaging(parameters);
-    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUrl.build("reports/players"));
+    return this.http.get<ReportResults<PlayersReportRecord>>(this.apiUrl.build("reports/players", parameters));
   }
 }

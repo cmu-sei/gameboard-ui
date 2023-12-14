@@ -1,5 +1,14 @@
 <div class="players-report-component">
     <app-report-parameters-container>
+        <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
+            [(ngModel)]="seriesQueryModel"></app-multi-select>
+        <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
+            [(ngModel)]="tracksQueryModel"></app-multi-select>
+        <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
+            [(ngModel)]="seasonsQueryModel"></app-multi-select>
+        <app-multi-select label="Games" name="games" [options]="games$ | async" [(ngModel)]="gamesQueryModel"
+            [itemTemplate]="multiSelectGame" [getSearchText]="displayGameName"
+            [value]="getGameValue"></app-multi-select>
         <app-parameter-date-range label="Signup Date" ngDefaultControl
             [(ngModel)]="createdDateQueryModel"></app-parameter-date-range>
         <app-parameter-date-range label="Last Played Date" ngDefaultControl
@@ -9,7 +18,8 @@
 
     <ng-container *ngIf="!ctx.isLoading; else loading">
         <div class="report-body mt-4">
-            <table class="report-table table-hover gameboard-report">
+            <table *ngIf="ctx.results?.records?.length; else noRecords"
+                class="report-table table-hover gameboard-report">
                 <colgroup span="3"></colgroup>
                 <colgroup span="2"></colgroup>
                 <colgroup span="4"></colgroup>
@@ -28,8 +38,8 @@
 
                 <tbody>
                     <tr class="headers headers-row">
-                        <td>Player</td>
-                        <td>Created On</td>
+                        <td>Name &amp; Sponsor</td>
+                        <td>Signed Up On</td>
                         <td>Last Played On</td>
                         <td>Competitive</td>
                         <td>Practice</td>
@@ -88,6 +98,10 @@
             (change)="handlePagingChange($event)"></app-select-pager>
     </div>
 </div>
+
+<ng-template #multiSelectGame let-context>
+    <span class="game-name">{{ context.name }}</span>
+</ng-template>
 
 <ng-template #noRecords>
     <app-no-report-records recordDescription="players"></app-no-report-records>
