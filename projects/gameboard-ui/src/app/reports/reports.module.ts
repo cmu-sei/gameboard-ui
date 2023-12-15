@@ -40,6 +40,7 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 import { PlayersReportSummaryToStatsPipe } from './components/reports/players-report/players-report-summary-to-stats.pipe';
+import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { PlayersReportSummaryToStatsPipe } from './components/reports/players-re
     ArrayFieldToClassPipe,
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
+    ChallengesReportComponent,
     EnrollmentReportComponent,
     EnrollmentReportByGameComponent,
     EnrollmentReportSponsorPlayerCountModalComponent,
@@ -89,6 +91,7 @@ import { PlayersReportSummaryToStatsPipe } from './components/reports/players-re
         path: '',
         component: ReportPageComponent,
         children: [
+          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
           { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
           { path: 'players', component: PlayersReportComponent, title: "Players Report" },

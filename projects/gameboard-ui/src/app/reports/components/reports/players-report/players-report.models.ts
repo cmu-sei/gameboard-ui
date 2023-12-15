@@ -1,6 +1,5 @@
 import { PagingArgs, SimpleEntity } from "@/api/models";
 import { ReportDateRange, ReportSponsor } from "@/reports/reports-models";
-import { ReportSummaryStat } from "../../report-stat-summary/report-stat-summary.component";
 
 export interface PlayersReportFlatParameters {
     createdDateStart?: string;
@@ -17,10 +16,6 @@ export interface PlayersReportFlatParameters {
 }
 
 export interface PlayersReportParameters {
-    createdDate?: ReportDateRange;
-    lastPlayedDate?: ReportDateRange;
-    sponsors?: SimpleEntity;
-    paging: PagingArgs;
 }
 
 export interface PlayersReportRecord {

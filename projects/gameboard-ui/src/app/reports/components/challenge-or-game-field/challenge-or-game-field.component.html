@@ -6,21 +6,21 @@
             <app-parameter-change-link [config]="{ parameterChange: { series: game.series}, disable: disableLinks }">
                 {{ game.series }}
             </app-parameter-change-link>
-            ::
         </span>
         <span *ngIf="game.season">
+            ::
             <app-parameter-change-link [config]="{ parameterChange: { seasons: game.season }, disable: disableLinks }">
                 {{ game.season }}
             </app-parameter-change-link>
-            ::
         </span>
         <span *ngIf="game.track">
+            ::
             <app-parameter-change-link [config]="{ parameterChange: { tracks: game.track }, disable: disableLinks }">
                 {{ game.track }}
             </app-parameter-change-link>
-            ::
         </span>
         <span *ngIf="challengeName">
+            ::
             <app-parameter-change-link [config]="{ parameterChange: { games: game.id }, disable: disableLinks }">
                 {{ game.name }}
             </app-parameter-change-link>
