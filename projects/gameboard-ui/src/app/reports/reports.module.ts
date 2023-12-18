@@ -5,6 +5,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
 import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt-summary/challenge-attempt-summary.component';
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
+import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
+import { ChallengesReportSummaryToStatsPipe } from './components/reports/challenges-report/challenges-report-summary-to-stats.pipe';
 import { EnrollmentReportByGameComponent } from './components/reports/enrollment-report/enrollment-report-by-game/enrollment-report-by-game.component';
 import { EnrollmentReportSponsorPlayerCountModalComponent } from './components/reports/enrollment-report/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
 import { EnrollmentReportSummaryComponent } from './components/reports/enrollment-report/enrollment-report-summary/enrollment-report-summary.component';
@@ -40,7 +42,6 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 import { PlayersReportSummaryToStatsPipe } from './components/reports/players-report/players-report-summary-to-stats.pipe';
-import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { ChallengesReportComponent } from './components/reports/challenges-repor
     PlayerChallengeAttemptsModalComponent,
     ParameterSponsorComponent,
     PlayersReportSummaryToStatsPipe,
+    ChallengesReportSummaryToStatsPipe,
   ],
   imports: [
     CommonModule,

@@ -91,7 +91,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
       { ...this.selectedParameters, pageNumber: undefined, pageSize: undefined, tab: undefined }
     );
 
-    if (!this.ctx?.stats$ || !areDeepEqual) {
+    if (!this.summaryStats || !areDeepEqual) {
       this.ctx = {
         stats$: this.loadSummaryStats(parameters)
       };

@@ -32,6 +32,16 @@ export interface ChallengesReportRecord {
     solveZeroCount: number;
 }
 
-export interface ChallengesReportStatSummary {
+export interface ChallengesReportStatSummaryPopularChallenge {
+    challengeName: string;
+    gameName: string;
+    deployCount: number;
+}
 
+export interface ChallengesReportStatSummary {
+    archivedDeployCount: number;
+    deployCount: number;
+    specCount: number;
+    mostPopularCompetitiveChallenge?: ChallengesReportStatSummaryPopularChallenge;
+    mostPopularPracticeChallenge?: ChallengesReportStatSummaryPopularChallenge;
 }
