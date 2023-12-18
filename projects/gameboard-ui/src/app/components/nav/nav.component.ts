@@ -10,6 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { Observable, map } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
 import { RouterService } from '@/services/router.service';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-nav',
@@ -23,6 +24,7 @@ export class AppNavComponent implements OnInit {
   customBackground = "";
   env: any;
 
+  protected fa = fa;
   protected isPracticeModeEnabled = false;
   protected profileUrl?: string;
 
