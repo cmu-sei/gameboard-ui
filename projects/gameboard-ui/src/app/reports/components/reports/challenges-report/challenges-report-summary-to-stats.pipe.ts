@@ -10,19 +10,16 @@ export class ChallengesReportSummaryToStatsPipe implements PipeTransform {
       return [];
 
     const outStats: ReportSummaryStat[] = [
-      { label: "Challenge Attempt", value: stats.deployCount }
+      { label: "Competitive Challenge Attempts", value: stats.deployCompetitiveCount },
+      { label: "Practice Challenge Attempts", value: stats.deployPracticeCount },
     ];
 
-    if (stats.archivedDeployCount > 0) {
-      outStats.push({ label: "Archived Attempt", value: stats.archivedDeployCount });
-    }
-
     if (stats.mostPopularCompetitiveChallenge) {
-      outStats.push({ label: "Most Popular Competitive Challenge", value: stats.mostPopularCompetitiveChallenge.challengeName, additionalInfo: `${stats.mostPopularCompetitiveChallenge.deployCount} attempts` });
+      outStats.push({ label: "Attempts On Most Popular Competitive Challenge", value: stats.mostPopularCompetitiveChallenge.deployCount, additionalInfo: `"${stats.mostPopularCompetitiveChallenge.challengeName}"` });
     }
 
     if (stats.mostPopularPracticeChallenge) {
-      outStats.push({ label: "Most Popular Practice Challenge", value: stats.mostPopularPracticeChallenge.challengeName, additionalInfo: `${stats.mostPopularPracticeChallenge.deployCount} attempts` });
+      outStats.push({ label: "Attempts on Most Popular Practice Challenge", value: stats.mostPopularPracticeChallenge.deployCount, additionalInfo: `"${stats.mostPopularPracticeChallenge.challengeName}"` });
     }
 
     return outStats;

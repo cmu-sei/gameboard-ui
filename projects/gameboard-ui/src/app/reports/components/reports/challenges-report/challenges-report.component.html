@@ -12,7 +12,7 @@
     </app-report-parameters-container>
 
     <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats; else loading"
-        [importantStat]="{ label: 'Challenge', value: ctx.results!.overallStats.specCount} "
+        [importantStat]="{ label: 'Challenges Configured', value: ctx.results!.overallStats.specCount} "
         [stats]="ctx.results!.overallStats | challengesReportSummaryToStats"></app-report-stat-summary>
 
     <ng-container *ngIf="!ctx.isLoading; else loading">

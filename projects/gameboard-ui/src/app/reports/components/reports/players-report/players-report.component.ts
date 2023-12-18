@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ReportComponentBase } from '../report-base.component';
-import { PlayersReportFlatParameters, PlayersReportParameters, PlayersReportRecord, PlayersReportStatSummary } from './players-report.models';
+import { PlayersReportFlatParameters, PlayersReportRecord, PlayersReportStatSummary } from './players-report.models';
 import { ReportKey, ReportResultsWithOverallStats, ReportViewUpdate } from '@/reports/reports-models';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { PlayersReportService } from './players-report.service';
@@ -19,7 +19,7 @@ interface PlayersReportContext {
   templateUrl: './players-report.component.html',
   styleUrls: ['./players-report.component.scss']
 })
-export class PlayersReportComponent extends ReportComponentBase<PlayersReportFlatParameters, PlayersReportParameters> {
+export class PlayersReportComponent extends ReportComponentBase<PlayersReportFlatParameters> {
   protected ctx: PlayersReportContext = {
     isLoading: false,
     selectedParameters: {}

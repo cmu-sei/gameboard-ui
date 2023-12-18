@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SupportReportFlatParameters, SupportReportParameters, SupportReportRecord } from './support-report.models';
+import { SupportReportFlatParameters, SupportReportRecord } from './support-report.models';
 import { ReportResults, ReportViewUpdate } from '../../../reports-models';
 import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '@/reports/components/reports/support-report/support-report.service';
@@ -26,7 +26,7 @@ interface SupportReportContext {
   templateUrl: './support-report.component.html',
   styleUrls: ['./support-report.component.scss']
 })
-export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters, SupportReportParameters> {
+export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters> {
   protected ticketLabels$ = this.reportService.getTicketLabels();
   protected ticketStatuses$ = this.reportService.getTicketStatuses();
 

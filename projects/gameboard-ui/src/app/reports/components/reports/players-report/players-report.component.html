@@ -9,7 +9,7 @@
         <app-multi-select label="Games" name="games" [options]="games$ | async" [(ngModel)]="gamesQueryModel"
             [itemTemplate]="multiSelectGame" [getSearchText]="displayGameName"
             [value]="getGameValue"></app-multi-select>
-        <app-parameter-date-range label="Signup Date" ngDefaultControl
+        <app-parameter-date-range label="Account Creation Date" ngDefaultControl
             [(ngModel)]="createdDateQueryModel"></app-parameter-date-range>
         <app-parameter-date-range label="Last Played Date" ngDefaultControl
             [(ngModel)]="lastPlayedDateQueryModel"></app-parameter-date-range>

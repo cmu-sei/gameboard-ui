@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ReportComponentBase } from '../report-base.component';
-import { ChallengesReportFlatParameters, ChallengesReportParameters, ChallengesReportRecord, ChallengesReportStatSummary } from './challenges-report.models';
+import { ChallengesReportFlatParameters, ChallengesReportRecord, ChallengesReportStatSummary } from './challenges-report.models';
 import { ReportKey, ReportResultsWithOverallStats, ReportViewUpdate } from '@/reports/reports-models';
 import { ChallengesReportService } from '../challenges-report.service';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
@@ -18,7 +18,7 @@ export interface ChallengesReportContext {
   templateUrl: './challenges-report.component.html',
   styleUrls: ['./challenges-report.component.scss']
 })
-export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportFlatParameters, ChallengesReportParameters> {
+export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportFlatParameters> {
   protected ctx: ChallengesReportContext = {
     isLoading: true,
     selectedParameters: {}

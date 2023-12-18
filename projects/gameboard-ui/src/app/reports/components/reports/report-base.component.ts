@@ -9,7 +9,7 @@ import { ObjectService } from "@/services/object.service";
 import { RouterService } from "@/services/router.service";
 
 @Component({ template: '', providers: [UnsubscriberService] })
-export abstract class ReportComponentBase<TFlatParameters extends {}, TStructuredParameters extends {}> implements OnInit {
+export abstract class ReportComponentBase<TFlatParameters extends {}> implements OnInit {
     // manually injected services (so the inheritors don't have to resolve dependencies)
     protected readonly activeReportService = inject(ActiveReportService);
     protected readonly reportsService = inject(ReportsService);

@@ -1,5 +1,5 @@
-import { PagingArgs, SimpleEntity } from "@/api/models";
-import { ReportDateRange, ReportSponsor } from "@/reports/reports-models";
+import { SimpleEntity } from "@/api/models";
+import { ReportSponsor } from "@/reports/reports-models";
 
 export interface PlayersReportFlatParameters {
     createdDateStart?: string;
@@ -13,9 +13,6 @@ export interface PlayersReportFlatParameters {
     tracks?: string;
     pageNumber?: number;
     pageSize?: number;
-}
-
-export interface PlayersReportParameters {
 }
 
 export interface PlayersReportRecord {

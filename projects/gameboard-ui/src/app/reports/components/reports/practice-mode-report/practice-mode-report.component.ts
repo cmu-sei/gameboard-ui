@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PracticeModeReportParameters, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters, PracticeModeReportOverallStats } from './practice-mode-report.models';
+import { PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters, PracticeModeReportOverallStats } from './practice-mode-report.models';
 import { ReportKey, ReportResults, ReportSponsor } from '@/reports/reports-models';
 import { Observable, firstValueFrom } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
@@ -15,7 +15,7 @@ import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary
   styleUrls: ['./practice-mode-report.component.scss']
 })
 export class PracticeModeReportComponent
-  extends ReportComponentBase<PracticeModeReportFlatParameters, PracticeModeReportParameters> {
+  extends ReportComponentBase<PracticeModeReportFlatParameters> {
   protected overallStats: ReportSummaryStat[] = [];
   protected games$: Observable<SimpleEntity[]> = this.reportsService.getGames();
   protected seasons$: Observable<string[]> = this.reportsService.getSeasons();
@@ -71,10 +71,10 @@ export class PracticeModeReportComponent
 
   protected handleOverallStatsUpdate(stats: PracticeModeReportOverallStats) {
     this.overallStats = [
-      { label: "Attempt", value: stats.attemptCount },
-      { label: "Challenge", value: stats.challengeCount },
-      { label: "Player", value: stats.playerCount },
-      { label: "Sponsor", value: stats.sponsorCount }
+      { label: "Attempts", value: stats.attemptCount },
+      { label: "Challenges", value: stats.challengeCount },
+      { label: "Players", value: stats.playerCount },
+      { label: "Sponsors", value: stats.sponsorCount }
     ];
   }
 

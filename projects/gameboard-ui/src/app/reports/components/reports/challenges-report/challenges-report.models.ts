@@ -11,10 +11,6 @@ export interface ChallengesReportFlatParameters {
     pageSize?: number;
 }
 
-export interface ChallengesReportParameters {
-
-}
-
 export interface ChallengesReportRecord {
     challengeSpec: SimpleEntity;
     game: ReportGame;
@@ -39,8 +35,8 @@ export interface ChallengesReportStatSummaryPopularChallenge {
 }
 
 export interface ChallengesReportStatSummary {
-    archivedDeployCount: number;
-    deployCount: number;
+    deployCompetitiveCount: number;
+    deployPracticeCount: number;
     specCount: number;
     mostPopularCompetitiveChallenge?: ChallengesReportStatSummaryPopularChallenge;
     mostPopularPracticeChallenge?: ChallengesReportStatSummaryPopularChallenge;
