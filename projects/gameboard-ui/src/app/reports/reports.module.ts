@@ -42,6 +42,7 @@ import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 import { PlayersReportSummaryToStatsPipe } from './components/reports/players-report/players-report-summary-to-stats.pipe';
+import { PlayersReportParticipationSummaryComponent } from './components/players-report-participation-summary/players-report-participation-summary.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { PlayersReportSummaryToStatsPipe } from './components/reports/players-re
     ParameterSponsorComponent,
     PlayersReportSummaryToStatsPipe,
     ChallengesReportSummaryToStatsPipe,
+    PlayersReportParticipationSummaryComponent,
   ],
   imports: [
     CommonModule,

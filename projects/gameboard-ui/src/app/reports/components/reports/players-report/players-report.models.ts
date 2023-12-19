@@ -22,10 +22,10 @@ export interface PlayersReportRecord {
     lastPlayedOn?: Date;
     deployedCompetitiveChallengesCount: number;
     deployedPracticeChallengesCount: number;
-    distinctGamesPlayedCount: number;
-    distinctSeriesPlayedCount: number;
-    distinctTracksPlayedCount: number;
-    distinctSeasonsPlayedCount: number;
+    distinctGamesPlayed: string[];
+    distinctSeriesPlayed: string[];
+    distinctTracksPlayed: string[];
+    distinctSeasonsPlayed: string[];
 }
 
 export interface PlayersReportStatSummary {
