@@ -60,7 +60,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
       // and flushed if the user submits answers during the debounce window
       this._updatePendingAnswers$.pipe(
         switchMap(update => of(update).pipe(
-          delay(3000),
+          delay(1500),
           takeUntil(this._answersSubmitted$)
         )),
         switchMap(update => this.challengesService.savePendingSubmission(update.challengeId, {
