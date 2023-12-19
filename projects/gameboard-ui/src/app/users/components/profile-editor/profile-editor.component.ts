@@ -14,6 +14,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
   selector: 'app-profile-editor',
   templateUrl: './profile-editor.component.html',
   styleUrls: ['./profile-editor.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class ProfileEditorComponent {
   currentUser$: Observable<ApiUser | null>;
