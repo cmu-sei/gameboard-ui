@@ -53,7 +53,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.unsub.add(
-      // After the player inputs anything and then doesn't change it for 3 seconds,
+      // After the player inputs anything and then doesn't change it for a short time,
       // update their unsubmitted answers (we keep one set of unsubmitted answers per challenge).
       //
       // this is a lot like debounceTime, but we allow it to be interrupted
