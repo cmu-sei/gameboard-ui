@@ -22,7 +22,8 @@ interface GameLaunchContext {
 @Component({
   selector: 'app-game-start-page',
   templateUrl: './external-game-loading-page.component.html',
-  styleUrls: ['./external-game-loading-page.component.scss']
+  styleUrls: ['./external-game-loading-page.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class ExternalGameLoadingPageComponent implements OnInit {
   private gameId: string | null;

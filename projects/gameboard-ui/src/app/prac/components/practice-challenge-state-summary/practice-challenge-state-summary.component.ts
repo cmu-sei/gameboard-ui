@@ -5,7 +5,7 @@ import { UserService as LocalUserService } from '@/utility/user.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Component } from '@angular/core';
 import { DateTime } from 'luxon';
-import { Observable, combineLatest, filter, firstValueFrom, map, tap, timer } from 'rxjs';
+import { Observable, combineLatest, firstValueFrom, map, tap, timer } from 'rxjs';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { slug } from '@/tools/functions';
 import { TeamService } from '@/api/team.service';
@@ -15,7 +15,8 @@ import { HubEventAction, NotificationService } from '@/services/notification.ser
 @Component({
   selector: 'app-practice-challenge-state-summary',
   templateUrl: './practice-challenge-state-summary.component.html',
-  styleUrls: ['./practice-challenge-state-summary.component.scss']
+  styleUrls: ['./practice-challenge-state-summary.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class PracticeChallengeStateSummaryComponent {
   protected extendTooltip = "";

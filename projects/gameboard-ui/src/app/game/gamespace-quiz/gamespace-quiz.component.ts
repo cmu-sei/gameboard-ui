@@ -6,7 +6,7 @@ import { fa } from "@/services/font-awesome.service";
 import { AnswerSubmission, BoardSpec, Challenge } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { TimeWindow } from '../../api/player-models';
-import { Observable, Subject, catchError, delay, filter, firstValueFrom, interval, map, of, startWith, switchMap, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, catchError, delay, filter, firstValueFrom, of, switchMap, takeUntil, tap } from 'rxjs';
 import { ChallengesService } from '@/api/challenges.service';
 import { NotificationService } from '@/services/notification.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
@@ -22,7 +22,8 @@ interface PendingSubmissionsUpdate {
 @Component({
   selector: 'app-gamespace-quiz',
   templateUrl: './gamespace-quiz.component.html',
-  styleUrls: ['./gamespace-quiz.component.scss']
+  styleUrls: ['./gamespace-quiz.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class GamespaceQuizComponent implements OnInit, OnChanges {
   @Input() challengeId?: string;
@@ -52,7 +53,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.unsub.add(
-      // After the player inputs anything and then doesn't change it for 5 seconds,
+      // After the player inputs anything and then doesn't change it for 3 seconds,
       // update their unsubmitted answers (we keep one set of unsubmitted answers per challenge).
       //
       // this is a lot like debounceTime, but we allow it to be interrupted

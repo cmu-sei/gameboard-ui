@@ -14,7 +14,8 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 @Component({
   selector: 'app-practice-challenge-list',
   templateUrl: './practice-challenge-list.component.html',
-  styleUrls: ['./practice-challenge-list.component.scss']
+  styleUrls: ['./practice-challenge-list.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class PracticeChallengeListComponent {
   list$: Observable<SpecSummary[]>;

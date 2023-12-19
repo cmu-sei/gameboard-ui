@@ -14,7 +14,8 @@ import { arraysEqual } from '@/tools/object-tools.lib';
 @Component({
   selector: 'app-parameter-sponsor',
   templateUrl: './parameter-sponsor.component.html',
-  styleUrls: ['./parameter-sponsor.component.scss']
+  styleUrls: ['./parameter-sponsor.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class ParameterSponsorComponent implements OnInit {
   @Input() queryParamName = "sponsors";

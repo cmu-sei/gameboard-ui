@@ -3,7 +3,6 @@ import { firstValueFrom } from 'rxjs';
 import { GameService } from '../../../api/game.service';
 import { GameContext } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
-import { PlayerService } from '../../../api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { SyncStartService } from '@/services/sync-start.service';
 import { SyncStartGameState } from '@/game/game.models';
@@ -14,7 +13,8 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 @Component({
   selector: 'app-session-start-controls',
   templateUrl: './session-start-controls.component.html',
-  styleUrls: ['./session-start-controls.component.scss']
+  styleUrls: ['./session-start-controls.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class SessionStartControlsComponent implements OnInit {
   @Input() ctx!: GameContext;

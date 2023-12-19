@@ -51,7 +51,8 @@ export interface ExternalGameAdminContext {
 @Component({
   selector: 'app-external-game-admin',
   templateUrl: './external-game-admin.component.html',
-  styleUrls: ['./external-game-admin.component.scss']
+  styleUrls: ['./external-game-admin.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class ExternalGameAdminComponent implements OnInit {
   private autoUpdateInterval = 30000;

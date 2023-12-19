@@ -15,7 +15,8 @@ import { fa } from '@/services/font-awesome.service';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss']
+  styleUrls: ['./nav.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class AppNavComponent implements OnInit {
   user$!: Observable<ApiUser | null>;

@@ -8,7 +8,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
   selector: 'app-parameter-timespan-picker',
   templateUrl: './parameter-timespan-picker.component.html',
   styleUrls: ['./parameter-timespan-picker.component.scss'],
-  providers: [createCustomInputControlValueAccessor(ParameterTimespanPickerComponent)]
+  providers: [createCustomInputControlValueAccessor(ParameterTimespanPickerComponent), UnsubscriberService]
 })
 export class ParameterTimespanPickerComponent extends CustomInputComponent<TimespanQueryParamModel> implements OnInit {
   @Input() label = '';

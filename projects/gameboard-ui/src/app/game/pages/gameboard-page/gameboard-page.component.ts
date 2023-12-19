@@ -24,7 +24,8 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 @Component({
   selector: 'app-gameboard-page',
   templateUrl: './gameboard-page.component.html',
-  styleUrls: ['./gameboard-page.component.scss']
+  styleUrls: ['./gameboard-page.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class GameboardPageComponent implements OnDestroy {
   refresh$ = new Subject<string>();

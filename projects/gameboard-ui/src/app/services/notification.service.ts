@@ -137,7 +137,7 @@ export class NotificationService {
       // if we're already connected...
       if (this.connection.state === HubConnectionState.Connected) {
         // and we're connected to the right group, do nothing
-        if (this.connection.connectionId == groupId) {
+        if (this.state$.value?.id == groupId) {
           this.log.logInfo(`Team (notification) hub is already connected to team ${groupId}.`);
           return;
         }

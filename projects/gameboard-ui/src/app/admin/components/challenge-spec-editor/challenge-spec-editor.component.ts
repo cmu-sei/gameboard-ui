@@ -10,7 +10,8 @@ import { Subject, debounceTime, filter, switchMap, tap } from 'rxjs';
 @Component({
   selector: 'app-challenge-spec-editor',
   templateUrl: './challenge-spec-editor.component.html',
-  styleUrls: ['./challenge-spec-editor.component.scss']
+  styleUrls: ['./challenge-spec-editor.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class ChallengeSpecEditorComponent implements OnChanges {
   @Input() spec?: Spec;
