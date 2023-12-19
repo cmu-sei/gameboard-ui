@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { SupportReportFlatParameters, SupportReportRecord } from './support-report.models';
-import { Observable, combineLatest, map } from 'rxjs';
-import { ReportResults, minutesToTimeSpan, timespanToMinutes } from '../../../reports-models';
+import { Observable, map } from 'rxjs';
+import { ReportResults } from '../../../reports-models';
 import { HttpClient } from '@angular/common/http';
-import { ApiUrlService } from '../../../../services/api-url.service';
-import { ReportsService } from '../../../reports.service';
+import { ApiUrlService } from '@/services/api-url.service';
 import { SupportService } from '@/api/support.service';
 
 @Injectable({ providedIn: 'root' })
@@ -13,11 +12,9 @@ export class SupportReportService {
   constructor(
     private apiUri: ApiUrlService,
     private http: HttpClient,
-    private reportsService: ReportsService,
     private supportService: SupportService) { }
 
   getReportData(args: SupportReportFlatParameters): Observable<ReportResults<SupportReportRecord>> {
-    this.reportsService.applyDefaultPaging(args);
     return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support", args));
   }
 

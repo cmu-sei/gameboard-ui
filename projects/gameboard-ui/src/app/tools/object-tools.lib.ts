@@ -13,8 +13,21 @@ export function arraysEqual<T>(a: Array<T>, b: Array<T>): boolean {
     return true;
 }
 
-export function deepEquals<T1, T2>(obj1: T1, obj2: T2): boolean {
-    return JSON.stringify(obj1) === JSON.stringify(obj2);
+export function deepEquals<T1 extends {}, T2 extends {}>(obj1: T1, obj2: T2): boolean {
+    const finalObj1: any = {};
+    const finalObj2: any = {};
+
+    for (const key in obj1) {
+        if (obj1[key] !== undefined)
+            finalObj1[key] = obj1[key];
+    }
+
+    for (const key in obj2) {
+        if (obj2[key] !== undefined)
+            finalObj2[key] = obj2[key];
+    }
+
+    return JSON.stringify(finalObj1) === JSON.stringify(finalObj2);
 }
 
 export function isEmpty(obj: any): boolean {

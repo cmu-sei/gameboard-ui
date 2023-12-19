@@ -17,7 +17,7 @@
     </app-report-parameters-container>
 
     <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats; else loading"
-        [importantStat]="{ label: 'Total Player', value: ctx.results!.overallStats.userCount } "
+        [importantStat]="{ label: 'Total Players', value: ctx.results!.overallStats.userCount } "
         [stats]="ctx.results?.overallStats | playersReportSummaryToStats"></app-report-stat-summary>
 
     <ng-container *ngIf="!ctx.isLoading; else loading">

@@ -9,6 +9,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { RouterService } from '@/services/router.service';
 import { unique } from 'projects/gameboard-ui/src/tools';
+import { arraysEqual } from '@/tools/object-tools.lib';
 
 @Component({
   selector: 'app-parameter-sponsor',
@@ -21,11 +22,12 @@ export class ParameterSponsorComponent implements OnInit {
   @Input() showSearchBoxThreshold = 6;
   @Input() showSelectionSummaryThreshold = 0;
 
-  protected selectedItemsDisplayedThreshold = 4;
+  protected allSponsors: SponsorWithChildSponsors[] = [];
   protected countSelectedOverDisplayThreshold = 0;
   protected fa = fa;
+  protected selectedItemsDisplayedThreshold = 4;
   protected selectionSummary = "";
-  protected allSponsors: SponsorWithChildSponsors[] = [];
+
   private static QUERYSTRING_VALUE_DELIMITER = ",";
 
   constructor(
@@ -156,12 +158,18 @@ export class ParameterSponsorComponent implements OnInit {
         .filter(sId => !!this.getSponsorForId(sId))
     );
 
+    // if the "updated" selection is the same or a permutation of the previous one, we don't need
+    // to emit or update the paging
+    if (arraysEqual(validSponsorIds, this.selectedSponsors.map(s => s.id))) {
+      return;
+    }
+
     const params: Params = {};
     if (validSponsorIds.length) {
       params[this.queryParamName] = validSponsorIds.join(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
     }
 
-    await this.routerService.updateQueryParams({ parameters: params, resetParams: ["pageNumber", "pageSize"] });
+    await this.routerService.updateQueryParams({ parameters: params, resetParams: ["pageNumber"] });
     this.updateSelectionSummary(value);
   }
 }
