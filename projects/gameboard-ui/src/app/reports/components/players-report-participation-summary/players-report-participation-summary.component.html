@@ -1,1 +1,47 @@
-<p>players-report-participation-summary works!</p>
+<ng-container *ngIf="context">
+    <div class="modal-header">
+        <div class="modal-title pull-left d-flex align-items-center">
+            <app-player-avatar-legacy [avatarUri]="context.player.sponsor.logoFileName | relativeImage" size="large"
+                class="d-block mr-4"></app-player-avatar-legacy>
+
+            <div>
+                <h2>{{ context.player.name }}</h2>
+                <h4>Participation Summary</h4>
+            </div>
+        </div>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="handleModalClose()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="all-content-container d-flex flex-wrap">
+            <div class="stuff-container">
+                <h2>Competitions</h2>
+                <ul>
+                    <li *ngFor="let seri of context.series">{{seri}}</li>
+                </ul>
+            </div>
+            <div class="stuff-container">
+                <h2>Seasons</h2>
+                <ul>
+                    <li *ngFor="let season of context.seasons">{{season}}</li>
+                </ul>
+            </div>
+            <div class="stuff-container">
+                <h2>Tracks</h2>
+                <ul>
+                    <li *ngFor="let track of context.tracks">{{track}}</li>
+                </ul>
+            </div>
+            <div class="stuff-container">
+                <h2>Games</h2>
+                <ul>
+                    <li *ngFor="let game of context.games">{{game}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="handleModalClose()">OK</button>
+    </div>
+</ng-container>

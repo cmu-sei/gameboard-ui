@@ -7,6 +7,8 @@ import { PlayersReportService } from './players-report.service';
 import { firstValueFrom } from 'rxjs';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { SimpleEntity } from '@/api/models';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { PlayersReportParticipationSummaryComponent, PlayersReportParticipationSummaryContext } from '../../players-report-participation-summary/players-report-participation-summary.component';
 
 interface PlayersReportContext {
   isLoading: boolean;
@@ -66,8 +68,27 @@ export class PlayersReportComponent extends ReportComponentBase<PlayersReportFla
     paramName: "tracks"
   });
 
-  constructor(private playersReportService: PlayersReportService) {
+  constructor(
+    private modalService: ModalConfirmService,
+    private playersReportService: PlayersReportService) {
     super();
+  }
+
+  protected showPlayerParticipation(record: PlayersReportRecord) {
+    this.modalService.openComponent<PlayersReportParticipationSummaryComponent, PlayersReportParticipationSummaryContext>({
+      content: PlayersReportParticipationSummaryComponent,
+      context: {
+        player: {
+          id: record.user.id,
+          name: record.user.name,
+          sponsor: record.sponsor
+        },
+        series: record.distinctSeriesPlayed,
+        seasons: record.distinctSeasonsPlayed,
+        tracks: record.distinctTracksPlayed,
+        games: record.distinctGamesPlayed
+      }
+    });
   }
 
   protected async updateView(parameters: PlayersReportFlatParameters): Promise<ReportViewUpdate> {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PlayersReportFlatParameters, PlayersReportRecord, PlayersReportStatSummary } from './players-report.models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
-import { ReportResults, ReportResultsWithOverallStats } from '@/reports/reports-models';
+import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
 
 @Injectable({ providedIn: 'root' })
@@ -11,6 +11,8 @@ export class PlayersReportService {
     private apiUrl: ApiUrlService,
     private http: HttpClient,
     private reportsService: ReportsService) { }
+
+
 
   getReportData(parameters: PlayersReportFlatParameters) {
     parameters = this.reportsService.applyDefaultPaging(parameters);
