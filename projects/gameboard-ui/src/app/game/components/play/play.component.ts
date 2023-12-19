@@ -25,7 +25,8 @@ export type PlayerContext = {
 @Component({
   selector: 'app-play',
   templateUrl: './play.component.html',
-  styleUrls: ['./play.component.scss']
+  styleUrls: ['./play.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class PlayComponent {
   @Input() playerContext: { playerId: string, userId: string } | null = null;

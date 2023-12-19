@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 export interface ReportSummaryStat {
   label: string;
-  value: number | string;
+  value?: number | string;
   additionalInfo?: string;
 }
 
@@ -22,6 +22,6 @@ export class ReportStatSummaryComponent implements OnChanges {
     this.allStats = [
       this.importantStat,
       ...this.stats
-    ].filter(e => !!e) as ReportSummaryStat[];
+    ].filter(e => !!e && e.value) as ReportSummaryStat[];
   }
 }

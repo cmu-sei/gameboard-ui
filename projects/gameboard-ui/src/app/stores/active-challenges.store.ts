@@ -1,7 +1,7 @@
 import { LocalActiveChallenge } from "@/api/challenges.models";
 import { createStore, withProps } from "@ngneat/elf";
 import { SimpleEntity } from "@/api/models";
-import { Observable, Subject, combineLatest, firstValueFrom, interval, map, merge, of, startWith, switchMap, tap } from "rxjs";
+import { Observable, Subject, Subscription, combineLatest, firstValueFrom, interval, map, merge, of, startWith, switchMap, tap } from "rxjs";
 import { Injectable, OnDestroy } from "@angular/core";
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { ChallengesService } from "@/api/challenges.service";
@@ -9,7 +9,6 @@ import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { PlayerService } from "@/api/player.service";
 import { DateTime } from "luxon";
 import { Challenge } from "@/api/board-models";
-import { PracticeService } from "@/services/practice.service";
 import { TeamService } from "@/api/team.service";
 
 interface ActiveChallengesProps {
@@ -33,6 +32,7 @@ export type ActiveChallengesPredicate = (challenge: LocalActiveChallenge) => cha
 
 @Injectable({ providedIn: 'root' })
 export class ActiveChallengesRepo implements OnDestroy {
+    private _subs: Subscription[] = [];
     public readonly activePracticeChallenge$: Observable<LocalActiveChallenge | null> = activeChallengesStore
         .pipe(
             startWith(activeChallengesStore.state),
@@ -52,10 +52,9 @@ export class ActiveChallengesRepo implements OnDestroy {
         challengesService: ChallengesService,
         playerService: PlayerService,
         localUser: LocalUserService,
-        teamService: TeamService,
-        private unsub: UnsubscriberService) {
+        teamService: TeamService) {
 
-        this.unsub.add(
+        this._subs.push(
             combineLatest([
                 of(challengesService),
                 localUser.user$,
@@ -68,14 +67,8 @@ export class ActiveChallengesRepo implements OnDestroy {
                 )
             ]).pipe(
                 map(([challengesService]) => ({ challengesService })),
-            ).subscribe(ctx => this._initState(ctx.challengesService, localUser.user$.value?.id || null))
-        );
-
-        this.unsub.add(
-            interval(1000).subscribe(() => this.checkActiveChallengesForEnd())
-        );
-
-        this.unsub.add(
+            ).subscribe(ctx => this._initState(ctx.challengesService, localUser.user$.value?.id || null)),
+            interval(1000).subscribe(() => this.checkActiveChallengesForEnd()),
             challengesService.challengeGraded$.subscribe(challenge => this.handleChallengeGraded(challenge))
         );
 
@@ -83,7 +76,9 @@ export class ActiveChallengesRepo implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.unsub.unsubscribeAll();
+        for (let sub of this._subs) {
+            sub.unsubscribe();
+        }
     }
 
     getActivePracticeChallenge(): LocalActiveChallenge | null {

@@ -10,7 +10,8 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 @Component({
   selector: 'app-notifications',
   templateUrl: './admin-system-notifications.component.html',
-  styleUrls: ['./admin-system-notifications.component.scss']
+  styleUrls: ['./admin-system-notifications.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class AdminSystemNotificationsComponent implements OnInit {
   private _forceLoad$ = new Subject<boolean>();

@@ -111,7 +111,8 @@
             </ng-container>
 
             <h3 *ngIf="spec.instance!.state.challenge?.questions?.length">Challenge Questions</h3>
-            <app-gamespace-quiz [spec]="spec!" [session]="ctx.session" (graded)="graded()"></app-gamespace-quiz>
+            <app-gamespace-quiz [challengeId]="spec.instance!.state.id" [spec]="spec!" [session]="ctx.session"
+              (graded)="graded()"></app-gamespace-quiz>
 
             <div *ngIf="spec.instance?.id" class="text-right m-4">
               <div class="mb-1">

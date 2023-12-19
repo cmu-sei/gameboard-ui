@@ -3,35 +3,46 @@
 
 import { Component } from '@angular/core';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { asyncScheduler, firstValueFrom, Observable, scheduled, Subject } from 'rxjs';
-import { mergeAll, tap } from 'rxjs/operators';
+import { asyncScheduler, Observable, scheduled, Subject } from 'rxjs';
+import { debounceTime, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, ChangedUser } from '../../../api/user-models';
 import { UserService as ApiUserService } from '../../../api/user.service';
 import { UserService } from '../../../utility/user.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-profile-editor',
   templateUrl: './profile-editor.component.html',
   styleUrls: ['./profile-editor.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class ProfileEditorComponent {
   currentUser$: Observable<ApiUser | null>;
-  updating$ = new Subject<ApiUser>();
   errors = [];
 
-  faSync = faSyncAlt;
+  private _doUpdate$ = new Subject<ChangedUser>();
+  private _updated$: Observable<ApiUser>;
 
+  faSync = faSyncAlt;
   disallowedName: string | null = null;
   disallowedReason: string | null = null;
 
   constructor(
     private api: ApiUserService,
     private userSvc: UserService,
+    private unsub: UnsubscriberService,
   ) {
+
+    this._updated$ = this._doUpdate$.pipe(
+      debounceTime(500),
+      switchMap(changedUser => this.api.update(changedUser, this.disallowedName))
+    );
+
+    this.unsub.add(this._updated$.subscribe());
 
     this.currentUser$ = scheduled([
       userSvc.user$,
-      this.updating$
+      this._updated$
     ], asyncScheduler).pipe(
       mergeAll(),
       tap(user => {
@@ -61,13 +72,11 @@ export class ProfileEditorComponent {
     // Otherwise, if there is a disallowed reason as well, mark it as that reason
     else if (this.disallowedReason) nameStatus = this.disallowedReason;
 
-    // update the api
-    const updatedUser = await firstValueFrom(this.api.update({
+    this._doUpdate$.next({
       id: this.userSvc.user$.value.id,
       name,
       nameStatus
-    }, this.disallowedName));
-    this.updating$.next(updatedUser!);
+    });
   }
 
   refresh(): void {

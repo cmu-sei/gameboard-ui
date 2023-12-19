@@ -20,6 +20,7 @@ import { TeamService } from '@/api/team.service';
 @Component({
   selector: 'app-practice-session',
   templateUrl: './practice-session.component.html',
+  providers: [UnsubscriberService]
 })
 export class PracticeSessionComponent {
   spec$: Observable<SpecSummary>;

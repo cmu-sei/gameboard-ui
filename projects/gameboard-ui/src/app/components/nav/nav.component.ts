@@ -10,11 +10,13 @@ import { Title } from '@angular/platform-browser';
 import { Observable, map } from 'rxjs';
 import { ReportsService } from '@/reports/reports.service';
 import { RouterService } from '@/services/router.service';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss']
+  styleUrls: ['./nav.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class AppNavComponent implements OnInit {
   user$!: Observable<ApiUser | null>;
@@ -23,6 +25,8 @@ export class AppNavComponent implements OnInit {
   customBackground = "";
   env: any;
 
+  protected fa = fa;
+  protected isCollapsed = false;
   protected isPracticeModeEnabled = false;
   protected profileUrl?: string;
 

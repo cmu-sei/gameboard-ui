@@ -1,9 +1,9 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, firstValueFrom, of, timer } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, firstValueFrom, of, timer } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, UserOidcProfile } from '../api/user-models';
 import { UserService as ApiUserService } from '../api/user.service';
@@ -13,7 +13,8 @@ import { LogService } from '@/services/log.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class UserService implements OnDestroy {
+  private _userSub?: Subscription;
   user$ = new BehaviorSubject<ApiUser | null>(null);
   init$ = new BehaviorSubject<boolean>(false);
   refresh$ = new BehaviorSubject<boolean>(false);
@@ -21,7 +22,6 @@ export class UserService {
   constructor(
     private auth: AuthService,
     private log: LogService,
-    private unsub: UnsubscriberService,
     api: ApiUserService,
     config: ConfigService,
     router: Router
@@ -60,15 +60,18 @@ export class UserService {
     });
 
     // log the login event for the current user (we track date of last login and total login count)
-    this.unsub.add(
-      this.user$.pipe(
-        // when the user's id changes
-        distinctUntilChanged((prev, current) => (prev?.id || null) === (current?.id || null)),
-        // and when the user is truthy
-        filter(u => !!u),
-        // record a login event
-      ).subscribe(async u => await firstValueFrom(api.updateLoginEvents()))
-    );
+
+    this._userSub = this.user$.pipe(
+      // when the user's id changes
+      distinctUntilChanged((prev, current) => (prev?.id || null) === (current?.id || null)),
+      // and when the user is truthy
+      filter(u => !!u),
+      // record a login event
+    ).subscribe(async u => await firstValueFrom(api.updateLoginEvents()));
+  }
+
+  ngOnDestroy(): void {
+    this._userSub?.unsubscribe();
   }
 
   logout(): void {

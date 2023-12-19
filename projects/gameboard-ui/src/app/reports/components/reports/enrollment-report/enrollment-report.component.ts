@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EnrollmentReportFlatParameters, EnrollmentReportParameters, EnrollmentReportStatSummary, EnrollmentReportTab } from './enrollment-report.models';
+import { EnrollmentReportFlatParameters, EnrollmentReportStatSummary, EnrollmentReportTab } from './enrollment-report.models';
 import { ReportKey, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
 import { Observable, first, firstValueFrom, map, of } from 'rxjs';
@@ -24,7 +24,7 @@ interface EnrollmentReportSummaryStats {
   templateUrl: './enrollment-report.component.html',
   styleUrls: ['./enrollment-report.component.scss']
 })
-export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters, EnrollmentReportParameters> {
+export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters> {
   games$ = this.reportsService.getGames();
   seasons$ = this.reportsService.getSeasons();
   series$ = this.reportsService.getSeries();
@@ -91,7 +91,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
       { ...this.selectedParameters, pageNumber: undefined, pageSize: undefined, tab: undefined }
     );
 
-    if (!this.ctx?.stats$ || !areDeepEqual) {
+    if (!this.summaryStats || !areDeepEqual) {
       this.ctx = {
         stats$: this.loadSummaryStats(parameters)
       };
@@ -126,10 +126,10 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
         };
 
         const otherStats = [
-          { label: "Game", value: stats.distinctGameCount },
-          { label: "Player", value: stats.distinctPlayerCount },
-          { label: "Team", value: stats.distinctTeamCount },
-          { label: "Sponsor", value: stats.distinctSponsorCount }
+          { label: "Games", value: stats.distinctGameCount },
+          { label: "Players", value: stats.distinctPlayerCount },
+          { label: "Teams", value: stats.distinctTeamCount },
+          { label: "Sponsors", value: stats.distinctSponsorCount }
         ]
           .filter(e => !!e)
           .map(e => e! as ReportSummaryStat);

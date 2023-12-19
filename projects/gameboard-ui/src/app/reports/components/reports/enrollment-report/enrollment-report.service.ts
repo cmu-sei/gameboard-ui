@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters, EnrollmentReportLineChartGroup, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
 import { Observable, firstValueFrom, map, } from 'rxjs';
-import { ReportResults, ReportResultsWithOverallStats } from '@/reports/reports-models';
+import { ReportResults } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '@/services/api-url.service';
@@ -16,8 +16,7 @@ export class EnrollmentReportService {
 
   getByGameData(parameters: EnrollmentReportFlatParameters | null): Observable<ReportResults<EnrollmentReportByGameRecord>> {
     parameters = parameters || {};
-    const pagedParameters = this.reportsService.applyDefaultPaging(parameters);
-    return this.http.get<ReportResults<EnrollmentReportByGameRecord>>(this.apiUrl.build("reports/enrollment/by-game", pagedParameters)).pipe(
+    return this.http.get<ReportResults<EnrollmentReportByGameRecord>>(this.apiUrl.build("reports/enrollment/by-game", parameters)).pipe(
       map(results => {
         for (const record of results.records) {
           record.game.executionClosed = this.reportsService.queryStringEncodedDateToDate(record.game.executionClosed as any)!;
@@ -32,8 +31,7 @@ export class EnrollmentReportService {
   }
 
   getReportData(parameters: EnrollmentReportFlatParameters): Observable<ReportResults<EnrollmentReportRecord>> {
-    const pagedParameters = this.reportsService.applyDefaultPaging(parameters);
-    return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", pagedParameters));
+    return this.http.get<ReportResults<EnrollmentReportRecord>>(this.apiUrl.build("reports/enrollment", parameters));
   }
 
   getSummaryStats(parameters: EnrollmentReportFlatParameters): Observable<EnrollmentReportStatSummary> {

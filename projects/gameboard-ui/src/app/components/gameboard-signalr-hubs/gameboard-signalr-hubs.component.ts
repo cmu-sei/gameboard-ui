@@ -12,7 +12,8 @@ import { combineLatest, map } from 'rxjs';
 @Component({
   selector: 'app-gameboard-signalr-hubs',
   templateUrl: './gameboard-signalr-hubs.component.html',
-  styleUrls: ['./gameboard-signalr-hubs.component.scss']
+  styleUrls: ['./gameboard-signalr-hubs.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class GameboardSignalRHubsComponent implements OnDestroy {
   protected isDevMode = false;

@@ -5,8 +5,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
 import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt-summary/challenge-attempt-summary.component';
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
+import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
+import { ChallengesReportSummaryToStatsPipe } from './components/reports/challenges-report/challenges-report-summary-to-stats.pipe';
 import { EnrollmentReportByGameComponent } from './components/reports/enrollment-report/enrollment-report-by-game/enrollment-report-by-game.component';
 import { EnrollmentReportSponsorPlayerCountModalComponent } from './components/reports/enrollment-report/enrollment-report-sponsor-player-count-modal/enrollment-report-sponsor-player-count-modal.component';
+import { EnrollmentReportSummaryComponent } from './components/reports/enrollment-report/enrollment-report-summary/enrollment-report-summary.component';
+import { EnrollmentReportTrendComponent } from './components/reports/enrollment-report/enrollment-report-trend/enrollment-report-trend.component';
 import { NoReportRecordsComponent } from './components/no-report-records/no-report-records.component';
 import { ParameterChangeLinkComponent } from './components/parameter-change-link/parameter-change-link.component';
 import { ParameterDateRangeComponent } from './components/parameters/parameter-date-range/parameter-date-range.component';
@@ -15,6 +19,7 @@ import { ParameterSponsorComponent } from './components/parameters/parameter-spo
 import { ParameterTicketStatusComponent } from './components/parameters/parameter-ticket-status/parameter-ticket-status.component';
 import { ParameterTimespanPickerComponent } from './components/parameters/parameter-timespan-picker/parameter-timespan-picker.component';
 import { PlayerFieldComponent } from './components/player-field/player-field.component';
+import { PlayersReportComponent } from './components/reports/players-report/players-report.component';
 import { ReportCardComponent } from './components/report-card/report-card.component';
 import { ReportFieldNoValueComponent } from './components/report-field-no-value/report-field-no-value.component';
 import { ReportGlobalControlsComponent } from './components/report-global-controls/report-global-controls.component';
@@ -36,8 +41,9 @@ import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
-import { EnrollmentReportTrendComponent } from './components/reports/enrollment-report/enrollment-report-trend/enrollment-report-trend.component';
-import { EnrollmentReportSummaryComponent } from './components/reports/enrollment-report/enrollment-report-summary/enrollment-report-summary.component';
+import { PlayersReportSummaryToStatsPipe } from './components/reports/players-report/players-report-summary-to-stats.pipe';
+import { PlayersReportParticipationSummaryComponent } from './components/players-report-participation-summary/players-report-participation-summary.component';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @NgModule({
   declarations: [
@@ -45,13 +51,17 @@ import { EnrollmentReportSummaryComponent } from './components/reports/enrollmen
     ArrayFieldToClassPipe,
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
+    ChallengesReportComponent,
     EnrollmentReportComponent,
     EnrollmentReportByGameComponent,
     EnrollmentReportSponsorPlayerCountModalComponent,
+    EnrollmentReportSummaryComponent,
+    EnrollmentReportTrendComponent,
     ParameterGameChallengespecComponent,
     ParameterDateRangeComponent,
     ParameterTicketStatusComponent,
     ParameterTimespanPickerComponent,
+    PlayersReportComponent,
     ReportCardComponent,
     ParameterChangeLinkComponent,
     ReportGlobalControlsComponent,
@@ -74,8 +84,9 @@ import { EnrollmentReportSummaryComponent } from './components/reports/enrollmen
     ReportStatSummaryComponent,
     PlayerChallengeAttemptsModalComponent,
     ParameterSponsorComponent,
-    EnrollmentReportTrendComponent,
-    EnrollmentReportSummaryComponent,
+    PlayersReportSummaryToStatsPipe,
+    ChallengesReportSummaryToStatsPipe,
+    PlayersReportParticipationSummaryComponent,
   ],
   imports: [
     CommonModule,
@@ -85,14 +96,17 @@ import { EnrollmentReportSummaryComponent } from './components/reports/enrollmen
         path: '',
         component: ReportPageComponent,
         children: [
+          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
           { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
+          { path: 'players', component: PlayersReportComponent, title: "Players Report" },
           { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]
       }
     ]),
     FontAwesomeModule,
     CoreModule,
-  ]
+  ],
+  providers: [UnsubscriberService]
 })
 export class ReportsModule { }

@@ -16,28 +16,12 @@ export interface EnrollmentReportFlatParameters {
     tracks?: string;
 }
 
-export interface EnrollmentReportParameters {
-    enrollDate?: ReportDateRange;
-    paging: PagingArgs;
-    seasons: string[];
-    series: string[];
-    sponsors: SimpleEntity[];
-    tab?: EnrollmentReportTab;
-    tracks: string[];
-}
-
-export interface EnrollmentReportSponsorViewModel {
-    id: string;
-    name: string;
-    logoFileName: string;
-}
-
 export interface EnrollmentReportRecord {
     player: {
         id: string;
         name: string;
         enrollDate?: Date;
-        sponsor?: EnrollmentReportSponsorViewModel
+        sponsor?: ReportSponsor
     },
     game: ReportGame,
     playTime: {
@@ -49,7 +33,7 @@ export interface EnrollmentReportRecord {
         id: string;
         name: string;
         currentCaptain: SimpleEntity;
-        sponsors: EnrollmentReportSponsorViewModel[];
+        sponsors: ReportSponsor[];
     },
     challenges: {
         name: string;

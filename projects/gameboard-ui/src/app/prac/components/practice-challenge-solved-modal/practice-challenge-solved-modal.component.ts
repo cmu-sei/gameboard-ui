@@ -22,7 +22,8 @@ interface LegacyFeedbackFormContext {
 @Component({
   selector: 'app-practice-challenge-solved-modal',
   templateUrl: './practice-challenge-solved-modal.component.html',
-  styleUrls: ['./practice-challenge-solved-modal.component.scss']
+  styleUrls: ['./practice-challenge-solved-modal.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class PracticeChallengeSolvedModalComponent implements OnInit {
   protected context?: PracticeChallengeSolvedModalContext;

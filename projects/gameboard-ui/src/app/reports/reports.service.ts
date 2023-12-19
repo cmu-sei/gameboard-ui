@@ -57,17 +57,6 @@ export class ReportsService {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/tracks"));
   }
 
-  applyDefaultPaging<T extends { pageNumber?: number; pageSize?: number }>(reportParameters: T): T {
-    return { ...this.getDefaultPaging(), ...reportParameters };
-  }
-
-  getDefaultPaging(): PagingArgs {
-    return {
-      pageNumber: 0,
-      pageSize: 20
-    };
-  }
-
   getReportMetaData(key: ReportKey): Observable<ReportMetaData> {
     return this.http.get<ReportMetaData>(this.apiUrlService.build("/reports/metaData", { reportKey: key }));
   }

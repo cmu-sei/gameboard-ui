@@ -7,9 +7,12 @@ import { ActivatedRoute } from "@angular/router";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { ObjectService } from "@/services/object.service";
 import { RouterService } from "@/services/router.service";
+import { deepEquals } from "@/tools/object-tools.lib";
 
 @Component({ template: '', providers: [UnsubscriberService] })
-export abstract class ReportComponentBase<TFlatParameters extends {}, TStructuredParameters extends {}> implements OnInit {
+export abstract class ReportComponentBase<TFlatParameters extends {}> {
+    private _lastParams?: TFlatParameters;
+
     // manually injected services (so the inheritors don't have to resolve dependencies)
     protected readonly activeReportService = inject(ActiveReportService);
     protected readonly reportsService = inject(ReportsService);
@@ -20,7 +23,11 @@ export abstract class ReportComponentBase<TFlatParameters extends {}, TStructure
 
     constructor() {
         this.unsub.add(this.route.queryParams.subscribe(params => {
-            this._updateView({ ...params } as TFlatParameters);
+            // only update the view if the params changed in some way
+            if (!this._lastParams || !deepEquals(this._lastParams, params)) {
+                this._updateView({ ...params } as TFlatParameters);
+                this._lastParams = params as TFlatParameters;
+            }
         }));
     }
 

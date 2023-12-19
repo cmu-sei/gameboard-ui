@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportByUserRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportParameters } from '../practice-mode-report.models';
+import { PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportByUserRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats } from '../practice-mode-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { firstValueFrom } from 'rxjs';
 import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';

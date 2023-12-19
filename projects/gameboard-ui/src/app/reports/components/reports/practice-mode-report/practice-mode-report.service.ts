@@ -15,12 +15,12 @@ export class PracticeModeReportService {
   ) { }
 
   getByChallengeData(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>> {
-    const finalParams = this.reportsService.applyDefaultPaging({ ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.challenge } });
+    const finalParams = { ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.challenge } };
     return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>>(this.apiUrl.build("reports/practice-area", finalParams));
   }
 
   getByPlayerModePerformance(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>> {
-    const finalParams = this.reportsService.applyDefaultPaging({ ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.playerModePerformance } });
+    const finalParams = { ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.playerModePerformance } };
 
     return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>>(this.apiUrl.build("reports/practice-area", finalParams)).pipe(
       map(r => {
@@ -41,7 +41,7 @@ export class PracticeModeReportService {
   }
 
   getByUserData(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>> {
-    const finalParams = this.reportsService.applyDefaultPaging({ ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.player } });
+    const finalParams = { ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.player } };
 
     return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>>(this.apiUrl.build("reports/practice-area", finalParams)).pipe(
       map(r => {

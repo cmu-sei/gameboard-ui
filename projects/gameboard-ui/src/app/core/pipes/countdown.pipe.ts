@@ -13,7 +13,7 @@ export class CountdownPipe implements PipeTransform {
       this.startSecondsAtMinute = config?.settings.countdownStartSecondsAtMinute!;
   }
 
-  transform(value?: number): string {
+  transform(value: number | null | undefined): string {
     if (!value || value < 0) {
       return "--";
     }

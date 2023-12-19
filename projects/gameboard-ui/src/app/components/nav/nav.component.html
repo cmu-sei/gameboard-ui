@@ -1,6 +1,5 @@
-<nav [class]="customBackground">
+<nav [class]="customBackground" class="nav-lg">
     <div class="nav-items d-flex align-items-center justify-content-end">
-        <app-gameboard-signalr-hubs></app-gameboard-signalr-hubs>
         <div class="flex-grow-1"></div>
         <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="['/home']">Home</a>
         <ng-container *ngIf="(toc$ | async)?.length">
@@ -29,6 +28,57 @@
                 <a class="btn btn-link text-success mx-1" (click)="logout()">Log out</a>
             </ng-container>
         </ng-container>
+    </div>
+</nav>
+
+<nav class="nav-sm bg-dark">
+    <div class="flex-grow-1"></div>
+    <div class="btn-group" dropdown placement="bottom right">
+        <button id="nav-toggle" dropdownToggle type="button" class="btn btn-info dropdown-toggle d-block"
+            aria-controls="dropdown-animated">
+            <fa-icon [icon]="fa.bars"></fa-icon>
+            Menu
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+            <li>
+                <a routerLinkActive="active" [routerLink]="['/home']">Home</a>
+            </li>
+            <ng-container *ngIf="(toc$ | async)?.length">
+                <li *ngFor="let t of toc$ | async">
+                    <a [routerLink]="['doc', t.link]" routerLinkActive="active">{{t.display}}</a>
+                </li>
+            </ng-container>
+            <li *ngIf="isPracticeModeEnabled">
+                <a routerLinkActive="active" [routerLink]="['practice']">Practice</a>
+            </li>
+            <ng-container *ngIf="user$ | async as user; else unauthed">
+                <li>
+                    <a routerLinkActive="active" [routerLink]="['support']">
+                        <span>Support</span>
+                        <app-support-pill></app-support-pill>
+                    </a>
+                </li>
+                <li>
+                    <a routerLinkActive="active" [routerLink]="profileUrl">Profile</a>
+                </li>
+                <li *ngIf="canAccessReporting$ | async">
+                    <a routerLinkActive="active" [routerLink]="['/reports']">
+                        Reports
+                    </a>
+                    <span class="badge badge-info">[BETA]</span>
+                </li>
+                <li *ngIf="user.isAdmin || user.isDirector || user.isRegistrar ||
+                                user.isDesigner || user.isObserver || user.isSupport">
+                    <a routerLinkActive="active" [routerLink]="['/admin']">
+                        Admin
+                    </a>
+                </li>
+                <li *ngIf="user?.id">
+                    <a (click)="logout()">Log out</a>
+                </li>
+            </ng-container>
+        </ul>
     </div>
 </nav>
 

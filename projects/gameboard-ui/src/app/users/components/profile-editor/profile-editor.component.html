@@ -16,14 +16,13 @@
         </div>
         <br>
 
-        <ng-container *ngIf="currentUser.name !== currentUser.approvedName">
+        <ng-container *ngIf="currentUser.name && currentUser.name !== currentUser.approvedName">
             <ng-container *ngIf="currentUser.nameStatus == 'pending' && currentUser.name != disallowedName">
                 <div class="alert alert-info">
-                    Your name is pending approval from an administrator. Return later or select 'Refresh' to see if it's
-                    been approved.
-
-                    {{currentUser.name}}
-                    {{currentUser.approvedName}}
+                    <p class="m-0">
+                        Your request to change your display name to <strong>{{currentUser.name}}</strong> is pending
+                        approval from an administrator. Return later or select 'Refresh' to see if it's been approved.
+                    </p>
                 </div>
             </ng-container>
             <ng-container *ngIf="currentUser.nameStatus && currentUser.nameStatus != 'pending'">

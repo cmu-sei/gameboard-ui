@@ -9,6 +9,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -36,6 +37,7 @@ import { ClockPipe } from './pipes/clock.pipe';
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
+import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
@@ -100,6 +102,7 @@ const PUBLIC_DECLARATIONS = [
   ChallengeSolutionGuideComponent,
   ColoredTextChipComponent,
   ConfirmButtonComponent,
+  CountdownComponent,
   CumulativeTimeClockComponent,
   DoughnutChartComponent,
   DropzoneComponent,
@@ -164,6 +167,7 @@ const RELAYED_MODULES = [
   BsDatepickerModule,
   BsDropdownModule,
   ButtonsModule,
+  CollapseModule,
   FontAwesomeModule,
   FormsModule,
   MarkdownModule,

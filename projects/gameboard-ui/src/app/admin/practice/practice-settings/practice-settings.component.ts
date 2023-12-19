@@ -14,7 +14,8 @@ interface PracticeSettingsContext {
 @Component({
   selector: 'app-practice-settings',
   templateUrl: './practice-settings.component.html',
-  styleUrls: ['./practice-settings.component.scss']
+  styleUrls: ['./practice-settings.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class PracticeSettingsComponent implements OnInit {
   ctx: PracticeSettingsContext | null = null;

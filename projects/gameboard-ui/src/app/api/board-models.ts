@@ -7,6 +7,7 @@ import { PlayerMode, PlayerRole, TimeWindow } from "./player-models";
 export interface Challenge {
   id: string;
   specId: string;
+  teamId: string;
   name: string;
   tag: string;
   startTime: Date;

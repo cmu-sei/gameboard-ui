@@ -9,7 +9,8 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 @Component({
   selector: 'app-system-notifications',
   templateUrl: './system-notifications.component.html',
-  styleUrls: ['./system-notifications.component.scss']
+  styleUrls: ['./system-notifications.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class SystemNotificationsComponent implements OnInit {
   protected notifications: ViewSystemNotification[] = [];

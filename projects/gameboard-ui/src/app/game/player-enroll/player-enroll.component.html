@@ -80,7 +80,7 @@
           <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
             <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
               <div class="alert alert-info">
-                Your name is pending approval from an administrator. Return later or select 'Update' to see if it's
+                Your name is pending approval from an administrator. Return later or select "Update" to see if it's
                 been approved.
               </div>
             </ng-container>
@@ -103,7 +103,6 @@
               </button>
             </div>
           </div>
-          <div><small class="text-warning">{{ctx.player.nameStatus}}</small></div>
           <small>
             This will show on the public scoreboard. Your requested display name is subject to approval and a generic
             moniker is used until that time.

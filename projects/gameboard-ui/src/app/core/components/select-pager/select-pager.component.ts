@@ -16,8 +16,6 @@ export class SelectPagerComponent implements OnChanges {
   protected pageNumber = 0;
   protected pages: number[] = [];
 
-  constructor(private route: ActivatedRoute) { }
-
   ngOnChanges(changes: SimpleChanges): void {
     const shouldCalcPages = (changes.itemCount || changes.pageSize);
     const itemCount = changes.itemCount?.currentValue || this.itemCount;
@@ -50,7 +48,9 @@ export class SelectPagerComponent implements OnChanges {
     clampedPageNumber = Math.min(pageNumber, this.pages.length - 1);
     clampedPageNumber = clampedPageNumber < 0 ? 0 : clampedPageNumber;
 
-    this.pageNumber = clampedPageNumber;
-    this.change.emit({ pageNumber: this.pageNumber, pageSize: this.pageSize! });
+    if (this.pageNumber !== clampedPageNumber) {
+      this.pageNumber = clampedPageNumber;
+      this.change.emit({ pageNumber: this.pageNumber, pageSize: this.pageSize! });
+    }
   }
 }

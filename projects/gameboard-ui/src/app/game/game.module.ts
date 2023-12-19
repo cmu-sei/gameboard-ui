@@ -38,6 +38,7 @@ import { SessionStartCountdownComponent } from './components/session-start-count
 import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
+import { IndexToSubmittedAnswerPipe } from './pipes/index-to-submitted-answer.pipe';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -72,6 +73,7 @@ const MODULE_DECLARATIONS = [
     ScoreboardTeamDetailModalComponent,
     ContinueToGameboardButtonComponent,
     ExternalGameLinkBannerComponent,
+    IndexToSubmittedAnswerPipe,
   ],
   imports: [
     CommonModule,

@@ -28,17 +28,6 @@ export interface PracticeModeReportFlatParameters {
     grouping: PracticeModeReportGrouping;
 }
 
-export interface PracticeModeReportParameters {
-    practiceDate: ReportDateRange,
-    games: SimpleEntity[],
-    seasons: string[],
-    series: string[],
-    sponsors: ReportSponsor[],
-    tracks: string[],
-    paging: PagingArgs,
-    grouping: PracticeModeReportGrouping;
-}
-
 export interface PracticeModeReportRecord { }
 
 export interface PracticeModeReportByUserRecord extends PracticeModeReportRecord {
