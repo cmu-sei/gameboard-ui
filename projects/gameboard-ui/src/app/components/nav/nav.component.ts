@@ -25,6 +25,7 @@ export class AppNavComponent implements OnInit {
   env: any;
 
   protected fa = fa;
+  protected isCollapsed = false;
   protected isPracticeModeEnabled = false;
   protected profileUrl?: string;
 
