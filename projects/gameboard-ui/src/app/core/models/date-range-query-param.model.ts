@@ -2,7 +2,7 @@ import { ReportDateRange } from "@/reports/reports-models";
 import { RouterService } from "@/services/router.service";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { inject } from "@angular/core";
-import { ActivatedRoute, Params, Route } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
 
 export class DateRangeQueryParamModel {
     dateStartParamName = "dateStart";

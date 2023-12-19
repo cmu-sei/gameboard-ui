@@ -47,6 +47,7 @@ export class ParameterSponsorComponent implements OnInit {
         const queryParamSponsorIds = (p.get(this.queryParamName) || "")
           .split(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
 
+        console.log("query param thing", queryParamSponsorIds);
         await this.updateSelectedSponsors(
           queryParamSponsorIds
             .map(id => this.getSponsorForId(id))
@@ -166,9 +167,7 @@ export class ParameterSponsorComponent implements OnInit {
     }
 
     const params: Params = {};
-    if (validSponsorIds.length) {
-      params[this.queryParamName] = validSponsorIds.join(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
-    }
+    params[this.queryParamName] = validSponsorIds.join(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
 
     await this.routerService.updateQueryParams({ parameters: params, resetParams: ["pageNumber"] });
     this.updateSelectionSummary(value);
