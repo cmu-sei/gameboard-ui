@@ -24,6 +24,7 @@ import { GameIsStarted } from '@/guards/game-is-started.guard';
 import { GamePageComponent } from './pages/game-page/game-page.component';
 import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
+import { IndexToSubmittedAnswersPipe } from './pipes/index-to-submitted-answers.pipe';
 import { PlayComponent } from './components/play/play.component';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
@@ -38,7 +39,6 @@ import { SessionStartCountdownComponent } from './components/session-start-count
 import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
-import { IndexToSubmittedAnswerPipe } from './pipes/index-to-submitted-answer.pipe';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -50,6 +50,7 @@ const MODULE_DECLARATIONS = [
   GameboardPageComponent,
   GamespaceQuizComponent,
   HubStateToPlayerStatusPipe,
+  IndexToSubmittedAnswersPipe,
   PlayComponent,
   PlayerEnrollComponent,
   PlayerPresenceComponent,
@@ -73,7 +74,6 @@ const MODULE_DECLARATIONS = [
     ScoreboardTeamDetailModalComponent,
     ContinueToGameboardButtonComponent,
     ExternalGameLinkBannerComponent,
-    IndexToSubmittedAnswerPipe,
   ],
   imports: [
     CommonModule,

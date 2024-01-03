@@ -6,7 +6,7 @@
 
     <markdown [data]="state.challenge.sectionText"></markdown>
 
-    <div *ngFor="let q of state.challenge.questions; let i=index" class="form-group p-4 mt-4"
+    <div *ngFor="let q of state.challenge.questions; let i = index" class="form-group p-4 mt-4"
       [class.pop-info]="!q.isGraded" [class.pop-success]="q.isGraded && q.isCorrect"
       [class.pop-warning]="q.isGraded && !q.isCorrect">
       <label>{{i+1}}. ({{q.weight}}) {{q.text}}</label>
@@ -28,7 +28,7 @@
         <small>
           <strong>Previous attempts: </strong>
           <!--If the question has been answered correctly, don't show the last historical entry for it (because we display it above)-->
-          {{ i | indexToSubmittedAnswer:pastSubmissions:q.isCorrect }}
+          {{ i | indexToSubmittedAnswers:pastSubmissions:q.isCorrect }}
         </small>
       </div>
     </div>
