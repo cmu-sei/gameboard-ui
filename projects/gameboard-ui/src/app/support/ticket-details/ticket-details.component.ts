@@ -9,7 +9,7 @@ import { debounceTime, switchMap, tap, filter, map, first } from 'rxjs/operators
 import { PlayerService } from '../../api/player.service';
 import { AttachmentFile, ChangedTicket, Ticket, TicketActivity } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
-import { ApiUser, UserSummary } from '../../api/user-models';
+import { ApiUser } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { EditData, SuggestionOption } from '../../utility/components/inplace-editor/inplace-editor.component';
 import { UserService as LocalUserService } from '../../utility/user.service';
