@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { PlayersReportFlatParameters, PlayersReportRecord, PlayersReportStatSummary } from './players-report.models';
 import { ApiUrlService } from '@/services/api-url.service';
-import { HttpClient } from '@angular/common/http';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 
 @Injectable({ providedIn: 'root' })
