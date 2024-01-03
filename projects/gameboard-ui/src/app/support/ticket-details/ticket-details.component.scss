@@ -3,14 +3,26 @@
 .card {
   border: 1px solid #222;
 }
+
 .card-body {
   background-color: #111;
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
+
+  &.is-support-personnel-activity {
+    background-color: #999999 !important;
+    color: #303030 !important;
+
+    ::ng-deep a {
+        color: #2c753b !important;
+    }
+  }
 }
+
 .card-footer {
   background-color: #111;
 }
+
 .card-header {
   background-color: #222;
   border: #222;
@@ -25,18 +37,20 @@ textarea {
   height: 120px;
   overflow: hidden;
 }
+
 .no-preview-icon {
   font-size: 50px;
 }
+
 .no-preview-text {
   font-size: 12px;
 }
+
 .summary-break {
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
 }
-
 
 .attachment {
   cursor: pointer;
@@ -57,12 +71,11 @@ textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: darken($dark, 5%); 
 }
+
 ::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0); 
 }
-// ::-webkit-resizer{
-  
-// }
+
 .dark-textarea:focus-visible, .dark-textarea:focus {
   outline: none;
   box-shadow: none;

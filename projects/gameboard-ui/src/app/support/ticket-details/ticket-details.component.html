@@ -137,7 +137,7 @@
         </div>
 
         <div *ngIf="!!ctx.ticket.activity" class="mx-md-4 mx-0">
-          <div *ngFor="let activity of ctx.ticket.activity; let i = index;" class="border-dark1 border-top1 ">
+          <div *ngFor="let activity of ctx.ticket.activity; let i = index;" class="border-dark1 border-top1">
             <div class="card my-3 mx-3" *ngIf="activity.type == 0"> <!-- Comment -->
               <div class="card-header py-2">
                 <div>
@@ -152,8 +152,7 @@
                 </div>
               </div>
               <div class="card-body"
-                [class.bg-light]="activity.user.isSupportPersonnel && !ctx.ticket.creator?.isSupportPersonnel"
-                [class.text-dark]="activity.user.isSupportPersonnel && !ctx.ticket.creator?.isSupportPersonnel">
+                [class.is-support-personnel-activity]="activity.user.isSupportPersonnel && !ctx.ticket.creator?.isSupportPersonnel">
                 <app-long-content-hider>
                   <p class="card-text">
                     <app-render-links-in-text [text]="activity.message"></app-render-links-in-text>
@@ -186,8 +185,8 @@
                 </div>
               </span>
             </div>
-            <div class="my-3 mx-3 px-3 border-0 text-center" *ngIf="activity.type == 2"> <!-- Assignee Change -->
-              <span class="text-center  py-2 d-flex rounded" style="background: black">
+            <div class="my-3 px-3 border-0 text-center" *ngIf="activity.type == 2"> <!-- Assignee Change -->
+              <span class="text-center py-2 px-3 d-flex rounded" style="background: black">
                 <span *ngIf="!!activity.assigneeId">Assigned to&nbsp;<span
                     class="font-weight-bold">{{activity.assignee.approvedName}}</span>
                   <div style="display: inline-block" [tooltip]="activity.timestamp | shorttime: true : true"

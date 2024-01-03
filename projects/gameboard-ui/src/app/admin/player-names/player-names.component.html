@@ -45,7 +45,8 @@
         <span class="text-muted">{{player.pendingName}}</span><br />
         <small class="text-muted">
           <span>{{player.gameName}}</span> &mdash;
-          <span>user: </span>&nbsp;<span>{{player.userApprovedName}}</span>&nbsp;
+          <span>user: </span>&nbsp;
+          <app-clipspan class="mr-2">{{ player.userId | slice:0:8 }}</app-clipspan>
           <span>player: </span>&nbsp;
           <app-clipspan class="mr-2">{{player.id | slice:0:8}}</app-clipspan>
           <span>team: </span>&nbsp;

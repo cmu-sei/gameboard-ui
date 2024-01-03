@@ -97,7 +97,9 @@ export class PlayersReportComponent extends ReportComponentBase<PlayersReportFla
     }
 
     this.ctx.selectedParameters = parameters;
+    this.ctx.isLoading = true;
     this.ctx.results = await firstValueFrom(this.playersReportService.getReportData(parameters));
+    this.ctx.isLoading = false;
 
     return {
       metaData: this.ctx.results.metaData

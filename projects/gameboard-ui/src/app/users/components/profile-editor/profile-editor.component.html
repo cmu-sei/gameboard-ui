@@ -19,9 +19,19 @@
         <ng-container *ngIf="currentUser.name && currentUser.name !== currentUser.approvedName">
             <ng-container *ngIf="currentUser.nameStatus == 'pending' && currentUser.name != disallowedName">
                 <div class="alert alert-info">
+                    <h3>Name change pending</h3>
+
                     <p class="m-0">
                         Your request to change your display name to <strong>{{currentUser.name}}</strong> is pending
                         approval from an administrator. Return later or select 'Refresh' to see if it's been approved.
+                    </p>
+
+                    <p class="mt-3">
+                        <strong>NOTE: </strong>
+                        You can still enroll in and play games while your name change is pending review.
+                        You'll still appear on scoreboards as <strong>{{currentUser.approvedName}}</strong> for now,
+                        but all scoreboard appearances will be updated to <strong>{{currentUser.name}}</strong> upon
+                        approval.
                     </p>
                 </div>
             </ng-container>

@@ -47,7 +47,6 @@ export class ParameterSponsorComponent implements OnInit {
         const queryParamSponsorIds = (p.get(this.queryParamName) || "")
           .split(ParameterSponsorComponent.QUERYSTRING_VALUE_DELIMITER);
 
-        console.log("query param thing", queryParamSponsorIds);
         await this.updateSelectedSponsors(
           queryParamSponsorIds
             .map(id => this.getSponsorForId(id))
