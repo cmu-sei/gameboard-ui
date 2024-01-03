@@ -5,9 +5,8 @@ import { unique } from 'projects/gameboard-ui/src/tools';
 @Pipe({ name: 'indexToSubmittedAnswer' })
 export class IndexToSubmittedAnswerPipe implements PipeTransform {
   transform(index: number, submissions: ChallengeSubmissionViewModel[], hideLastResponse = false): string {
-    if (index < 0 || !submissions || !submissions.length) {
+    if (index < 0 || !submissions || !submissions.length)
       throw new Error("Can't use IndexToSubmittedAnswer pipe without an index and submitted answers.");
-    }
 
     if (index > submissions.length)
       throw new Error(`Can't use IndexToSubmittedAnswer pipe with an out-of-range index (${index}, ${submissions.length})`);
