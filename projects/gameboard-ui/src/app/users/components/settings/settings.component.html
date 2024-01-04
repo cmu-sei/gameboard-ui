@@ -1,0 +1,36 @@
+<h2 class="mt-4">Settings</h2>
+
+<div class="settings-section">
+    <h3>Browser Notifications</h3>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'unsupported'">
+        <div class="">Your browser doesn't support the Browser Notifications API. Sorry 😔</div>
+    </ng-container>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'allowed'">
+        <div>
+            Browser notifications are <strong class="text-success">enabled</strong>. Use the button below to preview
+            a test notification!
+        </div>
+
+        <button class="btn btn-lg btn-success my-4" (click)="showTestNotification()">Show a test notification</button>
+    </ng-container>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'denied'">
+        <div>
+            Browser notifications are <strong class="text-danger">disabled</strong>. If you'd like to enable them,
+            use your browser's privacy features to grant this site permission to show notifications.
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'pending'">
+        <div>
+            Want to enable browser notifications? Use the button below, then click "Allow" at the prompt shown by
+            your browser.
+        </div>
+
+        <button class="btn btn-lg btn-info my-4" (click)="requestNotificationPermission()">
+            Enable browser notifications
+        </button>
+    </ng-container>
+</div>
