@@ -130,8 +130,9 @@
           <fa-icon [icon]="player.checked ? fa.checkSquare : fa.square"></fa-icon>
         </button>
       </div>
+      <!--If teams are collapsed, show all team sponsor logos-->
       <app-player-avatar-list class="cursor-pointer" (click)="view(player)"
-        [avatarUris]="player.teamSponsorLogos | sponsorLogoFileNamesToUris"
+        [avatarUris]="(!teamView ? player.sponsor.logo : player.teamSponsorLogos) | sponsorLogoFileNamesToUris"
         [showSessionStatusWidget]="showSessionStatus" [captainSession]="player.session"></app-player-avatar-list>
       <div class="ml-2">
         <span *ngIf="player.advanced" class="text-success ml-2">
@@ -195,7 +196,6 @@
       </div>
     </div>
   </ng-container>
-
 </ng-container>
 
 <ng-template #loading>

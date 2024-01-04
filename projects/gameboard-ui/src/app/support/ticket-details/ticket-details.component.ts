@@ -19,6 +19,7 @@ import { ToastService } from '../../utility/services/toast.service';
 import { fa } from '../../services/font-awesome.service';
 import { LogService } from '../../services/log.service';
 import { AppTitleService } from '@/services/app-title.service';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -36,6 +37,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   id: string = "";
   key = 0;
 
+  protected appName = "Gameboard";
   newCommentFocus = false;
   newCommentText = "";
   newCommentAttachments: File[] = [];
@@ -85,6 +87,10 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     appTitleService: AppTitleService,
+    config: ConfigService,
+    hub: NotificationService,
+    local: LocalUserService,
+    route: ActivatedRoute,
     private api: SupportService,
     private clipboard: ClipboardService,
     private logService: LogService,
@@ -93,11 +99,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private http: HttpClient,
     private toastsService: ToastService,
-    hub: NotificationService,
-    local: LocalUserService,
-    route: ActivatedRoute,
   ) {
-
     const canManage$ = local.user$.pipe(
       tap(u => this.currentUser = u),
       map(u => !!u?.isSupport)
@@ -138,13 +140,13 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
         a.attachmentFiles.forEach((f, i) => this.fetchFile(f, i));
 
         // Initialize comment attachment URL object - store it in a map to account for multiple comments
-        a.activity.forEach((g, i) => this.commentAttachmentMap.set(g.id, new Array<SafeResourceUrl>(g.attachmentFiles.length)));
+        a.activity.forEach(g => this.commentAttachmentMap.set(g.id, new Array<SafeResourceUrl>(g.attachmentFiles.length)));
 
         // Fetch each comment's attachments
         a.activity.forEach((g, i) => g.attachmentFiles.forEach((f, j) => this.fetchFile(f, j, g)));
         a.selfCreated = a.creatorId == a.requesterId;
         a.created = new Date(a.created);
-        let recent = new Date(new Date().getTime() - (5) * 60_000);
+        const recent = new Date(new Date().getTime() - (5) * 60_000);
         a.canUpdate = a.created > recent;
       })
     );
@@ -158,16 +160,14 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     this.changed$.pipe(
       debounceTime(500),
       switchMap(c => api.update(c))
-    ).subscribe(
-      a => {
-        this.refresh$.next(true);
-      }
-    );
+    ).subscribe(a => this.refresh$.next(true));
 
     hub.ticketEvents.pipe(
       filter(e => e.model.key !== this.key)
     ).subscribe(e => this.refresh$.next(true));
 
+    // grab the app name so we can give support personnel badges (like "Gameboard Support")
+    this.appName = config.appName;
   }
 
   // Grabs a given file, then sets the source of an image to be the URL within manifested as a blob.

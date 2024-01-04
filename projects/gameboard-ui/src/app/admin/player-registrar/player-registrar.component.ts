@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, interval, Observable, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
-import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Player, PlayerSearch } from '../../api/player-models';
@@ -62,7 +61,6 @@ export class PlayerRegistrarComponent {
     private bsModalService: BsModalService,
     private modalConfirmService: ModalConfirmService,
     private api: PlayerService,
-    private boardApi: BoardService,
     private clipboard: ClipboardService,
     private teamService: TeamService,
     private unityService: UnityService
