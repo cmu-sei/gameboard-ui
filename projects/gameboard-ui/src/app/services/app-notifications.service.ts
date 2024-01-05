@@ -54,7 +54,10 @@ export class AppNotificationsService {
       return;
     }
 
-    const notification = new Notification(config.title, { body: config.body });
+    const notification = new Notification(config.title, { body: config.body, icon: "assets/img/unity.png", tag: "1234", });
+    notification.onerror = err => {
+      this.log.logError(`Error showing browser notification:`, err);
+    };
 
     if (config.appUrl) {
       notification.onclick = (event) => {

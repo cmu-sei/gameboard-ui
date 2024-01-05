@@ -14,6 +14,20 @@
         </div>
 
         <button class="btn btn-lg btn-success my-4" (click)="showTestNotification()">Show a test notification</button>
+
+        <p class="fs-09 gray-text">
+            Still not seeing notifications? Some operating systems require you to specifically enable notifications from
+            your browser application in order to see them. Refer to specific documentation for
+            <a href="https://support.apple.com/guide/mac-help/change-notifications-settings-mh40583/mac"
+                rel="noopener noreferer" target="_blank">Macs</a>,
+            <a href="https://support.microsoft.com/en-us/windows/get-notifications-you-want-feeca47f-0baf-5680-16f0-8801db1a8466"
+                rel="noopener noreferer" target="_blank">PCs</a>,
+            <a href="https://support.apple.com/en-us/HT201925" rel="noopener noreferer" target="_blank">iOS devices</a>,
+            and
+            <a href="https://support.google.com/android/answer/9079661?hl=en" rel="noopener noreferer">
+                Android devices
+            </a> for additional assistance.
+        </p>
     </ng-container>
 
     <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'denied'">
