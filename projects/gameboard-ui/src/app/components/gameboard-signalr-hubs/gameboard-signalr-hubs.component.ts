@@ -8,6 +8,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ApiUser } from '@/api/user-models';
 import { StatusLightState } from '@/core/components/status-light/status-light.component';
 import { combineLatest, map } from 'rxjs';
+import { SupportHubService } from '@/services/signalR/support-hub.service';
 
 @Component({
   selector: 'app-gameboard-signalr-hubs',
@@ -17,16 +18,18 @@ import { combineLatest, map } from 'rxjs';
 })
 export class GameboardSignalRHubsComponent implements OnDestroy {
   protected isDevMode = false;
-  protected statusLightState: StatusLightState = "none";
+  protected gameHubStatusLightState: StatusLightState = "none";
+  protected supportHubStatusLightState: StatusLightState = "none";
   protected tooltip = "";
 
   constructor(
     private gameHub: GameHubService,
     private localUser: LocalUserService,
     private logService: LogService,
+    private supportHub: SupportHubService,
     private unsub: UnsubscriberService) {
     this.unsub.add(
-      this.localUser.user$.subscribe(u => this.handleLocalUserChanged.bind(this)(u))
+      this.localUser.user$.subscribe(async u => await this.handleLocalUserChanged.bind(this)(u))
     );
 
     this.isDevMode = !environment.production;
@@ -36,13 +39,14 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
     await this.gameHub.disconnect();
   }
 
-  private handleLocalUserChanged(u: ApiUser | null) {
+  private async handleLocalUserChanged(u: ApiUser | null) {
     this.log("Local user changed", u);
     // gamehub automatically manages repeated calls to connect/disconnect, so you won't
     // get duplicate connections if, for example, connect is called while it's already connected
     if (!u) {
       this.log("Local user is logged out, disconnecting from hubs");
-      this.gameHub.disconnect();
+      await this.gameHub.disconnect();
+      await this.supportHub.disconnect();
     }
     else {
       this.log("Local user is logged in, connecting", u);
@@ -50,8 +54,8 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       // remove any existing handlers
       this.unsub.unsubscribeAll();
 
-      // connect to the hub
-      this.gameHub.connect();
+      // connect to the hubs
+      await this.gameHub.connect();
 
       // listen for interesting events to log
       this.unsub.add(
@@ -63,10 +67,17 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
           map(([hubState, joinedGameIds]) => ({ hubState, joinedGameIds }))
         ).subscribe(ctx => {
           this.log("Game hub state change:", ctx);
-          this.statusLightState = this.hubStateToStatusLightState(ctx.hubState);
-          this.tooltip = this.buildTooltip(ctx);
-        })
+          this.gameHubStatusLightState = this.hubStateToStatusLightState(ctx.hubState);
+          this.tooltip = this.buildGameHubToolTip(ctx);
+        }),
       );
+
+      // set up support staff up if applicable
+      if (u.isAdmin || u.isSupport) {
+        await this.supportHub.connect();
+        await this.supportHub.joinStaffGroup();
+        this.unsub.add(this.supportHub.hubState$.subscribe(supportHubState => this.supportHubStatusLightState = this.hubStateToStatusLightState(supportHubState)));
+      }
     }
   }
 
@@ -82,14 +93,14 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
     }
   }
 
-  private buildTooltip(gameHubContext: { hubState: HubConnectionState, joinedGameIds: string[] }): string {
+  private buildGameHubToolTip(gameHubContext: { hubState: HubConnectionState, joinedGameIds: string[] }): string {
     let tooltip = `GameHub: ${gameHubContext.hubState}`;
 
     if (gameHubContext.joinedGameIds.length) {
       tooltip += "\nGames:\n";
 
       for (const gameId of gameHubContext.joinedGameIds) {
-        tooltip += `\t- ${gameId}`;
+        tooltip += `\n\t- ${gameId}`;
       }
     }
 

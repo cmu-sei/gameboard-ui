@@ -47,7 +47,8 @@ export class SettingsComponent {
     this.appNotificationsService.send({
       title: `Test ${this.appName} Notification`,
       body: "This is what a browser notification will look like. Pretty spiffy, huh?",
-      appUrl: "admin"
+      appUrl: "admin",
+      tag: "test"
     });
   }
 }

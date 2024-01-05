@@ -47,7 +47,7 @@ export class GameHubService {
     }
 
     this.logService.logInfo(`Game hub is joining game ${gameId}...`);
-    this.signalRService.sendMessage("JoinGame", { gameId });
+    this.signalRService.sendMessageWithArg("JoinGame", { gameId });
     this._joinedGameIds$.next([...this._joinedGameIds$.value, gameId]);
   }
 
@@ -57,7 +57,7 @@ export class GameHubService {
       return;
     }
 
-    await this.signalRService.sendMessage("LeaveGame", { gameId });
+    await this.signalRService.sendMessageWithArg("LeaveGame", { gameId });
     this._joinedGameIds$.next(this._joinedGameIds$.value.filter(g => g !== gameId));
   }
 

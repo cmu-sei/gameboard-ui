@@ -47,14 +47,20 @@ export class AppNotificationsService {
     return "pending";
   }
 
-  public send(config: { title: string, body: string, appUrl?: string }) {
+  public send(config: { title: string, body: string, appUrl?: string, tag?: string }) {
     if (this._canShowBrowserNotifications$.value !== "allowed") {
       this.log.logWarning(`Can't send browser notification (${this._canShowBrowserNotifications$.value}) - falling back to toast.`);
       this.toastService.showMessage(`${config.title}: ${config.body}`);
       return;
     }
 
-    const notification = new Notification(config.title, { body: config.body, icon: "assets/img/unity.png", tag: "1234", });
+    const notification = new Notification(config.title, {
+      body: config.body,
+      icon: "assets/img/unity.png",
+      tag: config.tag,
+      renotify: !!config.tag,
+    });
+
     notification.onerror = err => {
       this.log.logError(`Error showing browser notification:`, err);
     };
@@ -62,7 +68,7 @@ export class AppNotificationsService {
     if (config.appUrl) {
       notification.onclick = (event) => {
         event.preventDefault();
-        this.windowService.get().open(`${this.config.apphost}/${config.appUrl}`);
+        this.windowService.get().open(`${this.config.absoluteUrl}/${config.appUrl}`);
       };
     }
   }
