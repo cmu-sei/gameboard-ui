@@ -7,7 +7,8 @@
         [routerLinkActiveOptions]="{ exact: true }">Profile</a>
     <a class="btn btn-link" [routerLink]="['/', 'user', 'certificates']" routerLinkActive="active">Certificates</a>
     <a class="btn btn-link" [routerLink]="['/', 'user', 'profile', 'history']" routerLinkActive="active">History</a>
-    <a class="btn btn-link" [routerLink]="['/', 'user', 'settings']" routerLinkActive="active">Settings</a>
+    <a class="btn btn-link" [routerLink]="['/', 'user', 'settings']" routerLinkActive="active"
+        *ngIf="canUseSettings$ | async">Settings</a>
 </div>
 
 <main class="container">

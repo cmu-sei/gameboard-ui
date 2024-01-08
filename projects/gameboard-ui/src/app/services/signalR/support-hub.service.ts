@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { LogService } from '../log.service';
 import { SignalRService } from './signalr.service';
-import { SupportHubEvent, SupportHubEventType, TicketClosedEvent, TicketCreatedEvent } from './support-hub.models';
+import { SupportHubEvent, SupportHubEventType, TicketClosedEvent, TicketCreatedEvent, TicketUpdatedBySupportEvent, TicketUpdatedByUserEvent } from './support-hub.models';
 import { AppNotificationsService } from '../app-notifications.service';
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +24,9 @@ export class SupportHubService {
       "hub/support",
       [
         { eventType: SupportHubEventType.TicketClosed, handler: this.handleTicketClosed.bind(this) },
-        { eventType: SupportHubEventType.TicketCreated, handler: this.handleTicketCreated.bind(this) }
+        { eventType: SupportHubEventType.TicketCreated, handler: this.handleTicketCreated.bind(this) },
+        { eventType: SupportHubEventType.TicketUpdatedBySupport, handler: this.handleTicketUpdatedBySupport.bind(this) },
+        { eventType: SupportHubEventType.TicketUpdatedByUser, handler: this.handleTicketUpdatedByUser.bind(this) }
       ]
     );
   }
@@ -52,6 +54,28 @@ export class SupportHubService {
       body: ev.data.ticket.summary,
       appUrl: `support/tickets/${ev.data.ticket.id}`,
       tag: `support-created-${ev.data.ticket.id}`
+    });
+  }
+
+  private handleTicketUpdatedBySupport(ev: SupportHubEvent<TicketUpdatedBySupportEvent>) {
+    this.logService.logInfo("[GB Support Hub Staff Group]: Ticket updated by support", ev);
+
+    this.appNotificationsService.send({
+      title: `Ticket updated by Support: ${ev.data.ticket.key}`,
+      body: ev.data.ticket.summary,
+      appUrl: `support/tickets/${ev.data.ticket.id}`,
+      tag: `support-updated-by-support-${ev.data.ticket.id}`
+    });
+  }
+
+  private handleTicketUpdatedByUser(ev: SupportHubEvent<TicketUpdatedByUserEvent>) {
+    this.logService.logInfo("[GB Support Hub Staff Group]: Ticket updated by support", ev);
+
+    this.appNotificationsService.send({
+      title: `Ticket updated by Player: ${ev.data.ticket.key}`,
+      body: ev.data.ticket.summary,
+      appUrl: `support/tickets/${ev.data.ticket.id}`,
+      tag: `support-updated-by-user-${ev.data.ticket.id}`
     });
   }
 }

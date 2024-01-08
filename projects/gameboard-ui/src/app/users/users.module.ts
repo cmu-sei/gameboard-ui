@@ -50,9 +50,10 @@ const DECLARED_COMPONENTS = [
             ]
           },
           { path: 'profile', component: ProfileEditorComponent, title: "Profile" },
-          { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
+          { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard], title: "History" },
           {
             path: 'settings',
+            title: "Settings",
             component: SettingsComponent,
             canActivate: [() => inject(LocalUserService).user$.value?.isAdmin || inject(LocalUserService).user$.value?.isSupport]
           }

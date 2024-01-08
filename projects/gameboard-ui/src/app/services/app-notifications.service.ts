@@ -1,9 +1,11 @@
 import { ToastService } from '@/utility/services/toast.service';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, from, map, of, tap } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription, firstValueFrom, from, map, tap } from 'rxjs';
 import { LogService } from './log.service';
 import { WindowService } from './window.service';
 import { ConfigService } from '@/utility/config.service';
+import { UserService } from '@/api/user.service';
+import { UnsubscriberService } from './unsubscriber.service';
 
 export type CanUseBrowserNotificationsResult = "denied" | "pending" | "unsupported" | "allowed";
 
@@ -13,15 +15,25 @@ export type CanUseBrowserNotificationsResult = "denied" | "pending" | "unsupport
  * If the user doesn't grant the Notification permission to Gameboard, this service falls back to using the ToastService to show related notifications.
  * */
 @Injectable({ providedIn: 'root' })
-export class AppNotificationsService {
+export class AppNotificationsService implements OnDestroy {
   constructor(
     private config: ConfigService,
     private log: LogService,
     private toastService: ToastService,
-    private windowService: WindowService) { }
+    private userService: UserService,
+    private windowService: WindowService) {
+    this._userSettingsSubscription = this.userService.settingsUpdated$.subscribe(settings => this._playAudioOnBrowserNotification = settings.playAudioOnBrowserNotification);
+  }
 
   private _canShowBrowserNotifications$ = new BehaviorSubject<CanUseBrowserNotificationsResult>(this.resolveCanSendBrowserNotifications());
   public canShowBrowserNotifications$ = this._canShowBrowserNotifications$.asObservable();
+
+  private _playAudioOnBrowserNotification?: boolean;
+  private _userSettingsSubscription?: Subscription;
+
+  ngOnDestroy(): void {
+    this._userSettingsSubscription?.unsubscribe();
+  }
 
   requestPermission(): Observable<CanUseBrowserNotificationsResult> {
     if (this._canShowBrowserNotifications$.value !== "pending")
@@ -47,19 +59,30 @@ export class AppNotificationsService {
     return "pending";
   }
 
-  public send(config: { title: string, body: string, appUrl?: string, tag?: string }) {
+  public async send(config: { title: string, body: string, appUrl?: string, tag?: string }) {
     if (this._canShowBrowserNotifications$.value !== "allowed") {
       this.log.logWarning(`Can't send browser notification (${this._canShowBrowserNotifications$.value}) - falling back to toast.`);
       this.toastService.showMessage(`${config.title}: ${config.body}`);
       return;
     }
 
+    if (this._playAudioOnBrowserNotification === undefined) {
+      const settings = await firstValueFrom(this.userService.getSettings());
+      this._playAudioOnBrowserNotification = settings.playAudioOnBrowserNotification;
+    }
+
     const notification = new Notification(config.title, {
       body: config.body,
-      icon: "assets/img/unity.png",
       tag: config.tag,
       renotify: !!config.tag,
     });
+
+    // play audio notification (we only do this with the OS-level notification, because otherwise it's hard to know why the sound happened if you're
+    // not looking at this window)
+    if (this._playAudioOnBrowserNotification) {
+      const audio = new Audio(`${this.config.absoluteUrl}assets/audio/browser-notification-chime.mp3`);
+      audio.play();
+    }
 
     notification.onerror = err => {
       this.log.logError(`Error showing browser notification:`, err);
@@ -68,7 +91,7 @@ export class AppNotificationsService {
     if (config.appUrl) {
       notification.onclick = (event) => {
         event.preventDefault();
-        this.windowService.get().open(`${this.config.absoluteUrl}/${config.appUrl}`);
+        this.windowService.get().open(`${this.config.absoluteUrl}${config.appUrl}`);
       };
     }
   }
