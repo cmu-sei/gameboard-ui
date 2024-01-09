@@ -10,7 +10,6 @@ import { UserService as ApiUserService } from '../api/user.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { ConfigService } from './config.service';
 import { LogService } from '@/services/log.service';
-import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService implements OnDestroy {

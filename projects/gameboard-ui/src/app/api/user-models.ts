@@ -50,6 +50,14 @@ export interface TeamMember {
   role: PlayerRole;
 }
 
+export interface UserSettings {
+  playAudioOnBrowserNotification: boolean;
+}
+
+export interface UpdateUserSettingsRequest {
+  playAudioOnBrowserNotification?: boolean;
+}
+
 export interface UserSummary {
   id: string;
   approvedName: string;

@@ -72,6 +72,7 @@ export class PracticeModeReportComponent
   protected handleOverallStatsUpdate(stats: PracticeModeReportOverallStats) {
     this.overallStats = [
       { label: "Attempts", value: stats.attemptCount },
+      { label: "Completions", value: stats.completionCount },
       { label: "Challenges", value: stats.challengeCount },
       { label: "Players", value: stats.playerCount },
       { label: "Sponsors", value: stats.sponsorCount }

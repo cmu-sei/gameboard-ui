@@ -3,15 +3,18 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult } from './user-models';
+import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult, UpdateUserSettingsRequest, UserSettings } from './user-models';
 import { LogService } from '@/services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private _settingsUpdated$ = new Subject<UserSettings>();
+  public settingsUpdated$ = this._settingsUpdated$.asObservable();
+
   constructor(
     private apiUrl: ApiUrlService,
     private config: ConfigService,
@@ -64,6 +67,16 @@ export class UserService {
   public getDocs(): Observable<TreeNode> {
     return this.http.get<string[]>(this.apiUrl.build("docs")).pipe(
       map(r => this.mapToTree(r))
+    );
+  }
+
+  public getSettings(): Observable<UserSettings> {
+    return this.http.get<UserSettings>(this.apiUrl.build("user/settings"));
+  }
+
+  public updateSettings(update: UpdateUserSettingsRequest): Observable<UserSettings> {
+    return this.http.put<UserSettings>(this.apiUrl.build("user/settings"), update).pipe(
+      tap(settings => this._settingsUpdated$.next(settings))
     );
   }
 

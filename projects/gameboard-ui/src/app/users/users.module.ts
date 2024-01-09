@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '@/core/core.module';
 import { CertificatePrinterComponent } from './components/certificate-printer/certificate-printer.component';
@@ -13,6 +13,8 @@ import { ProfileEditorComponent } from './components/profile-editor/profile-edit
 import { ProfileHistoryComponent } from './components/profile-history/profile-history.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
+import { SettingsComponent } from './components/settings/settings.component';
+import { UserService as LocalUserService } from '@/utility/user.service';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -22,6 +24,7 @@ const DECLARED_COMPONENTS = [
   PracticeCertificatesComponent,
   ProfileEditorComponent,
   ProfileHistoryComponent,
+  SettingsComponent,
   UserPageComponent
 ];
 
@@ -47,7 +50,13 @@ const DECLARED_COMPONENTS = [
             ]
           },
           { path: 'profile', component: ProfileEditorComponent, title: "Profile" },
-          { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard] },
+          { path: 'profile/history', component: ProfileHistoryComponent, canActivate: [AuthGuard], title: "History" },
+          {
+            path: 'settings',
+            title: "Settings",
+            component: SettingsComponent,
+            canActivate: [() => inject(LocalUserService).user$.value?.isAdmin || inject(LocalUserService).user$.value?.isSupport]
+          }
         ]
       },
     ]),

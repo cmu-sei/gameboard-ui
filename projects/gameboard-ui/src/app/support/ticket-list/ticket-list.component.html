@@ -1,13 +1,13 @@
 <div *ngIf="ctx$ | async as ctx; else loading" class="container-xl" [class.expand]="ctx.canManage">
   <div class="d-flex justify-content-between mb-2">
     <h3 class="m-0 p-0 align-self-center">{{ctx.canManage ? 'Manage Tickets' : 'My Tickets'}}</h3>
-    <a class="btn btn-outline-info" [routerLink]="['../create']">
+    <a class="btn btn-info" [routerLink]="['../create']">
       <span>Create Ticket</span>
     </a>
   </div>
 
   <div class="filters row mb-2">
-    <div class="d-flex" [class]="ctx.canManage ? 'col-7' : 'col-2'">
+    <div class="d-flex col-7">
       <div class="input-group input-group-sm mr-2 w-25">
         <select class="form-control" [(ngModel)]="statusFilter" (change)="this.refresh$.next(true)">
           <option *ngFor="let option of ['Any Status', 'Open', 'In Progress', 'Closed', 'Not Closed']" [value]="option">
@@ -101,7 +101,6 @@
 
     <!-- Actions (managers only)-->
     <div *ngIf="ctx.canManage" class="col-1">
-      <!--I feel like this looks best without a header - it's clear what it is -->
     </div>
   </div>
 

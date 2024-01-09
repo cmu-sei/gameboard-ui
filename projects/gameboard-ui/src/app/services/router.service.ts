@@ -63,6 +63,10 @@ export class RouterService implements OnDestroy {
     return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }
 
+  public getTicketUrl(ticketKey: string) {
+    return this.router.createUrlTree(["support", "tickets", ticketKey]);
+  }
+
   public toChallenge(challengeId: string, playerId: string) {
     return this.router.navigateByUrl(`/board/${playerId}/${challengeId}`);
   }

@@ -1,6 +1,6 @@
 <div class="suggested-searches-component d-flex flex-wrap w-100">
     <a *ngFor="let search of searches" [routerLink]="['/practice']" [queryParams]="{ term: search }">
-        <app-colored-text-chip [text]="search" colorMode="monochrome"
+        <app-colored-text-chip class="d-block mb-2" [text]="search" colorMode="monochrome"
             (click)="handleSearchClick($event)"></app-colored-text-chip>
     </a>
 </div>

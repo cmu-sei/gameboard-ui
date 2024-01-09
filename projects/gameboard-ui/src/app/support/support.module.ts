@@ -32,8 +32,8 @@ import { CoreModule } from '../core/core.module';
       {
         path: '', component: SupportPageComponent, children: [
           { path: '', pathMatch: 'full', redirectTo: 'tickets' },
-          { path: 'create', component: TicketFormComponent },
-          { path: 'tickets', component: TicketListComponent },
+          { path: 'create', component: TicketFormComponent, title: "New Ticket" },
+          { path: 'tickets', component: TicketListComponent, title: "Support" },
           { path: 'tickets/:id', component: TicketDetailsComponent }
         ]
       },

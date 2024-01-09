@@ -1,5 +1,7 @@
-import { ConfigService } from '@/utility/config.service';
 import { Component } from '@angular/core';
+import { ConfigService } from '@/utility/config.service';
+import { UserService as LocalUserService } from '@/utility/user.service';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-user-page',
@@ -8,8 +10,19 @@ import { Component } from '@angular/core';
 })
 export class UserPageComponent {
   protected appName: string;
+  protected canUseSettings$: Observable<boolean>;
 
-  constructor(config: ConfigService) {
+  constructor(
+    config: ConfigService,
+    localUser: LocalUserService) {
     this.appName = config.settings.appname || "Gameboard";
+    this.canUseSettings$ = localUser.user$.pipe(
+      map(u => {
+        if (!u)
+          return false;
+
+        return u.isAdmin || u.isSupport;
+      })
+    );
   }
 }

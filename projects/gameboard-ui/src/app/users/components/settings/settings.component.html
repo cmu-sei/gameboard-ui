@@ -1,0 +1,62 @@
+<h2 class="mt-4">Settings</h2>
+
+<div class="settings-section">
+    <h3>Browser Notifications</h3>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'unsupported'">
+        <div class="">Your browser doesn't support the Browser Notifications API. Sorry 😔</div>
+    </ng-container>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'allowed'">
+        <div>
+            Browser notifications are <strong class="text-success">enabled</strong>. Use the button below to preview
+            a test notification!
+        </div>
+
+        <button class="btn btn-lg btn-success my-4" (click)="showTestNotification()">Show a test notification</button>
+
+        <p class="fs-09 gray-text">
+            Still not seeing notifications? Some operating systems require you to specifically enable notifications from
+            your browser application in order to see them. Refer to specific vendor-maintained documentation for
+
+            <a href="https://support.apple.com/guide/mac-help/change-notifications-settings-mh40583/mac"
+                rel="noopener noreferer" target="_blank">Macs</a>,
+            <a href="https://support.microsoft.com/en-us/windows/get-notifications-you-want-feeca47f-0baf-5680-16f0-8801db1a8466"
+                rel="noopener noreferer" target="_blank">PCs</a>,
+            <a href="https://support.apple.com/en-us/HT201925" rel="noopener noreferer" target="_blank">iOS devices</a>,
+            and
+            <a href="https://support.google.com/android/answer/9079661?hl=en" rel="noopener noreferer">
+                Android devices
+            </a> for additional assistance.
+        </p>
+    </ng-container>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'denied'">
+        <div class="my-3">
+            Browser notifications are <strong class="text-danger">disabled</strong>. If you'd like to enable them,
+            use your browser's privacy features to grant this site permission to show notifications.
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="(canUseBrowserNotifications$ | async) === 'pending'">
+        <div>
+            Want to enable browser notifications? Use the button below, then click "Allow" at the prompt shown by
+            your browser.
+        </div>
+
+        <button class="btn btn-lg btn-info my-4" (click)="requestNotificationPermission()">
+            Enable browser notifications
+        </button>
+    </ng-container>
+
+    <div class="browser-notifications-settings-form" *ngIf="playAudioOnBrowserNotification !== undefined">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="playAudioOnBrowserNotification"
+                (change)="handlePlayAudioOnBrowserNotificationChange(playAudioOnBrowserNotification)"
+                id="playAudioOnBrowserNotification">
+            <label class="form-check-label" for="playAudioOnBrowserNotification">
+                Play an audio alert when I receive a browser notification
+            </label>
+        </div>
+    </div>
+</div>

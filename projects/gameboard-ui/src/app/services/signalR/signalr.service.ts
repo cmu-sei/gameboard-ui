@@ -71,7 +71,11 @@ export class SignalRService {
     this.logger.logInfo("Disconnected from", this._connection?.baseUrl);
   }
 
-  public async sendMessage<T>(message: string, arg: T) {
+  public sendMessage(message: string) {
+    return this.sendMessageWithArg<null>(message, null);
+  }
+
+  public async sendMessageWithArg<T>(message: string, arg: T) {
     if (!this._connection) {
       this.logger.logError(this.formatForlog(`Can't send message ${message} with parameters ${arg}. The connection has not been created.`));
       return;
@@ -84,7 +88,10 @@ export class SignalRService {
     }
 
     this.logger.logInfo(this.formatForlog(`Sending message "${message}" to connection "${this._connection?.baseUrl} => ${this._connection.connectionId}" with params:`, arg));
-    await this._connection.invoke(message, arg);
+    if (arg)
+      await this._connection.invoke(message, arg);
+    else
+      await this._connection.invoke(message);
     this.logger.logInfo(this.formatForlog(`Message "${message}" sent.`));
   }
 

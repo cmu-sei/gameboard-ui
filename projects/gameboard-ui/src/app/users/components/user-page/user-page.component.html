@@ -2,6 +2,15 @@
     <span class="display-4">{{appName}}</span>
 </div>
 
+<div class="subnav container d-flex justify-content-end">
+    <a class="btn btn-link" [routerLink]="['/', 'user', 'profile']" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Profile</a>
+    <a class="btn btn-link" [routerLink]="['/', 'user', 'certificates']" routerLinkActive="active">Certificates</a>
+    <a class="btn btn-link" [routerLink]="['/', 'user', 'profile', 'history']" routerLinkActive="active">History</a>
+    <a class="btn btn-link" [routerLink]="['/', 'user', 'settings']" routerLinkActive="active"
+        *ngIf="canUseSettings$ | async">Settings</a>
+</div>
+
 <main class="container">
     <router-outlet></router-outlet>
 </main>
