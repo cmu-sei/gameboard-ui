@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { Observable, map } from 'rxjs';
-import { UserRole } from '@/api/user-models';
 
 @Component({
   selector: 'app-user-page',

@@ -1,9 +1,9 @@
+import { Component, OnInit } from '@angular/core';
+import { Observable, first, firstValueFrom } from 'rxjs';
 import { UserService } from '@/api/user.service';
 import { AppNotificationsService, CanUseBrowserNotificationsResult } from '@/services/app-notifications.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ConfigService } from '@/utility/config.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable, first, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -13,7 +13,7 @@ import { Observable, first, firstValueFrom } from 'rxjs';
 export class SettingsComponent implements OnInit {
   protected appName = "Gameboard";
   protected canUseBrowserNotifications$: Observable<CanUseBrowserNotificationsResult>;
-  protected playAudioOnBrowserNotification = false;
+  protected playAudioOnBrowserNotification?: boolean;
 
   constructor(
     config: ConfigService,
