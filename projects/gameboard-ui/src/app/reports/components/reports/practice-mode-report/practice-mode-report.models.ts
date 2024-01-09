@@ -11,6 +11,7 @@ export enum PracticeModeReportGrouping {
 export interface PracticeModeReportOverallStats {
     attemptCount: number;
     challengeCount: number;
+    completionCount: number;
     playerCount: number;
     sponsorCount: number;
 }
