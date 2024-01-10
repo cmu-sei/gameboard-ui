@@ -59,7 +59,7 @@ export class AppNotificationsService implements OnDestroy {
     return "pending";
   }
 
-  public async send(config: { title: string, body: string, appUrl?: string, tag?: string }) {
+  public async send(config: { title: string, body: string, allowRenotify?: boolean, appUrl?: string, tag?: string }) {
     if (this._canShowBrowserNotifications$.value !== "allowed") {
       this.log.logWarning(`Can't send browser notification (${this._canShowBrowserNotifications$.value}) - falling back to toast.`);
       this.toastService.showMessage(`${config.title}: ${config.body}`);
@@ -74,7 +74,7 @@ export class AppNotificationsService implements OnDestroy {
     const notification = new Notification(config.title, {
       body: config.body,
       tag: config.tag,
-      renotify: !!config.tag,
+      renotify: !!config.allowRenotify,
     });
 
     // play audio notification (we only do this with the OS-level notification, because otherwise it's hard to know why the sound happened if you're
