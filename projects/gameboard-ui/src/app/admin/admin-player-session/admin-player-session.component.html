@@ -1,7 +1,14 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
+<app-error-div [errors]="errors"></app-error-div>
+
 <ng-container *ngIf="team$ | async as team; else loading">
+  <div class="timeline-container px-3">
+    <div>Timeline</div>
+    <app-team-event-horizon [teamId]="team.teamId"></app-team-event-horizon>
+  </div>
+
   <div class="form-group">
     <label class="mb-0" for="reason-input">Extend Session</label>
     <div class="input-group">
@@ -14,8 +21,6 @@
     </div>
     <small></small>
   </div>
-
-  <app-error-div [errors]="errors"></app-error-div>
 
   <app-announce [teamId]="team.teamId"></app-announce>
 
