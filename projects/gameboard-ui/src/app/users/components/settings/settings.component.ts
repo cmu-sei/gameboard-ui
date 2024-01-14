@@ -65,6 +65,7 @@ export class SettingsComponent implements OnInit {
       appUrl: "user/settings",
       // we randomize the notification tag here in order to allow most devices to repeat it without it being dismissed.
       // this allows users to preview the notification multiple times with multiple clicks.
+      allowRenotify: true,
       tag: `test-${Math.random()}`
     });
   }
