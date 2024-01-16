@@ -50,7 +50,7 @@ export interface EventHorizonViewOptions {
     min: Date;
     max: Date;
     selectable: false;
-    start: Date,
+    start: Date;
     zoomMax: number;
 }
 
