@@ -8,7 +8,7 @@ import { SignalRHubEventHandler } from './signalr-hub.models';
 
 type SignalRHubEventHandlerCollection = { [eventType: string]: SignalRHubEventHandler<any> };
 
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class SignalRService {
   private readonly AUTO_RECONNECT_INTERVALS = [1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000];
 

@@ -1,26 +1,36 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LogService } from '../log.service';
 import { SignalRService } from './signalr.service';
 import { SupportHubEvent, SupportHubEventType, TicketClosedEvent, TicketCreatedEvent, TicketUpdatedBySupportEvent, TicketUpdatedByUserEvent } from './support-hub.models';
 import { AppNotificationsService } from '../app-notifications.service';
+import { ConfigService } from '@/utility/config.service';
+import { UserService } from '@/api/user.service';
+import { HubConnectionState } from '@microsoft/signalr';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SupportHubService {
-  public hubState$ = this.signalRService.state$;
+  public hubState$: Observable<HubConnectionState>;
+  private _signalRService: SignalRService;
 
   constructor(
+    userService: UserService,
+    private configService: ConfigService,
     private appNotificationsService: AppNotificationsService,
-    private logService: LogService,
-    @Inject(SignalRService) private signalRService: SignalRService) { }
+    private logService: LogService
+  ) {
+    this._signalRService = new SignalRService(configService, logService, userService);
+    this.hubState$ = this._signalRService.state$;
+  }
 
   async disconnect() {
-    await this.signalRService.disconnect();
+    await this._signalRService.disconnect();
   }
 
   // Should _only_ be called once per login by the component which is
   // managing all SignalR connections (GameboardSignalRHubsComponent)
   async connect() {
-    await this.signalRService.connect(
+    await this._signalRService.connect(
       "hub/support",
       [
         { eventType: SupportHubEventType.TicketClosed, handler: this.handleTicketClosed.bind(this) },
@@ -32,7 +42,7 @@ export class SupportHubService {
   }
 
   public async joinStaffGroup() {
-    await this.signalRService.sendMessage("joinStaffGroup");
+    await this._signalRService.sendMessage("joinStaffGroup");
   }
 
   private handleTicketClosed(ev: SupportHubEvent<TicketClosedEvent>) {
