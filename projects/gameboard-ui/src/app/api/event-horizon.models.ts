@@ -44,6 +44,7 @@ export interface EventHorizonGroup {
 }
 
 export interface EventHorizonViewOptions {
+    align: "auto" | "center" | "left" | "right",
     clickToUse: boolean,
     end: Date,
     min: Date;

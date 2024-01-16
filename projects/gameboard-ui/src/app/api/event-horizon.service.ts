@@ -40,7 +40,7 @@ export class EventHorizonService {
     const typedEvent = timelineEvent as unknown as EventHorizonSubmissionScoredEvent;
     return {
       id: typedEvent.id,
-      start: typedEvent.timestamp.toISODate(),
+      start: typedEvent.timestamp.toJSDate(),
       content: `
         # Submission: ${challenge.name} (${typedEvent.submissionScoredEventData.attemptNumber}/${challenge.maxAttempts})
     
@@ -198,6 +198,7 @@ export class EventHorizonService {
         ]
       },
       viewOptions: {
+        align: "left",
         clickToUse: true,
         end: sessionEnd.toJSDate(),
         min: sessionStart.toJSDate(),
