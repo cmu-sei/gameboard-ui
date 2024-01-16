@@ -4,7 +4,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { asyncScheduler, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import { asyncScheduler, firstValueFrom, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
 import { catchError, debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
 
@@ -105,15 +105,23 @@ export class GameboardPageComponent implements OnDestroy {
     ).subscribe();
 
     const launched$ = this.launching$.pipe(
-      switchMap(s => api.launch({
-        playerId: this.ctx.id,
-        specId: s.id,
-        variant: this.variant,
-        userId: usersvc.user$.value!.id
-      })),
-      catchError(err => {
-        this.renderLaunchError(err);
-        return of(null as unknown as Challenge);
+      switchMap(async s => {
+        try {
+          const launchedSpec = await firstValueFrom(
+            api.launch({
+              playerId: this.ctx.id,
+              specId: s.id,
+              variant: this.variant,
+              userId: usersvc.user$.value!.id
+            })
+          );
+
+          return launchedSpec;
+        }
+        catch (err: any) {
+          this.renderLaunchError(err);
+          return s.instance || null as unknown as Challenge;
+        }
       }),
       tap(c => this.deploying = false),
       filter(c => !!c),

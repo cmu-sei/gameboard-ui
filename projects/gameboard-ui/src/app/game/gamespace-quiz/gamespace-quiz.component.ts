@@ -6,7 +6,7 @@ import { fa } from "@/services/font-awesome.service";
 import { AnswerSubmission, BoardSpec, Challenge } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { TimeWindow } from '../../api/player-models';
-import { Observable, Subject, catchError, delay, filter, firstValueFrom, of, switchMap, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, Subscription, catchError, delay, filter, firstValueFrom, of, switchMap, takeUntil, tap } from 'rxjs';
 import { ChallengesService } from '@/api/challenges.service';
 import { NotificationService } from '@/services/notification.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
@@ -43,6 +43,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
 
   private _answersSubmitted$ = new Subject<PendingSubmissionsUpdate>();
   private _updatePendingAnswers$ = new Subject<PendingSubmissionsUpdate>();
+  private _teamHubEventsSubscription?: Subscription;
 
   constructor(
     private api: BoardService,
@@ -120,15 +121,20 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
       this.handleSubmissionsRetrieved(pastSubmissions);
     }
 
-    if (this.spec.instance?.teamId && changes?.spec?.previousValue?.instance?.teamId !== this.spec?.instance?.teamId) {
-      this.teamHub.init(this.spec.instance!.teamId);
 
-      this.unsub.add(
+    // if the teamID changed, managed the team hub
+    if (changes?.spec?.previousValue?.instance?.teamId !== this.spec?.instance?.teamId) {
+      // (manage the team hub subscription separately to avoid orphaning subscriptions when the teamid changes)
+      this._teamHubEventsSubscription?.unsubscribe();
+
+      if (this.spec.instance?.teamId) {
+        this.teamHub.init(this.spec.instance!.teamId);
+
         // updates from the hub (like from the challenge grading server, say)
-        this.teamHub.challengeEvents.subscribe(c => {
+        this._teamHubEventsSubscription = this.teamHub.challengeEvents.subscribe(c => {
           this.handleChallengeUpdated(c.model);
-        }),
-      );
+        });
+      }
     }
   }
 
