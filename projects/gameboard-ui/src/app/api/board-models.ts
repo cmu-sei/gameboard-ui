@@ -255,6 +255,7 @@ export interface ObserveChallenge {
   name: string;
   tag: string;
   teamId: string;
+  teamName: string;
   playerId: string;
   playerName: string;
   duration: number;
