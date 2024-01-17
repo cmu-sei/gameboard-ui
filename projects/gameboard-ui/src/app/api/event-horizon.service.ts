@@ -9,12 +9,20 @@ import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 export class EventHorizonService {
   constructor(private markdownHelpers: MarkdownHelpersService) { }
 
-  async getTeamEventHorizon(teamId: string): Promise<TeamEventHorizonViewModel> {
-    return await firstValueFrom(of(this.buildFakeData(teamId)));
+  async getTeamEventHorizon(teamId: string, eventTypes?: EventHorizonEventType[]): Promise<TeamEventHorizonViewModel> {
+    const fakeData = await firstValueFrom(of(this.buildFakeData(teamId)));
+
+    for (const challenge of fakeData.team.challenges) {
+      if (eventTypes?.length) {
+        challenge.events = challenge.events.filter(e => eventTypes.indexOf(e.type) >= 0);
+      }
+    }
+
+    return fakeData;
   }
 
   getEventTypes(): EventHorizonEventType[] {
-    return [EventHorizonEventType.ChallengeDeployed];
+    return Object.keys(EventHorizonEventType).map(k => k as EventHorizonEventType);
   }
 
   public toDataItem(timelineEvent: EventHorizonEvent, challenge: EventHorizonChallenge): DataItem {

@@ -2,6 +2,14 @@
     <div #timelineContainer></div>
     <hr />
     <div class="controls-container">
-
+        <div class="btn-group mr-2" role="group" aria-label="Event type selection group">
+            <div class="btn-group-toggle" data-toggle="buttons">
+                <label *ngFor="let eventType of allEventTypes" class="btn btn-secondary">
+                    <input type="checkbox" autocomplete="off" (click)="handleEventTypeToggled(eventType)"
+                        [class.active]="eventType | eventTypeSelectionToBoolean:eventTypeSelections"
+                        [checked]="eventType | eventTypeSelectionToBoolean:eventTypeSelections">{{eventType}}
+                </label>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
-import { TeamEventHorizonViewModel } from '@/api/event-horizon.models';
+import { EventHorizonEvent, EventHorizonEventType, TeamEventHorizonViewModel } from '@/api/event-horizon.models';
 import { EventHorizonService } from '@/api/event-horizon.service';
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Timeline, DataItem } from 'vis-timeline/esnext';
 
 @Component({
@@ -8,11 +8,26 @@ import { Timeline, DataItem } from 'vis-timeline/esnext';
   templateUrl: './team-event-horizon.component.html',
   styleUrls: ['./team-event-horizon.component.scss']
 })
-export class TeamEventHorizonComponent implements AfterViewInit {
+export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() teamId = "";
   @ViewChild("timelineContainer") timelineContainer?: ElementRef;
 
+  protected eventTypeSelections: { [key: string]: boolean } = {};
+  protected allEventTypes: EventHorizonEventType[] = [];
+  private timeline?: Timeline;
+  private dataItems: DataItem[] = [];
+
   constructor(private eventHorizonService: EventHorizonService) { }
+
+  ngOnInit() {
+    // load available event types
+    const eventTypes = this.eventHorizonService.getEventTypes();
+    this.allEventTypes = [...eventTypes];
+
+    for (const eventType of eventTypes) {
+      this.eventTypeSelections[eventType] = true;
+    }
+  }
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.teamId)
@@ -23,11 +38,12 @@ export class TeamEventHorizonComponent implements AfterViewInit {
     // Create a Timeline
     // (apparently this just does the thing, which is weird, but whatever)
     const timelineData = await this.eventHorizonService.getTeamEventHorizon(this.teamId);
-    const dataItems = this.buildTimelineDataSet(timelineData);
+    this.dataItems = this.buildTimelineDataSet(timelineData);
 
-    const timeline = new Timeline(
+    this.timeline?.destroy();
+    this.timeline = new Timeline(
       this.timelineContainer.nativeElement,
-      dataItems,
+      this.dataItems,
       timelineData.team.challenges.map(c => ({
         id: c.specId,
         content: c.name
@@ -36,15 +52,31 @@ export class TeamEventHorizonComponent implements AfterViewInit {
     );
   }
 
+  ngOnDestroy(): void {
+    this.timeline?.destroy();
+  }
+
+  protected async handleEventTypeToggled(eventType: EventHorizonEventType) {
+    this.eventTypeSelections[eventType] = !this.eventTypeSelections[eventType];
+    this.load();
+  }
+
   private buildTimelineDataSet(eventHorizon: TeamEventHorizonViewModel) {
     let dataSetEvents: DataItem[] = [];
 
     for (let challenge of eventHorizon.team.challenges) {
       for (let event of challenge.events) {
-        dataSetEvents.push(this.eventHorizonService.toDataItem(event, challenge));
+        if (!this.eventTypeSelections?.length || this.eventTypeSelections[event.type]) {
+          dataSetEvents.push(this.eventHorizonService.toDataItem(event, challenge));
+        }
       }
     }
 
     return dataSetEvents;
+  }
+
+  private async load() {
+
+
   }
 }
