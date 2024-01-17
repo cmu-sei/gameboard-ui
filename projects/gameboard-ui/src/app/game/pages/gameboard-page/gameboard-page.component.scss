@@ -23,15 +23,15 @@
 .mapbox-dot {
   fill: lime;
   stroke: lime;
-  fill-opacity: .6;
+  fill-opacity: 0.6;
   stroke-opacity: 1;
-  stroke-width: .25;
+  stroke-width: 0.25;
 }
 
 .callout {
   position: absolute;
   z-index: 10;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   max-width: 300px;
   max-height: 300px;
 }
@@ -52,5 +52,5 @@
 iframe {
   // aspect-ratio: 16 / 10;
   margin: auto;
-  display: block
+  display: block;
 }

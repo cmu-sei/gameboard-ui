@@ -32,7 +32,8 @@
           <svg viewBox="0 0 100 100">
             <svg:image [attr.href]="ctx?.game?.mapUrl" width="100" height="100" />
             <ng-container *ngFor="let c of ctx?.game?.specs">
-              <a class="mapbox-dot" (mouseenter)="mouseenter($event, c)" (mouseleave)="mouseleave($event, c)">
+              <a class="mapbox-dot cursor-pointer" (mouseenter)="mouseenter($event, c)"
+                (mouseleave)="mouseleave($event, c)">
                 <svg:circle [attr.cx]="c.x*100" [attr.cy]="c.y*100" [attr.r]="c.r*100" [attr.fill]="c.c"
                   (click)="select(c)" [attr.fill]="c.c"></svg:circle>
               </a>
@@ -43,7 +44,7 @@
         <div class="quizbox col m-4 p-4">
 
           <!-- not started, show preview -->
-          <ng-container *ngIf="specs$ | async as spec">
+          <ng-container *ngIf="selected as spec">
             <div *ngIf="!spec.instance!.id" class="text-center mb-4">
               <ng-container *ngIf="ctx.session.isDuring && !deploying">
                 <ng-container *ngIf="this.user$ | async as user">

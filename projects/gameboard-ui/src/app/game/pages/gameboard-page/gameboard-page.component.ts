@@ -34,7 +34,6 @@ export class GameboardPageComponent implements OnDestroy {
   selected!: BoardSpec;
   selecting$ = new Subject<BoardSpec>();
   launching$ = new Subject<BoardSpec>();
-  specs$: Observable<BoardSpec>;
   fetch$: Subscription;
 
   etd$!: Observable<number>;
@@ -104,7 +103,7 @@ export class GameboardPageComponent implements OnDestroy {
       tap(() => this.reselect())
     ).subscribe();
 
-    const launched$ = this.launching$.pipe(
+    this.unsub.add(this.launching$.pipe(
       switchMap(async s => {
         try {
           const launchedSpec = await firstValueFrom(
@@ -126,43 +125,29 @@ export class GameboardPageComponent implements OnDestroy {
       tap(c => this.deploying = false),
       filter(c => !!c),
       map(c => this.syncOne(c))
-    );
+    ).subscribe());
 
-    const selected$ = this.selecting$.pipe(
-      // If s.instance does not exist, fetch; otherwise, preview
-      switchMap(s => !!s.instance && !!s.instance.state
-        ? of(s)
-        : (!!s.instance
-          ? api.retrieve(s.instance.id)
-          : api.preview({ playerId: this.ctx.id, specId: s.id } as NewChallenge)
-        ).pipe(
-          catchError(err => {
-            this.errors.push(err);
-            return of(null as unknown as Challenge);
-          }),
-          filter(c => !!c),
-          map(c => this.syncOne({ ...c, specId: s.id }))
-        )
-      ),
-      // don't persist the "confirming" state if they switch challenges (#178)
-      tap(c => this.startChallengeConfirmButton?.stopConfirming()),
-      tap(s => this.selected = s)
-    );
-
-    // main feed
-    this.specs$ = scheduled(
-      [selected$, launched$],
-      asyncScheduler).pipe(
-        mergeAll(),
-      );
-  }
-
-  validate(b: BoardPlayer): void {
-    if (!b.game) {
-      this.router.navigateByUrl('/');
-    } else {
-      this.ctx = b;
-    }
+    this.unsub.add(
+      this.selecting$.pipe(
+        // If s.instance does not exist, fetch; otherwise, preview
+        switchMap(s => !!s.instance && !!s.instance.state
+          ? of(s)
+          : (!!s.instance
+            ? api.retrieve(s.instance.id)
+            : api.preview({ playerId: this.ctx.id, specId: s.id } as NewChallenge)
+          ).pipe(
+            catchError(err => {
+              this.errors.push(err);
+              return of(null as unknown as Challenge);
+            }),
+            filter(c => !!c),
+            map(c => this.syncOne({ ...c, specId: s.id }))
+          )
+        ),
+        // don't persist the "confirming" state if they switch challenges (#178)
+        tap(c => this.startChallengeConfirmButton?.stopConfirming()),
+        tap(s => this.selected = s)
+      ).subscribe());
   }
 
   ngOnDestroy(): void {
