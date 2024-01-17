@@ -170,7 +170,7 @@ export class SupportService {
           ## Gameboard Ticket: ${ticket.fullKey}
           ### ${ticket.summary}
 
-          **Created for:** _${isTeam ? "Player" : "Team"}:_ ${ticket.player?.approvedName}${gameDescription}${challengeDescription}
+          **Created for:** _${isTeam ? "Player" : "Team"}:_ ${ticket.player?.approvedName || ticket.requester?.approvedName}${gameDescription}${challengeDescription}
           **Status:** ${ticket.status}
           **Assigned to:** ${ticket.assignee?.approvedName || "_unassigned_"}
           ${supportCodeContent}
