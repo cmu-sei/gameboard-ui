@@ -13,6 +13,10 @@ export class EventHorizonService {
     return await firstValueFrom(of(this.buildFakeData(teamId)));
   }
 
+  getEventTypes(): EventHorizonEventType[] {
+    return [EventHorizonEventType.ChallengeDeployed];
+  }
+
   public toDataItem(timelineEvent: EventHorizonEvent, challenge: EventHorizonChallenge): DataItem {
     switch (timelineEvent.type) {
       case EventHorizonEventType.ChallengeDeployed:
@@ -35,8 +39,8 @@ export class EventHorizonService {
       id: timelineEvent.id,
       group: challenge.specId,
       start: timelineEvent.timestamp.toJSDate(),
-      content: `${eventName} :: ${timelineEvent.timestamp.toJSDate()}`,
-      className: className
+      content: `${eventName} :: ${timelineEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`,
+      className: className,
     };
   }
 
@@ -46,13 +50,12 @@ export class EventHorizonService {
     return {
       id: typedEvent.id,
       start: timelineEvent.timestamp.toJSDate(),
-      content: `${challenge.name} -> ${timelineEvent.type} :: ${timelineEvent.timestamp}`,
-      // content: `
-      //   # Challenge completed
+      content: `
+        # Challenge completed :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}
 
-      //   **Submissions:** ${typedEvent.solveCompleteEventData.attemptsUsed}/${challenge.maxAttempts}
-      //   **Total points:** ${typedEvent.solveCompleteEventData.finalScore}
-      // `,
+        **Submissions:** ${typedEvent.solveCompleteEventData.attemptsUsed}/${challenge.maxAttempts}
+        **Total points:** ${typedEvent.solveCompleteEventData.finalScore}
+      `,
       className: "event-type-challenge-complete",
       group: challenge.specId
     };
@@ -63,12 +66,13 @@ export class EventHorizonService {
     return {
       id: typedEvent.id,
       start: typedEvent.timestamp.toJSDate(),
-      content: `${challenge.name} -> ${timelineEvent.type} :: ${timelineEvent.timestamp}`,
-      // content: `
-      //   # Submission: ${challenge.name} (${typedEvent.submissionScoredEventData.attemptNumber}/${challenge.maxAttempts})
+      content: `
+        # Submission :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)} (${typedEvent.submissionScoredEventData.attemptNumber}/${challenge.maxAttempts})
 
-      //   ${this.markdownHelpers.arrayToBulletList(typedEvent.submissionScoredEventData.answers)}
-      // `.trim(),
+        ## Points Awarded: ${typedEvent.submissionScoredEventData.score}
+
+        ${this.markdownHelpers.arrayToBulletList(typedEvent.submissionScoredEventData.answers)}
+      `.trim(),
       className: "event-type-submission-scored",
       group: challenge.specId
     };
@@ -157,7 +161,7 @@ export class EventHorizonService {
               {
                 id: "0c22b40c-eee8-4ae4-b6cd-cb077b30b9c9",
                 type: EventHorizonEventType.SubmissionScored,
-                timestamp: sessionStart.plus({ minutes: 136 }),
+                timestamp: sessionStart.plus({ minutes: 214 }),
                 submissionScoredEventData: {
                   score: 175,
                   attemptNumber: 4,

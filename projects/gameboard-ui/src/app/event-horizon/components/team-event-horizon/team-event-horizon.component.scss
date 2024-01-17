@@ -1,18 +1,26 @@
 ::ng-deep {
   .event-type-challenge-deployed {
-    background-color: #e7eaf6;
+    background-color: #e7eaf6 !important;
   }
 
   .event-type-gamespace {
-    background-color: #a2a8d3;
+    background-color: #a2a8d3 !important;
   }
 
   .event-type-solve-complete {
-    background-color: #38598b;
+    background-color: #38598b !important;
   }
 
   .event-type-submission-scored {
-    background-color: #113f67;
-    color: #e7eaf6;
+    background-color: #113f67 !important;
+    color: #e7eaf6 !important;
+  }
+
+  .vis-panel.vis-left {
+    background-color: #ffffff;
+  }
+
+  .vis-panel.vis-bottom {
+    background-color: #ffffff;
   }
 }
