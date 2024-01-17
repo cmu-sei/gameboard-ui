@@ -1,8 +1,7 @@
 import { TeamEventHorizonViewModel } from '@/api/event-horizon.models';
 import { EventHorizonService } from '@/api/event-horizon.service';
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { DataSet } from 'vis-data';
-import { Timeline, DataItem, DataSetDataItem } from 'vis-timeline/esnext';
+import { Timeline, DataItem } from 'vis-timeline/esnext';
 
 @Component({
   selector: 'app-team-event-horizon',
@@ -25,11 +24,12 @@ export class TeamEventHorizonComponent implements AfterViewInit {
     // (apparently this just does the thing, which is weird, but whatever)
     const timelineData = await this.eventHorizonService.getTeamEventHorizon(this.teamId);
     const dataItems = this.buildTimelineDataSet(timelineData);
+
     const timeline = new Timeline(
       this.timelineContainer.nativeElement,
       dataItems,
       timelineData.team.challenges.map(c => ({
-        id: c.id,
+        id: c.specId,
         content: c.name
       })),
       timelineData.viewOptions
@@ -40,14 +40,9 @@ export class TeamEventHorizonComponent implements AfterViewInit {
     let dataSetEvents: DataItem[] = [];
 
     for (let challenge of eventHorizon.team.challenges) {
-      dataSetEvents = [...dataSetEvents, ...challenge.events.map(ev => ({
-        id: ev.id,
-        content: `${challenge.name} -> ${ev.type} :: ${ev.timestamp}`,
-        start: ev.timestamp.toISO(),
-        title: `Title ${challenge.name}`,
-        // type: "point",
-        group: challenge.id
-      }))];
+      for (let event of challenge.events) {
+        dataSetEvents.push(this.eventHorizonService.toDataItem(event, challenge));
+      }
     }
 
     return dataSetEvents;

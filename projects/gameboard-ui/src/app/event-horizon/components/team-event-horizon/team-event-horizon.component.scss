@@ -1,15 +1,18 @@
-.event-type {
-  background: #e7eaf6;
-}
+::ng-deep {
+  .event-type-challenge-deployed {
+    background-color: #e7eaf6;
+  }
 
-.second-color {
-  background: #a2a8d3;
-}
+  .event-type-gamespace {
+    background-color: #a2a8d3;
+  }
 
-.third-color {
-  background: #38598b;
-}
+  .event-type-solve-complete {
+    background-color: #38598b;
+  }
 
-.fourth-color {
-  background: #113f67;
+  .event-type-submission-scored {
+    background-color: #113f67;
+    color: #e7eaf6;
+  }
 }

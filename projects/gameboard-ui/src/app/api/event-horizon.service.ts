@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom, of } from 'rxjs';
 import { DateTime } from 'luxon';
-import { EventHorizonChallenge, EventHorizonEvent, EventHorizonEventType, EventHorizonSubmissionScoredEvent, TeamEventHorizonViewModel } from './event-horizon.models';
+import { EventHorizonChallenge, EventHorizonEvent, EventHorizonEventType, EventHorizonSolveCompleteEvent, EventHorizonSubmissionScoredEvent, TeamEventHorizonViewModel } from './event-horizon.models';
 import { DataItem } from 'vis-timeline';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 
@@ -16,11 +16,13 @@ export class EventHorizonService {
   public toDataItem(timelineEvent: EventHorizonEvent, challenge: EventHorizonChallenge): DataItem {
     switch (timelineEvent.type) {
       case EventHorizonEventType.ChallengeDeployed:
-        return this.toGenericDataItem(timelineEvent, challenge, "Deployed");
+        return this.toGenericDataItem(timelineEvent, challenge, "Deployed", "event-type-challenge-deployed");
       case EventHorizonEventType.GamespaceStarted:
-        return this.toGenericDataItem(timelineEvent, challenge, "Gamespace Started");
+        return this.toGenericDataItem(timelineEvent, challenge, "Gamespace Started", "event-type-gamespace");
       case EventHorizonEventType.GamespaceStopped:
-        return this.toGenericDataItem(timelineEvent, challenge, "Gamespace Stopped");
+        return this.toGenericDataItem(timelineEvent, challenge, "Gamespace Stopped", "event-type-gamespace");
+      case EventHorizonEventType.SolveComplete:
+        return this.toSolveCompleteDataItem(timelineEvent, challenge);
       case EventHorizonEventType.SubmissionScored: {
         return this.toSubmissionScoredDataItem(timelineEvent, challenge);
       }
@@ -28,11 +30,31 @@ export class EventHorizonService {
     throw new Error("Timeline event type not templated.");
   }
 
-  private toGenericDataItem(timelineEvent: EventHorizonEvent, challenge: EventHorizonChallenge, eventName: string): DataItem {
+  private toGenericDataItem(timelineEvent: EventHorizonEvent, challenge: EventHorizonChallenge, eventName: string, className: string): DataItem {
     return {
       id: timelineEvent.id,
+      group: challenge.specId,
       start: timelineEvent.timestamp.toJSDate(),
-      content: `${eventName} :: ${timelineEvent.timestamp.toISO()}`
+      content: `${eventName} :: ${timelineEvent.timestamp.toJSDate()}`,
+      className: className
+    };
+  }
+
+  private toSolveCompleteDataItem(timelineEvent: EventHorizonEvent, challenge: EventHorizonChallenge): DataItem {
+    const typedEvent = timelineEvent as unknown as EventHorizonSolveCompleteEvent;
+
+    return {
+      id: typedEvent.id,
+      start: timelineEvent.timestamp.toJSDate(),
+      content: `${challenge.name} -> ${timelineEvent.type} :: ${timelineEvent.timestamp}`,
+      // content: `
+      //   # Challenge completed
+
+      //   **Submissions:** ${typedEvent.solveCompleteEventData.attemptsUsed}/${challenge.maxAttempts}
+      //   **Total points:** ${typedEvent.solveCompleteEventData.finalScore}
+      // `,
+      className: "event-type-challenge-complete",
+      group: challenge.specId
     };
   }
 
@@ -41,12 +63,13 @@ export class EventHorizonService {
     return {
       id: typedEvent.id,
       start: typedEvent.timestamp.toJSDate(),
-      content: `
-        # Submission: ${challenge.name} (${typedEvent.submissionScoredEventData.attemptNumber}/${challenge.maxAttempts})
-    
-        ${this.markdownHelpers.arrayToBulletList(typedEvent.submissionScoredEventData.answers)}
-      `.trim(),
-      type: "point",
+      content: `${challenge.name} -> ${timelineEvent.type} :: ${timelineEvent.timestamp}`,
+      // content: `
+      //   # Submission: ${challenge.name} (${typedEvent.submissionScoredEventData.attemptNumber}/${challenge.maxAttempts})
+
+      //   ${this.markdownHelpers.arrayToBulletList(typedEvent.submissionScoredEventData.answers)}
+      // `.trim(),
+      className: "event-type-submission-scored",
       group: challenge.specId
     };
   }
@@ -133,7 +156,7 @@ export class EventHorizonService {
               },
               {
                 id: "0c22b40c-eee8-4ae4-b6cd-cb077b30b9c9",
-                type: EventHorizonEventType.SolveComplete,
+                type: EventHorizonEventType.SubmissionScored,
                 timestamp: sessionStart.plus({ minutes: 136 }),
                 submissionScoredEventData: {
                   score: 175,
