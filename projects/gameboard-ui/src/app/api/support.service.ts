@@ -104,6 +104,10 @@ export class SupportService {
     return this.http.get<Blob>(`${fileUrl}`, { params: { responseType: 'blob' } }).pipe();
   }
 
+  public getSupportCode(challengeId: string, tag: string) {
+    return `${challengeId.slice(0, 8)} ${tag}`;
+  }
+
   public seen(key: number): void {
     const ts = new Date();
     const f = this.seenMap.find(s => s.key === key);
@@ -126,14 +130,17 @@ export class SupportService {
 
         // resolve last ticket activity
         const lastTicketActivity = ticket.activity.length > 0 ? ticket.activity[0] : null;
-        let activitySection = `*none yet*`;
+        let activitySection = `_none yet_`;
 
         if (lastTicketActivity) {
           const parsedDate = new Date(Date.parse(lastTicketActivity.timestamp));
-          activitySection = `${lastTicketActivity.message}
+          const attachmentsContent = this.getAttachmentsMarkdown(uriBase, lastTicketActivity.attachmentFiles);
+
+          activitySection = `${lastTicketActivity.message || "_(no comment)_"}
 
           -- ${lastTicketActivity.user.approvedName} (${parsedDate.toDateString()} @ ${parsedDate.toLocaleTimeString()})
-          **Attachments:** ${this.getAttachmentsMarkdown(uriBase, lastTicketActivity.attachmentFiles)}`;
+
+          ${attachmentsContent ? `**Attachments:** ${attachmentsContent}` : ""}`;
         }
 
         // attachments?
@@ -142,14 +149,31 @@ export class SupportService {
           attachmentSection = `**Attachments:** ${this.getAttachmentsMarkdown(uriBase, ticket.attachmentFiles)}`;
         }
 
+        // associated game/challenge?
+        let gameDescription = "";
+        let challengeDescription = "";
+        let supportCodeContent = "";
+
+        if (ticket.challenge) {
+          const adminChallengeLink = `${uriBase}admin/support?search=${ticket.challengeId}`;
+          gameDescription = ` / _Game:_ [${ticket.challenge?.gameName}](${uriBase}game/${ticket.challenge?.gameId})`;
+          challengeDescription = ` / _Challenge:_ [${ticket.challenge?.name}](adminChallengeLink)`;
+
+          if (ticket.challenge.tag) {
+            const supportCode = this.getSupportCode(ticket.challenge.id, ticket.challenge.tag);
+            supportCodeContent = `**Support Code:** [${supportCode}](${adminChallengeLink})`;
+          }
+        }
+
         // templatize and return
         return `
           ## Gameboard Ticket: ${ticket.fullKey}
           ### ${ticket.summary}
 
-          **Created for:** _${isTeam ? "Player" : "Team"}:_ ${ticket.player?.approvedName} / _Game:_ [${ticket.challenge?.gameName}](${uriBase}game/${ticket.challenge?.gameId}) / _Challenge:_ [${ticket.challenge?.name}](${uriBase}admin/support?search=${ticket.challengeId})
+          **Created for:** _${isTeam ? "Player" : "Team"}:_ ${ticket.player?.approvedName}${gameDescription}${challengeDescription}
           **Status:** ${ticket.status}
           **Assigned to:** ${ticket.assignee?.approvedName || "_unassigned_"}
+          ${supportCodeContent}
           ${attachmentSection}
 
           #### Description
@@ -159,7 +183,7 @@ export class SupportService {
           ${activitySection}
 
           ***
-          View this on [Gameboard](${uriBase}support/tickets/${ticket.key})
+          View this ticket on [${this.config.appName}](${uriBase}support/tickets/${ticket.key})
         `.trim()
           .split("\n")
           .map(line => line.trim())
