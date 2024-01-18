@@ -1,5 +1,7 @@
-import { EventHorizonEventType, TeamEventHorizonViewModel } from '@/api/event-horizon.models';
+import { EventHorizonDataItem, EventHorizonEventType, TeamEventHorizonViewModel } from '@/api/event-horizon.models';
 import { EventHorizonService } from '@/api/event-horizon.service';
+import { EventHorizonRenderingService } from '@/services/event-horizon-rendering.service';
+import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Timeline, DataItem } from 'vis-timeline/esnext';
@@ -18,10 +20,12 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
   private timeline?: Timeline;
 
   private timelineViewModel?: TeamEventHorizonViewModel;
-  private visibleDataItems: DataItem[] = [];
+  private visibleDataItems: EventHorizonDataItem[] = [];
 
   constructor(
     private eventHorizonService: EventHorizonService,
+    private eventHorizonRenderingService: EventHorizonRenderingService,
+    private logService: LogService,
     private modalService: ModalConfirmService) { }
 
   ngOnInit() {
@@ -45,15 +49,18 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     this.timeline = new Timeline(
       this.timelineContainer.nativeElement,
       this.visibleDataItems,
-      this.timelineViewModel.team.challenges.map(c => ({
-        id: c.specId,
+      this.timelineViewModel.game.challengeSpecs.map(c => ({
+        id: c.id,
         content: c.name
       })),
       this.timelineViewModel.viewOptions
     );
 
-    this.timeline.on("select", ev => {
-      this.timeline?.setSelection([]);
+    this.timeline.on("select", async ev => {
+      if (ev.items.length) {
+        await this.handleEventSelected(ev.items[0]);
+        this.timeline?.setSelection([]);
+      }
     });
   }
 
@@ -62,6 +69,15 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   protected async handleEventSelected(eventId: string) {
+    if (!this.timelineViewModel) {
+      this.logService.logError("Couldn't handle event selection - timeline not loaded.");
+      return;
+    }
+    console.log("select event", this.eventHorizonService.getEventId(eventId, this.timelineViewModel!));
+    console.log("select data item", this.visibleDataItems.find(i => i.id == eventId));
+
+    const timelineEvent = this.eventHorizonService.getEventId(eventId, this.timelineViewModel);
+    const thing = this.eventHorizonRenderingService.toModalContent()
 
   }
 
@@ -84,10 +100,15 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
 
     this.visibleDataItems = [];
 
+    const selectedTypes = Object
+      .keys(EventHorizonEventType)
+      .filter(k => this.selectedEventTypes.some(t => t == k))
+      .map(t => t.toLowerCase());
+
     for (let challenge of eventHorizon.team.challenges) {
       for (let event of challenge.events) {
-        if (!this.selectedEventTypes?.length || this.selectedEventTypes.indexOf(event.type) >= 0) {
-          this.visibleDataItems.push(this.eventHorizonService.toDataItem(event, challenge));
+        if (!this.selectedEventTypes?.length || selectedTypes.indexOf(event.type.toLowerCase()) >= 0) {
+          this.visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, challenge));
         }
       }
     }

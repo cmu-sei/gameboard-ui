@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { DataItem } from "vis-timeline";
 
 export enum EventHorizonEventType {
     ChallengeDeployed = "challengeDeployed",
@@ -9,13 +10,13 @@ export enum EventHorizonEventType {
     SubmissionRejected = "submissionRejected",
 }
 
-export interface EventHorizonEvent {
+export interface EventHorizonGenericEvent {
     id: string;
     type: EventHorizonEventType;
     timestamp: DateTime;
 }
 
-export interface EventHorizonSubmissionScoredEvent extends EventHorizonEvent {
+export interface EventHorizonSubmissionScoredEvent extends EventHorizonGenericEvent {
     submissionScoredEventData: {
         score: number;
         attemptNumber: number;
@@ -23,15 +24,15 @@ export interface EventHorizonSubmissionScoredEvent extends EventHorizonEvent {
     }
 }
 
+export type EventHorizonEvent = EventHorizonGenericEvent | EventHorizonSubmissionScoredEvent | EventHorizonSolveCompleteEvent;
+
 export interface EventHorizonChallenge {
     id: string;
     specId: string;
     name: string;
-    maxAttempts: number;
-    events: (EventHorizonEvent | EventHorizonSubmissionScoredEvent | EventHorizonSolveCompleteEvent)[]
 }
 
-export interface EventHorizonSolveCompleteEvent extends EventHorizonEvent {
+export interface EventHorizonSolveCompleteEvent extends EventHorizonGenericEvent {
     solveCompleteEventData: {
         attemptsUsed: number;
         finalScore: number;
@@ -61,7 +62,8 @@ export interface TeamEventHorizonViewModel {
         challengeSpecs: {
             id: string;
             name: string;
-            maxPossibleScore: number
+            maxAttempts: number;
+            maxPossibleScore: number;
         }[]
     };
     team: {
@@ -71,7 +73,11 @@ export interface TeamEventHorizonViewModel {
             start: DateTime;
             end: DateTime;
         },
-        challenges: EventHorizonChallenge[];
+        events: EventHorizonEvent[]
     };
     viewOptions: EventHorizonViewOptions
+}
+
+export interface EventHorizonDataItem extends DataItem {
+    eventData: EventHorizonGenericEvent | null;
 }
