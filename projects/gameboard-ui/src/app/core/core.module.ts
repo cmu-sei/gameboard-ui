@@ -29,6 +29,7 @@ import { markedOptionsFactory } from './config/marked.config';
 
 // internal components/pipes/directives
 import { ApiUrlPipe } from './pipes/api-url.pipe';
+import { ArrayContainsPipe } from './pipes/array-contains.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
 import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
@@ -95,6 +96,7 @@ import { CamelspacePipe } from './pipes/camelspace.pipe';
 const PUBLIC_DECLARATIONS = [
   GbProgressBarComponent,
   ApiUrlPipe,
+  ArrayContainsPipe,
   AssetPathPipe,
   CamelspacePipe,
   ChallengeResultColorPipe,

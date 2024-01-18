@@ -1,19 +1,19 @@
 ::ng-deep {
   .event-type-challenge-deployed {
-    background-color: #e7eaf6 !important;
+    background-color: #e7eaf6;
   }
 
   .event-type-gamespace {
-    background-color: #a2a8d3 !important;
+    background-color: #a2a8d3;
   }
 
   .event-type-solve-complete {
-    background-color: #38598b !important;
+    background-color: #38598b;
   }
 
   .event-type-submission-scored {
-    background-color: #113f67 !important;
-    color: #e7eaf6 !important;
+    background-color: #113f67;
+    color: #e7eaf6;
   }
 
   .vis-panel.vis-left {
@@ -22,5 +22,25 @@
 
   .vis-panel.vis-bottom {
     background-color: #ffffff;
+  }
+
+  .vis-item {
+    .vis-item-content {
+      text-align: left !important;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    p {
+      margin: 4px 0 4px 0;
+    }
   }
 }

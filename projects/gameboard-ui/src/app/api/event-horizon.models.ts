@@ -45,11 +45,11 @@ export interface EventHorizonGroup {
 
 export interface EventHorizonViewOptions {
     align: "auto" | "center" | "left" | "right",
-    clickToUse: boolean,
+    clickToUse?: boolean,
     end: Date,
     min: Date;
     max: Date;
-    selectable: false;
+    selectable: boolean;
     start: Date;
     zoomMax: number;
 }

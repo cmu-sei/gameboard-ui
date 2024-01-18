@@ -1,5 +1,6 @@
-import { EventHorizonEvent, EventHorizonEventType, TeamEventHorizonViewModel } from '@/api/event-horizon.models';
+import { EventHorizonEventType, TeamEventHorizonViewModel } from '@/api/event-horizon.models';
 import { EventHorizonService } from '@/api/event-horizon.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Timeline, DataItem } from 'vis-timeline/esnext';
 
@@ -12,21 +13,22 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
   @Input() teamId = "";
   @ViewChild("timelineContainer") timelineContainer?: ElementRef;
 
-  protected eventTypeSelections: { [key: string]: boolean } = {};
+  protected selectedEventTypes: EventHorizonEventType[] = [];
   protected allEventTypes: EventHorizonEventType[] = [];
   private timeline?: Timeline;
-  private dataItems: DataItem[] = [];
 
-  constructor(private eventHorizonService: EventHorizonService) { }
+  private timelineViewModel?: TeamEventHorizonViewModel;
+  private visibleDataItems: DataItem[] = [];
+
+  constructor(
+    private eventHorizonService: EventHorizonService,
+    private modalService: ModalConfirmService) { }
 
   ngOnInit() {
     // load available event types
     const eventTypes = this.eventHorizonService.getEventTypes();
     this.allEventTypes = [...eventTypes];
-
-    for (const eventType of eventTypes) {
-      this.eventTypeSelections[eventType] = true;
-    }
+    this.selectedEventTypes = [...eventTypes];
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -37,46 +39,59 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
 
     // Create a Timeline
     // (apparently this just does the thing, which is weird, but whatever)
-    const timelineData = await this.eventHorizonService.getTeamEventHorizon(this.teamId);
-    this.dataItems = this.buildTimelineDataSet(timelineData);
+    this.timelineViewModel = await this.eventHorizonService.getTeamEventHorizon(this.teamId);
+    this.visibleDataItems = this.buildTimelineDataSet(this.timelineViewModel);
 
-    this.timeline?.destroy();
     this.timeline = new Timeline(
       this.timelineContainer.nativeElement,
-      this.dataItems,
-      timelineData.team.challenges.map(c => ({
+      this.visibleDataItems,
+      this.timelineViewModel.team.challenges.map(c => ({
         id: c.specId,
         content: c.name
       })),
-      timelineData.viewOptions
+      this.timelineViewModel.viewOptions
     );
+
+    this.timeline.on("select", ev => {
+      this.timeline?.setSelection([]);
+    });
   }
 
   ngOnDestroy(): void {
     this.timeline?.destroy();
   }
 
-  protected async handleEventTypeToggled(eventType: EventHorizonEventType) {
-    this.eventTypeSelections[eventType] = !this.eventTypeSelections[eventType];
-    this.load();
+  protected async handleEventSelected(eventId: string) {
+
   }
 
-  private buildTimelineDataSet(eventHorizon: TeamEventHorizonViewModel) {
-    let dataSetEvents: DataItem[] = [];
+  protected async handleEventTypeToggled(eventType: EventHorizonEventType) {
+    if (this.selectedEventTypes.some(t => t === eventType)) {
+      this.selectedEventTypes = [...this.selectedEventTypes.filter(t => t === eventType)];
+    }
+    else {
+      this.selectedEventTypes.push(eventType);
+    }
+
+    this.buildTimelineDataSet(this.timelineViewModel);
+  }
+
+  private buildTimelineDataSet(eventHorizon?: TeamEventHorizonViewModel) {
+    if (!eventHorizon) {
+      this.visibleDataItems = [];
+      return this.visibleDataItems;
+    }
+
+    this.visibleDataItems = [];
 
     for (let challenge of eventHorizon.team.challenges) {
       for (let event of challenge.events) {
-        if (!this.eventTypeSelections?.length || this.eventTypeSelections[event.type]) {
-          dataSetEvents.push(this.eventHorizonService.toDataItem(event, challenge));
+        if (!this.selectedEventTypes?.length || this.selectedEventTypes.indexOf(event.type) >= 0) {
+          this.visibleDataItems.push(this.eventHorizonService.toDataItem(event, challenge));
         }
       }
     }
 
-    return dataSetEvents;
-  }
-
-  private async load() {
-
-
+    return this.visibleDataItems;
   }
 }

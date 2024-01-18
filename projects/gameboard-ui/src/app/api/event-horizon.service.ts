@@ -4,10 +4,13 @@ import { DateTime } from 'luxon';
 import { EventHorizonChallenge, EventHorizonEvent, EventHorizonEventType, EventHorizonSolveCompleteEvent, EventHorizonSubmissionScoredEvent, TeamEventHorizonViewModel } from './event-horizon.models';
 import { DataItem } from 'vis-timeline';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
+import { MarkdownService } from 'ngx-markdown';
 
 @Injectable({ providedIn: 'root' })
 export class EventHorizonService {
-  constructor(private markdownHelpers: MarkdownHelpersService) { }
+  constructor(
+    private markdownService: MarkdownService,
+    private markdownHelpers: MarkdownHelpersService) { }
 
   async getTeamEventHorizon(teamId: string, eventTypes?: EventHorizonEventType[]): Promise<TeamEventHorizonViewModel> {
     const fakeData = await firstValueFrom(of(this.buildFakeData(teamId)));
@@ -58,12 +61,12 @@ export class EventHorizonService {
     return {
       id: typedEvent.id,
       start: timelineEvent.timestamp.toJSDate(),
-      content: `
+      content: this.markdownService.parse(`
         # Challenge completed :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}
 
         **Submissions:** ${typedEvent.solveCompleteEventData.attemptsUsed}/${challenge.maxAttempts}
         **Total points:** ${typedEvent.solveCompleteEventData.finalScore}
-      `,
+      `).trim(),
       className: "event-type-challenge-complete",
       group: challenge.specId
     };
@@ -74,13 +77,13 @@ export class EventHorizonService {
     return {
       id: typedEvent.id,
       start: typedEvent.timestamp.toJSDate(),
-      content: `
+      content: this.markdownService.parse(`
         # Submission :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)} (${typedEvent.submissionScoredEventData.attemptNumber}/${challenge.maxAttempts})
 
         ## Points Awarded: ${typedEvent.submissionScoredEventData.score}
 
         ${this.markdownHelpers.arrayToBulletList(typedEvent.submissionScoredEventData.answers)}
-      `.trim(),
+      `).trim(),
       className: "event-type-submission-scored",
       group: challenge.specId
     };
@@ -234,11 +237,10 @@ export class EventHorizonService {
       },
       viewOptions: {
         align: "left",
-        clickToUse: true,
         end: sessionEnd.toJSDate(),
         min: sessionStart.toJSDate(),
         max: sessionEnd.toJSDate(),
-        selectable: false,
+        selectable: true,
         start: sessionStart.toJSDate(),
         zoomMax: 1000 * 60 * 60 * 4
       }

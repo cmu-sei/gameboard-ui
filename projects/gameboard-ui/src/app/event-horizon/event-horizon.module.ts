@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TeamEventHorizonComponent } from './components/team-event-horizon/team-event-horizon.component';
-import { EventTypeSelectionToBooleanPipe } from './pipes/event-type-selection-to-boolean.pipe';
+import { CoreModule } from '@/core/core.module';
 
 const PUBLIC_DECLARATIONS = [
   TeamEventHorizonComponent
@@ -10,10 +10,10 @@ const PUBLIC_DECLARATIONS = [
 @NgModule({
   declarations: [
     ...PUBLIC_DECLARATIONS,
-    EventTypeSelectionToBooleanPipe
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    CoreModule,
   ],
   exports: [
     ...PUBLIC_DECLARATIONS

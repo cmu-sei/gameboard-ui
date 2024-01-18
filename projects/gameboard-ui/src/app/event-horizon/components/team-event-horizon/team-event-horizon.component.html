@@ -6,8 +6,8 @@
             <div class="btn-group-toggle" data-toggle="buttons">
                 <label *ngFor="let eventType of allEventTypes" class="btn btn-secondary">
                     <input type="checkbox" autocomplete="off" (click)="handleEventTypeToggled(eventType)"
-                        [class.active]="eventType | eventTypeSelectionToBoolean:eventTypeSelections"
-                        [checked]="eventType | eventTypeSelectionToBoolean:eventTypeSelections">{{eventType}}
+                        [class.active]="eventType | arrayContains:selectedEventTypes"
+                        [checked]="eventType | arrayContains:selectedEventTypes">{{eventType}}
                 </label>
             </div>
         </div>
