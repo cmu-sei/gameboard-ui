@@ -24,4 +24,5 @@ export interface ModalConfirmConfig {
     hideCancel?: boolean;
     modalClasses?: string[];
     renderBodyAsMarkdown?: boolean;
+    subtitle?: string;
 }

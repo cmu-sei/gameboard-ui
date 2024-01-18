@@ -7,7 +7,7 @@
                 <label *ngFor="let eventType of allEventTypes" class="btn btn-secondary">
                     <input type="checkbox" autocomplete="off" (click)="handleEventTypeToggled(eventType)"
                         [class.active]="eventType | arrayContains:selectedEventTypes"
-                        [checked]="eventType | arrayContains:selectedEventTypes">{{eventType}}
+                        [checked]="eventType | arrayContains:selectedEventTypes">{{eventType | eventTypeToFriendlyName}}
                 </label>
             </div>
         </div>

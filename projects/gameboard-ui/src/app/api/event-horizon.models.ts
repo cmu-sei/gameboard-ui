@@ -1,17 +1,16 @@
 import { DateTime } from "luxon";
 import { DataItem } from "vis-timeline";
 
-export enum EventHorizonEventType {
-    ChallengeDeployed = "challengeDeployed",
-    GamespaceStarted = "gamespaceStarted",
-    GamespaceStopped = "gamespaceStopped",
-    SolveComplete = "solveComplete",
-    SubmissionScored = "submissionScored",
-    SubmissionRejected = "submissionRejected",
-}
+export type EventHorizonEventType = "challengeDeployed" |
+    "gamespaceStarted" |
+    "gamespaceStopped" |
+    "solveComplete" |
+    "submissionRejected" |
+    "submissionScored"
 
 export interface EventHorizonGenericEvent {
     id: string;
+    challengeId: string;
     type: EventHorizonEventType;
     timestamp: DateTime;
 }
@@ -30,6 +29,18 @@ export interface EventHorizonChallenge {
     id: string;
     specId: string;
     name: string;
+}
+
+export interface EventHorizonTeamChallenge {
+    id: string;
+    specId: string;
+}
+
+export interface EventHorizonChallengeSpec {
+    id: string;
+    name: string;
+    maxAttempts: number;
+    maxPossibleScore: number;
 }
 
 export interface EventHorizonSolveCompleteEvent extends EventHorizonGenericEvent {
@@ -59,12 +70,7 @@ export interface TeamEventHorizonViewModel {
     game: {
         id: string;
         name: string;
-        challengeSpecs: {
-            id: string;
-            name: string;
-            maxAttempts: number;
-            maxPossibleScore: number;
-        }[]
+        challengeSpecs: EventHorizonChallengeSpec[]
     };
     team: {
         id: string;
@@ -73,6 +79,7 @@ export interface TeamEventHorizonViewModel {
             start: DateTime;
             end: DateTime;
         },
+        challenges: EventHorizonTeamChallenge[],
         events: EventHorizonEvent[]
     };
     viewOptions: EventHorizonViewOptions

@@ -1,4 +1,4 @@
-import { EventHorizonChallenge, EventHorizonDataItem, EventHorizonGenericEvent, EventHorizonEventType, EventHorizonSolveCompleteEvent, EventHorizonSubmissionScoredEvent } from '@/api/event-horizon.models';
+import { EventHorizonChallenge, EventHorizonDataItem, EventHorizonGenericEvent, EventHorizonEventType, EventHorizonSolveCompleteEvent, EventHorizonSubmissionScoredEvent, EventHorizonChallengeSpec } from '@/api/event-horizon.models';
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 import { MarkdownService } from 'ngx-markdown';
@@ -8,46 +8,75 @@ import { MarkdownHelpersService } from './markdown-helpers.service';
 export class EventHorizonRenderingService {
   constructor(
     private markdownHelpers: MarkdownHelpersService,
-    private markdownService: MarkdownService) {
+    private markdownService: MarkdownService) { }
 
-  }
-
-  public toDataItem(timelineEvent: EventHorizonGenericEvent, challenge: EventHorizonChallenge): EventHorizonDataItem {
+  public toDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     switch (timelineEvent.type) {
-      case EventHorizonEventType.ChallengeDeployed:
-        return this.toGenericDataItem(timelineEvent, challenge, "Deployed", "event-type-challenge-deployed");
-      case EventHorizonEventType.GamespaceStarted:
-        return this.toGenericDataItem(timelineEvent, challenge, "Gamespace Started", "event-type-gamespace");
-      case EventHorizonEventType.GamespaceStopped:
-        return this.toGenericDataItem(timelineEvent, challenge, "Gamespace Stopped", "event-type-gamespace");
-      case EventHorizonEventType.SolveComplete:
-        return this.toSolveCompleteDataItem(timelineEvent, challenge);
-      case EventHorizonEventType.SubmissionScored: {
-        return this.toSubmissionScoredDataItem(timelineEvent, challenge);
+      case "challengeDeployed":
+        return this.toGenericDataItem(timelineEvent, challengeSpec, "Deployed", "event-type-challenge-deployed");
+      case "gamespaceStarted":
+        return this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace Started", "event-type-gamespace");
+      case "gamespaceStopped":
+        return this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace Stopped", "event-type-gamespace");
+      case "solveComplete":
+        return this.toSolveCompleteDataItem(timelineEvent, challengeSpec);
+      case "submissionScored": {
+        return this.toSubmissionScoredDataItem(timelineEvent, challengeSpec);
       }
     }
     throw new Error("Timeline event type not templated.");
   }
 
-  public toModalContent(timelineEvent: EventHorizonGenericEvent, challenge: EventHorizonChallenge): string {
+  public toFriendlyName(eventType: EventHorizonEventType): string {
+    switch (eventType) {
+      case "challengeDeployed":
+        return "Challenge Deployed";
+      case "gamespaceStarted":
+        return "Gamespace Started";
+      case "gamespaceStopped":
+        return "Gamespace Stopped";
+      case "solveComplete":
+        return "Challenge Completed";
+      case "submissionRejected":
+        return "Submission Rejected (Session Expired)";
+      case "submissionScored":
+        return "Submission";
+      default:
+        throw new Error(`Couldn't find a friendly name for event type "${eventType}".`);
+    }
+  }
+
+  public toModalContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): string {
     switch (timelineEvent.type) {
-      case EventHorizonEventType.SolveComplete:
-        return this.toSolveCompleteModalContent(timelineEvent as EventHorizonSolveCompleteEvent, challenge);
+      case "solveComplete":
+        return this.toSolveCompleteModalContent(timelineEvent as EventHorizonSolveCompleteEvent, challengeSpec);
+      case "submissionScored":
+        return this.toSubmissionScoredModalContent(timelineEvent as EventHorizonSubmissionScoredEvent, challengeSpec);
     }
 
     return "";
   }
 
-  public toSolveCompleteModalContent(timelineEvent: EventHorizonSolveCompleteEvent, challenge: EventHorizonChallenge) {
-    return `
-      
+  private toSubmissionScoredModalContent(timelineEvent: EventHorizonSubmissionScoredEvent, challengeSpec: EventHorizonChallengeSpec) {
+    return `**Attempt:** ${timelineEvent.submissionScoredEventData.attemptNumber}/${challengeSpec.maxAttempts}
+
+**Points for this attempt:** ${timelineEvent.submissionScoredEventData.score}/${challengeSpec.maxPossibleScore}
+
+**Submitted Answers:** ${this.markdownHelpers.arrayToBulletList(timelineEvent.submissionScoredEventData.answers)}
+`.trim();
+  }
+
+  private toSolveCompleteModalContent(timelineEvent: EventHorizonSolveCompleteEvent, challengeSpec: EventHorizonChallengeSpec) {
+    return `**Attempts Used:** ${timelineEvent.solveCompleteEventData.attemptsUsed}/${challengeSpec.maxAttempts}
+
+**Final Score:** ${timelineEvent.solveCompleteEventData.finalScore}/${challengeSpec.maxPossibleScore}
     `.trim();
   }
 
-  private toGenericDataItem(timelineEvent: EventHorizonGenericEvent, challenge: EventHorizonChallenge, eventName: string, className: string): EventHorizonDataItem {
+  private toGenericDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, eventName: string, className: string): EventHorizonDataItem {
     return {
       id: timelineEvent.id,
-      group: challenge.specId,
+      group: challengeSpec.id,
       start: timelineEvent.timestamp.toJSDate(),
       content: `${eventName} :: ${timelineEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`,
       className: className,
@@ -55,38 +84,27 @@ export class EventHorizonRenderingService {
     };
   }
 
-  private toSolveCompleteDataItem(timelineEvent: EventHorizonGenericEvent, challenge: EventHorizonChallenge): EventHorizonDataItem {
+  private toSolveCompleteDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as unknown as EventHorizonSolveCompleteEvent;
 
     return {
       id: typedEvent.id,
       start: timelineEvent.timestamp.toJSDate(),
-      content: this.markdownService.parse(`
-        # Challenge completed :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}
-
-        **Submissions:** ${typedEvent.solveCompleteEventData.attemptsUsed}/${challenge.maxAttempts}
-        **Total points:** ${typedEvent.solveCompleteEventData.finalScore}
-      `).trim(),
+      content: this.markdownService.parse(`Challenge Completed :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`),
       className: "event-type-challenge-complete",
-      group: challenge.specId,
+      group: challengeSpec.id,
       eventData: typedEvent
     };
   }
 
-  private toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challenge: EventHorizonChallenge): EventHorizonDataItem {
+  private toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as unknown as EventHorizonSubmissionScoredEvent;
     return {
       id: typedEvent.id,
       start: typedEvent.timestamp.toJSDate(),
-      content: this.markdownService.parse(`
-        # Submission :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)} (${typedEvent.submissionScoredEventData.attemptNumber}/${challenge.maxAttempts})
-
-        ## Points Awarded: ${typedEvent.submissionScoredEventData.score}
-
-        ${this.markdownHelpers.arrayToBulletList(typedEvent.submissionScoredEventData.answers)}
-      `).trim(),
+      content: this.markdownService.parse(`Submission :: ${typedEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)} (${typedEvent.submissionScoredEventData.attemptNumber}/${challengeSpec.maxAttempts})`),
       className: "event-type-submission-scored",
-      group: challenge.specId,
+      group: challengeSpec.id,
       eventData: typedEvent
     };
   }

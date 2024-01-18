@@ -4,6 +4,7 @@ import { EventHorizonRenderingService } from '@/services/event-horizon-rendering
 import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DateTime } from 'luxon';
 import { Timeline, DataItem } from 'vis-timeline/esnext';
 
 @Component({
@@ -73,12 +74,17 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
       this.logService.logError("Couldn't handle event selection - timeline not loaded.");
       return;
     }
-    console.log("select event", this.eventHorizonService.getEventId(eventId, this.timelineViewModel!));
-    console.log("select data item", this.visibleDataItems.find(i => i.id == eventId));
 
     const timelineEvent = this.eventHorizonService.getEventId(eventId, this.timelineViewModel);
-    const thing = this.eventHorizonRenderingService.toModalContent()
+    const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, timelineEvent.id);
 
+    this.modalService.openConfirm({
+      title: `${spec.name}: ${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}`,
+      subtitle: `${timelineEvent.timestamp.toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS)}`,
+      bodyContent: this.eventHorizonRenderingService.toModalContent(timelineEvent, spec),
+      renderBodyAsMarkdown: true,
+      hideCancel: true
+    });
   }
 
   protected async handleEventTypeToggled(eventType: EventHorizonEventType) {
@@ -89,27 +95,22 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
       this.selectedEventTypes.push(eventType);
     }
 
+    console.log("selected event types", this.selectedEventTypes);
     this.buildTimelineDataSet(this.timelineViewModel);
   }
 
   private buildTimelineDataSet(eventHorizon?: TeamEventHorizonViewModel) {
-    if (!eventHorizon) {
+    if (!eventHorizon || !this.timelineViewModel) {
       this.visibleDataItems = [];
       return this.visibleDataItems;
     }
 
     this.visibleDataItems = [];
 
-    const selectedTypes = Object
-      .keys(EventHorizonEventType)
-      .filter(k => this.selectedEventTypes.some(t => t == k))
-      .map(t => t.toLowerCase());
-
-    for (let challenge of eventHorizon.team.challenges) {
-      for (let event of challenge.events) {
-        if (!this.selectedEventTypes?.length || selectedTypes.indexOf(event.type.toLowerCase()) >= 0) {
-          this.visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, challenge));
-        }
+    for (const event of eventHorizon.team.events) {
+      if (!this.selectedEventTypes?.length || this.selectedEventTypes.indexOf(event.type) >= 0) {
+        const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, event.id);
+        this.visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, spec));
       }
     }
 
