@@ -4,10 +4,12 @@
     <div class="controls-container">
         <div class="btn-group mr-2" role="group" aria-label="Event type selection group">
             <div class="btn-group-toggle" data-toggle="buttons">
-                <label *ngFor="let eventType of allEventTypes" class="btn btn-secondary">
+                <label *ngFor="let eventType of allEventTypes" class="btn btn-secondary mr-2 mb-2"
+                    [class.btn-secondary]="eventType | arrayContains:selectedEventTypes:true"
+                    [class.btn-info]="eventType | arrayContains:selectedEventTypes">
                     <input type="checkbox" autocomplete="off" (click)="handleEventTypeToggled(eventType)"
-                        [class.active]="eventType | arrayContains:selectedEventTypes"
-                        [checked]="eventType | arrayContains:selectedEventTypes">{{eventType | eventTypeToFriendlyName}}
+                        [checked]="eventType | arrayContains:selectedEventTypes">
+                    {{eventType | eventTypeToFriendlyName}}
                 </label>
             </div>
         </div>

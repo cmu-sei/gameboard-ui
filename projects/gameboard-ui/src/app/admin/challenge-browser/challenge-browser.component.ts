@@ -60,6 +60,7 @@ export class ChallengeBrowserComponent {
           this.select(result[0]);
       })
     );
+
     this.archived$ = merge(
       this.refresh$,
       interval(60000).pipe(

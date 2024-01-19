@@ -31,7 +31,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
 
   ngOnInit() {
     // load available event types
-    const eventTypes = this.eventHorizonService.getEventTypes();
+    const eventTypes = this.eventHorizonService.getEventTypes().filter(t => t !== "submissionRejected");
     this.allEventTypes = [...eventTypes];
     this.selectedEventTypes = [...eventTypes];
   }
@@ -45,7 +45,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     // Create a Timeline
     // (apparently this just does the thing, which is weird, but whatever)
     this.timelineViewModel = await this.eventHorizonService.getTeamEventHorizon(this.teamId);
-    this.visibleDataItems = this.buildTimelineDataSet(this.timelineViewModel);
+    this.buildTimelineDataSet(this.timelineViewModel);
 
     this.timeline = new Timeline(
       this.timelineContainer.nativeElement,
@@ -89,31 +89,31 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
 
   protected async handleEventTypeToggled(eventType: EventHorizonEventType) {
     if (this.selectedEventTypes.some(t => t === eventType)) {
-      this.selectedEventTypes = [...this.selectedEventTypes.filter(t => t === eventType)];
+      this.selectedEventTypes = [...this.selectedEventTypes.filter(t => t !== eventType)];
     }
     else {
-      this.selectedEventTypes.push(eventType);
+      // need to actually create a new array rather than .push so change detection catches it
+      this.selectedEventTypes = [...this.selectedEventTypes, eventType];
     }
 
-    console.log("selected event types", this.selectedEventTypes);
     this.buildTimelineDataSet(this.timelineViewModel);
   }
 
   private buildTimelineDataSet(eventHorizon?: TeamEventHorizonViewModel) {
     if (!eventHorizon || !this.timelineViewModel) {
-      this.visibleDataItems = [];
-      return this.visibleDataItems;
+      this.timeline?.setItems([]);
+      return;
     }
 
-    this.visibleDataItems = [];
+    const visibleDataItems: EventHorizonDataItem[] = [];
 
     for (const event of eventHorizon.team.events) {
       if (!this.selectedEventTypes?.length || this.selectedEventTypes.indexOf(event.type) >= 0) {
         const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, event.id);
-        this.visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, spec));
+        visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, spec));
       }
     }
 
-    return this.visibleDataItems;
+    this.timeline?.setItems(visibleDataItems);
   }
 }

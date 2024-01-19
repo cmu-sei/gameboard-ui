@@ -56,7 +56,6 @@ export class GameboardPageComponent implements OnDestroy {
     title: Title,
     usersvc: UserService,
     private browserService: BrowserService,
-    private router: Router,
     private api: BoardService,
     private config: ConfigService,
     private hub: NotificationService,
