@@ -52,6 +52,7 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
+import { SiteOverviewStatsComponent } from './components/site-overview-stats/site-overview-stats.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { AdminSystemNotificationsComponent } from '@/system-notifications/compon
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
+    SiteOverviewStatsComponent,
   ],
   imports: [
     CommonModule,
