@@ -12,6 +12,7 @@ import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
+
 @Component({
   selector: 'app-challenge-observer',
   templateUrl: './challenge-observer.component.html',
@@ -45,6 +46,7 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
   faSortAlphaDown = faSortAlphaDown;
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
+
   constructor(
     route: ActivatedRoute,
     private api: BoardService,

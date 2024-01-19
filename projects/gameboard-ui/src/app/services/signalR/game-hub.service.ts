@@ -1,9 +1,12 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRService } from './signalr.service';
 import { GameStartState, GameHubEvent, GameHubEventType, PlayerJoinedEvent } from './game-hub.models';
 import { LogService } from '@/services/log.service';
-import { BehaviorSubject, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { SyncStartGameState, SyncStartGameStartedState } from '@/game/game.models';
+import { ConfigService } from '@/utility/config.service';
+import { UserService } from '@/api/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class GameHubService {
@@ -13,6 +16,7 @@ export class GameHubService {
   private _externalGameLaunchProgressChanged$ = new Subject<GameStartState>();
   private _gameJoined$ = new Subject<PlayerJoinedEvent>();
   private _joinedGameIds$ = new BehaviorSubject<string[]>([]);
+  private _signalRService: SignalRService;
   private _syncStartGameStateChanged$ = new Subject<SyncStartGameState>();
   private _syncStartGameStarted$ = new Subject<SyncStartGameStartedState>();
   private _syncStartGameStarting$ = new Subject<SyncStartGameState>();
@@ -22,18 +26,22 @@ export class GameHubService {
   public externalGameLaunchEnded$ = this._externalGameLaunchEnded$.asObservable();
   public externalGameLaunchFailure$ = this._externalGameLaunchFailure$.asObservable();
   public gameJoined$ = this._gameJoined$.asObservable();
-  public hubState$ = this.signalRService.state$;
+  public hubState$: Observable<HubConnectionState>;
   public joinedGameIds$ = this._joinedGameIds$.asObservable();
   public syncStartGameStateChanged$ = this._syncStartGameStateChanged$.asObservable();
   public syncStartGameStarted$ = this._syncStartGameStarted$.asObservable();
   public syncStartGameStarting$ = this._syncStartGameStarting$.asObservable();
 
   constructor(
-    private logService: LogService,
-    @Inject(SignalRService) private signalRService: SignalRService) { }
+    configService: ConfigService,
+    userService: UserService,
+    private logService: LogService) {
+    this._signalRService = new SignalRService(configService, logService, userService);
+    this.hubState$ = this._signalRService.state$;
+  }
 
   async disconnect() {
-    await this.signalRService.disconnect();
+    await this._signalRService.disconnect();
   }
 
   async joinGame(gameId: string) {
@@ -47,7 +55,7 @@ export class GameHubService {
     }
 
     this.logService.logInfo(`Game hub is joining game ${gameId}...`);
-    this.signalRService.sendMessageWithArg("JoinGame", { gameId });
+    this._signalRService.sendMessageWithArg("JoinGame", { gameId });
     this._joinedGameIds$.next([...this._joinedGameIds$.value, gameId]);
   }
 
@@ -57,22 +65,22 @@ export class GameHubService {
       return;
     }
 
-    await this.signalRService.sendMessageWithArg("LeaveGame", { gameId });
+    await this._signalRService.sendMessageWithArg("LeaveGame", { gameId });
     this._joinedGameIds$.next(this._joinedGameIds$.value.filter(g => g !== gameId));
   }
 
   isConnected() {
-    return this.signalRService.isConnnected();
+    return this._signalRService.isConnnected();
   }
 
   isConnectedToGame = (gameId: string) => {
-    return this.signalRService.isConnnected() && this._joinedGameIds$.value.some(gId => gId === gameId);
+    return this._signalRService.isConnnected() && this._joinedGameIds$.value.some(gId => gId === gameId);
   };
 
   // This should _only_ be called once per login by the 
   // component which is managing all SignalR connections (GameboardSignalRHubsComponent)
   public async connect() {
-    await this.signalRService.connect(
+    await this._signalRService.connect(
       "hub/games",
       [
         { eventType: GameHubEventType.PlayerJoined, handler: this.handleGameJoined.bind(this) },

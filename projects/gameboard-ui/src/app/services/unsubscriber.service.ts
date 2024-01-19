@@ -1,9 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { LogService } from './log.service';
 
 @Injectable()
 export class UnsubscriberService implements OnDestroy {
   private _subscriptions: Subscription[] = [];
+
+  constructor(private logService: LogService) { }
 
   add(...subs: Subscription[]) {
     for (const sub of subs)
@@ -19,6 +22,9 @@ export class UnsubscriberService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribeAll();
+    if (this._subscriptions.length) {
+      this.unsubscribeAll();
+      this.logService.logInfo(`Unsubscriber tossed ${this._subscriptions.length} subs.`);
+    }
   }
 }
