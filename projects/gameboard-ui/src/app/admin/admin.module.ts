@@ -53,6 +53,7 @@ import { UserRegistrarComponent } from './user-registrar/user-registrar.componen
 import { UserReportComponent } from './user-report/user-report.component';
 import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 import { SiteOverviewStatsComponent } from './components/site-overview-stats/site-overview-stats.component';
+import { AdminOverviewComponent } from './components/admin-overview/admin-overview.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { SiteOverviewStatsComponent } from './components/site-overview-stats/sit
     UserRegistrarComponent,
     UserReportComponent,
     SiteOverviewStatsComponent,
+    AdminOverviewComponent,
   ],
   imports: [
     CommonModule,
@@ -119,6 +121,7 @@ import { SiteOverviewStatsComponent } from './components/site-overview-stats/sit
           { path: 'registrar/:id', component: PlayerRegistrarComponent },
           { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
+          { path: 'overview', component: AdminOverviewComponent, title: "Admin | Overview" },
           { path: 'report', component: ReportPageComponent, title: "Admin | Reports" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
