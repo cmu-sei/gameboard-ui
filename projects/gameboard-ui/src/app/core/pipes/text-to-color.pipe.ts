@@ -9,7 +9,7 @@ export class TextToColorPipe implements PipeTransform {
   transform(value: string): any {
     // inspired by StackOverflow
     // todo: map to different hue range if desired
-    const rgb = this.textToRgb.get(value);
+    const rgb = this.textToRgb.get((value || "").toLowerCase());
     const hex = this.textToRgb.rgbToHex(rgb);
 
     // calculate brightness of background color rgb
