@@ -6,6 +6,7 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../../api/user.service';
 import { firstValueFrom } from 'rxjs';
 import { LogService } from '@/services/log.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-announce',
@@ -14,13 +15,18 @@ import { LogService } from '@/services/log.service';
 })
 export class AnnounceComponent {
   @Input() teamId = '';
+  @Input() placeholderText = "We'd like to inform everyone playing that...";
+
   message = '';
   faSend = faPaperPlane;
   errors: any[] = [];
 
+  protected isLoading = false;
+
   constructor(
     private api: UserService,
-    private logService: LogService) { }
+    private logService: LogService,
+    private toastService: ToastService) { }
 
   async announce(): Promise<void> {
     if (!this.message) {
@@ -34,6 +40,7 @@ export class AnnounceComponent {
       }));
 
       this.message = "";
+      this.toastService.showMessage("Announcement sent.");
     }
     catch (err: any) {
       this.logService.logError("Error sending announcement", err);

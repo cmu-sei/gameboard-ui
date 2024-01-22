@@ -2,9 +2,11 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <ng-container *ngIf="team$ | async as team; else loading">
+  <app-error-div [errors]="errors"></app-error-div>
+
   <div class="form-group">
     <label class="mb-0" for="reason-input">Extend Session</label>
-    <div class="input-group">
+    <div *ngIf="!isExtending; else loading" class="input-group">
       <input id="reason-input" class="form-control" type="text" [(ngModel)]="team.sessionEnd">
       <div class="input-group-append">
         <button class="btn btn-outline-info" (click)="extend(team)">
@@ -15,9 +17,7 @@
     <small></small>
   </div>
 
-  <app-error-div [errors]="errors"></app-error-div>
-
-  <app-announce [teamId]="team.teamId"></app-announce>
+  <app-announce [teamId]="team.teamId" placeholderText="Your message (sends only to this player/team)"></app-announce>
 
   <div class="other-tools-container mb-2">
     <h4 class="mb-2">Other tools</h4>
