@@ -2,12 +2,11 @@ import { GameService } from '@/api/game.service';
 import { PlayerMode } from '@/api/player-models';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, firstValueFrom, forkJoin, map } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
 import { PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { GameCardContext } from '@/api/game-models';
-import { TeamService } from '@/api/team.service';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
@@ -30,6 +29,7 @@ export class PracticeService {
   }
 
   async isEnabled(): Promise<boolean> {
+    // lazily load the value for practice mode
     if (this._isEnabled$.value === undefined) {
       await this.updateIsEnabled();
     }
@@ -46,13 +46,19 @@ export class PracticeService {
   }
 
   private async updateIsEnabled() {
-    const isEnabled = await firstValueFrom(this.gameService.list({}).pipe(map(games => games.some(g => g.playerMode == PlayerMode.practice))));
-    this.logService.logInfo("Practice service queried the API for the presence of practice games: ", isEnabled);
-    this._isEnabled$.next(isEnabled);
+    const hasPracticeGames = await firstValueFrom(this.gameService.list({}).pipe(map(games => games.some(g => g.playerMode == PlayerMode.practice))));
+    this.logService.logInfo("Practice service queried the API for the presence of practice games: ", hasPracticeGames);
+
+    const settings = await firstValueFrom(this.getSettings());
+    this.logService.logInfo("Practice service checked for max concurrency limit", settings.maxConcurrentPracticeSessions);
+
+    this._isEnabled$.next(hasPracticeGames && settings.maxConcurrentPracticeSessions !== 0);
   }
 
   public async updateSettings(settings: PracticeModeSettings) {
     this.logService.logInfo("Updating settings", settings);
-    return await firstValueFrom(this.http.put(this.apiUrl.build("/practice/settings"), settings));
+    const result = await firstValueFrom(this.http.put(this.apiUrl.build("/practice/settings"), settings));
+    await this.updateIsEnabled();
+    return result;
   }
 }
