@@ -13,14 +13,6 @@ export interface SessionHaver {
 export class GameSessionService {
   constructor(private nowService: NowService) { }
 
-  public canUnenroll(player: Player) {
-    return this.canUnenrollSession(player.session);
-  }
-
-  public canUnenrollSession(session?: TimeWindow) {
-    return session ? session.isBefore : true;
-  }
-
   public addSession(sessionHaver: SessionHaver, sessionBegin: Date, sessionEnd: Date) {
     let finalSession: TimeWindow | undefined;
 
@@ -46,6 +38,14 @@ export class GameSessionService {
     sessionHaver.session = finalSession;
     sessionHaver.sessionBegin = finalSession?.beginDate;
     sessionHaver.sessionEnd = finalSession?.endDate;
+  }
+
+  public canUnenroll(player: Player) {
+    return this.canUnenrollSession(player.session);
+  }
+
+  public canUnenrollSession(session?: TimeWindow) {
+    return session ? session.isBefore : true;
   }
 
   public getCumulativeTime(session: TimeWindow) {

@@ -1,14 +1,16 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<div class="form-group">
+<app-error-div [errors]="errors"></app-error-div>
+
+<div class="form-group" *ngIf="!isLoading; else loading">
   <label class="mb-0" for="input-announce">Announcement</label>
   <div class="input-group">
-    <textarea name="input-announce" id="input-announce" rows="7"
-      placeholder="We'd like to inform everyone playing that..." class="form-control" [(ngModel)]="message">
+    <textarea name="input-announce" id="input-announce" rows="7" [placeholder]="placeholderText" class="form-control"
+      [(ngModel)]="message">
     </textarea>
     <div class="input-group-append">
-      <button class="btn btn-outline-info" (click)="announce()">
+      <button class="btn btn-outline-info" (click)="announce()" [disabled]="!message">
         <fa-icon [icon]="faSend"></fa-icon>
         <span>Announce</span>
       </button>
@@ -16,4 +18,6 @@
   </div>
 </div>
 
-<app-error-div [errors]="errors"></app-error-div>
+<ng-template #loading>
+  <app-spinner></app-spinner>
+</ng-template>
