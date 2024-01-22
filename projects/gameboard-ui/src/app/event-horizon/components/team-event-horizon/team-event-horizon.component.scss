@@ -1,27 +1,23 @@
 ::ng-deep {
-  .event-type-challenge-deployed {
+  .eh-event-clickable {
+    cursor: pointer;
+  }
+
+  .eh-event-type-challenge-deployed {
     background-color: #e7eaf6;
   }
 
-  .event-type-gamespace {
+  .eh-event-type-gamespace {
     background-color: #a2a8d3;
   }
 
-  .event-type-solve-complete {
+  .eh-event-type-solve-complete {
     background-color: #38598b;
   }
 
-  .event-type-submission-scored {
+  .eh-event-type-submission-scored {
     background-color: #113f67;
     color: #e7eaf6;
-  }
-
-  .vis-panel.vis-left {
-    background-color: #ffffff;
-  }
-
-  .vis-panel.vis-bottom {
-    background-color: #ffffff;
   }
 
   .vis-item {

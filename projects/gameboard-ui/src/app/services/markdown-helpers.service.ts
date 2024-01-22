@@ -9,6 +9,13 @@ export class MarkdownHelpersService {
     return items.map(i => `\n - ${i}`).join('');
   }
 
+  arrayToOrderedList(items: string[]): string {
+    if (!items?.length)
+      return "";
+
+    return items.map((item, index) => `${index + 1}. ${item.trim()}`).join("\n\n");
+  }
+
   getMarkdownPlaceholderHelp(header?: string): string {
     const paragraphs: string[] = [];
 
@@ -18,9 +25,5 @@ export class MarkdownHelpersService {
     paragraphs.push("This is a markdown field. You can surround text with _underscores_ to make it italic or double **asterisks** to make it bold. You can also [link to content using this syntax](https://google.com).");
 
     return paragraphs.join("\n\n").trim();
-  }
-
-  toHtml(markdownString: string) {
-
   }
 }

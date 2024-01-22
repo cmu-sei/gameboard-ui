@@ -45,6 +45,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     // Create a Timeline
     // (apparently this just does the thing, which is weird, but whatever)
     this.timelineViewModel = await this.eventHorizonService.getTeamEventHorizon(this.teamId);
+    const timelineViewOptions = this.eventHorizonRenderingService.getViewOptions(this.timelineViewModel);
     this.buildTimelineDataSet(this.timelineViewModel);
 
     this.timeline = new Timeline(
@@ -52,9 +53,9 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
       this.visibleDataItems,
       this.timelineViewModel.game.challengeSpecs.map(c => ({
         id: c.id,
-        content: c.name
+        content: c.name,
       })),
-      this.timelineViewModel.viewOptions
+      timelineViewOptions
     );
 
     this.timeline.on("select", async ev => {
@@ -77,6 +78,10 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
 
     const timelineEvent = this.eventHorizonService.getEventId(eventId, this.timelineViewModel);
     const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, timelineEvent.id);
+    const bodyContent = this.eventHorizonRenderingService.toModalContent(timelineEvent, spec);
+
+    if (!bodyContent)
+      return;
 
     this.modalService.openConfirm({
       title: `${spec.name}: ${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}`,

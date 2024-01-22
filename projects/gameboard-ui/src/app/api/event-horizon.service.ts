@@ -203,15 +203,6 @@ export class EventHorizonService {
             }
           }
         ]
-      },
-      viewOptions: {
-        align: "left",
-        end: sessionEnd.toJSDate(),
-        min: sessionStart.toJSDate(),
-        max: sessionEnd.toJSDate(),
-        selectable: true,
-        start: sessionStart.toJSDate(),
-        zoomMax: 1000 * 60 * 60 * 4
       }
     };
   }

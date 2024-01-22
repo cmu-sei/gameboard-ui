@@ -59,6 +59,7 @@ export interface EventHorizonViewOptions {
     align: "auto" | "center" | "left" | "right",
     clickToUse?: boolean,
     end: Date,
+    groupTemplate: (groupData: any, element: any) => string;
     min: Date;
     max: Date;
     selectable: boolean;
@@ -82,9 +83,9 @@ export interface TeamEventHorizonViewModel {
         challenges: EventHorizonTeamChallenge[],
         events: EventHorizonEvent[]
     };
-    viewOptions: EventHorizonViewOptions
 }
 
 export interface EventHorizonDataItem extends DataItem {
     eventData: EventHorizonGenericEvent | null;
+    isClickable: boolean;
 }
