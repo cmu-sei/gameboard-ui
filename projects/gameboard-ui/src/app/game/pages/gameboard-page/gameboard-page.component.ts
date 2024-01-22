@@ -3,9 +3,9 @@
 
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { asyncScheduler, firstValueFrom, merge, Observable, of, scheduled, Subject, Subscription, timer } from 'rxjs';
-import { catchError, debounceTime, filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { firstValueFrom, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { catchError, debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
 
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '@/api/board-models';

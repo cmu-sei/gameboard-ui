@@ -11,6 +11,7 @@ import { CoreModule } from '../core/core.module';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { UtilityModule } from '../utility/utility.module';
 
+import { AdminOverviewComponent } from './components/admin-overview/admin-overview.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AnnounceComponent } from './announce/announce.component';
 import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
@@ -42,6 +43,7 @@ import { PracticeComponent } from './practice/practice.component';
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
 import { PrereqsComponent } from './prereqs/prereqs.component';
 import { ReportPageComponent } from './report-page/report-page.component';
+import { SiteOverviewStatsComponent } from './components/site-overview-stats/site-overview-stats.component';
 import { SpecBrowserComponent } from './spec-browser/spec-browser.component';
 import { SponsorBrowserComponent } from './sponsor-browser/sponsor-browser.component';
 import { SupportReportLegacyComponent } from './support-report-legacy/support-report-legacy.component';
@@ -53,6 +55,7 @@ import { UserRegistrarComponent } from './user-registrar/user-registrar.componen
 import { UserReportComponent } from './user-report/user-report.component';
 import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
+
 
 @NgModule({
   declarations: [
@@ -95,6 +98,8 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
     UserApiKeysComponent,
     UserRegistrarComponent,
     UserReportComponent,
+    SiteOverviewStatsComponent,
+    AdminOverviewComponent,
   ],
   imports: [
     CommonModule,
@@ -119,6 +124,7 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
           { path: 'registrar/:id', component: PlayerRegistrarComponent },
           { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
+          { path: 'overview', component: AdminOverviewComponent, title: "Admin | Overview" },
           { path: 'report', component: ReportPageComponent, title: "Admin | Reports" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
