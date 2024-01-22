@@ -1,3 +1,5 @@
+@import "../../../../scss/variables";
+
 ::ng-deep {
   .eh-event-clickable {
     cursor: pointer;
@@ -45,5 +47,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    color: $foreground;
+  }
+
+  .vis-time-axis .vis-text {
+    color: $foreground !important;
   }
 }

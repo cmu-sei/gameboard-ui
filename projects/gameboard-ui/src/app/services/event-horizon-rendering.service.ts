@@ -77,7 +77,7 @@ export class EventHorizonRenderingService {
 
 **Points after this attempt:** ${timelineEvent.submissionScoredEventData.score}/${challengeSpec.maxPossibleScore}
 
-**Submitted Answers:** \n\n ${this.markdownHelpers.arrayToOrderedList(timelineEvent.submissionScoredEventData.answers)}
+**Submitted Answers** \n\n ${this.markdownHelpers.arrayToOrderedList(timelineEvent.submissionScoredEventData.answers)}
 `.trim();
   }
 
