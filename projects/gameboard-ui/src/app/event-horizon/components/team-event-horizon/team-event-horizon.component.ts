@@ -5,7 +5,7 @@ import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DateTime } from 'luxon';
-import { Timeline } from 'vis-timeline/esnext';
+import { DataGroup, DataGroupCollectionType, Timeline } from 'vis-timeline/esnext';
 
 @Component({
   selector: 'app-team-event-horizon',
@@ -21,7 +21,6 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
   private timeline?: Timeline;
 
   private timelineViewModel?: TeamEventHorizonViewModel;
-  private visibleDataItems: EventHorizonDataItem[] = [];
 
   constructor(
     private eventHorizonService: EventHorizonService,
@@ -46,21 +45,21 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     // (apparently this just does the thing, which is weird, but whatever)
     this.timelineViewModel = await this.eventHorizonService.getTeamEventHorizon(this.teamId);
     const timelineViewOptions = this.eventHorizonRenderingService.getViewOptions(this.timelineViewModel);
-    this.buildTimelineDataSet(this.timelineViewModel);
+    const visibleDataItems = this.buildTimelineDataSet(this.timelineViewModel);
 
     this.timeline = new Timeline(
       this.timelineContainer.nativeElement,
-      this.visibleDataItems,
+      visibleDataItems,
       this.timelineViewModel.game.challengeSpecs.map(c => ({
         id: c.id,
-        content: c.name,
+        content: c.name
       })),
       timelineViewOptions
     );
 
-    this.timeline.on("select", async ev => {
+    this.timeline.on("select", ev => {
       if (ev.items.length) {
-        await this.handleEventSelected(ev.items[0]);
+        this.handleEventSelected(ev.items[0]);
         this.timeline?.setSelection([]);
       }
     });
@@ -70,7 +69,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     this.timeline?.destroy();
   }
 
-  protected async handleEventSelected(eventId: string) {
+  protected handleEventSelected(eventId: string) {
     if (!this.timelineViewModel) {
       this.logService.logError("Couldn't handle event selection - timeline not loaded.");
       return;
@@ -104,21 +103,22 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     this.buildTimelineDataSet(this.timelineViewModel);
   }
 
-  private buildTimelineDataSet(eventHorizon?: TeamEventHorizonViewModel) {
+  private buildTimelineDataSet(eventHorizon?: TeamEventHorizonViewModel): EventHorizonDataItem[] {
     if (!eventHorizon || !this.timelineViewModel) {
       this.timeline?.setItems([]);
-      return;
+      return [];
     }
 
     const visibleDataItems: EventHorizonDataItem[] = [];
 
     for (const event of eventHorizon.team.events) {
-      if (!this.selectedEventTypes?.length || this.selectedEventTypes.indexOf(event.type) >= 0) {
+      if (this.selectedEventTypes.indexOf(event.type) >= 0) {
         const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, event.id);
         visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, spec));
       }
     }
 
     this.timeline?.setItems(visibleDataItems);
+    return visibleDataItems;
   }
 }

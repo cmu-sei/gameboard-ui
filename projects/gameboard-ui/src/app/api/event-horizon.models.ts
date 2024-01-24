@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { DataItem } from "vis-timeline";
+import { DataItem, TimelineOptions } from "vis-timeline";
 
 export type EventHorizonEventType = "challengeStarted" |
     "gamespaceOnOff" |
@@ -60,17 +60,7 @@ export interface EventHorizonGroup {
     name: string;
 }
 
-export interface EventHorizonViewOptions {
-    align: "auto" | "center" | "left" | "right",
-    clickToUse?: boolean,
-    end: Date,
-    groupTemplate: (groupData: any, element: any) => string;
-    min: Date;
-    max: Date;
-    selectable: boolean;
-    start: Date;
-    zoomMax: number;
-}
+export interface EventHorizonViewOptions extends TimelineOptions { }
 
 export interface TeamEventHorizonViewModel {
     game: {

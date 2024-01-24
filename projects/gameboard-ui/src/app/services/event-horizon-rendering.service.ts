@@ -19,9 +19,9 @@ export class EventHorizonRenderingService {
       min: eventHorizonVm.team.session.start.toJSDate(),
       max: sessionEnd.toJSDate(),
       selectable: true,
+      stackSubgroups: false,
       start: eventHorizonVm.team.session.start.toJSDate(),
       zoomMax: durationMs.shiftTo("milliseconds").milliseconds
-      // zoomMax: 1000 * 60 * 15
     };
   }
 
@@ -58,12 +58,16 @@ export class EventHorizonRenderingService {
   }
 
   public toGroupTemplate(groupData: DataGroup): string {
+    if (!groupData)
+      return "";
+
     return `<div class="eh-group">${groupData.content}</div>`;
   }
 
   public toModalContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): string {
     if (!timelineEvent)
       return "";
+
     switch (timelineEvent.type) {
       case "solveComplete":
         return this.toSolveCompleteModalContent(timelineEvent as EventHorizonSolveCompleteEvent, challengeSpec);
@@ -94,6 +98,7 @@ export class EventHorizonRenderingService {
     return {
       id: timelineEvent.id,
       group: challengeSpec.id,
+      // subgroup: timelineEvent.type,
       start: timelineEvent.timestamp.toJSDate(),
       content: `${eventName} :: ${timelineEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
@@ -127,7 +132,6 @@ export class EventHorizonRenderingService {
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Submission ${typedEvent.eventData.attemptNumber}/${challengeSpec.maxAttempts} (${typedEvent.eventData.score} points)`, "eh-event-type-submission-scored", true);
 
     baseItem.eventData = typedEvent;
-
     return baseItem;
   }
 }
