@@ -17,6 +17,7 @@ import { ClipboardService } from '../../utility/services/clipboard.service';
 import { ManageManualChallengeBonusesModalComponent } from '../components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { TeamService } from '@/api/team.service';
 import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
+import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
   selector: 'app-player-registrar',
@@ -29,7 +30,7 @@ export class PlayerRegistrarComponent {
   ctx$: Observable<{ game: Game, futures: Game[], players: Player[] }>;
   source: Player[] = [];
   selected: Player[] = [];
-  viewed: Player | undefined = undefined;
+  viewed?: Player;
   viewChange$ = new BehaviorSubject<Player | undefined>(this.viewed);
   search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time', mode: 'competition' };
   filter = '';
@@ -63,6 +64,7 @@ export class PlayerRegistrarComponent {
     private api: PlayerService,
     private clipboard: ClipboardService,
     private teamService: TeamService,
+    private title: AppTitleService,
     private unityService: UnityService
   ) {
 
@@ -71,14 +73,15 @@ export class PlayerRegistrarComponent {
       filter(p => !!p.id),
       switchMap(p => gameapi.retrieve(p.id)),
       tap(r => this.game = r),
-      tap(r => this.teamView = r.allowTeam ? 'collapse' : '')
+      tap(r => this.teamView = r.allowTeam ? 'collapse' : ''),
+      tap(r => this.title.set(`Players: ${r.name}`))
     );
 
     const fetch$ = combineLatest([
       route.params,
       this.refresh$,
       timer(0, 60000).pipe(
-        filter(i => i === 0 || (this.autorefresh && this.game.session.isDuring))
+        filter(i => i === 0 || (this.autorefresh && this.game.session.isDuring && !this.viewed))
       )
     ]).pipe(
       tap(() => this.isLoading = true),
