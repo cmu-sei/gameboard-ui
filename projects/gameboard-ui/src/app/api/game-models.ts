@@ -41,6 +41,7 @@ export interface GameDetail {
   externalGameStartupUrl?: string;
   requireSynchronizedStart: boolean;
   requireTeam: boolean;
+  showOnHomePageInPracticeMode: boolean;
   allowTeam: boolean;
   allowReset: boolean;
   playerMode: PlayerMode;
