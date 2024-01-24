@@ -5,7 +5,7 @@ import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DateTime } from 'luxon';
-import { Timeline, DataItem } from 'vis-timeline/esnext';
+import { Timeline } from 'vis-timeline/esnext';
 
 @Component({
   selector: 'app-team-event-horizon',

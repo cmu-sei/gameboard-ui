@@ -1,9 +1,8 @@
 import { DateTime } from "luxon";
 import { DataItem } from "vis-timeline";
 
-export type EventHorizonEventType = "challengeDeployed" |
-    "gamespaceStarted" |
-    "gamespaceStopped" |
+export type EventHorizonEventType = "challengeStarted" |
+    "gamespaceOnOff" |
     "solveComplete" |
     "submissionRejected" |
     "submissionScored"
@@ -15,15 +14,28 @@ export interface EventHorizonGenericEvent {
     timestamp: DateTime;
 }
 
+export interface EventHorizonGamespaceOnOffEvent extends EventHorizonGenericEvent {
+    eventData: {
+        offAt: DateTime;
+    };
+}
+
 export interface EventHorizonSubmissionScoredEvent extends EventHorizonGenericEvent {
-    submissionScoredEventData: {
+    eventData: {
         score: number;
         attemptNumber: number;
         answers: string[];
     }
 }
 
-export type EventHorizonEvent = EventHorizonGenericEvent | EventHorizonSubmissionScoredEvent | EventHorizonSolveCompleteEvent;
+export interface EventHorizonSolveCompleteEvent extends EventHorizonGenericEvent {
+    eventData: {
+        attemptsUsed: number;
+        finalScore: number;
+    };
+}
+
+export type EventHorizonEvent = EventHorizonGenericEvent | EventHorizonGamespaceOnOffEvent | EventHorizonSubmissionScoredEvent | EventHorizonSolveCompleteEvent;
 
 export interface EventHorizonChallenge {
     id: string;
@@ -41,13 +53,6 @@ export interface EventHorizonChallengeSpec {
     name: string;
     maxAttempts: number;
     maxPossibleScore: number;
-}
-
-export interface EventHorizonSolveCompleteEvent extends EventHorizonGenericEvent {
-    solveCompleteEventData: {
-        attemptsUsed: number;
-        finalScore: number;
-    };
 }
 
 export interface EventHorizonGroup {
@@ -78,7 +83,7 @@ export interface TeamEventHorizonViewModel {
         name: string;
         session: {
             start: DateTime;
-            end: DateTime;
+            end: DateTime | null;
         },
         challenges: EventHorizonTeamChallenge[],
         events: EventHorizonEvent[]
@@ -86,6 +91,6 @@ export interface TeamEventHorizonViewModel {
 }
 
 export interface EventHorizonDataItem extends DataItem {
-    eventData: EventHorizonGenericEvent | null;
+    eventData: EventHorizonEvent | null;
     isClickable: boolean;
 }

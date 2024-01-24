@@ -1,15 +1,52 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom, map, of } from 'rxjs';
 import { DateTime } from 'luxon';
-import { EventHorizonGenericEvent, EventHorizonEventType, EventHorizonEvent, TeamEventHorizonViewModel, EventHorizonChallengeSpec } from './event-horizon.models';
+import { EventHorizonGenericEvent, EventHorizonEventType, EventHorizonEvent, TeamEventHorizonViewModel, EventHorizonChallengeSpec, EventHorizonGamespaceOnOffEvent } from './event-horizon.models';
+import { HttpClient } from '@angular/common/http';
+import { ApiUrlService } from '@/services/api-url.service';
+import { ApiDateTimeService } from '@/services/api-date-time.service';
 
 @Injectable({ providedIn: 'root' })
 export class EventHorizonService {
-  constructor() { }
+  constructor(
+    private apiDateTimeService: ApiDateTimeService,
+    private apiUrl: ApiUrlService,
+    private http: HttpClient) { }
 
   async getTeamEventHorizon(teamId: string): Promise<TeamEventHorizonViewModel> {
-    const fakeData = await firstValueFrom(of(this.buildFakeData(teamId)));
-    return fakeData;
+    // const fakeData = await firstValueFrom(of(this.buildFakeData(teamId)));
+    // return fakeData;
+    return await firstValueFrom(this.http.get<TeamEventHorizonViewModel>(this.apiUrl.build(`team/${teamId}/timeline`)).pipe(
+      map(timeline => {
+        const start = this.apiDateTimeService.toDateTime(timeline.team.session.start as any);
+        const end = this.apiDateTimeService.toDateTime(timeline.team.session.end as any);
+
+        if (!start)
+          throw new Error(`Couldn't resolve timeline start for team event horizon ${teamId}.`);
+
+        timeline.team.session.start = start;
+        timeline.team.session.end = end;
+
+        for (const event of timeline.team.events) {
+          const timestamp = this.apiDateTimeService.toDateTime(event.timestamp as any);
+          if (!timestamp)
+            throw new Error(`Couldn't parse datetime for timeline event: ${JSON.stringify(event.timestamp)}`);
+          event.timestamp = timestamp;
+
+          // if this is a gamespace event, its eventData has another propert that needs help
+          const asGamespaceEvent = event as EventHorizonGamespaceOnOffEvent;
+          if (asGamespaceEvent.eventData?.offAt) {
+            const offAtStamp = this.apiDateTimeService.toDateTime(asGamespaceEvent.eventData?.offAt as any);
+
+            if (offAtStamp) {
+              asGamespaceEvent.eventData.offAt = offAtStamp;
+            }
+          }
+        }
+
+        return timeline;
+      })
+    ));
   }
 
   getEventId(eventId: string, timeline: TeamEventHorizonViewModel): EventHorizonEvent {
@@ -24,9 +61,8 @@ export class EventHorizonService {
   getEventTypes(): EventHorizonEventType[] {
     // no great way to enumerate string literal types
     return [
-      "challengeDeployed",
-      "gamespaceStarted",
-      "gamespaceStopped",
+      "challengeStarted",
+      "gamespaceOnOff",
       "solveComplete",
       "submissionRejected",
       "submissionScored"
@@ -94,7 +130,7 @@ export class EventHorizonService {
           {
             id: "ef42946b-81c8-4dfe-8851-60301d964607",
             challengeId: "6fc45c53-7e7b-4996-89a9-6b43950c0f74",
-            type: "challengeDeployed",
+            type: "challengeStarted",
             timestamp: sessionStart.plus({ minutes: 2 })
           } as EventHorizonGenericEvent,
           {
@@ -102,7 +138,7 @@ export class EventHorizonService {
             challengeId: "6fc45c53-7e7b-4996-89a9-6b43950c0f74",
             type: "submissionScored",
             timestamp: sessionStart.plus({ minutes: 27 }),
-            submissionScoredEventData: {
+            eventData: {
               score: 0,
               attemptNumber: 1,
               answers: ["deadbeef", "REDRUM", "p@ssw0rd"]
@@ -113,7 +149,7 @@ export class EventHorizonService {
             challengeId: "6fc45c53-7e7b-4996-89a9-6b43950c0f74",
             type: "submissionScored",
             timestamp: sessionStart.plus({ minutes: 33 }),
-            submissionScoredEventData: {
+            eventData: {
               score: 15,
               attemptNumber: 2,
               answers: ["feedbeef", "LOUD NOISES", "a hexcode"]
@@ -122,21 +158,27 @@ export class EventHorizonService {
           {
             id: "b08bc511-b698-4409-9eea-884fa5733a27",
             challengeId: "6fc45c53-7e7b-4996-89a9-6b43950c0f74",
-            type: "gamespaceStopped",
-            timestamp: sessionStart.plus({ minutes: 41 })
+            type: "gamespaceOnOff",
+            timestamp: sessionStart,
+            eventData: {
+              offAt: sessionStart.plus({ minutes: 41 })
+            }
           },
           {
             id: "84bf22a3-435e-49fb-891a-59c841228448",
             challengeId: "6fc45c53-7e7b-4996-89a9-6b43950c0f74",
-            type: "gamespaceStarted",
-            timestamp: sessionStart.plus({ minutes: 92 })
+            type: "gamespaceOnOff",
+            timestamp: sessionStart.plus({ minutes: 92 }),
+            eventData: {
+              offAt: sessionEnd
+            }
           },
           {
             id: "eb9e4ec8-a780-4256-8588-4e21bea8b781",
             challengeId: "6fc45c53-7e7b-4996-89a9-6b43950c0f74",
             type: "submissionScored",
             timestamp: sessionStart.plus({ minutes: 136 }),
-            submissionScoredEventData: {
+            eventData: {
               score: 175,
               attemptNumber: 3,
               answers: ["feedbeef", "softer noises", "Argh"]
@@ -147,7 +189,7 @@ export class EventHorizonService {
             challengeId: "6fc45c53-7e7b-4996-89a9-6b43950c0f74",
             type: "submissionScored",
             timestamp: sessionStart.plus({ minutes: 214 }),
-            submissionScoredEventData: {
+            eventData: {
               score: 175,
               attemptNumber: 4,
               answers: ["feedbeef", "softer noises", "it's not going to happen, is it?"]
@@ -156,7 +198,7 @@ export class EventHorizonService {
           {
             id: "149e0837-dd05-4ca2-91e8-bbe8f27a2081",
             challengeId: "bcdf2162-ef57-4c3a-a643-731577c14c1c",
-            type: "challengeDeployed",
+            type: "challengeStarted",
             timestamp: sessionStart.plus({ minutes: 42 })
           },
           {
@@ -164,7 +206,7 @@ export class EventHorizonService {
             challengeId: "bcdf2162-ef57-4c3a-a643-731577c14c1c",
             type: "submissionScored",
             timestamp: sessionStart.plus({ minutes: 67 }),
-            submissionScoredEventData: {
+            eventData: {
               score: 0,
               attemptNumber: 1,
               answers: ["omghalp", "this can't be right"]
@@ -175,7 +217,7 @@ export class EventHorizonService {
             challengeId: "bcdf2162-ef57-4c3a-a643-731577c14c1c",
             type: "submissionScored",
             timestamp: sessionStart.plus({ minutes: 82 }),
-            submissionScoredEventData: {
+            eventData: {
               score: 80,
               attemptNumber: 2,
               answers: ["yay", "omg what's the answer"]
@@ -186,7 +228,7 @@ export class EventHorizonService {
             challengeId: "bcdf2162-ef57-4c3a-a643-731577c14c1c",
             type: "submissionScored",
             timestamp: sessionStart.plus({ minutes: 91 }),
-            submissionScoredEventData: {
+            eventData: {
               score: 100,
               attemptNumber: 3,
               answers: ["yay", "the answer, weirdly, is also 'yay'"]
@@ -197,7 +239,7 @@ export class EventHorizonService {
             challengeId: "bcdf2162-ef57-4c3a-a643-731577c14c1c",
             type: "solveComplete",
             timestamp: sessionStart.plus({ minutes: 91, seconds: 2 }),
-            solveCompleteEventData: {
+            eventData: {
               attemptsUsed: 3,
               finalScore: 100
             }

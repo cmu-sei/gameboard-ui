@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 
 @Injectable({ providedIn: 'root' })
-export class ApiDateService {
+export class ApiDateTimeService {
   toDateTime(input?: string): DateTime | null {
-    if (!input) return null;
+    if (!input || input === "undefine") return null;
 
     // as of now, the API returns date objects as string (blargh)
     const parsedDateTime = DateTime.fromISO(input);

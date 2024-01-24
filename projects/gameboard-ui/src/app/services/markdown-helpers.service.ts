@@ -9,11 +9,11 @@ export class MarkdownHelpersService {
     return items.map(i => `\n - ${i}`).join('');
   }
 
-  arrayToOrderedList(items: string[]): string {
+  arrayToOrderedList(items: string[], falseyText: string = ""): string {
     if (!items?.length)
       return "";
 
-    return items.map((item, index) => `${index + 1}. ${item.trim()}`).join("\n\n");
+    return items.map((item, index) => `${index + 1}. ${item.trim() || falseyText}`).join("\n\n");
   }
 
   getMarkdownPlaceholderHelp(header?: string): string {
