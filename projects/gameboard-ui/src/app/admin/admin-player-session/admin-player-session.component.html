@@ -5,7 +5,7 @@
 
 <ng-container *ngIf="team$ | async as team; else loading">
   <div class="timeline-container px-3">
-    <div>Timeline</div>
+    <div>Timeline <span class="badge badge-info">[BETA]</span></div>
     <app-team-event-horizon [teamId]="team.teamId"></app-team-event-horizon>
   </div>
 
