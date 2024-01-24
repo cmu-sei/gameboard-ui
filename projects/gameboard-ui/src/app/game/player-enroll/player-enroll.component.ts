@@ -12,6 +12,8 @@ import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { UserService } from '@/api/user.service';
+import { ClipboardService } from '@/utility/services/clipboard.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-player-enroll',
@@ -54,8 +56,10 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   constructor(
     private api: PlayerService,
     private config: ConfigService,
+    private clipboard: ClipboardService,
     private hubService: NotificationService,
     private localUserService: LocalUserService,
+    private toastService: ToastService,
     private userService: UserService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
@@ -118,6 +122,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     this.api.invite(p.id).pipe(first())
       .subscribe((m: TeamInvitation) => {
         this.code = m.code;
+        this.clipboard.copy(m.code);
+        this.toastService.showMessage(`Copied your invitation code (${m.code}) to your clipboard.`);
         this.invitation = `${this.config.absoluteUrl}game/teamup/${m.code}`;
       });
   }
