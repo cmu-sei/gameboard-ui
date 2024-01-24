@@ -32,6 +32,7 @@
             ],
             "styles": [
               "node_modules/toastify-js/src/toastify.css",
+              "node_modules/vis-timeline/styles/vis-timeline-graph2d.css",
               "projects/gameboard-ui/src/styles.scss"
             ],
             "scripts": [
@@ -215,9 +216,7 @@
               "projects/gameboard-mks/src/favicon.ico",
               "projects/gameboard-mks/src/assets"
             ],
-            "styles": [
-              "projects/gameboard-mks/src/styles.scss"
-            ],
+            "styles": ["projects/gameboard-mks/src/styles.scss"],
             "scripts": []
           }
         }

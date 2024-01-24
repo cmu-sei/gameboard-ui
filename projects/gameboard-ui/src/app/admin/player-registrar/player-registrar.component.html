@@ -105,7 +105,9 @@
         <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
           role="button">
           <fa-icon [icon]="fa.sync"></fa-icon>
-          <span>{{autorefresh ? 'auto' : 'off'}}</span>
+          <span *ngIf="autorefresh && !viewed">auto</span>
+          <span *ngIf="autorefresh && viewed">paused</span>
+          <span *ngIf="!autorefresh">off</span>
         </label>
       </ng-container>
     </div>

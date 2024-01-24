@@ -11,6 +11,7 @@ import { UserService as LocalUserService } from '../../utility/user.service';
 import { RouterService } from '@/services/router.service';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from '@/api/board.service';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-ticket-form',
@@ -30,6 +31,7 @@ export class TicketFormComponent implements OnDestroy {
 
   challengeRefresh: BehaviorSubject<any> = new BehaviorSubject({});
   challengeOptions: ChallengeOverview[] = [];
+  isSubmitting = false;
 
   faArrowLeft = faArrowLeft;
 
@@ -42,6 +44,7 @@ export class TicketFormComponent implements OnDestroy {
 
   constructor(
     private api: SupportService,
+    private log: LogService,
     private routerService: RouterService,
     private userApi: UserService,
     boardApi: BoardService,
@@ -74,10 +77,17 @@ export class TicketFormComponent implements OnDestroy {
   }
 
   async submit() {
-    const ticket = await firstValueFrom(this.api.upload(this.ticket));
-    if (!!ticket.id) {
-      this.routerService.toSupportTickets(ticket.key.toString());
+    this.isSubmitting = true;
+    try {
+      const ticket = await firstValueFrom(this.api.upload(this.ticket));
+      if (!!ticket.id) {
+        this.routerService.toSupportTickets(ticket.key.toString());
+      }
     }
+    catch (err: any) {
+      this.log.logError("Error on ticket submit", err);
+    }
+    this.isSubmitting = false;
   }
 
   attachments(files: File[]) {

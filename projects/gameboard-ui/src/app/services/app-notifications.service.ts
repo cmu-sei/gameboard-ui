@@ -5,7 +5,6 @@ import { LogService } from './log.service';
 import { WindowService } from './window.service';
 import { ConfigService } from '@/utility/config.service';
 import { UserService } from '@/api/user.service';
-import { UnsubscriberService } from './unsubscriber.service';
 
 export type CanUseBrowserNotificationsResult = "denied" | "pending" | "unsupported" | "allowed";
 

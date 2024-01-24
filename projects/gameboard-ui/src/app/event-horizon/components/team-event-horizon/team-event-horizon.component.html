@@ -1,0 +1,16 @@
+<div class="team-event-horizon-component py-2">
+    <div #timelineContainer></div>
+    <hr />
+    <div class="controls-container">
+        <div class="btn-group btn-group-toggle" role="group" aria-label="Event type selection group"
+            data-toggle="buttons">
+            <label *ngFor="let eventType of allEventTypes" class="btn"
+                [class.btn-outline-light]="eventType | arrayContains:selectedEventTypes:true"
+                [class.btn-info]="eventType | arrayContains:selectedEventTypes">
+                <input type="checkbox" autocomplete="off" (click)="handleEventTypeToggled(eventType)"
+                    [checked]="eventType | arrayContains:selectedEventTypes">
+                {{eventType | eventTypeToFriendlyName}}
+            </label>
+        </div>
+    </div>
+</div>

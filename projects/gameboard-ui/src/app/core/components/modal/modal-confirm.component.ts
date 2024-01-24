@@ -7,7 +7,10 @@ import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.m
   template: `
     <div class="modal-confirm-component">
       <div class="modal-header">
-          <h4 class="modal-title pull-left">{{ context.title }}</h4>
+          <div class="titles-container">
+            <h4 class="modal-title pull-left">{{ context.title }}</h4>
+            <h5 *ngIf="context.subtitle" class="gray-text">{{ context.subtitle }}</h5>
+          </div>
           <button *ngIf="!context.hideCancel" type="button" class="btn-close close pull-right" aria-label="Close" (click)="cancel()">
               <span aria-hidden="true" class="visually-hidden">&times;</span>
           </button>
@@ -15,7 +18,7 @@ import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.m
       <div class="modal-body" *ngIf="!context.renderBodyAsMarkdown; else markdownBodyContent" [innerHTML]="context.bodyContent.trim()"></div>
       <div class="modal-footer">
           <button type="button" *ngIf="context.hideCancel !== true" class="btn btn-outline-info" (click)="cancel()">{{ context.cancelButtonText || "Cancel" }}</button>
-          <button type="button" class="btn btn-danger" (click)="confirm()">{{ context.confirmButtonText || 'OK' }}</button>
+          <button type="button" class="btn btn-danger" [class.btn-danger]="!context.hideCancel" [class.btn-info]="context.hideCancel" (click)="confirm()">{{ context.confirmButtonText || 'OK' }}</button>
       </div>
     </div>
 

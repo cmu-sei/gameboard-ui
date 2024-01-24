@@ -4,14 +4,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, firstValueFrom, forkJoin, map } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
 import { PracticeModeCertificate, PublishedCertificateViewModel } from '@/users/users.models';
-import { ConfigService } from '@/utility/config.service';
 import { PlayerMode } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class CertificatesService {
   constructor(
     private apiUrl: ApiUrlService,
-    private config: ConfigService,
     private domSanitizer: DomSanitizer,
     private http: HttpClient) { }
 

@@ -10,6 +10,8 @@ import { PlayerService } from '../../api/player.service';
 import { GameSessionService } from '../../services/game-session.service';
 import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 import { TeamService } from '@/api/team.service';
+import { ToastService } from '@/utility/services/toast.service';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-admin-player-session',
@@ -30,12 +32,14 @@ export class PlayerSessionComponent implements OnInit {
   faInfo = faInfoCircle;
   errors: any[] = [];
 
+  protected isExtending = false;
   protected isLoadingChallenges = false;
 
   constructor(
     private api: PlayerService,
     private sessionService: GameSessionService,
-    private teamService: TeamService
+    private teamService: TeamService,
+    private toastService: ToastService,
   ) { }
 
   ngOnInit(): void {
@@ -47,11 +51,16 @@ export class PlayerSessionComponent implements OnInit {
 
   async extend(team: Team): Promise<void> {
     try {
+      this.isExtending = true;
       await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: team.sessionEnd }));
     }
     catch (err: any) {
       this.errors.push(err);
     }
+
+    this.isExtending = false;
+    const friendlySessionEnd = DateTime.fromISO(team.sessionEnd.toString());
+    this.toastService.showMessage(`Team session extended to ${friendlySessionEnd.toLocaleString(DateTime.DATETIME_FULL)}.`);
   }
 
   toggleRawView(isExpanding: boolean): void {

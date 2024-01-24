@@ -7,7 +7,7 @@ import { ApiUrlService } from './api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { GetExternalTeamDataResponse } from '@/api/game-models';
 import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
-import { ApiDateService } from './api-date.service';
+import { ApiDateTimeService } from './api-date-time.service';
 
 export interface ExternalGameActive {
   gameServerUrl: string;
@@ -21,7 +21,7 @@ export class ExternalGameService {
   errors$ = this._errors$.asObservable();
 
   constructor(
-    private apiDateService: ApiDateService,
+    private apiDateService: ApiDateTimeService,
     private apiUrl: ApiUrlService,
     private config: ConfigService,
     private httpClient: HttpClient,
