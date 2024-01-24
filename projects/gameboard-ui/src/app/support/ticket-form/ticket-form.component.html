@@ -63,7 +63,8 @@
     </div>
 
     <div class="mt-3">
-      <button class="btn btn-dark" (click)="submit()" [disabled]="!ticket.summary.length">Submit</button>
+      <button class="btn btn-dark" (click)="submit()"
+        [disabled]="!ticket.summary.length || isSubmitting">Submit</button>
     </div>
   </form>
 </div>
