@@ -31,6 +31,7 @@ export class EventHorizonService {
           const timestamp = this.apiDateTimeService.toDateTime(event.timestamp as any);
           if (!timestamp)
             throw new Error(`Couldn't parse datetime for timeline event: ${JSON.stringify(event.timestamp)}`);
+
           event.timestamp = timestamp;
 
           // if this is a gamespace event, its eventData has another propert that needs help
