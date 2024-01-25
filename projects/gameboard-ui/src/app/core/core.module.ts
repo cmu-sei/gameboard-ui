@@ -28,6 +28,7 @@ import 'chartjs-adapter-luxon';
 import { markedOptionsFactory } from './config/marked.config';
 
 // internal components/pipes/directives
+import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
@@ -96,6 +97,7 @@ import { CamelspacePipe } from './pipes/camelspace.pipe';
 
 const PUBLIC_DECLARATIONS = [
   GbProgressBarComponent,
+  ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
   AssetPathPipe,

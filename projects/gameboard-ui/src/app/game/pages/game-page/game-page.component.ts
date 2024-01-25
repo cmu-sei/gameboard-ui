@@ -7,7 +7,7 @@ import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subs
 import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '@/api/user-models';
 import { GameService } from '@/api/game.service';
-import { Game, GameContext, GamePlayState } from '@/api/game-models';
+import { Game, GameContext } from '@/api/game-models';
 import { HubEvent, HubEventAction, NotificationService } from '@/services/notification.service';
 import { Player, TimeWindow } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
