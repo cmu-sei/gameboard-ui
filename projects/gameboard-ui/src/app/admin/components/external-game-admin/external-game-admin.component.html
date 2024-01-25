@@ -18,13 +18,13 @@
             </app-confirm-button>
         </div>
 
-        <alert *ngIf="context.hasNonStandardSessionWindow" type="warning" class="my-4">
+        <alert *ngIf="context.startTime && context.hasNonStandardSessionWindow" type="warning" class="my-4">
             <h3>Warning</h3>
 
             <p>
                 This game has been deployed and started, but there are multiple "start" and "end" dates
-                among challenges and player sessions. You may need to use the session align tool to ensure
-                these line up (coming soon™).
+                among challenges and player sessions. If you see this and haven't manually extended
+                someone's session, there may be an issue.
             </p>
         </alert>
 
