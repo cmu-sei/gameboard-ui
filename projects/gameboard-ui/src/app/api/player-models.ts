@@ -30,6 +30,7 @@ export interface Player {
   time: number;
   correctCount: number;
   partialCount: number;
+  isLateStart: boolean;
   isManager: boolean;
   isReady: boolean;
   advanced: boolean;

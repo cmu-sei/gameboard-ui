@@ -159,13 +159,16 @@
         <span>Disapprove</span>
       </button>
       <div class="spacer"></div>
-      <div class="cursor-pointer" [class.text-success]="player.session?.isDuring" (click)="view(player)">
-        {{player.rank}} |
-        {{player.score}} |
-        {{player.time | clock}} |
-        {{player.correctCount}} |
-        {{player.partialCount}} |
-        {{player.session?.countdown | countdown }}
+      <div class="cursor-pointer d-flex" [class.text-success]="player.session?.isDuring" (click)="view(player)">
+        <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-danger">Late Start</span></div>
+        <div>
+          {{player.rank}} |
+          {{player.score}} |
+          {{player.time | clock}} |
+          {{player.correctCount}} |
+          {{player.partialCount}} |
+          {{player.session?.countdown | countdown }}
+        </div>
       </div>
       <div>
         <button class="btn rounded-circle ml-4" (click)="view(player)">

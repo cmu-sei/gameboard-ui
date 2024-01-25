@@ -132,7 +132,9 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
 
         // updates from the hub (like from the challenge grading server, say)
         this._teamHubEventsSubscription = this.teamHub.challengeEvents.subscribe(c => {
-          this.handleChallengeUpdated(c.model);
+          if (c.model.id === this.spec?.instance?.id) {
+            this.handleChallengeUpdated(c.model);
+          }
         });
       }
     }
@@ -171,6 +173,10 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
   private handleSubmissionsRetrieved(submissions: GetChallengeSubmissionsResponse) {
     // if somehow we don't have an instance, this doesn't matter
     if (!this.spec.instance)
+      return;
+
+    // if we're on a different challoenge now, it doesn't matter
+    if (this.spec.instance.id !== submissions.challengeId)
       return;
 
     // determine if we have past submitted answers for question set of this challenge

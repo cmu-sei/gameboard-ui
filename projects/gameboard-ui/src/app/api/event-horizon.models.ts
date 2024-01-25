@@ -16,7 +16,7 @@ export interface EventHorizonGenericEvent {
 
 export interface EventHorizonGamespaceOnOffEvent extends EventHorizonGenericEvent {
     eventData: {
-        offAt: DateTime;
+        offAt?: DateTime;
     };
 }
 

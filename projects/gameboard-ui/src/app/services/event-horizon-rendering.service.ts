@@ -3,10 +3,13 @@ import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 import { MarkdownHelpersService } from './markdown-helpers.service';
 import { DataGroup } from 'vis-timeline';
+import { NowService } from './now.service';
 
 @Injectable({ providedIn: 'root' })
 export class EventHorizonRenderingService {
-  constructor(private markdownHelpers: MarkdownHelpersService) { }
+  constructor(
+    private markdownHelpers: MarkdownHelpersService,
+    private nowService: NowService) { }
 
   public getViewOptions(eventHorizonVm: TeamEventHorizonViewModel): EventHorizonViewOptions {
     const sessionEnd = eventHorizonVm.team.session.end || DateTime.now();
@@ -111,7 +114,7 @@ export class EventHorizonRenderingService {
     const typedEvent = timelineEvent as unknown as EventHorizonGamespaceOnOffEvent;
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace On", "eh-event-type-gamespace-on-off", false);
 
-    baseItem.end = typedEvent.eventData.offAt.toJSDate();
+    baseItem.end = typedEvent.eventData?.offAt?.toJSDate() || this.nowService.now();
     baseItem.eventData = typedEvent;
     baseItem.type = "background";
 

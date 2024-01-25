@@ -1,5 +1,5 @@
-<div class="team-event-horizon-component py-2">
-    <div #timelineContainer></div>
+<div #timelineContainer></div>
+<div *ngIf="timelineViewModel; else noTimeline" class="team-event-horizon-component py-2">
     <hr />
     <div class="controls-container">
         <div class="btn-group btn-group-toggle" role="group" aria-label="Event type selection group"
@@ -14,3 +14,9 @@
         </div>
     </div>
 </div>
+
+<ng-template #noTimeline>
+    <div>
+        This team doesn't have any recorded data for this game.
+    </div>
+</ng-template>
