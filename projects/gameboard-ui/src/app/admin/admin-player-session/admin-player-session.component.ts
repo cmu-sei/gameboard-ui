@@ -30,7 +30,7 @@ export class PlayerSessionComponent implements OnInit {
   showRaw = false;
   statusText = "Loading your session...";
   faInfo = faInfoCircle;
-  errors: any[] = [];
+  protected errors: any[] = [];
 
   protected isExtending = false;
   protected isLoadingChallenges = false;
@@ -53,14 +53,15 @@ export class PlayerSessionComponent implements OnInit {
     try {
       this.isExtending = true;
       await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: team.sessionEnd }));
+
+      const friendlySessionEnd = DateTime.fromISO(team.sessionEnd.toString());
+      this.toastService.showMessage(`Team session extended to ${friendlySessionEnd.toLocaleString(DateTime.DATETIME_FULL)}.`);
     }
     catch (err: any) {
       this.errors.push(err);
     }
 
     this.isExtending = false;
-    const friendlySessionEnd = DateTime.fromISO(team.sessionEnd.toString());
-    this.toastService.showMessage(`Team session extended to ${friendlySessionEnd.toLocaleString(DateTime.DATETIME_FULL)}.`);
   }
 
   toggleRawView(isExpanding: boolean): void {
