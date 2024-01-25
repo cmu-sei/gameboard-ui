@@ -13,7 +13,7 @@ export class IndexToSubmittedAnswersPipe implements PipeTransform {
     // ensure that all submissions have at least as many answers as are required to retrieve the questionIndexth answer
     const submissionLengths = submissions.map(s => s.answers.length);
     if (submissionLengths.some(length => length <= questionIndex)) {
-      throw new Error(`Can't use IndexToSubmittedAnswer pipe with an out-of-range index (${questionIndex}, ${submissionLengths})`);
+      return "";
     }
 
     // the final submitted answer may be the correct answer (if they got the question right). We show that elsewhere, so hide
