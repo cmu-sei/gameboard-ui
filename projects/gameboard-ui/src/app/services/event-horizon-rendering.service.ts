@@ -109,7 +109,6 @@ export class EventHorizonRenderingService {
     return {
       id: timelineEvent.id,
       group: challengeSpec.id,
-      // subgroup: timelineEvent.type,
       start: timelineEvent.timestamp.toJSDate(),
       content: `${eventName} :: ${timelineEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
