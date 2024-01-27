@@ -82,7 +82,11 @@ export class EventHorizonRenderingService {
   }
 
   private toSubmissionScoredModalContent(timelineEvent: EventHorizonSubmissionScoredEvent, challengeSpec: EventHorizonChallengeSpec) {
-    return `**Attempt:** ${timelineEvent.eventData.attemptNumber}/${challengeSpec.maxAttempts}
+    let attemptSummary = `${timelineEvent.eventData.attemptNumber}`;
+    if (challengeSpec.maxAttempts)
+      attemptSummary = `${attemptSummary}/${challengeSpec.maxAttempts}`;
+
+    return `**Attempt:** ${attemptSummary}
 
 **Points after this attempt:** ${timelineEvent.eventData.score}/${challengeSpec.maxPossibleScore}
 
@@ -91,7 +95,11 @@ export class EventHorizonRenderingService {
   }
 
   private toSolveCompleteModalContent(timelineEvent: EventHorizonSolveCompleteEvent, challengeSpec: EventHorizonChallengeSpec) {
-    return `**Attempts Used:** ${timelineEvent.eventData.attemptsUsed}/${challengeSpec.maxAttempts}
+    let attemptSummary = `${timelineEvent.eventData.attemptsUsed}`;
+    if (challengeSpec.maxAttempts)
+      attemptSummary = `${attemptSummary}/${challengeSpec.maxAttempts}`;
+
+    return `**Attempts Used:** ${attemptSummary}
 
 **Final Score:** ${timelineEvent.eventData.finalScore}/${challengeSpec.maxPossibleScore}
     `.trim();
@@ -101,7 +109,6 @@ export class EventHorizonRenderingService {
     return {
       id: timelineEvent.id,
       group: challengeSpec.id,
-      // subgroup: timelineEvent.type,
       start: timelineEvent.timestamp.toJSDate(),
       content: `${eventName} :: ${timelineEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
