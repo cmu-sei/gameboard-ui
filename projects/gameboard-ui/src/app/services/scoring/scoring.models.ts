@@ -93,6 +93,11 @@ export interface AutoChallengeBonus {
     solveRank: number;
 }
 
+export interface GameAutoBonusConfig {
+    allChallengesBonuses: GameLevelAutoChallengeBonus[];
+    specificChallengesBonuses: ChallengeLevelAutoChallengeBonus;
+}
+
 export interface GameLevelAutoChallengeBonus extends AutoChallengeBonus {
 }
 
