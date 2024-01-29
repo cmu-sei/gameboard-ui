@@ -391,6 +391,20 @@
           </div>
           <small>permission for players to reset their game session</small>
         </div>
+
+        <div class="form-group pb-0 pt-1">
+          <label class="mb-0" for="reset-toggle">Allow Late Starts</label>
+          <div class="form-control auto-h d-flex align-items-center">
+            <label>Forbidden</label>
+            <label class="btn text-info" btnCheckbox tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
+              id="late-start-toggle" name="allowLateStart" [(ngModel)]="game.allowLateStart">
+              <fa-icon *ngIf="!game.allowLateStart" [icon]="fa.toggleOff" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.allowLateStart" [icon]="fa.toggleOn" size="lg"></fa-icon>
+            </label>
+            <label>Allowed</label>
+          </div>
+          <small>allows players to start within a session length of the execution period end</small>
+        </div>
       </div>
 
       <div class="col-lg-6 col-sm-12">

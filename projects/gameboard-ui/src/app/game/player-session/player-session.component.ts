@@ -114,8 +114,14 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   async handleStart(player: Player): Promise<void> {
-    const startedPlayer = await firstValueFrom(this.api.start(player));
-    this.onSessionStart.emit(startedPlayer);
+    this.errors = [];
+    try {
+      const startedPlayer = await firstValueFrom(this.api.start(player));
+      this.onSessionStart.emit(startedPlayer);
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   handleReset(p: Player): void {
@@ -141,6 +147,7 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   private async doReset(p: Player) {
+    this.errors = [];
     this.isResetting = true;
     await firstValueFrom(this.teamService.resetSession(p.teamId, { unenrollTeam: true }));
     delete p.session;

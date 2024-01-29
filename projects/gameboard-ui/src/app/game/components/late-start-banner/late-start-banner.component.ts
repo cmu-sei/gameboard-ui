@@ -7,6 +7,7 @@ import { DateTime, Duration } from 'luxon';
   styleUrls: ['./late-start-banner.component.scss']
 })
 export class LateStartBannerComponent implements OnChanges {
+  @Input() gameAllowsLateStart?: boolean;
   @Input() gameEnd?: Date;
   @Input() sessionLengthMinutes?: number;
 
@@ -23,6 +24,7 @@ export class LateStartBannerComponent implements OnChanges {
     this.normalSessionLengthDescription = this.sessionLengthMinutes ? Duration.fromDurationLike({ minutes: this.sessionLengthMinutes }).rescale().toHuman() : undefined;
 
     this.showWarning = (
+      !!this.gameAllowsLateStart &&
       !!this.sessionLengthMinutes &&
       !!this.gameEndDateTime &&
       this.gameEndDateTime > DateTime.now() &&

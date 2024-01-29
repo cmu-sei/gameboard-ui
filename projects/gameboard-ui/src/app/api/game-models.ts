@@ -42,6 +42,7 @@ export interface GameDetail {
   requireSynchronizedStart: boolean;
   requireTeam: boolean;
   showOnHomePageInPracticeMode: boolean;
+  allowLateStart: boolean;
   allowTeam: boolean;
   allowReset: boolean;
   playerMode: PlayerMode;
