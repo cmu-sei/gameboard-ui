@@ -139,9 +139,14 @@ export class EventHorizonRenderingService {
 
   private toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as unknown as EventHorizonSubmissionScoredEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Submission ${typedEvent.eventData.attemptNumber}/${challengeSpec.maxAttempts} (${typedEvent.eventData.score} points)`, "eh-event-type-submission-scored", true);
 
+    let attemptSummary = `${typedEvent.eventData.attemptNumber}`;
+    if (challengeSpec.maxAttempts)
+      attemptSummary = `${attemptSummary}/${challengeSpec.maxAttempts}`;
+
+    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Submission ${attemptSummary} (${typedEvent.eventData.score} points)`, "eh-event-type-submission-scored", true);
     baseItem.eventData = typedEvent;
+
     return baseItem;
   }
 }
