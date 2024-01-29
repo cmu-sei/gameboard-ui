@@ -50,7 +50,18 @@
     color: $foreground;
   }
 
+  // force foreground color
   .vis-time-axis .vis-text {
     color: $foreground !important;
   }
+
+  // hides the vertical lines on the x (time) axis
+  .vis-time-axis .vis-grid.vis-vertical {
+    border-left: none !important;
+  }
+
+  // hides the little connectors from the point at the bottom to the flag
+  // .vis-item.vis-line {
+  //   border-left: none !important;
+  // }
 }
