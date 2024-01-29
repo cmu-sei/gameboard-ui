@@ -25,7 +25,8 @@
     [teamId]="ctx.player.teamId"></app-external-game-link-banner>
 
   <app-late-start-banner *ngIf="ctx?.player && ctx?.game && !ctx?.player?.session?.isDuring"
-    [sessionLengthMinutes]="ctx.game.sessionMinutes" [gameEnd]="ctx.game.gameEnd | apiDate"></app-late-start-banner>
+    [sessionLengthMinutes]="ctx.game.sessionMinutes" [gameEnd]="ctx.game.gameEnd | apiDate"
+    [gameAllowsLateStart]="ctx.game.allowLateStart"></app-late-start-banner>
 
   <div class="container-fluid">
     <div class="p-4">

@@ -4,7 +4,6 @@
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
   <div class="card mb-4">
     <div class="card-body">
-
       <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)" class="text-info card-text d-flex mb-2">
         <div>
           <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
