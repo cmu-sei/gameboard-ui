@@ -124,7 +124,6 @@ export class EventHorizonRenderingService {
     const typedEvent = timelineEvent as unknown as EventHorizonGamespaceOnOffEvent;
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace On", "eh-event-type-gamespace-on-off", false);
 
-    console.log("off at", typedEvent);
     baseItem.end = typedEvent.eventData?.offAt ? typedEvent.eventData.offAt.toJSDate() : this.nowService.now();
     baseItem.eventData = typedEvent;
     baseItem.type = "background";
