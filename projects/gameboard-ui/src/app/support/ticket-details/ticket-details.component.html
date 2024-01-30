@@ -28,7 +28,13 @@
           [class.badge-dark]="ctx.ticket.status == 'Closed'">{{ctx.ticket.status}}</span>
       </h4>
       <ng-container *ngIf="ctx.ticket.player as player">
-        <span class="mr-4">{{true ? 'Team:' : 'Player:'}} {{player.approvedName}}</span>
+        <span class="mr-4">
+          <span *ngIf="ctx.ticket.isTeamGame">
+            {{ ctx.ticket.teamName }}
+            /
+          </span>
+          {{ player.approvedName }}
+        </span>
         <span class="mr-4">Game:
           <a [routerLink]="['/game', ctx.ticket.player.gameId]">
             <span>{{player.gameName}}</span>
@@ -274,19 +280,21 @@
 
               <div class="form-group p-0 m-0 mb-4">
                 <label class="font-weight-bold" for="assignee-input">
-                  {{ ctx.ticket.isTeamGame ? "Team & Player" : "Player" }}
+                  {{ ctx.ticket.isTeamGame ? "Player / Team" : "Player" }}
                 </label>
                 <p *ngIf="ctx.ticket?.player" class="mb-0 pt-0 mb-1 px-2 align-items-center">
-                  <button *ngIf="ctx.ticket.player?.approvedName; else noPlayer" class="btn btn-link"
+                  <button *ngIf="ctx.ticket.player?.approvedName; else noPlayer" class="btn btn-link p-0 copy-id-button"
                     tooltip="Click to copy this player's ID" [appCopyOnClick]="ctx.ticket.playerId">
                     {{ctx.ticket.player?.approvedName}}
                   </button>
-                  {{ctx.ticket.player?.approvedName || 'None'}}
+                  <ng-container *ngIf="ctx.ticket.isTeamGame">
+                    //
+                    <button class="btn btn-link p-0 copy-id-button" tooltip="Click to copy this team's ID"
+                      [appCopyOnClick]="ctx.ticket.teamId">
+                      {{ctx.ticket.teamName}}
+                    </button>
+                  </ng-container>
                 </p>
-                <p *ngIf="ctx.ticket.playerId" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Player Id:
-                  {{ctx.ticket.playerId | slice:0:16}}</p>
-                <p *ngIf="ctx.ticket.playerId" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Team Id:
-                  {{ctx.ticket.teamId | slice:0:16}}</p>
               </div>
 
               <div class="form-group p-0 m-0 mb-4">
