@@ -22,8 +22,7 @@ export class EventHorizonRenderingService {
       min: eventHorizonVm.team.session.start.toJSDate(),
       max: sessionEnd.toJSDate(),
       selectable: true,
-      stack: false,
-      stackSubgroups: false,
+      stack: true,
       start: eventHorizonVm.team.session.start.toJSDate(),
       zoomMax: durationMs.shiftTo("milliseconds").milliseconds
     };
@@ -111,7 +110,6 @@ export class EventHorizonRenderingService {
       id: timelineEvent.id,
       group: challengeSpec.id,
       start: timelineEvent.timestamp.toJSDate(),
-      // content: `${eventName} :: ${timelineEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`,
       content: eventName,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
       // type: "point",
@@ -142,7 +140,6 @@ export class EventHorizonRenderingService {
 
   private toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as unknown as EventHorizonSubmissionScoredEvent;
-
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Submission", "eh-event-type-submission-scored", true);
     baseItem.eventData = typedEvent;
 
