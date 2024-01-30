@@ -34,14 +34,11 @@ export class EventHorizonService {
 
           event.timestamp = timestamp;
 
-          // if this is a gamespace event, its eventData has another propert that needs help
+          // if this is a gamespace event, its eventData has another property that needs help
           const asGamespaceEvent = event as EventHorizonGamespaceOnOffEvent;
           if (asGamespaceEvent.eventData?.offAt) {
             const offAtStamp = this.apiDateTimeService.toDateTime(asGamespaceEvent.eventData?.offAt as any);
-
-            if (offAtStamp) {
-              asGamespaceEvent.eventData.offAt = offAtStamp;
-            }
+            asGamespaceEvent.eventData.offAt = offAtStamp || undefined;
           }
         }
 
