@@ -4,7 +4,7 @@ import { ActiveReportService } from '@/reports/services/active-report.service';
 import { RouterService } from '@/services/router.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, first, firstValueFrom, pipe } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-report-page',
@@ -33,9 +33,10 @@ export class ReportPageComponent {
     if (!this.activeReportService.metaData$.value?.key)
       throw new Error("Can't export a report with unspecified key");
 
+    const queryParams = await firstValueFrom(this.route.queryParams);
     this.reportsService.openExport(
       this.activeReportService.metaData$.value?.key,
-      { ...this.route.snapshot.queryParams }
+      { ...queryParams }
     );
   }
 
