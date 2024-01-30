@@ -14,7 +14,9 @@ export interface Ticket {
   creatorId: string;
   challengeId: string;
   playerId: string;
+  isTeamGame: boolean;
   teamId: string;
+  teamName: string;
   summary: string;
   description: string;
   status: string;

@@ -33,11 +33,13 @@ import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { BigStatComponent } from './components/big-stat/big-stat.component';
+import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
 import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
 import { ChallengeSolutionGuideComponent } from './components/challenge-solution-guide/challenge-solution-guide.component';
 import { ClockPipe } from './pipes/clock.pipe';
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
+import { CopyOnClickDirective } from './directives/copy-on-click.directive';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { CountdownComponent } from './components/countdown/countdown.component';
@@ -93,10 +95,8 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
-import { CamelspacePipe } from './pipes/camelspace.pipe';
 
 const PUBLIC_DECLARATIONS = [
-  GbProgressBarComponent,
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
@@ -108,6 +108,7 @@ const PUBLIC_DECLARATIONS = [
   ChallengeSolutionGuideComponent,
   ColoredTextChipComponent,
   ConfirmButtonComponent,
+  CopyOnClickDirective,
   CountdownComponent,
   CumulativeTimeClockComponent,
   DoughnutChartComponent,
@@ -117,6 +118,7 @@ const PUBLIC_DECLARATIONS = [
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,
+  GbProgressBarComponent,
   LineChartComponent,
   LinkRendererPipe,
   LongContentHiderComponent,
