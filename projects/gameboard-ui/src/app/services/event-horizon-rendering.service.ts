@@ -22,7 +22,7 @@ export class EventHorizonRenderingService {
       min: eventHorizonVm.team.session.start.toJSDate(),
       max: sessionEnd.toJSDate(),
       selectable: true,
-      stackSubgroups: false,
+      stack: true,
       start: eventHorizonVm.team.session.start.toJSDate(),
       zoomMax: durationMs.shiftTo("milliseconds").milliseconds
     };
@@ -110,8 +110,9 @@ export class EventHorizonRenderingService {
       id: timelineEvent.id,
       group: challengeSpec.id,
       start: timelineEvent.timestamp.toJSDate(),
-      content: `${eventName} :: ${timelineEvent.timestamp.toLocaleString(DateTime.TIME_WITH_SECONDS)}`,
+      content: eventName,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
+      // type: "point",
       isClickable,
       eventData: null
     };
@@ -121,7 +122,7 @@ export class EventHorizonRenderingService {
     const typedEvent = timelineEvent as unknown as EventHorizonGamespaceOnOffEvent;
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace On", "eh-event-type-gamespace-on-off", false);
 
-    baseItem.end = typedEvent.eventData?.offAt?.toJSDate() || this.nowService.now();
+    baseItem.end = typedEvent.eventData?.offAt ? typedEvent.eventData.offAt.toJSDate() : this.nowService.now();
     baseItem.eventData = typedEvent;
     baseItem.type = "background";
 
@@ -130,7 +131,7 @@ export class EventHorizonRenderingService {
 
   private toSolveCompleteDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as unknown as EventHorizonSolveCompleteEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Challenge Completed (${typedEvent.eventData.finalScore} points)`, "eh-event-type-challenge-complete", true);
+    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Completed", "eh-event-type-challenge-complete", true);
 
     baseItem.eventData = typedEvent;
 
@@ -139,9 +140,9 @@ export class EventHorizonRenderingService {
 
   private toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as unknown as EventHorizonSubmissionScoredEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Submission ${typedEvent.eventData.attemptNumber}/${challengeSpec.maxAttempts} (${typedEvent.eventData.score} points)`, "eh-event-type-submission-scored", true);
-
+    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Submission", "eh-event-type-submission-scored", true);
     baseItem.eventData = typedEvent;
+
     return baseItem;
   }
 }
