@@ -30,17 +30,13 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
 
   private async loadSummary(teamId: string) {
     const scoreData = await firstValueFrom(this.scoresService.getTeamGameScore(teamId));
-    this.teamScoreData = scoreData
+    this.teamScoreData = scoreData;
     this.hasStartedChallenges = scoreData.score.challenges.length > 0;
-    // this.summary = response.score;
-    // this.startedChallenges = this.summary.challenges
-    //   .map(s => ({ id: s.id, name: s.name }));
-
-    // this.newChallengeBonusModel = {
-    //   description: '',
-    //   challengeId: response.score.challenges.length ? response.score.challenges[0].id : '',
-    //   pointValue: 1
-    // };;
+    this.newChallengeBonusModel = {
+      challengeId: scoreData.score.challenges.length ? scoreData.score.challenges[0].id : "",
+      description: "",
+      pointValue: 1
+    };
   }
 
   handleDelete(manualbonusId: string) {
