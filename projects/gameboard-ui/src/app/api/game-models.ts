@@ -126,8 +126,8 @@ export interface GameEnrollmentContext {
 }
 
 export enum GamePlayState {
-  NotRegistered = "notRegistered",
   NotStarted = "notStarted",
+  Deploying = "deploying",
   Starting = "starting",
   Started = "started",
   GameOver = "gameOver"
