@@ -34,13 +34,26 @@ export interface CreateManualChallengeBonus {
     pointValue: number;
 }
 
-export interface ManualChallengeBonusViewModel {
+export interface CreateManualTeamBonus {
+    teamId: string;
+    description: string;
+    pointValue: number;
+}
+
+export interface ManualBonus {
     id: string;
     description: string;
     enteredBy: SimpleEntity;
     enteredOn: Date;
-    challengeId: string;
     pointValue: number;
+}
+
+export interface ManualChallengeBonus extends ManualBonus {
+    challengeId: string;
+}
+
+export interface ManualTeamBonus extends ManualBonus {
+    teamId: string;
 }
 
 export interface GameScore {
@@ -72,7 +85,7 @@ export interface TeamScoreChallenge {
     result: ChallengeResult;
     score: Score;
     solveType: ChallengeResult;
-    manualBonuses: ManualChallengeBonusViewModel[];
+    manualBonuses: ManualChallengeBonus[];
 }
 
 export interface TeamGameScoreQueryResponse {
@@ -83,8 +96,9 @@ export interface TeamGameScoreQueryResponse {
 export interface TeamGameScore {
     game: SimpleEntity,
     team: SimpleEntity,
-    overallScore: Score,
     challenges: TeamScoreChallenge[];
+    manualBonuses: ManualTeamBonus[];
+    overallScore: Score,
 }
 
 export interface AutoChallengeBonus {

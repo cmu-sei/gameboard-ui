@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
-import { GameScore, GameScoreGameInfo, GameScoreTeam, TeamGameScore } from '@/services/scoring/scoring.models';
+import { GameScore, GameScoreGameInfo, GameScoreTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ScoreboardTeamDetailModalComponent, ScoreboardTeamDetailModalContext } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 
