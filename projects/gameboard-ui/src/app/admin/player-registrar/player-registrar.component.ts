@@ -32,7 +32,7 @@ export class PlayerRegistrarComponent {
   selected: Player[] = [];
   viewed?: Player;
   viewChange$ = new BehaviorSubject<Player | undefined>(this.viewed);
-  search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time', mode: 'competition' };
+  search: PlayerSearch = { term: '', take: 100, filter: ['collapse'], sort: 'time', mode: 'competition' };
   filter = '';
   teamView = 'collapse';
   scope = '';
