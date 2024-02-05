@@ -59,7 +59,7 @@ export class SponsorEditFormComponent implements OnInit, OnChanges {
   }
 
   private async loadEligibleParentSponsors() {
-    this.eligibleParentSponsors = await firstValueFrom(this.sponsorService.list({ hasParent: false }));
+    this.eligibleParentSponsors = await firstValueFrom(this.sponsorService.list({ excludeSponsorId: this.existingSponsor?.id, hasParent: false }));
   }
 
   private initSponsor(existingSponsor?: Sponsor) {

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
 import { Sponsor } from '@/api/sponsor-models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { SponsorEditModalComponent, SponsorEditModalContext } from '../sponsor-edit-modal/sponsor-edit-modal.component';
+import { SponsorEditModalComponent } from '../sponsor-edit-modal/sponsor-edit-modal.component';
 
 @Component({
   selector: 'app-sponsor-admin-entry',
@@ -23,7 +23,7 @@ export class SponsorAdminEntryComponent {
   }
 
   handleEdit(sponsor: Sponsor) {
-    this.modalService.openComponent<SponsorEditModalComponent, SponsorEditModalContext>({
+    this.modalService.openComponent<SponsorEditModalComponent>({
       content: SponsorEditModalComponent,
       context: {
         editingSponsor: sponsor,
