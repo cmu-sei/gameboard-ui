@@ -1,24 +1,29 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserService } from '../../utility/user.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { SupportSettings } from '@/api/support-models';
+import { SupportService } from '@/api/support.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-support-page',
   templateUrl: './support-page.component.html',
-  styleUrls: ['./support-page.component.scss']
+  styleUrls: ['./support-page.component.scss'],
+  providers: [UnsubscriberService]
 })
-export class SupportPageComponent implements OnInit, OnDestroy {
-  s: Subscription[] = [];
+export class SupportPageComponent implements OnInit {
+  protected settings?: SupportSettings;
 
   constructor(
-    private config: ConfigService,
+    private supportService: SupportService,
+    private unsub: UnsubscriberService,
     hub: NotificationService,
     user: UserService
   ) {
-    this.s.push(
+    // join the hub to get ticket notifications
+    this.unsub.add(
       user.user$.pipe(
         filter(u => !!u),
         tap(u => hub.init(u!.id))
@@ -26,10 +31,7 @@ export class SupportPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
-    this.s.forEach(s => s.unsubscribe());
+  async ngOnInit(): Promise<void> {
+    this.settings = await firstValueFrom(this.supportService.getSettings());
   }
 }

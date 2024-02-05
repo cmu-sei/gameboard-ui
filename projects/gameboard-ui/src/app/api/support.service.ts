@@ -8,9 +8,10 @@ import { catchError, first, last, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeOverview } from './board-models';
 import { PlayerService } from './player.service';
-import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, Ticket, TicketActivity, TicketSummary } from './support-models';
+import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSettings, Ticket, TicketActivity, TicketSummary } from './support-models';
 import { UserSummary } from './user-models';
 import { Search } from './models';
+import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class SupportService {
@@ -19,6 +20,7 @@ export class SupportService {
   seenStart = new Date();
 
   constructor(
+    private apiUrl: ApiUrlService,
     private http: HttpClient,
     private playerService: PlayerService,
     private config: ConfigService
@@ -116,6 +118,14 @@ export class SupportService {
     } else {
       this.seenMap.push({ key, ts });
     }
+  }
+
+  getSettings() {
+    return this.http.get<SupportSettings>(this.apiUrl.build("support/settings"));
+  }
+
+  updateSettings(settings: SupportSettings) {
+    return this.http.put<SupportSettings>(this.apiUrl.build("support/settings"), settings);
   }
 
   getTicketMarkdown = (ticket: Ticket): Observable<string> =>

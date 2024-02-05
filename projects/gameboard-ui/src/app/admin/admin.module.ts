@@ -55,6 +55,7 @@ import { UserRegistrarComponent } from './user-registrar/user-registrar.componen
 import { UserReportComponent } from './user-report/user-report.component';
 import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
+import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
     UserReportComponent,
     SiteOverviewStatsComponent,
     AdminOverviewComponent,
+    SupportSettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -133,6 +135,7 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: "notifications", component: AdminSystemNotificationsComponent },
+          { path: "support/settings", component: SupportSettingsComponent },
           { path: 'support', component: ChallengeBrowserComponent }
         ]
       },
