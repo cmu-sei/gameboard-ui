@@ -18,11 +18,13 @@ import { ManageManualChallengeBonusesModalComponent } from '../components/manage
 import { TeamService } from '@/api/team.service';
 import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 import { AppTitleService } from '@/services/app-title.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-player-registrar',
   templateUrl: './player-registrar.component.html',
-  styleUrls: ['./player-registrar.component.scss']
+  styleUrls: ['./player-registrar.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class PlayerRegistrarComponent {
   refresh$ = new BehaviorSubject<boolean>(true);
@@ -32,7 +34,9 @@ export class PlayerRegistrarComponent {
   selected: Player[] = [];
   viewed?: Player;
   viewChange$ = new BehaviorSubject<Player | undefined>(this.viewed);
-  search: PlayerSearch = { term: '', take: 100, filter: ['collapse'], sort: 'time', mode: 'competition' };
+  // we'd ideally constrain the max ("take") here, but this is the only place we provide player counts
+  // (see https://github.com/cmu-sei/Gameboard/issues/372)
+  search: PlayerSearch = { term: '', take: 0, filter: ['collapse'], sort: 'time', mode: 'competition' };
   filter = '';
   teamView = 'collapse';
   scope = '';
@@ -65,7 +69,8 @@ export class PlayerRegistrarComponent {
     private clipboard: ClipboardService,
     private teamService: TeamService,
     private title: AppTitleService,
-    private unityService: UnityService
+    private unityService: UnityService,
+    private unsub: UnsubscriberService
   ) {
 
     const game$ = route.params.pipe(
@@ -107,6 +112,17 @@ export class PlayerRegistrarComponent {
     ]).pipe(
       map(([game, players, futures]) => ({ game, players, futures }))
     );
+
+    this.unsub.add(route.queryParams.subscribe(param => {
+      if (param?.term) {
+        this.mode = "";
+        this.teamView = "";
+        this.search.filter = [this.filter];
+        this.search.mode = "";
+        this.search.term = param.term;
+        this.refresh$.next(true);
+      }
+    }));
   }
 
   toggleFilter(role: string): void {

@@ -40,11 +40,13 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
       throw new Error("Couldn't resolve the sponsor performance template.");
     }
 
-    this.modalService.openComponent<SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext>({
+    this.modalService.openComponent<SponsorChallengePerformanceComponent>({
       content: SponsorChallengePerformanceComponent,
       context: {
-        challenge,
-        sponsorPerformance
+        context: {
+          challenge,
+          sponsorPerformance
+        }
       },
       modalClasses: ["modal-dialog-centered", "modal-xl"]
     });

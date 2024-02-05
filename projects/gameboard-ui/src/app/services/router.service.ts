@@ -41,6 +41,14 @@ export class RouterService implements OnDestroy {
     this.router.navigateByUrl("/");
   }
 
+  public getAdminChallengeUrl(challengeId: string) {
+    return this.router.createUrlTree(["admin", "support"], { queryParams: { search: challengeId } }).toString();
+  }
+
+  public getAdminGamePlayerUrl(gameId: string, playerId: string) {
+    return this.router.createUrlTree(["admin", "registrar", gameId], { queryParams: { term: playerId } });
+  }
+
   public getCertificatePrintableUrl(mode: PlayerMode, challengeSpecOrGameId: string) {
     const localUserId = this.localUser.user$.value?.id;
 

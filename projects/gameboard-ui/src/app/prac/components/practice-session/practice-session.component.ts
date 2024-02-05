@@ -156,7 +156,9 @@ export class PracticeSessionComponent {
     this.modalService.openComponent({
       content: PracticeChallengeSolvedModalComponent,
       context: {
-        challenge
+        context: {
+          challenge
+        }
       },
     });
   }

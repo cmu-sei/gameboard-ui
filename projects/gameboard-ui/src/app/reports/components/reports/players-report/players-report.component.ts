@@ -75,18 +75,20 @@ export class PlayersReportComponent extends ReportComponentBase<PlayersReportFla
   }
 
   protected showPlayerParticipation(record: PlayersReportRecord) {
-    this.modalService.openComponent<PlayersReportParticipationSummaryComponent, PlayersReportParticipationSummaryContext>({
+    this.modalService.openComponent<PlayersReportParticipationSummaryComponent>({
       content: PlayersReportParticipationSummaryComponent,
       context: {
-        player: {
-          id: record.user.id,
-          name: record.user.name,
-          sponsor: record.sponsor
-        },
-        series: record.distinctSeriesPlayed,
-        seasons: record.distinctSeasonsPlayed,
-        tracks: record.distinctTracksPlayed,
-        games: record.distinctGamesPlayed
+        context: {
+          player: {
+            id: record.user.id,
+            name: record.user.name,
+            sponsor: record.sponsor
+          },
+          series: record.distinctSeriesPlayed,
+          seasons: record.distinctSeasonsPlayed,
+          tracks: record.distinctTracksPlayed,
+          games: record.distinctGamesPlayed
+        }
       }
     });
   }

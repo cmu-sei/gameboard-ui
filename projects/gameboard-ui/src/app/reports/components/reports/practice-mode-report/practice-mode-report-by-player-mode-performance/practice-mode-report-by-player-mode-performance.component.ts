@@ -38,7 +38,7 @@ export class PracticeModeReportByPlayerModePerformanceComponent implements OnCha
   protected totalAttemptsClicked(event: { userId: string, isPractice: boolean }) {
     this.modalService.openComponent({
       content: PlayerModePerformanceSummaryComponent,
-      context: event as PlayerModePerformanceSummaryContext,
+      context: { context: { ...event } },
       modalClasses: ["modal-dialog-centered", "modal-lg"]
     });
   }

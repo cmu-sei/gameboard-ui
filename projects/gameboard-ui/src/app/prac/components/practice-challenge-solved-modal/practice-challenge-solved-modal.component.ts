@@ -26,7 +26,7 @@ interface LegacyFeedbackFormContext {
   providers: [UnsubscriberService]
 })
 export class PracticeChallengeSolvedModalComponent implements OnInit {
-  protected context?: PracticeChallengeSolvedModalContext;
+  context?: PracticeChallengeSolvedModalContext;
   protected certificateUrl?: string;
   protected isCertificateConfigured = false;
   protected feedbackFormContext?: LegacyFeedbackFormContext = undefined;

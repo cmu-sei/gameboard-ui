@@ -214,12 +214,12 @@
         </div>
       </div>
 
-      <div *ngIf="ctx.canManage">
-        <div class="card ml-2 mb-auto" style="width: 350px;">
-          <div class="card-header d-flex justify-content-end pb-0" style="background-color: #111;">
-            Manage&nbsp;<fa-icon [icon]="faCog"></fa-icon>
+      <div *ngIf="ctx.canManage" class="ml-2">
+        <div class="card mb-auto manage-card">
+          <div class="card-header font-weight-bold">
+            Manage
           </div>
-          <div class="card-body pt-0" style="background-color: #111;">
+          <div class="card-body" style="background-color: #111;">
             <div *ngIf="changedTicket && !!changedTicket?.id">
 
               <div class="form-group p-0 m-0 mb-4">
@@ -314,6 +314,12 @@
                   {{ctx.ticket.creator?.approvedName || 'None'}}</p>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="card mt-2 manage-card">
+          <div class="card-header font-weight-bold">Support Tools</div>
+          <div class="card-body">
+            <app-ticket-support-tools [context]="supportToolsContext"></app-ticket-support-tools>
           </div>
         </div>
       </div>

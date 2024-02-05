@@ -39,25 +39,29 @@ export class AdminSystemNotificationsComponent implements OnInit {
   }
 
   protected handleCreateNotificationClick() {
-    this.modalService.openComponent<CreateEditSystemNotificationModalComponent, CreatedEditSystemNotificationModalContext>({
+    this.modalService.openComponent<CreateEditSystemNotificationModalComponent>({
       content: CreateEditSystemNotificationModalComponent,
       context: {
-        model: {
-          markdownContent: "",
-          notificationType: "generalInfo",
-          title: ""
-        },
-        onSave: () => this._forceLoad$.next(true)
+        context: {
+          model: {
+            markdownContent: "",
+            notificationType: "generalInfo",
+            title: ""
+          },
+          onSave: () => this._forceLoad$.next(true)
+        }
       }
     });
   }
 
   protected handleEditNotificationClick(notification: AdminViewSystemNotification) {
-    this.modalService.openComponent<CreateEditSystemNotificationModalComponent, CreatedEditSystemNotificationModalContext>({
+    this.modalService.openComponent<CreateEditSystemNotificationModalComponent>({
       content: CreateEditSystemNotificationModalComponent,
       context: {
-        model: { ...notification },
-        onSave: () => this._forceLoad$.next(true)
+        context: {
+          model: { ...notification },
+          onSave: () => this._forceLoad$.next(true)
+        }
       }
     });
   }

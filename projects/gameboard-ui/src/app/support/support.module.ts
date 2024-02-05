@@ -17,13 +17,16 @@ import { SupportPageComponent } from './support-page/support-page.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CoreModule } from '../core/core.module';
+import { TicketSupportToolsComponent } from './components/ticket-support-tools/ticket-support-tools.component';
+import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 
 @NgModule({
   declarations: [
-    TicketFormComponent,
-    TicketDetailsComponent,
-    TicketListComponent,
     SupportPageComponent,
+    TicketDetailsComponent,
+    TicketFormComponent,
+    TicketListComponent,
+    TicketSupportToolsComponent,
   ],
   imports: [
     CommonModule,
@@ -45,7 +48,8 @@ import { CoreModule } from '../core/core.module';
     MarkdownModule,
     ButtonsModule,
     ModalModule,
-    TooltipModule
+    TooltipModule,
+    EventHorizonModule
   ]
 })
 export class SupportModule { }

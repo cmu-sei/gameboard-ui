@@ -20,6 +20,7 @@ import { fa } from '../../services/font-awesome.service';
 import { LogService } from '../../services/log.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { ConfigService } from '@/utility/config.service';
+import { TicketSupportToolsContext } from '../components/ticket-support-tools/ticket-support-tools.component';
 
 @Component({
   selector: 'app-ticket-details',
@@ -76,6 +77,8 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   faExclamationCircle = faExclamationCircle;
   faSync = faSync;
 
+  protected supportToolsContext?: TicketSupportToolsContext;
+
   selectedAttachmentList?: AttachmentFile[];
   // Storage for attachments uploaded in the original ticket request
   attachmentObjectUrls: SafeResourceUrl[] = [];
@@ -121,6 +124,22 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
 
         // set the page title
         appTitleService.set(`${t.fullKey} | Support`);
+
+        // initialization for the "support tools" component
+        const hasGame = t.player?.gameId && t.player?.gameName;
+        const hasPlayer = !!t.player;
+        const hasTeam = t.teamId && t.teamName;
+
+        this.supportToolsContext = {
+          challenge: t.challenge ? { id: t.challengeId, name: t.challenge?.name } : undefined,
+          game: hasGame ? { id: t.player!.gameId, name: t.player!.gameName } : undefined,
+          player: hasPlayer ? { id: t.playerId, name: t.player!.approvedName } : undefined,
+          team: {
+            id: t.teamId,
+            name: t.teamName,
+            isMultiplePlayers: t.isTeamGame
+          }
+        };
       }),
       tap(t => {
         this.currentLabels.clear();
