@@ -28,18 +28,18 @@ import { PlayerWithSponsor } from '@/api/models';
 export class PlayerAvatarListComponent implements OnInit {
   // both the pure uri and the sponsors are here because some places we don't have
   // the sponsor metadata yet, and in others we do
-  @Input() avatarUris: string[] = [];
-  @Input() players: PlayerWithSponsor[] = [];
   @Input() avatarSize: 'small' | 'medium' | 'large' = 'medium';
-  @Input() showSessionStatusWidget: boolean = true;
+  @Input() avatarUris: string[] = [];
   @Input() captainSession?: TimeWindow;
+  @Input() players: PlayerWithSponsor[] = [];
+  @Input() showSessionStatusWidget: boolean = true;
 
   protected sizeClass = "";
   protected countClass = "";
 
   ngOnInit(): void {
     this.avatarUris = this.avatarUris || [];
-    this.countClass = `avatar-count-${this.avatarUris.length}`;
+    this.countClass = `avatar-count-${this.players.length || this.avatarUris.length}`;
     this.sizeClass = `avatar-size-${this.avatarSize.toString()}`;
   }
 }

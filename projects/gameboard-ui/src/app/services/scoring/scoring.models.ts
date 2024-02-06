@@ -71,6 +71,7 @@ export interface GameScoreGameInfo {
 export interface GameScoreTeam {
     challenges: TeamScoreChallenge[];
     liveSessionEnds: Date | null;
+    manualBonuses: ManualTeamBonus[];
     overallScore: Score;
     players: PlayerWithSponsor[];
     rank: number;

@@ -11,6 +11,10 @@
     </h1>
   </div>
 
+  <div *ngIf="isAdmin">
+    <input type="checkbox" [(ngModel)]="!isLegacyScoreboard">Use new scoreboard
+  </div>
+
   <div class="container">
     <div class="row">
       <div class="col-12 scoreboard">
@@ -22,9 +26,9 @@
   </div>
 
   <!-- coming soon to a Gameboard near you...-->
-  <!-- <div class="d-flex align-items-center justify-content-center" *ngIf="!isLegacyScoreboard">
+  <div class="d-flex align-items-center justify-content-center" *ngIf="!isLegacyScoreboard">
     <app-scoreboard class="page-width" [gameId]="game.id"></app-scoreboard>
-  </div> -->
+  </div>
 </ng-container>
 
 <ng-template #loading>

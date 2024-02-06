@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { GameScore, GameScoreGameInfo, GameScoreTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { ScoreboardTeamDetailModalComponent, ScoreboardTeamDetailModalContext } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 
 @Component({
   selector: 'app-scoreboard',
@@ -15,7 +15,8 @@ export class ScoreboardComponent implements OnChanges {
 
   protected gameData: GameScore | null = null;
   protected maxTeamMembers = 1;
-  protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column";
+  protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column.";
+  protected funnyTooltip = `<p>This is ok</p><p>isn't it?</p>`;
 
   constructor(
     private modalConfirmService: ModalConfirmService,

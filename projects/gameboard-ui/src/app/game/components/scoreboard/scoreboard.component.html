@@ -10,10 +10,10 @@
             <th scope="col"></th>
             <th scope="col"> {{ gameData.game.isTeamGame ? "Team" : "Player" }} </th>
             <th scope="col">Challenge Performance</th>
-            <th scope="col" [tooltip]="cumulativeTimeTooltip">
+            <th scope="col" class="text-center tooltipped-column-header" [tooltip]="cumulativeTimeTooltip">
                 <span class="tooltipped-column-header">Cumulative Time</span>
             </th>
-            <th scope="col">Score</th>
+            <th scope="col" class="text-center">Score</th>
         </tr>
     </thead>
 
@@ -30,12 +30,15 @@
                     <app-player-avatar-list avatarSize="medium" class="d-block mr-2"
                         [players]="teamScore.players"></app-player-avatar-list>
 
-                    <div class="team-names-container ml-2 d-flex flex-column align-items-center justify-content-center">
+                    <div class="team-names-container ml-2">
                         <h5 class="fs-20 m-0">{{teamScore.team.name}}</h5>
                         <ng-container *ngIf="gameData.game.isTeamGame && teamScore.players.length > 1">
-                            <hr />
-                            <ul class="player-names-list d-flex">
-                                <li *ngFor="let player of teamScore.players" class="mr-2">{{ player.name }}</li>
+                            <ul class="player-names-list d-flex mt-2">
+                                <li *ngFor="let player of teamScore.players" class="mr-2">
+                                    <app-player-avatar [player]="player" [showSponsorTooltip]="false" size="small"
+                                        [tooltip]="player.name + ' // ' + player.sponsor.name"
+                                        tooltipPlacement="bottom"></app-player-avatar>
+                                </li>
                             </ul>
                         </ng-container>
                     </div>
@@ -62,12 +65,12 @@
                 </div>
             </td>
             <td>
-                <div class="playtime challenge-count">
+                <div class="playtime challenge-count text-center">
                     {{ teamScore.totalTimeMs | msToDuration }}
                 </div>
             </td>
-            <td>
-                <span class="score">{{ teamScore.overallScore.totalScore }}</span>
+            <td class="text-center">
+                <span class="score text-center">{{ teamScore.overallScore.totalScore }}</span>
             </td>
         </tr>
     </tbody>
