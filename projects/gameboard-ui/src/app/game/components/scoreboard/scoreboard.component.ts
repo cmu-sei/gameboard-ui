@@ -31,12 +31,7 @@ export class ScoreboardComponent implements OnChanges {
   protected handleRowClick(gameInfo: GameScoreGameInfo, teamScore: GameScoreTeam) {
     this.modalConfirmService.openComponent<ScoreboardTeamDetailModalComponent>({
       content: ScoreboardTeamDetailModalComponent,
-      context: {
-        context: {
-          game: { id: gameInfo.id, name: gameInfo.name },
-          teamData: teamScore
-        }
-      },
+      context: { teamId: teamScore.team.id },
       modalClasses: [
         teamScore.players.length > 1 ? "modal-xl" : "modal-lg",
         "modal-dialog-centered"

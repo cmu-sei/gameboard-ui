@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ConfigService } from '../../utility/config.service';
-import { CreateManualChallengeBonus, CreateManualTeamBonus, GameAutoBonusConfig, GameScore, GameScoringConfig, TeamGameScoreQueryResponse, UpdateGameAutoChallengeBonusConfig } from './scoring.models';
+import { CreateManualChallengeBonus, CreateManualTeamBonus, GameAutoBonusConfig, GameScore, GameScoringConfig, TeamScoreQueryResponse, UpdateGameAutoChallengeBonusConfig } from './scoring.models';
 
 @Injectable({ providedIn: 'root' })
 export class ScoringService {
@@ -33,8 +33,8 @@ export class ScoringService {
     return this.http.get<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/score/config`);
   }
 
-  public getTeamGameScore(teamId: string): Observable<TeamGameScoreQueryResponse> {
-    return this.http.get<TeamGameScoreQueryResponse>(`${this.API_ROOT}/team/${teamId}/score`);
+  public getTeamScore(teamId: string): Observable<TeamScoreQueryResponse> {
+    return this.http.get<TeamScoreQueryResponse>(`${this.API_ROOT}/team/${teamId}/score`);
   }
 
   public createManualChallengeBonus(model: CreateManualChallengeBonus): Observable<void> {

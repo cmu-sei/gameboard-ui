@@ -1,17 +1,17 @@
-<ng-container *ngIf="context">
+<ng-container *ngIf="context;else loading">
     <div class="modal-header">
         <div class="modal-title pull-left d-flex align-items-center">
             <div *ngIf="!isTeam" class="single-player-avatar">
-                <app-player-avatar size="medium" [player]="context.teamData.players[0]"></app-player-avatar>
+                <app-player-avatar size="medium" [player]="context.score.players[0]"></app-player-avatar>
             </div>
             <div class="headers ml-3 pt-3">
                 <h3>
                     <span class="subtle-text">
                         {{ isTeam ? "Team" : "Player" }} Score:
                     </span>
-                    {{ context.game.name }}
+                    {{ context.gameInfo.name }}
                 </h3>
-                <h2>{{context.teamData.team.name}}</h2>
+                <h2>{{ context.score.team.name }}</h2>
             </div>
         </div>
         <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="handleModalClose()">
@@ -22,7 +22,7 @@
         <div *ngIf="isTeam" class="team-detail-section">
             <div class="player-list">
                 <ul class="d-flex align-items-center justify-content-center">
-                    <li *ngFor="let player of context.teamData.players">
+                    <li *ngFor="let player of context.score.players">
                         <div class="player-detail-container text-center mx-3">
                             <app-player-avatar [player]="player" size="large"></app-player-avatar>
                             <div class="player-name">{{ player.name }}</div>
@@ -38,14 +38,14 @@
 
             <div class="score-breakdown d-flex align-items-center justify-content-center my-4">
                 <div class="score-component">
-                    <div class="score-value">{{ context.teamData.overallScore.completionScore }}</div>
+                    <div class="score-value">{{ context.score.overallScore.completionScore }}</div>
                     <div class="score-label">Challenge Points</div>
                 </div>
 
                 <ng-container *ngIf="hasBonuses">
                     <div class="score-plus">+</div>
                     <div class="score-component">
-                        <div class="score-value">{{ context.teamData.overallScore.bonusScore }}</div>
+                        <div class="score-value">{{ context.score.overallScore.bonusScore }}</div>
                         <div class="score-label">Bonus Points</div>
                     </div>
                 </ng-container>
@@ -53,7 +53,7 @@
                 <ng-container *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses">
                     <div class="score-plus">+</div>
                     <div class="score-component">
-                        <div class="score-value">{{ context.teamData.overallScore.manualBonusScore }}</div>
+                        <div class="score-value">{{ context.score.overallScore.manualBonusScore }}</div>
                         <div class="score-label">Admin Adjustment</div>
                     </div>
                 </ng-container>
@@ -61,7 +61,7 @@
                 <ng-container *ngIf="hasBonuses || hasManualChallengeBonuses || hasManualTeamBonuses">
                     <div class="score-equals">=</div>
                     <div class="score-value score-total text-info">
-                        {{ context.teamData.overallScore.totalScore }}
+                        {{ context.score.overallScore.totalScore }}
                     </div>
                 </ng-container>
             </div>
@@ -88,7 +88,7 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let challenge of context.teamData.challenges">
+                    <tr *ngFor="let challenge of context.score.challenges">
                         <td>
                             {{challenge.name}}
                             <div [class]="challenge.result | challengeResultColor">
@@ -112,22 +112,22 @@
 
                 <tfoot>
                     <td></td>
-                    <td class="numeric-column"> {{ context.teamData.overallScore.completionScore }}</td>
+                    <td class="numeric-column"> {{ context.score.overallScore.completionScore }}</td>
                     <td *ngIf="hasBonuses" class="numeric-column">
-                        {{ context.teamData.overallScore.bonusScore }}
+                        {{ context.score.overallScore.bonusScore }}
                     </td>
                     <td *ngIf="hasManualChallengeBonuses" class="numeric-column">
                         {{ challengeManualBonusTotal }}
                     </td>
                     <td class="numeric-column  total-column">
                         <!--team level bonuses get displayed in a separate table below-->
-                        {{ context.teamData.overallScore.totalScore - teamManualBonusTotal }}
+                        {{ context.score.overallScore.totalScore - teamManualBonusTotal }}
                     </td>
                 </tfoot>
             </table>
         </div>
 
-        <div class="team-detail-section" *ngIf="context.teamData.manualBonuses.length">
+        <div class="team-detail-section" *ngIf="context.score.manualBonuses.length">
             <h4>Additional Bonuses</h4>
 
             <table class="table table-striped gameboard-table w-100 mt-3">
@@ -142,7 +142,7 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let bonus of context.teamData.manualBonuses">
+                    <tr *ngFor="let bonus of context.score.manualBonuses">
                         <td>
                             {{bonus.description}}
                         </td>
@@ -157,7 +157,7 @@
         <div class="team-detail-section">
             <div class="d-flex grand-total-container">
                 <div class="flex-grow-1">Grand Total</div>
-                <div class="total-column text-center">{{context.teamData.overallScore.totalScore}}</div>
+                <div class="total-column text-center">{{context.score.overallScore.totalScore}}</div>
             </div>
         </div>
     </div>
@@ -166,10 +166,6 @@
     </div>
 </ng-container>
 
-<ng-template #scoreBreakdownNoBonuses>
-    <div>{{ context.teamData.overallScore.totalScore }}</div>
-</ng-template>
-
-<ng-template #scoreBreakdownWithBonuses>
-
+<ng-template #loading>
+    <app-spinner></app-spinner>
 </ng-template>

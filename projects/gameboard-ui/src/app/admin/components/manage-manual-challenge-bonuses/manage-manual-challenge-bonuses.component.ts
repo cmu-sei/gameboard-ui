@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ScoringService } from '@/services/scoring/scoring.service';
-import { CreateManualChallengeBonus, TeamGameScoreQueryResponse } from '@/services/scoring/scoring.models';
+import { CreateManualChallengeBonus, TeamScoreQueryResponse } from '@/services/scoring/scoring.models';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -12,7 +12,7 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
   @Input() teamId!: string;
 
   protected hasStartedChallenges = false;
-  protected teamScoreData?: TeamGameScoreQueryResponse;
+  protected teamScoreData?: TeamScoreQueryResponse;
 
   newChallengeBonusModel: CreateManualChallengeBonus = {
     description: '',
@@ -27,7 +27,7 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
   }
 
   private async loadSummary(teamId: string) {
-    const scoreData = await firstValueFrom(this.scoresService.getTeamGameScore(teamId));
+    const scoreData = await firstValueFrom(this.scoresService.getTeamScore(teamId));
     this.teamScoreData = scoreData;
     this.hasStartedChallenges = scoreData.score.challenges.length > 0;
     this.newChallengeBonusModel = {

@@ -11,11 +11,11 @@
     </h1>
   </div>
 
-  <div *ngIf="isAdmin">
-    <input type="checkbox" [(ngModel)]="!isLegacyScoreboard">Use new scoreboard
-  </div>
-
   <div class="container">
+    <div *ngIf="isAdmin" class="row">
+      <input type="checkbox" [(ngModel)]="!isLegacyScoreboard">Use new scoreboard
+    </div>
+
     <div class="row">
       <div class="col-12 scoreboard">
         <h2 id="scoreboard" class="text-center my-4">Scoreboard</h2>

@@ -27,20 +27,24 @@
             </td>
             <td>
                 <div class="team-container d-flex align-items-center">
-                    <app-player-avatar-list avatarSize="medium" class="d-block mr-2"
-                        [players]="teamScore.players"></app-player-avatar-list>
+                    <ng-container *ngIf="!gameData.game.isTeamGame">
+                        <app-player-avatar *ngIf="!gameData.game.isTeamGame" [player]="teamScore.players[0]"
+                            class="mr-2"></app-player-avatar>
 
-                    <div class="team-names-container ml-2">
-                        <h5 class="fs-20 m-0">{{teamScore.team.name}}</h5>
-                        <ng-container *ngIf="gameData.game.isTeamGame && teamScore.players.length > 1">
-                            <ul class="player-names-list d-flex mt-2">
-                                <li *ngFor="let player of teamScore.players" class="mr-2">
-                                    <app-player-avatar [player]="player" [showSponsorTooltip]="false" size="small"
-                                        [tooltip]="player.name + ' // ' + player.sponsor.name"
-                                        tooltipPlacement="bottom"></app-player-avatar>
-                                </li>
-                            </ul>
-                        </ng-container>
+                        <span class="player-name">
+                            {{teamScore.players[0].name}}
+                        </span>
+                    </ng-container>
+
+                    <div *ngIf="gameData.game.isTeamGame" class="team-names-container ml-2">
+                        <h5 class="team-name m-0">{{teamScore.team.name}}</h5>
+                        <ul class="player-names-list d-flex mt-2">
+                            <li *ngFor="let player of teamScore.players" class="mr-2">
+                                <app-player-avatar [player]="player" [showSponsorTooltip]="false" size="tiny"
+                                    [tooltip]="player.name + ' // ' + player.sponsor.name"
+                                    placement="bottom"></app-player-avatar>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </td>

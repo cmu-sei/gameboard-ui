@@ -89,14 +89,15 @@ export interface TeamScoreChallenge {
     manualBonuses: ManualChallengeBonus[];
 }
 
-export interface TeamGameScoreQueryResponse {
+export interface TeamScoreQueryResponse {
     gameInfo: GameScoreGameInfo;
-    score: TeamGameScore
+    score: TeamScore
 }
 
-export interface TeamGameScore {
+export interface TeamScore {
     game: SimpleEntity,
     team: SimpleEntity,
+    players: PlayerWithSponsor[];
     challenges: TeamScoreChallenge[];
     manualBonuses: ManualTeamBonus[];
     overallScore: Score,
