@@ -1,4 +1,4 @@
-<table *ngIf="gameData" class="table table-striped table-hover gameboard-table w-100">
+<table *ngIf="scoreboardData" class="table table-striped table-hover gameboard-table w-100">
     <col class="width-5">
     <col>
     <col>
@@ -8,7 +8,7 @@
     <thead class="thead-light">
         <tr class="headers">
             <th scope="col"></th>
-            <th scope="col"> {{ gameData.game.isTeamGame ? "Team" : "Player" }} </th>
+            <th scope="col"> {{ scoreboardData.game.isTeamGame ? "Team" : "Player" }} </th>
             <th scope="col">Challenge Performance</th>
             <th scope="col" class="text-center tooltipped-column-header" [tooltip]="cumulativeTimeTooltip">
                 <span class="tooltipped-column-header">Cumulative Time</span>
@@ -18,17 +18,17 @@
     </thead>
 
     <tbody>
-        <tr *ngFor="let teamScore of gameData.teams" class="data-row cursor-pointer"
-            (click)="handleRowClick(gameData.game, teamScore)">
+        <tr *ngFor="let teamScore of scoreboardData.teams; index as i" class="data-row cursor-pointer"
+            (click)="handleRowClick(teamScore)">
             <td>
                 <div class="team-rank d-flex flex-column justify-content-center align-items-center">
-                    {{teamScore.rank}}
+                    {{i + 1}}
                 </div>
             </td>
             <td>
                 <div class="team-container d-flex align-items-center">
-                    <ng-container *ngIf="!gameData.game.isTeamGame">
-                        <app-player-avatar *ngIf="!gameData.game.isTeamGame" [player]="teamScore.players[0]"
+                    <ng-container *ngIf="!scoreboardData.game.isTeamGame">
+                        <app-player-avatar *ngIf="!scoreboardData.game.isTeamGame" [player]="teamScore.players[0]"
                             class="mr-2"></app-player-avatar>
 
                         <span class="player-name">
@@ -36,8 +36,8 @@
                         </span>
                     </ng-container>
 
-                    <div *ngIf="gameData.game.isTeamGame" class="team-names-container ml-2">
-                        <h5 class="team-name m-0">{{teamScore.team.name}}</h5>
+                    <div *ngIf="scoreboardData.game.isTeamGame" class="team-names-container ml-2">
+                        <h5 class="team-name m-0">{{teamScore.score.teamName}}</h5>
                         <ul class="player-names-list d-flex mt-2">
                             <li *ngFor="let player of teamScore.players" class="mr-2">
                                 <app-player-avatar [player]="player" [showSponsorTooltip]="false" size="tiny"
@@ -49,32 +49,30 @@
                 </div>
             </td>
             <td>
-                <div class="challenge-count"
-                    *ngIf="teamScore.challenges | teamChallengeScoresToChallengeResultTypeCount:'success'">
-                    <span class="text-success">{{ teamScore.challenges |
-                        teamChallengeScoresToChallengeResultTypeCount:"success" }}</span>
+                <div class="challenge-count" *ngIf="teamScore.score.solveCountComplete">
+                    <span class="text-success">{{ teamScore.score.solveCountComplete }}</span>
                     <span class="challenge-count-desc"> complete</span>
                 </div>
 
-                <div class="challenge-count"
-                    *ngIf="teamScore.challenges | teamChallengeScoresToChallengeResultTypeCount:'partial'">
-                    <span class="text-info">{{ teamScore.challenges |
-                        teamChallengeScoresToChallengeResultTypeCount:"partial" }}</span>
+                <div class="challenge-count" *ngIf="teamScore.score.solveCountPartial">
+                    <span class="text-info">{{ teamScore.score.solveCountPartial }}</span>
                     <span class="challenge-count-desc"> partial</span>
                 </div>
 
-                <div class="challenge-count" *ngIf="teamScore.challenges.length < gameData.game.specs.length">
-                    <span class="text-info">{{ gameData.game.specs.length - teamScore.challenges.length}}</span>
+                <div class="challenge-count"
+                    *ngIf="teamScore.score.solveCountPartial + teamScore.score.solveCountComplete < scoreboardData.game.specCount">
+                    <span class="text-info">{{ teamScore.score.solveCountPartial + teamScore.score.solveCountComplete -
+                        scoreboardData.game.specCount}}</span>
                     <span class="challenge-count-desc"> unattempted</span>
                 </div>
             </td>
             <td>
                 <div class="playtime challenge-count text-center">
-                    {{ teamScore.totalTimeMs | msToDuration }}
+                    {{ teamScore.score.cumulativeTimeMs| msToDuration }}
                 </div>
             </td>
             <td class="text-center">
-                <span class="score text-center">{{ teamScore.overallScore.totalScore }}</span>
+                <span class="score text-center">{{ teamScore.score.scoreOverall }}</span>
             </td>
         </tr>
     </tbody>

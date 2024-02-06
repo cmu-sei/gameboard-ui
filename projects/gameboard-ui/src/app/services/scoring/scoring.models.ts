@@ -125,3 +125,35 @@ export interface UpdateGameAutoChallengeBonusConfig {
     allChallengesBonuses: AutoChallengeBonus[];
     specificChallengesBonuses: ChallengeLevelAutoChallengeBonus[];
 }
+
+export interface ScoreboardData {
+    game: ScoreboardDataGame;
+    teams: ScoreboardDataTeam[];
+}
+
+export interface ScoreboardDataGame {
+    id: string;
+    name: string;
+    isTeamGame: boolean;
+    specCount: number;
+}
+
+export interface ScoreboardDataTeam {
+    players: PlayerWithSponsor[];
+    score: DenormalizedTeamScore;
+}
+
+export interface DenormalizedTeamScore {
+    gameId: string;
+    teamId: string;
+    teamName: string;
+    scoreOverall: number;
+    scoreAutoBonus: number;
+    scoreManualBonus: number;
+    scoreChallenge: number;
+    solveCountNone: number;
+    solveCountPartial: number;
+    solveCountComplete: number;
+    cumulativeTimeMs: number;
+    timeRemainingMs: number;
+}

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
-import { GameScore, GameScoreGameInfo, GameScoreTeam } from '@/services/scoring/scoring.models';
+import { GameScoreTeam, ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 
@@ -13,10 +13,9 @@ import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-mo
 export class ScoreboardComponent implements OnChanges {
   @Input() gameId?: string;
 
-  protected gameData: GameScore | null = null;
+  protected scoreboardData: ScoreboardData | null = null;
   protected maxTeamMembers = 1;
   protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column.";
-  protected funnyTooltip = `<p>This is ok</p><p>isn't it?</p>`;
 
   constructor(
     private modalConfirmService: ModalConfirmService,
@@ -28,22 +27,22 @@ export class ScoreboardComponent implements OnChanges {
     }
   }
 
-  protected handleRowClick(gameInfo: GameScoreGameInfo, teamScore: GameScoreTeam) {
+  protected handleRowClick(teamData: ScoreboardDataTeam) {
     this.modalConfirmService.openComponent<ScoreboardTeamDetailModalComponent>({
       content: ScoreboardTeamDetailModalComponent,
-      context: { teamId: teamScore.team.id },
+      context: { teamId: teamData.score.teamId },
       modalClasses: [
-        teamScore.players.length > 1 ? "modal-xl" : "modal-lg",
+        teamData.players.length > 1 ? "modal-xl" : "modal-lg",
         "modal-dialog-centered"
       ]
     });
   }
 
   private async loadGame(gameId: string) {
-    this.gameData = await firstValueFrom(this.scoreService.getGameScore(gameId));
+    this.scoreboardData = await firstValueFrom(this.scoreService.getScoreboard(gameId));
 
     this.maxTeamMembers = 1;
-    for (const team of this.gameData.teams.filter(t => t.players.length > 1)) {
+    for (const team of this.scoreboardData.teams.filter(t => t.players.length > 1)) {
       if (team.players.length > this.maxTeamMembers) {
         this.maxTeamMembers = team.players.length;
       }
