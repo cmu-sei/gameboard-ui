@@ -20,23 +20,33 @@
       </div>
 
       <div class="lead mt-4">Registration</div>
-      <div class="row px-2 mx-0 border-top border-dark">
+      <div *ngIf="isRegistrationOpen" class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Opens</div>
         <div class="col-6 p-2">{{game.registrationOpen | shorttime:true}}</div>
       </div>
-      <div class="row px-2 mx-0 border-top border-dark">
+      <div *ngIf="isRegistrationOpen" class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Closes</div>
         <div class="col-6 p-2">{{game.registrationClose | shorttime:true}}</div>
       </div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Access</div>
-        <div class="col-6 p-2 text-capitalize">{{game.registrationType}}</div>
+
+        <div *ngIf="isRegistrationOpen; else registrationClosed" class="col-6 p-2 text-capitalize">
+          {{ game.registrationType }}
+        </div>
       </div>
       <div class="row px-2 mx-0 border-top border-dark">
         <div class="col-6 p-2 font-weight-bold">Team Size</div>
-        <div class="col-6 p-2">{{game.allowTeam ? (game.minTeamSize || 1)+" - "+(game.maxTeamSize || 1) : "Individual"}}</div>
+        <div class="col-6 p-2">{{game.allowTeam ? (game.minTeamSize || 1)+" - "+(game.maxTeamSize || 1) : "Individual"}}
+        </div>
       </div>
 
     </div>
   </div>
 </ng-container>
+
+<ng-template #registrationClosed>
+  <div class="col-6 p-2">
+    Registration hasn't opened for this game yet. Check back soon!
+  </div>
+</ng-template>
