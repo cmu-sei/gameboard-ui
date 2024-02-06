@@ -16,6 +16,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { FormsModule } from '@angular/forms';
 import { TocPageComponent } from './toc-page/toc-page.component';
+import { RegistrationTypeToIsOpenPipe } from './pipes/registration-type-to-is-open.pipe';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { TocPageComponent } from './toc-page/toc-page.component';
     ForbiddenComponent,
     LoginPageComponent,
     TocPageComponent,
+    RegistrationTypeToIsOpenPipe,
   ],
   imports: [
     CommonModule,

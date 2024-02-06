@@ -5,7 +5,7 @@
   <div class="card" *ngIf="ctx">
     <div class="card-body">
 
-      <div class="text-info card-text mb-2">
+      <div class="text-info card-text mb-2" *ngIf="isRegistrationOpen">
         <span *ngIf="ctx.game.registration.isBefore">Enrollment opens in </span>
         <span *ngIf="ctx.game.registration.isDuring">Enrollment closes in </span>
         <span *ngIf="ctx.game.registration.isAfter">Enrollment is closed </span>
@@ -55,8 +55,8 @@
               *ngIf="ctxDelayed$ | async as delay; else loading">
               <div class="text-center"
                 *ngIf="!!(ctx.user.name && hasSelectedSponsor) && ctx.game.registration.isDuring">
-                <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
-                  (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                <app-confirm-button btnClass="btn btn-primary btn-lg mr-4" [disabled]="!isRegistrationOpen"
+                  [tooltip]="enrollTooltip" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
                   <fa-icon [icon]="faEdit"></fa-icon>
                   <span>Enroll</span>
                 </app-confirm-button>
