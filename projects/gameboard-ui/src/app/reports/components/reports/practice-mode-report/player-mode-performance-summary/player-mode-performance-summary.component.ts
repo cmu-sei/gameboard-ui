@@ -1,4 +1,3 @@
-import { IModalReady } from '@/core/components/modal/modal.models';
 import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -16,7 +15,7 @@ export interface PlayerModePerformanceSummaryContext extends Partial<PlayerModeP
   templateUrl: './player-mode-performance-summary.component.html',
   styleUrls: ['./player-mode-performance-summary.component.scss']
 })
-export class PlayerModePerformanceSummaryComponent implements IModalReady<PlayerModePerformanceSummaryContext>, OnInit {
+export class PlayerModePerformanceSummaryComponent implements OnInit {
   context!: PlayerModePerformanceSummaryContext;
 
   constructor(

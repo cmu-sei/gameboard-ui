@@ -1,5 +1,4 @@
 import { SimpleEntity } from '@/api/models';
-import { IModalReady } from '@/core/components/modal/modal.models';
 import { GameScoreTeam } from '@/services/scoring/scoring.models';
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -14,7 +13,7 @@ export interface ScoreboardTeamDetailModalContext extends Partial<ScoreboardTeam
   templateUrl: './scoreboard-team-detail-modal.component.html',
   styleUrls: ['./scoreboard-team-detail-modal.component.scss']
 })
-export class ScoreboardTeamDetailModalComponent implements IModalReady<ScoreboardTeamDetailModalContext>, OnInit {
+export class ScoreboardTeamDetailModalComponent implements OnInit {
   context!: ScoreboardTeamDetailModalContext;
   protected hasBonuses = false;
   protected hasManualChallengeBonuses = false;

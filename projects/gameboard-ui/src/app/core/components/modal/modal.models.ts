@@ -1,9 +1,5 @@
 import { TemplateRef } from "@angular/core";
 
-export interface IModalReady<TModalContext> {
-    context: TModalContext;
-}
-
 export interface ModalConfig<TComponent> {
     content: ModalContent<TComponent>;
     context: Partial<TComponent>;

@@ -1,7 +1,6 @@
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ChallengeResult } from '@/api/board-models';
 import { SimpleEntity } from '@/api/models';
-import { IModalReady } from '@/core/components/modal/modal.models';
 import { ReportGame, ReportSponsor } from '@/reports/reports-models';
 import { Component } from '@angular/core';
 
@@ -28,7 +27,7 @@ export interface PlayerChallengeAttempts extends Partial<PlayerChallengeAttempts
   templateUrl: './player-challenge-attempts-modal.component.html',
   styleUrls: ['./player-challenge-attempts-modal.component.scss']
 })
-export class PlayerChallengeAttemptsModalComponent implements IModalReady<PlayerChallengeAttempts> {
+export class PlayerChallengeAttemptsModalComponent {
   context!: PlayerChallengeAttempts;
 
   constructor(private modalRef: BsModalRef) { }

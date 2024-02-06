@@ -1,4 +1,3 @@
-import { IModalReady } from '@/core/components/modal/modal.models';
 import { ReportSponsor } from '@/reports/reports-models';
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -20,7 +19,7 @@ export interface PlayersReportParticipationSummaryContext {
   templateUrl: './players-report-participation-summary.component.html',
   styleUrls: ['./players-report-participation-summary.component.scss']
 })
-export class PlayersReportParticipationSummaryComponent implements IModalReady<PlayersReportParticipationSummaryContext> {
+export class PlayersReportParticipationSummaryComponent {
   context!: PlayersReportParticipationSummaryContext;
 
   constructor(private modalRef: BsModalRef) { }
