@@ -1,8 +1,8 @@
 <div class="external-game-page-component page-min-height d-flex flex-column align-items-center justify-content-center">
-    <ng-container *ngIf="game; else loading">
+    <ng-container *ngIf="game && iframeSrcUrl; else loading">
         <div class="external-host-container">
-            <iframe [src]="iframeSrcUrl | safeurl" *ngIf="iframeSrcUrl" id="unity-game-window"
-                [title]="iframeWindowTitle" frameborder="0" scrolling="no"></iframe>
+            <iframe [src]="iframeSrcUrl | safeurl" id="unity-game-window" [title]="iframeWindowTitle" frameborder="0"
+                scrolling="no"></iframe>
         </div>
 
         <app-error-div [errors]="errors"></app-error-div>
