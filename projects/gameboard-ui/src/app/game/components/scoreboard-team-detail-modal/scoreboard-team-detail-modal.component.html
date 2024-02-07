@@ -40,7 +40,8 @@
                 <h4>Score</h4>
 
                 <div class="score-breakdown d-flex align-items-center">
-                    <div class="score-component">
+                    <div class="score-component"
+                        *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasBonuses">
                         <div class="score-value">{{ context.score.overallScore.completionScore }}</div>
                         <div class="score-label">Challenge Points</div>
                     </div>
@@ -61,7 +62,7 @@
                         </div>
                     </ng-container>
 
-                    <ng-container *ngIf="hasBonuses || hasManualChallengeBonuses || hasManualTeamBonuses">
+                    <ng-container>
                         <div class="score-equals">=</div>
                         <div class="score-value score-total text-info">
                             {{ context.score.overallScore.totalScore }}
