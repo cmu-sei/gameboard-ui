@@ -72,10 +72,12 @@ export interface GameScoreTeam {
     challenges: TeamScoreChallenge[];
     liveSessionEnds: Date | null;
     manualBonuses: ManualTeamBonus[];
+    isAdvancedToNextRound: boolean;
     overallScore: Score;
     players: PlayerWithSponsor[];
     rank: number;
     team: SimpleEntity;
+    remainingTimeMs?: number;
     totalTimeMs: number;
 }
 
@@ -91,16 +93,19 @@ export interface TeamScoreChallenge {
 
 export interface TeamScoreQueryResponse {
     gameInfo: GameScoreGameInfo;
-    score: TeamScore
+    score: TeamScore;
 }
 
+
 export interface TeamScore {
-    game: SimpleEntity,
     team: SimpleEntity,
     players: PlayerWithSponsor[];
     challenges: TeamScoreChallenge[];
     manualBonuses: ManualTeamBonus[];
-    overallScore: Score,
+    isAdvancedToNextRound: boolean;
+    overallScore: Score;
+    cumulativeTimeMs: number;
+    remainingTimeMs?: number;
 }
 
 export interface AutoChallengeBonus {
@@ -155,5 +160,6 @@ export interface DenormalizedTeamScore {
     solveCountPartial: number;
     solveCountComplete: number;
     cumulativeTimeMs: number;
-    timeRemainingMs: number;
+    timeToSessionEndMs: number;
+    rank: number;
 }

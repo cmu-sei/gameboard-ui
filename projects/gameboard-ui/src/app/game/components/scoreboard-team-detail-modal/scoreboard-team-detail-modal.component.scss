@@ -32,6 +32,7 @@ tfoot td {
 
 .team-detail-section {
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .subtle-text {
@@ -46,6 +47,7 @@ tfoot td {
 .score-plus,
 .score-equals {
   margin: 0 0.5rem;
+  text-align: center;
 }
 
 .score-value,
@@ -54,11 +56,13 @@ tfoot td {
   line-height: 1.8rem;
   font-size: 2rem;
   font-weight: bold;
-  text-align: center;
 }
 
-.score-total {
+.score-total,
+.cumulative-time {
+  font-weight: bold;
   font-size: 3rem;
+  line-height: 2.7rem;
 }
 
 /* we constrain these to be the same width to align multiple tables */
