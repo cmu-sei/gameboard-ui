@@ -63,7 +63,8 @@
                     </ng-container>
 
                     <ng-container>
-                        <div class="score-equals">=</div>
+                        <div class="score-equals"
+                            *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasBonuses">=</div>
                         <div class="score-value score-total text-info">
                             {{ context.score.overallScore.totalScore }}
                         </div>

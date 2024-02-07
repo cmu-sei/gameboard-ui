@@ -63,8 +63,10 @@
 
                     <div class="challenge-count"
                         *ngIf="teamScore.score.solveCountPartial + teamScore.score.solveCountComplete < scoreboardData.game.specCount">
-                        <span class="text-info">{{ scoreboardData.game.specCount - teamScore.score.solveCountPartial +
-                            teamScore.score.solveCountComplete }}</span>
+                        <span class="text-info">
+                            {{ scoreboardData.game.specCount - (teamScore.score.solveCountPartial +
+                            teamScore.score.solveCountComplete) }}
+                        </span>
                         <span class="challenge-count-desc"> unattempted</span>
                     </div>
                 </td>
