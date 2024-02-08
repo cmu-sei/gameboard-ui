@@ -40,6 +40,7 @@ import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
 import { LateStartBannerComponent } from './components/late-start-banner/late-start-banner.component';
+import { ScoreToTooltipPipe } from './pipes/score-to-tooltip.pipe';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -76,6 +77,7 @@ const MODULE_DECLARATIONS = [
     ContinueToGameboardButtonComponent,
     ExternalGameLinkBannerComponent,
     LateStartBannerComponent,
+    ScoreToTooltipPipe,
   ],
   imports: [
     CommonModule,

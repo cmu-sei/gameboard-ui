@@ -75,8 +75,7 @@
                         {{ teamScore.score.cumulativeTimeMs | msToDuration }}
                     </div>
                 </td>
-                <td class="text-center"
-                    [tooltip]="teamScore.score.scoreChallenge + ' + ' + (teamScore.score.scoreAutoBonus + teamScore.score.scoreManualBonus) + ' bonus (Click for details)'">
+                <td class="text-center" [tooltip]="teamScore.score | scoreToTooltip">
                     <span class="score text-center"
                         [class.text-info]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
                         {{ teamScore.score.scoreOverall }}
