@@ -130,7 +130,7 @@
 
                 <tfoot *ngIf="hasManualTeamBonuses">
                     <td></td>
-                    <td *ngIf="hasBonuses || hasManualChallengeBonuses || hasManualTeamBonuses" class="numeric-column">
+                    <td *ngIf="hasBonuses" class="numeric-column">
                         {{ context.score.overallScore.completionScore }}</td>
                     <td *ngIf="hasAutoBonuses" class="numeric-column">
                         {{ context.score.overallScore.bonusScore }}
