@@ -1,15 +1,16 @@
 @import "../../../../scss/variables";
 
 h3 {
-  font-size: 0.9rem;
-  font-weight: bolder;
+  font-size: 1rem;
+  font-weight: bold;
   margin: 0;
   text-transform: uppercase;
 }
 
 h4 {
-  font-size: 0.9;
-  margin: 0;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 16px 0;
   text-transform: uppercase;
 }
 
@@ -33,11 +34,6 @@ tfoot td {
 .team-detail-section {
   margin-bottom: 2rem;
   margin-top: 2rem;
-
-  h4 {
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
 }
 
 .subtle-text {
@@ -64,7 +60,7 @@ tfoot td {
 }
 
 .big-stat {
-  font-weight: bold;
+  // font-weight: bold;
   font-size: 3rem;
 }
 

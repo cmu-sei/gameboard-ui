@@ -11,7 +11,7 @@
             <tr class="headers">
                 <th scope="col"></th>
                 <th scope="col"> {{ scoreboardData.game.isTeamGame ? "Team" : "Player" }} </th>
-                <th scope="col">Challenge Performance</th>
+                <th scope="col">Challenges</th>
                 <th scope="col" class="text-center tooltipped-column-header" [tooltip]="cumulativeTimeTooltip">
                     <span class="tooltipped-column-header">Cumulative Time</span>
                 </th>
@@ -75,8 +75,12 @@
                         {{ teamScore.score.cumulativeTimeMs | msToDuration }}
                     </div>
                 </td>
-                <td class="text-center">
-                    <span class="score text-center">{{ teamScore.score.scoreOverall }}</span>
+                <td class="text-center"
+                    [tooltip]="teamScore.score.scoreChallenge + ' + ' + (teamScore.score.scoreAutoBonus + teamScore.score.scoreManualBonus) + ' bonus (Click for details)'">
+                    <span class="score text-center"
+                        [class.text-info]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
+                        {{ teamScore.score.scoreOverall }}
+                    </span>
                 </td>
             </tr>
         </tbody>
