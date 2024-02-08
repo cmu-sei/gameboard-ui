@@ -6,6 +6,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { NowService } from '@/services/now.service';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-scoreboard',
@@ -18,15 +19,14 @@ export class ScoreboardComponent implements OnChanges {
 
   protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column.";
   protected hasAnyPlayingOrAdvanced = false;
-  protected liveGameSub?: Subscription;
   protected isLoading = true;
+  protected isLive = false;
   protected scoreboardData: ScoreboardData | null = null;
 
-  private gameEnd?: DateTime;
+  private liveGameSub?: Subscription;
 
   constructor(
     private modalConfirmService: ModalConfirmService,
-    private nowService: NowService,
     private scoreService: ScoringService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
@@ -51,10 +51,13 @@ export class ScoreboardComponent implements OnChanges {
     this.scoreboardData = await firstValueFrom(this.scoreService.getScoreboard(gameId));
     this.isLoading = false;
 
+    this.isLive = false;
     this.liveGameSub?.unsubscribe();
+
     if (this.scoreboardData.game.isLiveUntil)
-      this.liveGameSub = interval(60000).subscribe(_ => {
-        this.loadGame(gameId);
-      });
+      this.isLive = true;
+    this.liveGameSub = interval(60000).subscribe(_ => {
+      this.loadGame(gameId);
+    });
   }
 }
