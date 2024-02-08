@@ -36,10 +36,13 @@
         </div>
 
         <div class="team-detail-section d-flex align-items-stretch">
-            <div class="score-container pr-5 flex-basis-50 flex-grow-1">
+            <div class="pr-5 flex-basis-50 flex-grow-1">
                 <h4>Score</h4>
 
-                <div class="score-breakdown d-flex align-items-center">
+                <div class="big-stat">
+                    {{ context.score.overallScore.totalScore }} points
+                </div>
+                <!-- <div class="score-breakdown d-flex align-items-center">
                     <div class="score-component"
                         *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasBonuses">
                         <div class="score-value">{{ context.score.overallScore.completionScore }}</div>
@@ -62,18 +65,14 @@
                         </div>
                     </ng-container>
 
-                    <ng-container>
-                        <div class="score-equals"
-                            *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasBonuses">=</div>
-                        <div class="score-value score-total text-info">
-                            {{ context.score.overallScore.totalScore }}
-                        </div>
-                    </ng-container>
-                </div>
+                    <div class="score-equals" *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasBonuses">=
+                    </div>-->
+
+                <!-- </div> -->
             </div>
-            <div class="cumulative-time-container pl-5 flex-basis-50">
+            <div class="pl-5 flex-basis-50">
                 <h4>Cumulative Time</h4>
-                <div class="cumulative-time">
+                <div class="big-stat">
                     {{ context.score.cumulativeTimeMs | msToDuration }}
                 </div>
             </div>
