@@ -108,8 +108,7 @@
                                 <strong>{{ challenge.result | challengeResultPretty }}</strong>
                             </div>
                         </td>
-                        <td *ngIf="challenge.score.totalScore != challenge.score.completionScore"
-                            class="numeric-column">
+                        <td *ngIf="hasBonuses" class="numeric-column">
                             {{ challenge.score.completionScore }}
                         </td>
                         <td *ngIf="hasAutoBonuses" class="numeric-column">
