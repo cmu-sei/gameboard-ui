@@ -88,6 +88,7 @@ export interface TeamScoreChallenge {
     result: ChallengeResult;
     score: Score;
     solveType: ChallengeResult;
+    bonuses: AutoChallengeBonus[];
     manualBonuses: ManualChallengeBonus[];
 }
 
@@ -109,7 +110,7 @@ export interface TeamScore {
 }
 
 export interface AutoChallengeBonus {
-    description?: string;
+    description: string;
     pointValue: number;
     solveRank: number;
 }

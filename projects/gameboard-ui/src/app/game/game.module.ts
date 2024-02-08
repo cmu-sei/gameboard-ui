@@ -18,6 +18,7 @@ import { ExternalGameLinkBannerComponent } from './components/external-game-link
 import { ExternalGameLoadingPageComponent } from './pages/external-game-loading-page/external-game-loading-page.component';
 import { ExternalGamePageComponent } from './pages/external-game-page/external-game-page.component';
 import { ExternalSyncGameGuard } from '@/guards/external-sync-game.guard';
+import { LateStartBannerComponent } from './components/late-start-banner/late-start-banner.component';
 import { GameboardPageComponent } from './pages/gameboard-page/gameboard-page.component';
 import { GameInfoComponent } from './game-info/game-info.component';
 import { GameIsStarted } from '@/guards/game-is-started.guard';
@@ -25,6 +26,7 @@ import { GamePageComponent } from './pages/game-page/game-page.component';
 import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
 import { IndexToSubmittedAnswersPipe } from './pipes/index-to-submitted-answers.pipe';
+import { ManualBonusesToTooltipPipe } from './pipes/manual-bonuses-to-tooltip.pipe';
 import { PlayComponent } from './components/play/play.component';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
@@ -33,19 +35,20 @@ import { ScoreboardComponent } from './components/scoreboard/scoreboard.componen
 import { ScoreboardPageComponent } from './pages/scoreboard-page/scoreboard-page.component';
 import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
 import { ScoreboardTeamDetailModalComponent } from './components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+import { ScoreToTooltipPipe } from './pipes/score-to-tooltip.pipe';
 import { SessionForecastComponent } from './session-forecast/session-forecast.component';
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
 import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
-import { LateStartBannerComponent } from './components/late-start-banner/late-start-banner.component';
-import { ScoreToTooltipPipe } from './pipes/score-to-tooltip.pipe';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
   ChallengeDeployCountdownComponent,
+  ContinueToGameboardButtonComponent,
   ExternalGameLoadingPageComponent,
+  ExternalGameLinkBannerComponent,
   ExternalGamePageComponent,
   GameInfoComponent,
   GamePageComponent,
@@ -53,31 +56,26 @@ const MODULE_DECLARATIONS = [
   GamespaceQuizComponent,
   HubStateToPlayerStatusPipe,
   IndexToSubmittedAnswersPipe,
+  LateStartBannerComponent,
+  ManualBonusesToTooltipPipe,
   PlayComponent,
   PlayerEnrollComponent,
   PlayerPresenceComponent,
   PlayerSessionComponent,
-  SessionForecastComponent,
-  SessionStartControlsComponent,
+  ScoreboardComponent,
   ScoreboardPageComponent,
   ScoreboardTableComponent,
-  PlayerPresenceComponent,
-  CertificateComponent,
-  HubStateToPlayerStatusPipe,
+  ScoreboardTeamDetailModalComponent,
+  SessionForecastComponent,
   SessionStartControlsComponent,
   SessionStartCountdownComponent,
+  ScoreToTooltipPipe,
+  TeamChallengeScoresToChallengeResultTypeCountPipe,
 ];
 
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
-    ScoreboardComponent,
-    TeamChallengeScoresToChallengeResultTypeCountPipe,
-    ScoreboardTeamDetailModalComponent,
-    ContinueToGameboardButtonComponent,
-    ExternalGameLinkBannerComponent,
-    LateStartBannerComponent,
-    ScoreToTooltipPipe,
   ],
   imports: [
     CommonModule,
