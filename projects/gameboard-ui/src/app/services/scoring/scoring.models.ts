@@ -139,6 +139,7 @@ export interface ScoreboardData {
 export interface ScoreboardDataGame {
     id: string;
     name: string;
+    isLiveUntil?: Date,
     isTeamGame: boolean;
     specCount: number;
 }

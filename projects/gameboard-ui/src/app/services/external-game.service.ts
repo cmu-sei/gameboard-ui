@@ -25,8 +25,8 @@ export class ExternalGameService {
     private apiUrl: ApiUrlService,
     private config: ConfigService,
     private httpClient: HttpClient,
-    private storage: LocalStorageService,
-    private log: LogService) { }
+    private log: LogService,
+    private storage: LocalStorageService) { }
 
   public async createLocalStorageKeys(teamId: string): Promise<void> {
     // first check if we've already got info for this team
