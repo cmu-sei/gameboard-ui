@@ -17,9 +17,10 @@ export class ScoreboardTeamDetailModalComponent implements OnInit {
   teamId?: string;
 
   protected context?: TeamScoreQueryResponse;
-  protected hasBonuses = false;
+  protected hasAutoBonuses = false;
   protected hasManualChallengeBonuses = false;
   protected hasManualTeamBonuses = false;
+  protected hasBonuses = false;
   protected challengeManualBonusTotal = 0;
   protected teamManualBonusTotal = 0;
   protected isTeam = false;
@@ -42,9 +43,10 @@ export class ScoreboardTeamDetailModalComponent implements OnInit {
     }
 
     // affects how the score breakdown is rendered
-    this.hasBonuses = !!this.context.score.overallScore.bonusScore;
+    this.hasAutoBonuses = !!this.context.score.overallScore.bonusScore;
     this.hasManualChallengeBonuses = !!this.context.score.challenges.filter(c => !!c.manualBonuses.length).length;
     this.hasManualTeamBonuses = !!this.context.score.overallScore.manualBonusScore;
+    this.hasBonuses = this.hasAutoBonuses || this.hasManualChallengeBonuses || this.hasManualTeamBonuses;
     this.isTeam = this.context.score.players.length > 1;
 
     // the scoring endpoint currently doesn't provide the total of challenge manual bonuses 

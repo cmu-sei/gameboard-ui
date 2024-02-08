@@ -44,12 +44,12 @@
                 </div>
                 <!-- <div class="score-breakdown d-flex align-items-center">
                     <div class="score-component"
-                        *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasBonuses">
+                        *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasAutoBonuses">
                         <div class="score-value">{{ context.score.overallScore.completionScore }}</div>
                         <div class="score-label">Challenge Points</div>
                     </div>
 
-                    <ng-container *ngIf="hasBonuses">
+                    <ng-container *ngIf="hasAutoBonuses">
                         <div class="score-plus">+</div>
                         <div class="score-component">
                             <div class="score-value">{{ context.score.overallScore.bonusScore }}</div>
@@ -65,7 +65,7 @@
                         </div>
                     </ng-container>
 
-                    <div class="score-equals" *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasBonuses">=
+                    <div class="score-equals" *ngIf="hasManualChallengeBonuses || hasManualTeamBonuses || hasAutoBonuses">=
                     </div>-->
 
                 <!-- </div> -->
@@ -83,16 +83,18 @@
 
             <table class="challenge-results-table table table-striped gameboard-table w-100 mt-3">
                 <col>
-                <col>
                 <col *ngIf="hasBonuses">
+                <col *ngIf="hasAutoBonuses">
                 <col *ngIf="hasManualChallengeBonuses">
                 <col>
 
                 <thead class="thead-light">
                     <tr class="headers">
                         <th scope="col">Challenge</th>
-                        <th scope="col" class="numeric-column">Points</th>
-                        <th scope="col" *ngIf="hasBonuses" class="numeric-column">Bonus</th>
+                        <th scope="col" *ngIf="hasBonuses" class="numeric-column">
+                            Points
+                        </th>
+                        <th scope="col" *ngIf="hasAutoBonuses" class="numeric-column">Bonus</th>
                         <th scope="col" *ngIf="hasManualChallengeBonuses" class="numeric-column">Adjustment</th>
                         <th scope="col" class="numeric-column  total-column">Score</th>
                     </tr>
@@ -106,10 +108,11 @@
                                 <strong>{{ challenge.result | challengeResultPretty }}</strong>
                             </div>
                         </td>
-                        <td class="numeric-column">
+                        <td *ngIf="challenge.score.totalScore != challenge.score.completionScore"
+                            class="numeric-column">
                             {{ challenge.score.completionScore }}
                         </td>
-                        <td *ngIf="hasBonuses" class="numeric-column">
+                        <td *ngIf="hasAutoBonuses" class="numeric-column">
                             <span> {{ challenge.score.bonusScore }}</span>
                         </td>
                         <td *ngIf="hasManualChallengeBonuses" class="numeric-column">
@@ -123,8 +126,9 @@
 
                 <tfoot>
                     <td></td>
-                    <td class="numeric-column"> {{ context.score.overallScore.completionScore }}</td>
-                    <td *ngIf="hasBonuses" class="numeric-column">
+                    <td *ngIf="hasBonuses || hasManualChallengeBonuses || hasManualTeamBonuses" class="numeric-column">
+                        {{ context.score.overallScore.completionScore }}</td>
+                    <td *ngIf="hasAutoBonuses" class="numeric-column">
                         {{ context.score.overallScore.bonusScore }}
                     </td>
                     <td *ngIf="hasManualChallengeBonuses" class="numeric-column">
