@@ -27,8 +27,7 @@ export class ScoreboardComponent implements OnChanges {
   constructor(
     private modalConfirmService: ModalConfirmService,
     private nowService: NowService,
-    private scoreService: ScoringService,
-    private unsub: UnsubscriberService) { }
+    private scoreService: ScoringService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes?.gameId && this.gameId) {
@@ -57,13 +56,5 @@ export class ScoreboardComponent implements OnChanges {
       this.liveGameSub = interval(60000).subscribe(_ => {
         this.loadGame(gameId);
       });
-
-    if (this.scoreboardData.game.isLiveUntil) {
-      this.liveGameSub?.unsubscribe();
-
-      interval(60000).subscribe(_ => {
-        this.liveGameSub = this.loadGame(gameId.is)
-      })
-    }
   }
 }
