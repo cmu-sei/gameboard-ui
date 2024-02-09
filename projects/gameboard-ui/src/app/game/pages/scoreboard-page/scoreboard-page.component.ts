@@ -39,7 +39,7 @@ export class ScoreboardPageComponent {
       localUser.user$.subscribe(u => {
         if (!u) {
           this.isAdmin = false;
-          this.isNewScoreboard = true;
+          this.isNewScoreboard = false;
           return;
         }
 
