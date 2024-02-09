@@ -43,6 +43,7 @@ export interface GameStartState {
     challengesCreated: number;
     challengesTotal: number;
     gamespacesStarted: number;
+    gamespacesStartFailed: number;
     gamespacesTotal: number;
 
     startTime: Date,

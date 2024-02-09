@@ -126,18 +126,17 @@ export interface GameEnrollmentContext {
 }
 
 export enum GamePlayState {
-  NotRegistered = "notRegistered",
   NotStarted = "notStarted",
+  Deploying = "deploying",
   Starting = "starting",
   Started = "started",
   GameOver = "gameOver"
 }
 
-export type ExternalGameTeamDeployStatus = "notStarted" | "deploying" | "deployed";
-export type ExternalGameAdminOverallDeployStatus = "notStarted" | "partiallyDeployed" | "deploying" | "deployed";
+export type ExternalGameDeployStatus = "notStarted" | "partiallyDeployed" | "deploying" | "deployed";
 
 export interface GetExternalTeamDataResponse {
   teamId: string;
   externalUrl: string;
-  deployStatus: ExternalGameTeamDeployStatus;
+  deployStatus: ExternalGameDeployStatus;
 }

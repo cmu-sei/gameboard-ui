@@ -105,9 +105,8 @@
 
                     </div>
                     <button type="button" href="#" class="btn btn-info"
-                        [disabled]="team.deployStatus != 'notStarted' || !canDeploy"
-                        (click)="handlePreDeployTeamClick(context.game.id, team.id)"
-                        [class.disabled]="team.deployStatus != 'notStarted' || !canDeploy">Deploy</button>
+                        [disabled]="(team.deployStatus != 'notStarted' && team.deployStatus != 'partiallyDeployed') || !canDeploy"
+                        (click)="handlePreDeployTeamClick(context.game.id, team.id)">Deploy</button>
                 </div>
             </div>
         </div>
