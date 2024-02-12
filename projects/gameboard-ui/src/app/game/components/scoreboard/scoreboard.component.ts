@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable, Subscription, firstValueFrom, interval, map } from 'rxjs';
+import { Subscription, firstValueFrom, interval, map } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
@@ -16,11 +16,13 @@ export class ScoreboardComponent implements OnChanges {
   @Input() gameId?: string;
 
   protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column.";
-  protected hasAnyPlayingOrAdvanced = false;
+  protected hasAdvancedPlayers = false;
   protected isLoading = true;
   protected isLive = false;
+  protected isTeamGame = false;
   protected scoreboardData: ScoreboardData | null = null;
-  protected myString$?: Observable<string | null>;
+  protected advancingTeams: ScoreboardDataTeam[] = [];
+  protected nonAdvancingTeams: ScoreboardDataTeam[] = [];
 
   private liveGameSub?: Subscription;
 
@@ -53,28 +55,14 @@ export class ScoreboardComponent implements OnChanges {
     this.scoreboardData = await firstValueFrom(this.scoreService.getScoreboard(gameId));
     this.isLoading = false;
 
+    // record if we have any qualifying players (affects rendering)
+    this.hasAdvancedPlayers = !!this.scoreboardData.teams.filter(t => t.isAdvancedToNextRound).length;
+    this.advancingTeams = this.scoreboardData.teams.filter(t => t.isAdvancedToNextRound);
+    this.nonAdvancingTeams = this.scoreboardData.teams.filter(t => !t.isAdvancedToNextRound);
+
     this.isLive = false;
+    this.isTeamGame = this.scoreboardData.game.isTeamGame;
     this.liveGameSub?.unsubscribe();
-
-    for (let team of this.scoreboardData.teams.filter(t => !!t.sessionEnds)) {
-      this.myString$ = interval(1000).pipe(
-        map(_ => {
-          const diffed = team.sessionEnds!.diffNow().rescale();
-          diffed.normalize();
-
-          return diffed
-            .set({ milliseconds: 0 })
-            .set({ seconds: Math.floor(diffed.get("seconds")) })
-            .rescale();
-        }),
-        map(duration => {
-          if (duration.as("milliseconds") < 0)
-            return null;
-
-          return duration.toHuman();
-        })
-      );
-    }
 
     if (this.scoreboardData.game.isLiveUntil) {
       this.isLive = true;

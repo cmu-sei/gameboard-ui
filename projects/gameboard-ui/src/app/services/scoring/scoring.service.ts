@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, map } from 'rxjs';
+import { DateTime } from 'luxon';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ConfigService } from '../../utility/config.service';
 import { CreateManualChallengeBonus, CreateManualTeamBonus, GameAutoBonusConfig, GameScore, GameScoringConfig, ScoreboardData, TeamScoreQueryResponse, UpdateGameAutoChallengeBonusConfig } from './scoring.models';
 import { ApiDateTimeService } from '../api-date-time.service';
-import { DateTime } from 'luxon';
 
 @Injectable({ providedIn: 'root' })
 export class ScoringService {
@@ -44,7 +44,6 @@ export class ScoringService {
           continue;
 
         t.sessionEnds = this.apiDateTime.toDateTime(t.sessionEnds as any) as DateTime;
-        t.sessionEndsDate = t.sessionEnds.toJSDate();
       }
 
       return s;

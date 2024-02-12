@@ -1,3 +1,5 @@
+@import "../../../../scss/variables";
+
 hr {
   border: dashed 1px #eee;
 }
@@ -8,6 +10,19 @@ table {
   td {
     vertical-align: middle;
   }
+}
+
+thead {
+  position: sticky;
+  top: 0;
+}
+
+.qualifying-message-row {
+  background-color: $info;
+  color: #eee;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .challenge-count {

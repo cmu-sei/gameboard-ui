@@ -6,14 +6,14 @@
         everyone with points on the board!
     </alert>
     <table *ngIf="scoreboardData.teams.length; else noScore" class="table table-striped gameboard-table w-100"
-        [class.table-hover]="!isLive">
+        [class.advanced-players-highlight]="hasAdvancedPlayers" [class.table-hover]="!isLive">
         <col class="width-5">
         <col>
         <col>
         <col>
         <col>
 
-        <thead class="thead-light">
+        <thead class="thead-light header">
             <tr class="headers">
                 <th scope="col"></th>
                 <th scope="col"> {{ scoreboardData.game.isTeamGame ? "Team" : "Player" }} </th>
@@ -27,56 +27,18 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let teamScore of scoreboardData.teams; index as i" class="data-row"
-                [class.cursor-pointer]="!isLive" (click)="!isLive && handleRowClick(teamScore)">
-                <td>
-                    <div class="team-rank d-flex flex-column justify-content-center align-items-center">
-                        {{ teamScore.score.rank }}
-                    </div>
-                </td>
-                <td>
-                    <div class="team-container d-flex align-items-center">
-                        <div class="flex-grow-1"
-                            *ngTemplateOutlet="scoreboardData.game.isTeamGame ? teamNamePanel : playerNamePanel; context: {$implicit: teamScore};">
-                        </div>
-                        <div class="badge badge-info fs-09"
-                            *ngIf="teamScore.sessionEnds | datetimeToDate | dateToCountdown | async as sessionEnds">
-                            {{ sessionEnds }}
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="challenge-count" *ngIf="teamScore.score.solveCountComplete">
-                        <span class="font-bold text-info">{{ teamScore.score.solveCountComplete }}</span>
-                        <span class="challenge-count-desc"> complete</span>
-                    </div>
-
-                    <div class="challenge-count" *ngIf="teamScore.score.solveCountPartial">
-                        <span class="font-bold">{{ teamScore.score.solveCountPartial }}</span>
-                        <span class="challenge-count-desc"> partial</span>
-                    </div>
-
-                    <div class="challenge-count"
-                        *ngIf="teamScore.score.solveCountPartial + teamScore.score.solveCountComplete < scoreboardData.game.specCount">
-                        <span class="font-bold">
-                            {{ scoreboardData.game.specCount - (teamScore.score.solveCountPartial +
-                            teamScore.score.solveCountComplete) }}
-                        </span>
-                        <span class="challenge-count-desc"> unattempted</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="playtime challenge-count text-center">
-                        {{ teamScore.score.cumulativeTimeMs | msToDuration }}
-                    </div>
-                </td>
-                <td class="text-center" [tooltip]="teamScore.score | scoreToTooltip:isLive">
-                    <span class="score text-center"
-                        [class.text-info]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
-                        {{ teamScore.score.scoreOverall }}
-                    </span>
-                </td>
+            <tr *ngIf="hasAdvancedPlayers">
+                <td colspan="5" class="qualifying-message-row">Qualifying players</td>
             </tr>
+            <ng-container *ngFor="let teamScore of advancingTeams">
+                <ng-container *ngTemplateOutlet="team; context {$implicit: teamScore}"></ng-container>
+            </ng-container>
+            <tr *ngIf="hasAdvancedPlayers">
+                <td colspan="5" class="qualifying-message-row">Non-Qualifying players</td>
+            </tr>
+            <ng-container *ngFor="let teamScore of nonAdvancingTeams">
+                <ng-container *ngTemplateOutlet="team; context {$implicit: teamScore}"></ng-container>
+            </ng-container>
         </tbody>
     </table>
 </ng-container>
@@ -89,6 +51,59 @@
     <div class="no-score gray-text text-center">
         No one's scored in this game yet.
     </div>
+</ng-template>
+
+<ng-template #team let-teamScore>
+    <tr class="data-row" [class.cursor-pointer]="!isLive" [class.is-advanced]="teamScore.isAdvancedToNextRound"
+        [class.is-not-advanced]="!teamScore.isAdvancedToNextRound" (click)="!isLive && handleRowClick(teamScore)">
+        <td>
+            <div class="team-rank d-flex flex-column justify-content-center align-items-center">
+                {{ teamScore.score.rank }}
+            </div>
+        </td>
+        <td>
+            <div class="team-container d-flex align-items-center">
+                <div class="flex-grow-1"
+                    *ngTemplateOutlet="isTeamGame ? teamNamePanel : playerNamePanel; context: {$implicit: teamScore};">
+                </div>
+                <div class="badge badge-info fs-09"
+                    *ngIf="teamScore.sessionEnds | datetimeToDate | dateToCountdown | async as sessionEnds">
+                    {{ sessionEnds }}
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="challenge-count" *ngIf="teamScore.score.solveCountComplete">
+                <span class="font-bold text-info">{{ teamScore.score.solveCountComplete }}</span>
+                <span class="challenge-count-desc"> complete</span>
+            </div>
+
+            <div class="challenge-count" *ngIf="teamScore.score.solveCountPartial">
+                <span class="font-bold">{{ teamScore.score.solveCountPartial }}</span>
+                <span class="challenge-count-desc"> partial</span>
+            </div>
+
+            <div class="challenge-count"
+                *ngIf="scoreboardData && teamScore.score.solveCountPartial + teamScore.score.solveCountComplete < scoreboardData.game.specCount">
+                <span class="font-bold">
+                    {{ scoreboardData.game.specCount - (teamScore.score.solveCountPartial +
+                    teamScore.score.solveCountComplete) }}
+                </span>
+                <span class="challenge-count-desc"> unattempted</span>
+            </div>
+        </td>
+        <td>
+            <div class="playtime challenge-count text-center">
+                {{ teamScore.score.cumulativeTimeMs | msToDuration }}
+            </div>
+        </td>
+        <td class="text-center" [tooltip]="teamScore.score | scoreToTooltip:isLive">
+            <span class="score text-center"
+                [class.text-info]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
+                {{ teamScore.score.scoreOverall }}
+            </span>
+        </td>
+    </tr>
 </ng-template>
 
 <ng-template #playerNamePanel let-context>
@@ -111,4 +126,8 @@
             </li>
         </ul>
     </div>
+</ng-template>
+
+<ng-template #nonQualified>
+    <td>Non-Qualifying {{ scoreboardData?.game?.isTeamGame ? "Teams" : "Players" }}</td>
 </ng-template>

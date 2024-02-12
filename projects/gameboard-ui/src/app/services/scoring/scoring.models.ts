@@ -147,10 +147,10 @@ export interface ScoreboardDataGame {
 }
 
 export interface ScoreboardDataTeam {
+    isAdvancedToNextRound: boolean;
     players: PlayerWithSponsor[];
     score: DenormalizedTeamScore;
     sessionEnds?: DateTime;
-    sessionEndsDate?: Date;
 }
 
 export interface DenormalizedTeamScore {
