@@ -1,6 +1,12 @@
 <ng-container *ngIf="scoreboardData; else loading">
-    <table *ngIf="scoreboardData.teams.length; else noScore"
-        class="table table-striped table-hover gameboard-table w-100">
+    <alert *ngIf="isLive" type="info">
+        This game is still being played. Check back after the round ends
+        ({{ scoreboardData.game.isLiveUntil?.toJSDate() | friendlyDateAndTime }})
+        to see who came out on top and view complete score breakdowns for
+        everyone with points on the board!
+    </alert>
+    <table *ngIf="scoreboardData.teams.length; else noScore" class="table table-striped gameboard-table w-100"
+        [class.table-hover]="!isLive">
         <col class="width-5">
         <col>
         <col>
@@ -12,7 +18,8 @@
                 <th scope="col"></th>
                 <th scope="col"> {{ scoreboardData.game.isTeamGame ? "Team" : "Player" }} </th>
                 <th scope="col">Challenges</th>
-                <th scope="col" class="text-center tooltipped-column-header" [tooltip]="cumulativeTimeTooltip">
+                <th scope="col" class="text-center tooltipped-column-header" [tooltip]="cumulativeTimeTooltip"
+                    placement="top">
                     <span class="tooltipped-column-header">Cumulative Time</span>
                 </th>
                 <th scope="col" class="text-center">Score</th>
@@ -20,8 +27,8 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let teamScore of scoreboardData.teams; index as i" class="data-row cursor-pointer"
-                (click)="handleRowClick(teamScore)">
+            <tr *ngFor="let teamScore of scoreboardData.teams; index as i" class="data-row"
+                [class.cursor-pointer]="!isLive" (click)="!isLive && handleRowClick(teamScore)">
                 <td>
                     <div class="team-rank d-flex flex-column justify-content-center align-items-center">
                         {{ teamScore.score.rank }}
@@ -29,24 +36,12 @@
                 </td>
                 <td>
                     <div class="team-container d-flex align-items-center">
-                        <ng-container *ngIf="!scoreboardData.game.isTeamGame">
-                            <app-player-avatar *ngIf="!scoreboardData.game.isTeamGame" [player]="teamScore.players[0]"
-                                class="mr-2"></app-player-avatar>
-
-                            <span class="player-name">
-                                {{teamScore.players[0].name}}
-                            </span>
-                        </ng-container>
-
-                        <div *ngIf="scoreboardData.game.isTeamGame" class="team-names-container ml-2">
-                            <h5 class="team-name m-0">{{teamScore.score.teamName}}</h5>
-                            <ul class="player-names-list d-flex mt-2">
-                                <li *ngFor="let player of teamScore.players" class="mr-2">
-                                    <app-player-avatar [player]="player" [showSponsorTooltip]="false" size="tiny"
-                                        [tooltip]="player.name + ' // ' + player.sponsor.name"
-                                        placement="bottom"></app-player-avatar>
-                                </li>
-                            </ul>
+                        <div class="flex-grow-1"
+                            *ngTemplateOutlet="scoreboardData.game.isTeamGame ? teamNamePanel : playerNamePanel; context: {$implicit: teamScore};">
+                        </div>
+                        <div class="badge badge-info fs-09"
+                            *ngIf="teamScore.sessionEnds | datetimeToDate | dateToCountdown | async as sessionEnds">
+                            {{ sessionEnds }}
                         </div>
                     </div>
                 </td>
@@ -75,7 +70,7 @@
                         {{ teamScore.score.cumulativeTimeMs | msToDuration }}
                     </div>
                 </td>
-                <td class="text-center" [tooltip]="teamScore.score | scoreToTooltip">
+                <td class="text-center" [tooltip]="teamScore.score | scoreToTooltip:isLive">
                     <span class="score text-center"
                         [class.text-info]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
                         {{ teamScore.score.scoreOverall }}
@@ -93,5 +88,27 @@
 <ng-template #noScore>
     <div class="no-score gray-text text-center">
         No one's scored in this game yet.
+    </div>
+</ng-template>
+
+<ng-template #playerNamePanel let-context>
+    <div class="player-name-panel-container flex-grow-1 d-flex align-items-center">
+        <app-player-avatar [player]="context.players[0]" class="mr-2"></app-player-avatar>
+
+        <div class="player-name ml-2">
+            {{context.players[0].name}}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #teamNamePanel let-context>
+    <div class="team-names-container flex-grow-1 ml-2">
+        <h5 class="team-name m-0">{{context.score.teamName}}</h5>
+        <ul class="player-names-list d-flex mt-2 mb-0">
+            <li *ngFor="let player of context.players" class="mr-2">
+                <app-player-avatar [player]="player" [showSponsorTooltip]="false" size="tiny"
+                    [tooltip]="player.name + ' // ' + player.sponsor.name" placement="bottom"></app-player-avatar>
+            </li>
+        </ul>
     </div>
 </ng-template>

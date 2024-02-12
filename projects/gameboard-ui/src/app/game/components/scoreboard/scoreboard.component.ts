@@ -1,12 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Subscription, firstValueFrom, interval } from 'rxjs';
+import { Observable, Subscription, firstValueFrom, interval, map } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { NowService } from '@/services/now.service';
-import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-scoreboard',
@@ -22,6 +20,7 @@ export class ScoreboardComponent implements OnChanges {
   protected isLoading = true;
   protected isLive = false;
   protected scoreboardData: ScoreboardData | null = null;
+  protected myString$?: Observable<string | null>;
 
   private liveGameSub?: Subscription;
 
@@ -36,6 +35,9 @@ export class ScoreboardComponent implements OnChanges {
   }
 
   protected handleRowClick(teamData: ScoreboardDataTeam) {
+    // we don't show the details while the competition is ongoing
+    if (this.isLive) return;
+
     this.modalConfirmService.openComponent<ScoreboardTeamDetailModalComponent>({
       content: ScoreboardTeamDetailModalComponent,
       context: { teamId: teamData.score.teamId },
@@ -54,10 +56,32 @@ export class ScoreboardComponent implements OnChanges {
     this.isLive = false;
     this.liveGameSub?.unsubscribe();
 
-    if (this.scoreboardData.game.isLiveUntil)
+    for (let team of this.scoreboardData.teams.filter(t => !!t.sessionEnds)) {
+      this.myString$ = interval(1000).pipe(
+        map(_ => {
+          const diffed = team.sessionEnds!.diffNow().rescale();
+          diffed.normalize();
+
+          return diffed
+            .set({ milliseconds: 0 })
+            .set({ seconds: Math.floor(diffed.get("seconds")) })
+            .rescale();
+        }),
+        map(duration => {
+          if (duration.as("milliseconds") < 0)
+            return null;
+
+          return duration.toHuman();
+        })
+      );
+    }
+
+    if (this.scoreboardData.game.isLiveUntil) {
       this.isLive = true;
-    this.liveGameSub = interval(60000).subscribe(_ => {
-      this.loadGame(gameId);
-    });
+
+      this.liveGameSub = interval(60000).subscribe(_ => {
+        this.loadGame(gameId);
+      });
+    }
   }
 }

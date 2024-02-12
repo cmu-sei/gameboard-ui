@@ -1,15 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ConfigService } from '../../utility/config.service';
 import { CreateManualChallengeBonus, CreateManualTeamBonus, GameAutoBonusConfig, GameScore, GameScoringConfig, ScoreboardData, TeamScoreQueryResponse, UpdateGameAutoChallengeBonusConfig } from './scoring.models';
+import { ApiDateTimeService } from '../api-date-time.service';
+import { DateTime } from 'luxon';
 
 @Injectable({ providedIn: 'root' })
 export class ScoringService {
   private API_ROOT = '';
 
   constructor(
+    private apiDateTime: ApiDateTimeService,
     private apiUrl: ApiUrlService,
     private http: HttpClient,
     config: ConfigService
@@ -30,7 +33,22 @@ export class ScoringService {
   }
 
   public getScoreboard(gameId: string): Observable<ScoreboardData> {
-    return this.http.get<ScoreboardData>(this.apiUrl.build(`game/${gameId}/scoreboard`));
+    return this.http.get<ScoreboardData>(this.apiUrl.build(`game/${gameId}/scoreboard`)).pipe(map(s => {
+      if (!s.game.isLiveUntil)
+        return s;
+
+      s.game.isLiveUntil = this.apiDateTime.toDateTime(s.game.isLiveUntil as any) as DateTime;
+
+      for (let t of s.teams) {
+        if (!t.sessionEnds)
+          continue;
+
+        t.sessionEnds = this.apiDateTime.toDateTime(t.sessionEnds as any) as DateTime;
+        t.sessionEndsDate = t.sessionEnds.toJSDate();
+      }
+
+      return s;
+    }));
   }
 
   public getGameScoringConfig(gameId: string): Observable<GameScoringConfig> {

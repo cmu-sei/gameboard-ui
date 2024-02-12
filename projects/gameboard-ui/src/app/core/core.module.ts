@@ -44,7 +44,9 @@ import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
+import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
+import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
@@ -112,6 +114,8 @@ const PUBLIC_DECLARATIONS = [
   CopyOnClickDirective,
   CountdownComponent,
   CumulativeTimeClockComponent,
+  DateToCountdownPipe,
+  DatetimeToDatePipe,
   DoughnutChartComponent,
   DropzoneComponent,
   ErrorDivComponent,

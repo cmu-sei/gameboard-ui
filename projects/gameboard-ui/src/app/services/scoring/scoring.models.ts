@@ -1,5 +1,6 @@
 import { ChallengeResult } from "@/api/board-models";
 import { SimpleEntity, PlayerWithSponsor } from "@/api/models";
+import { DateTime } from "luxon";
 
 export interface GameScoringConfig {
     game: SimpleEntity;
@@ -140,7 +141,7 @@ export interface ScoreboardData {
 export interface ScoreboardDataGame {
     id: string;
     name: string;
-    isLiveUntil?: Date,
+    isLiveUntil?: DateTime,
     isTeamGame: boolean;
     specCount: number;
 }
@@ -148,6 +149,8 @@ export interface ScoreboardDataGame {
 export interface ScoreboardDataTeam {
     players: PlayerWithSponsor[];
     score: DenormalizedTeamScore;
+    sessionEnds?: DateTime;
+    sessionEndsDate?: Date;
 }
 
 export interface DenormalizedTeamScore {
@@ -162,6 +165,5 @@ export interface DenormalizedTeamScore {
     solveCountPartial: number;
     solveCountComplete: number;
     cumulativeTimeMs: number;
-    timeToSessionEndMs: number;
     rank: number;
 }
