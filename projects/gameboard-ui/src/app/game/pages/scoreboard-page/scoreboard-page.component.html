@@ -16,8 +16,8 @@
       <div class="col-12 scoreboard">
         <h2 id="scoreboard" class="text-center my-4">Scoreboard</h2>
         <div *ngIf="isAdmin" class="row">
-          <input type="checkbox" [(ngModel)]="isNewScoreboard">
-          Use new scoreboard
+          <input type="checkbox" id="isNewScoreboard" name="isNewScoreboard" [(ngModel)]="isNewScoreboard" />
+          <label for="isNewScoreboard">Use new scoreboard</label>
         </div>
         <app-scoreboard-table *ngIf="!isNewScoreboard" [id]="game.id"
           [live]="game.session.isDuring"></app-scoreboard-table>
