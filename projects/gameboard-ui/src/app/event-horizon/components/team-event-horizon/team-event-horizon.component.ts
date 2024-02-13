@@ -5,7 +5,7 @@ import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DateTime } from 'luxon';
-import { DataGroup, DataGroupCollectionType, Timeline } from 'vis-timeline/esnext';
+import { Timeline } from 'vis-timeline/esnext';
 
 @Component({
   selector: 'app-team-event-horizon',
@@ -13,7 +13,7 @@ import { DataGroup, DataGroupCollectionType, Timeline } from 'vis-timeline/esnex
   styleUrls: ['./team-event-horizon.component.scss']
 })
 export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() teamId = "";
+  @Input() teamId?: string;
   @ViewChild("timelineContainer") timelineContainer?: ElementRef;
 
   protected selectedEventTypes: EventHorizonEventType[] = [];

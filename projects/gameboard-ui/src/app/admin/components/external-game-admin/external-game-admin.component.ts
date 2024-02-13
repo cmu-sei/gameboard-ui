@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExternalGameAdminOverallDeployStatus, ExternalGameTeamDeployStatus } from '@/api/game-models';
+import { ExternalGameDeployStatus } from '@/api/game-models';
 import { SimpleEntity, SimpleSponsor } from '@/api/models';
 import { DateTime } from 'luxon';
 import { fa } from '@/services/font-awesome.service';
@@ -16,7 +16,7 @@ export interface ExternalGameAdminTeam {
   id: string;
   name: string;
   sponsors: SimpleSponsor[];
-  deployStatus: ExternalGameTeamDeployStatus;
+  deployStatus: ExternalGameDeployStatus;
   isReady: boolean;
   players: {
     id: string;
@@ -40,7 +40,7 @@ export interface ExternalGameAdminChallenge {
 
 export interface ExternalGameAdminContext {
   game: SimpleEntity;
-  overallDeployStatus: ExternalGameAdminOverallDeployStatus;
+  overallDeployStatus: ExternalGameDeployStatus;
   specs: SimpleEntity[];
   hasNonStandardSessionWindow: boolean;
   startTime?: DateTime;
@@ -119,7 +119,7 @@ export class ExternalGameAdminComponent implements OnInit {
     this.forceRefresh$.next();
   }
 
-  private bindOverallDeployStatus(overallDeployStatus: ExternalGameAdminOverallDeployStatus) {
+  private bindOverallDeployStatus(overallDeployStatus: ExternalGameDeployStatus) {
     this.canDeploy = overallDeployStatus == "notStarted" || overallDeployStatus == "partiallyDeployed";
 
     if (overallDeployStatus == "deploying") {

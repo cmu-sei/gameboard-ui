@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
 import { ModalConfirmService } from '../../../services/modal-confirm.service';
 import { ModalConfirmConfig } from './modal.models';
 

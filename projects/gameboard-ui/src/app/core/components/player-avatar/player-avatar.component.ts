@@ -9,7 +9,7 @@ import { SafeUrl } from '@angular/platform-browser';
   template: `
     <div [class]="'d-flex position-relative align-items-center justify-content-center player-avatar-component avatar-list-size ' + sizeClass +  ' ' + avatarCountClass">
       <div [class]="'avatar-container avatar-size ' + this.sizeClass" aria-roledescription="Player avatar icon"
-          [style.background-image]="avatarUrl" [tooltip]="tooltip"></div>
+          [style.background-image]="avatarUrl" [tooltip]="showSponsorTooltip ? tooltip : ''"></div>
       <app-player-status class="position-absolute status-light" *ngIf="session" [session]="session"></app-player-status>
   </div>
   `,
@@ -18,6 +18,7 @@ import { SafeUrl } from '@angular/platform-browser';
 export class PlayerAvatarComponent implements OnChanges {
   @Input() player?: PlayerWithSponsor;
   @Input() session?: TimeWindow;
+  @Input() showSponsorTooltip = true;
   @Input() size: 'tiny' | 'small' | 'medium' | 'large' = 'medium';
 
   protected avatarCountClass = '';

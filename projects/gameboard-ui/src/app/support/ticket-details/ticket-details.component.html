@@ -28,7 +28,13 @@
           [class.badge-dark]="ctx.ticket.status == 'Closed'">{{ctx.ticket.status}}</span>
       </h4>
       <ng-container *ngIf="ctx.ticket.player as player">
-        <span class="mr-4">{{true ? 'Team:' : 'Player:'}} {{player.approvedName}}</span>
+        <span class="mr-4">
+          <span *ngIf="ctx.ticket.isTeamGame">
+            {{ ctx.ticket.teamName }}
+            /
+          </span>
+          {{ player.approvedName }}
+        </span>
         <span class="mr-4">Game:
           <a [routerLink]="['/game', ctx.ticket.player.gameId]">
             <span>{{player.gameName}}</span>
@@ -208,12 +214,12 @@
         </div>
       </div>
 
-      <div *ngIf="ctx.canManage">
-        <div class="card ml-2 mb-auto" style="width: 350px;">
-          <div class="card-header d-flex justify-content-end pb-0" style="background-color: #111;">
-            Manage&nbsp;<fa-icon [icon]="faCog"></fa-icon>
+      <div *ngIf="ctx.canManage" class="ml-2">
+        <div class="card mb-auto manage-card">
+          <div class="card-header font-weight-bold">
+            Manage
           </div>
-          <div class="card-body pt-0" style="background-color: #111;">
+          <div class="card-body" style="background-color: #111;">
             <div *ngIf="changedTicket && !!changedTicket?.id">
 
               <div class="form-group p-0 m-0 mb-4">
@@ -260,7 +266,6 @@
                 <p *ngIf="changedTicket.challenge" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Support Code:
                   {{(changedTicket.challenge.id | slice:0:8) + ' ' + changedTicket.challenge.tag}}</p>
               </div>
-
               <div class="form-group p-0 m-0 mb-4">
                 <label class="font-weight-bold" for="assignee-input">Game Session <fa-icon
                     *ngIf="!changedTicket.playerId && false" class="text-danger ml-1"
@@ -273,13 +278,22 @@
               </div>
 
               <div class="form-group p-0 m-0 mb-4">
-                <label class="font-weight-bold" for="assignee-input">Team / Player</label><br />
-                <p style="vertical-align:middle;" class="mb-0 pt-0 mb-1 px-2 align-items-center">
-                  {{ctx.ticket.player?.approvedName || 'None'}}</p>
-                <p *ngIf="ctx.ticket.playerId" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Player Id:
-                  {{ctx.ticket.playerId | slice:0:16}}</p>
-                <p *ngIf="ctx.ticket.playerId" class="mb-0  pt-0 mb-1 px-2 align-items-center small">Team Id:
-                  {{ctx.ticket.teamId | slice:0:16}}</p>
+                <label class="d-block font-weight-bold" for="assignee-input">
+                  {{ ctx.ticket.isTeamGame ? "Player / Team" : "Player" }}
+                </label>
+                <p *ngIf="ctx.ticket?.player; else noPlayer" class="mb-0 pt-0 mb-1 px-2 align-items-center">
+                  <button *ngIf="ctx.ticket.player?.approvedName; else noPlayer" class="btn btn-link p-0 copy-id-button"
+                    tooltip="Click to copy this player's ID" [appCopyOnClick]="ctx.ticket.playerId">
+                    {{ctx.ticket.player?.approvedName}}
+                  </button>
+                  <ng-container *ngIf="ctx.ticket.isTeamGame">
+                    /
+                    <button class="btn btn-link p-0 copy-id-button" tooltip="Click to copy this team's ID"
+                      [appCopyOnClick]="ctx.ticket.teamId">
+                      {{ctx.ticket.teamName}}
+                    </button>
+                  </ng-container>
+                </p>
               </div>
 
               <div class="form-group p-0 m-0 mb-4">
@@ -300,6 +314,12 @@
                   {{ctx.ticket.creator?.approvedName || 'None'}}</p>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="card mt-2 manage-card">
+          <div class="card-header font-weight-bold">Support Tools</div>
+          <div class="card-body">
+            <app-ticket-support-tools [context]="supportToolsContext"></app-ticket-support-tools>
           </div>
         </div>
       </div>
@@ -346,3 +366,7 @@
     </div>
   </div>
 </div>
+
+<ng-template #noPlayer>
+  <div class="ml-2"><em>None</em></div>
+</ng-template>

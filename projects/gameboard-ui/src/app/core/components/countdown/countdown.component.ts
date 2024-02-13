@@ -1,6 +1,6 @@
 import { NowService } from '@/services/now.service';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable, map, of, tap, timer } from 'rxjs';
+import { Observable, map, of, timer } from 'rxjs';
 
 @Component({
   selector: 'app-countdown',
@@ -22,7 +22,7 @@ export class CountdownComponent implements OnChanges {
           if (!this.countdownTo)
             return 0;
 
-          return this.countdownTo - this.nowService.now().valueOf();
+          return Math.max(this.countdownTo - this.nowService.now().valueOf(), 0);
         })
       );
     }

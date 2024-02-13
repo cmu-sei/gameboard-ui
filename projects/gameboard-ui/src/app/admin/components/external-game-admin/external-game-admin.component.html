@@ -31,9 +31,6 @@
         <div *ngIf="context.teams.length; else noTeams"
             class="teams-data-container my-4 d-flex flex-wrap justify-content-start">
             <div *ngFor="let team of context.teams" class="card team-card mr-2 mb-2">
-                <div class="team-avatars-container">
-                    <app-player-avatar-list [players]="team.players"></app-player-avatar-list>
-                </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <h4 class="card-title flex-grow w-100">{{team.name}}</h4>
@@ -108,9 +105,8 @@
 
                     </div>
                     <button type="button" href="#" class="btn btn-info"
-                        [disabled]="team.deployStatus != 'notStarted' || !canDeploy"
-                        (click)="handlePreDeployTeamClick(context.game.id, team.id)"
-                        [class.disabled]="team.deployStatus != 'notStarted' || !canDeploy">Deploy</button>
+                        [disabled]="(team.deployStatus != 'notStarted' && team.deployStatus != 'partiallyDeployed') || !canDeploy"
+                        (click)="handlePreDeployTeamClick(context.game.id, team.id)">Deploy</button>
                 </div>
             </div>
         </div>

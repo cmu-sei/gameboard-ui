@@ -33,16 +33,20 @@ import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { BigStatComponent } from './components/big-stat/big-stat.component';
+import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
 import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
 import { ChallengeSolutionGuideComponent } from './components/challenge-solution-guide/challenge-solution-guide.component';
 import { ClockPipe } from './pipes/clock.pipe';
 import { ColoredTextChipComponent } from './components/colored-text-chip/colored-text-chip.component';
+import { CopyOnClickDirective } from './directives/copy-on-click.directive';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
+import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
+import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
@@ -83,6 +87,7 @@ import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
 import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
 import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
 import { StatusLightComponent } from './components/status-light/status-light.component';
+import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
@@ -93,10 +98,8 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
-import { CamelspacePipe } from './pipes/camelspace.pipe';
 
 const PUBLIC_DECLARATIONS = [
-  GbProgressBarComponent,
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
@@ -108,8 +111,11 @@ const PUBLIC_DECLARATIONS = [
   ChallengeSolutionGuideComponent,
   ColoredTextChipComponent,
   ConfirmButtonComponent,
+  CopyOnClickDirective,
   CountdownComponent,
   CumulativeTimeClockComponent,
+  DateToCountdownPipe,
+  DatetimeToDatePipe,
   DoughnutChartComponent,
   DropzoneComponent,
   ErrorDivComponent,
@@ -117,6 +123,7 @@ const PUBLIC_DECLARATIONS = [
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,
+  GbProgressBarComponent,
   LineChartComponent,
   LinkRendererPipe,
   LongContentHiderComponent,
@@ -158,6 +165,7 @@ const PUBLIC_DECLARATIONS = [
   SponsorsToLogoUrisPipe,
   SponsorLogoFileNamesToUrisPipe,
   StatusLightComponent,
+  SumArrayPipe,
   TextToColorPipe,
   ToggleClassPipe,
   ToTemplateContextPipe,

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.models';
+import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 
 @Component({
   selector: 'app-modal-confirm',
@@ -30,7 +30,7 @@ import { IModalReady, ModalConfirmConfig } from '@/core/components/modal/modal.m
   `,
   styleUrls: ['./modal-confirm.component.scss']
 })
-export class ModalConfirmComponent implements IModalReady<ModalConfirmConfig> {
+export class ModalConfirmComponent {
   context!: ModalConfirmConfig;
   private isConfirmed = false;
 

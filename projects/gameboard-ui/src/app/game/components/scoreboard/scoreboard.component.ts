@@ -1,21 +1,30 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom, interval, map } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
-import { GameScore, GameScoreGameInfo, GameScoreTeam, TeamGameScore } from '@/services/scoring/scoring.models';
+import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { ScoreboardTeamDetailModalComponent, ScoreboardTeamDetailModalContext } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-scoreboard',
   templateUrl: './scoreboard.component.html',
-  styleUrls: ['./scoreboard.component.scss']
+  styleUrls: ['./scoreboard.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class ScoreboardComponent implements OnChanges {
   @Input() gameId?: string;
 
-  protected gameData: GameScore | null = null;
-  protected maxTeamMembers = 1;
-  protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column";
+  protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column.";
+  protected hasAdvancedPlayers = false;
+  protected isLoading = true;
+  protected isLive = false;
+  protected isTeamGame = false;
+  protected scoreboardData: ScoreboardData | null = null;
+  protected advancingTeams: ScoreboardDataTeam[] = [];
+  protected nonAdvancingTeams: ScoreboardDataTeam[] = [];
+
+  private liveGameSub?: Subscription;
 
   constructor(
     private modalConfirmService: ModalConfirmService,
@@ -27,28 +36,40 @@ export class ScoreboardComponent implements OnChanges {
     }
   }
 
-  protected handleRowClick(gameInfo: GameScoreGameInfo, teamScore: GameScoreTeam) {
-    this.modalConfirmService.openComponent<ScoreboardTeamDetailModalComponent, ScoreboardTeamDetailModalContext>({
+  protected handleRowClick(teamData: ScoreboardDataTeam) {
+    // we don't show the details while the competition is ongoing
+    if (this.isLive) return;
+
+    this.modalConfirmService.openComponent<ScoreboardTeamDetailModalComponent>({
       content: ScoreboardTeamDetailModalComponent,
-      context: {
-        game: { id: gameInfo.id, name: gameInfo.name },
-        teamData: teamScore
-      },
+      context: { teamId: teamData.score.teamId },
       modalClasses: [
-        teamScore.players.length > 1 ? "modal-xl" : "modal-lg",
+        teamData.players.length > 1 ? "modal-xl" : "modal-lg",
         "modal-dialog-centered"
       ]
     });
   }
 
   private async loadGame(gameId: string) {
-    this.gameData = await firstValueFrom(this.scoreService.getGameScore(gameId));
+    this.isLoading = true;
+    this.scoreboardData = await firstValueFrom(this.scoreService.getScoreboard(gameId));
+    this.isLoading = false;
 
-    this.maxTeamMembers = 1;
-    for (const team of this.gameData.teams.filter(t => t.players.length > 1)) {
-      if (team.players.length > this.maxTeamMembers) {
-        this.maxTeamMembers = team.players.length;
-      }
+    // record if we have any qualifying players (affects rendering)
+    this.hasAdvancedPlayers = !!this.scoreboardData.teams.filter(t => t.isAdvancedToNextRound).length;
+    this.advancingTeams = this.scoreboardData.teams.filter(t => t.isAdvancedToNextRound);
+    this.nonAdvancingTeams = this.scoreboardData.teams.filter(t => !t.isAdvancedToNextRound);
+
+    this.isLive = false;
+    this.isTeamGame = this.scoreboardData.game.isTeamGame;
+    this.liveGameSub?.unsubscribe();
+
+    if (this.scoreboardData.game.isLiveUntil) {
+      this.isLive = true;
+
+      this.liveGameSub = interval(60000).subscribe(_ => {
+        this.loadGame(gameId);
+      });
     }
   }
 }

@@ -5,6 +5,10 @@ import { Challenge, ChallengeOverview, ChallengeSummary } from "./board-models";
 import { PlayerOverview } from "./player-models";
 import { UserSummary } from "./user-models";
 
+export interface SupportSettings {
+  supportPageGreeting?: string;
+}
+
 export interface Ticket {
   id: string;
   key: number;
@@ -14,7 +18,9 @@ export interface Ticket {
   creatorId: string;
   challengeId: string;
   playerId: string;
+  isTeamGame: boolean;
   teamId: string;
+  teamName: string;
   summary: string;
   description: string;
   status: string;

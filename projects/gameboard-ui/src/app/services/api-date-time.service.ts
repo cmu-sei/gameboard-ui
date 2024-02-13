@@ -9,7 +9,7 @@ export class ApiDateTimeService {
     // as of now, the API returns date objects as string (blargh)
     const parsedDateTime = DateTime.fromISO(input);
 
-    // also, it stores null dates as 1/1/01 (which weirdly gets converted to a time on 12/31/0000),
+    // also, it stores null dates as 1/1/01 (which gets converted to a time on 12/31/0000 because timezones),
     // so account for that too
     if (parsedDateTime.year == 0)
       return null;

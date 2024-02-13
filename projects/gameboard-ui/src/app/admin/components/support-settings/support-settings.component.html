@@ -1,0 +1,19 @@
+<h1>
+    Support Settings
+</h1>
+
+<div class="settings-section mt-4 mb-4" *ngIf="settings; else loading">
+    <h2>Greeting</h2>
+    <p>
+        This text appears as a banner on the Support page to welcome players. Edit it below
+        to customize it to your needs.
+    </p>
+
+    <label for="supportPageGreeting">Enter a greeting (allows markdown)</label>
+    <textarea id="supportPageGreeting" rows="8" [placeholder]="'Welcome to **' + appName + '** Support!'"
+        class="form-control" [(ngModel)]="settings.supportPageGreeting" (input)="handleSettingsChanged()"></textarea>
+</div>
+
+<ng-template #loading>
+    <app-spinner></app-spinner>
+</ng-template>

@@ -24,7 +24,7 @@ export class UserRegistrarComponent {
   selected: ApiUser[] = [];
   viewed: ApiUser | undefined = undefined;
   viewChange$ = new BehaviorSubject<ApiUser | undefined>(this.viewed);
-  search: Search = { term: '', take: 0, sort: "name" };
+  search: Search = { term: '', take: 200, sort: "name" };
   filter = '';
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique'];
   errors: any[] = [];

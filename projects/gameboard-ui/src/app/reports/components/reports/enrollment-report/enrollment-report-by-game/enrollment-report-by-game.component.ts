@@ -36,11 +36,13 @@ export class EnrollmentReportByGameComponent implements OnChanges {
   }
 
   protected handleSponsorsCountClick(game: ReportGame, sponsors: EnrollmentReportByGameSponsor[]) {
-    this.modalService.openComponent<EnrollmentReportSponsorPlayerCountModalComponent, EnrollmentReportSponsorPlayerCountModalContext>({
+    this.modalService.openComponent<EnrollmentReportSponsorPlayerCountModalComponent>({
       content: EnrollmentReportSponsorPlayerCountModalComponent,
       context: {
-        game: { id: game.id, name: game.name },
-        sponsors: sponsors,
+        context: {
+          game: { id: game.id, name: game.name },
+          sponsors: sponsors,
+        }
       },
       modalClasses: ["modal-xl"]
     });

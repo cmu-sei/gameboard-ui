@@ -1,12 +1,8 @@
 import { TemplateRef } from "@angular/core";
 
-export interface IModalReady<TModalContext> {
-    context: TModalContext;
-}
-
-export interface ModalConfig<TComponent, TContext> {
+export interface ModalConfig<TComponent> {
     content: ModalContent<TComponent>;
-    context: TContext;
+    context: Partial<TComponent>;
     modalClasses?: string[];
     isBackdropStatic?: boolean;
     ignoreBackdropClick?: boolean;

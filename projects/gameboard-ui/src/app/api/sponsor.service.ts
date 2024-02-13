@@ -11,6 +11,7 @@ import { ApiUrlService } from '@/services/api-url.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 export interface SponsorSearch {
+  excludeSponsorId?: string;
   hasParent?: boolean;
 }
 

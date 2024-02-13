@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { first } from 'rxjs/operators';
-import { SimpleEntity } from '@/api/models';
 import { ScoringService } from '@/services/scoring/scoring.service';
-import { CreateManualChallengeBonus, TeamGameScore, TeamGameScoreQueryResponse } from '@/services/scoring/scoring.models';
+import { CreateManualChallengeBonus, TeamScoreQueryResponse } from '@/services/scoring/scoring.models';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -14,7 +12,7 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
   @Input() teamId!: string;
 
   protected hasStartedChallenges = false;
-  protected teamScoreData?: TeamGameScoreQueryResponse;
+  protected teamScoreData?: TeamScoreQueryResponse;
 
   newChallengeBonusModel: CreateManualChallengeBonus = {
     description: '',
@@ -29,32 +27,31 @@ export class ManageManualChallengeBonusesComponent implements OnInit {
   }
 
   private async loadSummary(teamId: string) {
-    const scoreData = await firstValueFrom(this.scoresService.getTeamGameScore(teamId));
-    this.teamScoreData = scoreData
+    const scoreData = await firstValueFrom(this.scoresService.getTeamScore(teamId));
+    this.teamScoreData = scoreData;
     this.hasStartedChallenges = scoreData.score.challenges.length > 0;
-    // this.summary = response.score;
-    // this.startedChallenges = this.summary.challenges
-    //   .map(s => ({ id: s.id, name: s.name }));
-
-    // this.newChallengeBonusModel = {
-    //   description: '',
-    //   challengeId: response.score.challenges.length ? response.score.challenges[0].id : '',
-    //   pointValue: 1
-    // };;
+    this.newChallengeBonusModel = {
+      challengeId: "",
+      description: "",
+      pointValue: 1
+    };
   }
 
-  handleDelete(manualbonusId: string) {
-    this.scoresService.deleteManualBonus(manualbonusId)
-      .pipe(first())
-      .subscribe(() => this.loadSummary(this.teamId));
+  async handleDelete(manualBonusId: string) {
+    await firstValueFrom(this.scoresService.deleteManualBonus(manualBonusId));
+    await this.loadSummary(this.teamId);
   }
 
-  onSubmit() {
-    this.scoresService
-      .createManualChallengeBonus(this.newChallengeBonusModel)
-      .pipe(first())
-      .subscribe(_ => {
-        this.loadSummary(this.teamId);
-      });
+  async onSubmit() {
+    if (this.newChallengeBonusModel.challengeId) {
+      await firstValueFrom(this.scoresService.createManualChallengeBonus(this.newChallengeBonusModel));
+    }
+    else {
+      await firstValueFrom(this.scoresService.createManualTeamBonus({
+        ...this.newChallengeBonusModel,
+        teamId: this.teamId
+      }));
+    }
+    await this.loadSummary(this.teamId);
   }
 }

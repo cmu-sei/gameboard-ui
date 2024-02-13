@@ -15,16 +15,20 @@
     <div class="row">
       <div class="col-12 scoreboard">
         <h2 id="scoreboard" class="text-center my-4">Scoreboard</h2>
-        <app-scoreboard-table *ngIf="isLegacyScoreboard" [id]="game.id"
+        <div *ngIf="isAdmin" class="row">
+          <input type="checkbox" id="isNewScoreboard" name="isNewScoreboard" [(ngModel)]="isNewScoreboard" />
+          <label for="isNewScoreboard">Use new scoreboard</label>
+        </div>
+        <app-scoreboard-table *ngIf="!isNewScoreboard" [id]="game.id"
           [live]="game.session.isDuring"></app-scoreboard-table>
       </div>
     </div>
   </div>
 
   <!-- coming soon to a Gameboard near you...-->
-  <!-- <div class="d-flex align-items-center justify-content-center" *ngIf="!isLegacyScoreboard">
+  <div class="d-flex align-items-center justify-content-center" *ngIf="isNewScoreboard">
     <app-scoreboard class="page-width" [gameId]="game.id"></app-scoreboard>
-  </div> -->
+  </div>
 </ng-container>
 
 <ng-template #loading>

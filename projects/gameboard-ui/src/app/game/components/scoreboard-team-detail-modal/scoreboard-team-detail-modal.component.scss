@@ -1,44 +1,81 @@
+@import "../../../../scss/variables";
+
 h3 {
-    font-size: 0.9rem;
-    font-weight: bolder;
-    margin: 0;
-    text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  text-transform: uppercase;
 }
 
 h4 {
-    font-size: 0.9;
-    margin: 0;
-    text-transform: uppercase;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 16px 0;
+  text-transform: uppercase;
+}
+
+table {
+  border: solid 1px #eee;
+}
+
+td {
+  vertical-align: middle;
+}
+
+tfoot td {
+  border-top: dashed 2px #eee;
+  font-weight: bold;
+}
+
+.numeric-column {
+  text-align: center;
 }
 
 .team-detail-section {
-    margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .subtle-text {
-    color: #aaaaaa;
+  color: #aaaaaa;
 }
 
 .player-name {
-    font-weight: bold;
+  font-weight: bold;
 }
 
-
-.score-component, .score-plus, .score-equals {
-    margin: 0 0.5rem;
+.score-component,
+.score-plus,
+.score-equals {
+  margin: 0 0.5rem;
+  text-align: center;
 }
 
-.score-value, .score-plus, .score-equals {
-    line-height: 1.8rem;
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
+.score-value,
+.score-plus,
+.score-equals {
+  line-height: 1.8rem;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
-.score-total {
-    font-size: 3rem;
+.big-stat {
+  // font-weight: bold;
+  font-size: 3rem;
 }
 
-.challenge-results-table td {
-    vertical-align: middle;
+/* we constrain these to be the same width to align multiple tables */
+.total-column {
+  width: 12rem;
+}
+
+.grand-total-container {
+  background-color: $info;
+  color: #eee;
+  font-weight: bold;
+  text-transform: uppercase;
+
+  div {
+    padding: 0.75rem;
+  }
 }

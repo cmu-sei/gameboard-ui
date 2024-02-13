@@ -1,15 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
+import { DateTime } from 'luxon';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ConfigService } from '../../utility/config.service';
-import { CreateManualChallengeBonus, GameAutoBonusConfig, GameScore, GameScoringConfig, TeamGameScoreQueryResponse, UpdateGameAutoChallengeBonusConfig } from './scoring.models';
+import { CreateManualChallengeBonus, CreateManualTeamBonus, GameAutoBonusConfig, GameScore, GameScoringConfig, ScoreboardData, TeamScoreQueryResponse, UpdateGameAutoChallengeBonusConfig } from './scoring.models';
+import { ApiDateTimeService } from '../api-date-time.service';
 
 @Injectable({ providedIn: 'root' })
 export class ScoringService {
   private API_ROOT = '';
 
   constructor(
+    private apiDateTime: ApiDateTimeService,
     private apiUrl: ApiUrlService,
     private http: HttpClient,
     config: ConfigService
@@ -29,16 +32,41 @@ export class ScoringService {
     return this.http.get<GameScore>(this.apiUrl.build(`game/${gameId}/score`));
   }
 
+  public getScoreboard(gameId: string): Observable<ScoreboardData> {
+    return this.http.get<ScoreboardData>(this.apiUrl.build(`game/${gameId}/scoreboard`)).pipe(map(s => {
+      if (!s.game.isLiveUntil)
+        return s;
+
+      s.game.isLiveUntil = this.apiDateTime.toDateTime(s.game.isLiveUntil as any) as DateTime;
+
+      for (let t of s.teams) {
+        if (!t.sessionEnds)
+          continue;
+
+        t.sessionEnds = this.apiDateTime.toDateTime(t.sessionEnds as any) as DateTime;
+      }
+
+      return s;
+    }));
+  }
+
   public getGameScoringConfig(gameId: string): Observable<GameScoringConfig> {
     return this.http.get<GameScoringConfig>(`${this.API_ROOT}/game/${gameId}/score/config`);
   }
 
-  public getTeamGameScore(teamId: string): Observable<TeamGameScoreQueryResponse> {
-    return this.http.get<TeamGameScoreQueryResponse>(`${this.API_ROOT}/team/${teamId}/score`);
+  public getTeamScore(teamId: string): Observable<TeamScoreQueryResponse> {
+    return this.http.get<TeamScoreQueryResponse>(`${this.API_ROOT}/team/${teamId}/score`);
   }
 
   public createManualChallengeBonus(model: CreateManualChallengeBonus): Observable<void> {
     return this.http.post<void>(`${this.API_ROOT}/challenge/${model.challengeId}/bonus/manual`, {
+      description: model.description,
+      pointValue: model.pointValue
+    });
+  }
+
+  public createManualTeamBonus(model: CreateManualTeamBonus): Observable<void> {
+    return this.http.post<void>(`${this.API_ROOT}/team/${model.teamId}/bonus/manual`, {
       description: model.description,
       pointValue: model.pointValue
     });

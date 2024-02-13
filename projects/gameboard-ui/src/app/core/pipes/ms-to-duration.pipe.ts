@@ -31,6 +31,6 @@ export class MsToDurationPipe implements PipeTransform {
     if (seconds)
       retVals.push(`${seconds}s`);
 
-    return retVals.join(":");
+    return retVals.join(" ");
   }
 }

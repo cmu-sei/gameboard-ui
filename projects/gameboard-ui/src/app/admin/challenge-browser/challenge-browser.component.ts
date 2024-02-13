@@ -4,12 +4,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faEllipsisV, faInfoCircle, faSearch, faSyncAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
-import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, interval, merge, Observable, of } from 'rxjs';
+import { catchError, debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ChallengeSummary } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { Search } from '../../api/models';
 import { ChallengesService } from '@/api/challenges.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-challenge-browser',
@@ -37,6 +38,7 @@ export class ChallengeBrowserComponent {
   constructor(
     private api: BoardService,
     private challengesService: ChallengesService,
+    private toastService: ToastService,
     private route: ActivatedRoute,
   ) {
 
@@ -100,10 +102,20 @@ export class ChallengeBrowserComponent {
   }
 
   regrade(c: ChallengeSummary): void {
-    this.challengesService.regrade(c.id).subscribe(
-      r => this.selectedAudit = r,
-      (err) => this.errors.push(err)
-    );
+    this.challengesService
+      .regrade(c.id)
+      .pipe(catchError((err, caught) => {
+        this.errors.push(err);
+        return of(null);
+      }))
+      .subscribe(r => {
+        if (!r) {
+          return;
+        }
+
+        this.selectedAudit = r;
+        this.toastService.showMessage(`Challenge ${c.id} was regraded.`);
+      });
   }
 
   trackById(index: number, model: ChallengeSummary): string {

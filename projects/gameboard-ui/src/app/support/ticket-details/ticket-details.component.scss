@@ -1,4 +1,4 @@
-@import '../../../scss/variables';
+@import "../../../scss/variables";
 
 .card {
   border: 1px solid #222;
@@ -36,6 +36,10 @@ textarea {
   background-color: #111;
 }
 
+.manage-card {
+  width: 350px;
+}
+
 .no-preview {
   width: 120px;
   height: 120px;
@@ -65,22 +69,23 @@ textarea {
 
 // for table scroll bar to match theme
 ::-webkit-scrollbar {
-  background: rgba(0, 0, 0, 0); 
+  background: rgba(0, 0, 0, 0);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $dark; 
+  background: $dark;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: darken($dark, 5%); 
+  background: darken($dark, 5%);
 }
 
 ::-webkit-scrollbar-corner {
-  background: rgba(0, 0, 0, 0); 
+  background: rgba(0, 0, 0, 0);
 }
 
-.dark-textarea:focus-visible, .dark-textarea:focus {
+.dark-textarea:focus-visible,
+.dark-textarea:focus {
   outline: none;
   box-shadow: none;
 }
@@ -90,7 +95,7 @@ textarea {
 }
 
 .edit-h {
-  height: 35px;;
+  height: 35px;
 }
 
 .editable {
@@ -130,4 +135,8 @@ textarea {
 .btn-info:disabled {
   background-color: rgb(108, 117, 125);
   border-color: rgb(108, 117, 125);
+}
+
+.copy-id-button {
+  color: $info;
 }

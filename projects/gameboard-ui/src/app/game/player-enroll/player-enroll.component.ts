@@ -14,6 +14,7 @@ import { UserService as LocalUserService } from '../../utility/user.service';
 import { UserService } from '@/api/user.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { GameRegistrationType } from '@/api/game-models';
 
 @Component({
   selector: 'app-player-enroll',
@@ -39,10 +40,12 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   protected canStandardEnroll = false;
   protected disallowedName: string | null = null;
   protected disallowedReason: string | null = null;
+  protected enrollTooltip = "";
   protected hasSelectedSponsor = false;
   protected managerRole = PlayerRole.manager;
   protected isEnrolled$: Observable<boolean>;
   protected isManager$ = new Subject<boolean>();
+  protected isRegistrationOpen = false;
   protected hasTeammates$: Observable<boolean> = of(false);
   protected unenrollTooltip?: string;
   private hubSub?: Subscription;
@@ -68,6 +71,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
         ctx.player.session = new TimeWindow(ctx.player?.sessionBegin, ctx.player?.sessionEnd);
         ctx.game.session = new TimeWindow(ctx.game?.gameStart, ctx.game?.gameEnd);
         ctx.game.registration = new TimeWindow(ctx.game?.registrationOpen, ctx.game?.registrationClose);
+        this.isRegistrationOpen = ctx.game.registrationType !== GameRegistrationType.none;
+        this.enrollTooltip = this.isRegistrationOpen ? "" : "Registration is currently closed for this game.";
       }),
       tap((gc) => {
         if (gc.player.nameStatus && gc.player.nameStatus != 'pending') {

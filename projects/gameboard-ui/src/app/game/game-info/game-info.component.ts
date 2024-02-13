@@ -2,9 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Game } from '../../api/game-models';
-import { GameService } from '../../api/game.service';
+import { Game, GameRegistrationType } from '../../api/game-models';
 
 @Component({
   selector: 'app-game-info',
@@ -14,19 +12,12 @@ import { GameService } from '../../api/game.service';
 export class GameInfoComponent implements OnInit {
   @Input() game!: Game;
 
-  // game$!: Observable<Game>;
-
-  constructor (
-    route: ActivatedRoute,
-    api: GameService
-  ) {
-    // if (!route.parent){ return; }
-    // this.game$ = route.parent.params.pipe(
-    //   switchMap(p => api.retrieve(p.id)),
-    // );
-  }
+  protected isRegistrationOpen = false;
 
   ngOnInit(): void {
-  }
+    if (!this.game)
+      return;
 
+    this.isRegistrationOpen = this.game.registrationType != GameRegistrationType.none;
+  }
 }

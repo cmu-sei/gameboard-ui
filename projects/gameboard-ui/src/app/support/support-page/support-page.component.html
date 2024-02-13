@@ -5,6 +5,11 @@
   <h1 class="support-header mb-0">Support</h1>
 </div>
 
+<div class="container mb-4" *ngIf="settings?.supportPageGreeting">
+  <markdown [data]="settings?.supportPageGreeting"></markdown>
+  <hr />
+</div>
+
 <main class="mb-4 pb-4">
   <router-outlet></router-outlet>
 </main>

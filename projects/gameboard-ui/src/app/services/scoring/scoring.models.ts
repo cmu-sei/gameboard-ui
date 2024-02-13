@@ -1,5 +1,6 @@
 import { ChallengeResult } from "@/api/board-models";
 import { SimpleEntity, PlayerWithSponsor } from "@/api/models";
+import { DateTime } from "luxon";
 
 export interface GameScoringConfig {
     game: SimpleEntity;
@@ -34,13 +35,26 @@ export interface CreateManualChallengeBonus {
     pointValue: number;
 }
 
-export interface ManualChallengeBonusViewModel {
+export interface CreateManualTeamBonus {
+    teamId: string;
+    description: string;
+    pointValue: number;
+}
+
+export interface ManualBonus {
     id: string;
     description: string;
     enteredBy: SimpleEntity;
     enteredOn: Date;
-    challengeId: string;
     pointValue: number;
+}
+
+export interface ManualChallengeBonus extends ManualBonus {
+    challengeId: string;
+}
+
+export interface ManualTeamBonus extends ManualBonus {
+    teamId: string;
 }
 
 export interface GameScore {
@@ -58,10 +72,13 @@ export interface GameScoreGameInfo {
 export interface GameScoreTeam {
     challenges: TeamScoreChallenge[];
     liveSessionEnds: Date | null;
+    manualBonuses: ManualTeamBonus[];
+    isAdvancedToNextRound: boolean;
     overallScore: Score;
     players: PlayerWithSponsor[];
     rank: number;
     team: SimpleEntity;
+    remainingTimeMs?: number;
     totalTimeMs: number;
 }
 
@@ -72,23 +89,29 @@ export interface TeamScoreChallenge {
     result: ChallengeResult;
     score: Score;
     solveType: ChallengeResult;
-    manualBonuses: ManualChallengeBonusViewModel[];
+    bonuses: AutoChallengeBonus[];
+    manualBonuses: ManualChallengeBonus[];
 }
 
-export interface TeamGameScoreQueryResponse {
+export interface TeamScoreQueryResponse {
     gameInfo: GameScoreGameInfo;
-    score: TeamGameScore
+    score: TeamScore;
 }
 
-export interface TeamGameScore {
-    game: SimpleEntity,
+
+export interface TeamScore {
     team: SimpleEntity,
-    overallScore: Score,
+    players: PlayerWithSponsor[];
     challenges: TeamScoreChallenge[];
+    manualBonuses: ManualTeamBonus[];
+    isAdvancedToNextRound: boolean;
+    overallScore: Score;
+    cumulativeTimeMs: number;
+    remainingTimeMs?: number;
 }
 
 export interface AutoChallengeBonus {
-    description?: string;
+    description: string;
     pointValue: number;
     solveRank: number;
 }
@@ -108,4 +131,39 @@ export interface ChallengeLevelAutoChallengeBonus extends AutoChallengeBonus {
 export interface UpdateGameAutoChallengeBonusConfig {
     allChallengesBonuses: AutoChallengeBonus[];
     specificChallengesBonuses: ChallengeLevelAutoChallengeBonus[];
+}
+
+export interface ScoreboardData {
+    game: ScoreboardDataGame;
+    teams: ScoreboardDataTeam[];
+}
+
+export interface ScoreboardDataGame {
+    id: string;
+    name: string;
+    isLiveUntil?: DateTime,
+    isTeamGame: boolean;
+    specCount: number;
+}
+
+export interface ScoreboardDataTeam {
+    isAdvancedToNextRound: boolean;
+    players: PlayerWithSponsor[];
+    score: DenormalizedTeamScore;
+    sessionEnds?: DateTime;
+}
+
+export interface DenormalizedTeamScore {
+    gameId: string;
+    teamId: string;
+    teamName: string;
+    scoreOverall: number;
+    scoreAutoBonus: number;
+    scoreManualBonus: number;
+    scoreChallenge: number;
+    solveCountNone: number;
+    solveCountPartial: number;
+    solveCountComplete: number;
+    cumulativeTimeMs: number;
+    rank: number;
 }
