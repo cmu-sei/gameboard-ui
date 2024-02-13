@@ -179,7 +179,6 @@ export class PlayerRegistrarComponent {
   }
 
   review(): void {
-    console.log("reviewing", this.viewed?.id);
     this.viewed = this.source.find(g => g.id === this.viewed?.id);
     this.selected.forEach(s => {
       const t = this.source.find(g => g.id === s.id);
