@@ -5,10 +5,15 @@ import { ReportKey } from '@/reports/reports-models';
 import { BrowserService } from './browser.service';
 import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
+import { PlayerMode } from '@/api/player-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/tools/functions";
-import { PlayerMode } from '@/api/player-models';
+
+export interface RouterUrlOptions {
+  asAbsolute?: boolean;
+  queryParameters?: { [key: string]: string; };
+}
 
 export interface QueryParamsUpdate {
   parameters: Params,
@@ -27,8 +32,8 @@ export class RouterService implements OnDestroy {
     public router: Router,
     private objectService: ObjectService) { }
 
-  public getCurrentPathBase(): string {
-    let urlTree = this.router.parseUrl(this.router.url);
+  public getCurrentPathBase(options?: RouterUrlOptions): string {
+    const urlTree = this.router.parseUrl(this.router.url);
     urlTree.queryParams = {};
     return urlTree.toString();
   }
@@ -41,8 +46,9 @@ export class RouterService implements OnDestroy {
     this.router.navigateByUrl("/");
   }
 
-  public getAdminChallengeUrl(challengeId: string) {
-    return this.router.createUrlTree(["admin", "support"], { queryParams: { search: challengeId } }).toString();
+  public getAdminChallengeUrl(challengeId: string, options?: RouterUrlOptions) {
+    const absoluteUrlOptionalPath = options?.asAbsolute ? this.config.basehref + this.getCurrentPathBase() : "";
+    return this.router.createUrlTree([absoluteUrlOptionalPath, "admin", "support"], { queryParams: { search: challengeId } }).toString();
   }
 
   public getAdminGamePlayerUrl(gameId: string, playerId: string) {

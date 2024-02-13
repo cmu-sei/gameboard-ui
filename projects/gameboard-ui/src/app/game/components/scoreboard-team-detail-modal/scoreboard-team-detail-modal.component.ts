@@ -65,7 +65,6 @@ export class ScoreboardTeamDetailModalComponent implements OnInit {
         .manualBonuses
         .map(b => b.pointValue)
         .reduce((accumulator, nextValue) => accumulator + nextValue);
-
     }
   }
 
