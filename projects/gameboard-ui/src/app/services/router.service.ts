@@ -43,7 +43,6 @@ export class RouterService implements OnDestroy {
 
   public getAdminChallengeUrl(challengeId: string) {
     return this.buildAppUrlWithQueryParams({ queryParams: { search: challengeId } }, "admin", "support").toString();
-
   }
 
   public getAdminGamePlayerUrl(gameId: string, playerId: string) {
