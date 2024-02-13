@@ -144,7 +144,7 @@ export class RouterService implements OnDestroy {
   }
 
   public getGamePageUrl(gameId: string) {
-    return this.buildAppUrl("game", "gameId");
+    return this.buildAppUrl("game", gameId);
   }
 
   public goToGamePage(gameId: string) {
@@ -183,7 +183,7 @@ export class RouterService implements OnDestroy {
   }
 
   private buildAppUrlWithQueryParams(queryParams: any, ...urlBits: string[]) {
-    return this.router.createUrlTree([this.config.basehref || "", ...urlBits], { queryParams });
+    return this.router.createUrlTree([this.config.basehref || "", ...urlBits], { ...queryParams });
   }
 
   ngOnDestroy(): void {
