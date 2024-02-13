@@ -1,6 +1,7 @@
-import { ReportKey } from '@/reports/reports-models';
 import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
+import { Subscription, filter } from 'rxjs';
+import { ReportKey } from '@/reports/reports-models';
 import { BrowserService } from './browser.service';
 import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
@@ -13,7 +14,6 @@ export interface QueryParamsUpdate {
   parameters: Params,
   resetParams?: string[]
 }
-import { Subscription, filter } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class RouterService implements OnDestroy {
