@@ -264,9 +264,11 @@
                   (startEditFunc)="startEditChallenge()"
                   (selectOptionFunc)="selectChallenge($event)"></app-inplace-editor>
                 <p *ngIf="changedTicket.challenge" class="mb-0  pt-0 mb-1 px-2 align-items-center small">
-                  Support Code: <span appCopyOnClick class="text-info cursor-pointer">{{(changedTicket.challenge.id |
-                    slice:0:8) + ' '
-                    + (changedTicket.challenge.tag || '')}}</span>
+                  Support Code:
+                  <span appCopyOnClick class="text-info cursor-pointer"
+                    tooltip="Click to copy this ticket's support code">
+                    {{(changedTicket.challenge.id | slice:0:8) + ' ' + (changedTicket.challenge.tag || '')}}
+                  </span>
                 </p>
               </div>
               <div class="form-group p-0 m-0 mb-4">
