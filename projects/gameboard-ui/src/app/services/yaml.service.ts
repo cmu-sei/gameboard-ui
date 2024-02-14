@@ -27,4 +27,8 @@ export class YamlService {
   parse<T>(input: string): T {
     return YAML.parse(input) as T;
   }
+
+  render<T>(input: T) {
+    return YAML.stringify(input);
+  }
 }

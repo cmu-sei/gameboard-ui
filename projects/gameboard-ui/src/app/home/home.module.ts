@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { HomePageComponent } from './home-page/home-page.component';
 import { RouterModule } from '@angular/router';
 import { OidcComponent } from './oidc/oidc.component';
-import { NewsComponent } from './news/news.component';
 import { LandingComponent } from './landing/landing.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -22,7 +21,6 @@ import { RegistrationTypeToIsOpenPipe } from './pipes/registration-type-to-is-op
   declarations: [
     HomePageComponent,
     OidcComponent,
-    NewsComponent,
     LandingComponent,
     ForbiddenComponent,
     LoginPageComponent,

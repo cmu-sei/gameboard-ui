@@ -152,26 +152,16 @@
         <div class="form-group pb-0 pt-1">
           <label for="gameMarkdown-input">Lobby Markdown</label>
           <textarea rows="11" type="text" class="form-control" id="gameMarkdown-input" name="gameMarkdown"
+            placeholder="You can use **markdown** in the lobby description. _If_ you want."
             [(ngModel)]="game.gameMarkdown"></textarea>
-          <small>presented in the game lobby</small>
         </div>
       </div>
 
-      <div class="col-12">
-        <div class="form-group pb-0 pt-1">
-          <label for="feedbackConfig-input">Feedback Questions</label>
-          <textarea rows="11" type="text" class="form-control" id="feedbackConfig-input" name="feedbackConfig"
-            [(ngModel)]="game.feedbackConfig" (input)="yamlChanged()"></textarea>
-          <div class="d-flex justify-content-between">
-            <small>follow example YAML format</small>
-            <small [class]="feedbackWarning ? 'p-1 bg-danger rounded' : ''">
-              {{feedbackMessage}}
-            </small>
-          </div>
-        </div>
+      <div class="col-12 mt-5">
+        <app-feedback-editor [feedbackTemplate]="game.feedbackTemplate"></app-feedback-editor>
       </div>
 
-      <div class="col-12">
+      <div class="col-12 mt-5">
         <div class="form-group pb-0 pt-1">
           <label for="certificateTemplate-input">Certificate Template</label>
           <textarea rows="11" type="text" class="form-control" id="certificateTemplate-input" name="certificateTemplate"

@@ -1,0 +1,17 @@
+<div class="form-group pb-0 pt-1">
+    <alert *ngIf="validationMessage" type="warning">{{validationMessage}}</alert>
+
+    <label for="feedbackConfig-input">Feedback Questions</label>
+    <textarea rows="11" type="text" class="form-control" id="feedbackConfig-input" name="feedbackConfig"
+        [(ngModel)]="boundYaml" (input)="updateYaml(boundYaml)" [placeholder]="sampleConfig"></textarea>
+
+    <div class="d-flex align-items-center mt-3">
+        <button type="button" class="btn btn-info mr-2 flex-grow-1 flex-basis-50" [disabled]="!sampleConfig"
+            (click)="handlePasteSample()">
+            Paste Example Configuration
+        </button>
+        <button type="button" class="btn btn-success ml-2 flex-grow-1 flex-basis-50" [disabled]="!isValid">
+            Import Configuration
+        </button>
+    </div>
+</div>

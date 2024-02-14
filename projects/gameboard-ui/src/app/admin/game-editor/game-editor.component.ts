@@ -31,9 +31,6 @@ export class GameEditorComponent implements AfterViewInit {
   updated$!: Observable<boolean>;
   dirty = false;
   needsPracticeModeEnabledRefresh = false;
-  refreshFeedback = false;
-  feedbackMessage?: string = undefined;
-  feedbackWarning: boolean = false;
   viewing = 1;
   showCertificateInfo = false;
   showExternalGameFields = false;
@@ -75,7 +72,6 @@ export class GameEditorComponent implements AfterViewInit {
       tap(g => {
         this.game = g;
         this.title.set(`Edit "${g.name}"`);
-        this.updateFeedbackMessage();
       })
     );
   }
@@ -97,15 +93,9 @@ export class GameEditorComponent implements AfterViewInit {
       debounceTime(500),
       switchMap(g => this.api.update(this.game)),
       tap(r => this.dirty = false),
-      filter(f => this.refreshFeedback || this.needsPracticeModeEnabledRefresh),
+      filter(f => this.needsPracticeModeEnabledRefresh),
       switchMap(g => this.api.retrieve(this.game.id).pipe(
         tap(game => {
-          if (this.refreshFeedback) {
-            this.game.feedbackTemplate = game.feedbackTemplate;
-            this.updateFeedbackMessage();
-            this.refreshFeedback = false;
-          }
-
           if (this.needsPracticeModeEnabledRefresh) {
             this.practiceService.gamePlayerModeChanged({ gameId: game.id, isPractice: game.isPracticeMode });
             this.needsPracticeModeEnabledRefresh = false;
@@ -114,10 +104,6 @@ export class GameEditorComponent implements AfterViewInit {
       ),
       map(g => false)
     );
-  }
-
-  yamlChanged() {
-    this.refreshFeedback = true;
   }
 
   handleNonGameModeControlClicked(isDisabled: boolean) {
@@ -180,32 +166,6 @@ export class GameEditorComponent implements AfterViewInit {
     // if field value not blank, increment occurrence count by 1
     if (!!value)
       fieldMap.set(value, (fieldMap.get(value) ?? 0) + 1);
-  }
-
-  updateFeedbackMessage() {
-    this.feedbackWarning = false;
-    if (!this.game.feedbackConfig || this.game.feedbackConfig.trim().length == 0) {
-      this.feedbackMessage = "No questions configured";
-    } else if (this.game.feedbackTemplate) {
-      if (!this.checkFeedbackIds()) {
-        this.feedbackMessage = "IDs not unique in each list";
-        this.feedbackWarning = true;
-      } else {
-        this.feedbackMessage = `${this.game.feedbackTemplate?.game?.length ?? 0} game, ${this.game.feedbackTemplate?.challenge?.length ?? 0} challenge questions configured`;
-      }
-    } else {
-      this.feedbackMessage = "Invalid YAML format";
-      this.feedbackWarning = true;
-    }
-  }
-
-  checkFeedbackIds(): boolean {
-    const boardIds = new Set(this.game.feedbackTemplate.game?.map(q => q.id));
-    const challengeIds = new Set(this.game.feedbackTemplate.challenge?.map(q => q.id));
-    if ([...boardIds].length != (this.game.feedbackTemplate.game?.length ?? 0) || [...challengeIds].length != (this.game.feedbackTemplate.challenge?.length ?? 0)) {
-      return false;
-    }
-    return true;
   }
 
   sortByCount(a: KeyValue<string, number>, b: KeyValue<string, number>) {
