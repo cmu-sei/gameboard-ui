@@ -4,11 +4,11 @@ export const environment = {
   settings: {
     appname: 'Gameboard',
     apphost: 'http://localhost:5002',
+    basehref: "gb",
     mkshost: 'http://localhost:4201',
     imghost: 'http://localhost:5002/img',
     tochost: 'http://localhost:5002/doc',
     supporthost: 'http://localhost:5002/supportfiles',
-    gamebrainhost: '',
     unityhost: '',
     tocfile: '',
     countdownStartSecondsAtMinute: 5,

@@ -95,6 +95,7 @@ export class PlayerRegistrarComponent {
       switchMap(() => this.api.list(this.search)),
       tap(r => this.source = r),
       tap(() => this.isLoading = false),
+      tap(() => this.viewed = !this.viewed && this.search.term ? this.source.find(p => p.id === this.search.term) : this.viewed),
       tap(() => this.review())
     );
 

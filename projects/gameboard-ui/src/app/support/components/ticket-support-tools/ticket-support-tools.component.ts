@@ -71,10 +71,10 @@ export class TicketSupportToolsComponent implements OnInit {
     }
 
     if (this.context?.game) {
-      this.gameboardUrl = hasGame ? this.routerService.getGamePageUrlTree(this.context.game!.id).toString() : undefined;
+      this.gameboardUrl = hasGame ? this.routerService.getGamePageUrl(this.context.game!.id).toString() : undefined;
 
       if (this.context?.player) {
-        this.playerAdminUrl = hasGame ? this.routerService.getAdminGamePlayerUrl(this.context.game!.id, this.context.player.id).toString() : undefined;
+        this.playerAdminUrl = hasGame ? this.routerService.getAdminGamePlayerUrl(this.context.game!.id, this.context.player.id) : undefined;
       }
     }
 

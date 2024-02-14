@@ -1,19 +1,19 @@
-import { ReportKey } from '@/reports/reports-models';
 import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
+import { Subscription, filter } from 'rxjs';
+import { ReportKey } from '@/reports/reports-models';
 import { BrowserService } from './browser.service';
 import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
+import { PlayerMode } from '@/api/player-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/tools/functions";
-import { PlayerMode } from '@/api/player-models';
 
 export interface QueryParamsUpdate {
   parameters: Params,
   resetParams?: string[]
 }
-import { Subscription, filter } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class RouterService implements OnDestroy {
@@ -28,7 +28,7 @@ export class RouterService implements OnDestroy {
     private objectService: ObjectService) { }
 
   public getCurrentPathBase(): string {
-    let urlTree = this.router.parseUrl(this.router.url);
+    const urlTree = this.router.parseUrl(this.router.url);
     urlTree.queryParams = {};
     return urlTree.toString();
   }
@@ -42,11 +42,11 @@ export class RouterService implements OnDestroy {
   }
 
   public getAdminChallengeUrl(challengeId: string) {
-    return this.router.createUrlTree(["admin", "support"], { queryParams: { search: challengeId } }).toString();
+    return this.buildAppUrlWithQueryParams({ queryParams: { search: challengeId } }, "admin", "support").toString();
   }
 
   public getAdminGamePlayerUrl(gameId: string, playerId: string) {
-    return this.router.createUrlTree(["admin", "registrar", gameId], { queryParams: { term: playerId } });
+    return this.buildAppUrlWithQueryParams({ queryParams: { term: playerId } }, "admin", "registrar", gameId).toString();
   }
 
   public getCertificatePrintableUrl(mode: PlayerMode, challengeSpecOrGameId: string) {
@@ -143,12 +143,12 @@ export class RouterService implements OnDestroy {
     return this.router.createUrlTree(["game", "board", playerId]);
   }
 
-  public getGamePageUrlTree(gameId: string): UrlTree {
-    return this.router.parseUrl(`/game/${gameId}`);
+  public getGamePageUrl(gameId: string) {
+    return this.buildAppUrl("game", gameId);
   }
 
   public goToGamePage(gameId: string) {
-    this.router.navigateByUrl(this.getGamePageUrlTree(gameId));
+    this.router.navigateByUrl(this.getGamePageUrl(gameId).toString());
   }
 
   public getUnityBoardUrlTree(ctx: { gameId: string, playerId: string, teamId: string; sessionEnd: number }) {
@@ -176,6 +176,14 @@ export class RouterService implements OnDestroy {
     const updatedParams = { ...cleanParams, ...update.parameters };
     const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: updatedParams });
     return this.router.navigateByUrl(urlTree);
+  }
+
+  private buildAppUrl(...urlBits: string[]) {
+    return this.buildAppUrlWithQueryParams(null, ...urlBits);
+  }
+
+  private buildAppUrlWithQueryParams(queryParams: any, ...urlBits: string[]) {
+    return this.router.createUrlTree([this.config.basehref || "", ...urlBits], { ...queryParams });
   }
 
   ngOnDestroy(): void {

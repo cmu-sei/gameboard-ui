@@ -18,7 +18,7 @@ export class CopyOnClickDirective implements AfterViewInit {
       if (existingOnClick)
         existingOnClick();
 
-      const text = this.text || this.elementRef.nativeElement.innerHTML;
+      const text = this.text || this.elementRef.nativeElement.innerHTML.trim();
       if (text) {
         this.clipboardService.copy(text);
         this.toastService.showMessage(`Copied "${text}" to your clipboard.`);
