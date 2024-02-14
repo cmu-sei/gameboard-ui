@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, debounceTime } from 'rxjs';
+import { BehaviorSubject, debounceTime, map, tap } from 'rxjs';
 import { FeedbackTemplate } from '@/api/feedback-models';
 import { YamlService } from '@/services/yaml.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { isObject } from '@/tools/functions';
 import { YAMLParseError } from 'yaml';
+import { FeedbackService } from '@/api/feedback.service';
 
 @Component({
   selector: 'app-feedback-editor',
@@ -19,82 +20,59 @@ export class FeedbackEditorComponent implements OnChanges, OnInit {
   protected boundYaml = "";
   protected isValid = false;
   protected sampleConfig?: string;
-  protected validationMessage = "";
+  protected validationMessages: string[] = [];
 
   private templateChangeSubject$ = new BehaviorSubject<FeedbackTemplate | null>(null);
 
   public constructor(
+    private feedbackService: FeedbackService,
     private unsub: UnsubscriberService,
     private yamlService: YamlService) {
     this.unsub.add(
       this.templateChangeSubject$
-        .pipe(debounceTime(500))
-        .subscribe(t => this.templateChange.emit(t)));
+        .pipe(
+          debounceTime(500),
+          tap(t => this.templateChange.emit(t))
+        )
+        .subscribe()
+    );
   }
 
   async ngOnInit() {
-    this.sampleConfig = await this.yamlService.loadSample("feedback-config") || "";
+    this.sampleConfig = await this.feedbackService.getSampleYaml() || "";
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    console.log("got", changes.feedbackTemplate.currentValue);
     if (!this.feedbackTemplate) {
       this.boundYaml = "";
       return;
     }
 
-    this.boundYaml = this.yamlService.render(this.feedbackTemplate);
+    this.boundYaml = this.yamlService.render(this.feedbackTemplate, " Keys are written in alphabetical order - your 'message' field might be at the bottom 👇🏻");
   }
 
-  // updateFeedbackMessage() {
-  //   this.feedbackWarning = false;
-  //   if (!this.feedbackConfig || this.feedbackConfig.trim().length == 0) {
-  //     this.feedbackMessage = "No questions configured";
-  //   } else if (this.feedbackTemplate) {
-  //     if (!this.checkFeedbackIds()) {
-  //       this.feedbackMessage = "IDs not unique in each list";
-  //       this.feedbackWarning = true;
-  //     } else {
-  //       this.feedbackMessage = `${this.feedbackTemplate?.game?.length ?? 0} game, ${this.feedbackTemplate?.challenge?.length ?? 0} challenge questions configured`;
-  //     }
-  //   } else {
-  //     this.feedbackMessage = "Invalid YAML format";
-  //     this.feedbackWarning = true;
-  //   }
-  // }
-
-  // checkFeedbackIds(): boolean {
-  //   if (!this.feedbackTemplate)
-  //     return true;
-
-  //   const boardIds = new Set(this.feedbackTemplate.game?.map(q => q.id));
-  //   const challengeIds = new Set(this.feedbackTemplate.challenge?.map(q => q.id));
-  //   if ([...boardIds].length != (this.feedbackTemplate.game?.length ?? 0) || [...challengeIds].length != (this.feedbackTemplate.challenge?.length ?? 0)) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
   protected handlePasteSample(): void {
-    if (this.sampleConfig)
+    if (this.sampleConfig) {
       this.boundYaml = this.sampleConfig;
+      this.updateYaml(this.sampleConfig);
+    }
   }
 
   protected updateYaml(yamlConfig: string) {
-    let template: FeedbackTemplate | undefined = undefined;
     const feedbackTemplate = this.validateInput(yamlConfig);
-
-    this.update(template);
+    this.update(feedbackTemplate);
   }
 
   private update(template?: FeedbackTemplate) {
     this.feedbackTemplate = template;
 
     this.templateChangeSubject$.next(template || null);
-    this.templateChange.emit(template);
   }
 
   private validateInput(input: string): FeedbackTemplate | undefined {
-    this.validationMessage = "";
+    this.validationMessages = [];
+
     let parsed: FeedbackTemplate | undefined = undefined;
     const invalidYaml = "This isn't a valid YAML document. Try pasting the example configuration to get started.";
 
@@ -105,29 +83,19 @@ export class FeedbackEditorComponent implements OnChanges, OnInit {
       parsed = this.yamlService.parse<FeedbackTemplate>(input);
 
       if (!isObject(parsed)) {
-        this.validationMessage = invalidYaml;
+        this.validationMessages.push(invalidYaml);
         return undefined;
       }
     }
     catch (err) {
       if (err instanceof YAMLParseError) {
-        this.validationMessage = invalidYaml;
+        this.validationMessages.push(invalidYaml);
         return undefined;
       }
     }
 
-    if (!parsed?.challenge || !parsed?.game) {
-      this.validationMessage = "Your feedback configuration must include questions for either the game or challenge properties.";
-      return undefined;
-    }
-
-    for (const gameQuestion of parsed?.game || []) {
-      const keys = Object.keys(gameQuestion);
-      const hasRequiredProperties = ["id", "prompt", "shortName", "type"].every(p => !!keys.find(k => k === p));
-
-      if (!hasRequiredProperties) {
-        this.validationMessage = "Each configured question must have the following properties: id, prompt, shortName, and type";
-      }
+    if (parsed) {
+      this.validationMessages = this.validationMessages.concat(this.feedbackService.validateConfig(parsed));
     }
 
     return parsed;

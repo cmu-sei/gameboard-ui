@@ -1,16 +1,23 @@
 <div class="form-group pb-0 pt-1">
-    <alert *ngIf="validationMessage" type="warning">{{validationMessage}}</alert>
-
     <label for="feedbackConfig-input">Feedback Questions</label>
-    <textarea rows="11" type="text" class="form-control" id="feedbackConfig-input" name="feedbackConfig"
-        [(ngModel)]="boundYaml" (input)="updateYaml(boundYaml)" [placeholder]="sampleConfig"></textarea>
+    <textarea rows="11" type="text" class="form-control font-fixed-width" id="feedbackConfig-input"
+        name="feedbackConfig" [(ngModel)]="boundYaml" (input)="updateYaml(boundYaml)" (paste)="updateYaml(boundYaml)"
+        [placeholder]="sampleConfig"></textarea>
 
+    <alert *ngIf="validationMessages.length" type="warning" class="mt-3">
+        <ul class="m-0">
+            <li *ngFor="let message of validationMessages">
+                <markdown [data]="message"></markdown>
+            </li>
+        </ul>
+    </alert>
     <div class="d-flex align-items-center mt-3">
         <button type="button" class="btn btn-info mr-2 flex-grow-1 flex-basis-50" [disabled]="!sampleConfig"
             (click)="handlePasteSample()">
             Paste Example Configuration
         </button>
-        <button type="button" class="btn btn-success ml-2 flex-grow-1 flex-basis-50" [disabled]="!isValid">
+        <button type="button" class="btn btn-success ml-2 flex-grow-1 flex-basis-50"
+            [disabled]="!boundYaml || validationMessages.length">
             Import Configuration
         </button>
     </div>

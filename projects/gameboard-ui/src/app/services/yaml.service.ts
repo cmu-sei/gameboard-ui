@@ -28,7 +28,28 @@ export class YamlService {
     return YAML.parse(input) as T;
   }
 
-  render<T>(input: T) {
-    return YAML.stringify(input);
+  render<T extends {}>(input: T, headerComment?: string): string {
+    const doc = new YAML.Document(input, (key, value) => {
+      // if undefined, the key is left out of the rendered
+      // object, which is what we want for most cases
+      if (value === null || value === undefined)
+        return undefined;
+
+      return value;
+    });
+
+    if (headerComment) {
+      doc.commentBefore = headerComment;
+    }
+
+    return doc.toString();
+
+    return YAML.stringify(input, (key, value) => {
+
+      if (value === null || value === undefined)
+        return undefined;
+
+      return value;
+    });
   }
 }

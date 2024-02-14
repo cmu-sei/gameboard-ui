@@ -3,11 +3,11 @@
 
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game, GameEngineMode } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { KeyValue } from '@angular/common';
 import { AppTitleService } from '@/services/app-title.service';
 import { fa } from '@/services/font-awesome.service';
@@ -15,6 +15,8 @@ import { PlayerMode } from '@/api/player-models';
 import { ToastService } from '@/utility/services/toast.service';
 import { PracticeService } from '@/services/practice.service';
 import { ConfigService } from '@/utility/config.service';
+import { FeedbackTemplate } from '@/api/feedback-models';
+import { YamlService } from '@/services/yaml.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -57,7 +59,8 @@ export class GameEditorComponent implements AfterViewInit {
     private config: ConfigService,
     private practiceService: PracticeService,
     private title: AppTitleService,
-    private toast: ToastService
+    private toast: ToastService,
+    private yamlService: YamlService
   ) {
 
     // one-time get list of all games for field suggestions
@@ -72,6 +75,11 @@ export class GameEditorComponent implements AfterViewInit {
       tap(g => {
         this.game = g;
         this.title.set(`Edit "${g.name}"`);
+
+        // ensure that the feedback template yaml string is consistent with the configuration
+        if (this.game.feedbackConfig) {
+          this.game.feedbackTemplate = this.yamlService.parse(this.game.feedbackConfig);
+        }
       })
     );
   }
@@ -88,6 +96,11 @@ export class GameEditorComponent implements AfterViewInit {
         if (this.config.gamebrainhost && !this.game.externalGameStartupUrl && !this.defaultExternalGameStartUrlSuggested) {
           this.game.externalGameStartupUrl = `${this.config.gamebrainhost}admin/deploy`;
           this.defaultExternalGameStartUrlSuggested = true;
+        }
+
+        // keep feedbackTemplate synced to feedbackConfig
+        if (this.game.feedbackConfig) {
+          this.game.feedbackTemplate = this.yamlService.parse(this.game.feedbackConfig);
         }
       }),
       debounceTime(500),
@@ -109,6 +122,20 @@ export class GameEditorComponent implements AfterViewInit {
   handleNonGameModeControlClicked(isDisabled: boolean) {
     if (isDisabled)
       this.showExternalModeToast(true);
+  }
+
+  async handleFeedbackTemplateChange(template?: FeedbackTemplate) {
+    console.log("change", template);
+    if (template) {
+      this.game.feedbackConfig = this.yamlService.render(template);
+      this.game.feedbackTemplate = this.yamlService.parse(this.game.feedbackConfig);
+    }
+    else {
+      this.game.feedbackConfig = "";
+      this.game.feedbackTemplate = undefined;
+    }
+
+    await firstValueFrom(this.api.update(this.game));
   }
 
   handleModeChange(event: Event) {
