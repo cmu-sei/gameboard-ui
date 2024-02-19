@@ -56,10 +56,6 @@
       <app-error-div [errors]="errors"></app-error-div>
 
       <div class="text-right">
-        <button class="btn btn-info mr-2" (click)="audit(selected)">
-          <fa-icon [icon]="faInfo"></fa-icon>
-          <span>Audit</span>
-        </button>
         <button class="btn btn-info" (click)="regrade(selected)">
           <fa-icon [icon]="faSync"></fa-icon>
           <span>Regrade</span>
@@ -68,7 +64,8 @@
 
       <div *ngIf="!isLoadingSubmissions; else loadingSubmissions">
         <label for="" class="font-weight-bold">Submissions</label>
-        <pre *ngIf="selectedAudit?.length; else noSubmissions">{{selectedAudit | yaml}}</pre>
+        <ng-container
+          *ngTemplateOutlet="selectedAudit?.length ? localAudit : noSubmissions; context: { $implicit: selected }"></ng-container>
       </div>
 
       <label class="font-weight-bold">Challenge</label>
@@ -82,6 +79,19 @@
   <app-spinner></app-spinner>
 </ng-template>
 
-<ng-template #noSubmissions>
-  <div class="mb-3"><em>No submissions yet</em></div>
+<ng-template #localAudit>
+  <pre>{{selectedAudit | yaml}}</pre>
+</ng-template>
+
+<ng-template #noSubmissions let-challenge>
+  <div class="mb-3">
+    <em>No submissions yet.</em>
+
+    <div *ngIf="!challenge.archived && !isLoadingAuditFromGameEngine" class="btn btn-link text-info cursor-pointer py-0"
+      (click)="auditFromGameEngine(challenge.id)">
+      Audit from game engine?
+    </div>
+
+    <app-spinner *ngIf="isLoadingAuditFromGameEngine"></app-spinner>
+  </div>
 </ng-template>

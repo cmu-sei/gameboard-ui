@@ -35,6 +35,7 @@ export class ChallengeBrowserComponent {
   faSync = faSyncAlt;
   faCircle = faCircle;
 
+  protected isLoadingAuditFromGameEngine = false;
   protected isLoadingSubmissions = false;
 
   constructor(
@@ -75,7 +76,6 @@ export class ChallengeBrowserComponent {
       switchMap(() => api.archived(this.search)),
       tap(a => this.archiveMap = new Map(a.map(i => [i.id, i]))),
       map(a => {
-        // remove properties that aren't displayed for current challenges for consistency
         return a.map(i => {
           let { submissions, gameId, ...rest } = i as any;
           rest.archived = true;
@@ -90,6 +90,8 @@ export class ChallengeBrowserComponent {
     this.selectedAudit = [];
 
     if (c.archived) {
+      const archivedSubmissions = this.archiveMap.get(c.id)?.submissions;
+      this.selectedAudit = archivedSubmissions;
       return;
     }
 
@@ -110,18 +112,20 @@ export class ChallengeBrowserComponent {
     }
   }
 
-  async audit(c: ChallengeSummary): Promise<void> {
-    if (c.archived) {
-      // archived challenges already contain submissions, so no need for API call
-      this.selectedAudit = this.archiveMap.get(c.id)?.submissions;
-      return;
-    }
-
+  protected async auditFromGameEngine(challengeId: string): Promise<void> {
     try {
-      this.selectedAudit = await firstValueFrom(this.api.audit(c.id));
+      this.isLoadingAuditFromGameEngine = true;
+      this.selectedAudit = await firstValueFrom(this.api.audit(challengeId));
+
+      if (!this.selectedAudit?.length) {
+        this.toastService.showMessage(`No audit data available from the game engine for challenge ${challengeId}.`);
+      }
     }
     catch (err: any) {
       this.errors.push(err);
+    }
+    finally {
+      this.isLoadingAuditFromGameEngine = false;
     }
   }
 
