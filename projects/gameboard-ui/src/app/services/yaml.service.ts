@@ -43,13 +43,5 @@ export class YamlService {
     }
 
     return doc.toString();
-
-    return YAML.stringify(input, (key, value) => {
-
-      if (value === null || value === undefined)
-        return undefined;
-
-      return value;
-    });
   }
 }

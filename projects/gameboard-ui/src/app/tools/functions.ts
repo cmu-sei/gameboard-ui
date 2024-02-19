@@ -12,7 +12,7 @@ export function buildUrl(...urlBits: string[]): string | null {
 }
 
 export function hasProperty<T extends {}>(object: T, property: keyof T) {
-    return Object.keys(object).some(k => k === property);
+    return object ? Object.keys(object).some(k => k === property) : false;
 }
 
 export function isObject<T>(thing: T): boolean {

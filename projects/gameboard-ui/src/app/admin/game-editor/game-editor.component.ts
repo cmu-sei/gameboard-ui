@@ -97,11 +97,6 @@ export class GameEditorComponent implements AfterViewInit {
           this.game.externalGameStartupUrl = `${this.config.gamebrainhost}admin/deploy`;
           this.defaultExternalGameStartUrlSuggested = true;
         }
-
-        // keep feedbackTemplate synced to feedbackConfig
-        if (this.game.feedbackConfig) {
-          this.game.feedbackTemplate = this.yamlService.parse(this.game.feedbackConfig);
-        }
       }),
       debounceTime(500),
       switchMap(g => this.api.update(this.game)),
@@ -125,10 +120,9 @@ export class GameEditorComponent implements AfterViewInit {
   }
 
   async handleFeedbackTemplateChange(template?: FeedbackTemplate) {
-    console.log("change", template);
     if (template) {
       this.game.feedbackConfig = this.yamlService.render(template);
-      this.game.feedbackTemplate = this.yamlService.parse(this.game.feedbackConfig);
+      this.game.feedbackTemplate = template;
     }
     else {
       this.game.feedbackConfig = "";
