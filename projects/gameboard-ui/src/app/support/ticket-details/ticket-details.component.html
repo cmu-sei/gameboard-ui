@@ -45,9 +45,9 @@
         <span class="mr-4">Challenge:
           <a *ngIf="ctx.canManage" target="_blank" [routerLink]="['/admin/support']"
             [queryParams]="{search: ctx.ticket.challengeId}">
-            <span>{{challenge?.name}} ({{(challenge?.id | slice:0:8)}} {{challenge?.tag}})</span>
+            <span>{{challenge?.name}} ({{ challenge | toSupportCode }})</span>
           </a>
-          <span *ngIf="!ctx.canManage"> {{challenge?.name}} ({{(challenge?.id | slice:0:8)}} {{challenge?.tag}})</span>
+          <span *ngIf="!ctx.canManage"> {{challenge?.name}} ({{ challenge | toSupportCode }})</span>
         </span>
       </ng-container>
       <div class="copy-button-container ml-auto">
@@ -267,7 +267,7 @@
                   Support Code:
                   <span appCopyOnClick class="text-info cursor-pointer"
                     tooltip="Click to copy this ticket's support code">
-                    {{(changedTicket.challenge.id | slice:0:8) + ' ' + (changedTicket.challenge.tag || '')}}
+                    {{(changedTicket.challenge | toSupportCode)}}
                   </span>
                 </p>
               </div>
