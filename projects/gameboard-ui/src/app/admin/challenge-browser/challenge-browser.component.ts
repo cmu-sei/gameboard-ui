@@ -4,7 +4,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faEllipsisV, faInfoCircle, faSearch, faSyncAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, interval, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, interval, merge, Observable, of } from 'rxjs';
 import { catchError, debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ChallengeSummary } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
@@ -35,11 +35,13 @@ export class ChallengeBrowserComponent {
   faSync = faSyncAlt;
   faCircle = faCircle;
 
+  protected isLoadingSubmissions = false;
+
   constructor(
+    route: ActivatedRoute,
     private api: BoardService,
     private challengesService: ChallengesService,
     private toastService: ToastService,
-    private route: ActivatedRoute,
   ) {
 
     route.queryParams.pipe(
@@ -83,21 +85,43 @@ export class ChallengeBrowserComponent {
     );
   }
 
-  select(c: ChallengeSummary): void {
+  async select(c: ChallengeSummary): Promise<void> {
     this.selected = c;
     this.selectedAudit = [];
-    // todo: fetch challenge events / submissions
+
+    if (c.archived) {
+      return;
+    }
+
+    this.isLoadingSubmissions = true;
+
+    try {
+      const submissions = await firstValueFrom(this.challengesService.getSubmissions(c.id));
+      this.selectedAudit = submissions.submittedAnswers.map(s => {
+        return { submittedOn: s.submittedOn, answers: s.answers.map(a => a || "(no response)") };
+      });
+    }
+    catch (err: any) {
+      this.isLoadingSubmissions = false;
+      this.errors.push(`Couldn't load submissions for challenge ${c.id}`);
+    }
+    finally {
+      this.isLoadingSubmissions = false;
+    }
   }
 
-  audit(c: ChallengeSummary): void {
+  async audit(c: ChallengeSummary): Promise<void> {
     if (c.archived) {
       // archived challenges already contain submissions, so no need for API call
       this.selectedAudit = this.archiveMap.get(c.id)?.submissions;
-    } else {
-      this.api.audit(c.id).subscribe(
-        r => this.selectedAudit = r,
-        (err) => this.errors.push(err)
-      );
+      return;
+    }
+
+    try {
+      this.selectedAudit = await firstValueFrom(this.api.audit(c.id));
+    }
+    catch (err: any) {
+      this.errors.push(err);
     }
   }
 

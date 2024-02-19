@@ -4,7 +4,6 @@
 <h4>Challenges</h4>
 
 <div class="fixed">
-
   <div class="browser">
     <div class="input-group input-group-sm">
       <div class="input-group-prepend">
@@ -13,23 +12,24 @@
           <span>Search</span>
         </span>
       </div>
-      <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control" (input)="refresh$.next(true)">
+      <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control"
+        (input)="refresh$.next(true)">
     </div>
     <div *ngIf="challenges$ | async as list">
       <div class="mt-2 border-bottom">
         <span>Current</span>
       </div>
       <ul class="list-unstyled mb-1">
-        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable" 
+        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable"
           [class]="s.id == selected?.id ? 'clicked' : ''" (click)="select(s)">
           <div class="col-1 px-1 align-self-center">
             <fa-icon *ngIf="s.isActive" class="small text-success align-self-center" [icon]="faCircle"></fa-icon>
           </div>
           <span class="col mr-2 px-1 align-self-center d-flex justify-content-between">
-            <span>{{s.id | slice:0:8}}: {{s.tag}}</span>
+            <span>{{ s | toSupportCode }}</span>
             <small class="px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
           </span>
-          
+
         </li>
       </ul>
     </div>
@@ -39,10 +39,10 @@
         <span>Archived</span>
       </div>
       <ul class="list-unstyled">
-        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable" [class]="s.id == selected?.id ? 'clicked' : ''" 
-          (click)="select(s)">
+        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable"
+          [class]="s.id == selected?.id ? 'clicked' : ''" (click)="select(s)">
           <span class="col offset-1 mr-2 px-1 align-self-center d-flex justify-content-between">
-            <span>{{s.id | slice:0:8}}: {{s.tag}}</span>
+            <span>{{ s | toSupportCode }}</span>
             <small class="px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
           </span>
         </li>
@@ -66,14 +66,22 @@
         </button>
       </div>
 
-      <div *ngIf="selectedAudit">
-        <label for="">Submissions</label>
-        <pre>{{selectedAudit | yaml}}</pre>
+      <div *ngIf="!isLoadingSubmissions; else loadingSubmissions">
+        <label for="" class="font-weight-bold">Submissions</label>
+        <pre *ngIf="selectedAudit?.length; else noSubmissions">{{selectedAudit | yaml}}</pre>
       </div>
 
-      <label for="">Challenge</label>
+      <label class="font-weight-bold">Challenge</label>
       <pre>{{selected | yaml}}</pre>
     </div>
   </div>
 
 </div>
+
+<ng-template #loadingSubmissions>
+  <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #noSubmissions>
+  <div class="mb-3"><em>No submissions yet</em></div>
+</ng-template>
