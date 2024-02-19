@@ -98,6 +98,7 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { ToSupportCodePipe } from './pipes/to-support-code.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ApiDatePipe,
@@ -168,6 +169,7 @@ const PUBLIC_DECLARATIONS = [
   SumArrayPipe,
   TextToColorPipe,
   ToggleClassPipe,
+  ToSupportCodePipe,
   ToTemplateContextPipe,
   TicketStatusBadgePipe,
   UrlRewritePipe,
