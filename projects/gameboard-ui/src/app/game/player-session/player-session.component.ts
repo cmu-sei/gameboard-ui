@@ -148,8 +148,7 @@ export class PlayerSessionComponent implements OnDestroy {
 
   private async doReset(p: Player) {
     try {
-      // const team = await firstValueFrom(this.teamService.get(p.teamId));
-      const team = await firstValueFrom(this.teamService.get("1234"));
+      const team = await firstValueFrom(this.teamService.get(p.teamId));
     }
     catch (err: any) {
       if (err.status == 400) {
