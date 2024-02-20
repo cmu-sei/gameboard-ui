@@ -89,12 +89,15 @@ export class ChallengeBrowserComponent {
     this.selected = c;
     this.selectedAudit = [];
 
+    // if the challenge is archived, we usually have the challenge submissions
+    // in the archive table
     if (c.archived) {
       const archivedSubmissions = this.archiveMap.get(c.id)?.submissions;
       this.selectedAudit = archivedSubmissions;
       return;
     }
 
+    // otherwise, we can try to load them from GB's API
     this.isLoadingSubmissions = true;
 
     try {
@@ -112,6 +115,8 @@ export class ChallengeBrowserComponent {
     }
   }
 
+  // this is now a fallback that the user can elect to try for a challenge if 
+  // we don't have the data in archive or in the GB API
   protected async auditFromGameEngine(challengeId: string): Promise<void> {
     try {
       this.isLoadingAuditFromGameEngine = true;
