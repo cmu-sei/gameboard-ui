@@ -32,6 +32,10 @@ export class SupportReportComponent extends ReportComponentBase<SupportReportFla
 
   protected gameChallengeSpecQueryModel: GameChallengeSpecQueryModel | null = new GameChallengeSpecQueryModel();
   protected openedDateRangeModel: DateRangeQueryParamModel | null = null;
+  protected updatedDateRangeModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
+    dateStartParamName: "updatedDateStart",
+    dateEndParamName: "updatedDateEnd"
+  });
 
   protected labelsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "labels",

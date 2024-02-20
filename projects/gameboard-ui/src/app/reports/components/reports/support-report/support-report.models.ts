@@ -8,6 +8,8 @@ export interface SupportReportFlatParameters {
     minutesSinceUpdate?: number;
     openedDateStart?: string;
     openedDateEnd?: string;
+    updatedDateStart?: string;
+    updatedDateEnd?: string;
     openedTimeWindow?: SupportReportTicketWindow;
     pageNumber?: number;
     pageSize?: number;
