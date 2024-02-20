@@ -41,3 +41,22 @@ export enum SupportReportTicketWindow {
     EveningHours,
     OffHours
 }
+
+export interface SupportReportStatSummaryChallengeSpec {
+    id: string;
+    name: string;
+    ticketCount: number;
+}
+
+export interface SupportReportStatSummaryLabel {
+    label: string;
+    ticketCount: number;
+}
+
+export interface SupportReportStatSummary {
+    allTicketsMostPopularLabel?: SupportReportStatSummaryLabel;
+    openTicketsMostPopularLabel?: SupportReportStatSummaryLabel;
+    openTicketsCount: number;
+    allTicketsCount: number;
+    challengeSpecWithMostTickets?: SupportReportStatSummaryChallengeSpec;
+}

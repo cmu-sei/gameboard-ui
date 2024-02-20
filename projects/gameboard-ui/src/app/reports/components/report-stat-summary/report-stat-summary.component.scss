@@ -1,45 +1,52 @@
 h2 {
-    font-weight: bold;
-    text-transform: uppercase;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 ul {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 alert {
-   border: solid 2px #dfdfdf !important;
-   margin-bottom: 0;
+  border: solid 2px #dfdfdf !important;
+  margin-bottom: 0;
 
-   ::ng-deep .alert.alert-dark {
+  ::ng-deep .alert.alert-dark {
     margin: 0;
-   }
+  }
 
-   ::ng-deep .expanded-view {
+  ::ng-deep .expanded-view {
     margin: 0 !important;
-   }
+  }
 }
 
 .stat {
-    flex-wrap: wrap;
-    flex-basis: 48%;
-    flex-grow: 1;
-    margin: 0 1rem;
-    text-align: center;
+  flex-wrap: wrap;
+  flex-basis: 48%;
+  flex-grow: 1;
+  margin: 0 1rem;
+  text-align: center;
 
-    .label {
-        font-size: 1.2rem;
-        margin: 0;
-    }
+  .label {
+    font-size: 1.2rem;
+    margin: 0;
+    padding-top: 2px !important;
+    padding-bottom: 0 !important;
+  }
 
-    .value {
-        font-weight: bold;
-        font-size: 3.5rem;
-        line-height: 3.5rem;
-        margin: 0;
-    }
+  .value {
+    font-weight: bold;
+    font-size: 3.5rem;
+    line-height: 3.5rem;
+    margin: 0;
+  }
+
+  .value.small-value {
+    font-size: 2rem;
+    line-height: 2rem;
+  }
 }
 
 .subtle-color {
-    color: #dfdfdf;
+  color: #dfdfdf;
 }

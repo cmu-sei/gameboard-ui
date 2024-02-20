@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SupportReportFlatParameters, SupportReportRecord } from './support-report.models';
-import { ReportResults, ReportViewUpdate } from '../../../reports-models';
+import { SupportReportFlatParameters, SupportReportRecord, SupportReportStatSummary } from './support-report.models';
+import { ReportResultsWithOverallStats, ReportViewUpdate } from '../../../reports-models';
 import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '@/reports/components/reports/support-report/support-report.service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
@@ -15,7 +15,7 @@ import { TimespanQueryParamModel } from '@/core/models/timespan-query-param-mode
 import { GameChallengeSpecQueryModel } from '@/core/models/game-challenge-spec-query-param.model';
 
 interface SupportReportContext {
-  results: ReportResults<SupportReportRecord>,
+  results: ReportResultsWithOverallStats<SupportReportStatSummary, SupportReportRecord>,
   challengesChartConfig: DoughnutChartConfig,
   labelsChartConfigs: DoughnutChartConfig[],
   statusChartConfig: DoughnutChartConfig

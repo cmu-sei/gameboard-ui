@@ -13,9 +13,9 @@
                         </span>
                     </p>
                 </div>
-                <ul class="overall-stats d-flex align-items-start justify-content-center mb-5">
+                <ul class="overall-stats d-flex align-items-center justify-content-center mb-5">
                     <div *ngFor="let stat of stats" class="stat">
-                        <p class="value text-info">{{ stat.value }}</p>
+                        <p class="value text-info" [class.small-value]="stat.valueSize == 'small'">{{ stat.value }}</p>
                         <p class="label">{{ stat.label }}</p>
                         <div class="addl-info subtle-color" *ngIf="stat.additionalInfo">
                             {{stat.additionalInfo}}

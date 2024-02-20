@@ -14,6 +14,12 @@
             label="Time since ticket was updated"></app-parameter-timespan-picker>
     </app-report-parameters-container>
 
+    <app-report-stat-summary class="d-block mb-4" *ngIf="ctx?.results?.overallStats; else loading"
+        [importantStat]="{ label: 'Open Tickets', value: ctx?.results?.overallStats?.openTicketsCount }"
+        [stats]="ctx?.results?.overallStats | toSupportReportStats">
+    </app-report-stat-summary>
+
+
     <ng-container *ngIf="!isLoading; else loading">
         <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else noRecords">
             <tab heading="Summary Table" id="tab-summary-table">
