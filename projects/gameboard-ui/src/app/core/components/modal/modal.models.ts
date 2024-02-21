@@ -18,6 +18,7 @@ export interface ModalConfirmConfig {
     onCancel?: Function;
     onConfirm?: Function;
     hideCancel?: boolean;
+    ignoreBackdropClick?: boolean;
     modalClasses?: string[];
     renderBodyAsMarkdown?: boolean;
     subtitle?: string;

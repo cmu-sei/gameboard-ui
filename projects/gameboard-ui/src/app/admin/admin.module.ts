@@ -57,6 +57,7 @@ import { AdminSystemNotificationsComponent } from '@/system-notifications/compon
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
 import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
+import { ExtendTeamsModalComponent } from './components/extend-teams-modal/extend-teams-modal.component';
 
 
 @NgModule({
@@ -104,6 +105,7 @@ import { FeedbackEditorComponent } from './components/feedback-editor/feedback-e
     AdminOverviewComponent,
     SupportSettingsComponent,
     FeedbackEditorComponent,
+    ExtendTeamsModalComponent,
   ],
   imports: [
     CommonModule,

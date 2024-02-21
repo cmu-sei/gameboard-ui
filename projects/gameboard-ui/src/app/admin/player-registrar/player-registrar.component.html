@@ -96,6 +96,13 @@
           <fa-icon [icon]="fa.arrowDown"></fa-icon>
           <span>rerank</span>
         </button>
+
+        <button class="btn btn-sm btn-outline-warning py-0 ml-2" (click)="openExtendModal(ctx.game.id)"
+          [disabled]="!selected.length" [tooltip]="!selected.length ? 'Select one or more teams to extend' : ''">
+          <fa-icon [icon]="fa.clock"></fa-icon>
+          <span>extend</span>
+        </button>
+
         <button *ngIf="selected.length" class="btn btn-sm btn-outline-warning py-0 ml-2"
           (click)="advanceOptions=!advanceOptions">
           <fa-icon [icon]="fa.star"></fa-icon>
@@ -135,7 +142,7 @@
       <!--If teams are collapsed, show all team sponsor logos-->
       <app-player-avatar-list class="cursor-pointer" (click)="view(player)"
         [avatarUris]="(!teamView ? player.sponsor.logo : player.teamSponsorLogos) | sponsorLogoFileNamesToUris"
-        [showSessionStatusWidget]="showSessionStatus" [captainSession]="player.session"></app-player-avatar-list>
+        [captainSession]="player.session"></app-player-avatar-list>
       <div class="ml-2">
         <span *ngIf="player.advanced" class="text-success ml-2">
           <fa-icon [icon]="fa.star"></fa-icon>

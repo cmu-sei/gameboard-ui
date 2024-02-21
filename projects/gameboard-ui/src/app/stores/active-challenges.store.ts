@@ -63,7 +63,7 @@ export class ActiveChallengesRepo implements OnDestroy {
                     challengesService.challengeDeployStateChanged$,
                     playerService.playerSessionReset$,
                     teamService.playerSessionChanged$,
-                    teamService.teamSessionChanged$
+                    teamService.teamSessionsChanged$
                 )
             ]).pipe(
                 map(([challengesService]) => ({ challengesService })),

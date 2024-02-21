@@ -9,10 +9,11 @@
 
   <app-error-div [errors]="errors"></app-error-div>
 
+  <h4 class="mt-4">Session Extension</h4>
   <div class="form-group d-flex" *ngIf="!isExtending; else loading">
     <div class="extend-by-duration flex-grow-1 mr-2">
 
-      <label class="mb-0" for="duration-input">Extend Session by Duration</label>
+      <label class="mb-0" for="duration-input">By Duration</label>
       <div class="input-group">
         <input id="duration-input" class="form-control" type="number" placeholder="Extension length (in minutes)"
           [(ngModel)]="durationExtensionInMinutes">
@@ -27,9 +28,8 @@
       </div>
     </div>
     <div class="extend-by-time flex-grow-1 ml-2">
-      <label class="mb-0" for="reason-input">Extend Session</label>
+      <label class="mb-0" for="reason-input">To GMT Date/Time</label>
       <div class="input-group">
-        <!-- <input id="reason-input" class="form-control" type="text" [(ngModel)]="team.sessionEnd"> -->
         <input id="date-input" class="form-control" type="text" [(ngModel)]="dateExtension">
         <div class="input-group-append">
           <button class="btn btn-info" (click)="extend(team)">
@@ -62,7 +62,6 @@
         Unenroll</app-confirm-button>
     </div>
   </div>
-
 
   <ng-template *ngIf="isLoadingChallenges">
     <div class="yaml-container mt-4 ml-4 pb-4">

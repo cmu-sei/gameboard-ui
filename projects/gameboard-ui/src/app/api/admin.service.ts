@@ -1,8 +1,8 @@
-import { ApiUrlService } from '@/services/api-url.service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { GetSiteOverviewStatsResponse } from './admin.models';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ApiUrlService } from '@/services/api-url.service';
+import { GetSiteOverviewStatsResponse } from './admin.models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {

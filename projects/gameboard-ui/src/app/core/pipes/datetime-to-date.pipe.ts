@@ -4,9 +4,10 @@ import { DateTime } from 'luxon';
 @Pipe({ name: 'datetimeToDate' })
 export class DatetimeToDatePipe implements PipeTransform {
 
-  transform(value?: DateTime): Date | null {
+  transform(value: DateTime): Date {
     if (!value)
-      return null;
+      return value;
+
 
     return value.toJSDate();
   }

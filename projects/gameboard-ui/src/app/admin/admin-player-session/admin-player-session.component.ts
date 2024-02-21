@@ -34,8 +34,8 @@ export class PlayerSessionComponent implements OnInit {
   faInfo = faInfoCircle;
   protected errors: any[] = [];
 
-  protected durationExtensionInMinutes?: number;
   protected dateExtension = "";
+  protected durationExtensionInMinutes?: number;
   protected isExtending = false;
   protected isLoadingChallenges = false;
 
@@ -55,7 +55,7 @@ export class PlayerSessionComponent implements OnInit {
       tap(t => {
         t.sessionBegin = new Date(t.sessionBegin);
         t.sessionEnd = new Date(t.sessionEnd);
-        this.dateExtension = t.sessionEnd.toUTCString();
+        this.dateExtension = t.sessionEnd.toISOString();
       })
     );
   }
@@ -98,7 +98,7 @@ export class PlayerSessionComponent implements OnInit {
         this.toastService.showMessage(`Extended team ${team.approvedName}'s session by ${extensionInMinutes} minutes.`);
 
         this.durationExtensionInMinutes = undefined;
-        this.dateExtension = newSessionEndDateTime.toJSDate().toUTCString();
+        this.dateExtension = newSessionEndDateTime.toUTC().toISO();
       }
     });
   }

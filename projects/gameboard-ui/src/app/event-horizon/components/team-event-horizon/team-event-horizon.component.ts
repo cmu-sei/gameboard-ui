@@ -91,7 +91,8 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
       subtitle: `${timelineEvent.timestamp.toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS)}`,
       bodyContent: this.eventHorizonRenderingService.toModalContent(timelineEvent, spec),
       renderBodyAsMarkdown: true,
-      hideCancel: true
+      hideCancel: true,
+      ignoreBackdropClick: true
     });
   }
 
