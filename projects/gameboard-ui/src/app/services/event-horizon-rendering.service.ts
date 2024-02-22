@@ -31,7 +31,7 @@ export class EventHorizonRenderingService {
   public toDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     switch (timelineEvent.type) {
       case "challengeStarted":
-        return this.toGenericDataItem(timelineEvent, challengeSpec, "Started", "eh-event-type-challenge-started");
+        return this.toGenericDataItem(timelineEvent, challengeSpec, "Started", "eh-event-type-challenge-started", true);
       case "gamespaceOnOff":
         return this.toGamespaceOnOffDataItem(timelineEvent, challengeSpec);
       case "solveComplete":
@@ -72,6 +72,8 @@ export class EventHorizonRenderingService {
       return "";
 
     switch (timelineEvent.type) {
+      case "challengeStarted":
+        return this.toChallengeStartedModalContent(timelineEvent, challengeSpec);
       case "solveComplete":
         return this.toSolveCompleteModalContent(timelineEvent as EventHorizonSolveCompleteEvent, challengeSpec);
       case "submissionScored":
@@ -79,6 +81,10 @@ export class EventHorizonRenderingService {
     }
 
     return "";
+  }
+
+  private toChallengeStartedModalContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec) {
+    return `This challenge began at **${timelineEvent.timestamp.toLocaleString(DateTime.DATETIME_MED)}**.`;
   }
 
   private toSubmissionScoredModalContent(timelineEvent: EventHorizonSubmissionScoredEvent, challengeSpec: EventHorizonChallengeSpec) {
@@ -112,7 +118,6 @@ export class EventHorizonRenderingService {
       start: timelineEvent.timestamp.toJSDate(),
       content: eventName,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
-      // type: "point",
       isClickable,
       eventData: null
     };
