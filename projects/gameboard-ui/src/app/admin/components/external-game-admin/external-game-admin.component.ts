@@ -76,14 +76,13 @@ export class ExternalGameAdminComponent implements OnInit {
   ngOnInit(): void {
     this.unsub.add(
       combineLatest([
-        this.route.paramMap,
         timer(0, this.autoUpdateInterval),
         this.forceRefresh$
       ]).pipe(
         // this is just here because server failures makes timer go off
         // like 3x a second
         debounceTime(5000),
-        map(([params, tick, _]) => params?.get("gameId")),
+        map(([tick, _]) => this.route.snapshot.paramMap?.get("gameId")),
         filter(gameId => !!gameId)
       ).subscribe(gameId => this.load(gameId!))
     );
