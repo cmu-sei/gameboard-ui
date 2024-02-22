@@ -14,12 +14,17 @@ export interface ChallengeSpecScoringConfig {
     completionScore: number;
     possibleBonuses: GameScoringConfigChallengeBonus[];
     maxPossibleScore: number;
+    supportKey: string;
 }
 
 export interface GameScoringConfigChallengeBonus {
     id: string;
     description: string;
-    pointValue: string;
+    pointValue: number;
+}
+
+export interface GameScoringConfigChallengeBonusSolveRank extends GameScoringConfigChallengeBonus {
+    solveRank: number;
 }
 
 export interface Score {

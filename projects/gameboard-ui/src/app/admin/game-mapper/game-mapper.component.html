@@ -76,8 +76,7 @@
           a configuration in the YAML format described in the text box below.
         </p>
 
-        <app-game-bonuses-config [game]="game" *ngIf="game" [gameScoringConfig]="(gameBonusesConfig$ | async)"
-          (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"
+        <app-game-bonuses-config [gameId]="game.id" (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"
           [isEnabled]="!!(list$ | async)?.length"></app-game-bonuses-config>
       </div>
     </div>

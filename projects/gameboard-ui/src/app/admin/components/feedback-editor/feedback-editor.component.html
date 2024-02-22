@@ -16,12 +16,12 @@
         <div *ngIf="feedbackTemplate" class="flex-grow-1">
             <ng-container *ngIf="feedbackTemplate.game?.length || feedbackTemplate.challenge?.length">
                 <ng-container *ngIf="feedbackTemplate.game?.length">
-                    <strong>{{feedbackTemplate.game.length}}</strong>
+                    <strong class="text-info">{{feedbackTemplate.game.length}}</strong>
                     game questions
                 </ng-container>
                 <span *ngIf="feedbackTemplate?.game?.length && feedbackTemplate?.challenge?.length"> // </span>
                 <ng-container *ngIf="feedbackTemplate.challenge?.length">
-                    <strong>{{feedbackTemplate.challenge.length}}</strong>
+                    <strong class="text-info">{{feedbackTemplate.challenge.length}}</strong>
                     challenge questions
                 </ng-container>
             </ng-container>
