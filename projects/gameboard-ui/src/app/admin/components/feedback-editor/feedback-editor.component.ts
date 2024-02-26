@@ -69,6 +69,7 @@ Depending on the value of **type**, additional configuration may be required. Fo
 - **maxLabel:** The label for the lowest value of the question's scale (e.g. "Very Hard")`,
       hideCancel: true,
       renderBodyAsMarkdown: true,
+      modalClasses: ["modal-xl"],
       title: "About feedback templates"
     });
   }
@@ -143,8 +144,11 @@ Depending on the value of **type**, additional configuration may be required. Fo
     if (parsed) {
       this.validationMessages = this.validationMessages.concat(this.feedbackService.validateConfig(parsed));
 
+      // don't bother converting IDs if we're not going to pass validation
       if (!this.validationMessages.length) {
-        // don't bother converting IDs if we're not going to pass validation
+        // workaround for a funky thing: if the value supplied for a question's "Id" property can be evaluated
+        // as an integer, then the yaml library parses it as an integer, even if the typescript type is different
+        // (e.g. string). This just forces all IDs to be strings, which is the correct type.
         if (parsed?.game)
           for (const gameQuestion of parsed.game) {
             gameQuestion.id = gameQuestion?.id?.toString() || gameQuestion.id;
@@ -158,9 +162,6 @@ Depending on the value of **type**, additional configuration may be required. Fo
       }
     }
 
-    // workaround for a funky thing: if the value supplied for a question's "Id" property can be evaluated
-    // as an integer, then the yaml library parses it as an integer, even if the typescript type is different
-    // (e.g. string). This just forces all IDs to be strings, which is the correct type.
     return parsed;
   }
 }
