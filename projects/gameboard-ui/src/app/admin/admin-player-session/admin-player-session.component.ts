@@ -34,7 +34,7 @@ export class PlayerSessionComponent implements OnInit {
   faInfo = faInfoCircle;
   protected errors: any[] = [];
 
-  protected dateExtension = "";
+  protected isoDateExtension = "";
   protected durationExtensionInMinutes?: number;
   protected isExtending = false;
   protected isLoadingChallenges = false;
@@ -55,25 +55,34 @@ export class PlayerSessionComponent implements OnInit {
       tap(t => {
         t.sessionBegin = new Date(t.sessionBegin);
         t.sessionEnd = new Date(t.sessionEnd);
-        this.dateExtension = t.sessionEnd.toISOString();
+        this.isoDateExtension = t.sessionEnd.toISOString();
       })
     );
   }
 
+  // extend by ISO timestamp
   async extend(team: Team): Promise<void> {
-    try {
-      this.isExtending = true;
-      this.team.sessionEnd = new Date(this.dateExtension);
-      await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: team.sessionEnd }));
+    const friendlySessionEnd = DateTime.fromISO(this.isoDateExtension);
 
-      const friendlySessionEnd = DateTime.fromISO(team.sessionEnd.toString());
-      this.toastService.showMessage(`Team session extended to ${friendlySessionEnd.toLocaleString(DateTime.DATETIME_FULL)}.`);
-    }
-    catch (err: any) {
-      this.errors.push(err);
-    }
+    this.modalService.openConfirm({
+      bodyContent: `Are you sure you want to extend **${team.approvedName}**'s session? Their new end time will be **${this.friendlyDatesAndTimes.toFriendlyDateAndTime(friendlySessionEnd.toJSDate())}** (local time).`,
+      renderBodyAsMarkdown: true,
+      title: "Session Extension",
+      onConfirm: async () => {
+        try {
+          this.isExtending = true;
+          team.sessionEnd = new Date(this.isoDateExtension);
+          await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: team.sessionEnd }));
 
-    this.isExtending = false;
+          this.toastService.showMessage(`Team session extended to ${friendlySessionEnd.toLocaleString(DateTime.DATETIME_FULL)}.`);
+        }
+        catch (err: any) {
+          this.errors.push(err);
+        }
+
+        this.isExtending = false;
+      }
+    });
   }
 
   async extendByDuration(team: Team, extensionInMinutes?: number) {
@@ -101,7 +110,7 @@ export class PlayerSessionComponent implements OnInit {
           this.toastService.showMessage(`Extended team ${team.approvedName}'s session by ${extensionInMinutes} minutes.`);
 
           this.durationExtensionInMinutes = undefined;
-          this.dateExtension = newSessionEndDateTime.toUTC().toISO();
+          this.isoDateExtension = newSessionEndDateTime.toUTC().toISO();
         }
         catch (err: any) {
           this.errors.push(err);

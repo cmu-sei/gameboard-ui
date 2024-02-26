@@ -19,7 +19,6 @@
           [(ngModel)]="durationExtensionInMinutes">
         <div class="input-group-append">
           <button class="btn btn-info" [disabled]="!durationExtensionInMinutes || durationExtensionInMinutes < 0"
-            [class.btn-disabled]="!durationExtensionInMinutes || durationExtensionInMinutes < 0"
             [ariaDisabled]="!durationExtensionInMinutes || durationExtensionInMinutes < 0"
             (click)="extendByDuration(team, durationExtensionInMinutes)">
             <span>Extend</span>
@@ -30,7 +29,7 @@
     <div class="extend-by-time flex-grow-1 ml-2">
       <label class="mb-0" for="reason-input">To GMT Date/Time</label>
       <div class="input-group">
-        <input id="date-input" class="form-control" type="text" [(ngModel)]="dateExtension">
+        <input id="date-input" class="form-control" type="text" [(ngModel)]="isoDateExtension">
         <div class="input-group-append">
           <button class="btn btn-info" (click)="extend(team)">
             <span>Extend</span>
