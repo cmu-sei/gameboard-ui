@@ -3,7 +3,7 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faArrowLeft, faEllipsisV, faInfoCircle, faSearch, faSyncAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faSearch, faSyncAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, firstValueFrom, interval, merge, Observable, of } from 'rxjs';
 import { catchError, debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ChallengeSummary } from '../../api/board-models';
@@ -25,18 +25,18 @@ export class ChallengeBrowserComponent {
   archiveMap = new Map<string, ChallengeSummary>(); // alternative to calling `/audit` endpoint
   search: Search = { term: '', take: 100 };
   selected?: ChallengeSummary;
-  selectedAudit!: any;
   errors: any[] = [];
 
   faSearch = faSearch;
-  faArrowLeft = faArrowLeft;
-  faDetail = faEllipsisV;
   faInfo = faInfoCircle;
   faSync = faSyncAlt;
   faCircle = faCircle;
 
+  protected gameEngineAudit?: any[];
+  protected gameEngineAuditAttempted = false;
   protected isLoadingAuditFromGameEngine = false;
   protected isLoadingSubmissions = false;
+  protected selectedAudit?: any;
 
   constructor(
     route: ActivatedRoute,
@@ -86,6 +86,8 @@ export class ChallengeBrowserComponent {
   }
 
   async select(c: ChallengeSummary): Promise<void> {
+    this.gameEngineAudit = undefined;
+    this.gameEngineAuditAttempted = false;
     this.selected = c;
     this.selectedAudit = [];
 
@@ -120,7 +122,7 @@ export class ChallengeBrowserComponent {
   protected async auditFromGameEngine(challengeId: string): Promise<void> {
     try {
       this.isLoadingAuditFromGameEngine = true;
-      this.selectedAudit = await firstValueFrom(this.api.audit(challengeId));
+      this.gameEngineAudit = await firstValueFrom(this.api.audit(challengeId));
 
       if (!this.selectedAudit?.length) {
         this.toastService.showMessage(`No audit data available from the game engine for challenge ${challengeId}.`);
@@ -130,23 +132,24 @@ export class ChallengeBrowserComponent {
       this.errors.push(err);
     }
     finally {
+      this.gameEngineAuditAttempted = true;
       this.isLoadingAuditFromGameEngine = false;
     }
   }
 
-  regrade(c: ChallengeSummary): void {
+  async regrade(c: ChallengeSummary): Promise<void> {
     this.challengesService
       .regrade(c.id)
       .pipe(catchError((err, caught) => {
         this.errors.push(err);
         return of(null);
       }))
-      .subscribe(r => {
+      .subscribe(async r => {
         if (!r) {
           return;
         }
 
-        this.selectedAudit = r;
+        await this.auditFromGameEngine(c.id);
         this.toastService.showMessage(`Challenge ${c.id} was regraded.`);
       });
   }

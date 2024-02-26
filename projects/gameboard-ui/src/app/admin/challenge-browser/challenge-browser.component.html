@@ -62,36 +62,48 @@
         </button>
       </div>
 
+      <h4>Submissions</h4>
       <div *ngIf="!isLoadingSubmissions; else loadingSubmissions">
-        <label for="" class="font-weight-bold">Submissions</label>
         <ng-container
-          *ngTemplateOutlet="selectedAudit?.length ? localAudit : noSubmissions; context: { $implicit: selected }"></ng-container>
+          *ngTemplateOutlet="selectedAudit?.length ? auditYaml : noSubmissions; context: { '$implicit' : selectedAudit }"></ng-container>
       </div>
 
-      <label class="font-weight-bold">Challenge</label>
+      <h4 class="mt-4">Game Engine Audit</h4>
+      <div>
+        <ng-container *ngIf="gameEngineAuditAttempted; else gameEngineAuditNotLoaded">
+          <ng-container *ngIf="gameEngineAudit?.length; else noGameEngineAudit">
+            <pre>{{ gameEngineAudit | yaml }}</pre>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <h4 class="mt-4">Challenge</h4>
       <pre>{{selected | yaml}}</pre>
     </div>
   </div>
-
 </div>
 
 <ng-template #loadingSubmissions>
   <app-spinner></app-spinner>
 </ng-template>
 
-<ng-template #localAudit>
-  <pre>{{selectedAudit | yaml}}</pre>
+<ng-template #auditYaml let-audit>
+  <pre>{{audit | yaml}}</pre>
+</ng-template>
+
+<ng-template #gameEngineAuditNotLoaded>
+  <div *ngIf="selected && !selected.archived && !isLoadingAuditFromGameEngine"
+    class="btn btn-link text-info cursor-pointer py-0" (click)="auditFromGameEngine(selected.id)">
+    Audit from game engine?
+  </div>
+
+  <app-spinner *ngIf="isLoadingAuditFromGameEngine"></app-spinner>
+</ng-template>
+
+<ng-template #noGameEngineAudit>
+  <em>No game engine audit available for this challenge.</em>
 </ng-template>
 
 <ng-template #noSubmissions let-challenge>
-  <div class="mb-3">
-    <em>No submissions yet.</em>
-
-    <div *ngIf="!challenge.archived && !isLoadingAuditFromGameEngine" class="btn btn-link text-info cursor-pointer py-0"
-      (click)="auditFromGameEngine(challenge.id)">
-      Audit from game engine?
-    </div>
-
-    <app-spinner *ngIf="isLoadingAuditFromGameEngine"></app-spinner>
-  </div>
+  <em>No submissions yet.</em>
 </ng-template>

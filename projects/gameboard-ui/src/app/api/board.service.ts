@@ -65,8 +65,8 @@ export class BoardService {
     return this.http.delete<any>(`${this.url}/challenge/${id}`);
   }
 
-  public audit(id: string): Observable<any> {
-    return this.http.get<any>(`${this.url}/challenge/${id}/audit`);
+  public audit(id: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/challenge/${id}/audit`);
   }
 
   public consoles(gid: string): Observable<ObserveChallenge[]> {

@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable, Subject, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
 import { AdminExtendTeamSessionResponse, ResetTeamSessionRequest } from "./teams.models";
-import { Observable, Subject, tap } from "rxjs";
 import { ApiUrlService } from "@/services/api-url.service";
 
 @Injectable({ providedIn: 'root' })
@@ -35,7 +35,7 @@ export class TeamService {
             throw new Error("Can't retrieve teams - no ids specified.");
         }
 
-        return this.http.get<Team[]>(this.apiUrl.build(`/team/search`, { ids: teamIds.join(",") }));
+        return this.http.get<Team[]>(this.apiUrl.build(`admin/team/search?ids=${teamIds.join(",")}`));
     }
 
     public endSession(request: SessionEndRequest) {

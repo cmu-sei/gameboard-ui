@@ -129,7 +129,6 @@ export class PlayerRegistrarComponent {
 
       // when a team of interest emits a session change, refresh
       this.teamService.teamSessionsChanged$.subscribe(teamIds => {
-        // console.log("got em?", teamIds.some(tid => this.source.map));
         if (this.source.some(p => teamIds.some(tid => p.teamId == tid))) {
           this.refresh$.next(true);
         }
