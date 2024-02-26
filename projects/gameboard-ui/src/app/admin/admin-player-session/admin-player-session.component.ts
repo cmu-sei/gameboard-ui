@@ -89,16 +89,25 @@ export class PlayerSessionComponent implements OnInit {
       bodyContent: `Are you sure you want to extend **${team.approvedName}**'s session by **${extensionInMinutes}** minutes? Their new end time will be **${this.friendlyDatesAndTimes.toFriendlyDateAndTime(newSessionEndDateTime.toJSDate())}** (local time).`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-        if (newSessionEndDateTime.diffNow().toMillis() < 0) {
-          this.toastService.showMessage("Can't extend session: new endtime is before now.");
-          return;
+        this.isExtending = true;
+
+        try {
+          if (newSessionEndDateTime.diffNow().toMillis() < 0) {
+            this.toastService.showMessage("Can't extend session: new endtime is before now.");
+            return;
+          }
+
+          await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: newSessionEndDateTime.toUTC().toJSDate() }));
+          this.toastService.showMessage(`Extended team ${team.approvedName}'s session by ${extensionInMinutes} minutes.`);
+
+          this.durationExtensionInMinutes = undefined;
+          this.dateExtension = newSessionEndDateTime.toUTC().toISO();
+        }
+        catch (err: any) {
+          this.errors.push(err);
         }
 
-        await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: newSessionEndDateTime.toUTC().toJSDate() }));
-        this.toastService.showMessage(`Extended team ${team.approvedName}'s session by ${extensionInMinutes} minutes.`);
-
-        this.durationExtensionInMinutes = undefined;
-        this.dateExtension = newSessionEndDateTime.toUTC().toISO();
+        this.isExtending = false;
       }
     });
   }
