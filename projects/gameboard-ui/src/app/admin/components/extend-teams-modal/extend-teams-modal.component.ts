@@ -1,21 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { DateTime } from 'luxon';
 import { firstValueFrom } from 'rxjs';
 import { TeamService } from '@/api/team.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { Team } from '@/api/player-models';
-
-interface ExtendTeamsViewModel {
-  wouldEndSession: boolean;
-  teams: {
-    name: string;
-    id: string;
-    oldSessionEnd: DateTime,
-    newSessionEnd: DateTime,
-    wouldEndSession: boolean
-  }[]
-}
 
 @Component({
   selector: 'app-extend-teams-modal',
@@ -33,6 +21,7 @@ export class ExtendTeamsModalComponent implements OnInit {
 
   protected errors: any[] = [];
   protected isWorking = false;
+  protected modalTitle = "Extend Sessions";
   protected apiTeams: Team[] = [];
 
   constructor(
@@ -50,6 +39,7 @@ export class ExtendTeamsModalComponent implements OnInit {
     }
 
     this.apiTeams = await firstValueFrom(this.teamService.search(this.teamIds));
+    this.modalTitle = this.apiTeams.length === 1 ? `Extend Session: ${this.apiTeams[0].approvedName}` : "Extend Sessions";
   }
 
   async extend(teamIds: string[], extensionDurationInMinutes: number) {
@@ -70,11 +60,4 @@ export class ExtendTeamsModalComponent implements OnInit {
   protected close() {
     this.modalService.hide();
   }
-
-  // private async load(teamIds: string[]) {
-  //   const apiTeams = await firstValueFrom(this.teamService.search(teamIds));
-
-  //   vm.wouldEndSession = vm.teams.some(t => t.wouldEndSession);
-  //   this.viewModel = vm;
-  // }
 }

@@ -195,7 +195,7 @@ export class PlayerRegistrarComponent {
     });
   }
 
-  openExtendModal(gameId: string) {
+  protected openExtendModal(gameId: string) {
     const selectedTeamIds = unique(this.selected.map(p => p.teamId));
 
     this.modalConfirmService.openComponent({

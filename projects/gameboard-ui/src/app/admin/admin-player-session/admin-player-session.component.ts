@@ -14,6 +14,8 @@ import { ToastService } from '@/utility/services/toast.service';
 import { DateTime } from 'luxon';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
+import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
+import { GameService } from '@/api/game.service';
 
 @Component({
   selector: 'app-admin-player-session',
@@ -42,6 +44,7 @@ export class PlayerSessionComponent implements OnInit {
   constructor(
     private api: PlayerService,
     private friendlyDatesAndTimes: FriendlyDatesService,
+    private gameService: GameService,
     private sessionService: GameSessionService,
     private modalService: ModalConfirmService,
     private teamService: TeamService,
@@ -63,61 +66,29 @@ export class PlayerSessionComponent implements OnInit {
   // extend by ISO timestamp
   async extend(team: Team): Promise<void> {
     const friendlySessionEnd = DateTime.fromISO(this.isoDateExtension);
-
-    this.modalService.openConfirm({
-      bodyContent: `Are you sure you want to extend **${team.approvedName}**'s session? Their new end time will be **${this.friendlyDatesAndTimes.toFriendlyDateAndTime(friendlySessionEnd.toJSDate())}** (local time).`,
-      renderBodyAsMarkdown: true,
-      title: "Session Extension",
-      onConfirm: async () => {
-        try {
-          this.isExtending = true;
-          team.sessionEnd = new Date(this.isoDateExtension);
-          await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: team.sessionEnd }));
-
-          this.toastService.showMessage(`Team session extended to ${friendlySessionEnd.toLocaleString(DateTime.DATETIME_FULL)}.`);
-        }
-        catch (err: any) {
-          this.errors.push(err);
-        }
-
-        this.isExtending = false;
-      }
-    });
+    const extensionDuration = friendlySessionEnd.diffNow("minutes");
+    await this.extendByDuration(team, Math.floor(extensionDuration.minutes));
   }
 
   async extendByDuration(team: Team, extensionInMinutes?: number) {
-    if (!extensionInMinutes || extensionInMinutes < 0) {
+    if (!extensionInMinutes) {
       return;
     }
 
-    const oldSessionEndDateTime = DateTime.fromJSDate(new Date(team.sessionEnd));
-    const newSessionEndDateTime = oldSessionEndDateTime.plus({ minutes: extensionInMinutes });
+    const game = await firstValueFrom(this.gameService.retrieve(team.gameId));
 
-    this.modalService.openConfirm({
-      title: "Session Extension",
-      bodyContent: `Are you sure you want to extend **${team.approvedName}**'s session by **${extensionInMinutes}** minutes? Their new end time will be **${this.friendlyDatesAndTimes.toFriendlyDateAndTime(newSessionEndDateTime.toJSDate())}** (local time).`,
-      renderBodyAsMarkdown: true,
-      onConfirm: async () => {
-        this.isExtending = true;
-
-        try {
-          if (newSessionEndDateTime.diffNow().toMillis() < 0) {
-            this.toastService.showMessage("Can't extend session: new endtime is before now.");
-            return;
-          }
-
-          await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: newSessionEndDateTime.toUTC().toJSDate() }));
-          this.toastService.showMessage(`Extended team ${team.approvedName}'s session by ${extensionInMinutes} minutes.`);
-
-          this.durationExtensionInMinutes = undefined;
-          this.isoDateExtension = newSessionEndDateTime.toUTC().toISO();
-        }
-        catch (err: any) {
-          this.errors.push(err);
-        }
-
-        this.isExtending = false;
-      }
+    this.modalService.openComponent({
+      content: ExtendTeamsModalComponent,
+      context: {
+        extensionInMinutes: extensionInMinutes,
+        game: {
+          id: team.gameId,
+          name: game.name,
+          isTeamGame: game.isTeamGame
+        },
+        teamIds: [team.teamId]
+      },
+      modalClasses: ["modal-lg"]
     });
   }
 

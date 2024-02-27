@@ -1,6 +1,6 @@
 <div class="modal-content" *ngIf="apiTeams; else loading">
     <div class="modal-header">
-        <h5 class="modal-title">Extend Multiple {{ game?.isTeamGame ? "Teams" : "Players" }}</h5>
+        <h5 class="modal-title">{{ modalTitle }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -21,14 +21,10 @@
                 are what you expect.
             </alert>
 
-            <!-- <alert type="danger" *ngIf="wouldEndSession">
-                One or more {{ game?.isTeamGame ? "teams" : "players" }} will have their session ended prematurely
-                If shortened by this value. Proceed with caution!
-            </alert> -->
-
             <ng-container *ngIf="extensionInMinutes">
                 <div class="mb-4" *ngIf="extensionInMinutes">
-                    {{ extensionInMinutes > 0 ? "Extend" : "Shorten" }} the following sessions by
+                    {{ extensionInMinutes > 0 ? "Extend" : "Shorten" }} {{ apiTeams.length === 1 ? "this session" : "the
+                    following sessions" }} by
                     <strong>{{extensionInMinutes | absoluteValue}}</strong> minutes?
                 </div>
                 <div>
