@@ -63,15 +63,15 @@
       </div>
 
       <h4>Submissions</h4>
-      <div *ngIf="!isLoadingSubmissions; else loadingSubmissions">
+      <div class="mb-4" *ngIf="!isLoadingSubmissions; else loadingSubmissions">
         <ng-container
           *ngTemplateOutlet="selectedAudit?.length ? auditYaml : noSubmissions; context: { '$implicit' : selectedAudit }"></ng-container>
       </div>
 
-      <h4 class="mt-4">Game Engine Audit</h4>
       <div>
         <ng-container *ngIf="gameEngineAuditAttempted; else gameEngineAuditNotLoaded">
           <ng-container *ngIf="gameEngineAudit?.length; else noGameEngineAudit">
+            <h4 class="mt-4">Game Engine Audit</h4>
             <pre>{{ gameEngineAudit | yaml }}</pre>
           </ng-container>
         </ng-container>
@@ -93,7 +93,7 @@
 
 <ng-template #gameEngineAuditNotLoaded>
   <div *ngIf="selected && !selected.archived && !isLoadingAuditFromGameEngine"
-    class="btn btn-link text-info cursor-pointer py-0" (click)="auditFromGameEngine(selected.id)">
+    class="btn btn-link text-info cursor-pointer py-0 px-0" (click)="auditFromGameEngine(selected.id)">
     Audit from game engine?
   </div>
 
