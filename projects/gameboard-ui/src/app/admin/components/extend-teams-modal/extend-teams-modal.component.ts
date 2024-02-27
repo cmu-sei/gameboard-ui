@@ -1,10 +1,21 @@
-import { AdminService } from '@/api/admin.service';
-import { Team } from '@/api/player-models';
+import { Component, OnInit } from '@angular/core';
+import { DateTime } from 'luxon';
+import { firstValueFrom } from 'rxjs';
 import { TeamService } from '@/api/team.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
-import { Component, OnInit } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Team } from '@/api/player-models';
+
+interface ExtendTeamsViewModel {
+  wouldEndSession: boolean;
+  teams: {
+    name: string;
+    id: string;
+    oldSessionEnd: DateTime,
+    newSessionEnd: DateTime,
+    wouldEndSession: boolean
+  }[]
+}
 
 @Component({
   selector: 'app-extend-teams-modal',
@@ -12,17 +23,17 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./extend-teams-modal.component.scss']
 })
 export class ExtendTeamsModalComponent implements OnInit {
-  extensionInMinutes = 30;
   game?: {
-    id: string,
-    name: string,
-    isTeamGame: boolean
+    id: string;
+    name: string;
+    isTeamGame: boolean;
   };
+  extensionInMinutes = 30;
   teamIds: string[] = [];
 
   protected errors: any[] = [];
   protected isWorking = false;
-  protected teams: Team[] = [];
+  protected apiTeams: Team[] = [];
 
   constructor(
     private modalService: ModalConfirmService,
@@ -30,11 +41,15 @@ export class ExtendTeamsModalComponent implements OnInit {
     private toastService: ToastService) { }
 
   async ngOnInit(): Promise<void> {
-    this.teams = await firstValueFrom(this.teamService.search(this.teamIds));
-
     if (!this.game) {
       throw new Error("Can't open the Extend modal - no game info supplied.");
     }
+
+    if (!this.teamIds) {
+      throw new Error("Can't open the Extend modal - no teams supplied.");
+    }
+
+    this.apiTeams = await firstValueFrom(this.teamService.search(this.teamIds));
   }
 
   async extend(teamIds: string[], extensionDurationInMinutes: number) {
@@ -55,4 +70,11 @@ export class ExtendTeamsModalComponent implements OnInit {
   protected close() {
     this.modalService.hide();
   }
+
+  // private async load(teamIds: string[]) {
+  //   const apiTeams = await firstValueFrom(this.teamService.search(teamIds));
+
+  //   vm.wouldEndSession = vm.teams.some(t => t.wouldEndSession);
+  //   this.viewModel = vm;
+  // }
 }

@@ -28,6 +28,7 @@ import 'chartjs-adapter-luxon';
 import { markedOptionsFactory } from './config/marked.config';
 
 // internal components/pipes/directives
+import { AbsoluteValuePipe } from './pipes/absolute-value.pipe';
 import { AddDurationPipe } from './pipes/add-duration.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
@@ -47,6 +48,7 @@ import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
+import { DateTimeIsPastPipe } from './pipes/datetime-is-past.pipe';
 import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
 import { DateToDatetimePipe } from './pipes/date-to-datetime.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
@@ -103,6 +105,7 @@ import { YamlBlockComponent } from './components/yaml-block/yaml-block.component
 import { YamlPipe } from './pipes/yaml.pipe';
 
 const PUBLIC_DECLARATIONS = [
+  AbsoluteValuePipe,
   AddDurationPipe,
   ApiDatePipe,
   ApiUrlPipe,
@@ -120,6 +123,7 @@ const PUBLIC_DECLARATIONS = [
   CumulativeTimeClockComponent,
   DateToCountdownPipe,
   DateToDatetimePipe,
+  DateTimeIsPastPipe,
   DatetimeToDatePipe,
   DoughnutChartComponent,
   DropzoneComponent,

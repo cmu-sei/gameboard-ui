@@ -1,46 +1,72 @@
-<div class="modal-content" *ngIf="teams.length; else loading">
+<div class="modal-content" *ngIf="apiTeams; else loading">
     <div class="modal-header">
         <h5 class="modal-title">Extend Multiple {{ game?.isTeamGame ? "Teams" : "Players" }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+
     <div class="modal-body">
         <app-error-div></app-error-div>
         <ng-container *ngIf="!isWorking; else loading">
             <div class="form-group px-0">
                 <label for="extensionInMinutes">Extension Length</label>
                 <input type="number" class="form-control" id="extensionInMinutes" [(ngModel)]="extensionInMinutes"
-                    placeholder="Extension length (in minutes)">
+                    required placeholder="Extension length (in minutes)">
             </div>
 
-            <div class="mb-4">Extend the following sessions by <strong>{{extensionInMinutes}}</strong> minutes?</div>
-            <div>
-                <ul>
-                    <li *ngFor="let team of teams" class="session-list-item d-flex align-items-center">
-                        <div class="flex-grow-1">{{team.approvedName}}</div>
+            <alert type="warning" *ngIf="extensionInMinutes < 0">
+                If you use a negative value for the extension length, you'll <em>decrease</em> the amount of time
+                available to the {{ game?.isTeamGame ? "teams" : "players" }} shown here. Ensure the session times below
+                are what you expect.
+            </alert>
 
-                        <div>
-                            (from
+            <!-- <alert type="danger" *ngIf="wouldEndSession">
+                One or more {{ game?.isTeamGame ? "teams" : "players" }} will have their session ended prematurely
+                If shortened by this value. Proceed with caution!
+            </alert> -->
 
-                            <strong class="font-bold old-session-time">{{team.sessionEnd |
-                                friendlyDateAndTime}}</strong>
-                            to
-                            <strong class="text-info font-bold">
-                                {{team.sessionEnd | dateToDateTime | addDuration:{minutes: extensionInMinutes} |
-                                datetimeToDate | friendlyDateAndTime }}
-                            </strong>
-                            )
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            <ng-container *ngIf="extensionInMinutes">
+                <div class="mb-4" *ngIf="extensionInMinutes">
+                    {{ extensionInMinutes > 0 ? "Extend" : "Shorten" }} the following sessions by
+                    <strong>{{extensionInMinutes | absoluteValue}}</strong> minutes?
+                </div>
+                <div>
+
+                    <ul *ngIf="apiTeams">
+                        <li *ngFor="let team of apiTeams" class="session-list-item d-flex align-items-center">
+                            <div class="flex-grow-1">{{team.approvedName}}</div>
+
+                            <div *ngIf="team.sessionEnd  | dateToDateTime | addDuration: { minutes: extensionInMinutes } | dateTimeIsPast"
+                                class="badge badge-danger mr-2">Session will end</div>
+                            <div>
+                                (from
+
+                                <strong class="font-bold old-session-time">
+                                    {{team.sessionEnd | friendlyDateAndTime}}
+                                </strong>
+                                to
+                                <ng-container
+                                    *ngIf="team.sessionEnd | dateToDateTime | addDuration: { minutes: extensionInMinutes } as newSessionEnd">
+                                    <strong class="font-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
+                                        [class.text-info]="!(newSessionEnd | dateTimeIsPast)">
+                                        {{ newSessionEnd | datetimeToDate | friendlyDateAndTime }}
+                                    </strong>)
+                                </ng-container>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </ng-container>
         </ng-container>
     </div>
+
     <div class="modal-footer">
         <button type="button" class="btn" (click)="close()" [disabled]="isWorking">Cancel</button>
-        <button type="button" class="btn btn-success" (click)="extend(teamIds, extensionInMinutes)"
-            [disabled]="isWorking">Extend</button>
+        <button type="button" [class.btn-success]="extensionInMinutes > 0 ||  !!extensionInMinutes"
+            [class.btn-warning]="extensionInMinutes < 0" class="btn btn-success"
+            (click)="extend(teamIds, extensionInMinutes)" [disabled]="isWorking || !extensionInMinutes">{{
+            extensionInMinutes > 0 ? "Extend" : "Shorten" }} </button>
     </div>
 </div>
 

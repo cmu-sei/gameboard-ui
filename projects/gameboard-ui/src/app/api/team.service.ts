@@ -1,9 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, tap } from "rxjs";
+import { Observable, Subject, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
 import { AdminExtendTeamSessionResponse, ResetTeamSessionRequest } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
+import { ApiDateTimeService } from "@/services/api-date-time.service";
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
@@ -17,6 +18,7 @@ export class TeamService {
     public teamSessionReset$ = this._teamSessionReset$.asObservable();
 
     constructor(
+        private apiDates: ApiDateTimeService,
         private apiUrl: ApiUrlService,
         private http: HttpClient) { }
 
@@ -35,7 +37,16 @@ export class TeamService {
             throw new Error("Can't retrieve teams - no ids specified.");
         }
 
-        return this.http.get<Team[]>(this.apiUrl.build(`admin/team/search?ids=${teamIds.join(",")}`));
+        return this.http.get<Team[]>(this.apiUrl.build(`admin/team/search?ids=${teamIds.join(",")}`)).pipe(
+            map(teams => {
+                for (const team of teams) {
+                    team.sessionBegin = new Date(team.sessionBegin);
+                    team.sessionEnd = new Date(team.sessionEnd);
+                }
+
+                return teams;
+            })
+        );
     }
 
     public endSession(request: SessionEndRequest) {
