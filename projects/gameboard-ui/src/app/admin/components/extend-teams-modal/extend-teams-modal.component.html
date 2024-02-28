@@ -7,7 +7,7 @@
     </div>
 
     <div class="modal-body">
-        <app-error-div></app-error-div>
+        <app-error-div [errors]="errors"></app-error-div>
         <ng-container *ngIf="!isWorking; else loading">
             <div class="form-group px-0">
                 <label for="extensionInMinutes">Extension Length</label>
