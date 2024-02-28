@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-big-stat',
@@ -9,4 +9,5 @@ export class BigStatComponent {
   @Input() label = "";
   @Input() value = "";
   @Input() subLabel = "";
+  @Output() click = new EventEmitter();
 }

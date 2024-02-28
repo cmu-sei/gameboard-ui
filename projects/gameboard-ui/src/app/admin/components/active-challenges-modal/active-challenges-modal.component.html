@@ -1,17 +1,57 @@
 <div class="modal-content" *ngIf="specs?.length; else loading">
     <div class="modal-header">
-        <h5 class="modal-title">Active Challenges: {{ playerMode | titlecase }}</h5>
+        <h2 class="modal-title">Active Challenges: {{ playerMode | titlecase }}</h2>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 
     <div class="modal-body">
-        <app-error-div></app-error-div>
+        <app-error-div [errors]="errors"></app-error-div>
+
+        <div *ngFor="let spec of specs" class="spec-container">
+            <h3>{{ spec.name }}</h3>
+            <h4>
+                <a [routerLink]="['game/' + spec.game.id]">
+                    {{ spec.game.name }}
+                </a>
+            </h4>
+
+            <ul>
+                <li *ngFor="let challenge of spec.challenges">
+                    <div class="card d-flex">
+                        <h5>{{ challenge.team.name }}</h5>
+                        <button type="button" class="btn btn-link" appCopyOnClick>
+                            {{ {id: challenge.id, tag: spec.tag } }}
+                        </button>
+                        <div></div>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- <table>
+                <col>
+                <col>
+
+                <thead>
+                    <tr>
+                        <th>Player / Team</th>
+                        <th>Challenge STar</th>
+                    </tr>
+                </thead>
+            </table>
+            <ul class="spec-challenge-list">
+                <li *ngFor="let challenge of spec.challenges">
+                    <div class="challenge-container d-flex">
+
+                    </div>
+                </li>
+            </ul> -->
+        </div>
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-info">OK</button>
+        <button type="button" class="btn btn-info" (click)="close()">OK</button>
     </div>
 </div>
 
