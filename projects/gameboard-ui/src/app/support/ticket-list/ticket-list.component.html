@@ -11,7 +11,8 @@
       <div class="input-group input-group-sm mr-2 w-25">
         <select class="form-control" [(ngModel)]="statusFilter" (change)="this.refresh$.next(true)">
           <option *ngFor="let option of ['Any Status', 'Open', 'In Progress', 'Closed', 'Not Closed']" [value]="option">
-            {{option}}</option>
+            {{option}}
+          </option>
         </select>
       </div>
       <div *ngIf="ctx.canManage" class="input-group input-group-sm ml-2 w-25">
@@ -107,7 +108,6 @@
   <div class="list">
     <div *ngFor="let ticket of ctx.tickets" class="row b-1 mx-0 py-2">
       <div class="col-1">
-        <!-- <span class="mr-1 badge badge-pill bg-danger">*</span> -->
         <fa-icon *ngIf="ticket.lastSeen < ticket.lastUpdated" class="text-warning"
           [icon]="fa.exclamationCircle"></fa-icon>
         <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.key]">{{ticket.fullKey}}</a>
@@ -116,8 +116,11 @@
       <div class="col-5 d-flex flex-wrap">
         <div class="ml-2">
           <div class="d-inline flex-wrap">
-            <a class="p-0 text-left" [routerLink]="[ticket.key]"><span class="mr-2 h5 summary-break">{{ticket.summary ||
-                "No summary"}}</span></a>
+            <a class="p-0 text-left" [routerLink]="[ticket.key]">
+              <span class="mr-2 h5 summary-break">
+                {{ticket.summary || "No summary"}}
+              </span>
+            </a>
             <ng-container *ngIf="ctx.canManage">
               <span class="badge badge-pill text-black mr-2" *ngFor="let label of ticket.labelsList"
                 [ngStyle]="label | textToColor">{{label}}</span>
@@ -125,8 +128,11 @@
           </div>
           <div class="text-muted">
             <span class="font-weight-bold-">{{ticket.requester?.approvedName}}</span>
-            <span *ngIf="ticket.challenge">&nbsp;&middot;&nbsp;{{ticket.challenge.name}}
-              ({{ticket.challenge.tag}})</span>
+            <span *ngIf="ticket.challenge" class="text-info cursor-pointer"
+              [appCopyOnClick]="ticket.challenge | toSupportCode" tooltip="Copy this support code">
+              &nbsp;&middot;&nbsp;
+              {{ ticket.challenge | toSupportCode }}
+            </span>
           </div>
         </div>
       </div>

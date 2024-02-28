@@ -4,7 +4,6 @@
 <h4>Challenges</h4>
 
 <div class="fixed">
-
   <div class="browser">
     <div class="input-group input-group-sm">
       <div class="input-group-prepend">
@@ -13,23 +12,24 @@
           <span>Search</span>
         </span>
       </div>
-      <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control" (input)="refresh$.next(true)">
+      <input type="search" [(ngModel)]="search.term" placeholder="term" class="form-control"
+        (input)="refresh$.next(true)">
     </div>
     <div *ngIf="challenges$ | async as list">
       <div class="mt-2 border-bottom">
         <span>Current</span>
       </div>
       <ul class="list-unstyled mb-1">
-        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable" 
+        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable"
           [class]="s.id == selected?.id ? 'clicked' : ''" (click)="select(s)">
           <div class="col-1 px-1 align-self-center">
             <fa-icon *ngIf="s.isActive" class="small text-success align-self-center" [icon]="faCircle"></fa-icon>
           </div>
           <span class="col mr-2 px-1 align-self-center d-flex justify-content-between">
-            <span>{{s.id | slice:0:8}}: {{s.tag}}</span>
+            <span>{{ s | toSupportCode }}</span>
             <small class="px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
           </span>
-          
+
         </li>
       </ul>
     </div>
@@ -39,10 +39,10 @@
         <span>Archived</span>
       </div>
       <ul class="list-unstyled">
-        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable" [class]="s.id == selected?.id ? 'clicked' : ''" 
-          (click)="select(s)">
+        <li *ngFor="let s of list; trackBy:trackById" class="row px-0 mx-0 clickable"
+          [class]="s.id == selected?.id ? 'clicked' : ''" (click)="select(s)">
           <span class="col offset-1 mr-2 px-1 align-self-center d-flex justify-content-between">
-            <span>{{s.id | slice:0:8}}: {{s.tag}}</span>
+            <span>{{ s | toSupportCode }}</span>
             <small class="px-1 align-self-center">{{s.lastSyncTime | ago}}</small>
           </span>
         </li>
@@ -56,24 +56,54 @@
       <app-error-div [errors]="errors"></app-error-div>
 
       <div class="text-right">
-        <button class="btn btn-info mr-2" (click)="audit(selected)">
-          <fa-icon [icon]="faInfo"></fa-icon>
-          <span>Audit</span>
-        </button>
         <button class="btn btn-info" (click)="regrade(selected)">
           <fa-icon [icon]="faSync"></fa-icon>
           <span>Regrade</span>
         </button>
       </div>
 
-      <div *ngIf="selectedAudit">
-        <label for="">Submissions</label>
-        <pre>{{selectedAudit | yaml}}</pre>
+      <h4>Submissions</h4>
+      <div class="mb-4" *ngIf="!isLoadingSubmissions; else loadingSubmissions">
+        <ng-container
+          *ngTemplateOutlet="selectedAudit?.length ? auditYaml : noSubmissions; context: { '$implicit' : selectedAudit }"></ng-container>
       </div>
 
-      <label for="">Challenge</label>
+      <div>
+        <ng-container *ngIf="gameEngineAuditAttempted; else gameEngineAuditNotLoaded">
+          <ng-container *ngIf="gameEngineAudit?.length; else noGameEngineAudit">
+            <h4 class="mt-4">Game Engine Audit</h4>
+            <pre>{{ gameEngineAudit | yaml }}</pre>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <h4 class="mt-4">Challenge</h4>
       <pre>{{selected | yaml}}</pre>
     </div>
   </div>
-
 </div>
+
+<ng-template #loadingSubmissions>
+  <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #auditYaml let-audit>
+  <pre>{{audit | yaml}}</pre>
+</ng-template>
+
+<ng-template #gameEngineAuditNotLoaded>
+  <div *ngIf="selected && !selected.archived && !isLoadingAuditFromGameEngine"
+    class="btn btn-link text-info cursor-pointer py-0 px-0" (click)="auditFromGameEngine(selected.id)">
+    Audit from game engine?
+  </div>
+
+  <app-spinner *ngIf="isLoadingAuditFromGameEngine"></app-spinner>
+</ng-template>
+
+<ng-template #noGameEngineAudit>
+  <em>No game engine audit available for this challenge.</em>
+</ng-template>
+
+<ng-template #noSubmissions let-challenge>
+  <em>No submissions yet.</em>
+</ng-template>

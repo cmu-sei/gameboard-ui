@@ -59,9 +59,12 @@
   .vis-time-axis .vis-grid.vis-vertical {
     border-left: none !important;
   }
-
   // hides the little connectors from the point at the bottom to the flag
   // .vis-item.vis-line {
   //   border-left: none !important;
   // }
+}
+
+.btn-group > .btn:not(:first-child) {
+  border-left: solid 1px #ffffff;
 }

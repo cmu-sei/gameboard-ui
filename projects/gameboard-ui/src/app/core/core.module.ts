@@ -28,6 +28,8 @@ import 'chartjs-adapter-luxon';
 import { markedOptionsFactory } from './config/marked.config';
 
 // internal components/pipes/directives
+import { AbsoluteValuePipe } from './pipes/absolute-value.pipe';
+import { AddDurationPipe } from './pipes/add-duration.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
@@ -46,7 +48,9 @@ import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
+import { DateTimeIsPastPipe } from './pipes/datetime-is-past.pipe';
 import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
+import { DateToDatetimePipe } from './pipes/date-to-datetime.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
@@ -90,6 +94,7 @@ import { StatusLightComponent } from './components/status-light/status-light.com
 import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
+import { ToSupportCodePipe } from './pipes/to-support-code.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.component';
 import { ToTemplateContextPipe } from './pipes/to-template-context.pipe';
@@ -100,6 +105,8 @@ import { YamlBlockComponent } from './components/yaml-block/yaml-block.component
 import { YamlPipe } from './pipes/yaml.pipe';
 
 const PUBLIC_DECLARATIONS = [
+  AbsoluteValuePipe,
+  AddDurationPipe,
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
@@ -115,6 +122,8 @@ const PUBLIC_DECLARATIONS = [
   CountdownComponent,
   CumulativeTimeClockComponent,
   DateToCountdownPipe,
+  DateToDatetimePipe,
+  DateTimeIsPastPipe,
   DatetimeToDatePipe,
   DoughnutChartComponent,
   DropzoneComponent,
@@ -168,6 +177,7 @@ const PUBLIC_DECLARATIONS = [
   SumArrayPipe,
   TextToColorPipe,
   ToggleClassPipe,
+  ToSupportCodePipe,
   ToTemplateContextPipe,
   TicketStatusBadgePipe,
   UrlRewritePipe,

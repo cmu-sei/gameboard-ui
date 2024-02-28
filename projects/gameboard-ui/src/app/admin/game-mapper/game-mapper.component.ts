@@ -12,6 +12,7 @@ import { ConfigService } from '../../utility/config.service';
 import { fa } from '@/services/font-awesome.service';
 import { ChallengeSpecScoringConfig, GameScoringConfig } from '@/services/scoring/scoring.models';
 import { ScoringService } from '@/services/scoring/scoring.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-game-mapper',
@@ -50,12 +51,14 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   addedCount = 0;
 
   protected hasZeroPointSpecs = false;
+  protected syncErrors: any[] = [];
 
   constructor(
     private api: SpecService,
     private gameSvc: GameService,
     private renderer: Renderer2,
     private config: ConfigService,
+    private toastService: ToastService,
     scoringService: ScoringService
   ) {
     this.list$ = this.refresh$.pipe(
@@ -173,7 +176,15 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   }
 
   sync(): void {
-    this.api.sync(this.game.id).subscribe(() => this.refresh());
+    this.syncErrors = [];
+
+    try {
+      this.api.sync(this.game.id).subscribe(() => this.refresh());
+      this.toastService.showMessage("Synchronized specs with the game engine.");
+    }
+    catch (err: any) {
+      this.syncErrors.push(err);
+    }
   }
 
   trackById(index: number, g: Spec): string {

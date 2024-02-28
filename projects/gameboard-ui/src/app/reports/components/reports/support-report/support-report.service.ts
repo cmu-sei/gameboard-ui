@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { SupportReportFlatParameters, SupportReportRecord } from './support-report.models';
+import { SupportReportFlatParameters, SupportReportRecord, SupportReportStatSummary } from './support-report.models';
 import { Observable, map } from 'rxjs';
-import { ReportResults } from '../../../reports-models';
+import { ReportResults, ReportResultsWithOverallStats } from '../../../reports-models';
 import { HttpClient } from '@angular/common/http';
 import { ApiUrlService } from '@/services/api-url.service';
 import { SupportService } from '@/api/support.service';
@@ -14,8 +14,8 @@ export class SupportReportService {
     private http: HttpClient,
     private supportService: SupportService) { }
 
-  getReportData(args: SupportReportFlatParameters): Observable<ReportResults<SupportReportRecord>> {
-    return this.http.get<ReportResults<SupportReportRecord>>(this.apiUri.build("/reports/support", args));
+  getReportData(args: SupportReportFlatParameters): Observable<ReportResultsWithOverallStats<SupportReportStatSummary, SupportReportRecord>> {
+    return this.http.get<ReportResultsWithOverallStats<SupportReportStatSummary, SupportReportRecord>>(this.apiUri.build("/reports/support", args));
   }
 
   getTicketStatuses(): Observable<string[]> {

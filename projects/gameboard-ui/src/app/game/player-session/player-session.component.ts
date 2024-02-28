@@ -147,6 +147,21 @@ export class PlayerSessionComponent implements OnDestroy {
   }
 
   private async doReset(p: Player) {
+    try {
+      const team = await firstValueFrom(this.teamService.get(p.teamId));
+    }
+    catch (err: any) {
+      if (err.status == 400) {
+        // we want to trap a 400 here per https://github.com/cmu-sei/Gameboard/issues/195,
+        // so swallow if it matches and then redirect
+        this.onSessionReset.emit(p);
+        return;
+      }
+      else {
+        this.errors.push(err);
+      }
+    }
+
     this.errors = [];
     this.isResetting = true;
     await firstValueFrom(this.teamService.resetSession(p.teamId, { unenrollTeam: true }));

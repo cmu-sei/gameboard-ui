@@ -12,6 +12,10 @@ import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admi
 import { TeamService } from '@/api/team.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { DateTime } from 'luxon';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { FriendlyDatesService } from '@/services/friendly-dates.service';
+import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
+import { GameService } from '@/api/game.service';
 
 @Component({
   selector: 'app-admin-player-session',
@@ -32,12 +36,17 @@ export class PlayerSessionComponent implements OnInit {
   faInfo = faInfoCircle;
   protected errors: any[] = [];
 
+  protected isoDateExtension = "";
+  protected durationExtensionInMinutes?: number;
   protected isExtending = false;
   protected isLoadingChallenges = false;
 
   constructor(
     private api: PlayerService,
+    private friendlyDatesAndTimes: FriendlyDatesService,
+    private gameService: GameService,
     private sessionService: GameSessionService,
+    private modalService: ModalConfirmService,
     private teamService: TeamService,
     private toastService: ToastService,
   ) { }
@@ -45,23 +54,42 @@ export class PlayerSessionComponent implements OnInit {
   ngOnInit(): void {
     this.team$ = this.api.getTeam(this.player.teamId).pipe(
       tap(t => this.team = t),
-      tap(t => this.canUnenroll = this.sessionService.canUnenrollSession(new TimeWindow(t.sessionBegin, t.sessionEnd)))
+      tap(t => this.canUnenroll = this.sessionService.canUnenrollSession(new TimeWindow(t.sessionBegin, t.sessionEnd))),
+      tap(t => {
+        t.sessionBegin = new Date(t.sessionBegin);
+        t.sessionEnd = new Date(t.sessionEnd);
+        this.isoDateExtension = t.sessionEnd.toISOString();
+      })
     );
   }
 
+  // extend by ISO timestamp
   async extend(team: Team): Promise<void> {
-    try {
-      this.isExtending = true;
-      await firstValueFrom(this.teamService.extendSession({ teamId: team.teamId, sessionEnd: team.sessionEnd }));
+    const friendlySessionEnd = DateTime.fromISO(this.isoDateExtension);
+    const extensionDuration = friendlySessionEnd.diffNow("minutes");
+    await this.extendByDuration(team, Math.floor(extensionDuration.minutes));
+  }
 
-      const friendlySessionEnd = DateTime.fromISO(team.sessionEnd.toString());
-      this.toastService.showMessage(`Team session extended to ${friendlySessionEnd.toLocaleString(DateTime.DATETIME_FULL)}.`);
-    }
-    catch (err: any) {
-      this.errors.push(err);
+  async extendByDuration(team: Team, extensionInMinutes?: number) {
+    if (!extensionInMinutes) {
+      return;
     }
 
-    this.isExtending = false;
+    const game = await firstValueFrom(this.gameService.retrieve(team.gameId));
+
+    this.modalService.openComponent({
+      content: ExtendTeamsModalComponent,
+      context: {
+        extensionInMinutes: extensionInMinutes,
+        game: {
+          id: team.gameId,
+          name: game.name,
+          isTeamGame: game.isTeamGame
+        },
+        teamIds: [team.teamId]
+      },
+      modalClasses: ["modal-lg"]
+    });
   }
 
   toggleRawView(isExpanding: boolean): void {

@@ -57,9 +57,9 @@ export interface ExternalGameAdminContext {
 export class ExternalGameAdminComponent implements OnInit {
   private autoUpdateInterval = 30000;
   private forceRefresh$ = new Subject<void>();
+  private gameId?: string;
 
-  protected ctx$?: Observable<ExternalGameAdminContext>;
-  protected context?: ExternalGameAdminContext;
+  protected ctx?: ExternalGameAdminContext;
   protected errors: any[] = [];
   protected canDeploy = false;
   protected deployAllTooltip = "";
@@ -76,18 +76,19 @@ export class ExternalGameAdminComponent implements OnInit {
   ngOnInit(): void {
     this.unsub.add(
       combineLatest([
-        this.route.paramMap,
         timer(0, this.autoUpdateInterval),
         this.forceRefresh$
       ]).pipe(
         // this is just here because server failures makes timer go off
         // like 3x a second
         debounceTime(5000),
-        map(([params, tick, _]) => params?.get("gameId")),
+        map(([tick, _]) => this.route.snapshot.paramMap?.get("gameId")),
         filter(gameId => !!gameId)
       ).subscribe(gameId => this.load(gameId!))
     );
-
+    this.gameId = this.route.snapshot.paramMap?.get("gameId") || undefined;
+    if (!this.gameId)
+      this.errors.push("No gameId passed to the component.");
     this.forceRefresh$.next();
   }
 
@@ -130,37 +131,38 @@ export class ExternalGameAdminComponent implements OnInit {
     }
   }
 
-  private load(gameId: string) {
-    this.ctx$ = this.externalGameService.getAdminContext(gameId).pipe(
-      catchError((err, caught) => {
-        this.errors.push(err);
-        return caught;
-      }),
-      tap(ctx => {
-        // do some fiddly computations to dealing with them in the template
-        this.appTitleService.set(`${ctx.game.name} : External Game`);
-        this.bindOverallDeployStatus(ctx.overallDeployStatus);
+  private async load(gameId: string) {
+    this.errors = [];
 
-        this.sessionDateDescription = "";
-        if (ctx.startTime && ctx.endTime) {
-          // conver to js dates since our friendly dates service uses those and not luxon (for some godforsaken reason...)
-          // ...
-          // i'm kidding. it's my fault. i did it.
-          const startTime = ctx.startTime.toJSDate();
-          const endTime = ctx.endTime.toJSDate();
+    try {
+      const ctx = await firstValueFrom(this.externalGameService.getAdminContext(gameId));
 
-          // if they have the same day/month year, just show the date once
-          if (ctx.startTime.hasSame(ctx.endTime, 'day')) {
-            const dateDescription = this.friendlyDates.toFriendlyDate(startTime);
-            this.sessionDateDescription = `${dateDescription}, ${this.friendlyDates.toFriendlyTime(startTime)} - ${this.friendlyDates.toFriendlyTime(endTime)}`;
-          }
-          else {
-            this.sessionDateDescription = `${this.friendlyDates.toFriendlyDateAndTime(startTime)} - ${this.friendlyDates.toFriendlyDateAndTime(endTime)}`;
-          }
+      // do some fiddly computations to dealing with them in the template
+      this.appTitleService.set(`${ctx.game.name} : External Game`);
+      this.bindOverallDeployStatus(ctx.overallDeployStatus);
+
+      this.sessionDateDescription = "";
+      if (ctx.startTime && ctx.endTime) {
+        // conver to js dates since our friendly dates service uses those and not luxon (for some godforsaken reason...)
+        // ...
+        // i'm kidding. it's my fault. i did it.
+        const startTime = ctx.startTime.toJSDate();
+        const endTime = ctx.endTime.toJSDate();
+
+        // if they have the same day/month year, just show the date once
+        if (ctx.startTime.hasSame(ctx.endTime, 'day')) {
+          const dateDescription = this.friendlyDates.toFriendlyDate(startTime);
+          this.sessionDateDescription = `${dateDescription}, ${this.friendlyDates.toFriendlyTime(startTime)} - ${this.friendlyDates.toFriendlyTime(endTime)}`;
         }
+        else {
+          this.sessionDateDescription = `${this.friendlyDates.toFriendlyDateAndTime(startTime)} - ${this.friendlyDates.toFriendlyDateAndTime(endTime)}`;
+        }
+      }
 
-        return ctx;
-      })
-    );
+      this.ctx = ctx;
+    }
+    catch (err: any) {
+      this.errors.push;
+    }
   }
 }

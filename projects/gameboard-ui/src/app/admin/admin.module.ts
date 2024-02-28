@@ -56,6 +56,8 @@ import { UserReportComponent } from './user-report/user-report.component';
 import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
+import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
+import { ExtendTeamsModalComponent } from './components/extend-teams-modal/extend-teams-modal.component';
 
 
 @NgModule({
@@ -102,6 +104,8 @@ import { SupportSettingsComponent } from './components/support-settings/support-
     SiteOverviewStatsComponent,
     AdminOverviewComponent,
     SupportSettingsComponent,
+    FeedbackEditorComponent,
+    ExtendTeamsModalComponent,
   ],
   imports: [
     CommonModule,

@@ -53,6 +53,8 @@
         <span>Sync with Source</span>
       </button>
 
+      <app-error-div [errors]="syncErrors"></app-error-div>
+
       <ul class="spec-list mt-4">
         <li *ngFor="let spec of list$ | async">
           <app-challenge-spec-editor class="d-block mb-3" [spec]="spec" [scoringConfig]="specConfigMap[spec.id]"
@@ -76,8 +78,7 @@
           a configuration in the YAML format described in the text box below.
         </p>
 
-        <app-game-bonuses-config [game]="game" *ngIf="game" [gameScoringConfig]="(gameBonusesConfig$ | async)"
-          (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"
+        <app-game-bonuses-config [gameId]="game.id" (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"
           [isEnabled]="!!(list$ | async)?.length"></app-game-bonuses-config>
       </div>
     </div>

@@ -1,5 +1,6 @@
-# sample yaml configuration. this generates first and second-place bonuses for every challenge in the game,
-# plus a third place bonus for a challenge with the support key "aChallengeSupportKey".
+# Sample yaml configuration. This generates first and second-place bonuses for every challenge in the game,
+# plus a third place bonus for a challenge with the support key "aChallengeSupportKey". (If you don't have
+# a challenge with this key, you'll need to change/remove the specific bonus).
 
 ---
 allChallengesBonuses:

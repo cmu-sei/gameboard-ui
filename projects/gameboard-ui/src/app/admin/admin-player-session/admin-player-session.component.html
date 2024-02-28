@@ -9,17 +9,34 @@
 
   <app-error-div [errors]="errors"></app-error-div>
 
-  <div class="form-group">
-    <label class="mb-0" for="reason-input">Extend Session</label>
-    <div *ngIf="!isExtending; else loading" class="input-group">
-      <input id="reason-input" class="form-control" type="text" [(ngModel)]="team.sessionEnd">
-      <div class="input-group-append">
-        <button class="btn btn-outline-info" (click)="extend(team)">
-          <span>Extend</span>
-        </button>
+  <h4 class="mt-4">Session Extension</h4>
+  <div class="form-group d-flex" *ngIf="!isExtending; else loading">
+    <div class="extend-by-duration flex-grow-1 mr-2">
+
+      <label class="mb-0" for="duration-input">By Duration</label>
+      <div class="input-group">
+        <input id="duration-input" class="form-control" type="number" placeholder="Extension length (in minutes)"
+          [(ngModel)]="durationExtensionInMinutes">
+        <div class="input-group-append">
+          <button class="btn" [class.btn-info]="(durationExtensionInMinutes || 0) >= 0"
+            [class.btn-warning]="(durationExtensionInMinutes || 0) < 0" [disabled]="!durationExtensionInMinutes"
+            [ariaDisabled]="!durationExtensionInMinutes" (click)="extendByDuration(team, durationExtensionInMinutes)">
+            <span>{{ durationExtensionInMinutes && durationExtensionInMinutes < 0 ? "Shorten" : "Extend" }}</span>
+          </button>
+        </div>
       </div>
     </div>
-    <small></small>
+    <div class="extend-by-time flex-grow-1 ml-2">
+      <label class="mb-0" for="reason-input">To GMT Date/Time</label>
+      <div class="input-group">
+        <input id="date-input" class="form-control" type="text" [(ngModel)]="isoDateExtension">
+        <div class="input-group-append">
+          <button class="btn btn-info" (click)="extend(team)">
+            <span>Extend</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <app-announce [teamId]="team.teamId" placeholderText="Your message (sends only to this player/team)"></app-announce>
@@ -44,7 +61,6 @@
         Unenroll</app-confirm-button>
     </div>
   </div>
-
 
   <ng-template *ngIf="isLoadingChallenges">
     <div class="yaml-container mt-4 ml-4 pb-4">

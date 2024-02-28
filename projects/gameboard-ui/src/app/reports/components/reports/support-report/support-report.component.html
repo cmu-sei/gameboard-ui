@@ -6,13 +6,21 @@
             name="ticket-labels" ngDefaultControl></app-multi-select>
         <app-parameter-date-range ngDefaultControl name="openedDateRange" [(ngModel)]="openedDateRangeModel"
             label="Date ticket opened"></app-parameter-date-range>
+        <app-parameter-date-range ngDefaultControl name="updatedDateRange" [(ngModel)]="updatedDateRangeModel"
+            label="Date ticket last updated"></app-parameter-date-range>
+        <app-parameter-timespan-picker [(ngModel)]="openedTimeSpanQueryModel" ngDefaultControl
+            label="Minimum ticket age"></app-parameter-timespan-picker>
+        <app-parameter-timespan-picker [(ngModel)]="updatedTimeSpanQueryModel" ngDefaultControl
+            label="Minimum time since last update"></app-parameter-timespan-picker>
         <app-parameter-game-challengespec [(ngModel)]="gameChallengeSpecQueryModel"
             ngDefaultControl></app-parameter-game-challengespec>
-        <app-parameter-timespan-picker [(ngModel)]="openedTimeSpanQueryModel" ngDefaultControl
-            label="Time since ticket was opened"></app-parameter-timespan-picker>
-        <app-parameter-timespan-picker [(ngModel)]="updatedTimeSpanQueryModel" ngDefaultControl
-            label="Time since ticket was updated"></app-parameter-timespan-picker>
     </app-report-parameters-container>
+
+    <app-report-stat-summary class="d-block mb-4" *ngIf="ctx?.results?.overallStats; else loading"
+        [importantStat]="{ label: 'Open Tickets', value: ctx?.results?.overallStats?.openTicketsCount }"
+        [stats]="ctx?.results?.overallStats | toSupportReportStats">
+    </app-report-stat-summary>
+
 
     <ng-container *ngIf="!isLoading; else loading">
         <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else noRecords">

@@ -4,6 +4,7 @@ export interface ReportSummaryStat {
   label: string;
   value?: number | string;
   additionalInfo?: string;
+  valueSize?: "normal" | "small";
 }
 
 @Component({

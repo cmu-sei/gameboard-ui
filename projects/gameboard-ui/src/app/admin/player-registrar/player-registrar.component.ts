@@ -19,6 +19,8 @@ import { TeamService } from '@/api/team.service';
 import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
+import { unique } from 'projects/gameboard-ui/src/tools';
 
 @Component({
   selector: 'app-player-registrar',
@@ -58,7 +60,6 @@ export class PlayerRegistrarComponent {
 
   protected fa = fa;
   protected isLoading = false;
-  protected showSessionStatus = true;
 
   constructor(
     route: ActivatedRoute,
@@ -114,16 +115,24 @@ export class PlayerRegistrarComponent {
       map(([game, players, futures]) => ({ game, players, futures }))
     );
 
-    this.unsub.add(route.queryParams.subscribe(param => {
-      if (param?.term) {
-        this.mode = "";
-        this.teamView = "";
-        this.search.filter = [this.filter];
-        this.search.mode = "";
-        this.search.term = param.term;
-        this.refresh$.next(true);
-      }
-    }));
+    this.unsub.add(
+      route.queryParams.subscribe(param => {
+        if (param?.term) {
+          this.mode = "";
+          this.teamView = "";
+          this.search.filter = [this.filter];
+          this.search.mode = "";
+          this.search.term = param.term;
+          this.refresh$.next(true);
+        }
+      }),
+
+      // when a team of interest emits a session change, refresh
+      this.teamService.teamSessionsChanged$.subscribe(teamIds => {
+        if (this.source.some(p => teamIds.some(tid => p.teamId == tid))) {
+          this.refresh$.next(true);
+        }
+      }));
   }
 
   toggleFilter(role: string): void {
@@ -183,6 +192,24 @@ export class PlayerRegistrarComponent {
     this.selected.forEach(s => {
       const t = this.source.find(g => g.id === s.id);
       if (!!t) { t.checked = true; }
+    });
+  }
+
+  protected openExtendModal(gameId: string) {
+    const selectedTeamIds = unique(this.selected.map(p => p.teamId));
+
+    this.modalConfirmService.openComponent({
+      content: ExtendTeamsModalComponent,
+      context: {
+        extensionInMinutes: 30,
+        game: {
+          id: gameId,
+          name: this.game.name,
+          isTeamGame: this.game.isTeamGame
+        },
+        teamIds: selectedTeamIds
+      },
+      modalClasses: ["modal-lg"]
     });
   }
 

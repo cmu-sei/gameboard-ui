@@ -1,6 +1,6 @@
-<div class="external-game-admin-component py-2" *ngIf="ctx$ | async as context; else loading">
+<div class="external-game-admin-component py-2" *ngIf="ctx; else loading">
     <h2 class="text-upper fs-10 m-0 p-0">Deployment</h2>
-    <h1>{{context.game.name}}</h1>
+    <h1>{{ctx.game.name}}</h1>
     <h3 class="sync-session-date fs-12" *ngIf="sessionDateDescription">
         {{sessionDateDescription}}
     </h3>
@@ -9,16 +9,16 @@
     <div class="w-100">
         <app-error-div [errors]="errors"></app-error-div>
 
-        <div *ngIf="context.teams.length"
+        <div *ngIf="ctx.teams.length"
             class="global-controls-container my-2 d-flex align-items-center justify-content-end">
             <app-confirm-button btnClass="btn btn-lg btn-info" [disabled]="!canDeploy"
-                (confirm)="handlePreDeployAllClick(context.game.id)"
-                [tooltip]="context.overallDeployStatus == 'deploying' ? 'Resources are being deployed for this game. Hang tight...' : ''">
+                (confirm)="handlePreDeployAllClick(ctx.game.id)"
+                [tooltip]="ctx.overallDeployStatus == 'deploying' ? 'Resources are being deployed for this game. Hang tight...' : ''">
                 Deploy All
             </app-confirm-button>
         </div>
 
-        <alert *ngIf="context.startTime && context.hasNonStandardSessionWindow" type="warning" class="my-4">
+        <alert *ngIf="ctx.startTime && ctx.hasNonStandardSessionWindow" type="warning" class="my-4">
             <h3>Warning</h3>
 
             <p>
@@ -28,9 +28,9 @@
             </p>
         </alert>
 
-        <div *ngIf="context.teams.length; else noTeams"
+        <div *ngIf="ctx.teams.length; else noTeams"
             class="teams-data-container my-4 d-flex flex-wrap justify-content-start">
-            <div *ngFor="let team of context.teams" class="card team-card mr-2 mb-2">
+            <div *ngFor="let team of ctx.teams" class="card team-card mr-2 mb-2">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <h4 class="card-title flex-grow w-100">{{team.name}}</h4>
@@ -72,7 +72,7 @@
                                 </thead>
 
                                 <tbody>
-                                    <tr *ngFor="let spec of context.specs">
+                                    <tr *ngFor="let spec of ctx.specs">
                                         <td>
                                             <span placement="top"
                                                 [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
@@ -106,7 +106,7 @@
                     </div>
                     <button type="button" href="#" class="btn btn-info"
                         [disabled]="(team.deployStatus != 'notStarted' && team.deployStatus != 'partiallyDeployed') || !canDeploy"
-                        (click)="handlePreDeployTeamClick(context.game.id, team.id)">Deploy</button>
+                        (click)="handlePreDeployTeamClick(ctx.game.id, team.id)">Deploy</button>
                 </div>
             </div>
         </div>

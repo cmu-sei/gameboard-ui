@@ -22,7 +22,7 @@ export interface GameDetail {
   gameMarkdown: string;
   feedbackConfig: string;
   certificateTemplate: string;
-  feedbackTemplate: FeedbackTemplate;
+  feedbackTemplate?: FeedbackTemplate;
   registrationMarkdown: string;
   registrationOpen: Date;
   registrationClose: Date;

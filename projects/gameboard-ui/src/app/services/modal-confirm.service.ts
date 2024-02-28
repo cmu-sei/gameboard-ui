@@ -24,6 +24,7 @@ export class ModalConfirmService implements OnDestroy {
     this.bsModalRef = this.openWithDefaultStyles({
       content: ModalConfirmComponent,
       context: { context: config },
+      ignoreBackdropClick: config.ignoreBackdropClick,
       modalClasses: config.modalClasses
     });
   }

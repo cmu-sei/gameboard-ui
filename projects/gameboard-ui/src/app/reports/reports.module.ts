@@ -44,6 +44,7 @@ import { PlayerChallengeAttemptsModalComponent } from './components/player-chall
 import { PlayersReportSummaryToStatsPipe } from './components/reports/players-report/players-report-summary-to-stats.pipe';
 import { PlayersReportParticipationSummaryComponent } from './components/players-report-participation-summary/players-report-participation-summary.component';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { ToSupportReportStatsPipe } from './components/reports/support-report/to-support-report-stats.pipe';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
     ChallengesReportComponent,
+    ChallengesReportSummaryToStatsPipe,
     EnrollmentReportComponent,
     EnrollmentReportByGameComponent,
     EnrollmentReportSponsorPlayerCountModalComponent,
@@ -85,8 +87,8 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
     PlayerChallengeAttemptsModalComponent,
     ParameterSponsorComponent,
     PlayersReportSummaryToStatsPipe,
-    ChallengesReportSummaryToStatsPipe,
     PlayersReportParticipationSummaryComponent,
+    ToSupportReportStatsPipe,
   ],
   imports: [
     CommonModule,

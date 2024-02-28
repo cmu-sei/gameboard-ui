@@ -1,30 +1,24 @@
 <app-error-div [errors]="errors"></app-error-div>
 
-<ng-container *ngIf="isEnabled; else noSpecs">
+<ng-container *ngIf="isEnabled && gameId; else noSpecs">
     <div class="game-bonuses-config-component" *ngIf="!isLoading; else loading">
-        <div class="game-bonuses-component my-4 d-flex" *ngIf="game && hasBonusesConfigured">
-            <button type="button" class="btn btn-info d-block flex-grow-1 mr-2"
-                (click)="configInputsVisible = !configInputsVisible">
-                Upload new bonuses configuration
-            </button>
-            <app-confirm-button [disabled]="!hasBonusesConfigured" class="d-block flex-grow-1"
-                componentContainerClass="full-width" btnClass="btn btn-danger" (confirm)="handleDeleteClick(game.id)">
-                Delete bonuses configuration
-            </app-confirm-button>
-        </div>
-
-        <ng-container *ngIf="configInputsVisible">
+        <ng-container>
             <div>
                 <textarea id="bonus-config-yaml" [(ngModel)]="yamlIn" autofocus minlength="0"
-                    class="form-control full-width" [placeholder]="textPlaceholder"
+                    class="form-control font-fixed-width full-width" [placeholder]="textPlaceholder"
                     [rows]="textPlaceholderRows"></textarea>
             </div>
 
             <div class="d-flex full-width mt-2">
-                <button type="button" class="btn btn-info d-block flex-grow-1 mr-2" (disabled)="!textPlaceholder"
+                <button type="button" class="btn btn-info d-block flex-grow-1" (disabled)="!textPlaceholder"
                     (click)="handlePasteExampleConfigClick()">
                     Paste example configuration
                 </button>
+                <app-confirm-button [disabled]="!hasBonusesConfigured" class="d-block mx-2 flex-grow-1"
+                    componentContainerClass="full-width" btnClass="btn btn-danger"
+                    (confirm)="handleDeleteClick(gameId)">
+                    Delete bonuses configuration
+                </app-confirm-button>
                 <button type="button" class="btn btn-success d-block flex-grow-1" [disabled]="!yamlIn"
                     (click)="handleImportClick()">
                     Import bonus configuration
