@@ -34,7 +34,8 @@ export class SiteOverviewStatsComponent implements OnInit {
       content: ActiveChallengesModalComponent,
       context: {
         playerMode: playerMode == "practice" ? PlayerMode.practice : PlayerMode.competition
-      }
+      },
+      modalClasses: ["modal-dialog-centered", "modal-xl"]
     });
   }
 }

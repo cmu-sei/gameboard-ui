@@ -1,10 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'matchesterm'
-})
+@Pipe({ name: 'matchesterm' })
 export class MatchesTermPipe implements PipeTransform {
-
   transform(challenge: any, term: string, ...properties: string[]): unknown {
     term = term.toLowerCase();
     if (!term.length)
@@ -16,5 +13,4 @@ export class MatchesTermPipe implements PipeTransform {
     }
     return false;
   }
-
 }

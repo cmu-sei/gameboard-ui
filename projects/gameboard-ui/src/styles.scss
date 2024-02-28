@@ -408,6 +408,11 @@ th[align="left"] {
   cursor: pointer;
 }
 
+.overflow-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .ticket-status-badge {
   font-size: 0.8rem;
   line-height: 0.85rem;

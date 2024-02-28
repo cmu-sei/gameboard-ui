@@ -1,4 +1,4 @@
-<div class="big-stat-component" (click)="click.emit()">
+<div class="big-stat-component" [class.cursor-pointer]="isClickable">
     <div class="value text-info text-center">{{ value }}</div>
     <div class="label text-center">{{ label }}</div>
     <div class="addl-info subtle-color text-center" *ngIf="subLabel">

@@ -9,5 +9,5 @@ export class BigStatComponent {
   @Input() label = "";
   @Input() value = "";
   @Input() subLabel = "";
-  @Output() click = new EventEmitter();
+  @Input() isClickable = false;
 }

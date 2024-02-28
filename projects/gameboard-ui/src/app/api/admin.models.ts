@@ -11,6 +11,7 @@ export interface AppActiveChallengeSpec {
 
 export interface AppActiveChallenge {
     id: string;
+    hasTickets: boolean;
     startedAt: DateTime;
     team: {
         id: string;

@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { KeyValue } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faSyncAlt, faTv, faExternalLinkAlt, faExpandAlt, faUser, faThLarge, faMinusSquare, faPlusSquare, faCompressAlt, faSortAlphaDown, faSortAmountDownAlt, faAngleDoubleUp, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, timer, BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -12,13 +12,15 @@ import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
+import { MatchesTermPipe } from '@/utility/pipes/matches-term.pipe';
 
 @Component({
   selector: 'app-challenge-observer',
   templateUrl: './challenge-observer.component.html',
   styleUrls: ['./challenge-observer.component.scss'],
+  providers: [MatchesTermPipe]
 })
-export class ChallengeObserverComponent implements OnInit, OnDestroy {
+export class ChallengeObserverComponent implements OnDestroy {
   refresh$ = new BehaviorSubject<boolean>(true);
   game?: Game;
   table: Map<string, ObserveChallenge> = new Map<string, ObserveChallenge>(); // table of player challenges to display
@@ -47,16 +49,20 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
 
+  protected searchText = "";
+
   constructor(
     route: ActivatedRoute,
     private api: BoardService,
     private gameApi: GameService,
-    private conf: ConfigService
+    private conf: ConfigService,
+    private matchesTermPipe: MatchesTermPipe
   ) {
     this.mksHost = conf.mkshost;
     this.gameData = route.params.pipe(
       switchMap(a => this.gameApi.retrieve(a.id))
     ).subscribe(game => this.game = game);
+
     this.tableData = combineLatest([
       route.params,
       this.refresh$,
@@ -67,9 +73,19 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
       tap(() => this.isLoading = true),
       switchMap(() => this.api.consoles(this.gid)),
     ).subscribe(data => {
+      const queryTerm = route.snapshot.queryParams?.search?.toLowerCase();
+      this.searchText = queryTerm;
+
+      if (this.table.size === 1) {
+        for (let entry of this.table.entries()) {
+          entry[1].expanded = true;
+        }
+      }
+
       this.updateTable(data);
       this.isLoading = false;
     });
+
     this.fetchActors$ = combineLatest([
       route.params,
       this.refresh$,
@@ -88,6 +104,7 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
         return map;
       }, new Map<string, ConsoleActor[]>()))
     );
+
     this.term$ = this.typing$.pipe(
       debounceTime(500)
     );
@@ -105,12 +122,10 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
       } else {
         this.table.set(updatedChallenge.id, updatedChallenge);
       }
+
       if (updatedChallenge.gameRank > this.maxRank)
         this.maxRank = updatedChallenge.gameRank;
     }
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

@@ -93,6 +93,7 @@ import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-
 import { StatusLightComponent } from './components/status-light/status-light.component';
 import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
+import { ThisOrThatPipe } from './pipes/this-or-that.pipe';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { ToSupportCodePipe } from './pipes/to-support-code.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
@@ -176,6 +177,7 @@ const PUBLIC_DECLARATIONS = [
   StatusLightComponent,
   SumArrayPipe,
   TextToColorPipe,
+  ThisOrThatPipe,
   ToggleClassPipe,
   ToSupportCodePipe,
   ToTemplateContextPipe,

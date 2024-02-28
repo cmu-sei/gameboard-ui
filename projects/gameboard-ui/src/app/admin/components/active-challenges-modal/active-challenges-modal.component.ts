@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { fa } from "@/services/font-awesome.service";
+import { firstValueFrom } from 'rxjs';
 import { PlayerMode } from '@/api/player-models';
 import { AppActiveChallengeSpec } from '@/api/admin.models';
 import { AdminService } from '@/api/admin.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { firstValueFrom } from 'rxjs';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-active-challenges-modal',
@@ -14,12 +16,15 @@ export class ActiveChallengesModalComponent implements OnInit {
   playerMode?: PlayerMode;
 
   protected errors: any[] = [];
+  protected fa = fa;
+  protected isPracticeMode = false;
   protected isWorking = false;
   protected specs: AppActiveChallengeSpec[] = [];
 
   constructor(
     private adminService: AdminService,
-    private modalService: ModalConfirmService) { }
+    private modalService: ModalConfirmService,
+    private routerService: RouterService) { }
 
   async ngOnInit(): Promise<void> {
     if (!this.playerMode)
@@ -34,6 +39,7 @@ export class ActiveChallengesModalComponent implements OnInit {
 
   private async load(playerMode: PlayerMode): Promise<void> {
     this.errors = [];
+    this.isPracticeMode = playerMode === PlayerMode.practice;
 
     try {
       this.isWorking = true;
