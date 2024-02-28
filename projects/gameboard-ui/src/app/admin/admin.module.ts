@@ -58,6 +58,7 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
 import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
 import { ExtendTeamsModalComponent } from './components/extend-teams-modal/extend-teams-modal.component';
+import { ActiveChallengesModalComponent } from './components/active-challenges-modal/active-challenges-modal.component';
 
 
 @NgModule({
@@ -106,6 +107,7 @@ import { ExtendTeamsModalComponent } from './components/extend-teams-modal/exten
     SupportSettingsComponent,
     FeedbackEditorComponent,
     ExtendTeamsModalComponent,
+    ActiveChallengesModalComponent,
   ],
   imports: [
     CommonModule,
