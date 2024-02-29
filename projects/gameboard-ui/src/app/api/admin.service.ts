@@ -23,12 +23,6 @@ export class AdminService {
           }
         }
 
-        // response.specs = response.specs.concat(response.specs);
-        // response.specs = response.specs.concat(response.specs);
-        // response.specs = response.specs.concat(response.specs);
-        // response.specs = response.specs.concat(response.specs);
-        // response.specs = response.specs.concat(response.specs);
-
         return response;
       })
     );
