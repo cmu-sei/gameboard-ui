@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { GetAppActiveChallengesResponse, GetSiteOverviewStatsResponse } from './admin.models';
+import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse } from './admin.models';
 import { PlayerMode } from './player-models';
 import { DateTime } from 'luxon';
 
@@ -24,6 +24,17 @@ export class AdminService {
         }
 
         return response;
+      })
+    );
+  }
+
+  getActiveTeams(): Observable<GetAppActiveTeamsResponse> {
+    return this.http.get<GetAppActiveTeamsResponse>(this.apiUrl.build("admin/active-teams")).pipe(
+      tap(response => {
+        for (let team of response.teams) {
+          team.session.start = DateTime.fromISO(team.session.start.toString());
+          team.session.end = DateTime.fromISO(team.session.end.toString());
+        }
       })
     );
   }

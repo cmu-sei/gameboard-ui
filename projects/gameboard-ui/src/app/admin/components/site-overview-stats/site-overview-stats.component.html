@@ -8,8 +8,8 @@
             [isClickable]="true" (click)="showChallengesModal('practice')"></app-big-stat>
     </li>
     <li>
-        <app-big-stat label="Active Competitive Teams" [value]="activeCompetitiveTeams.toString()"
-            [isClickable]="true"></app-big-stat>
+        <app-big-stat label="Active Competitive Teams" [value]="activeCompetitiveTeams.toString()" [isClickable]="true"
+            (click)="showTeamsModal()"></app-big-stat>
     </li>
     <li>
         <app-big-stat label="Registered Users" [value]="registeredUsers.toString()"></app-big-stat>

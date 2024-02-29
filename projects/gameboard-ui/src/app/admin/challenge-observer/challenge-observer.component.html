@@ -54,7 +54,7 @@
       <div *ngFor="let row of table | keyvalue:sortByName; trackBy:trackByChallengeId;"
         [class]="row.value.pinned ? 'pinned' : ''"
         [ngStyle]="{'order': row.value.gameRank | observeorder:row.value.pinned:sort:maxRank }">
-        <ng-container *ngIf="row.value | matchesterm:updates.term:'playerName':'name':'tag':'id' as isMatch">
+        <ng-container *ngIf="row.value | matchesterm:updates.term:'playerName':'name':'tag':'id'">
           <div class="row mx-0 border-top border-light py-2">
             <div class="col-2 align-self-center pl-1 text-left">
               <button class="mr-1 btn btn-sm border-0"

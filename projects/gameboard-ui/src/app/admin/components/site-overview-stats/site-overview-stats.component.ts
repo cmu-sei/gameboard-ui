@@ -4,6 +4,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ActiveChallengesModalComponent } from '../active-challenges-modal/active-challenges-modal.component';
+import { ActiveTeamsModalComponent } from '../active-teams-modal/active-teams-modal.component';
 
 @Component({
   selector: 'app-site-overview-stats',
@@ -35,6 +36,14 @@ export class SiteOverviewStatsComponent implements OnInit {
       context: {
         playerMode: playerMode == "practice" ? PlayerMode.practice : PlayerMode.competition
       },
+      modalClasses: ["modal-dialog-centered", "modal-xl"]
+    });
+  }
+
+  protected showTeamsModal() {
+    this.modalService.openComponent({
+      content: ActiveTeamsModalComponent,
+      context: {},
       modalClasses: ["modal-dialog-centered", "modal-xl"]
     });
   }

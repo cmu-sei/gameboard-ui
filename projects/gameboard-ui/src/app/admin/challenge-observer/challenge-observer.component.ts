@@ -56,7 +56,7 @@ export class ChallengeObserverComponent implements OnDestroy {
     private api: BoardService,
     private gameApi: GameService,
     private conf: ConfigService,
-    private matchesTermPipe: MatchesTermPipe
+    private matchesTerm: MatchesTermPipe
   ) {
     this.mksHost = conf.mkshost;
     this.gameData = route.params.pipe(
@@ -75,12 +75,7 @@ export class ChallengeObserverComponent implements OnDestroy {
     ).subscribe(data => {
       const queryTerm = route.snapshot.queryParams?.search?.toLowerCase();
       this.searchText = queryTerm;
-
-      if (this.table.size === 1) {
-        for (let entry of this.table.entries()) {
-          entry[1].expanded = true;
-        }
-      }
+      this.typing$.next(queryTerm);
 
       this.updateTable(data);
       this.isLoading = false;

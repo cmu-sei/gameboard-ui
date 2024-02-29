@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { GameEngineType } from "./spec-models";
+import { SimpleEntity } from "./models";
 
 export interface AppActiveChallengeSpec {
     id: string;
@@ -32,6 +33,24 @@ export interface AppActiveChallengeGame {
 
 export interface GetAppActiveChallengesResponse {
     specs: AppActiveChallengeSpec[];
+}
+
+export interface GetAppActiveTeamsResponse {
+    teams: AppActiveTeam[];
+}
+
+export interface AppActiveTeam {
+    id: string;
+    name: string;
+    session: { start: DateTime, end: DateTime },
+    game: {
+        id: string;
+        name: string;
+        isTeamGame: boolean;
+    },
+    deployedChallengeCount: number;
+    isLateStart: boolean;
+    score: number;
 }
 
 export interface GetSiteOverviewStatsResponse {
