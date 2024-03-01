@@ -42,7 +42,7 @@
                             <div class="flex-grow-1">
                                 <a [href]="'/support/tickets?search=' + challenge.id" target="_blank"
                                     *ngIf="challenge.hasTickets" class="btn btn-warning"
-                                    tooltip="View open tickets for this challenge">
+                                    tooltip="View open tickets for this challenge" placement="bottom">
                                     <fa-icon [icon]="fa.ticket" size="lg"></fa-icon>
                                 </a>
                             </div>

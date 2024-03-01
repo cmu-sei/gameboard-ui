@@ -49,6 +49,7 @@ export interface AppActiveTeam {
         isTeamGame: boolean;
     },
     deployedChallengeCount: number;
+    hasTickets: boolean;
     isLateStart: boolean;
     score: number;
 }

@@ -11,7 +11,7 @@
         <ng-container *ngIf="teams.length; else noTeams">
             <div class="teams-container">
                 <ul class="d-flex">
-                    <li *ngFor="let team of teams" class="card challenge-card my-3 mr-3">
+                    <li *ngFor="let team of teams" class="card team-card my-3 mr-3">
                         <div class="card-body">
                             <h5 class="overflow-ellipsis">
                                 {{ team.name }}
@@ -41,13 +41,14 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            <!-- <div class="flex-grow-1">
-                                <a [href]="'/support/tickets?search=' + challenge.id" target="_blank"
-                                    *ngIf="challenge.hasTickets" class="btn btn-warning"
-                                    tooltip="View open tickets for this challenge">
+                            <div class="flex-grow-1">
+                                <a [href]="'/support/tickets?search=' + team.id" target="_blank" *ngIf="team.hasTickets"
+                                    class="btn btn-warning"
+                                    [tooltip]="'View open tickets for this ' + (team.game.isTeamGame | thisOrThat:'team':'player')"
+                                    placement="bottom">
                                     <fa-icon [icon]="fa.ticket" size="lg"></fa-icon>
                                 </a>
-                            </div> -->
+                            </div>
                             <a [href]="'/admin/support?search=' + team.id | relativeToAbsoluteHref" target="_blank"
                                 class="btn btn-info mr-2"
                                 [tooltip]="'View challenge states for this ' + (team.game.isTeamGame | thisOrThat:'team':'player')"
