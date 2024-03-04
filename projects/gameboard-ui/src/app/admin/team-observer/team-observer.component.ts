@@ -11,6 +11,7 @@ import { GameService } from '../../api/game.service';
 import { ObserveTeam, ObserveTeamMember, Team } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
+
 @Component({
   selector: 'app-team-observer',
   templateUrl: './team-observer.component.html',
@@ -47,6 +48,8 @@ export class TeamObserverComponent implements OnDestroy {
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
 
+  protected searchText = "";
+
   constructor(
     route: ActivatedRoute,
     private api: BoardService,
@@ -68,6 +71,10 @@ export class TeamObserverComponent implements OnDestroy {
       tap(() => this.isLoading = true),
       switchMap(() => this.playerApi.observeTeams(this.gid)) // tomorrow do this instead of players
     ).subscribe(data => {
+      const queryTerm = route.snapshot.queryParams?.search?.toLowerCase()?.trim();
+      this.searchText = queryTerm;
+      this.typing$.next(this.searchText);
+
       this.updateTable(data);
       this.isLoading = false;
     });

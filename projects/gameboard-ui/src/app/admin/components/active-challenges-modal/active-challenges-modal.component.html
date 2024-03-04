@@ -1,0 +1,90 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h2 class="modal-title">Active Challenges: {{ playerMode | titlecase }}</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <app-error-div [errors]="errors"></app-error-div>
+    </div>
+
+    <div class="modal-body" *ngIf="!isWorking; else loading">
+        <ng-container *ngIf="specs?.length; else noChallenges">
+            <div *ngFor="let spec of specs" class="spec-container">
+                <h3>{{ spec.name }}</h3>
+                <h4 class="game-link">
+                    <a target="_blank" [routerLink]="['game/' + spec.game.id]">
+                        {{ spec.game.name }}
+                    </a>
+                </h4>
+
+                <ul class="d-flex">
+                    <li *ngFor="let challenge of spec.challenges" class="card challenge-card my-3 mr-3">
+                        <div class="card-body">
+                            <h5 class="overflow-ellipsis">
+                                {{ challenge.team.name }}
+                            </h5>
+                            <button type="button" class="btn btn-link text-info" appCopyOnClick
+                                tooltip="Copy this support code" placement="bottom">
+                                {{ {id: challenge.id, tag: spec.tag } | toSupportCode }}
+                            </button>
+                            <div class="challenge-times mt-2">
+                                <div class="start-time">
+                                    <span class="font-bold">Launched: </span>
+                                    <span>{{ challenge.startedAt | datetimeToDate | friendlyDateAndTime }}</span>
+                                </div>
+                                <div class="end-time">
+                                    <span class="font-bold">Session End: </span>
+                                    <span>{{ challenge.team.session.end | datetimeToDate | friendlyDateAndTime }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center px-3">
+                            <div class="flex-grow-1">
+                                <a [href]="'/support/tickets?search=' + challenge.id" target="_blank"
+                                    *ngIf="challenge.hasTickets" class="btn btn-warning"
+                                    tooltip="View open tickets for this challenge" placement="bottom">
+                                    <fa-icon [icon]="fa.ticket" size="lg"></fa-icon>
+                                </a>
+                            </div>
+                            <a [href]="'/admin/support?search=' + challenge.id | relativeToAbsoluteHref" target="_blank"
+                                class="btn btn-info mr-2" tooltip="View this challenge's state" placement="bottom">
+                                <fa-icon [icon]="fa.barsStaggered" size="lg"></fa-icon>
+                            </a>
+
+                            <a [href]="'/admin/registrar/' + spec.game.id + '?term=' + challenge.team.id"
+                                target="_blank" class="btn btn-info mr-2"
+                                [tooltip]="'View this ' + (spec.game.isTeamGame | thisOrThat:'team':'player') + '\'s session'"
+                                placement="bottom">
+                                <fa-icon [icon]="spec.game.isTeamGame | thisOrThat:fa.peopleGroup:fa.person"
+                                    size="lg"></fa-icon>
+                            </a>
+
+                            <a [href]="'/admin/observer/challenges/' + spec.game.id + '?search=' + challenge.id"
+                                target="_blank" class="btn btn-info mr-2" tooltip="Observe this challenge"
+                                placement="bottom">
+                                <fa-icon [icon]="fa.eye" size="lg"></fa-icon>
+                            </a>
+
+                            <a [href]="'/game/' + spec.game.id" target="_blank" class="btn btn-info"
+                                tooltip="View this game" placement="bottom">
+                                <fa-icon [icon]="fa.chessBoard" size="lg"></fa-icon>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" (click)="close()">OK</button>
+    </div>
+</div>
+
+<ng-template #noChallenges>
+    <div class="text-center gray-text fs-11">There aren't any active challenges of this type right now.</div>
+</ng-template>
+
+<ng-template #loading>
+    <app-spinner></app-spinner>
+</ng-template>

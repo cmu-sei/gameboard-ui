@@ -1,4 +1,3 @@
-
 <a class="btn btn-link mr-2" routerLink="/admin">
   <fa-icon [icon]="faArrowLeft"></fa-icon>
   <span>Back</span>
@@ -19,8 +18,8 @@
     <div class="input-group-prepend">
       <span id="search-label" class="input-group-text">Search</span>
     </div>
-    <input id="search-input" type="search" class="form-control" #search (input)="typing$.next(search.value)"
-      aria-label="search term" aria-describedby="search-label" placeholder="term">
+    <input id="search-input" type="search" class="form-control" #search [ngModel]="searchText"
+      (input)="typing$.next(search.value)" aria-label="search term" aria-describedby="search-label" placeholder="term">
   </div>
   <div class="input-group mt-2 mb-0 ml-auto col-5">
     <div id="feedbackType-input" #selectType class="btn-group mb-2 ml-auto" btnRadioGroup name="sortType" tabindex="0"
@@ -47,15 +46,19 @@
     <h4 class="col-3 text-right pl-0">Console</h4>
   </div>
   <div class="d-flex flex-column">
-    <ng-container *ngIf="(!!table.size || !isLoading) && {actors: fetchActors$ | async, term : (term$ | async) ?? ''} as updates; else loading">
-      <div *ngFor="let row of table | keyvalue: sortByName; trackBy: trackByTeamId;" [class]="row.value.pinned ? 'pinned' : ''"
+    <ng-container
+      *ngIf="(!!table.size || !isLoading) && {actors: fetchActors$ | async, term : (term$ | async) ?? ''} as updates; else loading">
+      <div *ngFor="let row of table | keyvalue: sortByName; trackBy: trackByTeamId;"
+        [class]="row.value.pinned ? 'pinned' : ''"
         [ngStyle]="{'order': row.value.rank | observeorder:row.value.pinned:sort:maxRank }">
-        <ng-container *ngIf="row.value | matchesterm:updates.term:'approvedName':'teamId'">
+        <ng-container *ngIf="row.value | matchesterm:updates.term:'approvedName':'teamId' as isMatch">
           <div class="row mx-0 border-top border-light py-2">
             <div class="col-3 align-self-center pl-1 pr-0 text-left">
-              <button class="mr-1 btn btn-sm border-0" [class]="row.value.pinned ?  'btn-outline-success' : 'btn-outline-light'" 
+              <button class="mr-1 btn btn-sm border-0"
+                [class]="row.value.pinned ?  'btn-outline-success' : 'btn-outline-light'"
                 (click)="togglePinRow(row.value)">
-                <fa-icon class="pin-icon" [icon]="faAngleDoubleUp" [rotate]="row.value.pinned ? 90 : undefined"></fa-icon>
+                <fa-icon class="pin-icon" [icon]="faAngleDoubleUp"
+                  [rotate]="row.value.pinned ? 90 : undefined"></fa-icon>
               </button>
               <span class="text-break">{{row.value.approvedName}}</span>
               <span *ngIf="!!game?.allowTeam" class="ml-3">
@@ -67,16 +70,17 @@
             <div class="col-2 align-self-center text-right">{{row.value.score | number}}</div>
             <div class="col-3 align-self-center text-right">{{row.value.time | clock }}</div>
             <div class="col-3 align-self-center text-right">
-              <button class="btn btn-sm" [class]="row.value.expanded ? 'btn-success' : 'btn-outline-success' "
+              <button class="btn btn-sm"
+                [class]="row.value.expanded || table.size === 1 ? 'btn-success' : 'btn-outline-success' "
                 (click)="toggleShowConsole(row.value)">
                 <fa-icon [icon]="faGrid"></fa-icon>
               </button>
             </div>
           </div> <!-- end main challenge row -->
-          <ng-container *ngIf="row.value.expanded">
+          <ng-container *ngIf="row.value.expanded || table.size === 1">
             <div class="row mx-0 mt-1" [class.justify-content-center]="!game?.allowTeam">
               <ng-container *ngFor="let member of row.value.members;">
-                <div *ngIf="!member.minimized && {vm: updates.actors?.get(member.id)} as user" class="p-2 vm-console" 
+                <div *ngIf="!member.minimized && {vm: updates.actors?.get(member.id)} as user" class="p-2 vm-console"
                   [class]="member.fullWidth ? 'col-12' : 'col-4'">
                   <div class="rounded border border-success h-100 d-flex flex-column">
                     <div class="mt-1 ml-1 mx-0 px-0 d-flex justify-content-between">
@@ -87,18 +91,21 @@
                         </button>
                       </div>
                       <div class="mx-0 px-0 text-right">
-                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1" (click)="minimizeAllOthers(member, row.value)">
+                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1"
+                          (click)="minimizeAllOthers(member, row.value)">
                           <fa-icon [icon]="faWindowRestore"></fa-icon>
                         </button>
-                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1" (click)="toggleMinimize(member)">
+                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 ml-1"
+                          (click)="toggleMinimize(member)">
                           <fa-icon [icon]="faMinusSquare"></fa-icon>
                         </button>
-                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 mr-1" (click)="toggleFullWidth(member)">
+                        <button class="btn btn-outline-success btn-sm px-2 py-1 border-0 mr-1"
+                          (click)="toggleFullWidth(member)">
                           <fa-icon [icon]="member.fullWidth ? faCompressAlt : faExpandAlt"></fa-icon>
                         </button>
                       </div>
                     </div> <!-- end console header -->
-                    <div *ngIf="user.vm" class="mx-1 mb-1 p-0 text-left" >
+                    <div *ngIf="user.vm" class="mx-1 mb-1 p-0 text-left">
                       <span class="badge badge-success m-1 text-break text-dark">
                         <fa-icon class="pr-1" [icon]="faTv"></fa-icon>
                         {{user.vm.vmName}}
@@ -106,7 +113,7 @@
                       <span class="m-1 text-break text-success">
                         {{user.vm.challengeName}}
                       </span>
-                  </div> <!-- end challenge and console info header -->
+                    </div> <!-- end challenge and console info header -->
                     <div class="iframe-wrapper mt-auto" style="padding: 0px;">
                       <iframe *ngIf="user.vm; else empty;" class="rounded-bottom" frameborder="0"
                         [src]="(mksHost+'?f=0&o=1&u='+member.id) | safeurl">
@@ -121,7 +128,7 @@
                 <div *ngIf="member.minimized" class="m-0 p-2">
                   <button class="btn btn-outline-success btn-sm p-2 w-100" (click)="toggleMinimize(member)">
                     <div *ngIf="updates.actors?.get(member.id)" class="float-left">
-                      <fa-icon [icon]="faTv" ></fa-icon>
+                      <fa-icon [icon]="faTv"></fa-icon>
                     </div>
                     <span class="mx-3">{{member.approvedName}}</span>
                     <fa-icon [icon]="faPlusSquare" class="float-right"></fa-icon>
@@ -135,7 +142,6 @@
     </ng-container>
   </div>
 </div> <!-- end table of challenges -->
-
 
 <ng-template #empty>
   <div class="text-center text-light pt-3 rounded-bottom" id="empty-iframe">

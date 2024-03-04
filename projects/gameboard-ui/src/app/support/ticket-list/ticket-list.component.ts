@@ -10,6 +10,7 @@ import { UserService as LocalUserService } from '../../utility/user.service';
 import { ToastService } from '../../utility/services/toast.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 import { fa } from '@/services/font-awesome.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-list',
@@ -43,7 +44,8 @@ export class TicketListComponent implements OnDestroy {
     private config: ConfigService,
     private reportApi: ReportService,
     private toastService: ToastService,
-    hub: NotificationService
+    hub: NotificationService,
+    route: ActivatedRoute
   ) {
 
     this.searchText = config.local.ticketTerm || "";
@@ -103,6 +105,12 @@ export class TicketListComponent implements OnDestroy {
     this.ctx$ = combineLatest([ticket$, nextTicket$, canManage$]).pipe(
       map(([tickets, nextTicket, canManage]) => ({ tickets: tickets, nextTicket: nextTicket, canManage: canManage }))
     );
+
+    this.subs.push(route.queryParams.subscribe(qp => {
+      if (qp.search) {
+        this.searchText = qp.search;
+      }
+    }));
 
     this.subs.push(
       hub.ticketEvents.subscribe(

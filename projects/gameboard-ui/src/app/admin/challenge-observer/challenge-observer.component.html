@@ -21,7 +21,7 @@
       <span id="search-label" class="input-group-text">Search</span>
     </div>
     <input id="search-input" type="search" class="form-control" #search (input)="typing$.next(search.value)"
-      aria-label="search term" aria-describedby="search-label" placeholder="term">
+      aria-label="search term" aria-describedby="search-label" placeholder="term" [ngModel]="searchText">
   </div>
   <div class="input-group mt-2 mb-0 ml-auto col-5">
     <div id="feedbackType-input" #selectType class="btn-group mb-2 ml-auto" btnRadioGroup name="sortType" tabindex="0"
@@ -72,13 +72,13 @@
             <div class="col-2 align-self-center text-right">{{row.value.challengeScore | number}}</div>
             <div class="col-2 align-self-center text-right">
               <button *ngIf="row.value.consoles?.length" class="btn btn-sm"
-                [class]="row.value.expanded ? 'btn-success' : 'btn-outline-success' "
+                [class]="row.value.expanded || table.size === 1 ? 'btn-success' : 'btn-outline-success' "
                 (click)="toggleShowConsoles(row.value)">
                 <fa-icon [icon]="faGrid"></fa-icon>
               </button>
             </div>
           </div> <!-- end main challenge row -->
-          <ng-container *ngIf="row.value.expanded">
+          <ng-container *ngIf="row.value.expanded || table.size === 1">
             <div class="row mx-0 mt-1">
               <ng-container *ngFor="let vm of row.value.consoles;">
                 <div *ngIf="!vm.minimized" class="p-2 vm-console" [class]="vm.fullWidth ? 'col-12' : 'col-4'">

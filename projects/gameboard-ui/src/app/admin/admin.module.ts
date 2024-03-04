@@ -11,6 +11,7 @@ import { CoreModule } from '../core/core.module';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { UtilityModule } from '../utility/utility.module';
 
+import { ActiveChallengesModalComponent } from './components/active-challenges-modal/active-challenges-modal.component';
 import { AdminOverviewComponent } from './components/admin-overview/admin-overview.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AnnounceComponent } from './announce/announce.component';
@@ -58,10 +59,11 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
 import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
 import { ExtendTeamsModalComponent } from './components/extend-teams-modal/extend-teams-modal.component';
-
+import { ActiveTeamsModalComponent } from './components/active-teams-modal/active-teams-modal.component';
 
 @NgModule({
   declarations: [
+    ActiveChallengesModalComponent,
     AdminPageComponent,
     AnnounceComponent,
     ChallengeBrowserComponent,
@@ -106,6 +108,7 @@ import { ExtendTeamsModalComponent } from './components/extend-teams-modal/exten
     SupportSettingsComponent,
     FeedbackEditorComponent,
     ExtendTeamsModalComponent,
+    ActiveTeamsModalComponent,
   ],
   imports: [
     CommonModule,

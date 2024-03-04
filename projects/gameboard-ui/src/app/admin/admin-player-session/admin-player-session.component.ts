@@ -9,11 +9,8 @@ import { Player, Team, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { GameSessionService } from '../../services/game-session.service';
 import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
-import { TeamService } from '@/api/team.service';
-import { ToastService } from '@/utility/services/toast.service';
 import { DateTime } from 'luxon';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { FriendlyDatesService } from '@/services/friendly-dates.service';
 import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
 import { GameService } from '@/api/game.service';
 
@@ -43,12 +40,9 @@ export class PlayerSessionComponent implements OnInit {
 
   constructor(
     private api: PlayerService,
-    private friendlyDatesAndTimes: FriendlyDatesService,
     private gameService: GameService,
     private sessionService: GameSessionService,
     private modalService: ModalConfirmService,
-    private teamService: TeamService,
-    private toastService: ToastService,
   ) { }
 
   ngOnInit(): void {
