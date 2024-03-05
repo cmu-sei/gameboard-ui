@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { LocalStorageService, StorageKey } from './local-storage.service';
 import { ConfigService } from '@/utility/config.service';
 import { LogService } from './log.service';
 import { Observable, Subject, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { HttpClient } from '@angular/common/http';
 import { GetExternalTeamDataResponse } from '@/api/game-models';
 import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
 import { ApiDateTimeService } from './api-date-time.service';
@@ -29,19 +29,13 @@ export class ExternalGameService {
     private storage: LocalStorageService) { }
 
   public async createLocalStorageKeys(teamId: string): Promise<void> {
-    // first check if we've already got info for this team
-    this.log.logInfo("Checking for existing deploy data in local storage...");
+    // NOTE: We no longer try to use local storage to cache the team's metadata. The goal
+    // here was to avoid repeated hits for the metadata, but in test environments, a team may
+    // receive a different headless assignment on multiple runs.
     const teamNamespaceKeyName = this.computeNamespaceKey(teamId);
-    const existingValue = JSON.parse(this.storage.getArbitrary(teamNamespaceKeyName) || "{}");
-
-    if (existingValue[StorageKey.ExternalGameOidc] && existingValue[StorageKey.ExternalGameUrl]) {
-      this.log.logInfo("Found deploy data.", existingValue);
-      return existingValue;
-    }
-
-    // if not, we need to load it from the API
-    this.log.logInfo("No deploy data found in local storage. Loading it from the API...");
+    this.log.logInfo(`Retrieving external game data for key ${teamNamespaceKeyName} ...`);
     const externalTeamData = await firstValueFrom(this.getExternalTeamData(teamId));
+    this.log.logInfo(`Retrieved external game data:`, externalTeamData);
 
     this.log.logInfo("Resolving OIDC storage keys...");
     const oidcLink = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
