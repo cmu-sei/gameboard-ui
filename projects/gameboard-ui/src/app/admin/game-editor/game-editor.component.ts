@@ -93,8 +93,11 @@ export class GameEditorComponent implements AfterViewInit {
 
         // the first time we flip to "External" mode, if the external game start url isn't specified,
         // default it to gamebrain's url in settings
-        if (this.config.gamebrainhost && !this.game.externalGameStartupUrl && !this.defaultExternalGameStartUrlSuggested) {
-          this.game.externalGameStartupUrl = `${this.config.gamebrainhost}admin/deploy`;
+        if (this.config.gamebrainhost && !this.game.externalGameStartupEndpoint && !this.defaultExternalGameStartUrlSuggested) {
+          // this looks funny because the URL of the only currently-supported external host (Gamebrain) has its base url
+          // set through helm configuration of the API (so we only care about configuring the endpoint, not the fully-qualified)
+          // url
+          this.game.externalGameStartupEndpoint = "admin/deploy";
           this.defaultExternalGameStartUrlSuggested = true;
         }
       }),

@@ -273,32 +273,50 @@
         <small>Does the game use standard VMs, or is it played in Unity or another external host?</small>
       </div>
 
-      <ng-container *ngIf="game.mode === 'external'">
-        <div class="col-12 mt-4">
+      <div class="container" *ngIf="game.mode === 'external'">
+        <div class="row mt-4 pl-3">
           <h2>External Game Settings</h2>
         </div>
 
-        <div class="col-12 mt-2 pl-0 d-flex flex-wrap align-items-start justify-content-center">
-          <div class="form-group flex-basis-50 flex-shrink-1">
-            <label for="external-game-launch-url">Launch Metadata URL</label>
-            <input type="text" class="form-control" id="external-game-launch-url" name="external-game-launch-url"
-              [(ngModel)]="game.externalGameStartupUrl">
-            <small>
-              When Gameboard boots an external game, it'll post game metadata to this URL.
-              <em>({{externalGameServerUrlBase | trim:"/":"end"}}/{{game.externalGameStartupUrl}})</em>
-            </small>
-          </div>
-
-          <div class="form-group flex-basis-50 flex-shrink-1">
+        <div class="row">
+          <div class="col-6">
             <label for="external-game-launch-url">Game Client URL</label>
             <input type="text" class="form-control" id="external-game-client-url" name="external-game-client-url"
               [(ngModel)]="game.externalGameClientUrl">
             <small>
-              The URL from which Gameboard will attempt to serve the game client
+              The URL from which Gameboard will serve the game client
+            </small>
+          </div>
+
+          <div class="col-6"></div>
+        </div>
+
+        <div class="row">
+          <h3 class="mt-4 col-12">Endpoints</h3>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <label for="external-game-launch-url">Launch Metadata Endpoint</label>
+            <input type="text" class="form-control" id="external-game-launch-endpoint"
+              name="external-game-launch-endpoint" [(ngModel)]="game.externalGameStartupEndpoint">
+            <small>
+              When Gameboard boots an external game, it'll post game metadata to this endpoint on the external game
+              host.
+            </small>
+          </div>
+
+          <div class="col-6">
+            <label for="externalGameTeamExtendedEndpoint">Team Session Extension Endpoint</label>
+            <input type="text" class="form-control" id="externalGameTeamExtendedEndpoint"
+              name="externalGameTeamExtendedEndpoint" [(ngModel)]="game.externalGameTeamExtendedEndpoint">
+            <small>
+              If a team's session end time changes, Gameboard will make a request to the external host notifying it of
+              the change.
             </small>
           </div>
         </div>
-      </ng-container>
+      </div>
     </div>
 
     <div class="section-header" tabindex="0" (click)="show(3)">
