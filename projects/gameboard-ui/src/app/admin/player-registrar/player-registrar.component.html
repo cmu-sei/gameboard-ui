@@ -164,7 +164,10 @@
       </button>
       <div class="spacer"></div>
       <div class="cursor-pointer d-flex" [class.text-success]="player.session?.isDuring" (click)="view(player)">
-        <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-danger">Late Start</span></div>
+        <div *ngIf="!player.isReady && game.requireSynchronizedStart" class="mr-2">
+          <span class="badge badge-danger">Not Ready</span>
+        </div>
+        <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-warn">Late Start</span></div>
         <div *ngIf="player.advanced" class="mr-2"><span class="badge badge-success">Advanced</span></div>
         <div>
           {{player.rank}} |
@@ -181,8 +184,9 @@
         </button>
 
         <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
-          (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset($event)"
-          (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
+          [isSyncStartGame]="game.requireSynchronizedStart" (bonusManageRequest)="manageManualBonuses(player)"
+          (playerChange)="handlePlayerChange($event)" (sessionResetRequest)="confirmReset($event)"
+          (unenrollRequest)="confirmUnenroll($event)" (viewRequest)="view($event)">
         </app-team-admin-context-menu>
       </div>
       <div *ngIf="viewed === player" class="col-12">

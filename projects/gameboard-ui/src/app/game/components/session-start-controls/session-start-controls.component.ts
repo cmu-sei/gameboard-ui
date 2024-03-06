@@ -51,6 +51,7 @@ export class SessionStartControlsComponent implements OnInit {
           this.isConnectedToGameHub = gameIds.some(gId => gId == this.ctx.game.id);
         }),
         this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
+          console.log("state update", stateUpdate);
           this.handleNewSyncStartState(stateUpdate);
         })
       );

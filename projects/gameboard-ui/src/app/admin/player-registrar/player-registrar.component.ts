@@ -21,6 +21,7 @@ import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
 import { unique } from 'projects/gameboard-ui/src/tools';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-player-registrar',
@@ -70,6 +71,7 @@ export class PlayerRegistrarComponent {
     private clipboard: ClipboardService,
     private teamService: TeamService,
     private title: AppTitleService,
+    private toastService: ToastService,
     private unityService: UnityService,
     private unsub: UnsubscriberService
   ) {
@@ -283,6 +285,10 @@ export class PlayerRegistrarComponent {
     this.gameapi.rerank(gid).subscribe(
       () => this.refresh$.next(true)
     );
+  }
+
+  protected handlePlayerChange(player: Player) {
+    this.refresh$.next(true);
   }
 
   protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {

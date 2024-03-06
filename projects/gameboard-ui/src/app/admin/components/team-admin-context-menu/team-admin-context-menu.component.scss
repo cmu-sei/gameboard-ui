@@ -1,8 +1,14 @@
+@import "../../../../scss/variables";
+
 .ctx-menu-button {
-    aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1;
 }
 
 .btn-danger {
-    font-weight: bold;
-    color: red;
+  color: red;
+  font-weight: bold;
+}
+
+.btn-warning {
+  color: $warning;
 }
