@@ -1,4 +1,12 @@
 .yaml-container {
-    margin: 1.5rem 0 0 1.5rem;
-    padding-bottom: 1.5rem;
+  margin: 1.5rem 0 0 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.advancement-container {
+  h6 {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }

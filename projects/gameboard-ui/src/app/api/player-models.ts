@@ -196,6 +196,11 @@ export interface TeamAdvancement {
 export interface Team {
   teamId: string;
   gameId: string;
+  advancedFromGame?: SimpleEntity;
+  advancedFromPlayer?: SimpleEntity;
+  advancedFromTeamId?: string;
+  advancedWithScore?: number;
+  isAdvancedFromTeamGame?: boolean;
   approvedName: string;
   sessionBegin: Date;
   sessionEnd: Date;

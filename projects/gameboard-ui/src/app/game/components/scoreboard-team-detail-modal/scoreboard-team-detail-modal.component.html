@@ -12,7 +12,8 @@
                     {{ context.gameInfo.name }}
                 </h3>
                 <h2>{{ context.score.team.name }}</h2>
-                <div *ngIf="context.score.isAdvancedToNextRound" class="badge badge-info fs-09">Advanced to next round
+                <div *ngIf="context.score.isAdvancedToNextRound" class="badge badge-info fs-09">
+                    Advanced to next round
                 </div>
             </div>
         </div>
@@ -51,7 +52,7 @@
             </div>
         </div>
 
-        <div class="team-detail-section">
+        <div *ngIf="context.score.challenges.length" class="team-detail-section">
             <h4>Challenges</h4>
 
             <table class="challenge-results-table table table-striped gameboard-table w-100 mt-3">
@@ -100,7 +101,7 @@
                     </tr>
                 </tbody>
 
-                <tfoot *ngIf="hasManualTeamBonuses">
+                <tfoot *ngIf="hasManualTeamBonuses && context.score.challenges.length > 1">
                     <td></td>
                     <td *ngIf="hasBonuses" class="numeric-column">
                         {{ context.score.overallScore.completionScore }}</td>
@@ -112,13 +113,16 @@
                     </td>
                     <td class="numeric-column  total-column">
                         <!--team level bonuses get displayed in a separate table below-->
-                        {{ context.score.overallScore.totalScore - teamManualBonusTotal }}
+                        <!--this is also clunky, but their total from challenges is their total minus bonuses and advanced-->
+                        {{ context.score.overallScore.totalScore - teamManualBonusTotal -
+                        (context.score.overallScore.advancedScore || 0) }}
                     </td>
                 </tfoot>
             </table>
         </div>
 
-        <div class="team-detail-section" *ngIf="context.score.manualBonuses.length">
+        <div class="team-detail-section"
+            *ngIf="context.score.overallScore.advancedScore || context.score.manualBonuses.length">
             <h4>Additional Bonuses</h4>
 
             <table class="table table-striped gameboard-table w-100 mt-3">
@@ -133,6 +137,10 @@
                 </thead>
 
                 <tbody>
+                    <tr *ngIf="context.score.overallScore.advancedScore">
+                        <td>Previous Game Performance</td>
+                        <td class="numeric-column">{{ context.score.overallScore.advancedScore }}</td>
+                    </tr>
                     <tr *ngFor="let bonus of context.score.manualBonuses">
                         <td>
                             {{bonus.description}}
@@ -146,7 +154,7 @@
         </div>
 
         <div class="team-detail-section">
-            <div class="d-flex grand-total-container">
+            <div class="d-flex summed-score-container grand-total-container">
                 <div class="flex-grow-1">Grand Total</div>
                 <div class="total-column text-center">{{context.score.overallScore.totalScore}}</div>
             </div>

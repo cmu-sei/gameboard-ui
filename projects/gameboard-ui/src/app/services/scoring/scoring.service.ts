@@ -34,17 +34,17 @@ export class ScoringService {
 
   public getScoreboard(gameId: string): Observable<ScoreboardData> {
     return this.http.get<ScoreboardData>(this.apiUrl.build(`game/${gameId}/scoreboard`)).pipe(map(s => {
-      if (!s.game.isLiveUntil)
-        return s;
-
-      s.game.isLiveUntil = this.apiDateTime.toDateTime(s.game.isLiveUntil as any) as DateTime;
-
       for (let t of s.teams) {
         if (!t.sessionEnds)
           continue;
 
         t.sessionEnds = this.apiDateTime.toDateTime(t.sessionEnds as any) as DateTime;
       }
+
+      if (!s.game.isLiveUntil)
+        return s;
+
+      s.game.isLiveUntil = this.apiDateTime.toDateTime(s.game.isLiveUntil as any) as DateTime;
 
       return s;
     }));

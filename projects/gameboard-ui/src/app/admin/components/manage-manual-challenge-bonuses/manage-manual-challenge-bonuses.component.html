@@ -60,8 +60,10 @@
                     <strong>Manual Team Bonus</strong>
                     <div>{{bonus.description}}</div>
                     <div>
-                        <em>({{bonus.enteredBy.name}}, {{ bonus.enteredOn | shortdate}} @ {{ bonus.enteredOn |
-                            friendlyTime }})</em>
+                        <em>
+                            ({{bonus.enteredBy.name}}, {{ bonus.enteredOn | shortdate}} @ {{ bonus.enteredOn |
+                            friendlyTime }})
+                        </em>
                     </div>
                 </td>
                 <td class="vertical-align-cell">
@@ -74,6 +76,17 @@
                 <td class="text-center">--</td>
                 <td class="text-center">{{bonus.pointValue}}</td>
                 <td class="text-center">{{bonus.pointValue}}</td>
+            </tr>
+
+            <tr *ngIf="teamScoreData.score.overallScore.advancedScore" class="advance-score-row">
+                <td>
+                    <strong>Score from the previous game</strong>
+                </td>
+                <td></td>
+                <td class="text-center">--</td>
+                <td class="text-center">--</td>
+                <td class="text-center">--</td>
+                <td class="text-center">{{teamScoreData.score.overallScore.advancedScore}}</td>
             </tr>
 
             <tr class="table-info h6">

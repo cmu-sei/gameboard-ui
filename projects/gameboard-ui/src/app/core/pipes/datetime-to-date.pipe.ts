@@ -8,7 +8,6 @@ export class DatetimeToDatePipe implements PipeTransform {
     if (!value)
       return value;
 
-
     return value.toJSDate();
   }
 }
