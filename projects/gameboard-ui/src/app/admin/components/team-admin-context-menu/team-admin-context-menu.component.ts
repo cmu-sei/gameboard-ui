@@ -18,6 +18,7 @@ export interface TeamAdminContextMenuSessionResetRequest {
 export class TeamAdminContextMenuComponent implements OnInit {
   @Input() public player!: Player;
   @Input() isViewing = false;
+  @Input() isSyncStartGame = false;
 
   @Output() onBonusManageRequest = new EventEmitter<Player>();
   @Output() onSessionResetRequest = new EventEmitter<TeamAdminContextMenuSessionResetRequest>();
