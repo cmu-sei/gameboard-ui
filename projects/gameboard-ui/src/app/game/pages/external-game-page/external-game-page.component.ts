@@ -9,6 +9,7 @@ import { RouterService } from '@/services/router.service';
 import { LogService } from '@/services/log.service';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ConfigService } from '@/utility/config.service';
+import { WindowService } from '@/services/window.service';
 
 @Component({
   selector: 'app-external-game-page',
@@ -29,7 +30,8 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private log: LogService,
     private route: ActivatedRoute,
-    private routerService: RouterService) { }
+    private routerService: RouterService,
+    private windowService: WindowService) { }
 
   async ngOnInit(): Promise<void> {
     this.isProduction = environment.production;
@@ -58,6 +60,10 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     // we still don't know why, but we have to reload after hitting an iframe page
     // in order to prevent weird css bugs after launching the unity client
     this.routerService.reloadOnNextNavigateEnd();
+  }
+
+  protected handleIframeLoad() {
+    this.windowService.scrollToBottom();
   }
 
   ngOnDestroy(): void {
