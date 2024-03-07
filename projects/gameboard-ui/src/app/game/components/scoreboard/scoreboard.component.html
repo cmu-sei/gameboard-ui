@@ -8,7 +8,7 @@
     <table *ngIf="scoreboardData.teams.length; else noScore" class="table table-striped gameboard-table w-100"
         [class.advanced-players-highlight]="hasAdvancedPlayers" [class.table-hover]="!isLive">
         <col class="width-5">
-        <col>
+        <col class="width-50">
         <col>
         <col>
         <col>
@@ -19,8 +19,9 @@
                 <th scope="col"> {{ scoreboardData.game.isTeamGame ? "Team" : "Player" }} </th>
                 <th scope="col">Challenges</th>
                 <th scope="col" class="text-center">
-                    <span class="tooltipped-column-header" [tooltip]="cumulativeTimeTooltip" placement="top">Cumulative
-                        Time</span>
+                    <span class="tooltipped-column-header" [tooltip]="cumulativeTimeTooltip" placement="top">
+                        Cumulative Time
+                    </span>
                 </th>
                 <th scope="col" class="text-center">Score</th>
             </tr>
@@ -63,12 +64,11 @@
         </td>
         <td>
             <div class="team-container d-flex align-items-center">
-                <div class="flex-grow-1"
-                    *ngTemplateOutlet="isTeamGame ? teamNamePanel : playerNamePanel; context: {$implicit: teamScore};">
+                <div *ngTemplateOutlet="isTeamGame ? teamNamePanel : playerNamePanel; context: {$implicit: teamScore};">
                 </div>
-                <div class="badge badge-info fs-09"
+                <div class="flex-grow-1 text-right"
                     *ngIf="teamScore.sessionEnds | datetimeToDate | dateToCountdown | async as sessionEnds">
-                    {{ sessionEnds }}
+                    <span class="badge badge-info fs-09">{{ sessionEnds }}</span>
                 </div>
             </div>
         </td>
