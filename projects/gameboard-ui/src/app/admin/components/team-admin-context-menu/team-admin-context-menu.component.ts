@@ -44,6 +44,7 @@ export class TeamAdminContextMenuComponent implements OnInit {
     if (!this.player)
       throw new Error("No player provided");
 
+    this.hasStartedSession = this.player?.sessionBegin?.getFullYear() !== 0;
     this.isResettingSession = !this.gameSessionService.canUnenroll(this.player);
   }
 

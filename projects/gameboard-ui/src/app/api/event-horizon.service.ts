@@ -4,13 +4,15 @@ import { firstValueFrom, map, of } from 'rxjs';
 import { EventHorizonEventType, EventHorizonEvent, TeamEventHorizonViewModel, EventHorizonChallengeSpec, EventHorizonGamespaceOnOffEvent } from './event-horizon.models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ApiDateTimeService } from '@/services/api-date-time.service';
+import { LogService } from '@/services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class EventHorizonService {
   constructor(
     private apiDateTimeService: ApiDateTimeService,
     private apiUrl: ApiUrlService,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private log: LogService) { }
 
   async getTeamEventHorizon(teamId: string): Promise<TeamEventHorizonViewModel | null> {
     return await firstValueFrom(this.http.get<TeamEventHorizonViewModel>(this.apiUrl.build(`team/${teamId}/timeline`)).pipe(
@@ -21,8 +23,10 @@ export class EventHorizonService {
         const start = this.apiDateTimeService.toDateTime(timeline.team.session.start as any);
         const end = this.apiDateTimeService.toDateTime(timeline.team.session.end as any);
 
-        if (!start)
-          throw new Error(`Couldn't resolve timeline start for team event horizon ${teamId}.`);
+        if (!start) {
+          this.log.logInfo("No start date for this team's timeline. Have they started their session?");
+          return null;
+        }
 
         timeline.team.session.start = start;
         timeline.team.session.end = end;
