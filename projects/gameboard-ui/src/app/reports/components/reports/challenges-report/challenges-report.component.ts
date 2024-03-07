@@ -6,6 +6,7 @@ import { ReportKey, ReportResultsWithOverallStats, ReportViewUpdate } from '@/re
 import { ChallengesReportService } from '../challenges-report.service';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { SimpleEntity } from '@/api/models';
+import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 
 export interface ChallengesReportContext {
   isLoading: boolean,
@@ -48,6 +49,11 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
 
   protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "tracks"
+  });
+
+  protected startDateRangeModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
+    dateStartParamName: "startDateStart",
+    dateEndParamName: "startDateEnd"
   });
 
   constructor(private challengesReportService: ChallengesReportService) {
