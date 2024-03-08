@@ -32,7 +32,7 @@ import { ToastService } from '@/utility/services/toast.service';
 export class PlayerRegistrarComponent {
   refresh$ = new BehaviorSubject<boolean>(true);
   game!: Game;
-  ctx$: Observable<{ game: Game, futures: Game[], players: Player[] }>;
+  ctx$: Observable<{ game: Game, advanceTargetGames: Game[], players: Player[] }>;
   source: Player[] = [];
   selected: Player[] = [];
   viewed?: Player;
@@ -112,9 +112,9 @@ export class PlayerRegistrarComponent {
     this.ctx$ = combineLatest([
       game$,
       players$,
-      gameapi.list({ filter: ['future'] })
+      gameapi.list({ filter: ['advanceable'] })
     ]).pipe(
-      map(([game, players, futures]) => ({ game, players, futures }))
+      map(([game, players, advanceTargetGames]) => ({ game, players, advanceTargetGames }))
     );
 
     this.unsub.add(

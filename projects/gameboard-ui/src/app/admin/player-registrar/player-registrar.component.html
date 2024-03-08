@@ -124,7 +124,7 @@
         <fa-icon [icon]="advanceScores ? fa.checkSquare : fa.square"></fa-icon>
         <span>With Scores</span>
       </button>
-      <div *ngFor="let g of ctx.futures" class="m-1">
+      <div *ngFor="let g of ctx.advanceTargetGames" class="m-1">
         <app-confirm-button btnClass="btn btn-sm btn-outline-info" (confirm)="advanceSelected(g.id)">
           <span>Advance to {{g.name}}</span>
         </app-confirm-button>
