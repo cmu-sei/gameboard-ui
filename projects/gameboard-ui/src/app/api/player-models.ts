@@ -245,14 +245,6 @@ export interface TeamPlayer {
   pendingName: string;
 }
 
-export interface TeamState {
-  id: string;
-  name: string;
-  sessionBegin: Date,
-  sessionEnd: Date,
-  actor: SimpleEntity
-}
-
 export interface TeamSummary {
   id: string;
   name: string;
