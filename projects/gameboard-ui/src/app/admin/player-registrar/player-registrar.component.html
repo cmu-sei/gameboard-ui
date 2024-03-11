@@ -116,13 +116,14 @@
           <fa-icon [icon]="fa.star"></fa-icon>
           <span>advance</span>
         </button>
-        <span class="spacer"></span>
-
-        <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(ctx.game)">
-          <fa-icon [icon]="fa.plus"></fa-icon>
-          Add {{ctx.game.isTeamGame ? "Team" : "Player"}}
-        </button>
       </ng-container>
+
+      <span class="spacer"></span>
+
+      <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(ctx.game)">
+        <fa-icon [icon]="fa.plus"></fa-icon>
+        Add {{ctx.game.isTeamGame ? "Team" : "Player"}}
+      </button>
     </div>
 
     <div *ngIf="advanceOptions && selected.length">
