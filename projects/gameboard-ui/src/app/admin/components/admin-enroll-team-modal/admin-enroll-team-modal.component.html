@@ -1,0 +1,25 @@
+<div class="modal-content" *ngIf="game">
+    <div class="modal-header">
+        <h2 class="modal-title">Add {{game.isTeamGame ? "Team" : "Player"}}</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <app-error-div [errors]="errors"></app-error-div>
+    </div>
+
+    <div class="modal-body" *ngIf="!isWorking; else loading">
+        <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]="addUserId"
+                placeholder="This is totally the final interface, just so you know.">
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn link-button" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="handleAddClick(addUserId)">Add this player</button>
+    </div>
+</div>
+
+<ng-template #loading>
+    <app-spinner></app-spinner>
+</ng-template>

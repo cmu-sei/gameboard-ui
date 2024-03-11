@@ -78,6 +78,14 @@
     <hr />
 
     <div class="mb-2 d-flex align-items-baseline">
+      <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
+        role="button">
+        <fa-icon [icon]="fa.sync"></fa-icon>
+        <span *ngIf="autorefresh && !viewed">auto</span>
+        <span *ngIf="autorefresh && viewed">paused</span>
+        <span *ngIf="!autorefresh">off</span>
+      </label>
+      <span class="text-warning"> | </span>
       <small class="text-warning mx-2">count: {{ctx.players.length}}</small>
       <ng-container *ngIf="ctx.players.length">
         <small class="text-warning mx-2">selected: {{selected.length}}</small>
@@ -109,13 +117,11 @@
           <span>advance</span>
         </button>
         <span class="spacer"></span>
-        <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
-          role="button">
-          <fa-icon [icon]="fa.sync"></fa-icon>
-          <span *ngIf="autorefresh && !viewed">auto</span>
-          <span *ngIf="autorefresh && viewed">paused</span>
-          <span *ngIf="!autorefresh">off</span>
-        </label>
+
+        <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(ctx.game)">
+          <fa-icon [icon]="fa.plus"></fa-icon>
+          Add {{ctx.game.isTeamGame ? "Team" : "Player"}}
+        </button>
       </ng-container>
     </div>
 
@@ -167,7 +173,7 @@
         <div *ngIf="!player.isReady && game.requireSynchronizedStart" class="mr-2">
           <span class="badge badge-danger">Not Ready</span>
         </div>
-        <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-warn">Late Start</span></div>
+        <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-warning">Late Start</span></div>
         <div *ngIf="player.advanced" class="mr-2"><span class="badge badge-success">Advanced</span></div>
         <div>
           {{player.rank}} |

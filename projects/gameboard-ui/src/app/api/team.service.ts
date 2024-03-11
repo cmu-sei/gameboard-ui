@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
-import { AdminExtendTeamSessionResponse, ResetTeamSessionRequest } from "./teams.models";
+import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, ResetTeamSessionRequest } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { ApiDateTimeService } from "@/services/api-date-time.service";
 
@@ -21,6 +21,10 @@ export class TeamService {
         private apiDates: ApiDateTimeService,
         private apiUrl: ApiUrlService,
         private http: HttpClient) { }
+
+    adminEnroll(request: AdminEnrollTeamRequest): Observable<AdminEnrollTeamResponse> {
+        return this.http.post<AdminEnrollTeamResponse>(this.apiUrl.build("admin/team"), request);
+    }
 
     adminExtendSession(request: { teamIds: string[], extensionDurationInMinutes: number }) {
         return this.http.put<AdminExtendTeamSessionResponse>(this.apiUrl.build("admin/team/session"), request).pipe(

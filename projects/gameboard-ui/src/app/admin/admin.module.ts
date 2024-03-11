@@ -60,6 +60,7 @@ import { SupportSettingsComponent } from './components/support-settings/support-
 import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
 import { ExtendTeamsModalComponent } from './components/extend-teams-modal/extend-teams-modal.component';
 import { ActiveTeamsModalComponent } from './components/active-teams-modal/active-teams-modal.component';
+import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { ActiveTeamsModalComponent } from './components/active-teams-modal/activ
     FeedbackEditorComponent,
     ExtendTeamsModalComponent,
     ActiveTeamsModalComponent,
+    AdminEnrollTeamModalComponent,
   ],
   imports: [
     CommonModule,

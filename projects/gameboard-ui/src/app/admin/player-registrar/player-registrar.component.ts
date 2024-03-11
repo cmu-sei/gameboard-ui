@@ -22,6 +22,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
 import { unique } from 'projects/gameboard-ui/src/tools';
 import { ToastService } from '@/utility/services/toast.service';
+import { AdminEnrollTeamModalComponent } from '../components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 
 @Component({
   selector: 'app-player-registrar',
@@ -285,6 +286,15 @@ export class PlayerRegistrarComponent {
     this.gameapi.rerank(gid).subscribe(
       () => this.refresh$.next(true)
     );
+  }
+
+  protected handlePlayerAddClick(game: Game) {
+    this.modalConfirmService.openComponent({
+      content: AdminEnrollTeamModalComponent,
+      context: {
+        game: game,
+      },
+    });
   }
 
   protected handlePlayerChange(player: Player) {
