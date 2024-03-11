@@ -14,7 +14,7 @@ import { ExternalGameService } from './external-game.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  public connection: HubConnection;
+  private connection: HubConnection;
 
   private teamId$ = new Subject<string>();
 

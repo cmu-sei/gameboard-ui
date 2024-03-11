@@ -33,10 +33,16 @@ export class AdminEnrollTeamModalComponent implements OnInit {
   }
 
   protected async handleAddClick(userId: string) {
+    this.errors = [];
     if (!this.game?.id)
       return;
 
-    await firstValueFrom(this.teamService.adminEnroll({ userIds: [this.addUserId], gameId: this.game.id }));
-    this.modalConfirmService.hide();
+    try {
+      await firstValueFrom(this.teamService.adminEnroll({ userIds: [this.addUserId], gameId: this.game.id }));
+      this.modalConfirmService.hide();
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 }
