@@ -21,6 +21,8 @@ import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
 import { unique } from 'projects/gameboard-ui/src/tools';
+import { ToastService } from '@/utility/services/toast.service';
+import { AdminEnrollTeamModalComponent } from '../components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 
 @Component({
   selector: 'app-player-registrar',
@@ -31,7 +33,7 @@ import { unique } from 'projects/gameboard-ui/src/tools';
 export class PlayerRegistrarComponent {
   refresh$ = new BehaviorSubject<boolean>(true);
   game!: Game;
-  ctx$: Observable<{ game: Game, futures: Game[], players: Player[] }>;
+  ctx$: Observable<{ game: Game, advanceTargetGames: Game[], players: Player[] }>;
   source: Player[] = [];
   selected: Player[] = [];
   viewed?: Player;
@@ -70,6 +72,7 @@ export class PlayerRegistrarComponent {
     private clipboard: ClipboardService,
     private teamService: TeamService,
     private title: AppTitleService,
+    private toastService: ToastService,
     private unityService: UnityService,
     private unsub: UnsubscriberService
   ) {
@@ -110,9 +113,9 @@ export class PlayerRegistrarComponent {
     this.ctx$ = combineLatest([
       game$,
       players$,
-      gameapi.list({ filter: ['future'] })
+      gameapi.list({ filter: ['advanceable'] })
     ]).pipe(
-      map(([game, players, futures]) => ({ game, players, futures }))
+      map(([game, players, advanceTargetGames]) => ({ game, players, advanceTargetGames }))
     );
 
     this.unsub.add(
@@ -283,6 +286,19 @@ export class PlayerRegistrarComponent {
     this.gameapi.rerank(gid).subscribe(
       () => this.refresh$.next(true)
     );
+  }
+
+  protected handlePlayerAddClick(game: Game) {
+    this.modalConfirmService.openComponent({
+      content: AdminEnrollTeamModalComponent,
+      context: {
+        game: game,
+      },
+    });
+  }
+
+  protected handlePlayerChange(player: Player) {
+    this.refresh$.next(true);
   }
 
   protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {

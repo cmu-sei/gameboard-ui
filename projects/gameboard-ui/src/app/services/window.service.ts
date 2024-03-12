@@ -16,4 +16,8 @@ export class WindowService {
   print() {
     this.document.defaultView!.print();
   }
+
+  scrollToBottom() {
+    this.document.defaultView?.scrollTo(0, this.document.body.scrollHeight);
+  }
 }

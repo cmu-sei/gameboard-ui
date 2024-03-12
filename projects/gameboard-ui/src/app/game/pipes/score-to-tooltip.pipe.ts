@@ -9,6 +9,6 @@ export class ScoreToTooltipPipe implements PipeTransform {
       return "";
 
     const clickPrompt = gameIsLive ? "" : " (Click for details)";
-    return `${value.scoreChallenge} + ${value.scoreAutoBonus + value.scoreManualBonus} bonus${clickPrompt}`;
+    return `${value.scoreChallenge} + ${(value.scoreAdvanced || 0) + value.scoreAutoBonus + value.scoreManualBonus} bonus${clickPrompt}`;
   }
 }

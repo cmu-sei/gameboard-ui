@@ -196,6 +196,11 @@ export interface TeamAdvancement {
 export interface Team {
   teamId: string;
   gameId: string;
+  advancedFromGame?: SimpleEntity;
+  advancedFromPlayer?: SimpleEntity;
+  advancedFromTeamId?: string;
+  advancedWithScore?: number;
+  isAdvancedFromTeamGame?: boolean;
   approvedName: string;
   sessionBegin: Date;
   sessionEnd: Date;
@@ -238,14 +243,6 @@ export interface TeamPlayer {
   role: PlayerRole;
   isManager: boolean;
   pendingName: string;
-}
-
-export interface TeamState {
-  id: string;
-  name: string;
-  sessionBegin: Date,
-  sessionEnd: Date,
-  actor: SimpleEntity
 }
 
 export interface TeamSummary {

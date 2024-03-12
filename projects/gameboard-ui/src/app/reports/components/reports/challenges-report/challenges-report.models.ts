@@ -9,6 +9,8 @@ export interface ChallengesReportFlatParameters {
     tracks?: string;
     pageNumber?: number;
     pageSize?: number;
+    startDateStart?: string;
+    startDateEnd?: string;
 }
 
 export interface ChallengesReportRecord {

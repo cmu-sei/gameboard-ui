@@ -1,4 +1,14 @@
+@import "../../../../scss/variables";
+
 .value {
   font-size: 4rem;
   font-weight: bold;
+}
+
+.stat-button {
+  cursor: pointer;
+
+  .value span {
+    border-bottom: dotted 3px $info;
+  }
 }

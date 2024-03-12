@@ -48,8 +48,6 @@ export class GamePageComponent implements OnDestroy {
   protected player$ = new BehaviorSubject<Player | null>(null);
 
   private needsReloadOnUnenroll = false;
-  private syncStartChangedSubscription?: Subscription;
-  private externalGameDeployStartSubscription?: Subscription;
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
 
@@ -206,8 +204,6 @@ export class GamePageComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.hubEventsSubcription?.unsubscribe();
     this.localUserSubscription?.unsubscribe();
-    this.syncStartChangedSubscription?.unsubscribe();
-    this.externalGameDeployStartSubscription?.unsubscribe();
 
     if (this.ctxIds.gameId)
       this.gameHubService.leaveGame(this.ctxIds.gameId);
@@ -248,8 +244,6 @@ export class GamePageComponent implements OnDestroy {
     await this.hub.disconnect();
 
     this.player$.next(null);
-    this.externalGameDeployStartSubscription?.unsubscribe();
-    this.syncStartChangedSubscription?.unsubscribe();
 
     if (this.needsReloadOnUnenroll) {
       this.windowService.get().location.reload();

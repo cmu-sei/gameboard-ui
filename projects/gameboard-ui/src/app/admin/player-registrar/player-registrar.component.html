@@ -78,6 +78,14 @@
     <hr />
 
     <div class="mb-2 d-flex align-items-baseline">
+      <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
+        role="button">
+        <fa-icon [icon]="fa.sync"></fa-icon>
+        <span *ngIf="autorefresh && !viewed">auto</span>
+        <span *ngIf="autorefresh && viewed">paused</span>
+        <span *ngIf="!autorefresh">off</span>
+      </label>
+      <span class="text-warning"> | </span>
       <small class="text-warning mx-2">count: {{ctx.players.length}}</small>
       <ng-container *ngIf="ctx.players.length">
         <small class="text-warning mx-2">selected: {{selected.length}}</small>
@@ -108,15 +116,14 @@
           <fa-icon [icon]="fa.star"></fa-icon>
           <span>advance</span>
         </button>
-        <span class="spacer"></span>
-        <label class="btn btn-sm btn-outline-secondary py-0 mx-2" [(ngModel)]="autorefresh" btnCheckbox tabindex="0"
-          role="button">
-          <fa-icon [icon]="fa.sync"></fa-icon>
-          <span *ngIf="autorefresh && !viewed">auto</span>
-          <span *ngIf="autorefresh && viewed">paused</span>
-          <span *ngIf="!autorefresh">off</span>
-        </label>
       </ng-container>
+
+      <span class="spacer"></span>
+
+      <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(ctx.game)">
+        <fa-icon [icon]="fa.plus"></fa-icon>
+        Add {{ctx.game.isTeamGame ? "Team" : "Player"}}
+      </button>
     </div>
 
     <div *ngIf="advanceOptions && selected.length">
@@ -124,7 +131,7 @@
         <fa-icon [icon]="advanceScores ? fa.checkSquare : fa.square"></fa-icon>
         <span>With Scores</span>
       </button>
-      <div *ngFor="let g of ctx.futures" class="m-1">
+      <div *ngFor="let g of ctx.advanceTargetGames" class="m-1">
         <app-confirm-button btnClass="btn btn-sm btn-outline-info" (confirm)="advanceSelected(g.id)">
           <span>Advance to {{g.name}}</span>
         </app-confirm-button>
@@ -143,11 +150,8 @@
       <app-player-avatar-list class="cursor-pointer" (click)="view(player)"
         [avatarUris]="(!teamView ? player.sponsor.logo : player.teamSponsorLogos) | sponsorLogoFileNamesToUris"
         [captainSession]="player.session"></app-player-avatar-list>
-      <div class="ml-2">
-        <span *ngIf="player.advanced" class="text-success ml-2">
-          <fa-icon [icon]="fa.star"></fa-icon>
-        </span>
-        <span class="cursor-pointer" (click)="view(player)">{{player.approvedName}}</span>
+      <div class="ml-3">
+        <span class="cursor-pointer fs-11" (click)="view(player)">{{player.approvedName}}</span>
         <span class="text-muted">{{player.pendingName}}</span><br />
         <small class="text-muted">
           <span>player: </span>&nbsp;
@@ -167,7 +171,11 @@
       </button>
       <div class="spacer"></div>
       <div class="cursor-pointer d-flex" [class.text-success]="player.session?.isDuring" (click)="view(player)">
-        <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-danger">Late Start</span></div>
+        <div *ngIf="!player.isReady && game.requireSynchronizedStart" class="mr-2">
+          <span class="badge badge-danger">Not Ready</span>
+        </div>
+        <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-warning">Late Start</span></div>
+        <div *ngIf="player.advanced" class="mr-2"><span class="badge badge-success">Advanced</span></div>
         <div>
           {{player.rank}} |
           {{player.score}} |
@@ -183,24 +191,28 @@
         </button>
 
         <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
-          (onBonusManageRequest)="manageManualBonuses(player)" (onSessionResetRequest)="confirmReset($event)"
-          (onUnenrollRequest)="confirmUnenroll($event)" (onViewRequest)="view($event)">
+          [isSyncStartGame]="game.requireSynchronizedStart" (bonusManageRequest)="manageManualBonuses(player)"
+          (playerChange)="handlePlayerChange($event)" (sessionResetRequest)="confirmReset($event)"
+          (unenrollRequest)="confirmUnenroll($event)" (viewRequest)="view($event)">
         </app-team-admin-context-menu>
       </div>
       <div *ngIf="viewed === player" class="col-12">
-        <div class="form-group">
-          <label class="mb-0" for="name-input">Approved Name</label>
-          <input id="name-input" class="form-control" type="text" [(ngModel)]="player.approvedName"
-            (change)="update(player)">
-        </div>
-        <div class="form-group">
-          <label class="mb-0" for="reason-input">Disapproved Reason</label>
-          <input id="reason-input" class="form-control" type="text" [(ngModel)]="player.nameStatus"
-            (change)="update(player)">
-          <small> <button *ngFor="let reason of reasons" class="btn btn-link btn-sm"
-              (click)="player.nameStatus = reason; update(player)">
-              {{reason}}
-            </button></small>
+        <div class="row">
+          <div class="form-group col-9">
+            <label class="mb-0" for="name-input">Approved Name</label>
+            <input id="name-input" class="form-control" type="text" [(ngModel)]="player.approvedName"
+              (change)="update(player)">
+          </div>
+
+          <div class="form-group col-3">
+            <label class="mb-0" for="reason-input">Disapproved Reason</label>
+            <select name="reason-select" class="form-control" [(ngModel)]="player.nameStatus" (change)="update(player)">
+              <option [ngValue]="''">[not disapproved]</option>
+              <option *ngFor="let reason of reasons" [value]="reason">
+                {{reason}}
+              </option>
+            </select>
+          </div>
         </div>
         <app-admin-player-session [player]="player" (onManageManualBonusesRequest)="manageManualBonuses(player)"
           (onResetSessionRequest)="confirmReset($event)"

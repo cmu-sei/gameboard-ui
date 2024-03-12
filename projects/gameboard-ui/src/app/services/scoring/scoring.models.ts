@@ -28,6 +28,7 @@ export interface GameScoringConfigChallengeBonusSolveRank extends GameScoringCon
 }
 
 export interface Score {
+    advancedScore?: number;
     completionScore: number;
     manualBonusScore: number;
     bonusScore: number;
@@ -83,7 +84,6 @@ export interface GameScoreTeam {
     players: PlayerWithSponsor[];
     rank: number;
     team: SimpleEntity;
-    remainingTimeMs?: number;
     totalTimeMs: number;
 }
 
@@ -112,7 +112,6 @@ export interface TeamScore {
     isAdvancedToNextRound: boolean;
     overallScore: Score;
     cumulativeTimeMs: number;
-    remainingTimeMs?: number;
 }
 
 export interface AutoChallengeBonus {
@@ -163,6 +162,7 @@ export interface DenormalizedTeamScore {
     teamId: string;
     teamName: string;
     scoreOverall: number;
+    scoreAdvanced?: number;
     scoreAutoBonus: number;
     scoreManualBonus: number;
     scoreChallenge: number;

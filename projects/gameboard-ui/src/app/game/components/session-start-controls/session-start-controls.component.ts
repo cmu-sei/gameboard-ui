@@ -51,6 +51,7 @@ export class SessionStartControlsComponent implements OnInit {
           this.isConnectedToGameHub = gameIds.some(gId => gId == this.ctx.game.id);
         }),
         this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
+          this.logService.logInfo("State update", stateUpdate);
           this.handleNewSyncStartState(stateUpdate);
         })
       );
@@ -77,6 +78,7 @@ export class SessionStartControlsComponent implements OnInit {
 
   private handleNewSyncStartState(state: SyncStartGameState) {
     this.isGameSyncStartReady = state.isReady;
+    this.ctx.player.isReady = state.teams.some(t => t.players.some(p => p.isReady && p.id === this.ctx.player.id));
 
     if (!state || !state.teams.length) {
       this.playerReadyPct = 0;

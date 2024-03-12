@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
-import { PlayerService } from '@/api/player.service';
 import { firstValueFrom } from 'rxjs';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';

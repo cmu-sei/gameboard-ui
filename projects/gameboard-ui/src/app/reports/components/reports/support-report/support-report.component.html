@@ -21,7 +21,6 @@
         [stats]="ctx?.results?.overallStats | toSupportReportStats">
     </app-report-stat-summary>
 
-
     <ng-container *ngIf="!isLoading; else loading">
         <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else noRecords">
             <tab heading="Summary Table" id="tab-summary-table">

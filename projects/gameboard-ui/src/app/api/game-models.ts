@@ -38,7 +38,8 @@ export interface GameDetail {
   requireSponsoredTeam: boolean;
   allowPreview: boolean;
   externalGameClientUrl?: string;
-  externalGameStartupUrl?: string;
+  externalGameTeamExtendedEndpoint?: string;
+  externalGameStartupEndpoint?: string;
   requireSynchronizedStart: boolean;
   requireTeam: boolean;
   showOnHomePageInPracticeMode: boolean;

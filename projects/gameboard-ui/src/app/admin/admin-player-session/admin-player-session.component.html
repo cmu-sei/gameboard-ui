@@ -2,14 +2,39 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <ng-container *ngIf="team$ | async as team; else loading">
+  <h4 class="px-3">Timeline</h4>
   <div class="timeline-container px-3">
-    <div>Timeline <span class="badge badge-info">[BETA]</span></div>
     <app-team-event-horizon [teamId]="team.teamId"></app-team-event-horizon>
   </div>
 
   <app-error-div [errors]="errors"></app-error-div>
 
-  <h4 class="mt-4">Session Extension</h4>
+  <div *ngIf="team.advancedFromGame" class="advancement-container px-3">
+    <h4 class="mt-4">Advancement</h4>
+    <div class="d-flex justify-content-between">
+      <div class="advancement-info">
+        <h6>Advanced from</h6>
+        <div>{{team.advancedFromGame.name}}</div>
+      </div>
+
+      <div class="advancement-info">
+        <h6>Played as</h6>
+        <div>{{team.advancedFromPlayer?.name}}</div>
+      </div>
+
+      <div *ngIf="team.advancedFromTeamId && team.isAdvancedFromTeamGame" class="advancement-info">
+        <h6>Team</h6>
+        <div>{{team.advancedFromPlayer?.name}}</div>
+      </div>
+
+      <div class="advancement-info">
+        <h6>Score</h6>
+        <div>{{team.advancedWithScore || 0}}</div>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mt-4 px-3">Session Extension</h4>
   <div class="form-group d-flex" *ngIf="!isExtending; else loading">
     <div class="extend-by-duration flex-grow-1 mr-2">
 
@@ -39,12 +64,12 @@
     </div>
   </div>
 
-  <app-announce [teamId]="team.teamId" placeholderText="Your message (sends only to this player/team)"></app-announce>
-
   <div class="other-tools-container mb-2">
-    <h4 class="mb-2">Other tools</h4>
+    <h4 class="mb-2 px-3">Other tools</h4>
 
-    <div class="other-tools-buttons d-flex">
+    <app-announce [teamId]="team.teamId" placeholderText="Your message (sends only to this player/team)"></app-announce>
+
+    <div class="other-tools-buttons d-flex px-3">
       <button class="btn btn-info btn-sm mr-2" (click)="toggleRawView(!showRaw)">
         <fa-icon [icon]="faInfo"></fa-icon>
         <span>{{ (showRaw ? "Hide" : "View") }} Data</span>
@@ -54,8 +79,9 @@
       <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="canUnenroll"
         (confirm)="onUnenrollRequest.emit(team.teamId)">Unenroll</app-confirm-button>
       <app-confirm-button btnClass="btn btn-sm btn-danger mr-2" *ngIf="!canUnenroll"
-        (confirm)="onResetSessionRequest.emit({ player, unenrollTeam: false })">Reset
-        Session</app-confirm-button>
+        (confirm)="onResetSessionRequest.emit({ player, unenrollTeam: false })">
+        Reset Session
+      </app-confirm-button>
       <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="!canUnenroll"
         (confirm)="onResetSessionRequest.emit({ player, unenrollTeam: true })">Reset Session &amp;
         Unenroll</app-confirm-button>

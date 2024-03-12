@@ -9,6 +9,8 @@
         <app-multi-select label="Games" name="games" [options]="games$ | async" [(ngModel)]="gamesQueryModel"
             [itemTemplate]="multiSelectGame" [getSearchText]="displayGameName"
             [value]="getGameValue"></app-multi-select>
+        <app-parameter-date-range ngDefaultControl name="startDateRange" [(ngModel)]="startDateRangeModel"
+            label="Include Challenge Stats From"></app-parameter-date-range>
     </app-report-parameters-container>
 
     <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats; else loading"
