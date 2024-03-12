@@ -1,25 +1,69 @@
 <div class="modal-content" *ngIf="game">
     <div class="modal-header">
-        <h2 class="modal-title">Add {{game.isTeamGame ? "Team" : "Player"}}</h2>
+        <h2 class="modal-title">Add {{isTeamGame ? "Team" : "Player"}}</h2>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 
-    <div class="modal-body" *ngIf="!isWorking; else loading">
+    <div class="modal-body my-2" *ngIf="!isWorking; else loading">
         <app-error-div [errors]="errors"></app-error-div>
-        <div class="form-group">
-            <input type="text" class="form-control" [(ngModel)]="addUserId"
-                placeholder="This is totally the final interface, just so you know.">
+        <div class="input-group">
+            <input [(ngModel)]="searchTerm" appAutofocus [typeahead]="typeaheadSearch$" [typeaheadAsync]="true"
+                typeaheadOptionField="name" class="form-control" (typeaheadOnSelect)="handleTypeaheadSelect($event)"
+                [typeaheadItemTemplate]="searchResultsTemplate" placeholder="Search by name or user ID">
+            <div class="input-group-append">
+                <span class="input-group-text"><fa-icon [icon]="fa.search"></fa-icon></span>
+            </div>
+        </div>
+
+        <div class="selection-container">
+            <ul class="selection-list d-flex flex-wrap">
+                <li *ngFor="let user of selectedUsers" class="d-flex align-items-center mr-3 py-4 user-list-item">
+                    <app-avatar class="mr-2" [imageUrl]="user.sponsor | sponsorToLogoUri" [tooltip]="user.sponsor.name"
+                        size="tiny"></app-avatar>
+                    <div class="user-info">
+                        <div class="fs-11">{{ user.name }}</div>
+                        <div class="fs-08 link-button info-text" [appCopyOnClick]="user.id" tooltip="Copy this user ID">
+                            {{ user.id | slice:0:8 }}
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 
     <div class="modal-footer">
+        <!-- <div *ngIf="this.selectedUsers.length >= 2 && isTeamGame" class="form-group form-check flex-grow-1">
+            <input type="checkbox" class="form-check-input" id="addAsTeam">
+            <label class="form-check-label" for="addAsTeam">Add these users as a team</label>
+        </div> -->
+
         <button type="button" class="btn link-button" (click)="close()">Cancel</button>
-        <button type="button" class="btn btn-success" (click)="handleAddClick(addUserId)">Add this player</button>
+        <button type="button" class="btn btn-success" (click)="handleAddClick()"
+            [disabled]="selectedUsers.length === 0 || (game.minTeamSize && (selectedUsers.length < game.minTeamSize)) || (game.maxTeamSize && (selectedUsers.length > game.maxTeamSize))">
+            Add {{ selectedUsers.length >= 2 ? "These " + selectedUsers.length + " Users" : "This User" }}
+        </button>
     </div>
 </div>
 
 <ng-template #loading>
     <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #noResults class="text-center">
+    <div class="text-center my-3">
+        <em class="gray-text">Use the box above to search for the user(s) you want to enroll in this game.</em>
+    </div>
+</ng-template>
+
+<ng-template #searchResultsTemplate let-user="item">
+    <div class="d-flex align-items-center">
+        <app-avatar class="mr-3" [imageUrl]="user.sponsor | sponsorToLogoUri" [tooltip]="user.sponsor.name"
+            size="tiny"></app-avatar>
+        <div class="user-info">
+            <div>{{ user.name }}</div>
+            <em class="gray-text fs-08">{{ user.id | slice:0:8}}</em>
+        </div>
+    </div>
 </ng-template>
