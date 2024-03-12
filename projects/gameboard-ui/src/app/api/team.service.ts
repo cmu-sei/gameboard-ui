@@ -4,7 +4,7 @@ import { Observable, Subject, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
 import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, ResetTeamSessionRequest } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
-import { ApiDateTimeService } from "@/services/api-date-time.service";
+import { unique } from "../../tools";
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
@@ -18,11 +18,11 @@ export class TeamService {
     public teamSessionReset$ = this._teamSessionReset$.asObservable();
 
     constructor(
-        private apiDates: ApiDateTimeService,
         private apiUrl: ApiUrlService,
         private http: HttpClient) { }
 
     adminEnroll(request: AdminEnrollTeamRequest): Observable<AdminEnrollTeamResponse> {
+        request.userIds = unique(request.userIds);
         return this.http.post<AdminEnrollTeamResponse>(this.apiUrl.build("admin/team"), request);
     }
 
@@ -30,6 +30,12 @@ export class TeamService {
         return this.http.put<AdminExtendTeamSessionResponse>(this.apiUrl.build("admin/team/session"), request).pipe(
             tap(teamSessions => this._teamSessionsChanged$.next(teamSessions.teams.map(t => t.id)))
         );
+    }
+
+    unenroll(request: { teamId: string }) {
+        return this.http.post(this.apiUrl.build(`team/${request.teamId}/session`), {
+            unenrollTeam: true
+        });
     }
 
     public get(teamId: string) {
@@ -63,6 +69,12 @@ export class TeamService {
         return this.updateSession(model);
     }
 
+    public resetSession(teamId: string, request: ResetTeamSessionRequest): Observable<void> {
+        return this.http.post<void>(this.apiUrl.build(`/team/${teamId}/session`), request).pipe(
+            tap(_ => this._teamSessionReset$.next(teamId))
+        );
+    }
+
     private updateSession(request: SessionExtendRequest | SessionEndRequest): Observable<void> {
         return this.http.put<any>(this.apiUrl.build("/team/session"), request).pipe(
             tap(_ => this._teamSessionsChanged$.next([request.teamId])),
@@ -70,9 +82,4 @@ export class TeamService {
         );
     }
 
-    public resetSession(teamId: string, request: ResetTeamSessionRequest): Observable<void> {
-        return this.http.post<void>(this.apiUrl.build(`/team/${teamId}/session`), request).pipe(
-            tap(_ => this._teamSessionReset$.next(teamId))
-        );
-    }
 }

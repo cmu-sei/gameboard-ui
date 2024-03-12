@@ -34,6 +34,8 @@ import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
+import { AutofocusDirective } from './directives/autofocus.directive';
+import { AvatarComponent } from './components/avatar/avatar.component';
 import { BigStatComponent } from './components/big-stat/big-stat.component';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
@@ -46,11 +48,12 @@ import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
-import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
+import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { DateTimeIsPastPipe } from './pipes/datetime-is-past.pipe';
 import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
 import { DateToDatetimePipe } from './pipes/date-to-datetime.pipe';
+import { DelimitedPipe } from './pipes/delimited.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
@@ -112,6 +115,8 @@ const PUBLIC_DECLARATIONS = [
   ApiUrlPipe,
   ArrayContainsPipe,
   AssetPathPipe,
+  AutofocusDirective,
+  AvatarComponent,
   BigStatComponent,
   CamelspacePipe,
   ChallengeResultColorPipe,
@@ -126,6 +131,7 @@ const PUBLIC_DECLARATIONS = [
   DateToDatetimePipe,
   DateTimeIsPastPipe,
   DatetimeToDatePipe,
+  DelimitedPipe,
   DoughnutChartComponent,
   DropzoneComponent,
   ErrorDivComponent,
@@ -147,13 +153,13 @@ const PUBLIC_DECLARATIONS = [
   PlayerAvatarListComponent,
   PlayerStatusComponent,
   NumbersToPercentage,
+  QueryParamModelDirective,
   RelativeUrlsPipe,
   RenderLinksInTextComponent,
   SpinnerComponent,
-  UrlRewritePipe,
   ToggleSwitchComponent,
   TrimPipe,
-  QueryParamModelDirective,
+  UrlRewritePipe,
   ClockPipe,
   CountdownPipe,
   CountdownColorPipe,
@@ -203,12 +209,12 @@ const RELAYED_MODULES = [
   RouterModule,
   TabsModule,
   TooltipModule,
-  TypeaheadModule,
+  TypeaheadModule
 ];
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS,
+    ...PUBLIC_DECLARATIONS
   ],
   imports: [
     CommonModule,
@@ -223,6 +229,7 @@ const RELAYED_MODULES = [
       },
     }),
     PopoverModule.forRoot(),
+    TypeaheadModule.forRoot(),
     ...RELAYED_MODULES
   ],
   exports: [

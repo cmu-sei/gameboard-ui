@@ -227,11 +227,10 @@ export class PlayerRegistrarComponent {
     });
   }
 
-  unenroll(model: Player): void {
+  async unenroll(model: Player): Promise<void> {
     this.isLoading = true;
-    this.api.unenroll(model.id, true).pipe(first()).subscribe(_ => {
-      this.refresh$.next(true);
-    });
+    await firstValueFrom(this.teamService.unenroll({ teamId: model.teamId }));
+    this.refresh$.next(true);
   }
 
   update(model: Player): void {
@@ -293,7 +292,12 @@ export class PlayerRegistrarComponent {
       content: AdminEnrollTeamModalComponent,
       context: {
         game: game,
+        onConfirm: result => {
+          this.toastService.showMessage(`Enrolled ${result.name}`);
+          this.refresh$.next(true);
+        }
       },
+      modalClasses: ["modal-xl"]
     });
   }
 
@@ -304,7 +308,7 @@ export class PlayerRegistrarComponent {
   protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
     this.modalConfirmService.openConfirm({
       bodyContent: `
-      Are you sure you want to reset the session for ${request.player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?
+      Are you sure you want to reset the session for ${this.game.allowTeam ? " team" : ""} ${request.player.approvedName}?
       ${(!request.unenrollTeam ? "" : `
         They'll also be unenrolled from the game.`)}
       `,
@@ -317,7 +321,7 @@ export class PlayerRegistrarComponent {
 
   protected confirmUnenroll(player: Player) {
     this.modalConfirmService.openConfirm({
-      bodyContent: `Are you sure you want to unenroll ${player.approvedName}${this.game.allowTeam ? " (and their team)" : ""}?`,
+      bodyContent: `Are you sure you want to unenroll ${this.game.allowTeam ? " team " : ""}${player.approvedName}?`,
       title: `Unenroll ${player.approvedName}?`,
       onConfirm: () => {
         this.unenroll(player);

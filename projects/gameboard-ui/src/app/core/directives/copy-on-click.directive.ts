@@ -13,7 +13,6 @@ export class CopyOnClickDirective implements AfterViewInit {
 
   ngAfterViewInit() {
     const existingOnClick = this.elementRef.nativeElement.onclick;
-
     this.elementRef.nativeElement.onclick = () => {
       if (existingOnClick)
         existingOnClick();

@@ -1,0 +1,14 @@
+@use "sass:map";
+@import "../../../../scss/player-avatars";
+
+.avatar-container {
+  aspect-ratio: 1 / 1;
+  background: no-repeat center center;
+  background-color: #dadada;
+  background-size: cover;
+  border: dashed 1px #dadada;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  display: inline-block;
+  object-fit: cover;
+}
