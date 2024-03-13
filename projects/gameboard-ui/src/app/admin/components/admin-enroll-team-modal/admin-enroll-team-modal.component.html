@@ -21,9 +21,11 @@
             <ul class="selection-list d-flex flex-wrap">
                 <li *ngFor="let user of selectedUsers" class="d-flex align-items-center mr-3 py-4 user-list-item">
                     <app-avatar-chip [avatarImageUrl]="user.sponsor | sponsorToLogoUri"
-                        [avatarTooltip]="user.sponsor.name" (actionClick)="handleSelectedActionClick(user.id)">
+                        [avatarTooltip]="user.sponsor.name" (actionClick)="handleSelectedActionClick(user.id)"
+                        actionTooltip="Remove this player">
                         <div class="fs-11">{{ user.name }}</div>
-                        <div class="fs-08 link-button info-text" [appCopyOnClick]="user.id" tooltip="Copy this user ID">
+                        <div class="fs-08 link-button info-text" [appCopyOnClick]="user.id" tooltip="Copy this user ID"
+                            placement="bottom">
                             {{ user.id | slice:0:8 }}
                         </div>
                     </app-avatar-chip>

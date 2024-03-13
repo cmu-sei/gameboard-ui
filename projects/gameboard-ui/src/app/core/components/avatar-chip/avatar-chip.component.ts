@@ -12,8 +12,8 @@ import { AvatarSize } from '../avatar/avatar.component';
       <div class="avatar-chip-content-container ml-2 pr-2">
         <ng-content></ng-content>
       </div>
-      <div *ngIf="actionClick" class="action-button-container">
-        <button type="button" class="btn mr-1 px-2" (click)="handleActionButtonClick()">
+      <div *ngIf="!hideActionButton" class="action-button-container">
+        <button type="button" class="btn mr-1 px-2" (click)="handleActionButtonClick()" [tooltip]="actionTooltip">
           <fa-icon [icon]="fa.xMark"></fa-icon>
         </button>
       </div>
@@ -24,7 +24,9 @@ export class AvatarChipComponent {
   @Input() avatarImageUrl?: SafeUrl;
   @Input() avatarSize: AvatarSize = "small";
   @Input() avatarTooltip = "";
-  @Output() actionClick = new EventEmitter;
+  @Input() actionTooltip = "";
+  @Input() hideActionButton = false;
+  @Output() actionClick = new EventEmitter();
 
   protected fa = fa;
 
