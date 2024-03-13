@@ -6,13 +6,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { fa } from '@/services/font-awesome.service';
 import { BehaviorSubject, Subject, Observable, firstValueFrom } from 'rxjs';
-import { debounceTime, switchMap, tap, mergeMap, catchError } from 'rxjs/operators';
+import { debounceTime, switchMap, tap, mergeMap } from 'rxjs/operators';
 import { Game, NewGame } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { Search } from '../../api/models';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 import * as YAML from 'yaml';
 import { AppTitleService } from '@/services/app-title.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { GameYamlImportModalComponent } from '../components/game-yaml-import-modal/game-yaml-import-modal.component';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -58,9 +61,11 @@ export class DashboardComponent implements OnInit {
   constructor(
     private api: GameService,
     private clipboard: ClipboardService,
+    private modalService: ModalConfirmService,
     private router: Router,
     private route: ActivatedRoute,
     private titleService: AppTitleService,
+    private toastService: ToastService
   ) {
     this.games$ = this.refresh$.pipe(
       debounceTime(250),
@@ -73,6 +78,7 @@ export class DashboardComponent implements OnInit {
       tap(m => this.games.unshift(m)),
       tap(m => this.select(m))
     );
+
     // use local storage to keep toggle preference when returning to dashboard for continuity
     // default to false (card view) when no preference stored yet
     this.tableView = window.localStorage[this.preferenceKey] == 'true' ? true : false;
@@ -115,18 +121,17 @@ export class DashboardComponent implements OnInit {
 
   yaml(game: Game): void {
     this.clipboard.copyToClipboard(
-      YAML.stringify(game, this.replacer)
+      YAML.stringify(game as NewGame, this.replacer)
     );
   }
 
   json(game: Game): void {
-    this.clipboard.copyToClipboard(
-      JSON.stringify(game, this.replacer, 2)
-    );
+    this.clipboard.copyToClipboard(JSON.stringify(game, this.replacer, 2));
   }
 
   // don't stringify parsed feedbackTemplate object, just string property
   replacer(key: any, value: any) {
+    if (key == "id") return undefined;
     if (key == "feedbackTemplate") return undefined;
     else return value;
   }
@@ -139,8 +144,8 @@ export class DashboardComponent implements OnInit {
     files.forEach(file => {
       const fr = new FileReader();
       fr.onload = ev => {
-        const model = YAML.parse(fr.result as string) as Game[];
-        model.forEach(m => this.creating$.next({ ...m, isClone: true }));
+        const game = YAML.parse(fr.result as string) as Game;
+        this.creating$.next(game);
       };
       if (file.size < 8192) {
         fr.readAsText(file);
@@ -158,5 +163,17 @@ export class DashboardComponent implements OnInit {
   toggleViewMode() {
     this.tableView = !this.tableView;
     window.localStorage[this.preferenceKey] = this.tableView;
+  }
+
+  protected handleImportYamlClick() {
+    this.modalService.openComponent({
+      content: GameYamlImportModalComponent,
+      context: {
+        onCreate: (game) => {
+          this.refresh$.next(true);
+          this.toastService.showMessage(`Created game "${game.name}"`);
+        }
+      }
+    });
   }
 }

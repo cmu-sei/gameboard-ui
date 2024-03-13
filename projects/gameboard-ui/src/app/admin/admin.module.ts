@@ -61,6 +61,7 @@ import { FeedbackEditorComponent } from './components/feedback-editor/feedback-e
 import { ExtendTeamsModalComponent } from './components/extend-teams-modal/extend-teams-modal.component';
 import { ActiveTeamsModalComponent } from './components/active-teams-modal/active-teams-modal.component';
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
+import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-mo
     ExtendTeamsModalComponent,
     ActiveTeamsModalComponent,
     AdminEnrollTeamModalComponent,
+    GameYamlImportModalComponent,
   ],
   imports: [
     CommonModule,
