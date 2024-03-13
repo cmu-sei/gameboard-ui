@@ -22,7 +22,7 @@ export class PlayerAvatarComponent implements OnChanges {
   @Input() size: 'tiny' | 'small' | 'medium' | 'large' = 'medium';
 
   protected avatarCountClass = '';
-  protected avatarUrl?: SafeUrl = "";
+  protected avatarUrl: SafeUrl = "";
   protected sizeClass = "";
   protected tooltip = "";
 
@@ -33,7 +33,8 @@ export class PlayerAvatarComponent implements OnChanges {
       throw new Error("Can't use PlayerAvatarComponent with a falsey player input.");
     }
 
-    this.avatarUrl = `url(${this.sponsorService.resolveAbsoluteSponsorLogoUri(this.player.sponsor.logo)})`;
+    console.log("player sponsor logo", this.avatarUrl);
+    this.avatarUrl = this.sponsorService.resolveAbsoluteSponsorLogoUri(this.player.sponsor.logo);
     this.sizeClass = `avatar-size-${this.size}`;
     this.tooltip = this.player.sponsor.name;
   }

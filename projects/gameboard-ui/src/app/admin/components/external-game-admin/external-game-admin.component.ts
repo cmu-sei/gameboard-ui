@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Observable, Subject, catchError, combineLatest, debounceTime, filter, firstValueFrom, map, tap, timer } from 'rxjs';
+import { Subject, combineLatest, debounceTime, filter, firstValueFrom, map, timer } from 'rxjs';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ActivatedRoute } from '@angular/router';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
