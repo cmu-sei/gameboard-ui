@@ -1,6 +1,7 @@
-import { AvatarSize } from '@/core/models/avatar';
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
+
+export type AvatarSize = 'tiny' | 'small' | 'medium' | 'large';
 
 @Component({
   selector: 'app-avatar',

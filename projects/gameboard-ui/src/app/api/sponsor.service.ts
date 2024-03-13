@@ -74,9 +74,6 @@ export class SponsorService {
   }
 
   public resolveAbsoluteSponsorLogoUri(logoFileName: string | undefined | null) {
-    console.log("logo thing", logoFileName, !!logoFileName ?
-      `${this.config.imagehost}/${logoFileName}` :
-      `${this.config.basehref}assets/sponsor.svg`);
     return !!logoFileName ?
       `${this.config.imagehost}/${logoFileName}` :
       `${this.config.basehref}assets/sponsor.svg`;

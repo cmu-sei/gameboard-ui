@@ -61,6 +61,7 @@ import {
   faTv,
   faUser,
   faUsers,
+  faXmark
 } from '@fortawesome/free-solid-svg-icons';
 
 export const fa = {
@@ -122,7 +123,8 @@ export const fa = {
   triangleExclamation: faTriangleExclamation,
   tv: faTv,
   user: faUser,
-  users: faUsers
+  users: faUsers,
+  xMark: faXmark
 };
 
 export type FontAwesomeIcons = typeof fa;

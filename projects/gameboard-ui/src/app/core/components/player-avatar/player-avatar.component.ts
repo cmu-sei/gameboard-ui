@@ -33,7 +33,6 @@ export class PlayerAvatarComponent implements OnChanges {
       throw new Error("Can't use PlayerAvatarComponent with a falsey player input.");
     }
 
-    console.log("player sponsor logo", this.avatarUrl);
     this.avatarUrl = this.sponsorService.resolveAbsoluteSponsorLogoUri(this.player.sponsor.logo);
     this.sizeClass = `avatar-size-${this.size}`;
     this.tooltip = this.player.sponsor.name;
