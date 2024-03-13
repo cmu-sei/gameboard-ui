@@ -44,29 +44,28 @@
                             <div class="flex-grow-1">
                                 <a [href]="'support/tickets?search=' + team.id" target="_blank" *ngIf="team.hasTickets"
                                     class="btn btn-warning"
-                                    [tooltip]="'View open tickets for this ' + (team.game.isTeamGame | thisOrThat:'team':'player')"
+                                    [tooltip]="'View open tickets for this ' + (team.game.isTeamGame ? 'team' : 'player')"
                                     placement="bottom">
                                     <fa-icon [icon]="fa.ticket" size="lg"></fa-icon>
                                 </a>
                             </div>
                             <a [href]="'admin/support?search=' + team.id | relativeToAbsoluteHref" target="_blank"
                                 class="btn btn-info mr-2"
-                                [tooltip]="'View challenge states for this ' + (team.game.isTeamGame | thisOrThat:'team':'player')"
+                                [tooltip]="'View challenge states for this ' + (team.game.isTeamGame ? 'team' : 'player')"
                                 placement="bottom">
                                 <fa-icon [icon]="fa.barsStaggered" size="lg"></fa-icon>
                             </a>
 
                             <a [href]="'admin/registrar/' + team.game.id + '?term=' + team.id | relativeToAbsoluteHref"
                                 target="_blank" class="btn btn-info mr-2"
-                                [tooltip]="'View this ' + (team.game.isTeamGame | thisOrThat:'team':'player') + '\'s session'"
+                                [tooltip]="'View this ' + (team.game.isTeamGame ? 'team' : 'player') + '\'s session'"
                                 placement="bottom">
-                                <fa-icon [icon]="team.game.isTeamGame | thisOrThat:fa.peopleGroup:fa.person"
-                                    size="lg"></fa-icon>
+                                <fa-icon [icon]="team.game.isTeamGame ? fa.peopleGroup : fa.person" size="lg"></fa-icon>
                             </a>
 
                             <a [href]="'admin/observer/teams/' + team.game.id + '?search=' + team.id | relativeToAbsoluteHref"
                                 target="_blank" class="btn btn-info mr-2"
-                                [tooltip]="'Observe this ' + (team.game.isTeamGame | thisOrThat:'team':'player')"
+                                [tooltip]="'Observe this ' + (team.game.isTeamGame ? 'team' : 'player')"
                                 placement="bottom">
                                 <fa-icon [icon]="fa.eye" size="lg"></fa-icon>
                             </a>

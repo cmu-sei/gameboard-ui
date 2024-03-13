@@ -53,10 +53,9 @@
 
                             <a [href]="'admin/registrar/' + spec.game.id + '?term=' + challenge.team.id | relativeToAbsoluteHref"
                                 target="_blank" class="btn btn-info mr-2"
-                                [tooltip]="'View this ' + (spec.game.isTeamGame | thisOrThat:'team':'player') + '\'s session'"
+                                [tooltip]="'View this ' + (spec.game.isTeamGame ? 'team' : 'player') + '\'s session'"
                                 placement="bottom">
-                                <fa-icon [icon]="spec.game.isTeamGame | thisOrThat:fa.peopleGroup:fa.person"
-                                    size="lg"></fa-icon>
+                                <fa-icon [icon]="spec.game.isTeamGame ? fa.peopleGroup : fa.person" size="lg"></fa-icon>
                             </a>
 
                             <a [href]="'admin/observer/challenges/' + spec.game.id + '?search=' + challenge.id | relativeToAbsoluteHref"
