@@ -8,10 +8,9 @@ import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-deployment-admin-team-context-menu',
-  templateUrl: './deployment-admin-team-context-menu.component.html',
-  styleUrls: ['./deployment-admin-team-context-menu.component.scss']
+  templateUrl: './external-game-admin-team-context-menu.component.html'
 })
-export class DeploymentAdminTeamContextMenuComponent {
+export class ExternalGameAdminTeamContextMenuComponent {
   @Input() team?: SimpleEntity;
   @Input() isReady = false;
   @Output() teamReadyStateToggled = new EventEmitter<{ teamId: string, isReady: boolean }>();

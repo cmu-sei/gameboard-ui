@@ -80,6 +80,10 @@ export class AdminEnrollTeamModalComponent implements OnInit {
     }
   }
 
+  protected handleSelectedActionClick(userId: string) {
+    this.selectedUsers = [...this.selectedUsers.filter(u => u.id != userId)];
+  }
+
   protected handleTypeaheadSelect(apiUserResult: TypeaheadMatch) {
     if (!this.selectedUsers.some(u => u.id === apiUserResult.item.id)) {
       this.selectedUsers.push(apiUserResult.item);

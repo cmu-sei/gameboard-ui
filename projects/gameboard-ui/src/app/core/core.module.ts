@@ -35,6 +35,7 @@ import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { AvatarChipComponent } from './components/avatar-chip/avatar-chip.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { BigStatComponent } from './components/big-stat/big-stat.component';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
@@ -96,7 +97,6 @@ import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-
 import { StatusLightComponent } from './components/status-light/status-light.component';
 import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
-import { ThisOrThatPipe } from './pipes/this-or-that.pipe';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { ToSupportCodePipe } from './pipes/to-support-code.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
@@ -117,6 +117,7 @@ const PUBLIC_DECLARATIONS = [
   AssetPathPipe,
   AutofocusDirective,
   AvatarComponent,
+  AvatarChipComponent,
   BigStatComponent,
   CamelspacePipe,
   ChallengeResultColorPipe,
@@ -183,7 +184,6 @@ const PUBLIC_DECLARATIONS = [
   StatusLightComponent,
   SumArrayPipe,
   TextToColorPipe,
-  ThisOrThatPipe,
   ToggleClassPipe,
   ToSupportCodePipe,
   ToTemplateContextPipe,

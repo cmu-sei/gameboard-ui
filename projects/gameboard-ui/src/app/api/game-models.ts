@@ -68,7 +68,6 @@ export interface GameCardContext {
   isTeamGame: boolean;
 }
 
-
 export interface Game extends GameDetail {
   id: string;
   mapUrl: string;

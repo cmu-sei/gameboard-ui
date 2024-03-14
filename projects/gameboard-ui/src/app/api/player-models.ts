@@ -34,6 +34,7 @@ export interface Player {
   isManager: boolean;
   isReady: boolean;
   advanced: boolean;
+  advancedFromGame?: SimpleEntity;
   teamSponsorLogos: string[];
   pendingName: string;
   checked: boolean;

@@ -175,7 +175,8 @@
           <span class="badge badge-danger">Not Ready</span>
         </div>
         <div *ngIf="player.isLateStart" class="mr-2"><span class="badge badge-warning">Late Start</span></div>
-        <div *ngIf="player.advanced" class="mr-2"><span class="badge badge-success">Advanced</span></div>
+        <div *ngIf="player.advancedFromGame" class="mr-2"><span class="badge badge-success">Advanced from "{{
+            player.advancedFromGame.name }}"</span></div>
         <div>
           {{player.rank}} |
           {{player.score}} |

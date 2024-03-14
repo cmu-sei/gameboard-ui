@@ -20,9 +20,9 @@ import { ChallengeObserverComponent } from './challenge-observer/challenge-obser
 import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DeploymentAdminTeamContextMenuComponent } from './components/deployment-admin-team-context-menu/deployment-admin-team-context-menu.component';
 import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
 import { ExternalGameAdminPlayerContextMenuComponent } from './components/external-game-admin-player-context-menu/external-game-admin-player-context-menu.component';
+import { ExternalGameAdminTeamContextMenuComponent } from './components/external-game-admin-team-context-menu/external-game-admin-team-context-menu.component';
 import { ExternalGamePlayerStatusToStatusLightPipe } from './pipes/external-game-player-status-to-status-light.pipe';
 import { ExternalTeamToChallengeCreatedPipe } from './pipes/external-team-to-challenge-created.pipe';
 import { ExternalTeamChallengesToIsPredeployablePipe } from './pipes/external-team-challenges-to-is-predeployable.pipe';
@@ -61,6 +61,7 @@ import { FeedbackEditorComponent } from './components/feedback-editor/feedback-e
 import { ExtendTeamsModalComponent } from './components/extend-teams-modal/extend-teams-modal.component';
 import { ActiveTeamsModalComponent } from './components/active-teams-modal/active-teams-modal.component';
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
+import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
 
 @NgModule({
   declarations: [
@@ -72,9 +73,9 @@ import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-mo
     ChallengeReportComponent,
     ChallengeSpecEditorComponent,
     DashboardComponent,
-    DeploymentAdminTeamContextMenuComponent,
     ExternalGameAdminComponent,
     ExternalGameAdminPlayerContextMenuComponent,
+    ExternalGameAdminTeamContextMenuComponent,
     ExternalGamePlayerStatusToStatusLightPipe,
     ExternalSpecIdToChallengePipe,
     ExternalGamePlayerStatusToFriendlyPipe,
@@ -111,6 +112,7 @@ import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-mo
     ExtendTeamsModalComponent,
     ActiveTeamsModalComponent,
     AdminEnrollTeamModalComponent,
+    GameYamlImportModalComponent,
   ],
   imports: [
     CommonModule,

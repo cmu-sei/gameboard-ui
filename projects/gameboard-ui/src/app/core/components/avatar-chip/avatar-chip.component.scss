@@ -1,0 +1,16 @@
+@import "../../../../scss/variables";
+
+.avatar-chip-component {
+  background-color: #111;
+  border-radius: 120px;
+  max-height: 48px;
+}
+
+.action-button-container {
+  border-left: dotted 1px #888;
+}
+
+app-avatar {
+  position: relative;
+  top: 3px;
+}

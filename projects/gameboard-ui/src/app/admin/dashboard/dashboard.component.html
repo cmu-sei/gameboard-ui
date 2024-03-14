@@ -13,6 +13,11 @@
       (input)="typing($event)" aria-label="search term" aria-describedby="search-label"
       placeholder="Enter name, season, track, division, series, sponsor, key, mode, card text, or id">
   </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <app-error-div [errors]="errors"></app-error-div>
+  </div>
 
   <div *ngIf="tableView" class="col-4">
     <button class="btn btn-secondary btn-sm" (click)="create()">
@@ -34,25 +39,30 @@
     </div>
   </div>
 
-  <div class="component-errors">
-    <app-error-div [errors]="errors"></app-error-div>
-  </div>
-
   <ng-container *ngIf="games$ | async as games; else loading">
-
     <!-- Card view mode -->
     <ng-container *ngIf="!tableView">
       <div class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
-        <button class=" btn btn-info flex-grow-1 w-100" (click)="create()">
+        <button class="btn btn-info flex-grow-1 w-100" (click)="create()">
           <fa-icon [icon]="faPlus"></fa-icon>
           <span>New Game</span>
         </button>
 
         <p class="mt-2">OR</p>
 
+        <button class="btn btn-info flex-grow-1 w-100" (click)="handleImportYamlClick()">
+          <fa-icon [icon]="fa.barsStaggered"></fa-icon>
+          <span>Import From YAML</span>
+        </button>
+
+        <p class="mt-2">OR</p>
+
         <app-dropzone class="d-flex flex-grow-1 w-100" (dropped)="dropped($event)">
-          <div class="dropzone-target h-100">
-            <pre class="overflow-hidden">Drag in a yaml game array</pre>
+          <div class="dropzone-target h-100 d-flex flex-column align-items-center justify-content-center">
+            <div class="text-center">
+              Upload or drop a YAML file
+              <em class="d-block fs-09 gray-text">(must be an array of games)</em>
+            </div>
           </div>
         </app-dropzone>
       </div>
