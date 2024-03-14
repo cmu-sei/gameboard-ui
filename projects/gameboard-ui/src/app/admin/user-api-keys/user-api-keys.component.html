@@ -11,7 +11,7 @@
                 <div class="text-content">
                     <h6>You've got a new API key!</h6>
                     <p>The key is: <em class="visible-key">{{visibleKey}}</em></p>
-                    <p>Be sure to record this somewhere; you'll never be able to view it again.</p>
+                    <p>Be sure to record this somewhere safe; you'll never be able to view it again.</p>
                 </div>
                 <div class="buttons">
                     <button type="button" class="btn btn-secondary" (click)="copyKey(visibleKey)">
@@ -27,7 +27,9 @@
         <table>
             <tr>
                 <th>Key</th>
-                <th>Issued on</th>
+                <th>
+                    <ng-container *ngIf="apiKeys.length">Issued on</ng-container>
+                </th>
                 <th>Expires on</th>
                 <th></th>
             </tr>
@@ -58,7 +60,7 @@
                         [(ngModel)]="newApiKey.name">
                 </td>
                 <td>
-                    <span>{{dummyGeneratedOn | shortdate}} @ {{dummyGeneratedOn | friendlyTime}}</span>
+                    <span *ngIf="apiKeys.length" class="text-muted">--</span>
                 </td>
                 <td>
                     <div class="input-group">

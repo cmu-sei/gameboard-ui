@@ -25,7 +25,7 @@ export class TicketListComponent implements OnDestroy {
   list: TicketSummary[] = [];
   searchText: string = "";
   statusFilter: string = "Any Status";
-  assignFilter: string = "Any";
+  assignFilter: string = "Any Assignment";
 
   curOrderItem: string = "created";
   isDescending: boolean = true;
@@ -36,6 +36,7 @@ export class TicketListComponent implements OnDestroy {
   skip = 0;
 
   protected fa = fa;
+  protected selectedLabels: string[] = [];
 
   constructor(
     local: LocalUserService,
@@ -50,7 +51,7 @@ export class TicketListComponent implements OnDestroy {
 
     this.searchText = config.local.ticketTerm || "";
     this.statusFilter = config.local.ticketFilter || "Any Status";
-    this.assignFilter = config.local.ticketType || "Any";
+    this.assignFilter = config.local.ticketType || "Any Assignment";
     this.curOrderItem = config.local.ticketOrder || "created";
     this.isDescending = config.local.ticketOrderDesc || true;
 
@@ -70,7 +71,7 @@ export class TicketListComponent implements OnDestroy {
       })),
       switchMap(() => api.list({
         term: this.searchText,
-        filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
+        filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase(), this.selectedLabels],
         take: this.take,
         skip: this.skip,
         orderItem: this.curOrderItem,
@@ -166,6 +167,10 @@ export class TicketListComponent implements OnDestroy {
 
   downloadTicketDetailReport() {
     this.reportApi.exportTicketDetails({ term: this.searchText, filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()] });
+  }
+
+  protected handleLabelSelectionChanged(labels: string[]) {
+
   }
 
   async copyMarkdown(ticket: TicketSummary) {

@@ -1,0 +1,10 @@
+<div class="input-group">
+    <div class="input-group-prepend">
+        <ul class="input-group-text selected-label-list d-flex flex-wrap">
+            <li *ngFor="let label of selectedLabels">
+                <app-colored-text-chip size="small" [text]="label"></app-colored-text-chip>
+            </li>
+        </ul>
+    </div>
+    <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+</div>

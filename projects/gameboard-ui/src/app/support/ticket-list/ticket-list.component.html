@@ -1,30 +1,41 @@
 <div *ngIf="ctx$ | async as ctx; else loading" class="container-xl" [class.expand]="ctx.canManage">
-  <div class="d-flex justify-content-between mb-2">
-    <h3 class="m-0 p-0 align-self-center">{{ctx.canManage ? 'Manage Tickets' : 'My Tickets'}}</h3>
-    <a class="btn btn-info" [routerLink]="['../create']">
-      <span>Create Ticket</span>
-    </a>
+  <div class="d-flex align-items-baseline mb-2">
+    <h3 class="m-0 p-0 flex-grow-1">{{ctx.canManage ? 'Tickets' : 'My Tickets'}}</h3>
+
+    <div class="btn-group">
+      <a *ngIf="ctx.canManage" [routerLink]="['reports', 'support']" class="btn btn-info"
+        tooltip="View these tickets in the Support Report">
+        <fa-icon [icon]="fa.table"></fa-icon>
+      </a>
+      <button *ngIf="ctx.canManage" class="btn btn-info" (click)="downloadTicketDetailReport()"
+        tooltip="Export these tickets to CSV">
+        <fa-icon [icon]="fa.fileCsv"></fa-icon>
+      </button>
+      <a class="btn btn-info" [routerLink]="['../create']">
+        <span>Create Ticket</span>
+      </a>
+    </div>
   </div>
 
-  <div class="filters row mb-2">
+  <div class="filters row my-3">
     <div class="d-flex col-7">
-      <div class="input-group input-group-sm mr-2 w-25">
-        <select class="form-control" [(ngModel)]="statusFilter" (change)="this.refresh$.next(true)">
+      <div class="input-group input-group-sm w-25">
+        <select class="form-control pr-0" [(ngModel)]="statusFilter" (change)="this.refresh$.next(true)">
           <option *ngFor="let option of ['Any Status', 'Open', 'In Progress', 'Closed', 'Not Closed']" [value]="option">
             {{option}}
           </option>
         </select>
       </div>
       <div *ngIf="ctx.canManage" class="input-group input-group-sm ml-2 w-25">
-        <select class="form-control" [(ngModel)]="assignFilter" (change)="this.refresh$.next(true)">
-          <option *ngFor="let option of ['Any', 'Assigned to me', 'Unassigned']" [value]="option">{{option}}</option>
+        <select class="form-control px-0" [(ngModel)]="assignFilter" (change)="this.refresh$.next(true)">
+          <option *ngFor="let option of ['Any Assignment', 'Assigned to me', 'Unassigned']" [value]="option">
+            {{option}}
+          </option>
         </select>
       </div>
-      <button *ngIf="ctx.canManage" class="btn btn-outline-info btn-sm mx-1 mr-2" (click)="downloadTicketDetailReport()"
-        [disabled]="!ctx.canManage">
-        <fa-icon [icon]="fa.fileDownload"></fa-icon>
-        <span>csv</span>
-      </button>
+      <div class="ml-2">
+        <app-ticket-label-picker></app-ticket-label-picker>
+      </div>
     </div>
     <div class="input-group input-group-sm col-5 ml-auto">
       <div class="input-group-prepend">
@@ -32,16 +43,17 @@
           <fa-icon [icon]="fa.search"></fa-icon>
         </span>
       </div>
-      <input type="search" [(ngModel)]="searchText" placeholder="term" class="form-control border-0"
+      <input type="search" [(ngModel)]="searchText"
+        placeholder="Search by description, label, player, user, or challenge" class="form-control border-0"
         (input)="refresh$.next(true)">
     </div>
   </div>
 
-  <div class="row m-0 p-0 mb-1">
+  <div class="row mx-0 mt-3 p-0 mb-1">
     <!-- Key column with ordering -->
     <div class="col-1" (click)="orderByColumn('key')" (mouseover)="showHoverCaret=true; hoverOrderItem='key'"
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
-      <span class="m-0 p-1">Key</span>
+      <span class="column-header m-0 p-1">Key</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'key' && hoverOrderItem != 'key'">
         <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'key' || curOrderItem == 'key')) || (curOrderItem != 'key' && hoverOrderItem != 'key')">
@@ -51,9 +63,10 @@
     </div>
 
     <!-- Summary column with ordering -->
-    <div class="col-5" (click)="orderByColumn('summary')" (mouseover)="showHoverCaret=true; hoverOrderItem='summary'"
+    <div [class.col-4]="ctx.canManage" [class.col-5]="!ctx.canManage" (click)="orderByColumn('summary')"
+      (mouseover)="showHoverCaret=true; hoverOrderItem='summary'"
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
-      <span class="m-0 p-1">Summary</span>
+      <span class="column-header m-0 p-1">Summary</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'summary' && hoverOrderItem != 'summary'">
         <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'summary' || curOrderItem == 'summary')) || (curOrderItem != 'summary' && hoverOrderItem != 'summary')">
@@ -65,7 +78,7 @@
     <!-- Status column with ordering -->
     <div class="col-3" (click)="orderByColumn('status')" (mouseover)="showHoverCaret=true; hoverOrderItem='status'"
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
-      <span class="m-0 p-1">Status{{ctx.canManage ? ' / Assignee' : ''}}</span>
+      <span class="column-header m-0 p-1">Status{{ctx.canManage ? ' / Assignee' : ''}}</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'status' && hoverOrderItem != 'status'">
         <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'status' || curOrderItem == 'status')) || (curOrderItem != 'status' && hoverOrderItem != 'status')">
@@ -75,10 +88,9 @@
     </div>
 
     <!-- Created column with ordering -->
-    <div class="text-right" [class.col-1]="ctx.canManage" [class.col-2]="!ctx.canManage"
-      (click)="orderByColumn('created')" (mouseover)="showHoverCaret=true; hoverOrderItem='created'"
+    <div class="col-2" (click)="orderByColumn('created')" (mouseover)="showHoverCaret=true; hoverOrderItem='created'"
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
-      <span class="m-0 p-1">Created</span>
+      <span class="column-header m-0 p-1">Created</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'created' && hoverOrderItem != 'created'">
         <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'created' || curOrderItem == 'created')) || (curOrderItem != 'created' && hoverOrderItem != 'created')">
@@ -88,10 +100,9 @@
     </div>
 
     <!-- Updated column with ordering -->
-    <div class="col-1 text-right" (click)="orderByColumn('updated')"
-      (mouseover)="showHoverCaret=true; hoverOrderItem='updated'"
+    <div class="col-1" (click)="orderByColumn('updated')" (mouseover)="showHoverCaret=true; hoverOrderItem='updated'"
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
-      <span class="m-0 p-1">Updated</span>
+      <span class="column-header m-0 p-1">Updated</span>
       <span class="m-0 p-1" [hidden]="curOrderItem != 'updated' && hoverOrderItem != 'updated'">
         <fa-icon class="m-0 p-1" [icon]="fa.caretDown"
           [hidden]="(!isDescending && (hoverOrderItem != 'updated' || curOrderItem == 'updated')) || (curOrderItem != 'updated' && hoverOrderItem != 'updated')">
@@ -113,7 +124,7 @@
         <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.key]">{{ticket.fullKey}}</a>
       </div>
 
-      <div class="col-5 d-flex flex-wrap">
+      <div class="flex flex-wrap" [class.col-4]="ctx.canManage" [class.col-5]="!ctx.canManage">
         <div class="ml-2">
           <div class="d-inline flex-wrap">
             <a class="p-0 text-left" [routerLink]="[ticket.key]">
@@ -136,22 +147,21 @@
           </div>
         </div>
       </div>
-      <div class="col-2 align-self-center d-flex flex-column justify-content-between">
-        <div class="text-left">
+      <div class="col-3 align-self-center d-flex flex-column justify-content-between">
+        <div>
           <span class="badge mr-2" style="font-size: 90%" [class.badge-info]="ticket.status == 'Open' || !ticket.status"
             [class.badge-success]="ticket.status == 'In Progress'" [class.badge-dark]="ticket.status == 'Closed'">
             {{ticket.status}}
           </span>&nbsp;
         </div>
-        <div class="text-left">
+        <div>
           <ng-container *ngIf="ctx.canManage">
             <span *ngIf="!!ticket.assignee" class="mb-1">{{ticket.assignee.approvedName}}</span>
             <span *ngIf="!ticket.assignee" class="text-muted">Unassigned</span>
           </ng-container>
         </div>
       </div>
-      <div class="align-self-center d-flex text-right flex-column justify-content-between" [class.col-2]="ctx.canManage"
-        [class.col-3]="!ctx.canManage">
+      <div class="col-2 d-flex flex-column align-items-center justify-content-center">
         <div class="created-date">{{ ticket.created | shortdate }}</div>
         <div class="created-time">{{ ticket.created | friendlyTime }}</div>
       </div>
@@ -159,8 +169,8 @@
         <span>{{ticket.lastUpdated | ago}}</span>
       </div>
 
-      <div *ngIf="ctx.canManage" class="col-1">
-        <button class="btn btn-secondary" tooltip="Copy ticket to markdown" (click)="copyMarkdown(ticket)">
+      <div *ngIf="ctx.canManage" class="col-1 d-flex flex-column align-items-center justify-content-center">
+        <button class="btn btn-secondary" tooltip="Copy ticket markdown" (click)="copyMarkdown(ticket)">
           <fa-icon [icon]="fa.clipboard"></fa-icon>
         </button>
       </div>

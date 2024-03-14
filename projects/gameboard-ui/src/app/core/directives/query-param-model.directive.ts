@@ -1,4 +1,4 @@
-import { ActivatedRoute, Params } from '@angular/router';
+import { Params } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
 import { ReportDateRange } from '@/reports/reports-models';
 import { RouterService } from '@/services/router.service';
@@ -44,7 +44,6 @@ export class QueryParamModelDirective<T> implements OnChanges {
 
   constructor(
     private hostComponent: CustomInputComponent<T>,
-    private route: ActivatedRoute,
     private elementRef: ElementRef,
     private routerService: RouterService,
     private unsub: UnsubscriberService) { }
@@ -66,7 +65,6 @@ export class QueryParamModelDirective<T> implements OnChanges {
     }
 
     // OTHERWISE: we have new config and need to (re) init
-
     // determine if the config describes a simple single property or an object
     this._isMultiConfig = !!this.config.propertyNameToQueryParamNameMap;
 
@@ -83,16 +81,6 @@ export class QueryParamModelDirective<T> implements OnChanges {
         ...(this.config.propertyNameToQueryParamNameMap?.map(entry => entry.queryStringParamName) || [])
       ];
     }
-
-    // listen for external changes to the querystring (like regular navigation).
-    // when this happens, we need to update the ngmodel of the component without
-    // triggering an emitter event
-    this.unsub.add(
-      this.route.queryParams.subscribe(params => {
-        const model = this.deserializeModel(params, this.config!);
-        this.hostComponent.ngModel = model;
-      })
-    );
 
     // when the component is manipulated, it serializes its value
     // to the querystring via thie _queryParamBuffer$ subject

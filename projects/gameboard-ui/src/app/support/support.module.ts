@@ -19,6 +19,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CoreModule } from '../core/core.module';
 import { TicketSupportToolsComponent } from './components/ticket-support-tools/ticket-support-tools.component';
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
+import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
     TicketFormComponent,
     TicketListComponent,
     TicketSupportToolsComponent,
+    TicketLabelPickerComponent,
   ],
   imports: [
     CommonModule,

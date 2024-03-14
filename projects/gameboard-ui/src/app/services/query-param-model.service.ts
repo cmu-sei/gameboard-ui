@@ -1,13 +1,9 @@
-import { ReportTimeSpan } from '@/reports/reports-models';
 import { EventEmitter, Injectable } from '@angular/core';
-import { QueryParamModelConfig, QueryStringParameter } from './query-param-model.directive';
-import { ReportsService } from '@/reports/reports.service';
+import { QueryParamModelConfig, QueryStringParameter } from '../core/directives/query-param-model.directive';
 import { ReportGameChallengeSpec } from '@/reports/components/parameters/parameter-game-challengespec/parameter-game-challengespec.component';
 
 @Injectable({ providedIn: 'root' })
 export class QueryParamModelService {
-  constructor(private reportsService: ReportsService) { }
-
   getGameChallengeSpecQueryModelConfig(config: { gameIdParamName: string, challengeSpecIdParamName: string, emitter: EventEmitter<ReportGameChallengeSpec | null> }): QueryParamModelConfig<ReportGameChallengeSpec> {
     return {
       propertyNameToQueryParamNameMap: [

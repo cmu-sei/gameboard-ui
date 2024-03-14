@@ -2,19 +2,19 @@
   margin-bottom: 1rem;
 }
 
-.list>div {
+.list > div {
   border-radius: 0;
   border: 1px solid #222;
   border-top: 0;
 }
 
-.list>div:first-child {
+.list > div:first-child {
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
   border-top: 1px solid #222;
 }
 
-.list>div:last-child {
+.list > div:last-child {
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
 }
@@ -25,6 +25,10 @@
   word-break: break-word;
 }
 
-// .expand {
-//   max-width: 1400px;
-// }
+.column-header {
+  font-weight: bold;
+}
+
+.btn-group > .btn:not(:first-child) {
+  border-left: solid 1px #ffffff;
+}
