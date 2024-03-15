@@ -57,6 +57,7 @@
 <ng-template #team let-teamScore>
     <tr class="data-row" [class.cursor-pointer]="teamScore.userCanAccessScoreDetail"
         [class.is-advanced]="teamScore.isAdvancedToNextRound" [class.is-not-advanced]="!teamScore.isAdvancedToNextRound"
+        [class.user-team-score-row]="teamScore.userIsOnTeam"
         (click)="teamScore.userCanAccessScoreDetail && handleRowClick(teamScore)">
         <td>
             <div class="team-rank d-flex flex-column justify-content-center align-items-center">
