@@ -45,7 +45,6 @@ export class ScoringService {
         return s;
 
       s.game.isLiveUntil = this.apiDateTime.toDateTime(s.game.isLiveUntil as any) as DateTime;
-
       return s;
     }));
   }

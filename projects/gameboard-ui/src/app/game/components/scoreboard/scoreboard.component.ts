@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Subscription, firstValueFrom, interval, map } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
@@ -12,13 +12,14 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
   styleUrls: ['./scoreboard.component.scss'],
   providers: [UnsubscriberService]
 })
-export class ScoreboardComponent implements OnChanges {
+export class ScoreboardComponent implements OnInit {
   @Input() gameId?: string;
 
+  protected canViewAllScores = false;
   protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column.";
   protected hasAdvancedPlayers = false;
-  protected isLoading = true;
   protected isLive = false;
+  protected isLoading = true;
   protected isTeamGame = false;
   protected scoreboardData: ScoreboardData | null = null;
   protected advancingTeams: ScoreboardDataTeam[] = [];
@@ -28,17 +29,19 @@ export class ScoreboardComponent implements OnChanges {
 
   constructor(
     private modalConfirmService: ModalConfirmService,
-    private scoreService: ScoringService) { }
+    private scoreService: ScoringService,
+    private unsub: UnsubscriberService) { }
 
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    if (changes?.gameId && this.gameId) {
-      this.loadGame(this.gameId);
-    }
+  async ngOnInit() {
+    if (!this.gameId)
+      throw new Error("Couldn't resolve the gameId.");
+
+    await this.loadGame(this.gameId);
   }
 
   protected handleRowClick(teamData: ScoreboardDataTeam) {
-    // we don't show the details while the competition is ongoing
-    if (this.isLive) return;
+    if (!teamData.userCanAccessScoreDetail)
+      return;
 
     this.modalConfirmService.openComponent<ScoreboardTeamDetailModalComponent>({
       content: ScoreboardTeamDetailModalComponent,
@@ -66,7 +69,6 @@ export class ScoreboardComponent implements OnChanges {
 
     if (this.scoreboardData.game.isLiveUntil) {
       this.isLive = true;
-
       this.liveGameSub = interval(60000).subscribe(_ => {
         this.loadGame(gameId);
       });

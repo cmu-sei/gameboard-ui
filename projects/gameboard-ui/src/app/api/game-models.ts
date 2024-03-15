@@ -36,7 +36,6 @@ export interface GameDetail {
   gamespaceLimitPerSession: number;
   isPublished: boolean;
   requireSponsoredTeam: boolean;
-  allowPreview: boolean;
   externalGameClientUrl?: string;
   externalGameTeamExtendedEndpoint?: string;
   externalGameStartupEndpoint?: string;
@@ -44,6 +43,8 @@ export interface GameDetail {
   requireTeam: boolean;
   showOnHomePageInPracticeMode: boolean;
   allowLateStart: boolean;
+  allowPreview: boolean;
+  allowPublicScoreboardAccess: boolean;
   allowTeam: boolean;
   allowReset: boolean;
   playerMode: PlayerMode;

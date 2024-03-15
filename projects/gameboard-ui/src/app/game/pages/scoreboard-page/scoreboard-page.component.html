@@ -16,16 +16,16 @@
       <div class="col-12 scoreboard">
         <h2 id="scoreboard" class="text-center my-4">Scoreboard</h2>
         <div *ngIf="isAdmin" class="row">
-          <input type="checkbox" id="isNewScoreboard" name="isNewScoreboard" [(ngModel)]="isNewScoreboard" />
-          <label for="isNewScoreboard">Use new scoreboard</label>
+          <input type="checkbox" id="isOldScoreboard" name="isOldScoreboard" [(ngModel)]="isOldScoreboard" />
+          <label for="isOldScoreboard">Use old scoreboard</label>
         </div>
-        <app-scoreboard-table *ngIf="!isNewScoreboard" [id]="game.id"
+        <app-scoreboard-table *ngIf="isOldScoreboard" [id]="game.id"
           [live]="game.session.isDuring"></app-scoreboard-table>
       </div>
     </div>
   </div>
 
-  <div class="d-flex align-items-center justify-content-center" *ngIf="isNewScoreboard">
+  <div class="d-flex align-items-center justify-content-center w-100" *ngIf="!isOldScoreboard">
     <app-scoreboard class="page-width" [gameId]="game.id"></app-scoreboard>
   </div>
 </ng-container>
