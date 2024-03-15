@@ -10,7 +10,7 @@
     <div class="modal-body" *ngIf="!isWorking; else loading">
         <ng-container *ngIf="teams.length; else noTeams">
             <div class="teams-container">
-                <ul class="d-flex">
+                <ul class="d-flex flex-wrap">
                     <li *ngFor="let team of teams" class="card team-card my-3 mr-3">
                         <div class="card-body">
                             <h5 class="overflow-ellipsis">
