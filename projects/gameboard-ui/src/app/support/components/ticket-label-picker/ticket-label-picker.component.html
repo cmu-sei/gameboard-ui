@@ -1,10 +1,14 @@
-<div class="input-group">
-    <div class="input-group-prepend">
-        <ul class="input-group-text selected-label-list d-flex flex-wrap">
+<div class="ticket-label-picker-component d-flex align-items-baseline">
+    <ng-container *ngIf="selectedLabels.length; else popModal">
+        <div class="font-bold mr-2">Labels: </div>
+        <ul class="selected-label-list d-flex flex-wrap">
             <li *ngFor="let label of selectedLabels">
                 <app-colored-text-chip size="small" [text]="label"></app-colored-text-chip>
             </li>
         </ul>
-    </div>
-    <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+    </ng-container>
 </div>
+
+<ng-template #popModal>
+    <div class="link-button cursor-pointer">Filter by labels...</div>
+</ng-template>

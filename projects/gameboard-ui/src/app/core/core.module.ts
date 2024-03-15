@@ -107,6 +107,7 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { ModalContentComponent } from './components/modal-content/modal-content.component';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -214,7 +215,8 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
+    ModalContentComponent
   ],
   imports: [
     CommonModule,

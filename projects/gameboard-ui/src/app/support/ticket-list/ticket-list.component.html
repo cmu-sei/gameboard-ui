@@ -37,9 +37,9 @@
         <app-ticket-label-picker></app-ticket-label-picker>
       </div>
     </div>
-    <div class="input-group input-group-sm col-5 ml-auto">
+    <div class="input-group input-group-sm col-5">
       <div class="input-group-prepend">
-        <span class="input-group-text">
+        <span class="input-group-text search-button-icon">
           <fa-icon [icon]="fa.search"></fa-icon>
         </span>
       </div>
@@ -161,7 +161,7 @@
           </ng-container>
         </div>
       </div>
-      <div class="col-2 d-flex flex-column align-items-center justify-content-center">
+      <div class="col-2 d-flex flex-column">
         <div class="created-date">{{ ticket.created | shortdate }}</div>
         <div class="created-time">{{ ticket.created | friendlyTime }}</div>
       </div>

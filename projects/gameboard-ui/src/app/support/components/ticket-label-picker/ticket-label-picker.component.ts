@@ -1,3 +1,4 @@
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
@@ -10,11 +11,18 @@ export class TicketLabelPickerComponent implements OnInit {
 
   protected labels: string[] = [];
   protected selectedLabels: string[] = [];
+
+  constructor(private modalService: ModalConfirmService) { }
+
   ngOnInit(): void {
     this.selectedLabels = [
       "flank",
       "practice-challenge",
       "stank"
     ];
+  }
+
+  protected handleOpenModal() {
+
   }
 }

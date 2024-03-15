@@ -32,3 +32,10 @@
 .btn-group > .btn:not(:first-child) {
   border-left: solid 1px #ffffff;
 }
+
+.search-button-icon {
+  box-sizing: border-box;
+  // manually constrained to avoid vertical growth if the row
+  // wraps
+  height: 30px;
+}
