@@ -6,7 +6,7 @@
         everyone with points on the board!
     </alert>
     <table *ngIf="scoreboardData.teams.length; else noScore" class="table table-striped gameboard-table w-100"
-        [class.advanced-players-highlight]="hasAdvancedPlayers" [class.table-hover]="!isLive">
+        [class.advanced-players-highlight]="hasAdvancedPlayers" [class.table-hover]="canViewAllScores">
         <col class="width-5">
         <col class="width-50">
         <col>
@@ -49,14 +49,16 @@
 </ng-template>
 
 <ng-template #noScore>
-    <div class="no-score gray-text text-center">
+    <div class="no-score text-muted text-center">
         No one's scored in this game yet.
     </div>
 </ng-template>
 
 <ng-template #team let-teamScore>
-    <tr class="data-row" [class.cursor-pointer]="!isLive" [class.is-advanced]="teamScore.isAdvancedToNextRound"
-        [class.is-not-advanced]="!teamScore.isAdvancedToNextRound" (click)="!isLive && handleRowClick(teamScore)">
+    <tr class="data-row" [class.cursor-pointer]="teamScore.userCanAccessScoreDetail"
+        [class.is-advanced]="teamScore.isAdvancedToNextRound" [class.is-not-advanced]="!teamScore.isAdvancedToNextRound"
+        [class.user-team-score-row]="teamScore.userIsOnTeam"
+        (click)="teamScore.userCanAccessScoreDetail && handleRowClick(teamScore)">
         <td>
             <div class="team-rank d-flex flex-column justify-content-center align-items-center">
                 {{ teamScore.score.rank }}
@@ -97,7 +99,7 @@
                 {{ teamScore.score.cumulativeTimeMs | msToDuration }}
             </div>
         </td>
-        <td class="text-center" [tooltip]="teamScore.score | scoreToTooltip:isLive">
+        <td class="text-center" [tooltip]="teamScore.userCanAccessScoreDetail && teamScore.score | scoreToTooltip">
             <span class="score text-center"
                 [class.text-info]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
                 {{ teamScore.score.scoreOverall }}

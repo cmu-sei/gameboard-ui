@@ -20,7 +20,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 export class ScoreboardPageComponent {
   game$: Observable<Game>;
   isAdmin = false;
-  isNewScoreboard = false;
+  isOldScoreboard = false;
 
   constructor(
     route: ActivatedRoute,
@@ -39,7 +39,7 @@ export class ScoreboardPageComponent {
       localUser.user$.subscribe(u => {
         if (!u) {
           this.isAdmin = false;
-          this.isNewScoreboard = false;
+          this.isOldScoreboard = false;
           return;
         }
 
