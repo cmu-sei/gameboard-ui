@@ -33,6 +33,7 @@ import { AddDurationPipe } from './pipes/add-duration.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
+import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { AvatarChipComponent } from './components/avatar-chip/avatar-chip.component';
@@ -59,6 +60,7 @@ import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-cha
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { FeedbackFormComponent } from './components/feedback-form/feedback-form.component';
+import { FilterPipe } from './pipes/filter.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
@@ -70,6 +72,7 @@ import { LongContentHiderComponent } from './components/long-content-hider/long-
 import { MinPipe } from './pipes/min.pipe';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './components/modal/modal-confirm.directive';
+import { ModalContentComponent } from './components/modal-content/modal-content.component';
 import { MultiSelectComponent } from './components/multi-select/multi-select.component';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { NumbersToPercentage } from './pipes/numbers-to-percentage.pipe';
@@ -107,7 +110,6 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
-import { ModalContentComponent } from './components/modal-content/modal-content.component';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -115,6 +117,7 @@ const PUBLIC_DECLARATIONS = [
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
+  ArrayToCountPipe,
   AssetPathPipe,
   AutofocusDirective,
   AvatarComponent,
@@ -165,8 +168,10 @@ const PUBLIC_DECLARATIONS = [
   ClockPipe,
   CountdownPipe,
   CountdownColorPipe,
+  FilterPipe,
   FriendlyTimePipe,
   MinPipe,
+  ModalContentComponent,
   PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,
@@ -215,8 +220,7 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS,
-    ModalContentComponent
+    ...PUBLIC_DECLARATIONS
   ],
   imports: [
     CommonModule,

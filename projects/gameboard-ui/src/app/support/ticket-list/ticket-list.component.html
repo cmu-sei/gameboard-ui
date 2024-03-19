@@ -18,7 +18,7 @@
   </div>
 
   <div class="filters row my-3">
-    <div class="d-flex col-7">
+    <div class="d-flex col-8">
       <div class="input-group input-group-sm w-25">
         <select class="form-control pr-0" [(ngModel)]="statusFilter" (change)="this.refresh$.next(true)">
           <option *ngFor="let option of ['Any Status', 'Open', 'In Progress', 'Closed', 'Not Closed']" [value]="option">
@@ -34,10 +34,10 @@
         </select>
       </div>
       <div class="ml-2">
-        <app-ticket-label-picker></app-ticket-label-picker>
+        <app-ticket-label-picker (selectionChanged)="handleLabelSelectionChanged($event)"></app-ticket-label-picker>
       </div>
     </div>
-    <div class="input-group input-group-sm col-5">
+    <div class="input-group input-group-sm col-4">
       <div class="input-group-prepend">
         <span class="input-group-text search-button-icon">
           <fa-icon [icon]="fa.search"></fa-icon>
@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div class="row mx-0 mt-3 p-0 mb-1">
+  <div class="row mx-0 mt-4 p-0 mb-1">
     <!-- Key column with ordering -->
     <div class="col-1" (click)="orderByColumn('key')" (mouseover)="showHoverCaret=true; hoverOrderItem='key'"
       (mouseout)="showHoverCaret=false; hoverOrderItem=curOrderItem">
@@ -116,7 +116,7 @@
     </div>
   </div>
 
-  <div class="list">
+  <div *ngIf="ctx.tickets.length; else noTickets" class="list">
     <div *ngFor="let ticket of ctx.tickets" class="row b-1 mx-0 py-2">
       <div class="col-1">
         <fa-icon *ngIf="ticket.lastSeen < ticket.lastUpdated" class="text-warning"
@@ -196,5 +196,11 @@
 <ng-template #loading>
   <div class="text-center w-100 mx-auto">
     <app-spinner></app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #noTickets>
+  <div class="text-center text-muted my-4">
+    There aren't any tickets which match your filter settings.
   </div>
 </ng-template>

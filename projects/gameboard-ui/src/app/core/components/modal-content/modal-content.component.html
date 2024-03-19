@@ -18,13 +18,15 @@
         <ng-content></ng-content>
     </div>
     <div class="modal-footer d-flex align-items-center">
-        <ng-content select="[footer]"></ng-content>
+        <div class="modal-footer-container flex-grow-1">
+            <ng-content select="[footer]"></ng-content>
+        </div>
 
         <div class="modal-buttons">
-            <button type="button" *ngIf="hideCancel !== true" class="btn link-button" (click)="handleClose()">
+            <button type="button" *ngIf="!hideCancel" class="btn link-button" (click)="handleClose()">
                 {{ cancelButtonText || "Cancel" }}
             </button>
-            <button type="button" class="btn btn-danger" [class.btn-danger]="!hideCancel" [class.btn-info]="hideCancel"
+            <button type="button" class="btn" [class.btn-danger]="isDangerConfirm" [class.btn-info]="!isDangerConfirm"
                 (click)="handleConfirm()">
                 {{ confirmButtonText || 'OK' }}
             </button>

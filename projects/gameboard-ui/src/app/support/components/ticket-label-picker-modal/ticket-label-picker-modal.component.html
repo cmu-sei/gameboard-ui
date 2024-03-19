@@ -1,0 +1,28 @@
+<app-modal-content title="Filter by labels" [subtitle]="selectedCount + ' selected'" confirmButtonText="Filter"
+    (confirm)="handleConfirmSelections()">
+    <div *ngIf="selectedCount < totalLabelCount; else allLabelsSelected">
+        <div class="mb-4">
+            <input type="text" class="form-control" placeholder="Search tags to filter by..." [(ngModel)]="searchText">
+        </div>
+        <ul class="d-flex flex-wrap align-items-center mb-0">
+            <li *ngFor="let entry of labels | keyvalue | filter:'value':false" class="mr-2 mb-2">
+                <app-colored-text-chip [text]="entry.key" [isClickable]="true" (click)="handleLabelSelection(entry.key)"
+                    colorMode="dim"></app-colored-text-chip>
+            </li>
+        </ul>
+    </div>
+    <hr />
+    <div *ngIf="selectedCount" class="mb-3">Include tickets which have <strong>all</strong> of these labels:</div>
+    <ul class="selected-label-list d-flex flex-wrap align-items-baseline mb-0">
+        <li *ngFor="let label of labels | keyvalue | filter:'value':true" class="mr-2 mb-2">
+            <app-colored-text-chip [text]="label.key" [isClickable]="true" (click)="handleLabelSelection(label.key)"
+                [enableSecondaryAction]="true" [secondaryActionIcon]="fa.xMark"></app-colored-text-chip>
+        </li>
+    </ul>
+</app-modal-content>
+
+<ng-template #allLabelsSelected>
+    <div class="text-muted text-center">
+        Your filtering settings include all labels.
+    </div>
+</ng-template>

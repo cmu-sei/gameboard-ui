@@ -20,6 +20,7 @@ import { CoreModule } from '../core/core.module';
 import { TicketSupportToolsComponent } from './components/ticket-support-tools/ticket-support-tools.component';
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
+import { TicketLabelPickerModalComponent } from './components/ticket-label-picker-modal/ticket-label-picker-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { TicketLabelPickerComponent } from './components/ticket-label-picker/tic
     TicketListComponent,
     TicketSupportToolsComponent,
     TicketLabelPickerComponent,
+    TicketLabelPickerModalComponent,
   ],
   imports: [
     CommonModule,

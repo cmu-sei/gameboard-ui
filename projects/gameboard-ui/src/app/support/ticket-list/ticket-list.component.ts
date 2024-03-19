@@ -36,6 +36,7 @@ export class TicketListComponent implements OnDestroy {
   skip = 0;
 
   protected fa = fa;
+  protected isLoading = false;
   protected selectedLabels: string[] = [];
 
   constructor(
@@ -64,14 +65,19 @@ export class TicketListComponent implements OnDestroy {
       timer(0, 60_000)
     ]).pipe(
       debounceTime(250),
-      tap(() => config.updateLocal({
-        ticketTerm: this.searchText,
-        ticketFilter: this.statusFilter,
-        ticketType: this.assignFilter
-      })),
+      tap(() => {
+        config.updateLocal({
+          ticketTerm: this.searchText,
+          ticketFilter: this.statusFilter,
+          ticketType: this.assignFilter
+        });
+
+        this.isLoading = true;
+      }),
       switchMap(() => api.list({
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase(), this.selectedLabels],
+        withAllLabels: this.selectedLabels.join(","),
         take: this.take,
         skip: this.skip,
         orderItem: this.curOrderItem,
@@ -81,7 +87,10 @@ export class TicketListComponent implements OnDestroy {
         a.forEach(t => t.labelsList = t.label?.split(" ").filter(l => !!l));
         return a;
       }),
-      tap(a => this.list = a)
+      tap(a => {
+        this.list = a;
+        this.isLoading = false;
+      })
     );
 
     const nextTicket$ = combineLatest([
@@ -92,6 +101,7 @@ export class TicketListComponent implements OnDestroy {
       switchMap(() => api.list({
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
+        withAllLabels: (this.selectedLabels || []).join(","),
         take: 1,
         skip: this.skip + this.take,
         orderItem: this.curOrderItem,
@@ -170,7 +180,8 @@ export class TicketListComponent implements OnDestroy {
   }
 
   protected handleLabelSelectionChanged(labels: string[]) {
-
+    this.selectedLabels = labels;
+    this.refresh$.next(true);
   }
 
   async copyMarkdown(ticket: TicketSummary) {

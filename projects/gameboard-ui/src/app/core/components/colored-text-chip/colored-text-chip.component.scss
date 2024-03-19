@@ -1,32 +1,37 @@
 .badge.badge-pill {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.dim {
+  backdrop-filter: brightness(0.4);
+  //   filter: brightness(0.4);
 }
 
 .click-target {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .colored-text-chip-small {
-    font-size: 0.75rem !important;
-    line-height: 0.8rem !important;
+  font-size: 0.75rem !important;
+  line-height: 0.8rem !important;
 }
 
 .colored-text-chip-medium {
-    font-size: 0.9rem !important; 
-    line-height: 0.85rem !important;
+  font-size: 0.9rem !important;
+  line-height: 0.85rem !important;
 }
 
 .text-container {
-    font-size: inherit;
-    line-height: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .secondary-action {
-    font-size: inherit;
-    line-height: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 fa-icon {
-    color: inherit;
+  color: inherit;
 }
