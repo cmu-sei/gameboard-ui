@@ -3,10 +3,6 @@
     <h3 class="m-0 p-0 flex-grow-1">{{ctx.canManage ? 'Tickets' : 'My Tickets'}}</h3>
 
     <div class="btn-group">
-      <a *ngIf="ctx.canManage" [routerLink]="['reports', 'support']" class="btn btn-info"
-        tooltip="View these tickets in the Support Report">
-        <fa-icon [icon]="fa.table"></fa-icon>
-      </a>
       <button *ngIf="ctx.canManage" class="btn btn-info" (click)="downloadTicketDetailReport()"
         tooltip="Export these tickets to CSV">
         <fa-icon [icon]="fa.fileCsv"></fa-icon>
