@@ -109,10 +109,17 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
     this.created$ = api.selected$.pipe(
       filter(s => !this.list.find(i => i.externalId === s.externalId)),
-      map(s => ({ ...s, gameId: this.game.id, points: 0, x: .5, y: .5, r: .015 } as NewSpec)),
+      map(s => {
+        // compute semi-random coordinates for the new spec so it doesn't sit on top of other
+        // added specs
+        const randomX = Math.random() * 0.5 + 0.25;
+        const randomY = Math.random() * 0.5 + 0.25;
+        return { ...s, gameId: this.game.id, points: 1, x: randomX, y: randomY, r: .015 } as NewSpec;
+      }),
       switchMap(s => api.create(s)),
       tap(r => this.list.push(r)),
-      tap(r => this.addedCount += 1)
+      tap(r => this.addedCount += 1),
+      tap(s => this.refresh())
     );
 
     this.updated$ = this.updating$.pipe(
