@@ -14,12 +14,12 @@ export class RefreshIframeOnReconnectDirective implements AfterViewInit {
   constructor(
     private apiStatusService: ApiStatusService,
     private config: ConfigService,
-    private ref: ElementRef,
+    private ref: ElementRef<HTMLIFrameElement>,
     private toastService: ToastService,
     private unsub: UnsubscriberService) { }
 
   ngAfterViewInit(): void {
-    if (!this.ref?.nativeElement?.contentWindow?.location?.reload())
+    if (!this.ref?.nativeElement?.contentWindow?.location?.reload)
       throw new Error("Can't use appRefreshIframeOnReconnect with a non-refreshable IFrame.");
 
     this.iframe = this.ref.nativeElement;
