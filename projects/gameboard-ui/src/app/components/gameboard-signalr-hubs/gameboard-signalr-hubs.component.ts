@@ -32,6 +32,17 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       this.localUser.user$.subscribe(async u => await this.handleLocalUserChanged.bind(this)(u))
     );
 
+    // // document.hidden?
+    // const visibilityChange = "visibilitychange";
+    // if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+    // }
+
+    // document.addEventListener(visibilityChange, function () {
+    //   console.log("Visibility changed at " + new Date());
+    //   console.log("page is", document.hidden);
+    //   console.log("so is the hub connected?", gameHub.isConnected());
+    // }, false);
+
     this.isDevMode = !environment.production;
   }
 

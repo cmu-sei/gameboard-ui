@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -83,6 +83,7 @@ import { PlayerAvatarListComponent } from './components/player-avatar-list/playe
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
 import { PluralizerPipe } from './pipes/pluralizer.pipe';
 import { QueryParamModelDirective } from './directives/query-param-model.directive';
+import { RefreshIframeOnReconnectDirective } from './directives/refresh-iframe-on-reconnect.directive';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
 import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
 import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
@@ -110,6 +111,8 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { ApiStatusInterceptor } from '@/api-status.interceptor';
+import { AuthInterceptor } from '@/utility/auth.interceptor';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -159,6 +162,7 @@ const PUBLIC_DECLARATIONS = [
   PlayerStatusComponent,
   NumbersToPercentage,
   QueryParamModelDirective,
+  RefreshIframeOnReconnectDirective,
   RelativeUrlsPipe,
   RenderLinksInTextComponent,
   SpinnerComponent,
@@ -220,11 +224,24 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiStatusInterceptor,
+      multi: true
+    },
   ],
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule,
     ProgressbarModule,
     TooltipModule,
     MarkdownModule.forRoot({

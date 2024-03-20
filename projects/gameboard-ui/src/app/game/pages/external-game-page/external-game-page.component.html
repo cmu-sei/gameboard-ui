@@ -2,7 +2,7 @@
     <ng-container *ngIf="game && iframeSrcUrl; else loading">
         <div class="external-host-container">
             <iframe [src]="iframeSrcUrl | safeurl" id="unity-game-window" [title]="iframeWindowTitle" frameborder="0"
-                scrolling="no" onload=""></iframe>
+                scrolling="no" onload="handleIframeLoad()" appRefreshIframeOnReconnect></iframe>
         </div>
 
         <app-error-div [errors]="errors"></app-error-div>
