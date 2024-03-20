@@ -25,7 +25,7 @@ export class RefreshIframeOnReconnectDirective implements AfterViewInit {
     this.iframe = this.ref.nativeElement;
     this.unsub.add(this.apiStatusService.status$.subscribe(status => {
       if (status === "up") {
-        this.toastService.showMessage(`${this.config.appName} experienced an interruption in service. We're reloading your game to ensure you get the best experience possible.`)
+        this.toastService.showMessage(`${this.config.appName} experienced an interruption in service. We're reloading your game to ensure you get the best experience possible.`);
         this.iframe?.contentWindow?.location?.reload();
       }
     }));
