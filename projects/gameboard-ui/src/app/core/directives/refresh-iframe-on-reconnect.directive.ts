@@ -20,9 +20,7 @@ export class RefreshIframeOnReconnectDirective {
 
     unsub.add(apiStatusService.status$.subscribe(status => {
       if (status === "up") {
-        console.warn("API went down/came back up. Reloading external game host...");
         this.iframe?.contentWindow?.location?.reload();
-        console.warn("Done.");
       }
     }));
   }
