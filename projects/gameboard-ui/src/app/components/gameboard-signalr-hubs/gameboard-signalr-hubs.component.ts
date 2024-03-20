@@ -9,6 +9,7 @@ import { ApiUser } from '@/api/user-models';
 import { StatusLightState } from '@/core/components/status-light/status-light.component';
 import { combineLatest, map } from 'rxjs';
 import { SupportHubService } from '@/services/signalR/support-hub.service';
+import { UserHubService } from '@/services/signalR/user-hub.service';
 
 @Component({
   selector: 'app-gameboard-signalr-hubs',
@@ -20,16 +21,20 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
   protected isDevMode = false;
   protected gameHubStatusLightState: StatusLightState = "none";
   protected supportHubStatusLightState: StatusLightState = "none";
+  protected userHubStatusLightState: StatusLightState = "none";
+
   protected tooltip = "";
+  protected userHubTooltip = "";
 
   constructor(
     private gameHub: GameHubService,
     private localUser: LocalUserService,
     private logService: LogService,
     private supportHub: SupportHubService,
-    private unsub: UnsubscriberService) {
+    private unsub: UnsubscriberService,
+    private userHub: UserHubService) {
     this.unsub.add(
-      this.localUser.user$.subscribe(async u => await this.handleLocalUserChanged.bind(this)(u))
+      this.localUser.user$.subscribe(async u => await this.handleLocalUserChanged.bind(this)(u)),
     );
 
     // // document.hidden?
@@ -58,6 +63,7 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       this.log("Local user is logged out, disconnecting from hubs");
       await this.gameHub.disconnect();
       await this.supportHub.disconnect();
+      await this.userHub.disconnect();
     }
     else {
       this.log("Local user is logged in, connecting", u);
@@ -67,6 +73,7 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
 
       // connect to the hubs
       await this.gameHub.connect();
+      await this.userHub.connect();
 
       // listen for interesting events to log
       this.unsub.add(
@@ -81,9 +88,15 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
           this.gameHubStatusLightState = this.hubStateToStatusLightState(ctx.hubState);
           this.tooltip = this.buildGameHubToolTip(ctx);
         }),
+
+        this.userHub.hubState$.subscribe(userHubState => {
+          this.log("[GB UserHub]: Hub state is", userHubState);
+          this.userHubStatusLightState = this.hubStateToStatusLightState(userHubState);
+          this.userHubTooltip = `UserHub: ${userHubState}`;
+        })
       );
 
-      // set up support staff up if applicable
+      // join the support hub (which everyone uses to get ticket updates)
       if (u.isAdmin || u.isSupport) {
         await this.supportHub.connect();
         await this.supportHub.joinStaffGroup();

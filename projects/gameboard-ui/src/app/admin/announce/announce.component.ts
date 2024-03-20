@@ -7,6 +7,7 @@ import { UserService } from '../../api/user.service';
 import { firstValueFrom } from 'rxjs';
 import { LogService } from '@/services/log.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { AdminService } from '@/api/admin.service';
 
 @Component({
   selector: 'app-announce',
@@ -24,7 +25,7 @@ export class AnnounceComponent {
   protected isLoading = false;
 
   constructor(
-    private api: UserService,
+    private adminService: AdminService,
     private logService: LogService,
     private toastService: ToastService) { }
 
@@ -34,9 +35,9 @@ export class AnnounceComponent {
     }
 
     try {
-      await firstValueFrom(this.api.announce({
-        teamId: this.teamId,
-        message: this.message
+      await firstValueFrom(this.adminService.sendAnnouncement({
+        contentMarkdown: this.message,
+        teamId: this.teamId
       }));
 
       this.message = "";

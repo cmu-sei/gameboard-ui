@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse } from './admin.models';
+import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
 import { DateTime } from 'luxon';
 
@@ -41,5 +41,9 @@ export class AdminService {
 
   getOverallSiteStats(): Observable<GetSiteOverviewStatsResponse> {
     return this.http.get<GetSiteOverviewStatsResponse>(this.apiUrl.build("admin/stats"));
+  }
+
+  sendAnnouncement(announcement: SendAnnouncement): Observable<void> {
+    return this.http.post<void>(this.apiUrl.build("admin/announce"), announcement);
   }
 }
