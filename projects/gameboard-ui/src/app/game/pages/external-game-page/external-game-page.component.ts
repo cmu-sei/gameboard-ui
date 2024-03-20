@@ -52,7 +52,7 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     this.layoutService.stickyMenu$.next(false);
 
     if (!this.game.externalGameClientUrl) {
-      this.errors.push(`Unable to resolve external game client Url ("${this.game.externalGameClientUrl}")`);
+      this.errors.push(`Unable to resolve external game client url ("${this.game.externalGameClientUrl}").`);
     }
 
     this.log.logInfo("Launched external game iframe at", this.iframeSrcUrl);
