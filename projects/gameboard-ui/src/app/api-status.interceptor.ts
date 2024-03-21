@@ -10,9 +10,16 @@ import { ApiStatus } from './api/api-status.service';
 // HttpInterceptor and just consume the service, independent of what's powering it.
 @Injectable()
 export class ApiStatusInterceptor implements HttpInterceptor {
+<<<<<<< Updated upstream
     private _apiStatus$ = new Subject<ApiStatus>();
     public apiStatus$ = this._apiStatus$
         .asObservable().pipe(startWith("up" as ApiStatus));
+=======
+    private _apiStatus$ = new BehaviorSubject<ApiStatus>("up");
+    public apiStatus$ = this
+        ._apiStatus$
+        .asObservable();
+>>>>>>> Stashed changes
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let finalResponse: HttpEvent<any> | HttpErrorResponse;
