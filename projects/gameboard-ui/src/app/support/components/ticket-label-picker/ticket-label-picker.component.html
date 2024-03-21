@@ -1,0 +1,17 @@
+<div class="ticket-label-picker-component d-flex flex-wrap align-items-center pt-1">
+    <ng-container *ngIf="selectedLabels.length; else popModal">
+        <ul class="selected-label-list d-flex flex-wrap m-0 p-0">
+            <li *ngFor="let label of selectedLabels" class="mb-2">
+                <app-colored-text-chip size="small" [text]="label" [isClickable]="true"
+                    (click)="handleLabelClick(label)" [enableSecondaryAction]="true"
+                    [secondaryActionIcon]="fa.xMark"></app-colored-text-chip>
+            </li>
+            <li><app-colored-text-chip text="+" [isClickable]="true" tooltip="Filter by more labels"
+                    (click)="handleLabelAddClick(selectedLabels)"></app-colored-text-chip> </li>
+        </ul>
+    </ng-container>
+</div>
+
+<ng-template #popModal>
+    <div class="link-button cursor-pointer" (click)="handleOpenModal(selectedLabels)">Filter by labels...</div>
+</ng-template>

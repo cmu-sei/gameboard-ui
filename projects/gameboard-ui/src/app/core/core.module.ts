@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -33,6 +33,7 @@ import { AddDurationPipe } from './pipes/add-duration.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
+import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { AvatarChipComponent } from './components/avatar-chip/avatar-chip.component';
@@ -59,6 +60,7 @@ import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-cha
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { FeedbackFormComponent } from './components/feedback-form/feedback-form.component';
+import { FilterPipe } from './pipes/filter.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
@@ -70,6 +72,7 @@ import { LongContentHiderComponent } from './components/long-content-hider/long-
 import { MinPipe } from './pipes/min.pipe';
 import { ModalConfirmComponent } from './components/modal/modal-confirm.component';
 import { ModalConfirmDirective } from './components/modal/modal-confirm.directive';
+import { ModalContentComponent } from './components/modal-content/modal-content.component';
 import { MultiSelectComponent } from './components/multi-select/multi-select.component';
 import { MsToDurationPipe } from './pipes/ms-to-duration.pipe';
 import { NumbersToPercentage } from './pipes/numbers-to-percentage.pipe';
@@ -80,6 +83,7 @@ import { PlayerAvatarListComponent } from './components/player-avatar-list/playe
 import { PlayerStatusComponent } from './components/player-status/player-status.component';
 import { PluralizerPipe } from './pipes/pluralizer.pipe';
 import { QueryParamModelDirective } from './directives/query-param-model.directive';
+import { RefreshIframeOnReconnectDirective } from './directives/refresh-iframe-on-reconnect.directive';
 import { RelativeImagePipe } from './pipes/relative-image.pipe';
 import { RelativeToAbsoluteHrefPipe } from './pipes/relative-to-absolute-href.pipe';
 import { RelativeUrlsPipe } from './pipes/relative-urls.pipe';
@@ -107,6 +111,8 @@ import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
+import { ApiStatusInterceptor } from '@/api-status.interceptor';
+import { AuthInterceptor } from '@/utility/auth.interceptor';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -114,6 +120,7 @@ const PUBLIC_DECLARATIONS = [
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
+  ArrayToCountPipe,
   AssetPathPipe,
   AutofocusDirective,
   AvatarComponent,
@@ -155,6 +162,7 @@ const PUBLIC_DECLARATIONS = [
   PlayerStatusComponent,
   NumbersToPercentage,
   QueryParamModelDirective,
+  RefreshIframeOnReconnectDirective,
   RelativeUrlsPipe,
   RenderLinksInTextComponent,
   SpinnerComponent,
@@ -164,8 +172,10 @@ const PUBLIC_DECLARATIONS = [
   ClockPipe,
   CountdownPipe,
   CountdownColorPipe,
+  FilterPipe,
   FriendlyTimePipe,
   MinPipe,
+  ModalContentComponent,
   PluralizerPipe,
   RenderLinksInTextComponent,
   RelativeImagePipe,
@@ -214,11 +224,24 @@ const RELAYED_MODULES = [
 
 @NgModule({
   declarations: [
-    ...PUBLIC_DECLARATIONS
+    ...PUBLIC_DECLARATIONS,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiStatusInterceptor,
+      multi: true
+    },
   ],
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule,
     ProgressbarModule,
     TooltipModule,
     MarkdownModule.forRoot({

@@ -18,8 +18,8 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
   @Output() update = new EventEmitter<string>();
 
   protected config?: GameScoringConfig;
+  protected configuredBonusCount = 0;
   protected errors: any[] = [];
-  protected hasBonusesConfigured = false;
   protected isLoading = false;
   protected textPlaceholder: string | null = null;
   protected textPlaceholderRows = 8;
@@ -51,7 +51,6 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (this.gameId) {
-
       await this.loadConfig(this.gameId);
     }
   }
@@ -99,6 +98,7 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
     this.isLoading = true;
     await this.scoringService.deleteGameAutoChallengeBonuses(gameId);
     this.yamlIn = undefined;
+    this.toastsService.showMessage("Deleted all automatic bonuses for this game.");
 
     //reload
     await this.loadConfig(gameId);
@@ -108,8 +108,8 @@ export class GameBonusesConfigComponent implements OnInit, OnChanges {
 
   private bindConfig(config: GameScoringConfig) {
     this.config = config;
-    this.hasBonusesConfigured = config.specs.some(c => c.possibleBonuses.length);
-    if (this.hasBonusesConfigured) {
+    this.configuredBonusCount = config.specs.filter(s => s.possibleBonuses.length).length;
+    if (this.configuredBonusCount) {
       this.yamlIn = this.renderConfigAsYaml(config);
     }
   }

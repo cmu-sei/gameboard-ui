@@ -10,12 +10,11 @@ import { UserReport, PlayerReport, SponsorReport, GameSponsorReport, ChallengeRe
 
 @Injectable({ providedIn: 'root' })
 export class ReportService {
-
   url = '';
 
   constructor(
-    private http: HttpClient,
-    private config: ConfigService
+    private config: ConfigService,
+    private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
   }

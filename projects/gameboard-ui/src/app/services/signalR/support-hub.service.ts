@@ -14,8 +14,8 @@ export class SupportHubService {
   private _signalRService: SignalRService;
 
   constructor(
+    configService: ConfigService,
     userService: UserService,
-    private configService: ConfigService,
     private appNotificationsService: AppNotificationsService,
     private logService: LogService
   ) {

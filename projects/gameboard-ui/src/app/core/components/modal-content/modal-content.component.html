@@ -1,0 +1,35 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="titles-container">
+            <h6 *ngIf="subSubtitle">{{ subSubtitle }}</h6>
+            <h4 title class="modal-title pull-left">
+                {{ title }}
+            </h4>
+            <h5 *ngIf="subtitle" class="text-muted">
+                {{ subtitle }}
+            </h5>
+        </div>
+        <button *ngIf="!hideCancel" type="button" class="btn-close close pull-right" aria-label="Close"
+            (click)="handleClose()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ng-content></ng-content>
+    </div>
+    <div class="modal-footer d-flex align-items-center">
+        <div class="modal-footer-container flex-grow-1">
+            <ng-content select="[footer]"></ng-content>
+        </div>
+
+        <div class="modal-buttons">
+            <button type="button" *ngIf="!hideCancel" class="btn link-button" (click)="handleClose()">
+                {{ cancelButtonText || "Cancel" }}
+            </button>
+            <button type="button" class="btn" [class.btn-danger]="isDangerConfirm" [class.btn-info]="!isDangerConfirm"
+                (click)="handleConfirm()">
+                {{ confirmButtonText || 'OK' }}
+            </button>
+        </div>
+    </div>
+</div>

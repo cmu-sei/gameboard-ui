@@ -10,18 +10,18 @@
             </div>
 
             <div class="d-flex full-width mt-2">
-                <button type="button" class="btn btn-info d-block flex-grow-1" (disabled)="!textPlaceholder"
+                <button type="button" class="btn btn-info d-block flex-grow-1 mr-1" (disabled)="!textPlaceholder"
                     (click)="handlePasteExampleConfigClick()">
-                    Paste example configuration
+                    Paste this example configuration
                 </button>
-                <app-confirm-button [disabled]="!hasBonusesConfigured" class="d-block mx-2 flex-grow-1"
-                    componentContainerClass="full-width" btnClass="btn btn-danger"
+                <app-confirm-button *ngIf="configuredBonusCount > 0" [disabled]="configuredBonusCount == 0"
+                    class="d-block mx-1 flex-grow-1" componentContainerClass="full-width" btnClass="btn btn-danger"
                     (confirm)="handleDeleteClick(gameId)">
                     Delete bonuses configuration
                 </app-confirm-button>
-                <button type="button" class="btn btn-success d-block flex-grow-1" [disabled]="!yamlIn"
+                <button type="button" class="btn btn-success d-block ml-1 flex-grow-1" [disabled]="!yamlIn"
                     (click)="handleImportClick()">
-                    Import bonus configuration
+                    Import this configuration
                 </button>
             </div>
         </ng-container>

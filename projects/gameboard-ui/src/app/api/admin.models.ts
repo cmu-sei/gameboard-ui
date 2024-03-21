@@ -60,3 +60,9 @@ export interface GetSiteOverviewStatsResponse {
     activeCompetitiveTeams: number;
     registeredUsers: number;
 }
+
+export interface SendAnnouncement {
+    contentMarkdown: string;
+    title?: string;
+    teamId?: string;
+}

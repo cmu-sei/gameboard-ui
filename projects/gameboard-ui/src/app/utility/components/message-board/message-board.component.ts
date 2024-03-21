@@ -1,39 +1,30 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Announcement } from '../../../api/user-models';
-import { HubEvent, NotificationService } from '../../../services/notification.service';
+import { Component } from '@angular/core';
+import { fa } from '@/services/font-awesome.service';
+import { UserHubService } from '@/services/signalR/user-hub.service';
+import { UserHubAnnouncement } from '@/services/signalR/user-hub.models';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-message-board',
   templateUrl: './message-board.component.html',
-  styleUrls: ['./message-board.component.scss']
+  styleUrls: ['./message-board.component.scss'],
+  providers: [UnsubscriberService]
 })
-export class MessageBoardComponent implements OnInit {
-
-  feed$: Observable<HubEvent>;
-  list: Announcement[] = [];
-  faClose = faTimes;
+export class MessageBoardComponent {
+  protected list: UserHubAnnouncement[] = [];
+  protected fa = fa;
 
   constructor(
-    hub: NotificationService
-  ) {
-    this.feed$ = hub.announcements.pipe(
-      tap(e => this.list.push(e.model as Announcement))
-    );
+    unsub: UnsubscriberService,
+    userHub: UserHubService) {
+
+    unsub.add(userHub.announcements$.subscribe(announcement => this.list.push(announcement)));
   }
 
-  ngOnInit(): void {
-  }
-
-  dismiss(a: Announcement): void {
-    this.list.splice(
-      this.list.indexOf(a),
-      1
-    );
+  dismiss(a: UserHubAnnouncement): void {
+    this.list = [...this.list.filter(item => item !== a)];
   }
 }

@@ -19,7 +19,6 @@ export class UserApiKeysComponent implements OnInit, OnDestroy {
 
   protected errors: string[] = [];
   protected apiKeys$?: Observable<ApiKeyViewModel[]>;
-  protected dummyGeneratedOn = new Date();
   protected minDate = new Date();
   protected newApiKey!: NewApiKey;
   protected visibleKey: string = '';

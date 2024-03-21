@@ -1,7 +1,6 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -17,7 +16,6 @@ import { ApiModule } from './api/api.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthInterceptor } from './utility/auth.interceptor';
 import { ConfigService } from './utility/config.service';
 import { UserService as CurrentUserService } from './utility/user.service';
 import { UtilityModule } from './utility/utility.module';
@@ -49,7 +47,6 @@ import { SystemNotificationsModule } from './system-notifications/system-notific
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    HttpClientModule,
     AppRoutingModule,
     ApiModule,
     FontAwesomeModule,
@@ -64,11 +61,6 @@ import { SystemNotificationsModule } from './system-notifications/system-notific
     ProgressbarModule.forRoot(),
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
     {
       provide: APP_INITIALIZER,
       useFactory: loadSettings,

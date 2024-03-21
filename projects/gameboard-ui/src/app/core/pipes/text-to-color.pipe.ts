@@ -7,8 +7,6 @@ export class TextToColorPipe implements PipeTransform {
   constructor(private textToRgb: TextToRgbService) { }
 
   transform(value: string): any {
-    // inspired by StackOverflow
-    // todo: map to different hue range if desired
     const rgb = this.textToRgb.get((value || "").toLowerCase());
     const hex = this.textToRgb.rgbToHex(rgb);
 

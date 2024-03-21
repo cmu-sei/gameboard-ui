@@ -38,7 +38,6 @@ import { SupportReportContextMenuComponent } from './components/reports/support-
 import { SupportReportComponent } from './components/reports/support-report/support-report.component';
 import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { ArrayFieldToClassPipe } from './pipes/array-field-to-class.pipe';
-import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { CountToTooltipClassPipe } from './pipes/count-to-tooltip-class.pipe';
 import { PlayerChallengeAttemptsModalComponent } from './components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 import { PlayersReportSummaryToStatsPipe } from './components/reports/players-report/players-report-summary-to-stats.pipe';
@@ -48,7 +47,6 @@ import { ToSupportReportStatsPipe } from './components/reports/support-report/to
 
 @NgModule({
   declarations: [
-    ArrayToCountPipe,
     ArrayFieldToClassPipe,
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,

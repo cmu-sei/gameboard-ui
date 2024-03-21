@@ -35,9 +35,7 @@ export class UserService implements OnDestroy {
       map(([i, r, t]) => t),
       filter(t => t === AuthTokenState.valid && !!auth.oidcUser?.profile),
       map(tokenState => auth.oidcUser?.profile as unknown as UserOidcProfile),
-      switchMap(profile => api.tryCreate({
-        id: profile.sub
-      })),
+      switchMap(profile => api.tryCreate({ id: profile.sub })),
       catchError(err => of(null)),
       filter(result => !!result),
       tap(result => this.init$.next(true)),

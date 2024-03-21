@@ -19,7 +19,7 @@ export class ColoredTextChipComponent {
   @Input() enableSecondaryAction = false;
   @Input() secondaryActionIcon: IconDefinition = fa.times;
   @Input() size: "small" | "medium" | "large" = "medium";
-  @Input() colorMode: "colored" | "monochrome" = "colored";
+  @Input() colorMode: "normal" | "dim" = "normal";
   @Output() click = new EventEmitter<ColoredTextChipEvent>();
   @Output() secondaryActionClick = new EventEmitter<ColoredTextChipEvent>();
 

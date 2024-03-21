@@ -20,7 +20,6 @@ export class NotificationService {
 
   state$ = new BehaviorSubject<HubState>({ id: '', connectionState: HubConnectionState.Disconnected, joined: false });
   actors$ = new BehaviorSubject<Array<HubPlayer>>([]);
-  announcements = new Subject<HubEvent>();
   teamEvents = new Subject<HubEvent>();
   challengeEvents = new Subject<HubEvent>();
   playerEvents = new Subject<HubEvent>();
@@ -120,7 +119,6 @@ export class NotificationService {
 
     connection.on('teamEvent', (e: HubEvent) => this.onTeamEvent(e));
     connection.on('challengeEvent', (e: HubEvent) => this.challengeEvents.next(e));
-    connection.on('announcement', (e: HubEvent) => this.announcements.next(e));
     connection.on('ticketEvent', (e: HubEvent) => this.ticketEvents.next(e));
     connection.on('playerEvent', e => this.onPlayerEvent(e));
 
