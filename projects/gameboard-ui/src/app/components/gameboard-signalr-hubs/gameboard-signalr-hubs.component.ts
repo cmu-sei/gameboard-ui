@@ -73,6 +73,7 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
 
       // connect to the hubs
       await this.gameHub.connect();
+      await this.supportHub.connect();
       await this.userHub.connect();
 
       // listen for interesting events to log
@@ -93,15 +94,10 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
           this.log("[GB UserHub]: Hub state is", userHubState);
           this.userHubStatusLightState = this.hubStateToStatusLightState(userHubState);
           this.userHubTooltip = `UserHub: ${userHubState}`;
-        })
-      );
+        }),
 
-      // join the support hub (which everyone uses to get ticket updates)
-      if (u.isAdmin || u.isSupport) {
-        await this.supportHub.connect();
-        await this.supportHub.joinStaffGroup();
-        this.unsub.add(this.supportHub.hubState$.subscribe(supportHubState => this.supportHubStatusLightState = this.hubStateToStatusLightState(supportHubState)));
-      }
+        this.supportHub.hubState$.subscribe(supportHubState => this.supportHubStatusLightState = this.hubStateToStatusLightState(supportHubState))
+      );
     }
   }
 

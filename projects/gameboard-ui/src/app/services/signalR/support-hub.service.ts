@@ -41,10 +41,6 @@ export class SupportHubService {
     );
   }
 
-  public async joinStaffGroup() {
-    await this._signalRService.sendMessage("joinStaffGroup");
-  }
-
   private handleTicketClosed(ev: SupportHubEvent<TicketClosedEvent>) {
     this.logService.logInfo("[GB Support Hub Staff Group]: Ticket Closed", ev);
 
