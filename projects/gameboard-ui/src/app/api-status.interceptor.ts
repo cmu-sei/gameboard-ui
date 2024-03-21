@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { Observable, Subject, finalize, tap } from 'rxjs';
+import { Observable, Subject, finalize, tap, startWith } from 'rxjs';
 import { ApiStatus } from './api/api-status.service';
 
 // not sure how much sense this makes, but I'm trying it. Basically, it feels funky
@@ -11,7 +11,8 @@ import { ApiStatus } from './api/api-status.service';
 @Injectable()
 export class ApiStatusInterceptor implements HttpInterceptor {
     private _apiStatus$ = new Subject<ApiStatus>();
-    public apiStatus$ = this._apiStatus$.asObservable();
+    public apiStatus$ = this._apiStatus$
+        .asObservable().pipe(startWith("up" as ApiStatus));
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let finalResponse: HttpEvent<any> | HttpErrorResponse;
