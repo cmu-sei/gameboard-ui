@@ -62,40 +62,46 @@
                                 <col>
                                 <col>
                                 <col>
+                                <col>
 
                                 <thead class="thead-light">
                                     <tr>
                                         <th></th>
-                                        <th>Created</th>
-                                        <th>Deployed</th>
+                                        <th class="text-center">Created</th>
+                                        <th class="text-center">Deployed</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <tr *ngFor="let spec of ctx.specs">
                                         <td>
-                                            <span placement="top"
-                                                [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
-                                                {{spec.name}}
-                                            </span>
+                                            <span>{{spec.name}}</span>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span
                                                 [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated"
-                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated">
+                                                [class.text-info]="(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated">
                                                 {{((spec.id |
                                                 externalSpecIdToChallenge:team.challenges)!.challengeCreated ? "Yes" :
                                                 "No")}}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span
                                                 [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed"
-                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed">
+                                                [class.text-info]="(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed">
                                                 {{((spec.id |
                                                 externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed
                                                 ? "Yes" : "No")}}
                                             </span>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-dark p-1 challenge-button"
+                                                [appCopyOnClick]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id"
+                                                [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id ? 'Copy this challenge ID to your clipboard' : ''">
+                                                <fa-icon [icon]="fa.copy"></fa-icon>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
