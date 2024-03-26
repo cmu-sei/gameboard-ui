@@ -159,18 +159,13 @@ export class GameEditorComponent implements AfterViewInit {
 
   upload(files: File[], type: string): void {
     this.api.uploadImage(this.game.id, type, files[0]).subscribe(
-      r => {
-        this.game.logo = r.filename;
-      }
+      r => this.game.logo = r.filename
     );
   }
 
-  clearImage(): void {
-    this.api.deleteImage(this.game.id, 'card').subscribe(
-      r => {
-        this.game.logo = r.filename;
-      }
-    );
+  async clearImage() {
+    await this.api.deleteGameCardImage(this.game.id);
+    this.game.logo = "";
   }
 
   addSuggestions(games: Game[]) {

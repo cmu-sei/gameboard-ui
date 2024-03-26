@@ -33,9 +33,14 @@ export interface PlayerJoinedEvent {
     player: SimpleEntity;
 }
 
+export interface GameHubActiveEnrollment {
+    game: SimpleEntity;
+    player: SimpleEntity;
+}
+
 export interface YouJoinedEvent {
-    connectionId: string;
     userId: string;
+    activeEnrollments: GameHubActiveEnrollment[];
 }
 
 export interface GameStartState {

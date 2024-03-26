@@ -26,7 +26,7 @@ import { GamePageComponent } from './pages/game-page/game-page.component';
 import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
 import { IndexToSubmittedAnswersPipe } from './pipes/index-to-submitted-answers.pipe';
-import { ManualBonusesToTooltipPipe } from './pipes/manual-bonuses-to-tooltip.pipe';
+import { ChallengeBonusesToTooltip } from './pipes/manual-bonuses-to-tooltip.pipe';
 import { PlayComponent } from './components/play/play.component';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
@@ -57,7 +57,7 @@ const MODULE_DECLARATIONS = [
   HubStateToPlayerStatusPipe,
   IndexToSubmittedAnswersPipe,
   LateStartBannerComponent,
-  ManualBonusesToTooltipPipe,
+  ChallengeBonusesToTooltip,
   PlayComponent,
   PlayerEnrollComponent,
   PlayerPresenceComponent,

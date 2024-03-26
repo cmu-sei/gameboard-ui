@@ -39,15 +39,16 @@
                     </div>
 
                     <div class="card-text mb-4">
-                        <div class="card-section mb-4">
-                            <h5>Players</h5>
+                        <div class="card-section my-4">
+                            <h5 class="mb-3">Players</h5>
 
                             <ul class="player-list">
                                 <li *ngFor="let player of team.players" class="d-flex align-items-center w-100">
                                     <app-player-avatar [player]="player" size="tiny"></app-player-avatar>
-                                    <app-status-light [state]="player.status | externalGamePlayerStatusToStatusLight"
+                                    <app-status-light class="pb-1"
+                                        [state]="player.status | externalGamePlayerStatusToStatusLight"
                                         [tooltip]="player.status | externalGamePlayerStatusToFriendly"></app-status-light>
-                                    <div class="flex-grow-1">{{player.name}}</div>
+                                    <div class="flex-grow-1 pb-1">{{player.name}}</div>
                                     <app-external-game-admin-player-context-menu
                                         (playerReadyStateChanged)="handlePlayerReadyStateChanged($event.playerId)"
                                         [player]="{ id: player.id, name: player.name, isSyncStartReady: player.status == 'ready'}"></app-external-game-admin-player-context-menu>
@@ -98,9 +99,9 @@
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-dark p-1 challenge-button"
-                                                [appCopyOnClick]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id"
-                                                [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id ? 'Copy this challenge ID to your clipboard' : ''">
-                                                <fa-icon [icon]="fa.copy"></fa-icon>
+                                                [appCopyOnClick]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
+                                                <fa-icon [icon]="fa.copy" size="sm"
+                                                    [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id ? 'Copy this challenge ID to your clipboard' : ''"></fa-icon>
                                             </button>
                                         </td>
                                     </tr>

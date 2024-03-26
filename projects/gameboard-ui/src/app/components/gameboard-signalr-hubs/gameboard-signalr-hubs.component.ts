@@ -7,9 +7,10 @@ import { LogService } from '@/services/log.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ApiUser } from '@/api/user-models';
 import { StatusLightState } from '@/core/components/status-light/status-light.component';
-import { combineLatest, map } from 'rxjs';
 import { SupportHubService } from '@/services/signalR/support-hub.service';
 import { UserHubService } from '@/services/signalR/user-hub.service';
+import { Observable } from 'rxjs';
+import { GameHubActiveEnrollment } from '@/services/signalR/game-hub.models';
 
 @Component({
   selector: 'app-gameboard-signalr-hubs',
@@ -23,7 +24,8 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
   protected supportHubStatusLightState: StatusLightState = "none";
   protected userHubStatusLightState: StatusLightState = "none";
 
-  protected tooltip = "";
+  protected gameHubActiveEnrollments$: Observable<GameHubActiveEnrollment[]>;
+  protected gameHubTooltip = "";
   protected userHubTooltip = "";
 
   constructor(
@@ -37,18 +39,8 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       this.localUser.user$.subscribe(async u => await this.handleLocalUserChanged.bind(this)(u)),
     );
 
-    // // document.hidden?
-    // const visibilityChange = "visibilitychange";
-    // if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
-    // }
-
-    // document.addEventListener(visibilityChange, function () {
-    //   console.log("Visibility changed at " + new Date());
-    //   console.log("page is", document.hidden);
-    //   console.log("so is the hub connected?", gameHub.isConnected());
-    // }, false);
-
     this.isDevMode = !environment.production;
+    this.gameHubActiveEnrollments$ = this.gameHub.activeEnrollments$;
   }
 
   async ngOnDestroy(): Promise<void> {
@@ -57,7 +49,8 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
 
   private async handleLocalUserChanged(u: ApiUser | null) {
     this.log("Local user changed", u);
-    // gamehub automatically manages repeated calls to connect/disconnect, so you won't
+
+    // hubs automatically manage repeated calls to connect/disconnect, so you won't
     // get duplicate connections if, for example, connect is called while it's already connected
     if (!u) {
       this.log("Local user is logged out, disconnecting from hubs");
@@ -79,15 +72,8 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       // listen for interesting events to log
       this.unsub.add(
         this.gameHub.hubState$.subscribe(gameHubState => {
-          this.log("[GB GameHub]: Hub state is", gameHubState);
-        }),
-
-        combineLatest([this.gameHub.hubState$, this.gameHub.joinedGameIds$]).pipe(
-          map(([hubState, joinedGameIds]) => ({ hubState, joinedGameIds }))
-        ).subscribe(ctx => {
-          this.log("Game hub state change:", ctx);
-          this.gameHubStatusLightState = this.hubStateToStatusLightState(ctx.hubState);
-          this.tooltip = this.buildGameHubToolTip(ctx);
+          this.log("[GB GameHub]: State change to", gameHubState);
+          this.gameHubStatusLightState = this.hubStateToStatusLightState(gameHubState);
         }),
 
         this.userHub.hubState$.subscribe(userHubState => {
@@ -113,14 +99,14 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
     }
   }
 
-  private buildGameHubToolTip(gameHubContext: { hubState: HubConnectionState, joinedGameIds: string[] }): string {
-    let tooltip = `GameHub: ${gameHubContext.hubState}`;
+  private buildGameHubToolTip(enrollments: string[]): string {
+    let tooltip = "";
 
-    if (gameHubContext.joinedGameIds.length) {
+    if (enrollments.length) {
       tooltip += "\nGames:\n";
 
-      for (const gameId of gameHubContext.joinedGameIds) {
-        tooltip += `\n\t- ${gameId}`;
+      for (const enrollment of enrollments) {
+        tooltip += `\n\t- ${enrollment}`;
       }
     }
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 
 export type StatusLightState = "none" | "preparing" | "active" | "error";
 
@@ -19,5 +19,5 @@ export type StatusLightState = "none" | "preparing" | "active" | "error";
 })
 export class StatusLightComponent {
   @Input() state: StatusLightState = "none";
-  @Input() tooltip = "";
+  @Input() tooltip: string | TemplateRef<any> = "";
 }

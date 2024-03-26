@@ -103,13 +103,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     }
 
     this.log.logInfo("Checking hub connection to game", ctx.game.id);
-    if (!this.gameHub.isConnectedToGame(ctx.game.id)) {
-      this.log.logInfo(`Not connected to game "${ctx.game.id}" - connecting now.`);
-      await this.gameHub.joinGame(ctx.game.id);
-      this.log.logInfo(`Connected to game "${ctx.game.id}".`);
-    }
-    else {
-      this.log.logInfo(`Already connected to game "${ctx.game.id}". Skipping connection.`);
+    const isConnected = this.gameHub.isConnectedToGame(ctx.game.id);
+
+    if (!isConnected) {
+      const error = `Not connected to hub for game ${ctx.game.id}`;
+      this.errors.push(error);
+      throw new Error(error);
     }
 
     if (ctx.game.mode == GameEngineMode.External) {

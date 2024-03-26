@@ -43,17 +43,14 @@ export class SessionStartControlsComponent implements OnInit {
     if (this.ctx.game.requireSynchronizedStart) {
       // update stuff state of the game hub on init
       this.handleNewSyncStartState(await firstValueFrom(this.gameService.getSyncStartState(this.ctx.game.id)));
-      this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id);
 
       // when the hub updates, maintain state
       this.unsub.add(
-        this.gameHub.joinedGameIds$.subscribe(gameIds => {
-          this.isConnectedToGameHub = gameIds.some(gId => gId == this.ctx.game.id);
-        }),
         this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
           this.logService.logInfo("State update", stateUpdate);
           this.handleNewSyncStartState(stateUpdate);
-        })
+        }),
+        this.gameHub.activeEnrollments$.subscribe(() => this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id)),
       );
     }
   }

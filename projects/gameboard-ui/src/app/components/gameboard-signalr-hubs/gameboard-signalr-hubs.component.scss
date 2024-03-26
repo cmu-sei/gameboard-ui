@@ -1,0 +1,11 @@
+:host ::ng-deep {
+  .game-hub-tooltip-container,
+  .tooltip-inner {
+    text-align: left;
+  }
+
+  ul li {
+    list-style-type: square;
+    margin-left: 1rem;
+  }
+}

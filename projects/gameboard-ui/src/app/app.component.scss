@@ -7,8 +7,4 @@
   left: 0px;
   position: sticky;
   z-index: 999;
-
-  &.nonsticky {
-    position: unset;
-  }
 }

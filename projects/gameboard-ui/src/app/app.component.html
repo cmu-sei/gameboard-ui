@@ -2,11 +2,13 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <div class="app-container">
-  <div class="sticky-content" [class.nonsticky]="!(stickyMenu$ | async)">
+  <div [class.sticky-content]="(stickyMenu$ | async)">
     <app-sponsor-select-banner></app-sponsor-select-banner>
-    <app-nav></app-nav>
+    <div class="d-flex align-items-center">
+      <app-gameboard-signalr-hubs class="flex-grow-1"></app-gameboard-signalr-hubs>
+      <app-nav></app-nav>
+    </div>
   </div>
-  <app-gameboard-signalr-hubs></app-gameboard-signalr-hubs>
   <app-system-notifications></app-system-notifications>
   <app-message-board></app-message-board>
   <router-outlet></router-outlet>

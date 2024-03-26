@@ -1,5 +1,13 @@
-<ng-container *ngIf="isDevMode">
-    <app-status-light [state]="gameHubStatusLightState" [tooltip]="tooltip"></app-status-light>
+<div *ngIf="isDevMode" class="d-flex">
+    <app-status-light [state]="gameHubStatusLightState" [tooltip]="gameHubTtTemplate"
+        containerClass="game-hub-tooltip-container"></app-status-light>
     <app-status-light [state]="supportHubStatusLightState"></app-status-light>
     <app-status-light [state]="userHubStatusLightState" [tooltip]="userHubTooltip"></app-status-light>
-</ng-container>
+</div>
+
+<ng-template #gameHubTtTemplate let-context>
+    <h1 class="fs-11">GameHub: {{ gameHubStatusLightState | titlecase }}</h1>
+    <ul *ngIf="gameHubActiveEnrollments$ | async as enrollments">
+        <li *ngFor="let enrollment of enrollments">{{enrollment.game.name}}</li>
+    </ul>
+</ng-template>
