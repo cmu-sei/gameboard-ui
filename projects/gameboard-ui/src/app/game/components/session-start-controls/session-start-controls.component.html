@@ -4,7 +4,7 @@
             After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
         </p>
 
-        <p [hidden]="ctx.game.maxTeamSize < 2">
+        <p *ngIf="ctx.game.maxTeamSize > 1">
             This will start the session for the team, so be sure your teammates are ready to start. You cannot
             add or remove team members after your session has started.
         </p>
@@ -19,7 +19,7 @@
             "I'm ready" below. If you're all set to play, be sure to ready up so everyone can start playing!
         </p>
 
-        <div *ngIf="isConnectedToGameHub; else connectingToHub"
+        <div *ngIf="isConnectedToGameHub; else loading"
             class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
             <progressbar class="flex-grow-1" [animate]="true" [value]="playerReadyPct" [max]="100" [ariaValueMin]="0"
                 [ariaValueMax]="100" type="info">
@@ -30,6 +30,13 @@
                 {{ playerReadyCount }} / {{ playerReadyCount + playerNotReadyCount }} players ready
             </p>
         </div>
+    </alert>
+
+    <alert type="danger" *ngIf="ctx.game.requireSynchronizedStart && isHubConnectionError">
+        <h3><strong>Game Connection Error</strong></h3>
+        <p>
+            We're having trouble connecting you to the game. Don't worry; we'll keep trying.
+        </p>
     </alert>
 
     <div class="d-flex align-items-center justify-content-center" *ngIf="!isDoubleChecking">
@@ -63,14 +70,13 @@
             <alert type="danger">
                 <ul>
                     <li>After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes!</li>
-                    <li [hidden]="ctx.game.maxTeamSize < 2">
-                        This will start the session for the team, so be sure your
-                        teammates are ready to start!
+                    <li [hidden]="ctx.game.maxTeamSize < 2 && ctx.game.mode !== 'external'">
+                        This will start the session for the team, so be sure your teammates are ready to start!
                     </li>
                     <li [hidden]="ctx.game.maxTeamSize < 2">
                         You cannot add or remove team members after your session has started!
                     </li>
-                    <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it!</li>
+                    <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it.</li>
                 </ul>
             </alert>
 
@@ -85,6 +91,10 @@
     </div>
 </div>
 
+<ng-template #loading>
+    <app-spinner color="#ffffff"></app-spinner>
+</ng-template>
+
 <ng-template #connectingToHub>
-    <app-spinner>Connecting to the game...</app-spinner>
+    <app-spinner text="Connecting to the game..." textPosition="bottom"></app-spinner>
 </ng-template>

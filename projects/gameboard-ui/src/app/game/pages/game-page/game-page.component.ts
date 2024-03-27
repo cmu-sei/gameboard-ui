@@ -190,7 +190,7 @@ export class GamePageComponent implements OnDestroy {
         // join the hub that coordinates across everyone playing this game
         // (for sync start, external game launch, etc.)
         if (ctx.game.requireSynchronizedStart || this.isExternalGame) {
-          this.logService.logInfo("This is an external or sync-start game. Joining the game hub...");
+          this.logService.logInfo("This is an external or sync-start game. Listening for game hub events...");
 
           // wire up listeners to move the player along when sync start is ready
           this.externalGameLaunchStartedSubscription?.unsubscribe();

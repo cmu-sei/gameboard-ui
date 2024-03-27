@@ -215,7 +215,7 @@ a[routerLink] {
   font-size: 1.2rem;
 }
 
-app-spinner svg {
+app-spinner svg.default-theme {
   rect,
   path {
     fill: theme-color("success");

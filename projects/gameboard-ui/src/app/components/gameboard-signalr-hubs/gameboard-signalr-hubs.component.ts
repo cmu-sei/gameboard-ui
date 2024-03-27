@@ -20,12 +20,14 @@ import { GameHubActiveEnrollment } from '@/services/signalR/game-hub.models';
 })
 export class GameboardSignalRHubsComponent implements OnDestroy {
   protected isDevMode = false;
-  protected gameHubStatusLightState: StatusLightState = "none";
   protected supportHubStatusLightState: StatusLightState = "none";
   protected userHubStatusLightState: StatusLightState = "none";
 
-  protected gameHubActiveEnrollments$: Observable<GameHubActiveEnrollment[]>;
-  protected gameHubTooltip = "";
+  protected gameHubContext: {
+    activeEnrollments$: Observable<GameHubActiveEnrollment[]>,
+    hubState$: Observable<HubConnectionState>,
+    status: StatusLightState,
+  };
   protected userHubTooltip = "";
 
   constructor(
@@ -40,7 +42,11 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
     );
 
     this.isDevMode = !environment.production;
-    this.gameHubActiveEnrollments$ = this.gameHub.activeEnrollments$;
+    this.gameHubContext = {
+      activeEnrollments$: this.gameHub.activeEnrollments$,
+      hubState$: this.gameHub.hubState$,
+      status: "none"
+    };
   }
 
   async ngOnDestroy(): Promise<void> {
@@ -48,8 +54,6 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
   }
 
   private async handleLocalUserChanged(u: ApiUser | null) {
-    this.log("Local user changed", u);
-
     // hubs automatically manage repeated calls to connect/disconnect, so you won't
     // get duplicate connections if, for example, connect is called while it's already connected
     if (!u) {
@@ -72,12 +76,11 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       // listen for interesting events to log
       this.unsub.add(
         this.gameHub.hubState$.subscribe(gameHubState => {
-          this.log("[GB GameHub]: State change to", gameHubState);
-          this.gameHubStatusLightState = this.hubStateToStatusLightState(gameHubState);
+          this.log("State change to", gameHubState);
+          this.gameHubContext.status = this.hubStateToStatusLightState(gameHubState);
         }),
 
         this.userHub.hubState$.subscribe(userHubState => {
-          this.log("[GB UserHub]: Hub state is", userHubState);
           this.userHubStatusLightState = this.hubStateToStatusLightState(userHubState);
           this.userHubTooltip = `UserHub: ${userHubState}`;
         }),
@@ -97,20 +100,6 @@ export class GameboardSignalRHubsComponent implements OnDestroy {
       default:
         return "preparing";
     }
-  }
-
-  private buildGameHubToolTip(enrollments: string[]): string {
-    let tooltip = "";
-
-    if (enrollments.length) {
-      tooltip += "\nGames:\n";
-
-      for (const enrollment of enrollments) {
-        tooltip += `\n\t- ${enrollment}`;
-      }
-    }
-
-    return tooltip;
   }
 
   private log(...args: any[]) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, firstValueFrom, map, timer } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, timer } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, HubConnectionState, IHttpConnectionOptions } from '@microsoft/signalr';
 import { UserService } from '@/api/user.service';
 import { ConfigService } from '@/utility/config.service';
@@ -13,10 +13,12 @@ export class SignalRService {
   private readonly AUTO_RECONNECT_INTERVALS = [1000, 2000, 3000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000];
 
   private _connection?: HubConnection;
+  private _connectionId$ = new BehaviorSubject<string | null>(null);
   private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
   private _events$ = new BehaviorSubject<SignalRHubEventHandler<any> | null>(null);
   private _eventHandlers: SignalRHubEventHandlerCollection = {};
 
+  public connectionId$ = this._connectionId$.asObservable();
   public events$ = this._events$.asObservable();
   public state$ = this._connectionState$.asObservable();
 
@@ -43,13 +45,14 @@ export class SignalRService {
       await this.disconnect();
     }
 
-    this.logger.logInfo(this.formatForlog(`Building connection to`, connectToUrl));
+    this.logger.logInfo(this.formatForlog("Building connection to", connectToUrl));
     this._connection = this.buildConnection(connectToUrl, eventHandlers);
-    this.logger.logInfo(this.formatForlog(`Starting connection to`, connectToUrl));
+
+    this.logger.logInfo(this.formatForlog("Starting connection to", connectToUrl));
     await this.resolveOpenConnection(this._connection);
 
-    // this can resolve without an actual connection id, which is wild to me
-    // have to check the connection state rather than id to confirm
+    // because we skip negotiation below (which has unclear benefit to us but we're not messing with it for now)
+    // this can/does resolve without a connection id, so check the state instead
     if (this._connection?.state == HubConnectionState.Connected) {
       this.logger.logInfo(`Connection started with url`, connectToUrl);
     }
@@ -59,15 +62,14 @@ export class SignalRService {
     else {
       this.logger.logError(`CRITICAL: The SignalR service was unable to join hub "${connectToUrl}".`);
     }
-  }
 
-  public isConnnected() {
-    return this.isConnectedOrConnectingState(this._connectionState$.value);
+    this.updateState();
   }
 
   public async disconnect(): Promise<void> {
     this.logger.logInfo("Disconnecting from hub at ", this._connection?.baseUrl);
     this._connection?.stop();
+    this.updateState();
     this.logger.logInfo("Disconnected from", this._connection?.baseUrl);
   }
 
@@ -82,6 +84,7 @@ export class SignalRService {
     }
 
     if (this._connection.state !== HubConnectionState.Connected) {
+      this.updateState();
       this.logger.logWarning(`Can't send message "${message}" with parameters ${arg}. The hub is not connected (State: "${this._connection?.state}"). Attempting to connect...`);
       await this.resolveOpenConnection(this._connection);
       this.logger.logWarning(`Connected. Now sending message: "${message}."`);
@@ -104,7 +107,8 @@ export class SignalRService {
             authResult = firstValueFrom(this.userService.ticket().pipe(map(r => r?.ticket)));
           }
           catch (err: any) {
-            this._connectionState$.next(this._connection?.state || HubConnectionState.Disconnected);
+            this.logger.logError("[GB SignalR Error]:", err);
+            this.updateState();
           }
 
           return authResult;
@@ -119,6 +123,7 @@ export class SignalRService {
 
     connection.onclose(err => this.handleClose.bind(this)(err));
     connection.onreconnected(cid => this.handleConnected.bind(this)(cid));
+    connection.onreconnecting(err => this.handleReconnecting.bind(this)(err));
     this.bindEventHandlersToConnection(connection, eventHandlers, this._eventHandlers);
 
     return connection;
@@ -145,12 +150,13 @@ export class SignalRService {
 
   private async resolveOpenConnection(connection: HubConnection, attemptIntervals: number[] = this.AUTO_RECONNECT_INTERVALS): Promise<void> {
     if (connection.state == HubConnectionState.Disconnected) {
+      this.logger.logInfo("Disconnected - connecting to the SignalR hub at", connection.baseUrl);
       await connection.start();
     }
 
     if (connection.state === HubConnectionState.Connected) {
-      this.logger.logInfo("Connected to SignalR hub at", connection.baseUrl);
-      this.handleConnected();
+      this.logger.logInfo("Already connected to SignalR hub at", connection.baseUrl);
+      this.handleConnected(connection.connectionId || undefined);
       return;
     }
 
@@ -166,17 +172,24 @@ export class SignalRService {
 
   private handleConnected(connectionId?: string) {
     this.logger.logInfo(`SignalR Service | Connected ${(connectionId ? `connection id "${connectionId}"` : "")}`);
+    this._connectionId$.next(connectionId || null);
     this.updateState();
   }
 
   private handleClose(err?: Error) {
     this.logger.logInfo(this.formatForlog("SignalR service connection closed."));
     this._eventHandlers = {};
+    this._connectionId$.next(null);
 
     if (err) {
       this.logger.logError(this.formatForlog(`SignalR Service Error: ${err}`));
     }
 
+    this.updateState();
+  }
+
+  private handleReconnecting(err?: Error) {
+    this.logger.logInfo(this.formatForlog("SignalR service is reconnecting..."), err);
     this.updateState();
   }
 
