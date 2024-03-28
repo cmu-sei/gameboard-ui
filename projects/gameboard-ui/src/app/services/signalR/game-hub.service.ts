@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRService } from './signalr.service';
-import { GameStartState, GameHubEvent, GameHubEventType, YourActiveGamesChanged, GameHubActiveEnrollment } from './game-hub.models';
+import { GameStartState, GameHubEvent, GameHubEventType, GameHubActiveEnrollment } from './game-hub.models';
 import { LogService } from '@/services/log.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SyncStartGameState, SyncStartGameStartedState } from '@/game/game.models';
@@ -20,7 +20,7 @@ export class GameHubService {
   private _syncStartGameStateChanged$ = new Subject<SyncStartGameState>();
   private _syncStartGameStarted$ = new Subject<SyncStartGameStartedState>();
   private _syncStartGameStarting$ = new Subject<SyncStartGameState>();
-  private _yourActiveGamesChanged$ = new Subject<YourActiveGamesChanged>();
+  // private _yourActiveGamesChanged$ = new Subject<YourActiveGamesChanged>();
 
   public activeEnrollments$ = this._activeEnrollments$.asObservable();
   public externalGameLaunchProgressChanged$ = this._externalGameLaunchProgressChanged$.asObservable();
@@ -31,7 +31,7 @@ export class GameHubService {
   public syncStartGameStateChanged$ = this._syncStartGameStateChanged$.asObservable();
   public syncStartGameStarted$ = this._syncStartGameStarted$.asObservable();
   public syncStartGameStarting$ = this._syncStartGameStarting$.asObservable();
-  public yourActiveGamesChanged$ = this._yourActiveGamesChanged$.asObservable();
+  // public yourActiveGamesChanged$ = this._yourActiveGamesChanged$.asObservable();
 
   constructor(
     configService: ConfigService,
@@ -46,9 +46,11 @@ export class GameHubService {
   }
 
   isConnectedToGame = (gameId: string) => {
-    return this._signalRService.connectionState == HubConnectionState.Connected && this._activeEnrollments$.value.some(enrollment =>
-      enrollment.game.id === gameId
-    );
+    // return this._signalRService.connectionState == HubConnectionState.Connected && this._activeEnrollments$.value.some(enrollment =>
+    //   enrollment.game.id === gameId
+    // );
+
+    return this._signalRService.connectionState == HubConnectionState.Connected;
   };
 
   // This should _only_ be called once per login by the 
@@ -69,7 +71,7 @@ export class GameHubService {
         { eventType: GameHubEventType.SyncStartGameStateChanged, handler: this.handleSyncStartStateChanged.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStarted, handler: this.handleSyncStartGameStarted.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStarting, handler: this.handleSyncStartGameStarting.bind(this) },
-        { eventType: GameHubEventType.YourActiveGamesChanged, handler: this.handleYourActiveGamesChanged.bind(this) }
+        // { eventType: GameHubEventType.YourActiveGamesChanged, handler: this.handleYourActiveGamesChanged.bind(this) }
       ]);
   }
 
@@ -102,8 +104,8 @@ export class GameHubService {
     this.logService.logInfo("Sync start game starting...", ev.data);
   }
 
-  private handleYourActiveGamesChanged(ev: GameHubEvent<YourActiveGamesChanged>) {
-    this.logService.logInfo("You joined the game hub!", ev.data);
-    this._activeEnrollments$.next(ev.data.activeEnrollments.sort((a, b) => a.game.name.localeCompare(b.game.name)));
-  }
+  // private handleYourActiveGamesChanged(ev: GameHubEvent<YourActiveGamesChanged>) {
+  //   this.logService.logInfo("You joined the game hub!", ev.data);
+  //   this._activeEnrollments$.next(ev.data.activeEnrollments.sort((a, b) => a.game.name.localeCompare(b.game.name)));
+  // }
 }
