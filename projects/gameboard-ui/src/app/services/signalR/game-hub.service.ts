@@ -90,6 +90,7 @@ export class GameHubService {
   }
 
   private handleSyncStartStateChanged(ev: GameHubEvent<SyncStartGameState>) {
+    console.log("gamehub i have recenved a sync start state event and i think that's swell", ev);
     this.logService.logInfo("Sync start state changed:", ev.data);
     this._syncStartGameStateChanged$.next(ev.data);
   }

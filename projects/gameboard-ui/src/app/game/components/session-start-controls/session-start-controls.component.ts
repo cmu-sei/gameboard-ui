@@ -43,6 +43,7 @@ export class SessionStartControlsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (this.ctx.game.requireSynchronizedStart) {
+      console.log("gamehub this game requires sync start so i'm going to register things ok?");
       // update stuff state of the game hub on init
       this.handleNewSyncStartState(await firstValueFrom(this.gameService.getSyncStartState(this.ctx.game.id)));
 
@@ -65,6 +66,8 @@ export class SessionStartControlsComponent implements OnInit {
           }
         }),
       );
+
+      console.log("gamehub i registered some events i promise");
     }
   }
 
