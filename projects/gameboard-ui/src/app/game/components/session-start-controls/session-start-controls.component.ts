@@ -49,7 +49,10 @@ export class SessionStartControlsComponent implements OnInit {
 
       // when the hub updates, maintain state
       this.unsub.add(
-        this.gameHub.activeEnrollments$.subscribe(() => this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id)),
+        this.gameHub.activeEnrollments$.subscribe(() => {
+          this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id);
+          console.log("gamehub so my active enrollments changed and am i connected to the gamehub?", this.isConnectedToGameHub);
+        }),
         this.gameHub.hubState$.subscribe(state => {
           console.log("gamehub state update", state);
           this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id);
