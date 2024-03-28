@@ -50,12 +50,16 @@ export class SessionStartControlsComponent implements OnInit {
       this.unsub.add(
         this.gameHub.activeEnrollments$.subscribe(() => this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id)),
         this.gameHub.hubState$.subscribe(state => {
+          console.log("gamehub state update", state);
           this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id);
+          console.log("gamehub is connected", this.isConnectedToGameHub);
           this.isHubConnectionError = (state === HubConnectionState.Disconnected || state === HubConnectionState.Disconnecting);
         }),
 
         this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
+          console.log("gamehub new sync start state", stateUpdate);
           if (stateUpdate.game.id === this.ctx.game.id) {
+            console.log("gamehub it's for this game");
             this.logService.logInfo("State update", stateUpdate);
             this.handleNewSyncStartState(stateUpdate);
           }
