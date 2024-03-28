@@ -55,8 +55,10 @@ export class SessionStartControlsComponent implements OnInit {
         }),
 
         this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
-          this.logService.logInfo("State update", stateUpdate);
-          this.handleNewSyncStartState(stateUpdate);
+          if (stateUpdate.game.id === this.ctx.game.id) {
+            this.logService.logInfo("State update", stateUpdate);
+            this.handleNewSyncStartState(stateUpdate);
+          }
         }),
       );
     }
