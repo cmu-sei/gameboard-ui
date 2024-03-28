@@ -34,7 +34,7 @@ export class TeamService {
 
     unenroll(request: { teamId: string }) {
         return this.http.post(this.apiUrl.build(`team/${request.teamId}/session`), {
-            unenrollTeam: true
+            resetType: "unenrollAndArchiveChallenges"
         });
     }
 
