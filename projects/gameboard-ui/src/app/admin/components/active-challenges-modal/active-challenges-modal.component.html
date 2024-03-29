@@ -9,69 +9,94 @@
 
     <div class="modal-body" *ngIf="!isWorking; else loading">
         <ng-container *ngIf="specs?.length; else noChallenges">
-            <div *ngFor="let spec of specs" class="spec-container">
-                <h3>{{ spec.name }}</h3>
-                <h4 class="game-link">
-                    <a target="_blank" [routerLink]="['game/' + spec.game.id]">
-                        {{ spec.game.name }}
-                    </a>
-                </h4>
+            <div class="search container">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <fa-icon [icon]="fa.search"></fa-icon>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control"
+                        placeholder="Search by challenge ID/name, challenge spec ID, or team ID" appAutofocus
+                        aria-label="Team Search" (input)="handleSearchInput(searchInput.value || '')" #searchInput>
+                </div>
+            </div>
 
-                <ul class="d-flex flex-wrap">
-                    <li *ngFor="let challenge of spec.challenges" class="card challenge-card my-3 mr-3">
-                        <div class="card-body">
-                            <h5 class="overflow-ellipsis">
-                                {{ challenge.team.name }}
-                            </h5>
-                            <button type="button" class="btn btn-link text-info" appCopyOnClick
-                                tooltip="Copy this support code" placement="bottom">
-                                {{ {id: challenge.id, tag: spec.tag } | toSupportCode }}
-                            </button>
-                            <div class="challenge-times mt-2">
-                                <div class="start-time">
-                                    <span class="font-bold">Launched: </span>
-                                    <span>{{ challenge.startedAt | datetimeToDate | friendlyDateAndTime }}</span>
-                                </div>
-                                <div class="end-time">
-                                    <span class="font-bold">Session End: </span>
-                                    <span>{{ challenge.team.session.end | datetimeToDate | friendlyDateAndTime }}</span>
+            <ng-container *ngIf="matchingSpecs.length; else noMatchingChallenges">
+                <div *ngFor="let spec of matchingSpecs" class="spec-container">
+                    <h3>{{ spec.name }}</h3>
+                    <h4 class="game-link">
+                        <a target="_blank" [routerLink]="['game/' + spec.game.id]">
+                            {{ spec.game.name }}
+                        </a>
+                    </h4>
+
+                    <ul class="d-flex flex-wrap">
+                        <li *ngFor="let challenge of spec.challenges" class="card challenge-card my-3 mr-3">
+                            <div class="card-body">
+                                <h5 class="overflow-ellipsis">
+                                    {{ challenge.team.name }}
+                                </h5>
+                                <button type="button" class="btn btn-link text-info" appCopyOnClick
+                                    tooltip="Copy this support code" placement="bottom">
+                                    {{ {id: challenge.id, tag: spec.tag } | toSupportCode }}
+                                </button>
+                                <div class="challenge-times mt-2">
+                                    <div class="start-time">
+                                        <span class="font-bold">Launched: </span>
+                                        <span>{{ challenge.startedAt | datetimeToDate | friendlyDateAndTime }}</span>
+                                    </div>
+                                    <div class="end-time">
+                                        <span class="font-bold">Session End: </span>
+                                        <span>{{ challenge.team.session.end | datetimeToDate | friendlyDateAndTime
+                                            }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center px-3">
-                            <div class="flex-grow-1">
-                                <a [href]="'support/tickets?search=' + challenge.id | relativeToAbsoluteHref"
-                                    target="_blank" *ngIf="challenge.hasTickets" class="btn btn-warning"
-                                    tooltip="View open tickets for this challenge" placement="bottom">
-                                    <fa-icon [icon]="fa.ticket" size="lg"></fa-icon>
+
+                            <div class="card-footer d-flex align-items-center px-3">
+                                <div class="flex-grow-1">
+                                    <a [href]="'support/tickets?search=' + challenge.id | relativeToAbsoluteHref"
+                                        target="_blank" *ngIf="challenge.hasTickets" class="btn btn-warning"
+                                        tooltip="View open tickets for this challenge" placement="bottom">
+                                        <fa-icon [icon]="fa.ticket" size="lg"></fa-icon>
+                                    </a>
+                                </div>
+
+                                <button type="button" tooltip="Copy this challenge's ID" placement="bottom"
+                                    class="btn btn-info mr-2" [appCopyOnClick]="challenge.id">
+                                    <fa-icon [icon]="fa.copy"></fa-icon>
+                                </button>
+
+                                <a [href]="'admin/support?search=' + challenge.id | relativeToAbsoluteHref"
+                                    target="_blank" class="btn btn-info mr-2" tooltip="View this challenge's state"
+                                    placement="bottom">
+                                    <fa-icon [icon]="fa.barsStaggered" size="lg"></fa-icon>
+                                </a>
+
+                                <a [href]="'admin/registrar/' + spec.game.id + '?term=' + challenge.team.id | relativeToAbsoluteHref"
+                                    target="_blank" class="btn btn-info mr-2"
+                                    [tooltip]="'View this ' + (spec.game.isTeamGame ? 'team' : 'player') + '\'s session'"
+                                    placement="bottom">
+                                    <fa-icon [icon]="spec.game.isTeamGame ? fa.peopleGroup : fa.person"
+                                        size="lg"></fa-icon>
+                                </a>
+
+                                <a [href]="'admin/observer/challenges/' + spec.game.id + '?search=' + challenge.id | relativeToAbsoluteHref"
+                                    target="_blank" class="btn btn-info mr-2" tooltip="Observe this challenge"
+                                    placement="bottom">
+                                    <fa-icon [icon]="fa.eye" size="lg"></fa-icon>
+                                </a>
+
+                                <a [href]="'game/' + spec.game.id | relativeToAbsoluteHref" target="_blank"
+                                    class="btn btn-info" tooltip="View this game" placement="bottom">
+                                    <fa-icon [icon]="fa.chessBoard" size="lg"></fa-icon>
                                 </a>
                             </div>
-                            <a [href]="'admin/support?search=' + challenge.id | relativeToAbsoluteHref" target="_blank"
-                                class="btn btn-info mr-2" tooltip="View this challenge's state" placement="bottom">
-                                <fa-icon [icon]="fa.barsStaggered" size="lg"></fa-icon>
-                            </a>
-
-                            <a [href]="'admin/registrar/' + spec.game.id + '?term=' + challenge.team.id | relativeToAbsoluteHref"
-                                target="_blank" class="btn btn-info mr-2"
-                                [tooltip]="'View this ' + (spec.game.isTeamGame ? 'team' : 'player') + '\'s session'"
-                                placement="bottom">
-                                <fa-icon [icon]="spec.game.isTeamGame ? fa.peopleGroup : fa.person" size="lg"></fa-icon>
-                            </a>
-
-                            <a [href]="'admin/observer/challenges/' + spec.game.id + '?search=' + challenge.id | relativeToAbsoluteHref"
-                                target="_blank" class="btn btn-info mr-2" tooltip="Observe this challenge"
-                                placement="bottom">
-                                <fa-icon [icon]="fa.eye" size="lg"></fa-icon>
-                            </a>
-
-                            <a [href]="'game/' + spec.game.id | relativeToAbsoluteHref" target="_blank"
-                                class="btn btn-info" tooltip="View this game" placement="bottom">
-                                <fa-icon [icon]="fa.chessBoard" size="lg"></fa-icon>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+                        </li>
+                    </ul>
+                </div>
+            </ng-container>
         </ng-container>
     </div>
 
@@ -82,6 +107,10 @@
 
 <ng-template #noChallenges>
     <div class="text-center gray-text fs-11">There aren't any active challenges of this type right now.</div>
+</ng-template>
+
+<ng-template #noMatchingChallenges>
+    <div class="text-center gray-text fs-11">None of the active challenges match your search.</div>
 </ng-template>
 
 <ng-template #loading>
