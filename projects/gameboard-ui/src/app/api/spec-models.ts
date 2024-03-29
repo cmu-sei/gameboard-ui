@@ -15,6 +15,7 @@ export interface SpecDetail extends ExternalSpec {
   averageDeploySeconds: number;
   points: number;
   disabled: boolean;
+  isHidden: boolean;
   x: number;
   y: number;
   r: number;

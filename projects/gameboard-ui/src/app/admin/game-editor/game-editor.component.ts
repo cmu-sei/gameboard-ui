@@ -17,6 +17,7 @@ import { PracticeService } from '@/services/practice.service';
 import { ConfigService } from '@/utility/config.service';
 import { FeedbackTemplate } from '@/api/feedback-models';
 import { YamlService } from '@/services/yaml.service';
+import { Spec } from '@/api/spec-models';
 
 @Component({
   selector: 'app-game-editor',
@@ -36,6 +37,7 @@ export class GameEditorComponent implements AfterViewInit {
   viewing = 1;
   showCertificateInfo = false;
   showExternalGameFields = false;
+  protected specCount = 0;
   externalGameServerUrlBase = this.config.gamebrainhost;
 
   // the first time we flip the mode to external, suggest the gamebrainhost endpoint as the external startup
@@ -142,6 +144,10 @@ export class GameEditorComponent implements AfterViewInit {
     if (gameMode == GameEngineMode.External) {
       this.showExternalModeToast();
     }
+  }
+
+  protected handleSpecsUpdated(specs: Spec[]) {
+    this.specCount = specs.length;
   }
 
   showExternalModeToast(reduceDuration?: boolean) {

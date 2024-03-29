@@ -19,10 +19,9 @@
                 <th scope="col"> {{ scoreboardData.game.isTeamGame ? "Team" : "Player" }} </th>
                 <th scope="col">Challenges</th>
                 <th scope="col" class="text-center">
-                    <span class="tooltipped-column-header cursor-help" [tooltip]="cumulativeTimeTooltip"
-                        placement="top">
+                    <app-whats-this class="tooltipped-column-header" [whatItIs]="cumulativeTimeTooltip" placement="top">
                         Cumulative Time
-                    </span>
+                    </app-whats-this>
                 </th>
                 <th scope="col" class="text-center">Score</th>
             </tr>

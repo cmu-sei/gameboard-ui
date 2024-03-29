@@ -509,11 +509,11 @@
 
     <div class="section-header" tabindex="0" (click)="show(4)">
       <fa-icon [icon]="viewing===4 ? fa.caretDown : fa.caretRight"></fa-icon>
-      <span class="lead text-light"> Challenges </span>
+      <span class="lead text-light"> Challenges {{ specCount > 0 ? "(" + specCount + ")" : "" }}</span>
     </div>
 
     <div [hidden]="viewing!==4" class="mb-4">
-      <app-game-mapper [game]="game"></app-game-mapper>
+      <app-game-mapper class="d-block mt-3" [game]="game" (specsUpdated)="handleSpecsUpdated($event)"></app-game-mapper>
     </div>
   </ng-container>
 </form>

@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
@@ -21,6 +21,7 @@ import { ToastService } from '@/utility/services/toast.service';
 })
 export class GameMapperComponent implements OnInit, AfterViewInit {
   @Input() game!: Game;
+  @Output() specsUpdated = new EventEmitter<Spec[]>();
   @ViewChild('mapbox') mapboxRef!: ElementRef;
   @ViewChild('callout') calloutRef!: ElementRef;
 
@@ -65,7 +66,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
       debounceTime(500),
       switchMap(id => gameSvc.retrieveSpecs(id)),
       tap(r => this.list = r),
-      tap(r => this.checkForZeroPointActiveSpecs(r))
+      tap(r => this.checkForZeroPointActiveSpecs(r)),
+      tap(r => this.specsUpdated.emit(r))
     );
 
     this.gameBonusesConfig$ = this.refresh$.pipe(
@@ -119,19 +121,19 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
       switchMap(s => api.create(s)),
       tap(r => this.list.push(r)),
       tap(r => this.addedCount += 1),
-      tap(s => this.refresh())
+      tap(s => this.refresh()),
     );
 
     this.updated$ = this.updating$.pipe(
       debounceTime(500),
       filter(s => s.points === 0 || s.points > 0),
       switchMap(s => api.update(s)),
-      tap(s => this.refresh())
+      tap(s => this.refresh()),
     );
 
     this.deleted$ = this.deleting$.pipe(
       switchMap(s => api.delete(s.id)),
-      tap(() => this.refresh$.next(this.game.id))
+      tap(() => this.refresh$.next(this.game.id)),
     );
   }
 
@@ -201,6 +203,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   protected handleSpecUpdated(spec: Spec) {
     this.list = [...this.list.filter(s => s.id !== spec.id), spec];
     this.checkForZeroPointActiveSpecs(this.list);
+    this.specsUpdated.emit(this.list);
   }
 
   private checkForZeroPointActiveSpecs(specs: Spec[]) {

@@ -1,11 +1,11 @@
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Subject, debounceTime, filter, switchMap, tap } from 'rxjs';
 import { Spec } from '@/api/spec-models';
 import { SpecService } from '@/api/spec.service';
 import { fa } from '@/services/font-awesome.service';
 import { ChallengeSpecScoringConfig } from '@/services/scoring/scoring.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { slug } from '@/tools/functions';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Subject, debounceTime, filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-challenge-spec-editor',
