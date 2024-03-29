@@ -25,7 +25,7 @@ interface FixedToastOptions {
   gravity: "top" | "bottom";
   position: "center" | "right" | "left";
   showCloseIcon: boolean;
-  style: { [rule: string]: string };
+  style?: { [rule: string]: string };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -40,11 +40,7 @@ export class ToastService {
     escapeMarkup: false,
     gravity: "top",
     position: "center",
-    showCloseIcon: true,
-    style: {
-      background: "var(--dark)",
-      border: "solid 1px var(--light)"
-    },
+    showCloseIcon: true
   };
 
   showMessage(text: string) {

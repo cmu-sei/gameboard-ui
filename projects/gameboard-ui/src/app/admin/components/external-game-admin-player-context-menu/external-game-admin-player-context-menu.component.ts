@@ -34,12 +34,13 @@ export class ExternalGameAdminPlayerContextMenuComponent implements OnChanges {
 
   protected copy(text: string, description: string) {
     this.clipboardService.copy(text);
-    this.toastService.showMessage(`Copied ${description} ${text} to your clipboard.`);
+    this.toastService.showMessage(`Copied ${description} **${text}** to your clipboard.`);
   }
 
-  protected async togglePlayerReadyStatusClicked(playerId: string, currentIsReady: boolean) {
-    const isReady = !currentIsReady;
-    await firstValueFrom(this.syncStartService.updatePlayerReadyState(playerId, { isReady }));
-    this.playerReadyStateChanged.emit({ playerId, isReady });
+  protected async togglePlayerReadyStatusClicked(player: ExternalGameAdminPlayerContextMenuData) {
+    const isReady = !player.isSyncStartReady;
+    await firstValueFrom(this.syncStartService.updatePlayerReadyState(player.id, { isReady }));
+    this.toastService.showMessage(`Player **${player.name}** is now ${isReady ? "" : " not"} ready.`);
+    this.playerReadyStateChanged.emit({ playerId: player.id, isReady });
   }
 }

@@ -10,7 +10,7 @@ import { ExternalGameService } from '@/services/external-game.service';
 import { ActivatedRoute } from '@angular/router';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
 
-export type ExternalGameAdminPlayerStatus = "notConnected" | "notReady" | "ready";
+export type SyncStartPlayerStatus = "notConnected" | "notReady" | "ready";
 
 export interface ExternalGameAdminTeam {
   id: string;
@@ -23,7 +23,7 @@ export interface ExternalGameAdminTeam {
     name: string;
     isManager: boolean;
     sponsor: SimpleSponsor;
-    status: ExternalGameAdminPlayerStatus;
+    status: SyncStartPlayerStatus;
     user: SimpleEntity;
   }[],
   challenges: ExternalGameAdminChallenge[]
@@ -76,16 +76,16 @@ export class ExternalGameAdminComponent implements OnInit {
   ngOnInit(): void {
     this.unsub.add(
       combineLatest([
-        timer(0, this.autoUpdateInterval),
-        this.forceRefresh$
-      ]).pipe(
         // this is just here because server failures makes timer go off
         // like 3x a second
-        debounceTime(5000),
+        timer(0, this.autoUpdateInterval).pipe(debounceTime(5000)),
+        this.forceRefresh$
+      ]).pipe(
         map(([tick, _]) => this.route.snapshot.paramMap?.get("gameId")),
         filter(gameId => !!gameId)
       ).subscribe(gameId => this.load(gameId!))
     );
+
     this.gameId = this.route.snapshot.paramMap?.get("gameId") || undefined;
     if (!this.gameId)
       this.errors.push("No gameId passed to the component.");

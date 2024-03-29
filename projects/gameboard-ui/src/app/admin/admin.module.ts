@@ -48,6 +48,7 @@ import { SiteOverviewStatsComponent } from './components/site-overview-stats/sit
 import { SpecBrowserComponent } from './spec-browser/spec-browser.component';
 import { SponsorBrowserComponent } from './sponsor-browser/sponsor-browser.component';
 import { SupportReportLegacyComponent } from './support-report-legacy/support-report-legacy.component';
+import { SyncStartTeamPlayerReadyCountPipe } from './pipes/sync-start-team-player-ready-count.pipe';
 import { SystemNotificationsModule } from '@/system-notifications/system-notifications.module';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
 import { TeamObserverComponent } from './team-observer/team-observer.component';
@@ -62,6 +63,7 @@ import { ExtendTeamsModalComponent } from './components/extend-teams-modal/exten
 import { ActiveTeamsModalComponent } from './components/active-teams-modal/active-teams-modal.component';
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
+import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state-description.pipe';
 
 @NgModule({
   declarations: [
@@ -113,6 +115,8 @@ import { GameYamlImportModalComponent } from './components/game-yaml-import-moda
     ActiveTeamsModalComponent,
     AdminEnrollTeamModalComponent,
     GameYamlImportModalComponent,
+    SyncStartTeamPlayerReadyCountPipe,
+    SyncStartGameStateDescriptionPipe,
   ],
   imports: [
     CommonModule,

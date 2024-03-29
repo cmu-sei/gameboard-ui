@@ -1,9 +1,10 @@
 @import "../scss/variables";
 
 .gb-toast {
-  background-color: $info !important;
+  background-color: $dark !important;
+  background-image: none !important;
+  border: solid 2px $info;
   border-radius: 6px;
-  color: $gray-100;
   padding-left: 1rem;
   padding-right: 1rem;
 
@@ -15,6 +16,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    strong {
+      color: $info;
+    }
   }
 
   svg {

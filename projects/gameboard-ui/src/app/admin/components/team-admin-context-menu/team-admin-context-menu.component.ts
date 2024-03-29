@@ -50,7 +50,7 @@ export class TeamAdminContextMenuComponent implements OnInit {
 
   async copy(text: string, description: string) {
     await this.clipboardService.copy(text);
-    this.toastService.showMessage(`Copied ${description} "${text}" to your clipboard.`);
+    this.toastService.showMessage(`Copied ${description} **${text}** to your clipboard.`);
   }
 
   async handleUpdatePlayerReady(player: Player, isReady: boolean) {
@@ -59,8 +59,8 @@ export class TeamAdminContextMenuComponent implements OnInit {
     this.playerChange.emit(player);
     this.toastService.showMessage(
       player.isReady ?
-        `Player ${player.approvedName} has been readied.` :
-        `Player ${player.approvedName} is no longer ready.`
+        `Player **${player.approvedName}** has been readied.` :
+        `Player **${player.approvedName}** is no longer ready.`
     );
   }
 

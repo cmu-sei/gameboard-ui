@@ -151,13 +151,27 @@ h5 {
 }
 
 /* TABLE-Y STUFF */
-
 th[align="right"] {
   text-align: right;
 }
 
 th[align="center"] {
   text-align: center;
+}
+
+.gameboard-table {
+  width: 100%;
+
+  thead {
+    border-bottom: solid 1px $foreground;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    width: 100%;
+
+    th {
+      padding-bottom: 0.5rem;
+    }
+  }
 }
 
 .spacer {
@@ -334,21 +348,6 @@ th[align="left"] {
 
 .font-bold {
   font-weight: bold !important;
-}
-
-.gameboard-table {
-  width: 100%;
-
-  thead {
-    border-bottom: solid 1px $foreground;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    width: 100%;
-
-    th {
-      padding-bottom: 0.5rem;
-    }
-  }
 }
 
 .text-capitalize {
