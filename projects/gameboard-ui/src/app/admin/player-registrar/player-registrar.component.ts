@@ -23,6 +23,7 @@ import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/exte
 import { unique } from 'projects/gameboard-ui/src/tools';
 import { ToastService } from '@/utility/services/toast.service';
 import { AdminEnrollTeamModalComponent } from '../components/admin-enroll-team-modal/admin-enroll-team-modal.component';
+import { GameSessionService } from '@/services/game-session.service';
 
 @Component({
   selector: 'app-player-registrar',
@@ -66,6 +67,7 @@ export class PlayerRegistrarComponent {
   constructor(
     route: ActivatedRoute,
     private gameapi: GameService,
+    private gameSessionService: GameSessionService,
     private bsModalService: BsModalService,
     private modalConfirmService: ModalConfirmService,
     private api: PlayerService,
@@ -220,14 +222,7 @@ export class PlayerRegistrarComponent {
     await firstValueFrom(this.unityService.undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true }));
   }
 
-  private resetSession(request: TeamAdminContextMenuSessionResetRequest): void {
-    this.isLoading = true;
-    this.teamService.resetSession(request.player.teamId, { unenrollTeam: request.unenrollTeam }).pipe(first()).subscribe(_ => {
-      this.refresh$.next(true);
-    });
-  }
-
-  async unenroll(model: Player): Promise<void> {
+  async unenroll(model: Player,): Promise<void> {
     this.isLoading = true;
     await firstValueFrom(this.teamService.unenroll({ teamId: model.teamId }));
     this.refresh$.next(true);
@@ -281,10 +276,10 @@ export class PlayerRegistrarComponent {
     }).subscribe(() => this.clearSelected());
   }
 
-  rerank(gid: string): void {
-    this.gameapi.rerank(gid).subscribe(
-      () => this.refresh$.next(true)
-    );
+  async rerank(gid: string): Promise<void> {
+    await firstValueFrom(this.gameapi.rerank(gid));
+    () => this.refresh$.next(true);
+    this.toastService.showMessage(`${this.game.name} has been **re-ranked**.`);
   }
 
   protected handlePlayerAddClick(game: Game) {
@@ -293,7 +288,7 @@ export class PlayerRegistrarComponent {
       context: {
         game: game,
         onConfirm: result => {
-          this.toastService.showMessage(`Enrolled ${result.name}`);
+          this.toastService.showMessage(`Enrolled **${result.name}** in the game.`);
           this.refresh$.next(true);
         }
       },
@@ -306,28 +301,34 @@ export class PlayerRegistrarComponent {
   }
 
   protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
+    // this is all really window-dressing around the "reset" operation, which we describe as an unenroll if the team's session hasn't started
+    const isUnenroll = request.resetType === "unenrollAndArchiveChallenges" && this.gameSessionService.canUnenroll(request.player);
+    let confirmMessage = `Are you sure you want to unenroll ${this.game.allowTeam ? " team" : ""} **${request.player.approvedName}** from the game?`;
+    let confirmTitle = `Unenroll ${request.player.approvedName}?`;
+    let confirmToast = `**${request.player.approvedName}** has been unenrolled.`;
+
+    if (!isUnenroll) {
+      confirmMessage = `Are you sure you want to reset the session for ${this.game.allowTeam ? " team" : ""} **${request.player.approvedName}**?`;
+      confirmTitle = `Reset ${request.player.approvedName}'s session?`;
+      confirmToast = `${this.game.allowTeam ? "Team " : ""}**${request.player.approvedName}**'s session has been reset.`;
+
+      // accommodate various "types" of reset that can happen (e.g. keep challenges, don't keep challenges, destroy the universe and the unenroll)
+      if (request.resetType === "preserveChallenges")
+        confirmMessage += " Their challenges **won't** be archived automatically, and they'll remain enrolled in the game.";
+      else if (request.resetType == "unenrollAndArchiveChallenges")
+        confirmMessage += " Their challenges will be archived, and they'll be unenrolled from the game.";
+    }
+
     this.modalConfirmService.openConfirm({
-      bodyContent: `
-      Are you sure you want to reset the session for ${this.game.allowTeam ? " team" : ""} ${request.player.approvedName}?
-      ${(!request.unenrollTeam ? "" : `
-        They'll also be unenrolled from the game.`)}
-      `,
-      title: `Reset ${request.player.approvedName}'s session?`,
-      onConfirm: () => this.resetSession(request),
+      bodyContent: confirmMessage,
+      renderBodyAsMarkdown: true,
+      title: confirmTitle,
+      onConfirm: () => {
+        this.resetSession(request);
+        this.toastService.showMessage(confirmToast);
+      },
       confirmButtonText: "Yes, reset",
       cancelButtonText: "No, don't reset"
-    });
-  }
-
-  protected confirmUnenroll(player: Player) {
-    this.modalConfirmService.openConfirm({
-      bodyContent: `Are you sure you want to unenroll ${this.game.allowTeam ? " team " : ""}${player.approvedName}?`,
-      title: `Unenroll ${player.approvedName}?`,
-      onConfirm: () => {
-        this.unenroll(player);
-      },
-      confirmButtonText: "Yes, unenroll",
-      cancelButtonText: "No, don't unenroll"
     });
   }
 
@@ -340,5 +341,11 @@ export class PlayerRegistrarComponent {
         teamId: player.teamId
       }
     });
+  }
+
+  private async resetSession(request: TeamAdminContextMenuSessionResetRequest): Promise<void> {
+    this.isLoading = true;
+    await firstValueFrom(this.teamService.resetSession({ teamId: request.player.teamId, resetType: request.resetType }));
+    this.refresh$.next(true);
   }
 }

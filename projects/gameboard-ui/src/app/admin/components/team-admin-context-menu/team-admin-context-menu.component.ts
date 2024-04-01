@@ -7,10 +7,11 @@ import { ToastService } from '@/utility/services/toast.service';
 import { SyncStartService } from '@/services/sync-start.service';
 import { firstValueFrom } from 'rxjs';
 import { PlayerService } from '@/api/player.service';
+import { TeamSessionResetType } from '@/api/teams.models';
 
 export interface TeamAdminContextMenuSessionResetRequest {
   player: Player;
-  unenrollTeam: boolean;
+  resetType: TeamSessionResetType;
 }
 
 @Component({
@@ -25,9 +26,8 @@ export class TeamAdminContextMenuComponent implements OnInit {
   @Input() isSyncStartGame = false;
 
   @Output() bonusManageRequest = new EventEmitter<Player>();
-  @Output() playerChange = new EventEmitter<Player>
+  @Output() playerChange = new EventEmitter<Player>();
   @Output() sessionResetRequest = new EventEmitter<TeamAdminContextMenuSessionResetRequest>();
-  @Output() unenrollRequest = new EventEmitter<Player>();
   @Output() viewRequest = new EventEmitter<Player>();
 
   protected fa = fa;
@@ -55,12 +55,12 @@ export class TeamAdminContextMenuComponent implements OnInit {
 
   async handleUpdatePlayerReady(player: Player, isReady: boolean) {
     player.isReady = isReady;
-    await firstValueFrom(this.syncStartService.updatePlayerReadyState(player.id, { isReady }));
+    await firstValueFrom(this.syncStartService.updateTeamReadyState(player.teamId, { isReady }));
     this.playerChange.emit(player);
     this.toastService.showMessage(
       player.isReady ?
-        `Player **${player.approvedName}** has been readied.` :
-        `Player **${player.approvedName}** is no longer ready.`
+        `**${player.approvedName}**'s team has been readied.` :
+        `**${player.approvedName}**'s team is no longer ready.`
     );
   }
 
