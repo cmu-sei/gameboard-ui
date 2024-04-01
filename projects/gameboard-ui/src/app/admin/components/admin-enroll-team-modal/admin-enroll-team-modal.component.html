@@ -43,7 +43,7 @@
         <button type="button" class="btn link-button" (click)="close()">Cancel</button>
         <button type="button" class="btn btn-success" (click)="handleAddClick()"
             [disabled]="selectedUsers.length === 0 || (game.minTeamSize && (selectedUsers.length < game.minTeamSize)) || (game.maxTeamSize && (selectedUsers.length > game.maxTeamSize))">
-            Add {{ selectedUsers.length >= 2 ? "These " + selectedUsers.length + " Users" : "This User" }}
+            {{ (game.maxTeamSize || 0) > 1 ? "Create this team" : "Add this player" }}
         </button>
     </div>
 </div>
