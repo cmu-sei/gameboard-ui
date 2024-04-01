@@ -20,7 +20,7 @@ export class CopyOnClickDirective implements AfterViewInit {
       const text = (this.text || this.elementRef.nativeElement.innerHTML).trim();
       if (text) {
         this.clipboardService.copy(text);
-        this.toastService.showMessage(`Copied "${text}" to your clipboard.`);
+        this.toastService.showMessage(`Copied **${text}** to your clipboard.`);
       }
     };
   }

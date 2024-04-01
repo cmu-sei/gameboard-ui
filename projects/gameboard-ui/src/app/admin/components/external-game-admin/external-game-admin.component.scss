@@ -1,40 +1,64 @@
 h1 {
-    margin: 0;
+  margin: 0;
 }
 
 h2 {
-    letter-spacing: 0.3rem;
+  letter-spacing: 0.3rem;
 }
 
 h3.sync-session-date {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+}
+
+h5 {
+  font-weight: bold;
+  text-transform: uppercase;
+
+  .player-count {
+    font-weight: normal;
+    text-transform: none;
+  }
 }
 
 .team-card {
-    flex-basis: 48%;
+  flex-basis: 48%;
 }
 
 .team-avatars-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1rem;
 }
 
 tr {
-    border-bottom: dashed 1px #dedede;
+  border-bottom: dashed 1px #dedede;
 }
 
-td, th {
-    padding: 2px 4px;
+.challenge-button {
+  aspect-ratio: 1/1;
+  height: 26px;
+  width: 26px;
+  padding-bottom: 20px !important;
+}
+
+td,
+th {
+  padding: 2px 4px;
 }
 
 .not-deployed {
-    color: #888888;
+  color: #888888;
 }
 
-app-deployment-admin-team-context-menu, app-external-game-admin-player-context-menu {
-    display: block;
-    margin-top: -12px;
+::ng-deep .sync-start-description > p {
+  margin: 0;
+  padding-top: 10px;
+}
+
+app-deployment-admin-team-context-menu,
+app-external-game-admin-player-context-menu {
+  display: block;
+  margin-top: -12px;
 }

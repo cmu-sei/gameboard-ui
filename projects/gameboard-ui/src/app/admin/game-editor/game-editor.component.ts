@@ -17,6 +17,7 @@ import { PracticeService } from '@/services/practice.service';
 import { ConfigService } from '@/utility/config.service';
 import { FeedbackTemplate } from '@/api/feedback-models';
 import { YamlService } from '@/services/yaml.service';
+import { Spec } from '@/api/spec-models';
 
 @Component({
   selector: 'app-game-editor',
@@ -36,6 +37,7 @@ export class GameEditorComponent implements AfterViewInit {
   viewing = 1;
   showCertificateInfo = false;
   showExternalGameFields = false;
+  protected specCount = 0;
   externalGameServerUrlBase = this.config.gamebrainhost;
 
   // the first time we flip the mode to external, suggest the gamebrainhost endpoint as the external startup
@@ -144,6 +146,10 @@ export class GameEditorComponent implements AfterViewInit {
     }
   }
 
+  protected handleSpecsUpdated(specs: Spec[]) {
+    this.specCount = specs.length;
+  }
+
   showExternalModeToast(reduceDuration?: boolean) {
     this.game.playerMode = PlayerMode.competition;
     this.game.requireSynchronizedStart = true;
@@ -159,18 +165,13 @@ export class GameEditorComponent implements AfterViewInit {
 
   upload(files: File[], type: string): void {
     this.api.uploadImage(this.game.id, type, files[0]).subscribe(
-      r => {
-        this.game.logo = r.filename;
-      }
+      r => this.game.logo = r.filename
     );
   }
 
-  clearImage(): void {
-    this.api.deleteImage(this.game.id, 'card').subscribe(
-      r => {
-        this.game.logo = r.filename;
-      }
-    );
+  async clearImage() {
+    await this.api.deleteGameCardImage(this.game.id);
+    this.game.logo = "";
   }
 
   addSuggestions(games: Game[]) {

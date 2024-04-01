@@ -48,7 +48,7 @@
         recommend assigning a non-zero point value to each challenge.
       </alert>
 
-      <button class="mt-2 mb-4 btn btn-sm btn-outline-info" (click)="sync()">
+      <button class="mt-2 mb-4 btn btn-sm btn-info" (click)="sync()">
         <fa-icon [icon]="fa.sync"></fa-icon>
         <span>Sync with Source</span>
       </button>
@@ -93,7 +93,7 @@
           <fa-icon [icon]="fa.trash"></fa-icon>
           <span>Reset</span>
         </button>
-        <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.mapbox-hover]="!!specHover">
+        <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.cursor-pointer]="!!specHover">
           <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
             <span>{{this.specHover?.name}}</span><br />
             <span>Points: {{this.specHover?.points}}</span>

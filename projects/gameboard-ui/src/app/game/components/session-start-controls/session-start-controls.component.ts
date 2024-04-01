@@ -9,6 +9,7 @@ import { SyncStartGameState } from '@/game/game.models';
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { LogService } from '@/services/log.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-session-start-controls',
@@ -26,6 +27,7 @@ export class SessionStartControlsComponent implements OnInit {
   protected isDoubleChecking = false;
   protected isGameSyncStartReady = false;
   protected isConnectedToGameHub = false;
+  protected isHubConnectionError = false;
   protected isReadyingUp = false;
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
@@ -43,17 +45,21 @@ export class SessionStartControlsComponent implements OnInit {
     if (this.ctx.game.requireSynchronizedStart) {
       // update stuff state of the game hub on init
       this.handleNewSyncStartState(await firstValueFrom(this.gameService.getSyncStartState(this.ctx.game.id)));
-      this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id);
 
       // when the hub updates, maintain state
       this.unsub.add(
-        this.gameHub.joinedGameIds$.subscribe(gameIds => {
-          this.isConnectedToGameHub = gameIds.some(gId => gId == this.ctx.game.id);
+        this.gameHub.activeEnrollments$.subscribe(() => this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id)),
+        this.gameHub.hubState$.subscribe(state => {
+          this.isConnectedToGameHub = this.gameHub.isConnectedToGame(this.ctx.game.id);
+          this.isHubConnectionError = (state === HubConnectionState.Disconnected || state === HubConnectionState.Disconnecting);
         }),
+
         this.gameHub.syncStartGameStateChanged$.subscribe(stateUpdate => {
-          this.logService.logInfo("State update", stateUpdate);
-          this.handleNewSyncStartState(stateUpdate);
-        })
+          if (stateUpdate.game.id === this.ctx.game.id) {
+            this.logService.logInfo("State update", stateUpdate);
+            this.handleNewSyncStartState(stateUpdate);
+          }
+        }),
       );
     }
   }

@@ -164,7 +164,7 @@ export class PlayerSessionComponent implements OnDestroy {
 
     this.errors = [];
     this.isResetting = true;
-    await firstValueFrom(this.teamService.resetSession(p.teamId, { unenrollTeam: true }));
+    await firstValueFrom(this.teamService.resetSession({ teamId: p.teamId, resetType: "unenrollAndArchiveChallenges" }));
     delete p.session;
     this.onSessionReset.emit(p);
     this.player$.next(p);

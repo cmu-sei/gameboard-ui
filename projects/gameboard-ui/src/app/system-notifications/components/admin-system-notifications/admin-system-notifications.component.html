@@ -7,7 +7,7 @@
         optionally configure below). Once a player dismisses a notification, they won't see it again.
     </p>
 
-    <div class="notification-controls-container my-4">
+    <div class="notification-controls-container my-5">
         <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-lg btn-info" (click)="handleCreateNotificationClick()">
                 &plus; Create Notification
@@ -59,8 +59,10 @@
                 </td>
 
                 <td>
-                    <div><strong>{{notification.calloutViewCount}}</strong> callout views</div>
-                    <div><strong>{{notification.fullViewCount}}</strong> full views</div>
+                    <div><strong>{{notification.calloutViewCount}}</strong> callout {{ "view" |
+                        pluralizer:notification.calloutViewCount }}</div>
+                    <div><strong>{{notification.fullViewCount}}</strong> full {{ "view" |
+                        pluralizer:notification.fullViewCount }}</div>
                 </td>
 
                 <td>

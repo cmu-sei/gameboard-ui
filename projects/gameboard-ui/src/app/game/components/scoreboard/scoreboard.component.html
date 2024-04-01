@@ -19,9 +19,9 @@
                 <th scope="col"> {{ scoreboardData.game.isTeamGame ? "Team" : "Player" }} </th>
                 <th scope="col">Challenges</th>
                 <th scope="col" class="text-center">
-                    <span class="tooltipped-column-header" [tooltip]="cumulativeTimeTooltip" placement="top">
+                    <app-whats-this class="tooltipped-column-header" [whatItIs]="cumulativeTimeTooltip" placement="top">
                         Cumulative Time
-                    </span>
+                    </app-whats-this>
                 </th>
                 <th scope="col" class="text-center">Score</th>
             </tr>
@@ -45,7 +45,7 @@
 </ng-container>
 
 <ng-template #loading>
-    <app-spinner></app-spinner>
+    <app-spinner text="Checking in on the game..."></app-spinner>
 </ng-template>
 
 <ng-template #noScore>

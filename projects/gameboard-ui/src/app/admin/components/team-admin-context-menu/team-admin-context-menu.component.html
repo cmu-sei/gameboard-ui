@@ -29,17 +29,28 @@
             </li>
         </ng-container>
         <li class="divider dropdown-divider"></li>
-        <li role="menuitem" *ngIf="isResettingSession; else unenroll">
-            <button class="dropdown-item btn btn-danger"
-                (click)="sessionResetRequest.emit({ player, unenrollTeam: false})">
-                Reset Session
-            </button>
+        <ng-container *ngIf="isResettingSession; else unenroll">
+            <li role="menuitem">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="sessionResetRequest.emit({ player, resetType: 'preserveChallenges' })">
+                    Reset Session (Preserve Challenges)
+                </button>
+            </li>
 
-            <button class="dropdown-item btn btn-danger"
-                (click)="sessionResetRequest.emit({ player, unenrollTeam: true})">
-                Reset Session &amp; Unenroll
-            </button>
-        </li>
+            <li role="menuitem">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="sessionResetRequest.emit({ player, resetType: 'archiveChallenges' })">
+                    Reset Session
+                </button>
+            </li>
+
+            <li role="menuitem">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="sessionResetRequest.emit({ player, resetType: 'unenrollAndArchiveChallenges' })">
+                    Reset Session &amp; Unenroll
+                </button>
+            </li>
+        </ng-container>
     </ul>
 </div>
 
@@ -56,6 +67,6 @@
 <ng-template #unenroll>
     <li role="menuitem">
         <button type="button" class="dropdown-item btn btn-danger"
-            (click)="unenrollRequest.emit(player)">Unenroll</button>
+            (click)="sessionResetRequest.emit({ player, resetType: 'unenrollAndArchiveChallenges' })">Unenroll</button>
     </li>
 </ng-template>

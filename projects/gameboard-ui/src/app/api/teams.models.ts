@@ -19,6 +19,4 @@ export interface AdminExtendTeamSessionResponse {
     ]
 }
 
-export interface ResetTeamSessionRequest {
-    unenrollTeam: boolean;
-}
+export type TeamSessionResetType = "unenrollAndArchiveChallenges" | "archiveChallenges" | "preserveChallenges";

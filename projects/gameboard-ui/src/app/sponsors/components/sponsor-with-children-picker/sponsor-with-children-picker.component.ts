@@ -1,4 +1,5 @@
 import { Sponsor } from '@/api/sponsor-models';
+import { SponsorService } from '@/api/sponsor.service';
 import { ApiUser } from '@/api/user-models';
 import { UserService } from '@/api/user.service';
 import { ToastService } from '@/utility/services/toast.service';
@@ -21,6 +22,7 @@ export class SponsorWithChildrenPickerComponent implements OnInit {
   constructor(
     private api: UserService,
     private localUserService: LocalUserService,
+    private sponsorService: SponsorService,
     private toastService: ToastService) {
     this.localUser$ = localUserService.user$.asObservable();
   }
@@ -37,7 +39,10 @@ export class SponsorWithChildrenPickerComponent implements OnInit {
       sponsorId: sponsor.id
     }));
 
-    this.toastService.showMessage(`Your sponsor has been changed to "${sponsor.name}".`)
+    this.toastService.show({
+      avatarUrl: this.sponsorService.resolveAbsoluteSponsorLogoUri(sponsor.logo),
+      text: `Your sponsor has been changed to **${sponsor.name}**.`
+    });
     this.localUserService.refresh();
   }
 }

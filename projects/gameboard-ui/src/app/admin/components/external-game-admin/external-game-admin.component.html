@@ -4,13 +4,16 @@
     <h3 class="sync-session-date fs-12" *ngIf="sessionDateDescription">
         {{sessionDateDescription}}
     </h3>
+
     <hr class="light" />
 
     <div class="w-100">
         <app-error-div [errors]="errors"></app-error-div>
 
-        <div *ngIf="ctx.teams.length"
-            class="global-controls-container my-2 d-flex align-items-center justify-content-end">
+        <div *ngIf="ctx.teams.length" class="global-controls-container my-2 d-flex">
+            <div class="flex-grow-1 sync-start-description"
+                [innerHTML]="ctx | syncStartGameStateDescription | markdown"></div>
+
             <app-confirm-button btnClass="btn btn-lg btn-info" [disabled]="!canDeploy"
                 (confirm)="handlePreDeployAllClick(ctx.game.id)"
                 [tooltip]="ctx.overallDeployStatus == 'deploying' ? 'Resources are being deployed for this game. Hang tight...' : ''">
@@ -33,21 +36,29 @@
             <div *ngFor="let team of ctx.teams" class="card team-card mr-2 mb-2">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title flex-grow w-100">{{team.name}}</h4>
+                        <h4 class="card-title flex-grow w-100">
+                            {{team.name}}
+                            <span *ngIf="team.isReady" class="ml-2 mb-2 badge badge-info">Ready</span>
+                        </h4>
                         <app-deployment-admin-team-context-menu class="d-block" [team]="team" [isReady]="team.isReady"
                             (teamReadyStateToggled)="handleTeamReadyStateChanged(team.id)"></app-deployment-admin-team-context-menu>
                     </div>
 
                     <div class="card-text mb-4">
-                        <div class="card-section mb-4">
-                            <h5>Players</h5>
+                        <div class="card-section my-4">
+                            <h5 class="mb-3">
+                                Players
+                                <span class="player-count">({{ team.players | syncStartTeamPlayerReadyCount }}
+                                    ready)</span>
+                            </h5>
 
                             <ul class="player-list">
                                 <li *ngFor="let player of team.players" class="d-flex align-items-center w-100">
                                     <app-player-avatar [player]="player" size="tiny"></app-player-avatar>
-                                    <app-status-light [state]="player.status | externalGamePlayerStatusToStatusLight"
+                                    <app-status-light class="pb-1"
+                                        [state]="player.status | externalGamePlayerStatusToStatusLight"
                                         [tooltip]="player.status | externalGamePlayerStatusToFriendly"></app-status-light>
-                                    <div class="flex-grow-1">{{player.name}}</div>
+                                    <div class="flex-grow-1 pb-1">{{player.name}}</div>
                                     <app-external-game-admin-player-context-menu
                                         (playerReadyStateChanged)="handlePlayerReadyStateChanged($event.playerId)"
                                         [player]="{ id: player.id, name: player.name, isSyncStartReady: player.status == 'ready'}"></app-external-game-admin-player-context-menu>
@@ -62,40 +73,47 @@
                                 <col>
                                 <col>
                                 <col>
+                                <col>
 
                                 <thead class="thead-light">
                                     <tr>
                                         <th></th>
-                                        <th>Created</th>
-                                        <th>Deployed</th>
+                                        <th class="text-center">Created</th>
+                                        <th class="text-center">Deployed</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <tr *ngFor="let spec of ctx.specs">
                                         <td>
-                                            <span placement="top"
-                                                [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
-                                                {{spec.name}}
-                                            </span>
+                                            <span>{{spec.name}}</span>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span
                                                 [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated"
-                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated">
+                                                [class.text-info]="(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated">
                                                 {{((spec.id |
                                                 externalSpecIdToChallenge:team.challenges)!.challengeCreated ? "Yes" :
                                                 "No")}}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span
                                                 [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed"
-                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed">
+                                                [class.text-info]="(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed">
                                                 {{((spec.id |
                                                 externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed
                                                 ? "Yes" : "No")}}
                                             </span>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-dark p-1 challenge-button" *ngIf="(spec.id |
+                                                externalSpecIdToChallenge:team.challenges)!.challengeCreated"
+                                                [appCopyOnClick]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id">
+                                                <fa-icon [icon]="fa.copy" size="sm"
+                                                    [tooltip]="(spec.id | externalSpecIdToChallenge:team.challenges)?.id ? 'Copy this challenge ID to your clipboard' : ''"></fa-icon>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>

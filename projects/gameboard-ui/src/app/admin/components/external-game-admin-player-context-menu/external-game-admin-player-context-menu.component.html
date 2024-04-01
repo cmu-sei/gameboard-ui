@@ -6,8 +6,7 @@
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
         <li role="menuitem">
-            <button class="dropdown-item btn"
-                (click)="togglePlayerReadyStatusClicked(player.id, player.isSyncStartReady)">
+            <button class="dropdown-item btn" (click)="togglePlayerReadyStatusClicked(player)">
                 {{ (player.isSyncStartReady ? "Unready " : "Ready ") + player.name }}
             </button>
         </li>

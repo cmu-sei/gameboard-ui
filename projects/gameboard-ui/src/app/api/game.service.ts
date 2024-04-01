@@ -3,7 +3,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, firstValueFrom, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
@@ -87,14 +87,24 @@ export class GameService {
     return this.http.get<SessionForecast[]>(`${this.url}/game/${id}/sessions`);
   }
 
+  public deleteImage(id: string, type: string): Observable<any> {
+    return this.http.delete(`${this.url}/game/${id}/${type}`);
+  }
+
+  public async deleteGameCardImage(gameId: string): Promise<void> {
+    await firstValueFrom(this.http.delete(`${this.url}/game/${gameId}/card`));
+  }
+
   public uploadImage(id: string, type: string, file: File): Observable<UploadedFile> {
     const payload: FormData = new FormData();
     payload.append('file', file, file.name);
     return this.http.post<UploadedFile>(`${this.url}/game/${id}/${type}`, payload);
   }
 
-  public deleteImage(id: string, type: string): Observable<any> {
-    return this.http.delete(`${this.url}/game/${id}/${type}`);
+  public async uploadGameCardImage(id: string, file: File): Promise<UploadedFile> {
+    const body = new FormData();
+    body.append('file', file, file.name);
+    return await firstValueFrom(this.http.post<UploadedFile>(`${this.url}/game/${id}/card`, body));
   }
 
   public rerank(id: string): Observable<any> {

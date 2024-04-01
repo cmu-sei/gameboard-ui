@@ -7,11 +7,12 @@ import { Component, Input } from '@angular/core';
   selector: 'app-spinner',
   template: `
     <div class="spinner-component">
-      <h1 *ngIf="textPosition == 'top'"><ng-content></ng-content></h1>
+      <h1 *ngIf="textPosition === 'top' && !!text">{{text}}</h1>
+    
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
         y="0px" width="108px" height="132px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;"
-        xml:space="preserve">
-        <rect x="0" y="10" width="4" height="10" fill="#323" opacity="0.2">
+        xml:space="preserve" [class.default-theme]="!color">
+        <rect x="0" y="10" width="4" height="10" [attr.fill]="color" opacity="0.2">
           <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.9s"
             repeatCount="indefinite" />
           <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.9s"
@@ -19,7 +20,7 @@ import { Component, Input } from '@angular/core';
           <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.9s"
             repeatCount="indefinite" />
         </rect>
-        <rect x="8" y="10" width="4" height="10" fill="#323" opacity="0.2">
+        <rect x="8" y="10" width="4" height="10" [attr.fill]="color" [attr.stroke]="color"opacity="0.2">
           <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.9s"
             repeatCount="indefinite" />
           <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.9s"
@@ -27,7 +28,7 @@ import { Component, Input } from '@angular/core';
           <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.9s"
             repeatCount="indefinite" />
         </rect>
-        <rect x="16" y="10" width="4" height="10" fill="#323" opacity="0.2">
+        <rect x="16" y="10" width="4" height="10" [attr.fill]="color" [attr.stroke]="color"opacity="0.2">
           <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.9s"
             repeatCount="indefinite" />
           <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.9s"
@@ -36,13 +37,17 @@ import { Component, Input } from '@angular/core';
             repeatCount="indefinite" />
         </rect>
       </svg>
-      <h1 *ngIf="textPosition == 'bottom'"><ng-content></ng-content></h1>
+
+      <h1 *ngIf="textPosition !== 'top' && !!text">{{text}}</h1>
     </div>
   `,
   styles: [
-    ".spinner-component { width: 100%; text-align: center; }"
+    ".spinner-component { width: 100%; text-align: center; }",
+    "h1 { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; }"
   ],
 })
 export class SpinnerComponent {
+  @Input() color?: string;
+  @Input() text?: string;
   @Input() textPosition: "top" | "bottom" = "top";
 }

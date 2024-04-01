@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import Toastify from "toastify-js";
-import { ConfigService } from '../config.service';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeService } from '../../services/font-awesome.service';
+import { MarkdownService, ParseOptions } from 'ngx-markdown';
 
 export interface ToastOptions {
+  allowMarkdown?: boolean;
+  avatarUrl?: string;
   text: string;
   duration?: number;
   destination?: string;
@@ -23,14 +25,14 @@ interface FixedToastOptions {
   gravity: "top" | "bottom";
   position: "center" | "right" | "left";
   showCloseIcon: boolean;
-  style: { [rule: string]: string };
+  style?: { [rule: string]: string };
 }
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   constructor(
-    private config: ConfigService,
-    private faService: FontAwesomeService) { }
+    private faService: FontAwesomeService,
+    private markdownService: MarkdownService) { }
 
   private FIXED_OPTIONS: FixedToastOptions = {
     className: "gb-toast",
@@ -38,11 +40,7 @@ export class ToastService {
     escapeMarkup: false,
     gravity: "top",
     position: "center",
-    showCloseIcon: true,
-    style: {
-      background: "var(--dark)",
-      border: `solid 1px ${this.config.settings.custom_background || "var(--light)"}`
-    },
+    showCloseIcon: true
   };
 
   showMessage(text: string) {
@@ -56,8 +54,13 @@ export class ToastService {
   // to decouple direct reliance on toastify and enforce uniform
   // behavior across gameboard
   private toVendorOpts(options: ToastOptions): Toastify.Options {
+    // toastify requires "avatar", not "avatarUrl"
+    (options as any).avatar = options.avatarUrl;
+    delete options.avatarUrl;
+    const text = options.allowMarkdown === false ? options.text : this.markdownService.parse(options.text);
+
     const iconMarkup = options.faIcon ? this.faService.iconToSvg(options.faIcon) : null;
-    const textTemplate = `<div class="toast-container">${iconMarkup || ""}${options.text}</div>`;
+    const textTemplate = `<div class="toast-container">${iconMarkup || ""}${text}</div>`;
 
     return {
       ...options,

@@ -38,14 +38,14 @@
 
         <div class="team-detail-section d-flex align-items-stretch">
             <div class="pr-5 flex-basis-50 flex-grow-1">
-                <h4>Score</h4>
+                <h4 class="mb-0">Score</h4>
 
                 <div class="big-stat">
                     {{ context.score.overallScore.totalScore }} points
                 </div>
             </div>
             <div class="pl-5 flex-basis-50">
-                <h4>Cumulative Time</h4>
+                <h4 class="mb-0">Cumulative Time</h4>
                 <div class="big-stat">
                     {{ context.score.cumulativeTimeMs | msToDuration }}
                 </div>
@@ -86,12 +86,12 @@
                             {{ challenge.score.completionScore }}
                         </td>
                         <td *ngIf="hasAutoBonuses" class="numeric-column">
-                            <span [tooltip]="challenge.bonuses | manualBonusesToTooltip">
+                            <span [tooltip]="challenge.bonuses | challengeBonusesToTooltip">
                                 {{ challenge.score.bonusScore }}
                             </span>
                         </td>
                         <td *ngIf="hasManualChallengeBonuses" class="numeric-column">
-                            <span [tooltip]="challenge.manualBonuses | manualBonusesToTooltip">
+                            <span [tooltip]="challenge.manualBonuses | challengeBonusesToTooltip">
                                 {{ challenge.score.manualBonusScore }}
                             </span>
                         </td>

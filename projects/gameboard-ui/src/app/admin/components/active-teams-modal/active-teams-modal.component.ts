@@ -18,11 +18,30 @@ export class ActiveTeamsModalComponent implements OnInit {
   protected errors: any[] = [];
   protected fa = fa;
   protected isWorking = false;
+
+  protected matchingSearchTeams: AppActiveTeam[] = [];
   protected teams: AppActiveTeam[] = [];
 
   async ngOnInit(): Promise<void> {
     const response = await firstValueFrom(this.admin.getActiveTeams());
     this.teams = response.teams;
+    this.matchingSearchTeams = response.teams;
+  }
+
+  protected handleSearchInput(text: string) {
+    if (!text) {
+      this.matchingSearchTeams = this.teams;
+      return;
+    }
+
+    text = text.toLowerCase();
+
+    this.matchingSearchTeams = this
+      .teams
+      .filter(t =>
+        t.name.toLowerCase().indexOf(text) >= 0 ||
+        t.id.toLowerCase().indexOf(text) >= 0
+      );
   }
 
   protected close() {

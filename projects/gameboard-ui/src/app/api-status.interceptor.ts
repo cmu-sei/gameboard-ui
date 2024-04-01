@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { Observable, Subject, finalize, tap } from 'rxjs';
+import { Observable, finalize, tap, BehaviorSubject } from 'rxjs';
 import { ApiStatus } from './api/api-status.service';
 
 // not sure how much sense this makes, but I'm trying it. Basically, it feels funky
@@ -10,8 +10,10 @@ import { ApiStatus } from './api/api-status.service';
 // HttpInterceptor and just consume the service, independent of what's powering it.
 @Injectable()
 export class ApiStatusInterceptor implements HttpInterceptor {
-    private _apiStatus$ = new Subject<ApiStatus>();
-    public apiStatus$ = this._apiStatus$.asObservable();
+    private _apiStatus$ = new BehaviorSubject<ApiStatus>("up");
+    public apiStatus$ = this
+        ._apiStatus$
+        .asObservable();
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let finalResponse: HttpEvent<any> | HttpErrorResponse;

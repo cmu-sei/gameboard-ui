@@ -24,11 +24,12 @@ export class ExternalGameAdminTeamContextMenuComponent {
 
   protected handleCopyClicked(text: string) {
     this.clipboardService.copy(text);
-    this.toastService.showMessage(`Copied team ID "${text}" to your clipboard.`);
+    this.toastService.showMessage(`Copied team ID **${text}** to your clipboard.`);
   }
 
   protected async handleTeamReadyStatusToggled(team: SimpleEntity, isReady: boolean) {
     await firstValueFrom(this.syncStartService.updateTeamReadyState(team.id, { isReady: !isReady }));
+    this.toastService.showMessage(`Team **${team.name}** is now ${!!isReady ? "not " : ""} ready.`);
     this.teamReadyStateToggled.emit({ teamId: team.id, isReady: !isReady });
   }
 }

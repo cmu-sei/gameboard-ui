@@ -108,6 +108,7 @@ import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.
 import { ToTemplateContextPipe } from './pipes/to-template-context.pipe';
 import { TrimPipe } from './pipes/trim.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
+import { WhatsThisComponent } from './components/whats-this/whats-this.component';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
 import { YamlBlockComponent } from './components/yaml-block/yaml-block.component';
 import { YamlPipe } from './pipes/yaml.pipe';
@@ -199,6 +200,7 @@ const PUBLIC_DECLARATIONS = [
   ToTemplateContextPipe,
   TicketStatusBadgePipe,
   UrlRewritePipe,
+  WhatsThisComponent,
   WhitespacePipe,
   YamlBlockComponent,
   YamlPipe

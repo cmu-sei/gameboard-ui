@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
-import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, ResetTeamSessionRequest } from "./teams.models";
+import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools";
 
@@ -32,9 +32,9 @@ export class TeamService {
         );
     }
 
-    unenroll(request: { teamId: string }) {
+    unenroll(request: { teamId: string, resetType?: TeamSessionResetType }) {
         return this.http.post(this.apiUrl.build(`team/${request.teamId}/session`), {
-            unenrollTeam: true
+            resetType: request.resetType || "unenrollAndArchiveChallenges"
         });
     }
 
@@ -69,9 +69,9 @@ export class TeamService {
         return this.updateSession(model);
     }
 
-    public resetSession(teamId: string, request: ResetTeamSessionRequest): Observable<void> {
-        return this.http.post<void>(this.apiUrl.build(`/team/${teamId}/session`), request).pipe(
-            tap(_ => this._teamSessionReset$.next(teamId))
+    public resetSession(request: { teamId: string, resetType?: TeamSessionResetType }): Observable<void> {
+        return this.http.post<void>(this.apiUrl.build(`/team/${request.teamId}/session`), request).pipe(
+            tap(_ => this._teamSessionReset$.next(request.teamId))
         );
     }
 

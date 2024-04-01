@@ -194,7 +194,7 @@
         <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
           [isSyncStartGame]="game.requireSynchronizedStart" (bonusManageRequest)="manageManualBonuses(player)"
           (playerChange)="handlePlayerChange($event)" (sessionResetRequest)="confirmReset($event)"
-          (unenrollRequest)="confirmUnenroll($event)" (viewRequest)="view($event)">
+          (viewRequest)="view($event)">
         </app-team-admin-context-menu>
       </div>
       <div *ngIf="viewed === player" class="col-12">

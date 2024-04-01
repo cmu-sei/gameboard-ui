@@ -18,25 +18,24 @@ export class GameHubEventType implements SignalRHubEventType {
     static ExternalGameLaunchStart = "externalGameLaunchStart";
     static ExternalGameLaunchEnd = "externalGameLaunchEnd";
     static ExternalGameLaunchFailure = "externalGameLaunchFailure";
-    static PlayerJoined = "playerJoined";
     static SyncStartGameStarted = "syncStartGameStarted";
     static SyncStartGameStarting = "syncStartGameStarting";
     static SyncStartGameStateChanged = "syncStartGameStateChanged";
     static VerifyAllPlayersConnectedStart = "verifyAllPlayersConnectedStart";
     static VerifyAllPlayersConnectedCountChange = "verifyAllPlayersConnectedCountChange";
     static VerifyAllPlayersConnectedEnd = "verifyAllPlayersConnectedEnd";
-    static YouJoined = "YouJoined";
+    // static YourActiveGamesChanged = "YourActiveGamesChanged";
 }
 
-export interface PlayerJoinedEvent {
-    gameId: string;
+export interface GameHubActiveEnrollment {
+    game: SimpleEntity;
     player: SimpleEntity;
 }
 
-export interface YouJoinedEvent {
-    connectionId: string;
-    userId: string;
-}
+// export interface YourActiveGamesChanged {
+//     userId: string;
+//     activeEnrollments: GameHubActiveEnrollment[];
+// }
 
 export interface GameStartState {
     game: SimpleEntity;
