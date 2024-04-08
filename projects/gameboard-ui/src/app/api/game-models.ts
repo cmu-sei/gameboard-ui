@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { FeedbackTemplate } from "./feedback-models";
+import { SimpleEntity } from "./models";
 import { Player, PlayerMode, TimeWindow } from "./player-models";
 import { ApiUser } from "./user-models";
 
@@ -135,6 +136,33 @@ export enum GamePlayState {
 }
 
 export type ExternalGameDeployStatus = "notStarted" | "partiallyDeployed" | "deploying" | "deployed";
+
+export interface ExternalGameHost {
+  id: string;
+  name: string;
+  clientUrl: string;
+  destroyResourcesOnDeployFailure?: boolean;
+  gamespaceDeployBatchSize?: number;
+  hostApiKey?: string;
+  hostUrl: string;
+  pingEndpoint?: string;
+  startupEndpoint: string;
+  teamExtendedEndpoint?: string;
+  usedByGames: SimpleEntity[];
+}
+
+export interface UpsertExternalGameHost {
+  id?: string;
+  name: string;
+  clientUrl: string;
+  hostUrl: string;
+  startupEndpoint: string;
+  destroyResourcesOnDeployFailure?: boolean;
+  gamespaceDeployBatchSize?: number;
+  hostApiKey?: string;
+  pingEndpoint?: string;
+  teamExtendedEndpoint?: string;
+}
 
 export interface GetExternalTeamDataResponse {
   teamId: string;

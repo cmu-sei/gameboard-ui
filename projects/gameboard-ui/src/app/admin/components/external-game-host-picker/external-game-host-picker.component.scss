@@ -1,0 +1,9 @@
+.btn-group {
+  button {
+    border-left: solid 1px white;
+  }
+
+  :first-child {
+    border-left: none;
+  }
+}

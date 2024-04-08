@@ -132,7 +132,7 @@
             </div>
 
             <div *ngIf="spec.instance!.state.challenge && ctx.game.feedbackTemplate?.challenge?.length">
-              <app-feedback-form [boardPlayer]="ctx" [title]="'Challenge Feedback'" [spec]="spec"
+              <app-feedback-form [boardPlayer]="ctx" title="Challenge Feedback" [spec]="spec"
                 [type]="'challenge'"></app-feedback-form>
             </div>
           </ng-container>

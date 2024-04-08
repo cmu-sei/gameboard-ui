@@ -64,6 +64,8 @@ import { ActiveTeamsModalComponent } from './components/active-teams-modal/activ
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
 import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state-description.pipe';
+import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
+import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
 
 @NgModule({
   declarations: [
@@ -117,6 +119,8 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
     GameYamlImportModalComponent,
     SyncStartTeamPlayerReadyCountPipe,
     SyncStartGameStateDescriptionPipe,
+    ExternalGameHostPickerComponent,
+    ExternalHostEditorComponent,
   ],
   imports: [
     CommonModule,

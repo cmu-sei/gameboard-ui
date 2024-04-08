@@ -266,11 +266,15 @@
         <label for="mode-input">Engine Mode</label>
         <select id="mode-input" name="mode-input" class="form-control mt-1" [(ngModel)]="game.mode"
           (change)="handleModeChange($event)">
-          <option [value]="'vm'">Standard (VMs only)</option>
-          <option [value]="'external'">External</option>
-          <option [value]="'unity'">Legacy Unity Games</option>
+          <option [value]="'vm'">Standard (Gameboard VMs)</option>
+          <option [value]="'external'">External Host</option>
         </select>
-        <small>Does the game use standard VMs, or is it played in Unity or another external host?</small>
+        <small>Does the game use standard VMs, or is it played on an external host?</small>
+      </div>
+
+      <div class="form-group py-2 w-100">
+        <label for="external-host">External Host</label>
+        <app-external-game-host-picker name="external-host" [gameId]="game.id"></app-external-game-host-picker>
       </div>
 
       <div class="container" *ngIf="game.mode === 'external'">
