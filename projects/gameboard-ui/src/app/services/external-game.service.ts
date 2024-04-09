@@ -5,7 +5,7 @@ import { ConfigService } from '@/utility/config.service';
 import { LogService } from './log.service';
 import { Observable, Subject, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { ExternalGameHost, GetExternalTeamDataResponse } from '@/api/game-models';
+import { ExternalGameHost, GetExternalTeamDataResponse, UpsertExternalGameHost } from '@/api/game-models';
 import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
 import { ApiDateTimeService } from './api-date-time.service';
 
@@ -47,18 +47,6 @@ export class ExternalGameService {
     }));
   }
 
-  public clearLocalStorageKeys(teamId: string) {
-    const keysToRemove: string[] = [StorageKey.UnityOidcLink, StorageKey.UnityGameLink];
-
-    if (teamId) {
-      keysToRemove.push(this.computeNamespaceKey(teamId));
-    }
-
-    this.log.logInfo("Clearing local storage keys...", keysToRemove);
-    this.storage.removeArbitrary(false, ...keysToRemove);
-    this.log.logInfo("Local storage keys cleared.");
-  }
-
   public getAdminContext(gameId: string): Observable<ExternalGameAdminContext> {
     return this.httpClient.get<ExternalGameAdminContext>(this.apiUrl.build(`/admin/games/external/${gameId}`)).pipe(
       map(ctx => {
@@ -75,7 +63,7 @@ export class ExternalGameService {
   }
 
   public getHosts(): Promise<{ hosts: ExternalGameHost[] }> {
-    return firstValueFrom(this.httpClient.get<{ hosts: ExternalGameHost[] }>(this.apiUrl.build("games/external/hosts")))
+    return firstValueFrom(this.httpClient.get<{ hosts: ExternalGameHost[] }>(this.apiUrl.build("games/external/hosts")));
   }
 
   public preDeployAll(gameId: string) {
@@ -84,6 +72,10 @@ export class ExternalGameService {
 
   public preDeployTeams(gameId: string, ...teamIds: string[]) {
     return this.httpClient.post<void>(this.apiUrl.build(`admin/games/external/${gameId}/pre-deploy`), { teamIds: teamIds });
+  }
+
+  public upsertExternalGameHost(host: UpsertExternalGameHost): Promise<ExternalGameHost> {
+    return firstValueFrom(this.httpClient.post<ExternalGameHost>(this.apiUrl.build("games/external/hosts"), host));
   }
 
   private computeNamespaceKey = (teamId: string): string => `externalGame:${teamId}`;

@@ -274,7 +274,8 @@
 
       <div class="form-group py-2 w-100">
         <label for="external-host">External Host</label>
-        <app-external-game-host-picker name="external-host" [gameId]="game.id"></app-external-game-host-picker>
+        <app-external-game-host-picker name="external-host" [gameId]="game.id"
+          (select)="handleGameHostChanged($event)"></app-external-game-host-picker>
       </div>
 
       <div class="container" *ngIf="game.mode === 'external'">

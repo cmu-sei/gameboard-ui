@@ -37,15 +37,6 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
         case "external":
           this.updateFromExternalGame(this.context);
           break;
-        case "unity":
-          this.buttonText = "Continue to Cubespace";
-          this.buttonUrl = this.routerService.getUnityBoardUrlTree({
-            gameId: this.context.gameId,
-            playerId: this.context.player.id,
-            teamId: this.context.player.teamId,
-            sessionEnd: this.context.player.sessionEnd.valueOf()
-          }).toString();
-          this.isEnabled = true;
       }
     } else {
       this.buttonText = "";

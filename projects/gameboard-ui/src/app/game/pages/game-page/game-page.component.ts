@@ -7,7 +7,7 @@ import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subs
 import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '@/api/user-models';
 import { GameService } from '@/api/game.service';
-import { Game, GameContext } from '@/api/game-models';
+import { Game, GameContext, GameEngineMode } from '@/api/game-models';
 import { HubEvent, HubEventAction, NotificationService } from '@/services/notification.service';
 import { Player, TimeWindow } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
@@ -76,7 +76,7 @@ export class GamePageComponent implements OnDestroy {
       filter(p => !!p.id),
       switchMap(p => apiGame.retrieve(p.id)),
       tap(g => this.ctxIds.gameId = g.id),
-      tap(g => this.needsReloadOnUnenroll = apiGame.isNonStandardEngineMode(g)),
+      tap(g => this.needsReloadOnUnenroll = g.mode === GameEngineMode.External),
       tap(g => this.isExternalGame = g.mode == "external"),
       tap(g => this.titleService.set(g.name)),
     );

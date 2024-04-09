@@ -9,7 +9,6 @@ export const environment = {
     imghost: 'http://localhost:5002/img',
     tochost: 'http://localhost:5002/doc',
     supporthost: 'http://localhost:5002/supportfiles',
-    unityhost: '',
     tocfile: '',
     countdownStartSecondsAtMinute: 5,
     custom_background: 'custom-bg-blue',

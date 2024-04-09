@@ -123,12 +123,6 @@ export class GameService {
     return this.http.delete(`${this.url}/challengegate/${id}`);
   }
 
-  // an abstracted definition for this rule. Does this game run
-  // in Gameboard or elsewhere?
-  public isNonStandardEngineMode(g: Game): boolean {
-    return g.mode === GameEngineMode.Cubespace || g.mode === GameEngineMode.External;
-  }
-
   private tryCache(id: string, limit: number = 20): Game | null {
     const item = this.cache.find(c => c.id === id);
     const entity = !!item ? item.latest(limit) : null;

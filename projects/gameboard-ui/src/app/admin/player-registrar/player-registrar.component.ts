@@ -12,7 +12,6 @@ import { Player, PlayerSearch } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
-import { UnityService } from '../../unity/unity.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 import { ManageManualChallengeBonusesModalComponent } from '../components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { TeamService } from '@/api/team.service';
@@ -75,7 +74,6 @@ export class PlayerRegistrarComponent {
     private teamService: TeamService,
     private title: AppTitleService,
     private toastService: ToastService,
-    private unityService: UnityService,
     private unsub: UnsubscriberService
   ) {
 
@@ -216,10 +214,6 @@ export class PlayerRegistrarComponent {
       },
       modalClasses: ["modal-lg"]
     });
-  }
-
-  async undeploy(model: Player): Promise<void> {
-    await firstValueFrom(this.unityService.undeployGame({ ctx: { gameId: model.gameId, teamId: model.teamId }, retainLocalStorage: true }));
   }
 
   async unenroll(model: Player,): Promise<void> {

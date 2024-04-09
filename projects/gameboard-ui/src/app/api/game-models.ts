@@ -85,7 +85,6 @@ export interface NewGame extends GameDetail {
 export type ChangedGame = Game
 
 export enum GameEngineMode {
-  Cubespace = "unity",
   External = "external",
   Standard = "vm"
 }

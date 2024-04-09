@@ -31,6 +31,5 @@ export class AppComponent implements OnInit {
       this.document.body.classList.add(this.config.settings.custom_background);
       this.customBackground = this.config.settings.custom_background || 'custom-bg-black';
     }
-    throw new Error('Method not implemented.');
   }
 }

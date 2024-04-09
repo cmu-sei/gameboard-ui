@@ -1,4 +1,61 @@
-<app-modal-content [title]="title">
+<app-modal-content [title]="title" (confirm)="handleConfirm(editHost)">
+    <form #hostForm="ngForm" [ngFormOptions]="{updateOn: 'change'}">
+        <div class="form-group">
+            <label for="host-name">Host Name</label>
+            <input id="hostName" name="host-name" type="text" class="form-control px-0" [(ngModel)]="editHost.name"
+                placeholder="Enter a name for this host" required appAutofocus>
+        </div>
 
-    <p>external-host-editor works!</p>
+        <div class="form-group">
+            <label for="host-url">Host URL</label>
+            <input id="hostUrl" name="host-url" type="text" class="form-control px-0" [(ngModel)]="editHost.hostUrl"
+                placeholder="https://my-site.com/api" required>
+        </div>
+
+        <div class="form-group">
+            <label for="host-api-key">Host API Key</label>
+            <input id="hostApiKey" name="host-api-key" type="text" class="form-control px-0"
+                [(ngModel)]="editHost.hostApiKey" placeholder="(e.g. 123thisIsMyKey!)">
+        </div>
+
+        <div class="form-group">
+            <label for="client-url">Client URL</label>
+            <input id="clientUrl" name="client-url" type="text" class="form-control px-0"
+                [(ngModel)]="editHost.clientUrl" placeholder="https://my-site.com/theClient" required>
+        </div>
+
+        <div class="form-group">
+            <label for="destroy-resources-on-deploy-fail">Destroy Resources On Failed Deployment</label>
+            <input id="destroyResourcesOnDeployFail" name="destroy-resources-on-deploy-fail" type="checkbox"
+                class="form-control px-0" [(ngModel)]="editHost.destroyResourcesOnDeployFailure" required>
+        </div>
+
+        <div class="form-group">
+            <label for="challenge-deploy-batch-size">Challenge Deploy Batch Size</label>
+            <input id="clientUrl" name="challenge-deploy-batch-size" type="number" class="form-control px-0"
+                [(ngModel)]="editHost.gamespaceDeployBatchSize" placeholder="2">
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+            <label for="startup-endpoint">Startup Endpoint (POST)</label>
+            <input id="startupEndpoint" name="startup-endpoint" type="input" class="form-control px-0"
+                [(ngModel)]="editHost.startupEndpoint" placeholder="game/start" required>
+        </div>
+
+        <div class="form-group">
+            <label for="team-extend-endpoint">Team Extended Endpoint (POST)</label>
+            <input id="teamExtendEndpoint" name="team-extend-endpoint" type="input" class="form-control px-0"
+                [(ngModel)]="editHost.teamExtendedEndpoint" placeholder="team/extended">
+        </div>
+
+        <div class="form-group">
+            <label for="ping-endpoint">Team Extended Endpoint (GET)</label>
+            <input id="ping-endpoint" name="ping-endpoint" type="input" class="form-control px-0"
+                [(ngModel)]="editHost.pingEndpoint" placeholder="status">
+        </div>
+    </form>
+
+    <app-error-div [errors]="errors" footer></app-error-div>
 </app-modal-content>

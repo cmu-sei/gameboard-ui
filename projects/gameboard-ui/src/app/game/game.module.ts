@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CoreModule } from '../core/core.module';
-import { UnityModule } from '../unity/unity.module';
 import { UtilityModule } from '../utility/utility.module';
 
 import { AuthGuard } from '../utility/auth.guard';
@@ -41,7 +40,6 @@ import { SessionStartControlsComponent } from './components/session-start-contro
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
 import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
-import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -85,13 +83,11 @@ const MODULE_DECLARATIONS = [
       { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
       { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalSyncGameGuard], component: ExternalGamePageComponent },
-      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard, UserIsPlayingGuard], component: UnityBoardComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),
     CoreModule,
-    UtilityModule,
-    UnityModule
+    UtilityModule
   ],
   exports: [
     ChallengeDeployCountdownComponent,

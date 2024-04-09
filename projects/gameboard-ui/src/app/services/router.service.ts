@@ -151,10 +151,6 @@ export class RouterService implements OnDestroy {
     this.router.navigateByUrl(this.getGamePageUrl(gameId).toString());
   }
 
-  public getUnityBoardUrlTree(ctx: { gameId: string, playerId: string, teamId: string; sessionEnd: number }) {
-    return this.router.createUrlTree(["game", "unity-board", ctx.gameId, ctx.playerId, ctx.teamId, ctx.sessionEnd]);
-  }
-
   public reloadOnNextNavigateEnd() {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
