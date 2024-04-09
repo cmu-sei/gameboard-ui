@@ -7,6 +7,16 @@ export class ScoreToTooltipPipe implements PipeTransform {
     if (!value || value.scoreOverall === 0 || value.scoreOverall === value.scoreChallenge)
       return "";
 
-    return `${value.scoreChallenge} + ${(value.scoreAdvanced || 0) + value.scoreAutoBonus + value.scoreManualBonus} bonus (click for details)`;
+    let previousGameClause = "";
+    if (value.scoreAdvanced || 0) {
+      previousGameClause = ` + ${value.scoreAdvanced || 0} previous`;
+    }
+
+    let bonusClause = "";
+    const bonusPoints = (value.scoreAutoBonus || 0) || (value.scoreManualBonus || 0);
+    if (bonusPoints)
+      bonusClause = ` + ${bonusPoints} bonus `;
+
+    return `${value.scoreChallenge}${previousGameClause}${bonusClause} (click for details)`;
   }
 }
