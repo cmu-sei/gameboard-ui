@@ -114,7 +114,7 @@
                     </div> <!-- end users list header -->
                     <div class="iframe-wrapper mt-auto" style="padding: 0px;">
                       <iframe class="rounded-bottom w-100 h-100" frameborder="0"
-                        [src]="(mksHost+'?f=0&o=1&s='+vm.challengeId+'&v='+vm.name) | safeurl">
+                        [src]="(mksHost+'?f=0&o=1&s='+vm.challengeId+'&v='+vm.name+'&teamName='+row.value.playerName+'&challengeName='+row.value.name) | safeurl">
                       </iframe>
                     </div> <!-- end iframe wrapper -->
                   </div>

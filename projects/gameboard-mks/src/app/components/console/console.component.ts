@@ -89,9 +89,17 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     this.canvasId = el.id + this.index;
     el.id += this.index;
 
-    if (!!this.request?.name) {
-      this.titleSvc.setTitle(`console: ${this.request.name}`);
-    }
+    let onConsoleBit = "";
+    if (this.request?.name)
+      onConsoleBit = ` on ${this.request.name}`;
+
+    const teamNameBit = `${this.request.teamName} `;
+
+    let challengeNameBit = "";
+    if (this.request.challengeName)
+      challengeNameBit = ` :: ${this.request.challengeName}`;
+
+    this.titleSvc.setTitle(teamNameBit + onConsoleBit + challengeNameBit);
 
     if (!!this.request.observer) {
       this.showCog = false;

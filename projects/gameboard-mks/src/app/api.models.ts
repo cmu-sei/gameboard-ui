@@ -13,6 +13,8 @@ export interface ConsoleRequest {
   observer?: boolean;                 // Whether this challenge is being observed (o=0 or o=1)
   userId?: string;                    // The hexadecimal ID of the user trying to access the VM (u=e3c...)
   enableActivityListener: boolean;    // Indicates whether the user activity listener should be enabled. Only works for practice consoles.
+  challengeName?: string;             // the name of the challenge which owns the console
+  teamName?: string;                  // the name of the player/team using the console
 }
 
 export interface ConsolePresence {
