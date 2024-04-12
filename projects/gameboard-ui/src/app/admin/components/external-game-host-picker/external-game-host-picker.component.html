@@ -1,24 +1,30 @@
-<div *ngIf="gameId" class="d-flex align-items-center">
+<div class="d-flex align-items-center">
     <div class="flex-grow-1">
-        <select id="external-host-picker" *ngIf="hosts.length; else noHosts" name="external-host-picker"
-            class="form-control d-block" [(ngModel)]="selectedHostId">
+        <select id="external-host-picker" *ngIf="hosts.length; else noHosts" name="external-host-picker" #hostsSelect
+            class="form-control d-block" [(ngModel)]="selectedHostId"
+            (ngModelChange)="handleHostSelect(hostsSelect.value)">
+            <option *ngFor="let host of hosts" [ngValue]="host.id">{{host.name}} ({{ host.hostUrl }})</option>
         </select>
     </div>
 
-    <div class="btn-group">
-        <button *ngIf="selectedHostId" class="btn btn-info ml-2" (click)="handleEditClick(gameId, selectedHostId)"
+    <div class="btn-group ml-2">
+        <button *ngIf="selectedHostId" class="btn btn-danger" (click)="handleDeleteClick(selectedHostId)"
+            tooltip="Delete this host">
+            <fa-icon [icon]="fa.trash"></fa-icon>
+        </button>
+        <button *ngIf="selectedHostId" class="btn btn-info" (click)="handleEditClick(selectedHostId)"
             tooltip="Edit this host's settings">
             <fa-icon [icon]="fa.edit"></fa-icon>
         </button>
-        <button class="btn btn-info" (click)="handleAddClick(gameId)" tooltip="Create a new external host">
+        <button class="btn btn-info" (click)="handleAddClick()" tooltip="Create a new external host">
             <fa-icon [icon]="fa.plus"></fa-icon>
         </button>
     </div>
 </div>
 
 <ng-template #noHosts>
-    <span class="text-muted" *ngIf="gameId">
+    <span class="text-muted">
         No external hosts have been created. You'll need to <button type="text" class="btn btn-link text-info px-0"
-            (click)="handleAddClick(gameId)">add one</button> to configure this external game.
+            (click)="handleAddClick()">add one</button> to configure this external game.
     </span>
 </ng-template>

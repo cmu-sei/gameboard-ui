@@ -23,6 +23,7 @@ export interface GameDetail {
   gameMarkdown: string;
   feedbackConfig: string;
   certificateTemplate: string;
+  externalHostId?: string;
   feedbackTemplate?: FeedbackTemplate;
   registrationMarkdown: string;
   registrationOpen: Date;
@@ -37,9 +38,6 @@ export interface GameDetail {
   gamespaceLimitPerSession: number;
   isPublished: boolean;
   requireSponsoredTeam: boolean;
-  externalGameClientUrl?: string;
-  externalGameTeamExtendedEndpoint?: string;
-  externalGameStartupEndpoint?: string;
   requireSynchronizedStart: boolean;
   requireTeam: boolean;
   showOnHomePageInPracticeMode: boolean;

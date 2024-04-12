@@ -3,21 +3,20 @@
 
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { ExternalGameHost, Game, GameEngineMode } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { ActivatedRoute } from '@angular/router';
 import { KeyValue } from '@angular/common';
 import { AppTitleService } from '@/services/app-title.service';
 import { fa } from '@/services/font-awesome.service';
 import { PlayerMode } from '@/api/player-models';
 import { ToastService } from '@/utility/services/toast.service';
 import { PracticeService } from '@/services/practice.service';
-import { ConfigService } from '@/utility/config.service';
 import { FeedbackTemplate } from '@/api/feedback-models';
-import { YamlService } from '@/services/yaml.service';
 import { Spec } from '@/api/spec-models';
+import { YamlService } from '@/services/yaml.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -53,7 +52,6 @@ export class GameEditorComponent implements AfterViewInit {
   constructor(
     route: ActivatedRoute,
     private api: GameService,
-    private config: ConfigService,
     private practiceService: PracticeService,
     private title: AppTitleService,
     private toast: ToastService,
@@ -109,9 +107,10 @@ export class GameEditorComponent implements AfterViewInit {
       this.showExternalModeToast(true);
   }
 
-  async handleGameHostChanged(host: ExternalGameHost) {
-    this.toast.showMessage(`Changed to host ${host.name}`);
-    // await this.ex
+  async handleExternalGameHostChanged(host: ExternalGameHost) {
+    this.game.externalHostId = host.id;
+    await firstValueFrom(this.api.update(this.game));
+    this.toast.showMessage(`Changed to host **${host.name}**`);
   }
 
   async handleFeedbackTemplateChange(template?: FeedbackTemplate) {

@@ -1,4 +1,5 @@
 import { UpsertExternalGameHost } from '@/api/game-models';
+import { ExternalGameService } from '@/services/external-game.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -14,11 +15,22 @@ export class ExternalHostEditorComponent implements OnInit {
     startupEndpoint: ""
   };
   protected errors: any[] = [];
-  protected hostId?: string;
+  public hostId?: string;
   public onSave?: (host: UpsertExternalGameHost) => void | Promise<void>;
   protected title = "New External Game Host";
 
-  ngOnInit(): void {
+  constructor(private externalGameService: ExternalGameService) { }
+
+  async ngOnInit() {
+    if (this.hostId) {
+      const response = await this.externalGameService.getHosts();
+      const host = response.hosts.find(h => h.id === this.hostId);
+
+      if (!host)
+        throw new Error(`Couldn't resolve host ${this.hostId}.`);
+
+      this.editHost = host;
+    }
   }
 
   protected async handleConfirm(host: UpsertExternalGameHost) {

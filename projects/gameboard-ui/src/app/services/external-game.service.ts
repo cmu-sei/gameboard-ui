@@ -58,8 +58,17 @@ export class ExternalGameService {
     );
   }
 
+  public async deleteHost(hostId: string) {
+    await firstValueFrom(this.httpClient.delete(this.apiUrl.build(`games/external/hosts/${hostId}`)));
+  }
+
   public getExternalTeamData(teamId: string): Observable<GetExternalTeamDataResponse> {
     return this.httpClient.get<GetExternalTeamDataResponse>(this.apiUrl.build(`/games/external/team/${teamId}`));
+  }
+
+  public async getHost(id: string): Promise<ExternalGameHost> {
+    return firstValueFrom(this.httpClient.get<ExternalGameHost>(this.apiUrl.build(`games/external/hosts/${id}`)));
+
   }
 
   public getHosts(): Promise<{ hosts: ExternalGameHost[] }> {
