@@ -12,6 +12,7 @@ export class DeleteExternalGameHostModalComponent implements OnInit {
   deleted?: (migratedToHostId: string) => void | Promise<void>;
 
   protected deleteHost?: ExternalGameHost;
+  protected replaceHost?: ExternalGameHost;
   protected errors: any[] = [];
   protected hosts: ExternalGameHost[] = [];
 
@@ -22,16 +23,24 @@ export class DeleteExternalGameHostModalComponent implements OnInit {
       return;
 
     const response = await this.externalGameService.getHosts();
+
+    if (response.hosts.length === 0)
+      this.errors.push("No external hosts configured.");
+
     this.hosts = response.hosts.filter(h => h.id != this.deleteHostId);
     this.deleteHost = response.hosts.find(h => h.id === this.deleteHostId);
+    this.replaceHost = response.hosts[0];
   }
 
-  protected async handleConfirm(hostId: string) {
+  protected async handleConfirm(replaceHost?: ExternalGameHost) {
     this.errors = [];
+
+    if (!replaceHost)
+      this.errors.push("Couldn't resolve a replacement host.");
 
     if (this.deleted)
       try {
-        await this.deleted(hostId);
+        await this.deleted(replaceHost!.id);
       }
       catch (err) {
         this.errors.push(err);
