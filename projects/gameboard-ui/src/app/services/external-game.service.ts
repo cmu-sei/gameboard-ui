@@ -58,8 +58,8 @@ export class ExternalGameService {
     );
   }
 
-  public async deleteHost(hostId: string) {
-    await firstValueFrom(this.httpClient.delete(this.apiUrl.build(`games/external/hosts/${hostId}`)));
+  public async deleteHost(hostId: string, migratedToHostId: string) {
+    await firstValueFrom(this.httpClient.delete(this.apiUrl.build(`games/external/hosts/${hostId}`), { body: { replaceHostId: migratedToHostId } }));
   }
 
   public getExternalTeamData(teamId: string): Observable<GetExternalTeamDataResponse> {

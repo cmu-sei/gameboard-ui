@@ -7,6 +7,16 @@
                 <app-report-card class="d-block" [report]="report"></app-report-card>
             </li>
         </ul>
+
+        <h2 class="mb-4">Legacy Reports</h2>
+        <div class="legacy-reports-list">
+            <a class="ml-0 pl-0 btn btn-link" [routerLink]="['/admin/report/users']">User Reports</a>
+            <a class="btn btn-link" [routerLink]="['/admin/report/sponsors']">Board Reports</a>
+            <a class="btn btn-link" [routerLink]="['/admin/report/challenges']">Challenge Reports</a>
+            <a class="btn btn-link" [routerLink]="['/admin/report/feedback']">Feedback Reports</a>
+            <a class="btn btn-link" [routerLink]="['/admin/report/support']">Support Reports</a>
+            <a class="btn btn-link" [routerLink]="['/admin/report/participation']">Participation Reports</a>
+        </div>
     </div>
 
     <ng-template #loading>

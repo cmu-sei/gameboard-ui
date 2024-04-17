@@ -1,15 +1,16 @@
 <div class="d-flex align-items-center">
     <div class="flex-grow-1">
         <select id="external-host-picker" *ngIf="hosts.length; else noHosts" name="external-host-picker" #hostsSelect
-            class="form-control d-block" [(ngModel)]="selectedHostId"
-            (ngModelChange)="handleHostSelect(hostsSelect.value)">
-            <option *ngFor="let host of hosts" [ngValue]="host.id">{{host.name}} ({{ host.hostUrl }})</option>
+            class="form-control d-block" [(ngModel)]="selectedHost" (ngModelChange)="handleHostSelect(selectedHost)">
+            <option *ngFor="let host of hosts" [ngValue]="host">
+                {{host.name}} ({{ host.hostUrl }})
+            </option>
         </select>
     </div>
 
     <div class="btn-group ml-2">
         <button *ngIf="selectedHostId" class="btn btn-danger" (click)="handleDeleteClick(selectedHostId)"
-            tooltip="Delete this host">
+            [disabled]="hosts.length <= 1" tooltip="Delete this host">
             <fa-icon [icon]="fa.trash"></fa-icon>
         </button>
         <button *ngIf="selectedHostId" class="btn btn-info" (click)="handleEditClick(selectedHostId)"

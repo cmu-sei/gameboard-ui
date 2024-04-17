@@ -4,6 +4,7 @@ import { fa } from "@/services/font-awesome.service";
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ExternalHostEditorComponent } from '../external-host-editor/external-host-editor.component';
 import { ExternalGameService } from '@/services/external-game.service';
+import { DeleteExternalGameHostModalComponent } from '../delete-external-game-host-modal/delete-external-game-host-modal.component';
 
 @Component({
   selector: 'app-external-game-host-picker',
@@ -12,10 +13,12 @@ import { ExternalGameService } from '@/services/external-game.service';
 })
 export class ExternalGameHostPickerComponent implements OnInit {
   @Input() selectedHostId?: string;
-  @Output() select = new EventEmitter<ExternalGameHost>();
+  @Output() selectedHostIdChange = new EventEmitter<string>();
+  @Output() selectedHostChange = new EventEmitter<ExternalGameHost>();
 
   protected fa = fa;
   protected hosts: ExternalGameHost[] = [];
+  protected selectedHost?: ExternalGameHost;
 
   constructor(
     private externalGameService: ExternalGameService,
@@ -25,18 +28,11 @@ export class ExternalGameHostPickerComponent implements OnInit {
     await this.loadHosts(this.selectedHostId);
   }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   if (!this.hosts.length)
-  //     return;
-
-  //   if (!this.selectedHostId) {
-  //     this.selectedHost = this.hosts.find(h => h.id === this.selectedHostId);
-  //     return;
-  //   }
-
-  //   this.selectedHost = this.hosts[0];
-  //   console.log("selected host became", this.selectedHost);
-  // }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.selectedHostId && !changes.selectedHostId.firstChange) {
+      this.selectedHost = this.hosts.find(h => h.id === changes.selectedHostId.currentValue);
+    }
+  }
 
   protected async handleAddClick() {
     this.modalService.openComponent({
@@ -48,17 +44,14 @@ export class ExternalGameHostPickerComponent implements OnInit {
   }
 
   protected handleDeleteClick(hostId: string) {
-    const host = this.hosts.find(h => h.id == hostId);
-    if (!host)
-      return;
-
-    this.modalService.openConfirm({
-      title: `Delete ${host.name}?`,
-      bodyContent: `Are you sure you want to delete the host **${host.name}**? This can't be undone.`,
-      renderBodyAsMarkdown: true,
-      onConfirm: async () => {
-        await this.externalGameService.deleteHost(hostId);
-        await this.loadHosts();
+    this.modalService.openComponent({
+      content: DeleteExternalGameHostModalComponent,
+      context: {
+        deleteHostId: hostId,
+        deleted: async migratedToHostId => {
+          await this.externalGameService.deleteHost(hostId, migratedToHostId);
+          await this.loadHosts(migratedToHostId);
+        }
       },
     });
   }
@@ -73,28 +66,27 @@ export class ExternalGameHostPickerComponent implements OnInit {
     });
   }
 
-  protected handleHostSelect(selectedHostId?: string) {
-    if (!selectedHostId)
+  protected handleHostSelect(selectedHost?: ExternalGameHost) {
+    if (!selectedHost?.id)
       return;
 
-    const selectedHost = this.hosts.find(h => h.id == selectedHostId);
-    if (!selectedHost)
-      throw new Error(`Couldn't resolve external host ${selectedHostId}`);
-
-    this.selectedHostId = selectedHostId;
-    this.select.emit(selectedHost);
+    this.selectedHostId = selectedHost.id;
+    this.selectedHost = selectedHost;
+    this.selectedHostIdChange.emit(selectedHost.id);
+    this.selectedHostChange.emit(selectedHost);
   }
 
   private async handleSave(host: UpsertExternalGameHost) {
-    console.log("hi so this one is selected now", this.selectedHostId);
     await this.externalGameService.upsertExternalGameHost(host);
     await this.loadHosts(host.id);
-    console.log("and this one is selected after", this.selectedHostId);
   }
 
   private async loadHosts(selectedHostId?: string) {
     const response = await this.externalGameService.getHosts();
     this.hosts = response?.hosts || [];
-    this.handleHostSelect(selectedHostId);
+
+    if (selectedHostId) {
+      this.handleHostSelect(this.hosts.find(h => h.id === selectedHostId));
+    }
   }
 }
