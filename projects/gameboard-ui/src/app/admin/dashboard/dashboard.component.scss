@@ -1,8 +1,7 @@
-@import '../../../scss/variables';
+@import "../../../scss/variables";
 
 .new-game-controls {
-  height: 340px;
-  padding: .25rem;
+  padding: 0.25rem 1.25rem;
 }
 
 ::ng-deep app-dropzone .dropzone {
@@ -10,10 +9,10 @@
 }
 
 .dropzone-target {
-  border: .25rem dashed lightgray;
-  border-radius: .25rem;
+  border: 0.25rem dashed lightgray;
+  border-radius: 0.25rem;
   height: 100%;
-  padding: .25rem;
+  padding: 0.25rem;
 }
 
 .overlay {
@@ -22,8 +21,8 @@
   bottom: 0rem;
   left: 0rem;
   right: 0rem;
-  border-radius: .25rem;
-  background-color: rgba(black, .8);
+  border-radius: 0.25rem;
+  background-color: rgba(black, 0.8);
   z-index: 10;
 }
 
@@ -33,8 +32,8 @@
   background-color: $body-bg;
 }
 table {
-  border-collapse: separate; 
-  border-spacing: 0; 
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 td {
@@ -62,12 +61,12 @@ td.date-col {
 
 // 3 'sticky' columns to never scroll out of view
 .sticky-card {
-  position: sticky; 
-  left: 0; 
+  position: sticky;
+  left: 0;
 }
 .sticky-options {
-  position: sticky; 
-  left: 45px; 
+  position: sticky;
+  left: 45px;
   z-index: 30;
 }
 .sticky-name {
@@ -96,11 +95,11 @@ td.date-col {
 
 // for table scroll bar to match theme
 .table-wrapper::-webkit-scrollbar {
-  background: $black; 
+  background: $black;
 }
 .table-wrapper::-webkit-scrollbar-thumb {
-  background: $dark; 
+  background: $dark;
 }
 .table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: darken($dark, 5%); 
+  background: darken($dark, 5%);
 }
