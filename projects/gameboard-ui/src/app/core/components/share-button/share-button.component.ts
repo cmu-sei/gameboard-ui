@@ -9,6 +9,7 @@ import { ToastService } from '@/utility/services/toast.service';
   templateUrl: './share-button.component.html',
 })
 export class ShareButtonComponent {
+  @Input() disabled?: boolean;
   @Input() message?: string;
   @Input() shareContent?: string;
   @Input() size: "small" | "medium" | "large" = "large";

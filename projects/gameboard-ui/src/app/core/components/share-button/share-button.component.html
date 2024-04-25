@@ -1,4 +1,4 @@
 <button type="button" class="btn btn-secondary m-0 border border-light" [class.btn-lg]="size == 'large'"
-    [class.btn-sm]="size =='small'" [tooltip]="tooltip" (click)="handleShareClick()">
+    [disabled]="disabled" [class.btn-sm]="size =='small'" [tooltip]="tooltip" (click)="handleShareClick()">
     <fa-icon [icon]="fa.clipboard"></fa-icon>
 </button>
