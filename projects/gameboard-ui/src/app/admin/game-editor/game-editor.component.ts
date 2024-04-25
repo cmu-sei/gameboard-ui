@@ -102,11 +102,6 @@ export class GameEditorComponent implements AfterViewInit {
     );
   }
 
-  handleNonGameModeControlClicked(isDisabled: boolean) {
-    if (isDisabled)
-      this.showExternalModeToast(true);
-  }
-
   async handleExternalGameHostChanged(host: ExternalGameHost) {
     this.game.externalHostId = host.id;
     await firstValueFrom(this.api.update(this.game));
@@ -129,23 +124,10 @@ export class GameEditorComponent implements AfterViewInit {
   handleModeChange(event: Event) {
     const gameMode = ((event?.target as any).value as GameEngineMode);
     this.game.mode = gameMode;
-
-    if (gameMode == GameEngineMode.External) {
-      this.showExternalModeToast();
-    }
   }
 
   protected handleSpecsUpdated(specs: Spec[]) {
     this.specCount = specs.length;
-  }
-
-  showExternalModeToast(reduceDuration?: boolean) {
-    this.game.playerMode = PlayerMode.competition;
-    this.game.requireSynchronizedStart = true;
-    this.toast.show({
-      text: `Because this game is now in Exernal mode, "Player Mode" is locked to "Competition" and "Require Synchronized Start" is locked to on.`,
-      duration: reduceDuration ? 5000 : 8000
-    });
   }
 
   show(i: number): void {
