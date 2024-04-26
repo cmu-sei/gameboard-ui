@@ -21,7 +21,7 @@ export interface ExternalGameAdminTeam {
   players: {
     id: string;
     name: string;
-    isManager: boolean;
+    isCaptain: boolean;
     sponsor: SimpleSponsor;
     status: SyncStartPlayerStatus;
     user: SimpleEntity;

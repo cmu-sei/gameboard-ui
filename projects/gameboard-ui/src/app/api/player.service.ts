@@ -109,7 +109,7 @@ export class PlayerService {
     return this.http.get<PlayerCertificate[]>(`${this.url}/certificates`);
   }
 
-  public promoteToManager(teamId: string, playerId: string, ctx: { currentManagerPlayerId: string, asAdmin?: boolean }): Observable<void> {
+  public promoteToCaptain(teamId: string, playerId: string, ctx: { currentCaptainId: string, asAdmin?: boolean }): Observable<void> {
     return this.http.put<void>(`${this.url}/team/${teamId}/manager/${playerId}`, ctx);
   }
 

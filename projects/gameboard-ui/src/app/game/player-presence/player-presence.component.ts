@@ -116,7 +116,7 @@ export class PlayerPresenceComponent implements OnInit {
         throw new Error("Can't resolve the current player to promote manager.");
       }
 
-      this.playerApi.promoteToManager(s.id, playerId, { currentManagerPlayerId: localPlayer.id }).pipe(first()).subscribe(_ => {
+      this.playerApi.promoteToCaptain(s.id, playerId, { currentCaptainId: localPlayer.id }).pipe(first()).subscribe(_ => {
         this.onManagerPromoted.emit(playerId);
       });
     });

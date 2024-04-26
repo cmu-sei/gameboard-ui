@@ -2,8 +2,9 @@
     <app-spinner *ngIf="isDownloading">Loading your certificate...</app-spinner>
 
     <div class="print-button-container" *ngIf="!isDownloading && isPublished">
-        <button type="button" class="btn btn-info print-button" (click)="handlePrintClick()">Print This
-            Certificate</button>
+        <button type="button" class="btn btn-info print-button" (click)="handlePrintClick()">
+            Print This Certificate
+        </button>
     </div>
 
     <div class="gameboard-print" *ngIf="isPublished; else notPublished">
@@ -16,5 +17,4 @@
             This certificate either doesn't exist or has not been published by its owner.
         </div>
     </ng-template>
-
 </div>

@@ -36,10 +36,8 @@
           </div>
           <div *ngIf="ctx.game.requireTeam">
             <p>
-              In fact, this event <em>requires</em>
-              a team of {{ctx.game.minTeamSize}} to {{ctx.game.maxTeamSize}}.
-              Any player not associated with a sufficiently
-              sized team at game-open will be unable to participate.
+              In fact, this event <em>requires</em> a team of {{ctx.game.minTeamSize}} to {{ctx.game.maxTeamSize}}.
+              Any player not associated with a sufficiently sized team will be unable to participate.
             </p>
           </div>
 
@@ -114,30 +112,32 @@
         <ng-container *ngIf="ctx.game.allowTeam">
           <div class="form-group d-flex flex-column">
             <div class="mb-2" *ngIf="(isManager$ | async) || !(hasTeammates$ | async)">
-              <span class="lead">Manager</span>, generate an invitation for your teammates.<br />
-              <small>NOTE: generating an invitation invalidates previous invitations.</small>
-              <button class="btn btn-outline-info mb-2" (click)="invite(ctx.player)">
-                <fa-icon [icon]="faCopy"></fa-icon>
-                <span>Generate</span>
-              </button>
-              <div class="text-center mb-2">
-                <app-clipspan *ngIf="invitation" class="mb-2">{{code}}</app-clipspan><br />
-              </div>
+              <ng-container *ngIf="!code; else invitationGenerated">
+                <h3>Captains</h3>
+                Generate your team-up code here, then send it to your teammates so they can join up!
+
+                <div class="d-flex flex-column align-items-center justify-content-center mt-2">
+                  <button type="button" class="btn btn-info my-3" (click)="invite(ctx.player)">Generate</button>
+
+                  <small class="d-block text-muted">
+                    <strong>NOTE:</strong> generating an invitation invalidates previous invitations.
+                  </small>
+                </div>
+              </ng-container>
             </div>
           </div>
 
           <!--managers can't abandon their teams-->
           <ng-container *ngIf="!(hasTeammates$ | async) || !(isManager$ | async)">
             <div class="form-group d-flex flex-column">
-              <div class="mb-2">
-                <span class="lead">Members</span>, redeem the invitation code here to team up.<br />
-              </div>
+              <h3>Team Up</h3>
               <div class="input-group">
-                <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64">
+                <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64"
+                  placeholder="Enter your code here to join a team">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-info" [disabled]="!token" (click)="redeem(ctx.player)">
+                  <button class="btn btn-info" [disabled]="!token" (click)="redeem(ctx.player)">
                     <fa-icon [icon]="faPaste"></fa-icon>
-                    <span>Redeem</span>
+                    <span>Join</span>
                   </button>
                 </div>
               </div>
@@ -176,4 +176,11 @@
 
 <ng-template #enrolling>
   <app-spinner>Enrolling you in the game...</app-spinner>
+</ng-template>
+
+<ng-template #invitationGenerated>
+  <div class="invitation-generated-wrapper">
+    <span class="text-muted">Your invitation code: </span>
+    <strong [appCopyOnClick]="code" class="invitation-code text-info font-bold cursor-pointer">{{code}}</strong>
+  </div>
 </ng-template>

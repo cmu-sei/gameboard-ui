@@ -124,13 +124,11 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     this.code = "";
     this.invitation = "";
 
-    this.api.invite(p.id).pipe(first())
-      .subscribe((m: TeamInvitation) => {
-        this.code = m.code;
-        this.clipboard.copy(m.code);
-        this.toastService.showMessage(`Copied your invitation code (${m.code}) to your clipboard.`);
-        this.invitation = `${this.config.absoluteUrl}game/teamup/${m.code}`;
-      });
+    const invitation = await firstValueFrom(this.api.invite(p.id));
+    this.code = invitation.code;
+    this.clipboard.copy(invitation.code);
+    this.toastService.showMessage(`Copied invitation code **${invitation.code}** to your clipboard.`);
+    this.invitation = `${this.config.absoluteUrl}game/teamup/${invitation.code}`;
   }
 
   async redeem(p: Player): Promise<void> {
