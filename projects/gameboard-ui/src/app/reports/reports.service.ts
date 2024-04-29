@@ -75,20 +75,6 @@ export class ReportsService {
     return new Date(Date.parse(dateString));
   }
 
-  flattenMultiSelectValues(input?: string[]): string | undefined {
-    if (!input)
-      return undefined;
-
-    return input.join(",") || undefined;
-  }
-
-  unflattenMultiSelectValues(input?: string): string[] {
-    if (!input)
-      return [];
-
-    return input.split(",");
-  }
-
   async openExport<T>(reportKey: ReportKey, parameters: T) {
     await this.filesService.downloadFileFrom(this.apiUrlService.build(`/reports/export/${reportKey.toString()}`, parameters), reportKey.toString(), "csv", "text/csv");
   }

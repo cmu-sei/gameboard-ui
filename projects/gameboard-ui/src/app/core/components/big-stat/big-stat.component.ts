@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class BigStatComponent {
   @Input() label = "";
-  @Input() value = "";
+  @Input() value: string | number = "";
   @Input() subLabel = "";
   @Input() isClickable = false;
 }

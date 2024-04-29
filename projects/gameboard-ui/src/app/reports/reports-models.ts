@@ -82,6 +82,7 @@ export enum ReportKey {
     EnrollmentReport = "enrollment",
     PlayersReport = "players",
     PracticeAreaReport = "practice-area",
+    SiteUsageReport = "site-usage",
     SupportReport = "support"
 }
 

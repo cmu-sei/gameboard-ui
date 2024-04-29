@@ -44,6 +44,7 @@ import { PlayersReportSummaryToStatsPipe } from './components/reports/players-re
 import { PlayersReportParticipationSummaryComponent } from './components/players-report-participation-summary/players-report-participation-summary.component';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ToSupportReportStatsPipe } from './components/reports/support-report/to-support-report-stats.pipe';
+import { SiteUsageReportComponent } from './components/reports/site-usage-report/site-usage-report.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { ToSupportReportStatsPipe } from './components/reports/support-report/to
     ReportFieldNoValueComponent,
     ChallengeOrGameFieldComponent,
     PracticeModeReportByPlayerModePerformanceComponent,
+    SiteUsageReportComponent,
     SponsorChallengePerformanceComponent,
     PlayerFieldComponent,
     PlayerModePerformanceSummaryComponent,
@@ -100,6 +102,7 @@ import { ToSupportReportStatsPipe } from './components/reports/support-report/to
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
           { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
           { path: 'players', component: PlayersReportComponent, title: "Players Report" },
+          { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report" },
           { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]
       }

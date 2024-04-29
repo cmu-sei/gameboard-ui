@@ -1,6 +1,6 @@
 <div class="big-stat-component" [class.stat-button]="isClickable">
     <div class="value text-info text-center">
-        <span>{{ value }}</span>
+        <span>{{ value === undefined || value === null ? "--" : value }}</span>
     </div>
     <div class="label text-center">{{ label }}</div>
     <div class="addl-info subtle-color text-center" *ngIf="subLabel">

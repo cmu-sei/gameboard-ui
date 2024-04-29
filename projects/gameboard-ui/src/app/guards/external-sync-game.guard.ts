@@ -38,7 +38,7 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
 
     // try to bail out early if someone's trying to hit this route for an ineligible game
     const game = await firstValueFrom(this.gameService.retrieve(gameId));
-    if (!game.requireSynchronizedStart || game.mode !== GameEngineMode.External)
+    if (game.mode !== GameEngineMode.External)
       return false;
 
     const team = await firstValueFrom(this.playerService.getTeam(teamId));

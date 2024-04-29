@@ -1,0 +1,30 @@
+<app-report-parameters-container>
+    <app-parameter-date-range label="Dates" ngDefaultControl [(ngModel)]="dateQueryModel"></app-parameter-date-range>
+    <app-parameter-sponsor ngDefaultControl></app-parameter-sponsor>
+</app-report-parameters-container>
+
+<div class="d-flex flex-wrap align-items-center justify-content-center my-4" *ngIf="reportData">
+    <app-big-stat [value]="reportData.avgCompetitiveChallengesPerCompetitiveUser"
+        label="Avg. Challenges Per Competitive Player"></app-big-stat>
+
+    <app-big-stat [value]="reportData.avgPracticeChallengesPerPracticeUser"
+        label="Avg. Challenges Per Practice Player"></app-big-stat>
+
+    <app-big-stat [value]="reportData.competitiveUsersWithNoPracticeCount"
+        label="Competitive-Only Players"></app-big-stat>
+
+    <app-big-stat [value]="reportData.practiceUsersWithNoCompetitiveCount" label="Practice-Only Players"></app-big-stat>
+
+    <app-big-stat [value]="reportData.deployedChallengesCount" label="Challenges attempted"
+        [subLabel]="reportData.deployedChallengesCompetitiveCount + ' competitive, ' + reportData.deployedChallengesPracticeCount + ' practice'"></app-big-stat>
+
+    <app-big-stat [value]="reportData.deployedChallengesSpecCount" label="Unique challenges attempted"></app-big-stat>
+
+    <app-big-stat [value]="reportData.sponsorCount" label="Sponsors represented"></app-big-stat>
+
+    <app-big-stat [value]="reportData.userCount" label="Players active"></app-big-stat>
+</div>
+
+<ng-template #loading>
+    <app-spinner>Loading your report...</app-spinner>
+</ng-template>
