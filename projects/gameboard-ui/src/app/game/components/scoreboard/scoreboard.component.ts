@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, firstValueFrom, interval, map } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
@@ -12,7 +12,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
   styleUrls: ['./scoreboard.component.scss'],
   providers: [UnsubscriberService]
 })
-export class ScoreboardComponent implements OnInit {
+export class ScoreboardComponent implements OnInit, OnDestroy {
   @Input() gameId?: string;
 
   protected canViewAllScores = false;
@@ -37,6 +37,10 @@ export class ScoreboardComponent implements OnInit {
       throw new Error("Couldn't resolve the gameId.");
 
     await this.loadGame(this.gameId);
+  }
+
+  ngOnDestroy(): void {
+    this.liveGameSub?.unsubscribe();
   }
 
   protected handleRowClick(teamData: ScoreboardDataTeam) {
