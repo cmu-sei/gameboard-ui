@@ -16,7 +16,8 @@
         <p class="sync-start-message">
             This game is synchronized, so you won't be able to start it until <strong>everyone</strong>
             registered to play <span *ngIf="ctx.game.maxTeamSize > 1"> (across all teams)</span> has clicked
-            "I'm ready" below. If you're all set to play, be sure to ready up so everyone can start playing!
+            <strong>"I'm ready"</strong> below. If you're all set to play, be sure to ready up so everyone can start
+            playing!
         </p>
 
         <div *ngIf="isConnectedToGameHub; else loading"
@@ -41,12 +42,14 @@
 
     <div class="d-flex align-items-center justify-content-center" *ngIf="!isDoubleChecking">
         <ng-container *ngIf="ctx.game.requireSynchronizedStart">
-            <button *ngIf="isConnectedToGameHub; else connectingToHub" btnCheckbox class="btn btn-lg mr-4"
-                [disabled]="isReadyingUp || !isConnectedToGameHub || playerReadyPct == 100"
-                [class.btn-outline-success]="!ctx.player.isReady" [class.btn-danger]="ctx.player.isReady"
-                [class.btn-secondary]="isReadyingUp" (click)="handleReadyUpdated(ctx.player)">
-                <span>{{ ctx.player.isReady ? "Cancel - I'm not ready" : "I'm ready!" }}</span>
-            </button>
+            <ng-container *ngIf="!isReadyingUp; else loading">
+                <button *ngIf="isConnectedToGameHub; else connectingToHub" btnCheckbox class="btn btn-lg mr-4"
+                    [disabled]="isReadyingUp || !isConnectedToGameHub || playerReadyPct == 100"
+                    [class.btn-outline-success]="!ctx.player.isReady" [class.btn-danger]="ctx.player.isReady"
+                    [class.btn-secondary]="isReadyingUp" (click)="handleReadyUpdated(ctx.player)">
+                    <span>{{ ctx.player.isReady ? "Cancel - I'm not ready" : "I'm ready!" }}</span>
+                </button>
+            </ng-container>
         </ng-container>
 
         <app-confirm-button btnClass="btn btn-lg btn-info" *ngIf="!ctx.game.requireSynchronizedStart"
@@ -97,4 +100,13 @@
 
 <ng-template #connectingToHub>
     <app-spinner text="Connecting to the game..." textPosition="bottom"></app-spinner>
+</ng-template>
+
+<ng-template #readyButton>
+    <button *ngIf="isConnectedToGameHub; else connectingToHub" btnCheckbox class="btn btn-lg mr-4"
+        [disabled]="isReadyingUp || !isConnectedToGameHub || playerReadyPct == 100"
+        [class.btn-outline-success]="!ctx.player.isReady" [class.btn-danger]="ctx.player.isReady"
+        [class.btn-secondary]="isReadyingUp" (click)="handleReadyUpdated(ctx.player)">
+        <span>{{ ctx.player.isReady ? "Cancel - I'm not ready" : "I'm ready!" }}</span>
+    </button>
 </ng-template>
