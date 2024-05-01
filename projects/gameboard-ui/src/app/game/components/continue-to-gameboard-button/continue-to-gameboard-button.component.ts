@@ -45,7 +45,7 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
   }
 
   private async updateFromExternalGame(context: ContinueToGameboardButtonContext) {
-    this.buttonText = "Continue to Cubespace";
+    this.buttonText = "Continue to External Game";
     this.buttonUrl = this
       .routerService
       .getExternalGameLoadingPageUrlTree({ gameId: context.gameId, playerId: context.player.id })

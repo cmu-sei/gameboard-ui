@@ -74,10 +74,10 @@
                 <ul>
                     <li>After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes!</li>
                     <li [hidden]="ctx.game.maxTeamSize < 2 && ctx.game.mode !== 'external'">
-                        This will start the session for the team, so be sure your teammates are ready to start!
+                        This will start the session for the team, so be sure your teammates are ready to start.
                     </li>
                     <li [hidden]="ctx.game.maxTeamSize < 2">
-                        You cannot add or remove team members after your session has started!
+                        You cannot add or remove team members after your session has started.
                     </li>
                     <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it.</li>
                 </ul>
