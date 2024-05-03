@@ -12,6 +12,7 @@ import { GameHubService } from '@/services/signalR/game-hub.service';
 import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { TeamService } from '@/api/team.service';
 
 interface GameLaunchContext {
   game: Game;
@@ -43,6 +44,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     private playerApi: PlayerService,
     private routerService: RouterService,
     private titleService: AppTitleService,
+    private teamService: TeamService,
     private unsub: UnsubscriberService) {
     this.gameId = route.snapshot.paramMap.get("gameId") || null;
     this.playerId = route.snapshot.paramMap.get("playerId") || null;
@@ -96,7 +98,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     this.log.logInfo("Launching game with context", ctx);
 
     // if the player already has a session for the game and it's happening right now, move them along
-    const playState = await firstValueFrom(this.gameApi.getGamePlayState(ctx.game.id));
+    const playState = await firstValueFrom(this.teamService.getGamePlayState(ctx.player.teamId));
     if (playState == GamePlayState.Started) {
       this.log.logInfo("The game is already started - move them to the game page", ctx.player);
       this.handleGameReady(ctx);

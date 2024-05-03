@@ -16,7 +16,7 @@ import { ContinueToGameboardButtonComponent } from './components/continue-to-gam
 import { ExternalGameLinkBannerComponent } from './components/external-game-link-banner/external-game-link-banner.component';
 import { ExternalGameLoadingPageComponent } from './pages/external-game-loading-page/external-game-loading-page.component';
 import { ExternalGamePageComponent } from './pages/external-game-page/external-game-page.component';
-import { ExternalSyncGameGuard } from '@/guards/external-sync-game.guard';
+import { ExternalGameGuard } from '@/guards/external-game.guard';
 import { LateStartBannerComponent } from './components/late-start-banner/late-start-banner.component';
 import { GameboardPageComponent } from './pages/gameboard-page/gameboard-page.component';
 import { GameInfoComponent } from './game-info/game-info.component';
@@ -82,7 +82,7 @@ const MODULE_DECLARATIONS = [
       { path: 'board/:playerId/:cid', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
-      { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalSyncGameGuard], component: ExternalGamePageComponent },
+      { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalGameGuard], component: ExternalGamePageComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),

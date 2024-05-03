@@ -1,8 +1,9 @@
 import { GameEngineMode, GamePlayState } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
+import { TeamService } from '@/api/team.service';
 import { RouterService } from '@/services/router.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, combineLatest, map } from 'rxjs';
+import { Observable, combineLatest, firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-external-game-link-banner',
@@ -18,9 +19,10 @@ export class ExternalGameLinkBannerComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
-    private routerService: RouterService) { }
+    private routerService: RouterService,
+    private teamService: TeamService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (!this.gameId || !this.teamId) {
       throw new Error("Can't display external game link banner without gameId and teamId inputs.");
     }
@@ -32,7 +34,7 @@ export class ExternalGameLinkBannerComponent implements OnInit {
 
     this.isExternalGameReady$ = combineLatest([
       this.gameService.retrieve(this.gameId),
-      this.gameService.getGamePlayState(this.gameId)
+      this.teamService.getGamePlayState(this.teamId)
     ]).pipe(
       map(([game, playState]) => ({ mode: game.mode, playState })),
       map(modeAndPlayState => modeAndPlayState.mode == GameEngineMode.External && modeAndPlayState.playState == GamePlayState.Started)

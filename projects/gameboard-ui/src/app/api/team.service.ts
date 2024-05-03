@@ -5,6 +5,7 @@ import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
 import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools";
+import { GamePlayState } from "./game-models";
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
@@ -40,6 +41,10 @@ export class TeamService {
 
     public get(teamId: string) {
         return this.http.get<Team>(this.apiUrl.build(`/team/${teamId}`));
+    }
+
+    public getGamePlayState(teamId: string): Observable<GamePlayState> {
+        return this.http.get<GamePlayState>(this.apiUrl.build(`team/${teamId}/play-state`));
     }
 
     public search(teamIds: string[]) {

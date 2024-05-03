@@ -4,6 +4,7 @@ import { Player } from '@/api/player-models';
 import { RouterService } from '@/services/router.service';
 import { firstValueFrom } from 'rxjs';
 import { GameService } from '@/api/game.service';
+import { TeamService } from '@/api/team.service';
 
 export interface ContinueToGameboardButtonContext {
   gameId: string;
@@ -24,7 +25,8 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
 
   constructor(
     private gameService: GameService,
-    private routerService: RouterService) { }
+    private routerService: RouterService,
+    private teamService: TeamService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes.context && !!this.context) {
@@ -52,7 +54,7 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
       .toString();
 
     // this is only enabled if the game is started or starting
-    const playState = await firstValueFrom(this.gameService.getGamePlayState(context.gameId));
+    const playState = await firstValueFrom(this.teamService.getGamePlayState(context.player.teamId));
     this.isEnabled = playState == GamePlayState.Started || playState == GamePlayState.Starting;
   }
 }
