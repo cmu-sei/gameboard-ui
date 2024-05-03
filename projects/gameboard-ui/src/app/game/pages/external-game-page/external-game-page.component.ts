@@ -10,6 +10,7 @@ import { LogService } from '@/services/log.service';
 import { ExternalGameService } from '@/services/external-game.service';
 import { ConfigService } from '@/utility/config.service';
 import { WindowService } from '@/services/window.service';
+import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
   selector: 'app-external-game-page',
@@ -32,6 +33,7 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     private log: LogService,
     private route: ActivatedRoute,
     private routerService: RouterService,
+    private title: AppTitleService,
     private windowService: WindowService) { }
 
   async ngOnInit(): Promise<void> {
@@ -70,6 +72,7 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
     this.iframeWindowTitle = `${this.game.name} (External ${this.config.appName} Game)`;
     this.iframeSrcUrl = `${host.clientUrl}?teamId=${teamId}`;
     this.layoutService.stickyMenu$.next(false);
+    this.title.set(this.game.name);
 
     this.log.logInfo("Launched external game iframe at", this.iframeSrcUrl);
 
