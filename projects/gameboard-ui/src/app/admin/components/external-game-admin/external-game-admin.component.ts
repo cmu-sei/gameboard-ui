@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ExternalGameDeployStatus } from '@/api/game-models';
-import { SimpleEntity, SimpleSponsor } from '@/api/models';
+import { Subject, combineLatest, debounceTime, filter, firstValueFrom, map, timer } from 'rxjs';
 import { DateTime } from 'luxon';
+import { SimpleEntity, SimpleSponsor } from '@/api/models';
 import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Subject, combineLatest, debounceTime, filter, firstValueFrom, map, timer } from 'rxjs';
 import { ExternalGameService } from '@/services/external-game.service';
-import { ActivatedRoute } from '@angular/router';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
 
 export type SyncStartPlayerStatus = "notConnected" | "notReady" | "ready";
@@ -17,6 +17,7 @@ export interface ExternalGameAdminTeam {
   name: string;
   sponsors: SimpleSponsor[];
   deployStatus: ExternalGameDeployStatus;
+  externalGameHostUrl?: string;
   isReady: boolean;
   players: {
     id: string;
