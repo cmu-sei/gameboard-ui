@@ -13,11 +13,12 @@
     <ng-container *ngIf="metaData$ | async as metaData">
         <div class="header-content">
             <h1>{{metaData.title}}</h1>
-            <h5>{{metaData.runAt | shortdate }} @ {{metaData.runAt | friendlyTime}}</h5>
+            <h5 class="text-muted font-bold">{{metaData.runAt | shortdate }} @ {{metaData.runAt | friendlyTime}}</h5>
             <p>{{ metaData.description }}</p>
         </div>
 
-        <app-report-global-controls (exportRequestCsv)="handleExportToCsv()"></app-report-global-controls>
+        <app-report-global-controls [enableExport]="metaData.isExportable"
+            (exportRequestCsv)="handleExportToCsv()"></app-report-global-controls>
     </ng-container>
 
     <div class="report-page-router-outlet mb-4">

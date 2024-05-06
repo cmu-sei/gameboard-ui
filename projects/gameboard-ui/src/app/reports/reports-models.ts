@@ -7,6 +7,7 @@ export interface ReportViewModel {
     description: string;
     exampleFields: string[];
     exampleParameters: string[];
+    isExportable: boolean;
 }
 
 export interface ReportResults<T> {
@@ -26,6 +27,7 @@ export interface ReportMetaData {
     key: ReportKey;
     title: string;
     description: string;
+    isExportable: boolean;
     runAt: Date;
 }
 
