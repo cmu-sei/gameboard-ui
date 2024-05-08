@@ -9,9 +9,9 @@ import { first, firstValueFrom } from 'rxjs';
 })
 export class ModalContentComponent<T> {
   @Input() hideCancel = false;
-  @Input() title = "";
-  @Input() subtitle = "";
-  @Input() subSubtitle = "";
+  @Input() title?: string;
+  @Input() subtitle?: string;
+  @Input() subSubtitle?: string;
   @Input() cancelButtonText?: string;
   @Input() confirmButtonText?: string;
   @Input() isDangerConfirm = false;

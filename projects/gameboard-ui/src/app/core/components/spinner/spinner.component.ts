@@ -7,7 +7,9 @@ import { Component, Input } from '@angular/core';
   selector: 'app-spinner',
   template: `
     <div class="spinner-component">
-      <h1 *ngIf="textPosition === 'top' && !!text">{{text}}</h1>
+      <ng-container *ngIf="textPosition === 'top'">
+        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+      </ng-container>
     
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
         y="0px" width="108px" height="132px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;"
@@ -38,8 +40,14 @@ import { Component, Input } from '@angular/core';
         </rect>
       </svg>
 
-      <h1 *ngIf="textPosition !== 'top' && !!text">{{text}}</h1>
+      <ng-container *ngIf="textPosition !== 'top'">
+        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+      </ng-container>
     </div>
+
+    <ng-template #contentTemplate>
+      <h1><ng-content></ng-content></h1>
+    </ng-template>
   `,
   styles: [
     ".spinner-component { width: 100%; text-align: center; }",
@@ -48,6 +56,5 @@ import { Component, Input } from '@angular/core';
 })
 export class SpinnerComponent {
   @Input() color?: string;
-  @Input() text?: string;
   @Input() textPosition: "top" | "bottom" = "top";
 }

@@ -169,7 +169,32 @@ th[align="center"] {
     width: 100%;
 
     th {
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.25rem;
+      padding-top: 0.25rem;
+    }
+  }
+
+  .headers-row {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #ffffff;
+
+    td:not(:first-of-type) {
+      border-left: solid 1px #ffffff;
+    }
+  }
+
+  .super-headers-row {
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px #ffffff;
+    border-top: solid 1px #ffffff;
+    text-transform: uppercase;
+
+    th:not(:first-of-type) {
+      border-left: solid 1px #ffffff;
     }
   }
 }

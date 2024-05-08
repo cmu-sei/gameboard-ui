@@ -1,0 +1,33 @@
+<app-modal-content [title]="title" [subtitle]="subtitle" [hideCancel]="true">
+    <table class="gameboard-table" *ngIf="!isLoading; else loading">
+        <col> <!--sponsor-->
+        <col> <!--player count-->
+
+        <thead>
+            <tr class="headers">
+                <th>Sponsor</th>
+                <th>Player Count</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let sponsor of sponsors">
+                <td class="d-flex align-items-center my-2">
+                    <app-avatar [imageUrl]="sponsor | sponsorToLogoUri"></app-avatar>
+                    <div class="ml-2">
+                        <div class="fs-12">{{sponsor.name}}</div>
+                        <div class="text-muted" *ngIf="sponsor.parentName">{{sponsor.parentName}}</div>
+                    </div>
+                </td>
+                <td class="text-center">
+                    {{ sponsor.playerCount }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading sponsors...</app-spinner>
+</ng-template>

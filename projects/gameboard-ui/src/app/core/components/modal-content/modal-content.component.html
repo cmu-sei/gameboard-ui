@@ -1,12 +1,12 @@
 <div class="modal-content">
     <div class="modal-header">
         <div class="titles-container">
-            <h6 *ngIf="subSubtitle" class="text-upper text-muted font-bold mb-0 pb-0">{{ subSubtitle }}</h6>
+            <h6 *ngIf="subtitle" class="text-upper text-muted font-bold mb-0 pb-0">{{ subtitle }}</h6>
             <h2 title class="modal-title pull-left">
                 {{ title }}
             </h2>
-            <h5 *ngIf="subtitle" class="text-muted">
-                {{ subtitle }}
+            <h5 *ngIf="subSubtitle" class="text-muted">
+                {{ subSubtitle }}
             </h5>
         </div>
         <button *ngIf="!hideCancel" type="button" class="btn-close close pull-right" aria-label="Close"

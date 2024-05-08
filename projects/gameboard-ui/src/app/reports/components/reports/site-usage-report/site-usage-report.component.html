@@ -6,21 +6,25 @@
 <ng-container *ngIf="reportData; else loading">
     <h2>Players &amp; Sponsors</h2>
     <div class="d-flex flex-wrap align-items-top justify-content-between">
-        <app-big-stat [value]="reportData.userCount" label="Players active"></app-big-stat>
-        <app-big-stat [value]="reportData.sponsorCount" label="Sponsors represented"></app-big-stat>
-        <app-big-stat [value]="reportData.competitiveUsersWithNoPracticeCount"
-            label="Competitive-Only Players"></app-big-stat>
-        <app-big-stat [value]="reportData.practiceUsersWithNoCompetitiveCount"
+        <app-big-stat [value]="reportData.userCount" label="Active players" [isClickable]="true"
+            (click)="showPlayersModal()"></app-big-stat>
+        <app-big-stat [value]="reportData.sponsorCount" label="Sponsors represented" [isClickable]="true"
+            (click)="showSponsorsModal()"></app-big-stat>
+        <app-big-stat [value]="reportData.competitiveUsersWithNoPracticeCount" label="Competitive-Only Players"
+            [isClickable]="true"
+            (click)="showPlayersModal({ exclusiveToMode: playerModeEnumCompetitive})"></app-big-stat>
+        <app-big-stat [value]="reportData.practiceUsersWithNoCompetitiveCount" [isClickable]="true"
+            (click)="showPlayersModal({ exclusiveToMode: playerModeEnumPractice })"
             label="Practice-Only Players"></app-big-stat>
     </div>
 
     <h2 class="mt-5">Challenges</h2>
     <div class="d-flex flex-wrap align-items-top justify-content-between">
-        <app-big-stat [value]="reportData.deployedChallengesSpecCount"
-            label="Unique challenges attempted"></app-big-stat>
+        <app-big-stat [value]="reportData.deployedChallengesSpecCount" label="Unique challenges attempted"
+            [isClickable]="true" (click)="showChallengesModal()"></app-big-stat>
 
         <app-big-stat [value]="reportData.deployedChallengesCount" label="Challenges attempted"
-            [subLabel]="reportData.deployedChallengesCompetitiveCount + ' competitive, ' + reportData.deployedChallengesPracticeCount + ' practice'"></app-big-stat>
+            [subLabel]="reportData.deployedChallengesCompetitiveCount + ' competitive + ' + reportData.deployedChallengesPracticeCount + ' practice'"></app-big-stat>
 
         <app-big-stat [value]="reportData.avgCompetitiveChallengesPerCompetitiveUser"
             label="Avg. Challenges Per Competitive Player"></app-big-stat>

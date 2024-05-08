@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { PagingResults, SimpleEntity } from "../api/models";
 
 export interface ReportViewModel {
@@ -28,7 +29,7 @@ export interface ReportMetaData {
     title: string;
     description: string;
     isExportable: boolean;
-    runAt: Date;
+    runAt: DateTime;
 }
 
 export interface ReportDateRange {
