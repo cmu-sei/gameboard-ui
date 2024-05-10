@@ -13,6 +13,9 @@ import { SiteUsageReportChallengesListComponent } from './site-usage-report-chal
 
 @Component({
   selector: 'app-site-usage-report',
+  styles: [
+    ".report-section { margin-top: 60px; }"
+  ],
   templateUrl: './site-usage-report.component.html',
 })
 export class SiteUsageReportComponent extends ReportComponentBase<SiteUsageReportFlatParameters> {

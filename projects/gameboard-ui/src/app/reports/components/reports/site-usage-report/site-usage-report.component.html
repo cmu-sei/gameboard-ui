@@ -18,17 +18,14 @@
             label="Practice-Only Players"></app-big-stat>
     </div>
 
-    <h2 class="mt-5">Challenges</h2>
+    <h2 class="report-section">Challenges</h2>
     <div class="d-flex flex-wrap align-items-top justify-content-between">
         <app-big-stat [value]="reportData.deployedChallengesSpecCount" label="Unique challenges attempted"
             [isClickable]="true" (click)="showChallengesModal()"></app-big-stat>
-
         <app-big-stat [value]="reportData.deployedChallengesCount" label="Challenges attempted"
             [subLabel]="reportData.deployedChallengesCompetitiveCount + ' competitive + ' + reportData.deployedChallengesPracticeCount + ' practice'"></app-big-stat>
-
         <app-big-stat [value]="reportData.avgCompetitiveChallengesPerCompetitiveUser"
             label="Avg. Challenges Per Competitive Player"></app-big-stat>
-
         <app-big-stat [value]="reportData.avgPracticeChallengesPerPracticeUser"
             label="Avg. Challenges Per Practice Player"></app-big-stat>
     </div>
