@@ -47,10 +47,9 @@ export class GamePageComponent implements OnDestroy {
   protected isExternalGame = false;
   protected player$ = new BehaviorSubject<Player | null>(null);
 
-  private needsReloadOnUnenroll = false;
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
-  private externalGameLaunchStartedSubscription?: Subscription;
+  private launchStartedSubscription?: Subscription;
 
   constructor(
     apiGame: GameService,
@@ -76,7 +75,6 @@ export class GamePageComponent implements OnDestroy {
       filter(p => !!p.id),
       switchMap(p => apiGame.retrieve(p.id)),
       tap(g => this.ctxIds.gameId = g.id),
-      tap(g => this.needsReloadOnUnenroll = g.mode === GameEngineMode.External),
       tap(g => this.isExternalGame = g.mode == "external"),
       tap(g => this.titleService.set(g.name)),
     );
@@ -102,7 +100,7 @@ export class GamePageComponent implements OnDestroy {
           )
         );
       })
-    ).subscribe(async done => {
+    ).subscribe(async _ => {
       const currentPlayer = this.player$.getValue();
       if (!currentPlayer?.id) {
         this.boardPlayer = undefined;
@@ -193,9 +191,9 @@ export class GamePageComponent implements OnDestroy {
           this.logService.logInfo("This is an external or sync-start game. Listening for game hub events...");
 
           // wire up listeners to move the player along when sync start is ready
-          this.externalGameLaunchStartedSubscription?.unsubscribe();
-          this.externalGameLaunchStartedSubscription = this.gameHubService.externalGameLaunchStarted$.subscribe(startState => {
-            if (startState)
+          this.launchStartedSubscription?.unsubscribe();
+          this.launchStartedSubscription = this.gameHubService.launchStarted$.subscribe(status => {
+            if (status.gameId == ctx.game.id)
               this.redirectToExternalGameLoadingPage(ctx);
           });
         }
@@ -206,7 +204,7 @@ export class GamePageComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.hubEventsSubcription?.unsubscribe();
     this.localUserSubscription?.unsubscribe();
-    this.externalGameLaunchStartedSubscription?.unsubscribe();
+    this.launchStartedSubscription?.unsubscribe();
   }
 
   protected onSessionStarted(player: Player): void {
@@ -230,7 +228,7 @@ export class GamePageComponent implements OnDestroy {
 
     this.player$.next(null);
 
-    if (this.needsReloadOnUnenroll) {
+    if (this.isExternalGame) {
       this.windowService.get().location.reload();
     }
   }

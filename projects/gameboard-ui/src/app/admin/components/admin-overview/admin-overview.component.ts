@@ -14,7 +14,7 @@ export class AdminOverviewComponent {
   protected supportHubState$: Observable<HubConnectionState>;
 
   constructor(
-    private gameHubService: GameHubService,
+    gameHubService: GameHubService,
     supportHub: SupportHubService) {
     this.gameHubState$ = gameHubService.hubState$;
     this.supportHubState$ = supportHub.hubState$;

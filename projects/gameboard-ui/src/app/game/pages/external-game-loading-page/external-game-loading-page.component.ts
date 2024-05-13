@@ -9,10 +9,10 @@ import { Game, GameEngineMode, GamePlayState } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
-import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { TeamService } from '@/api/team.service';
+import { GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
 
 interface GameLaunchContext {
   game: Game;
@@ -33,7 +33,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
   errors: string[] = [];
   gameLaunchCtx?: GameLaunchContext;
   launchCompleted = false;
-  state?: GameStartState;
+  status?: GameHubResourcesDeployStatus;
 
   constructor(
     route: ActivatedRoute,
@@ -115,12 +115,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
 
     if (ctx.game.mode == GameEngineMode.External) {
       this.log.logInfo("Wiring up game hub external game event listeners...", ctx);
-      this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.updateGameStartState.bind(this)(state)));
-      this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.updateGameStartState.bind(this)(state)));
-      this.unsub.add(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
+      this.unsub.add(this.gameHub.launchStarted$.subscribe(ev => this.updateGameStartState.bind(this)(ev.data)));
+      this.unsub.add(this.gameHub.launchProgressChanged.subscribe(ev => this.updateGameStartState.bind(this)(ev.data)));
+      this.unsub.add(this.gameHub.launchFailure$.subscribe(ev => this.errors.push(ev.data.err || "Unknown error")));
       this.unsub.add(
-        this.gameHub.externalGameLaunchEnded$.subscribe(state => {
-          this.updateGameStartState(state);
+        this.gameHub.launchEnded$.subscribe(ev => {
+          this.updateGameStartState(ev.data);
           this.handleGameReady(ctx);
         })
       );
@@ -129,8 +129,8 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     }
   }
 
-  private updateGameStartState(state: GameStartState) {
-    this.log.logInfo("Game start state update:", state);
-    this.state = state;
+  private updateGameStartState(status: GameHubResourcesDeployStatus) {
+    this.log.logInfo("Game start state update:", status);
+    this.status = status;
   }
 }
