@@ -181,7 +181,9 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     this.errors = [];
 
     try {
+      this.isEnrolling = true;
       await firstValueFrom(this.api.unenroll(p.id));
+      this.isEnrolling = false;
       this.onUnenroll.emit(p);
     }
     catch (err: any) {

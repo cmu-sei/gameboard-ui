@@ -49,25 +49,25 @@
 
           <!-- enrollment controls -->
           <ng-container *ngIf="!ctx.player.id">
-            <div class="d-flex align-items-center justify-content-center mt-5"
-              *ngIf="ctxDelayed$ | async as delay; else loading">
-              <div class="text-center"
-                *ngIf="!!(ctx.user.name && hasSelectedSponsor) && ctx.game.registration.isDuring">
-                <app-confirm-button btnClass="btn btn-primary btn-lg mr-4" [disabled]="!isRegistrationOpen"
-                  [tooltip]="enrollTooltip" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                  <span>Enroll</span>
-                </app-confirm-button>
-              </div>
+            <ng-container *ngIf="!isEnrolling; else enrolling">
+              <div class="d-flex align-items-center justify-content-center mt-5"
+                *ngIf="ctxDelayed$ | async as delay; else loading">
+                <div class="text-center"
+                  *ngIf="!!(ctx.user.name && hasSelectedSponsor) && ctx.game.registration.isDuring">
+                  <app-confirm-button btnClass="btn btn-primary btn-lg mr-4" [disabled]="!isRegistrationOpen"
+                    [tooltip]="enrollTooltip" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                    <fa-icon [icon]="faEdit"></fa-icon>
+                    <span>Enroll</span>
+                  </app-confirm-button>
 
-              <div *ngIf="canAdminEnroll" class="text-center">
-                <app-confirm-button btnClass="btn btn-warning btn-lg"
-                  (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                  <span>Admin Enroll</span>
-                </app-confirm-button>
+                  <app-confirm-button btnClass="btn btn-warning btn-lg"
+                    (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                    <fa-icon [icon]="faEdit"></fa-icon>
+                    <span>Admin Enroll</span>
+                  </app-confirm-button>
+                </div>
               </div>
-            </div>
+            </ng-container>
           </ng-container>
         </ng-container>
       </ng-container>
@@ -112,8 +112,9 @@
         <ng-container *ngIf="ctx.game.allowTeam">
           <div class="form-group d-flex flex-column">
             <div class="mb-2" *ngIf="(isManager$ | async) || !(hasTeammates$ | async)">
+              <h3>Captains</h3>
+
               <ng-container *ngIf="!code; else invitationGenerated">
-                <h3>Captains</h3>
                 Generate your team-up code here, then send it to your teammates so they can join up!
 
                 <div class="d-flex flex-column align-items-center justify-content-center mt-2">
@@ -133,7 +134,7 @@
               <h3>Team Up</h3>
               <div class="input-group">
                 <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64"
-                  placeholder="Enter your code here to join a team">
+                  placeholder="Enter your invitation code here to join a team">
                 <div class="input-group-append">
                   <button class="btn btn-info" [disabled]="!token" (click)="redeem(ctx.player)">
                     <fa-icon [icon]="faPaste"></fa-icon>
@@ -146,23 +147,25 @@
         </ng-container>
 
         <!-- unenroll -->
-        <div
-          *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
-          class="form-group text-center">
-          <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
-            <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
-              [disabled]="!!unenrollTooltip">
-              <fa-icon [icon]="faTrash"></fa-icon>
-              <span>Unenroll</span>
-            </app-confirm-button>
-          </div>
+        <ng-container *ngIf="!isEnrolling; else unenrolling">
+          <div
+            *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
+            class="form-group text-center">
+            <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
+              <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
+                [disabled]="!!unenrollTooltip">
+                <fa-icon [icon]="faTrash"></fa-icon>
+                <span>Unenroll</span>
+              </app-confirm-button>
+            </div>
 
-          <ng-template *ngIf="!unenrollTooltip">
-            <p class="small">
-              You can unenroll until either the enrollment period ends or your game session starts.
-            </p>
-          </ng-template>
-        </div>
+            <ng-template *ngIf="!unenrollTooltip">
+              <p class="small">
+                You can unenroll until either the enrollment period ends or your game session starts.
+              </p>
+            </ng-template>
+          </div>
+        </ng-container>
       </ng-container>
     </div>
   </div>
@@ -175,7 +178,11 @@
 </ng-template>
 
 <ng-template #enrolling>
-  <app-spinner>Enrolling you in the game...</app-spinner>
+  <app-spinner textPosition="bottom">Joining the game</app-spinner>
+</ng-template>
+
+<ng-template #unenrolling>
+  <app-spinner textPosition="bottom">Leaving the game</app-spinner>
 </ng-template>
 
 <ng-template #invitationGenerated>
