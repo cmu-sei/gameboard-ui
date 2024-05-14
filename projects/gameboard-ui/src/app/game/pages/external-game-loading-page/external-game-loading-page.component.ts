@@ -30,10 +30,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
   private gameId: string | null;
   private playerId: string | null;
 
-  errors: string[] = [];
-  gameLaunchCtx?: GameLaunchContext;
-  launchCompleted = false;
-  status?: GameHubResourcesDeployStatus;
+  protected challengesCreatedCount = 0;
+  protected gamespacesDeployCount = 0;
+  protected errors: string[] = [];
+  protected gameLaunchCtx?: GameLaunchContext;
+  protected launchCompleted = false;
+  protected status?: GameHubResourcesDeployStatus;
 
   constructor(
     route: ActivatedRoute,
@@ -128,8 +130,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
   }
 
   private updateGameStartState(ev: GameHubEventWith<GameHubResourcesDeployStatus>) {
-    console.log("event is", ev);
     this.log.logInfo("Game start state update:", ev);
     this.status = ev.data;
+
+    if (ev.data.challenges) {
+      this.challengesCreatedCount = ev.data.challenges.length;
+      this.gamespacesDeployCount = ev.data.challenges.filter(c => c.hasGamespace).length;
+    }
   }
 }

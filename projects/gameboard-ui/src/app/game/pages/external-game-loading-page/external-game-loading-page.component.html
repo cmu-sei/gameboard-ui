@@ -13,13 +13,13 @@
                     <div class="step-container full-width my-4">
                         <h2>Building challenges...</h2>
                         <app-progress-bar
-                            [percentage]="status.challenges.length | numbersToPercentage:status.challengeSpecs.length"></app-progress-bar>
+                            [percentage]="challengesCreatedCount | numbersToPercentage:status.challengeSpecs.length"></app-progress-bar>
                     </div>
 
                     <div class="step-container full-width my-4">
                         <h2>Starting gamespaces...</h2>
                         <app-progress-bar
-                            [percentage]="status.challenges.length| numbersToPercentage:status.challengeSpecs.length"></app-progress-bar>
+                            [percentage]="gamespacesDeployCount | numbersToPercentage:status.challengeSpecs.length"></app-progress-bar>
                     </div>
                 </ng-container>
 
