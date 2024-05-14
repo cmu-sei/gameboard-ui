@@ -5,6 +5,7 @@ import { ToastService } from '@/utility/services/toast.service';
 @Directive({ selector: '[appCopyOnClick]' })
 export class CopyOnClickDirective implements AfterViewInit {
   @Input('appCopyOnClick') text?: string;
+  @Input('appCopyOnClickMessage') message?: string;
 
   constructor(
     private elementRef: ElementRef,
@@ -20,7 +21,7 @@ export class CopyOnClickDirective implements AfterViewInit {
       const text = (this.text || this.elementRef.nativeElement.innerHTML).trim();
       if (text) {
         this.clipboardService.copy(text);
-        this.toastService.showMessage(`Copied **${text}** to your clipboard.`);
+        this.toastService.showMessage(this.message || `Copied **${text}** to your clipboard.`);
       }
     };
   }

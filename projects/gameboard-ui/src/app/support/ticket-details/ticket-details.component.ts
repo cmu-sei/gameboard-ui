@@ -63,6 +63,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   currentLabels = new Set<string>();
 
   faArrowLeft = faArrowLeft;
+  fa = fa;
   faFileAlt = faFileAlt;
   faEllipsisH = faEllipsisH;
   faPaperclip = faPaperclip;
