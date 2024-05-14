@@ -205,7 +205,7 @@ export class GamePageComponent implements OnDestroy {
           this.launchStartedSubscription?.unsubscribe();
 
           this.launchEndedSubscription = this.gameHubService.launchEnded$.subscribe(handleGameLaunchEvent);
-          this.launchProgressChangedSubscription = this.gameHubService.launchProgressChanged.subscribe(handleGameLaunchEvent);
+          this.launchProgressChangedSubscription = this.gameHubService.launchProgressChanged$.subscribe(handleGameLaunchEvent);
           this.launchStartedSubscription = this.gameHubService.launchStarted$.subscribe(handleGameLaunchEvent);
         }
       })

@@ -22,6 +22,7 @@ export class GameHubEventType implements SignalRHubEventType {
     static LaunchStart = "LaunchStart";
     static LaunchEnd = "LaunchEnd";
     static LaunchFailure = "LaunchFailure";
+    static LaunchProgressChanged = "LaunchProgressChanged";
     static SyncStartGameStarted = "SyncStartGameStarted";
     static SyncStartGameStarting = "SyncStartGameStarting";
     static SyncStartGameStateChanged = "SyncStartGameStateChanged";

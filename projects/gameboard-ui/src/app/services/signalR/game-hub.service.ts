@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HubConnectionState } from '@microsoft/signalr';
 import { SignalRService } from './signalr.service';
-import { GameHubEventWith, GameHubEventType, GameHubActiveEnrollment, GameHubEvent, GameHubResourcesDeployStatus } from './game-hub.models';
+import { GameHubEventWith, GameHubEventType, GameHubActiveEnrollment, GameHubResourcesDeployStatus } from './game-hub.models';
 import { LogService } from '@/services/log.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SyncStartGameState, SyncStartGameStartedState } from '@/game/game.models';
@@ -22,7 +22,7 @@ export class GameHubService {
   private _syncStartGameStarting$ = new Subject<SyncStartGameState>();
 
   public activeEnrollments$ = this._activeEnrollments$.asObservable();
-  public launchProgressChanged = this._launchProgressChanged$.asObservable();
+  public launchProgressChanged$ = this._launchProgressChanged$.asObservable();
   public launchStarted$ = this._launchStarted$.asObservable();
   public launchEnded$ = this._launchEnded$.asObservable();
   public launchFailure$ = this._launchFailure$.asObservable();
@@ -60,8 +60,9 @@ export class GameHubService {
         { eventType: GameHubEventType.GamespacesDeployProgressChange, handler: this.handleLaunchProgressChanged.bind(this) },
         { eventType: GameHubEventType.GamespacesDeployEnd, handler: this.handleLaunchProgressChanged.bind(this) },
         { eventType: GameHubEventType.LaunchStart, handler: this.handleLaunchStart.bind(this) },
-        { eventType: GameHubEventType.LaunchFailure, handler: this.handleLaunchFailure.bind(this) },
         { eventType: GameHubEventType.LaunchEnd, handler: this.handleLaunchEnded.bind(this) },
+        { eventType: GameHubEventType.LaunchFailure, handler: this.handleLaunchFailure.bind(this) },
+        { eventType: GameHubEventType.LaunchProgressChanged, handler: this.handleLaunchProgressChanged.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStateChanged, handler: this.handleSyncStartStateChanged.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStarted, handler: this.handleSyncStartGameStarted.bind(this) },
         { eventType: GameHubEventType.SyncStartGameStarting, handler: this.handleSyncStartGameStarting.bind(this) },
