@@ -72,7 +72,7 @@ export class GameService {
   }
 
   public deployResources(gameId: string, teamIds: string[]) {
-    return firstValueFrom(this.http.post(`${this.url}/game/{id}/resources`, { teamIds }));
+    return firstValueFrom(this.http.post(`${this.url}/game/${gameId}/resources`, { teamIds }));
   }
 
   public getSyncStartState(gameId: string): Observable<SyncStartGameState> {
