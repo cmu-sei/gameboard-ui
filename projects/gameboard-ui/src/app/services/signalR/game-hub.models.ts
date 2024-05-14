@@ -5,6 +5,7 @@ import { GameState } from "@/api/board-models";
 
 export interface GameHubEvent {
     gameId: string;
+    teamIds: string[];
 }
 
 export interface GameHubEventWith<T> extends GameHubEvent {

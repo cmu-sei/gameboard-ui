@@ -195,7 +195,7 @@ export class GamePageComponent implements OnDestroy {
 
           // wire up listeners to move the player along when sync start is ready
           const handleGameLaunchEvent = (ev: GameHubEventWith<GameHubResourcesDeployStatus>) => {
-            if (ev.data.game.id == ctx.game.id && ev.data.teams.some(t => t.id == ctx.player.teamId)) {
+            if (ev.gameId == ctx.game.id && ev.teamIds.some(tId => tId == ctx.player.teamId)) {
               this.redirectToExternalGameLoadingPage(ctx);
             }
           };
