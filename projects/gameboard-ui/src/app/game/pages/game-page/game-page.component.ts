@@ -7,7 +7,7 @@ import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subs
 import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiUser, PlayerRole } from '@/api/user-models';
 import { GameService } from '@/api/game.service';
-import { Game, GameContext, GameEngineMode } from '@/api/game-models';
+import { Game, GameContext } from '@/api/game-models';
 import { HubEvent, HubEventAction, NotificationService } from '@/services/notification.service';
 import { Player, TimeWindow } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
@@ -23,6 +23,7 @@ import { RouterService } from '@/services/router.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UserService } from '@/api/user.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { GameHubEventWith, GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
 
 interface GameEnrollmentContext {
   game: Game;
@@ -50,6 +51,8 @@ export class GamePageComponent implements OnDestroy {
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
   private launchStartedSubscription?: Subscription;
+  private launchEndedSubscription?: Subscription;
+  private launchProgressChangedSubscription?: Subscription;
 
   constructor(
     apiGame: GameService,
@@ -191,11 +194,19 @@ export class GamePageComponent implements OnDestroy {
           this.logService.logInfo("This is an external or sync-start game. Listening for game hub events...");
 
           // wire up listeners to move the player along when sync start is ready
-          this.launchStartedSubscription?.unsubscribe();
-          this.launchStartedSubscription = this.gameHubService.launchStarted$.subscribe(status => {
-            if (status.gameId == ctx.game.id)
+          const handleGameLaunchEvent = (ev: GameHubEventWith<GameHubResourcesDeployStatus>) => {
+            if (ev.data.game.id == ctx.game.id && ev.data.teams.some(t => t.id == ctx.player.teamId)) {
               this.redirectToExternalGameLoadingPage(ctx);
-          });
+            }
+          };
+
+          this.launchEndedSubscription?.unsubscribe();
+          this.launchProgressChangedSubscription?.unsubscribe();
+          this.launchStartedSubscription?.unsubscribe();
+
+          this.launchEndedSubscription = this.gameHubService.launchEnded$.subscribe(handleGameLaunchEvent);
+          this.launchProgressChangedSubscription = this.gameHubService.launchProgressChanged.subscribe(handleGameLaunchEvent);
+          this.launchStartedSubscription = this.gameHubService.launchStarted$.subscribe(handleGameLaunchEvent);
         }
       })
     );
