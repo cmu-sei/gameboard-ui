@@ -12,7 +12,7 @@ import { GameHubService } from '@/services/signalR/game-hub.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { TeamService } from '@/api/team.service';
-import { GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
+import { GameHubEventWith, GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
 
 interface GameLaunchContext {
   game: Game;
@@ -114,12 +114,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     }
 
     this.log.logInfo("Wiring up game hub external game event listeners...", ctx);
-    this.unsub.add(this.gameHub.launchStarted$.subscribe(ev => this.updateGameStartState.bind(this)(ev.data)));
-    this.unsub.add(this.gameHub.launchProgressChanged.subscribe(ev => this.updateGameStartState.bind(this)(ev.data)));
+    this.unsub.add(this.gameHub.launchStarted$.subscribe(ev => this.updateGameStartState.bind(this)(ev)));
+    this.unsub.add(this.gameHub.launchProgressChanged.subscribe(ev => this.updateGameStartState.bind(this)(ev)));
     this.unsub.add(this.gameHub.launchFailure$.subscribe(ev => this.errors.push(ev.data.err || "Unknown error")));
     this.unsub.add(
       this.gameHub.launchEnded$.subscribe(ev => {
-        this.updateGameStartState(ev.data);
+        this.updateGameStartState(ev);
         this.handleGameReady(ctx);
       })
     );
@@ -127,8 +127,9 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     this.log.logInfo("External game event listeners wired.");
   }
 
-  private updateGameStartState(status: GameHubResourcesDeployStatus) {
-    this.log.logInfo("Game start state update:", status);
-    this.status = status;
+  private updateGameStartState(ev: GameHubEventWith<GameHubResourcesDeployStatus>) {
+    console.log("event is", ev);
+    this.log.logInfo("Game start state update:", ev);
+    this.status = ev.data;
   }
 }
