@@ -22,9 +22,15 @@
         </li>
         <ng-container *ngIf="!isSyncStartGame || !hasStartedSession">
             <li class="divider dropdown-divider"></li>
+            <li role="menuitem" *ngIf="!hasStartedSession">
+                <button class="dropdown-item btn btn-warning">
+                    <strong>Deploy</strong> Game Resources
+                    <span class="badge badge-info">[BETA]</span>
+                </button>
+            </li>
             <li role="menuitem" *ngIf="!isSyncStartGame; else syncStartGameItems">
                 <button class="dropdown-item btn btn-warning" (click)="handleStartSession(player)">
-                    Start <strong>{{ player.approvedName }}'s</strong> Session
+                    <strong>Start</strong>{{ player.approvedName }}'s Session
                 </button>
             </li>
         </ng-container>
