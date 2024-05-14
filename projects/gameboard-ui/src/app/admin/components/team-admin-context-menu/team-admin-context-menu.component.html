@@ -23,14 +23,25 @@
         <ng-container *ngIf="!isSyncStartGame || !hasStartedSession">
             <li class="divider dropdown-divider"></li>
             <li role="menuitem" *ngIf="!hasStartedSession">
-                <button class="dropdown-item btn btn-warning">
+                <button class="dropdown-item btn btn-warning" (click)="handleDeployResources(player)">
                     <strong>Deploy</strong> Game Resources
-                    <span class="badge badge-info">[BETA]</span>
+                    <span class="badge badge-warn">[ALPHA]</span>
                 </button>
             </li>
+
             <li role="menuitem" *ngIf="!isSyncStartGame; else syncStartGameItems">
                 <button class="dropdown-item btn btn-warning" (click)="handleStartSession(player)">
-                    <strong>Start</strong>{{ player.approvedName }}'s Session
+                    Start <strong>{{ player.approvedName }}</strong>'s Session
+                </button>
+            </li>
+
+            <li *ngIf="isSyncStartGame && !hasStartedSession">
+                <button class="dropdown-item btn btn-warning" [disabled]="hasStartedSession"
+                    (click)="handleUpdatePlayerReady(player, !player.isReady)">
+                    <strong>
+                        {{ player.isReady ? "Unready" : "Ready" }}
+                        {{ player.approvedName }}
+                    </strong>
                 </button>
             </li>
         </ng-container>
@@ -61,13 +72,6 @@
 </div>
 
 <ng-template #syncStartGameItems>
-    <button class="dropdown-item btn btn-warning" [disabled]="hasStartedSession"
-        (click)="handleUpdatePlayerReady(player, !player.isReady)">
-        <strong>
-            {{ player.isReady ? "Unready" : "Ready" }}
-            {{ player.approvedName }}
-        </strong>
-    </button>
 </ng-template>
 
 <ng-template #unenroll>
