@@ -118,7 +118,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     this.log.logInfo("Wiring up game hub external game event listeners...", ctx);
     this.unsub.add(this.gameHub.launchStarted$.subscribe(ev => this.updateGameStartState.bind(this)(ev)));
     this.unsub.add(this.gameHub.launchProgressChanged$.subscribe(ev => this.updateGameStartState.bind(this)(ev)));
-    this.unsub.add(this.gameHub.launchFailure$.subscribe(ev => this.errors.push(ev.data.err || "Unknown error")));
+    this.unsub.add(this.gameHub.launchFailure$.subscribe(ev => this.errors.push(ev.data.message || "Unknown error")));
     this.unsub.add(
       this.gameHub.launchEnded$.subscribe(ev => {
         this.updateGameStartState(ev);

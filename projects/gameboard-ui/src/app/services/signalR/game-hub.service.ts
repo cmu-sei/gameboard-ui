@@ -15,7 +15,7 @@ export class GameHubService {
   private _activeEnrollments$ = new BehaviorSubject<GameHubActiveEnrollment[]>([]);
   private _launchStarted$ = new Subject<GameHubEventWith<GameHubResourcesDeployStatus>>();
   private _launchEnded$ = new Subject<GameHubEventWith<GameHubResourcesDeployStatus>>();
-  private _launchFailure$ = new Subject<GameHubEventWith<GameHubResourcesDeployStatus>>();
+  private _launchFailure$ = new Subject<GameHubEventWith<{ message: string }>>();
   private _launchProgressChanged$ = new Subject<GameHubEventWith<GameHubResourcesDeployStatus>>();
   private _syncStartGameStateChanged$ = new Subject<SyncStartGameState>();
   private _syncStartGameStarted$ = new Subject<SyncStartGameStartedState>();
@@ -77,7 +77,7 @@ export class GameHubService {
     this._launchEnded$.next(ev);
   }
 
-  private handleLaunchFailure(ev: GameHubEventWith<GameHubResourcesDeployStatus>) {
+  private handleLaunchFailure(ev: GameHubEventWith<{ message: string; }>) {
     this._launchFailure$.next(ev);
   }
 
