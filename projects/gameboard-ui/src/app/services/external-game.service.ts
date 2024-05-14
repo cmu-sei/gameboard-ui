@@ -5,7 +5,7 @@ import { ConfigService } from '@/utility/config.service';
 import { LogService } from './log.service';
 import { Observable, Subject, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { ExternalGameHost, GetExternalTeamDataResponse, UpsertExternalGameHost } from '@/api/game-models';
+import { ExternalGameHost, ExternalGameHostClientInfo, GetExternalTeamDataResponse, UpsertExternalGameHost } from '@/api/game-models';
 import { ExternalGameAdminContext } from '@/admin/components/external-game-admin/external-game-admin.component';
 import { ApiDateTimeService } from './api-date-time.service';
 
@@ -68,7 +68,10 @@ export class ExternalGameService {
 
   public async getHost(id: string): Promise<ExternalGameHost> {
     return firstValueFrom(this.httpClient.get<ExternalGameHost>(this.apiUrl.build(`games/external/hosts/${id}`)));
+  }
 
+  public async getHostClientInfo(id: string): Promise<ExternalGameHostClientInfo> {
+    return firstValueFrom(this.httpClient.get<ExternalGameHostClientInfo>(this.apiUrl.build(`games/external/hosts/${id}/client`)));
   }
 
   public getHosts(): Promise<{ hosts: ExternalGameHost[] }> {

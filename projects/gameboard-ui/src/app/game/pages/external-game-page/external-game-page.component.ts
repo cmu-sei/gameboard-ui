@@ -62,13 +62,13 @@ export class ExternalGamePageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const host = await this.externalGameService.getHost(this.game.externalHostId);
+    const host = await this.externalGameService.getHostClientInfo(this.game.externalHostId);
 
     if (!host.clientUrl) {
       this.errors.push(`Unable to resolve external game client url ("${host.clientUrl}").`);
     }
 
-    this.externalClientUrl = host.clientUrl;
+    // this.externalClientUrl = host.clientUrl;
     this.iframeWindowTitle = `${this.game.name} (External ${this.config.appName} Game)`;
     this.iframeSrcUrl = `${host.clientUrl}?teamId=${teamId}`;
     this.layoutService.stickyMenu$.next(false);

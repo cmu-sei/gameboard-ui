@@ -134,6 +134,12 @@ export enum GamePlayState {
 
 export type ExternalGameDeployStatus = "notStarted" | "partiallyDeployed" | "deploying" | "deployed";
 
+export interface ExternalGameHostClientInfo {
+  id: string;
+  name: string;
+  clientUrl: string;
+}
+
 export interface ExternalGameHost {
   id: string;
   name: string;
