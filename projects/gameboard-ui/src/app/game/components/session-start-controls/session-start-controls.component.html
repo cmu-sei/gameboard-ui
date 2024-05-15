@@ -81,7 +81,7 @@
                 </ul>
             </alert>
 
-            <div class="text-center" *ngIf="!isStartingSession; else isStartingSession">
+            <div class="text-center" *ngIf="!isStartingSession; else startingSession">
                 <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="handleStartRequest(ctx.player)"
                     (cancel)="handleDoubleCheckRequest(false)">
                     <fa-icon [icon]="fa.bolt"></fa-icon>
@@ -100,7 +100,7 @@
     <app-spinner text="Connecting to the game..." textPosition="bottom"></app-spinner>
 </ng-template>
 
-<ng-template #isStartingSession>
+<ng-template #startingSession>
     <app-spinner>Starting your session...</app-spinner>
 </ng-template>
 
