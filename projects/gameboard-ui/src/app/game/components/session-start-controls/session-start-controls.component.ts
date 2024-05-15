@@ -29,6 +29,7 @@ export class SessionStartControlsComponent implements OnInit {
   protected isConnectedToGameHub = false;
   protected isHubConnectionError = false;
   protected isReadyingUp = false;
+  protected isStartingSession = false;
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
   protected playerReadyPct = 0;
@@ -69,8 +70,11 @@ export class SessionStartControlsComponent implements OnInit {
     this.onDoubleCheckChanged.emit(isDoubleChecking);
   }
 
-  protected handleStartRequest(player: Player) {
+  protected async handleStartRequest(player: Player) {
+    this.isStartingSession = true;
     this.onRequestStart.emit(player);
+    await firstValueFrom(this.onRequestStart.asObservable());
+    this.isStartingSession = false;
   }
 
   protected async handleReadyUpdated(player: Player) {
