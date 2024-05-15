@@ -123,7 +123,8 @@
                         <div class="card-section" *ngIf="team.externalGameHostUrl">
                             <h5>Game Host URL</h5>
 
-                            <a [href]="team.externalGameHostUrl" target="_blank">{{ team.externalGameHostUrl }}</a>
+                            <div class="cursor-pointer text-info" [appCopyOnClick]="team.externalGameHostUrl"
+                                appCopyOnClickMessage="Copied this team's external host URL to your clipboard."></div>
                         </div>
                     </div>
                     <button type="button" href="#" class="btn btn-info"
