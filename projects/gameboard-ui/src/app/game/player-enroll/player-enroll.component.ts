@@ -12,6 +12,7 @@ import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { UserService } from '@/api/user.service';
+import { fa } from '@/services/font-awesome.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { GameRegistrationType } from '@/api/game-models';
@@ -50,6 +51,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   protected unenrollTooltip?: string;
   private hubSub?: Subscription;
 
+  fa = fa;
   faUser = faUser;
   faEdit = faEdit;
   faCopy = faCopy;

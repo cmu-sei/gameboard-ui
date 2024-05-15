@@ -159,6 +159,10 @@ th[align="center"] {
   text-align: center;
 }
 
+.gb-button-group > button:not(:first-of-type) {
+  border-left: solid 1px white;
+}
+
 .gameboard-table {
   width: 100%;
 

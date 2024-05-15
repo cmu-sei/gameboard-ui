@@ -102,8 +102,8 @@
             </div>
           </div>
           <small>
-            This will show on the public scoreboard. Your requested display name is subject to approval and a generic
-            moniker is used until that time.
+            Your name will be visible on the public scoreboard. It's also subject to approval - until an administrator
+            has approved it, a generic name will be displayed instead.
           </small>
         </div>
 
@@ -114,17 +114,27 @@
             <div class="mb-2" *ngIf="(isManager$ | async) || !(hasTeammates$ | async)">
               <h3>Captains</h3>
 
-              <ng-container *ngIf="!code; else invitationGenerated">
-                Generate your team-up code here, then send it to your teammates so they can join up!
+              Generate your team-up code here, then send it to your teammates so they can join up!
 
-                <div class="d-flex flex-column align-items-center justify-content-center mt-2">
-                  <button type="button" class="btn btn-info my-3" (click)="invite(ctx.player)">Generate</button>
+              <div class="input-group my-3">
+                <input type="text" disabled id="token-input" class="form-control" [(ngModel)]="code" maxlength="64"
+                  placeholder="Generate a code ->">
+                <div class="input-group-append gb-button-group">
+                  <button class="btn btn-info" (click)="invite(ctx.player)">
+                    <fa-icon [icon]="fa.arrowsSpin"></fa-icon>
+                  </button>
 
-                  <small class="d-block text-muted">
-                    <strong>NOTE:</strong> generating an invitation invalidates previous invitations.
-                  </small>
+                  <button *ngIf="code" class="btn btn-info button-group-button" [appCopyOnClick]="code"
+                    appCopyOnClickMessage="Copied your invitation code to your clipboard.">
+                    <fa-icon [icon]="fa.copy"></fa-icon>
+                  </button>
                 </div>
-              </ng-container>
+              </div>
+
+              <small class="d-block text-muted">
+                <strong>NOTE:</strong> Generating an invitation code invalidates any codes you've
+                generated previously.
+              </small>
             </div>
           </div>
 
