@@ -66,7 +66,7 @@
         </ng-container>
     </div>
 
-    <div class="doublecheck-container" *ngIf="!isStartingSession; else isStartingSession">
+    <div class="doublecheck-container">
         <div class="card-text my-4" *ngIf="isDoubleChecking">
             <alert type="danger">
                 <ul>
@@ -81,7 +81,7 @@
                 </ul>
             </alert>
 
-            <div class="text-center">
+            <div class="text-center" *ngIf="!isStartingSession; else isStartingSession">
                 <app-confirm-button btnClass="btn btn-lg btn-warning" (confirm)="handleStartRequest(ctx.player)"
                     (cancel)="handleDoubleCheckRequest(false)">
                     <fa-icon [icon]="fa.bolt"></fa-icon>
