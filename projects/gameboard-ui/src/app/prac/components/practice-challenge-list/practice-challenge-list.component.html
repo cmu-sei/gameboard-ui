@@ -29,7 +29,7 @@
         </div>
 
         <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0 mt-5">
-            <app-share-button class="d-block mr-1" size="small"
+            <app-share-button class="d-block mr-1" size="small" [disabled]="!term"
                 message="Copied a link to this search to your clipboard."
                 tooltip="Copy a link to this search"></app-share-button>
             <div class="input-group-prepend">

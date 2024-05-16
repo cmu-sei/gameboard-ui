@@ -6,14 +6,16 @@ import { Injectable } from '@angular/core';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
+import { TeamService } from '@/api/team.service';
 
 @Injectable({ providedIn: 'root' })
-export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
+export class ExternalGameGuard implements CanActivate, CanActivateChild {
   constructor(
     private gameService: GameService,
     private localUserService: LocalUserService,
     private logService: LogService,
-    private playerService: PlayerService) { }
+    private playerService: PlayerService,
+    private teamService: TeamService) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -32,13 +34,13 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
     const userId = this.localUserService.user$.value?.id;
 
     if (!gameId || !teamId || !userId) {
-      this.logService.logWarning("Can't activate ExternalSyncGameGuard for gameId, teamId, userId", gameId, teamId, userId);
+      this.logService.logWarning("Can't activate ExternalGameGuard for gameId, teamId, userId", gameId, teamId, userId);
       return false;
     }
 
     // try to bail out early if someone's trying to hit this route for an ineligible game
     const game = await firstValueFrom(this.gameService.retrieve(gameId));
-    if (!game.requireSynchronizedStart || game.mode !== GameEngineMode.External)
+    if (game.mode !== GameEngineMode.External)
       return false;
 
     const team = await firstValueFrom(this.playerService.getTeam(teamId));
@@ -46,7 +48,7 @@ export class ExternalSyncGameGuard implements CanActivate, CanActivateChild {
       return false;
     }
 
-    const playState = await firstValueFrom(this.gameService.getGamePlayState(gameId));
+    const playState = await firstValueFrom(this.teamService.getGamePlayState(teamId));
     return playState == GamePlayState.Started;
   }
 }

@@ -12,7 +12,7 @@ export class ApiUrlService {
     return `${this.API_ROOT}${finalRelativeUrl}${queryModel ? this.objectToQuery(queryModel) : ''}`;
   }
 
-  objectToQuery<TObject extends { [key: string]: any }>(target: TObject | null | undefined, prependWithQuestionMark = true): string {
+  objectToQuery<TObject extends { [key: string]: any }>(target: TObject | null | undefined, prependQuestionMark = true): string {
     if (!target) {
       return '';
     }
@@ -38,7 +38,7 @@ export class ApiUrlService {
     if (finalParams.length) {
       const queryString = finalParams.join("&");
 
-      if (prependWithQuestionMark) {
+      if (prependQuestionMark) {
         return `?${queryString}`;
       }
       else {

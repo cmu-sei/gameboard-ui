@@ -58,8 +58,8 @@
     <div class="d-flex m-0 p-0">
       <div class="flex-grow-1" style="min-width: 0">
         <div class="card">
-          <div class="card-header d-flex justify-content-between py-2">
-            <div>
+          <div class="card-header d-flex align-items-center justify-content-between py-2">
+            <div class="flex-grow-1">
               <span class="mr-1 font-weight-bold">{{ctx.ticket.requester?.approvedName}}</span>
               <span *ngIf="!ctx.ticket.selfCreated" class="mr-1 font-weight-bold">(by
                 {{ctx.ticket.creator?.approvedName}})</span>
@@ -67,6 +67,13 @@
                 container="body" [adaptivePosition]="true" placement="top">
                 {{ctx.ticket.created | ago}}
               </span>
+            </div>
+            <div class="ticket-text-tools-container justify-self-end">
+              <button type="button" class="btn btn-small px-1 py-0" tooltip="Copy this ticket's text"
+                [appCopyOnClick]="ctx.ticket.description"
+                appCopyOnClickMessage="Copied this ticket's text to your clipboard.">
+                <fa-icon [icon]="fa.copy" size="sm" class="text-info"></fa-icon>
+              </button>
             </div>
             <div>
               <fa-icon *ngIf="ctx.ticket.canUpdate && ctx.ticket.creatorId == currentUser?.id && !editingContent"
@@ -154,9 +161,16 @@
                     <div class="mr-1">·</div>
                   </ng-container>
 
-                  <div style="display: inline-block" [tooltip]="activity.timestamp | shorttime: true : true"
-                    containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
+                  <div class="flex-grow-1" style="display: inline-block"
+                    [tooltip]="activity.timestamp | shorttime: true : true" containerClass="light-tooltip"
+                    container="body" [adaptivePosition]="true" placement="top">
                     {{activity.timestamp | ago}}</div>
+
+                  <button type="button" class="btn btn-small px-1 py-0" tooltip="Copy this comment"
+                    [appCopyOnClick]="ctx.ticket.description"
+                    appCopyOnClickMessage="Copied this comment's text to your clipboard.">
+                    <fa-icon [icon]="fa.copy" size="sm" class="text-info"></fa-icon>
+                  </button>
                 </div>
               </div>
               <div class="card-body"

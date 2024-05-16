@@ -4,8 +4,6 @@ export enum StorageKey {
   ExternalGameOidc = "oidcLink",
   ExternalGameUrl = "gameServerUrl",
   Gameboard = "gameboard",
-  UnityGameLink = "gameServerLink",
-  UnityOidcLink = "oidcLink",
 }
 
 @Injectable({ providedIn: 'root' })

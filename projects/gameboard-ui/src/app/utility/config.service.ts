@@ -37,18 +37,6 @@ export class ConfigService {
     return this.location.path();
   }
 
-  embeddedMonacoOptions = {
-    language: 'markdown',
-    lineNumbers: 'off',
-    minimap: { enabled: false },
-    quickSuggestions: false,
-    wordWrap: 'on',
-    scrollBeyondLastLine: false,
-    automaticLayout: true,
-    linkedEditing: true,
-    fixedOverflowWidgets: true
-  };
-
   datedisplay_options: Intl.DateTimeFormatOptions = {
     month: 'short',
     day: '2-digit',
@@ -112,22 +100,6 @@ export class ConfigService {
 
   get appName(): string {
     return this.settings.appname || "Gameboard";
-  }
-
-  get gamebrainhost(): string {
-    let path = this.settings.gamebrainhost || this.basehref;
-    if (!path.endsWith('/')) {
-      path += '/';
-    }
-    return path;
-  }
-
-  get unityHost(): string {
-    let path = this.settings.unityclienthost || this.basehref;
-    if (!path.endsWith('/')) {
-      path += '/';
-    }
-    return path;
   }
 
   get mkshost(): string {
@@ -242,8 +214,6 @@ export interface Settings {
   imghost?: string;
   tochost?: string;
   supporthost?: string;
-  gamebrainhost?: string;
-  unityclienthost?: string;
   tocfile?: string;
   custom_background?: string;
   countdownStartSecondsAtMinute?: number;

@@ -8,18 +8,18 @@
                 <h3>Launching</h3>
                 <h1>{{gameLaunchCtx.game.name}}</h1>
             </div>
-            <ng-container *ngIf="state; else loading">
+            <ng-container *ngIf="status; else loading">
                 <ng-container *ngIf="!launchCompleted; else countdown">
                     <div class="step-container full-width my-4">
                         <h2>Building challenges...</h2>
                         <app-progress-bar
-                            [percentage]="state.challengesCreated | numbersToPercentage:state.challengesTotal"></app-progress-bar>
+                            [percentage]="challengesCreatedCount | numbersToPercentage:status.challengeSpecs.length"></app-progress-bar>
                     </div>
 
                     <div class="step-container full-width my-4">
                         <h2>Starting gamespaces...</h2>
                         <app-progress-bar
-                            [percentage]="state.gamespacesStarted | numbersToPercentage:state.gamespacesTotal"></app-progress-bar>
+                            [percentage]="gamespacesDeployCount | numbersToPercentage:status.challengeSpecs.length"></app-progress-bar>
                     </div>
                 </ng-container>
 

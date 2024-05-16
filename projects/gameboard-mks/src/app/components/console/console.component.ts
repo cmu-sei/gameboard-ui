@@ -89,9 +89,19 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     this.canvasId = el.id + this.index;
     el.id += this.index;
 
-    if (!!this.request?.name) {
-      this.titleSvc.setTitle(`console: ${this.request.name}`);
-    }
+    let teamNameBit = "";
+    if (this.request.teamName)
+      teamNameBit = `${this.request.teamName} on`
+
+    let onConsoleBit = "console";
+    if (this.request?.name)
+      onConsoleBit = this.request.name;
+
+    let challengeNameBit = "";
+    if (this.request.challengeName)
+      challengeNameBit = ` :: ${this.request.challengeName}`;
+
+    this.titleSvc.setTitle(teamNameBit + onConsoleBit + challengeNameBit);
 
     if (!!this.request.observer) {
       this.showCog = false;
@@ -102,8 +112,6 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     } else {
       setTimeout(() => this.reload(), 1);
     }
-    // TODO: restore audience hub
-    // setTimeout(() => this.hubSvc.init(this.request), 100);
 
     this.audienceDiv.nativeElement.onmousedown = (e: MouseEvent) => {
       e.preventDefault();

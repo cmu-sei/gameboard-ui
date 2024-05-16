@@ -43,7 +43,6 @@ import { PlayerSponsorReportComponent } from './player-sponsor-report/player-spo
 import { PracticeComponent } from './practice/practice.component';
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
 import { PrereqsComponent } from './prereqs/prereqs.component';
-import { ReportPageComponent } from './report-page/report-page.component';
 import { SiteOverviewStatsComponent } from './components/site-overview-stats/site-overview-stats.component';
 import { SpecBrowserComponent } from './spec-browser/spec-browser.component';
 import { SponsorBrowserComponent } from './sponsor-browser/sponsor-browser.component';
@@ -64,6 +63,9 @@ import { ActiveTeamsModalComponent } from './components/active-teams-modal/activ
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
 import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state-description.pipe';
+import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
+import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
+import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +100,6 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
     PracticeComponent,
     PracticeSettingsComponent,
     PrereqsComponent,
-    ReportPageComponent,
     SpecBrowserComponent,
     SponsorBrowserComponent,
     SupportReportLegacyComponent,
@@ -117,6 +118,9 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
     GameYamlImportModalComponent,
     SyncStartTeamPlayerReadyCountPipe,
     SyncStartGameStateDescriptionPipe,
+    ExternalGameHostPickerComponent,
+    ExternalHostEditorComponent,
+    DeleteExternalGameHostModalComponent,
   ],
   imports: [
     CommonModule,
@@ -142,7 +146,6 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
           { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
           { path: 'overview', component: AdminOverviewComponent, title: "Admin | Overview" },
-          { path: 'report', component: ReportPageComponent, title: "Admin | Reports" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },

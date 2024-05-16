@@ -175,6 +175,11 @@
                     <div *dropdownMenu class="dropdown-menu">
                       <a class="dropdown-item px-3" [routerLink]="['../registrar', game.id]"><fa-icon class="mr-1"
                           [icon]="faUsers"></fa-icon>Players</a>
+                      <a class="dropdown-item px-3" *ngIf="game.mode == 'external'"
+                        [routerLink]="['../game', game.id, 'external']">
+                        <fa-icon [icon]="fa.rocket"></fa-icon>
+                        Deployment
+                      </a>
                       <a class="dropdown-item px-3" [routerLink]="['../observer/challenges', game.id]"><fa-icon
                           class="mr-1" [icon]="faTv"></fa-icon>Observe</a>
                       <a class="dropdown-item px-3" [routerLink]="['/game', game.id]"><fa-icon class="mr-1"

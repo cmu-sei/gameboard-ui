@@ -71,8 +71,8 @@ export class GameService {
     );
   }
 
-  public getGamePlayState(gameId: string): Observable<GamePlayState> {
-    return this.http.get<GamePlayState>(`${this.url}/game/${gameId}/play-state`);
+  public deployResources(gameId: string, teamIds: string[]) {
+    return firstValueFrom(this.http.post(`${this.url}/game/${gameId}/resources`, { teamIds }));
   }
 
   public getSyncStartState(gameId: string): Observable<SyncStartGameState> {
@@ -121,12 +121,6 @@ export class GameService {
 
   public deletePrereq(id: string): Observable<any> {
     return this.http.delete(`${this.url}/challengegate/${id}`);
-  }
-
-  // an abstracted definition for this rule. Does this game run
-  // in Gameboard or elsewhere?
-  public isNonStandardEngineMode(g: Game): boolean {
-    return g.mode === GameEngineMode.Cubespace || g.mode === GameEngineMode.External;
   }
 
   private tryCache(id: string, limit: number = 20): Game | null {

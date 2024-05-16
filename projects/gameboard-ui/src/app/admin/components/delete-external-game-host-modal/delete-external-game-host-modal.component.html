@@ -1,0 +1,23 @@
+<app-modal-content *ngIf="deleteHost; else loading" title="Delete External Host" confirmButtonText="Yes, delete"
+    cancelButtonText="No, don't delete" (confirm)="handleConfirm(replaceHost)" [isDangerConfirm]="true">
+    <app-error-div [errors]="errors"></app-error-div>
+    <div class="used-by-games-container" *ngIf="deleteHost.usedByGames.length">
+        This external game host is in use{{ deleteHost.usedByGames.length === 1 ? " by the game " +
+        deleteHost!.usedByGames[0].name : "" }}. To delete it, you'll need to transfer the games
+        it's currently hosting to another host.
+
+        <ul *ngIf="deleteHost.usedByGames.length > 1">
+            <li *ngFor="let game of deleteHost.usedByGames">{{game.name}}</li>
+        </ul>
+    </div>
+    <div class="form-group">
+        <label for="target-host">Transfer these games to host</label>
+        <select id="target-host" name="target-host" class="form-control" [(ngModel)]="replaceHost">
+            <option *ngFor="let host of hosts" [ngValue]="host">{{host.name}} ({{host.hostUrl}})</option>
+        </select>
+    </div>
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading the host...</app-spinner>
+</ng-template>

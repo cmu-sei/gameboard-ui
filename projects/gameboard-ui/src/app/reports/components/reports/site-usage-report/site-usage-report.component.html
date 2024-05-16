@@ -1,0 +1,36 @@
+<app-report-parameters-container>
+    <app-parameter-date-range label="Dates" ngDefaultControl [(ngModel)]="dateQueryModel"></app-parameter-date-range>
+    <app-parameter-sponsor ngDefaultControl></app-parameter-sponsor>
+</app-report-parameters-container>
+
+<ng-container *ngIf="reportData; else loading">
+    <h2>Players &amp; Sponsors</h2>
+    <div class="d-flex flex-wrap align-items-top justify-content-between">
+        <app-big-stat [value]="reportData.userCount" label="Active players" [isClickable]="true"
+            (click)="showPlayersModal()"></app-big-stat>
+        <app-big-stat [value]="reportData.sponsorCount" label="Sponsors represented" [isClickable]="true"
+            (click)="showSponsorsModal()"></app-big-stat>
+        <app-big-stat [value]="reportData.competitiveUsersWithNoPracticeCount" label="Competitive-Only Players"
+            [isClickable]="true"
+            (click)="showPlayersModal({ exclusiveToMode: playerModeEnumCompetitive})"></app-big-stat>
+        <app-big-stat [value]="reportData.practiceUsersWithNoCompetitiveCount" [isClickable]="true"
+            (click)="showPlayersModal({ exclusiveToMode: playerModeEnumPractice })"
+            label="Practice-Only Players"></app-big-stat>
+    </div>
+
+    <h2 class="report-section">Challenges</h2>
+    <div class="d-flex flex-wrap align-items-top justify-content-between">
+        <app-big-stat [value]="reportData.deployedChallengesSpecCount" label="Unique challenges attempted"
+            [isClickable]="true" (click)="showChallengesModal()"></app-big-stat>
+        <app-big-stat [value]="reportData.deployedChallengesCount" label="Challenges attempted"
+            [subLabel]="reportData.deployedChallengesCompetitiveCount + ' competitive + ' + reportData.deployedChallengesPracticeCount + ' practice'"></app-big-stat>
+        <app-big-stat [value]="reportData.avgCompetitiveChallengesPerCompetitiveUser"
+            label="Avg. Challenges Per Competitive Player"></app-big-stat>
+        <app-big-stat [value]="reportData.avgPracticeChallengesPerPracticeUser"
+            label="Avg. Challenges Per Practice Player"></app-big-stat>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading your report...</app-spinner>
+</ng-template>

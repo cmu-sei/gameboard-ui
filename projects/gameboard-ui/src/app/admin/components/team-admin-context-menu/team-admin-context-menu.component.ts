@@ -8,6 +8,7 @@ import { SyncStartService } from '@/services/sync-start.service';
 import { firstValueFrom } from 'rxjs';
 import { PlayerService } from '@/api/player.service';
 import { TeamSessionResetType } from '@/api/teams.models';
+import { GameService } from '@/api/game.service';
 
 export interface TeamAdminContextMenuSessionResetRequest {
   player: Player;
@@ -35,6 +36,7 @@ export class TeamAdminContextMenuComponent implements OnInit {
 
   constructor(
     private clipboardService: ClipboardService,
+    private gameService: GameService,
     private gameSessionService: GameSessionService,
     private playerService: PlayerService,
     private syncStartService: SyncStartService,
@@ -51,6 +53,11 @@ export class TeamAdminContextMenuComponent implements OnInit {
   async copy(text: string, description: string) {
     await this.clipboardService.copy(text);
     this.toastService.showMessage(`Copied ${description} **${text}** to your clipboard.`);
+  }
+
+  async handleDeployResources(player: Player) {
+    await this.gameService.deployResources(player.gameId, [player.teamId]);
+    this.toastService.showMessage(`Resources are being deployed for **${player.approvedName}**.`);
   }
 
   async handleUpdatePlayerReady(player: Player, isReady: boolean) {

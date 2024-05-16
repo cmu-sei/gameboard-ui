@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CoreModule } from '../core/core.module';
-import { UnityModule } from '../unity/unity.module';
 import { UtilityModule } from '../utility/utility.module';
 
 import { AuthGuard } from '../utility/auth.guard';
@@ -17,7 +16,7 @@ import { ContinueToGameboardButtonComponent } from './components/continue-to-gam
 import { ExternalGameLinkBannerComponent } from './components/external-game-link-banner/external-game-link-banner.component';
 import { ExternalGameLoadingPageComponent } from './pages/external-game-loading-page/external-game-loading-page.component';
 import { ExternalGamePageComponent } from './pages/external-game-page/external-game-page.component';
-import { ExternalSyncGameGuard } from '@/guards/external-sync-game.guard';
+import { ExternalGameGuard } from '@/guards/external-game.guard';
 import { LateStartBannerComponent } from './components/late-start-banner/late-start-banner.component';
 import { GameboardPageComponent } from './pages/gameboard-page/gameboard-page.component';
 import { GameInfoComponent } from './game-info/game-info.component';
@@ -41,7 +40,6 @@ import { SessionStartControlsComponent } from './components/session-start-contro
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
 import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
-import { UnityBoardComponent } from '../unity/unity-board/unity-board.component';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -84,14 +82,12 @@ const MODULE_DECLARATIONS = [
       { path: 'board/:playerId/:cid', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
-      { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalSyncGameGuard], component: ExternalGamePageComponent },
-      { path: 'unity-board/:gameId/:playerId/:teamId/:sessionExpirationTime', canActivate: [AuthGuard, UserIsPlayingGuard], component: UnityBoardComponent },
+      { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalGameGuard], component: ExternalGamePageComponent },
       { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),
     CoreModule,
-    UtilityModule,
-    UnityModule
+    UtilityModule
   ],
   exports: [
     ChallengeDeployCountdownComponent,

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { first, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-modal-content',
@@ -8,23 +9,22 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 })
 export class ModalContentComponent<T> {
   @Input() hideCancel = false;
-  @Input() title = "";
-  @Input() subtitle = "";
-  @Input() subSubtitle = "";
+  @Input() title?: string;
+  @Input() subtitle?: string;
+  @Input() subSubtitle?: string;
   @Input() cancelButtonText?: string;
   @Input() confirmButtonText?: string;
   @Input() isDangerConfirm = false;
 
   @Output() confirm = new EventEmitter<void>();
 
-  constructor(private modalService: ModalConfirmService) {
-  }
+  constructor(private modalService: ModalConfirmService) { }
 
   protected handleClose() {
     this.modalService.hide();
   }
 
-  protected handleConfirm() {
+  protected async handleConfirm() {
     this.confirm.emit();
     this.modalService.hide();
   }

@@ -1,6 +1,7 @@
 import { GamePlayState } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { PlayerService } from '@/api/player.service';
+import { TeamService } from '@/api/team.service';
 import { LogService } from '@/services/log.service';
 import { UserService } from '@/utility/user.service';
 import { Injectable } from '@angular/core';
@@ -13,7 +14,8 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
     private gameService: GameService,
     private localUserService: UserService,
     private log: LogService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private teamService: TeamService
   ) { }
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -48,7 +50,8 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
       resolvedGameId = player.gameId;
     }
     this.log.logInfo("Resolved gameId for GameIsStartedGuard", gameId);
+    this.log.logInfo("Resolved teamId for GameIsStartedGuard", player.teamId);
 
-    return await firstValueFrom(this.gameService.getGamePlayState(resolvedGameId).pipe(map(phase => phase == GamePlayState.Started)));
+    return await firstValueFrom(this.teamService.getGamePlayState(player.teamId).pipe(map(phase => phase == GamePlayState.Started)));
   }
 }

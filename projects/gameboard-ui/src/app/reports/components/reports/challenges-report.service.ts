@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ChallengesReportFlatParameters, ChallengesReportRecord, ChallengesReportStatSummary } from './challenges-report/challenges-report.models';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ChallengesReportFlatParameters, ChallengesReportRecord, ChallengesReportStatSummary } from './challenges-report/challenges-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { ApiUrlService } from '@/services/api-url.service';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesReportService {

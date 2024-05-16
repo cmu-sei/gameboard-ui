@@ -215,10 +215,9 @@
         <label class="mb-0" for="reset-toggle">Player Mode</label>
         <div class="form-control auto-h d-flex align-items-center">
           <label>Competition</label>
-          <label class="btn text-info" [disabled]="game.mode === 'external'"
-            (click)="handleNonGameModeControlClicked(game.mode === 'external')" btnCheckbox btnCheckboxTrue="practice"
-            btnCheckboxFalse="competition" tabindex="0" [ngModelOptions]="{updateOn: 'change'}" id="reset-toggle"
-            name="playerMode" [(ngModel)]="game.playerMode">
+          <label class="btn text-info" btnCheckbox btnCheckboxTrue="practice" btnCheckboxFalse="competition"
+            tabindex="0" [ngModelOptions]="{updateOn: 'change'}" id="reset-toggle" name="playerMode"
+            [(ngModel)]="game.playerMode">
             <fa-icon *ngIf="game.playerMode==='competition'" [icon]="fa.toggleOff" size="lg"></fa-icon>
             <fa-icon *ngIf="game.playerMode==='practice'" [icon]="fa.toggleOn" size="lg"></fa-icon>
           </label>
@@ -247,8 +246,7 @@
         <label class="mb-0" for="sync-start-toggle">Require Synchronized Start</label>
         <div class="form-control auto-h d-flex align-items-center">
           <label>No</label>
-          <label class="btn text-info" btnCheckbox (click)="handleNonGameModeControlClicked(game.mode === 'external')"
-            [disabled]="game.mode === 'external'" [btnCheckboxTrue]="true" [btnCheckboxFalse]="false" tabindex="0"
+          <label class="btn text-info" btnCheckbox [btnCheckboxTrue]="true" [btnCheckboxFalse]="false" tabindex="0"
             [ngModelOptions]="{updateOn: 'change'}" id="sync-start-toggle" name="syncStartToggle"
             [(ngModel)]="game.requireSynchronizedStart">
             <fa-icon *ngIf="!game.requireSynchronizedStart" [icon]="fa.toggleOff" size="lg"></fa-icon>
@@ -266,56 +264,16 @@
         <label for="mode-input">Engine Mode</label>
         <select id="mode-input" name="mode-input" class="form-control mt-1" [(ngModel)]="game.mode"
           (change)="handleModeChange($event)">
-          <option [value]="'vm'">Standard (VMs only)</option>
-          <option [value]="'external'">External</option>
-          <option [value]="'unity'">Legacy Unity Games</option>
+          <option [value]="'vm'">Standard (Gameboard VMs)</option>
+          <option [value]="'external'">External Host</option>
         </select>
-        <small>Does the game use standard VMs, or is it played in Unity or another external host?</small>
+        <small>Does the game use standard VMs, or is it played on an external host?</small>
       </div>
 
-      <div class="container" *ngIf="game.mode === 'external'">
-        <div class="row mt-4 pl-3">
-          <h2>External Game Settings</h2>
-        </div>
-
-        <div class="row">
-          <div class="col-6">
-            <label for="external-game-launch-url">Game Client URL</label>
-            <input type="text" class="form-control" id="external-game-client-url" name="external-game-client-url"
-              [(ngModel)]="game.externalGameClientUrl">
-            <small>
-              The URL from which Gameboard will serve the game client
-            </small>
-          </div>
-
-          <div class="col-6"></div>
-        </div>
-
-        <div class="row">
-          <h3 class="mt-4 col-12">Endpoints</h3>
-        </div>
-
-        <div class="row">
-          <div class="col-6">
-            <label for="external-game-launch-url">Launch Metadata Endpoint</label>
-            <input type="text" class="form-control" id="external-game-launch-endpoint"
-              name="external-game-launch-endpoint" [(ngModel)]="game.externalGameStartupEndpoint">
-            <small>
-              When Gameboard boots an external game, it'll post game metadata to this endpoint on the external game
-              host.
-            </small>
-          </div>
-
-          <div class="col-6">
-            <label for="externalGameTeamExtendedEndpoint">Team Session Extension Endpoint</label>
-            <input type="text" class="form-control" id="externalGameTeamExtendedEndpoint"
-              name="externalGameTeamExtendedEndpoint" [(ngModel)]="game.externalGameTeamExtendedEndpoint">
-            <small>
-              If a team's session end time changes, Gameboard will make a request to the external host notifying it of
-              the change.
-            </small>
-          </div>
-        </div>
+      <div class="form-group py-2 w-100" *ngIf="game.mode === 'external'">
+        <label for="external-host">External Host</label>
+        <app-external-game-host-picker name="external-host" [(selectedHostId)]="game.externalHostId"
+          (selectedHostChange)="handleExternalGameHostChanged($event)"></app-external-game-host-picker>
       </div>
     </div>
 

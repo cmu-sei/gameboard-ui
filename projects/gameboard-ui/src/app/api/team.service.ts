@@ -1,10 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, map, tap } from "rxjs";
+import { Observable, Subject, firstValueFrom, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
 import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools";
+import { GamePlayState } from "./game-models";
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
@@ -42,6 +43,10 @@ export class TeamService {
         return this.http.get<Team>(this.apiUrl.build(`/team/${teamId}`));
     }
 
+    public getGamePlayState(teamId: string): Observable<GamePlayState> {
+        return this.http.get<GamePlayState>(this.apiUrl.build(`team/${teamId}/play-state`));
+    }
+
     public search(teamIds: string[]) {
         if (!teamIds?.length) {
             throw new Error("Can't retrieve teams - no ids specified.");
@@ -70,9 +75,13 @@ export class TeamService {
     }
 
     public resetSession(request: { teamId: string, resetType?: TeamSessionResetType }): Observable<void> {
-        return this.http.post<void>(this.apiUrl.build(`/team/${request.teamId}/session`), request).pipe(
+        return this.http.put<void>(this.apiUrl.build(`/team/${request.teamId}/session`), request).pipe(
             tap(_ => this._teamSessionReset$.next(request.teamId))
         );
+    }
+
+    public startSession(request: { teamIds: string[] }) {
+        return firstValueFrom(this.http.post<any>(this.apiUrl.build("/team/session"), request));
     }
 
     private updateSession(request: SessionExtendRequest | SessionEndRequest): Observable<void> {

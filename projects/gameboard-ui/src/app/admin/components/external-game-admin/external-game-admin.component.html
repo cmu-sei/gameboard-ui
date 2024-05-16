@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="card-text mb-4">
-                        <div class="card-section my-4">
+                        <div class="card-section">
                             <h5 class="mb-3">
                                 Players
                                 <span class="player-count">({{ team.players | syncStartTeamPlayerReadyCount }}
@@ -118,9 +118,14 @@
                                     </tr>
                                 </tbody>
                             </table>
-
                         </div>
 
+                        <div class="card-section" *ngIf="team.externalGameHostUrl">
+                            <h5>Game Host URL</h5>
+
+                            <div class="cursor-pointer text-info" [appCopyOnClick]="team.externalGameHostUrl"
+                                appCopyOnClickMessage="Copied this team's external host URL to your clipboard."></div>
+                        </div>
                     </div>
                     <button type="button" href="#" class="btn btn-info"
                         [disabled]="(team.deployStatus != 'notStarted' && team.deployStatus != 'partiallyDeployed') || !canDeploy"
@@ -143,8 +148,8 @@
 
 <ng-template #loading>
     <div class="w-100 d-flex align-items-center justify-content-center">
-        <app-spinner>
-            <h1>Loading game data...</h1>
+        <app-spinner textPosition="bottom">
+            Loading game data...
         </app-spinner>
     </div>
 </ng-template>

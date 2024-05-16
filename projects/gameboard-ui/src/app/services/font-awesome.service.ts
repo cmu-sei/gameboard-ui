@@ -45,6 +45,7 @@ import {
   faPeopleGroup,
   faPerson,
   faPlus,
+  faRecycle,
   faRocket,
   faSearch,
   faShare,
@@ -63,12 +64,14 @@ import {
   faTv,
   faUser,
   faUsers,
-  faXmark
+  faXmark,
+  faArrowsSpin
 } from '@fortawesome/free-solid-svg-icons';
 
 export const fa = {
   arrowDown: faLongArrowAltDown,
   arrowLeft: faArrowLeft,
+  arrowsSpin: faArrowsSpin,
   arrowUp: faArrowUp,
   bars: faBars,
   barsStaggered: faBarsStaggered,
@@ -110,6 +113,7 @@ export const fa = {
   peopleGroup: faPeopleGroup,
   person: faPerson,
   plus: faPlus,
+  recycle: faRecycle,
   rocket: faRocket,
   search: faSearch,
   share: faShare,

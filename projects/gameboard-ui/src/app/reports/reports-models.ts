@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { PagingResults, SimpleEntity } from "../api/models";
 
 export interface ReportViewModel {
@@ -7,6 +8,7 @@ export interface ReportViewModel {
     description: string;
     exampleFields: string[];
     exampleParameters: string[];
+    isExportable: boolean;
 }
 
 export interface ReportResults<T> {
@@ -26,7 +28,8 @@ export interface ReportMetaData {
     key: ReportKey;
     title: string;
     description: string;
-    runAt: Date;
+    isExportable: boolean;
+    runAt: DateTime;
 }
 
 export interface ReportDateRange {
@@ -82,6 +85,7 @@ export enum ReportKey {
     EnrollmentReport = "enrollment",
     PlayersReport = "players",
     PracticeAreaReport = "practice-area",
+    SiteUsageReport = "site-usage",
     SupportReport = "support"
 }
 

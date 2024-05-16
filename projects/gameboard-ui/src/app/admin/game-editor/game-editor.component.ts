@@ -3,21 +3,20 @@
 
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Game, GameEngineMode } from '../../api/game-models';
+import { ExternalGameHost, Game, GameEngineMode } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { ActivatedRoute } from '@angular/router';
 import { KeyValue } from '@angular/common';
 import { AppTitleService } from '@/services/app-title.service';
 import { fa } from '@/services/font-awesome.service';
 import { PlayerMode } from '@/api/player-models';
 import { ToastService } from '@/utility/services/toast.service';
 import { PracticeService } from '@/services/practice.service';
-import { ConfigService } from '@/utility/config.service';
 import { FeedbackTemplate } from '@/api/feedback-models';
-import { YamlService } from '@/services/yaml.service';
 import { Spec } from '@/api/spec-models';
+import { YamlService } from '@/services/yaml.service';
 
 @Component({
   selector: 'app-game-editor',
@@ -38,11 +37,6 @@ export class GameEditorComponent implements AfterViewInit {
   showCertificateInfo = false;
   showExternalGameFields = false;
   protected specCount = 0;
-  externalGameServerUrlBase = this.config.gamebrainhost;
-
-  // the first time we flip the mode to external, suggest the gamebrainhost endpoint as the external startup
-  // url
-  private defaultExternalGameStartUrlSuggested = false;
 
   // store unique values of each game field with their frequencies for ordered suggestion lists
   suggestions = {
@@ -58,7 +52,6 @@ export class GameEditorComponent implements AfterViewInit {
   constructor(
     route: ActivatedRoute,
     private api: GameService,
-    private config: ConfigService,
     private practiceService: PracticeService,
     private title: AppTitleService,
     private toast: ToastService,
@@ -92,16 +85,6 @@ export class GameEditorComponent implements AfterViewInit {
       tap(values => {
         this.dirty = true;
         this.needsPracticeModeEnabledRefresh = values.playerMode !== this.game.playerMode;
-
-        // the first time we flip to "External" mode, if the external game start url isn't specified,
-        // default it to gamebrain's url in settings
-        if (this.config.gamebrainhost && !this.game.externalGameStartupEndpoint && !this.defaultExternalGameStartUrlSuggested) {
-          // this looks funny because the URL of the only currently-supported external host (Gamebrain) has its base url
-          // set through helm configuration of the API (so we only care about configuring the endpoint, not the fully-qualified)
-          // url
-          this.game.externalGameStartupEndpoint = "admin/deploy";
-          this.defaultExternalGameStartUrlSuggested = true;
-        }
       }),
       debounceTime(500),
       switchMap(g => this.api.update(this.game)),
@@ -119,9 +102,10 @@ export class GameEditorComponent implements AfterViewInit {
     );
   }
 
-  handleNonGameModeControlClicked(isDisabled: boolean) {
-    if (isDisabled)
-      this.showExternalModeToast(true);
+  async handleExternalGameHostChanged(host: ExternalGameHost) {
+    this.game.externalHostId = host.id;
+    await firstValueFrom(this.api.update(this.game));
+    this.toast.showMessage(`Changed to host **${host.name}**`);
   }
 
   async handleFeedbackTemplateChange(template?: FeedbackTemplate) {
@@ -140,23 +124,10 @@ export class GameEditorComponent implements AfterViewInit {
   handleModeChange(event: Event) {
     const gameMode = ((event?.target as any).value as GameEngineMode);
     this.game.mode = gameMode;
-
-    if (gameMode == GameEngineMode.External) {
-      this.showExternalModeToast();
-    }
   }
 
   protected handleSpecsUpdated(specs: Spec[]) {
     this.specCount = specs.length;
-  }
-
-  showExternalModeToast(reduceDuration?: boolean) {
-    this.game.playerMode = PlayerMode.competition;
-    this.game.requireSynchronizedStart = true;
-    this.toast.show({
-      text: `Because this game is now in Exernal mode, "Player Mode" is locked to "Competition" and "Require Synchronized Start" is locked to on.`,
-      duration: reduceDuration ? 5000 : 8000
-    });
   }
 
   show(i: number): void {

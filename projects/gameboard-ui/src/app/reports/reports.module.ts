@@ -44,6 +44,10 @@ import { PlayersReportSummaryToStatsPipe } from './components/reports/players-re
 import { PlayersReportParticipationSummaryComponent } from './components/players-report-participation-summary/players-report-participation-summary.component';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ToSupportReportStatsPipe } from './components/reports/support-report/to-support-report-stats.pipe';
+import { SiteUsageReportComponent } from './components/reports/site-usage-report/site-usage-report.component';
+import { SiteUsagePlayerListComponent } from './components/reports/site-usage-report/site-usage-player-list/site-usage-player-list.component';
+import { SiteUsageReportSponsorsModalComponent } from './components/reports/site-usage-report/site-usage-report-sponsors-modal/site-usage-report-sponsors-modal.component';
+import { SiteUsageReportChallengesListComponent } from './components/reports/site-usage-report/site-usage-report-challenges-list/site-usage-report-challenges-list.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +82,7 @@ import { ToSupportReportStatsPipe } from './components/reports/support-report/to
     ReportFieldNoValueComponent,
     ChallengeOrGameFieldComponent,
     PracticeModeReportByPlayerModePerformanceComponent,
+    SiteUsageReportComponent,
     SponsorChallengePerformanceComponent,
     PlayerFieldComponent,
     PlayerModePerformanceSummaryComponent,
@@ -87,6 +92,9 @@ import { ToSupportReportStatsPipe } from './components/reports/support-report/to
     PlayersReportSummaryToStatsPipe,
     PlayersReportParticipationSummaryComponent,
     ToSupportReportStatsPipe,
+    SiteUsagePlayerListComponent,
+    SiteUsageReportSponsorsModalComponent,
+    SiteUsageReportChallengesListComponent,
   ],
   imports: [
     CommonModule,
@@ -100,6 +108,7 @@ import { ToSupportReportStatsPipe } from './components/reports/support-report/to
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
           { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
           { path: 'players', component: PlayersReportComponent, title: "Players Report" },
+          { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report" },
           { path: 'support', component: SupportReportComponent, title: "Support Report" }
         ]
       }

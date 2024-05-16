@@ -1,11 +1,12 @@
-import { LocaleService } from '@/utility/services/locale.service';
 import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
+import { LocaleService } from '@/utility/services/locale.service';
 
 @Injectable({ providedIn: 'root' })
 export class FriendlyDatesService {
   constructor(private localeService: LocaleService) { }
 
-  toFriendlyDate(date?: Date) {
+  toFriendlyDate(date?: string | Date | DateTime) {
     const transformed = this.transformDateInput(date);
     if (!transformed) {
       return "";
@@ -18,7 +19,7 @@ export class FriendlyDatesService {
     });
   }
 
-  toFriendlyTime(date?: Date) {
+  toFriendlyTime(date?: string | Date | DateTime) {
     const transformed = this.transformDateInput(date);
     if (!transformed)
       return "";
@@ -29,13 +30,19 @@ export class FriendlyDatesService {
     });
   }
 
-  toFriendlyDateAndTime(date?: Date): string {
+  toFriendlyDateAndTime(date?: string | Date | DateTime): string {
     return `${this.toFriendlyDate(date)} @ ${this.toFriendlyTime(date)}`;
   }
 
-  private transformDateInput(input?: Date): Date | null {
+  private transformDateInput(input?: string | Date | DateTime): Date | null {
     if (!input)
       return null;
+
+    if (typeof input == 'string' || input instanceof String)
+      return DateTime.fromISO(input.toString()).toJSDate();
+
+    if ("toJSDate" in input)
+      return (input as DateTime).toJSDate();
 
     return new Date(input);
   }

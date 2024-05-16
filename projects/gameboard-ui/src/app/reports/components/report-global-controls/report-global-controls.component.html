@@ -5,7 +5,7 @@
     <app-share-button class="d-block mr-2"
         message="Copied a link to this report (and its filtering settings) to your clipboard."
         tooltip="Copy a link to this report"></app-share-button>
-    <div class="mr-2">
+    <div class="mr-2" *ngIf="enableExport">
         <button class="btn btn-info btn-lg csv-export-button" (click)="exportRequestCsv.emit()" tabindex="0"
             role="button">Export to CSV</button>
     </div>

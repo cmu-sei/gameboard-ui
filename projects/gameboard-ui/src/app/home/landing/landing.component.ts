@@ -70,5 +70,4 @@ export class LandingComponent implements OnInit {
   typing(e: Event): void {
     this.refresh$.next(true);
   }
-
 }

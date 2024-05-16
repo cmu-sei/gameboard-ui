@@ -4,6 +4,7 @@ import { Player } from '@/api/player-models';
 import { RouterService } from '@/services/router.service';
 import { firstValueFrom } from 'rxjs';
 import { GameService } from '@/api/game.service';
+import { TeamService } from '@/api/team.service';
 
 export interface ContinueToGameboardButtonContext {
   gameId: string;
@@ -24,7 +25,8 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
 
   constructor(
     private gameService: GameService,
-    private routerService: RouterService) { }
+    private routerService: RouterService,
+    private teamService: TeamService) { }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes.context && !!this.context) {
@@ -37,15 +39,6 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
         case "external":
           this.updateFromExternalGame(this.context);
           break;
-        case "unity":
-          this.buttonText = "Continue to Cubespace";
-          this.buttonUrl = this.routerService.getUnityBoardUrlTree({
-            gameId: this.context.gameId,
-            playerId: this.context.player.id,
-            teamId: this.context.player.teamId,
-            sessionEnd: this.context.player.sessionEnd.valueOf()
-          }).toString();
-          this.isEnabled = true;
       }
     } else {
       this.buttonText = "";
@@ -54,14 +47,14 @@ export class ContinueToGameboardButtonComponent implements OnChanges {
   }
 
   private async updateFromExternalGame(context: ContinueToGameboardButtonContext) {
-    this.buttonText = "Continue to Cubespace";
+    this.buttonText = "Continue to External Game";
     this.buttonUrl = this
       .routerService
       .getExternalGameLoadingPageUrlTree({ gameId: context.gameId, playerId: context.player.id })
       .toString();
 
     // this is only enabled if the game is started or starting
-    const playState = await firstValueFrom(this.gameService.getGamePlayState(context.gameId));
+    const playState = await firstValueFrom(this.teamService.getGamePlayState(context.player.teamId));
     this.isEnabled = playState == GamePlayState.Started || playState == GamePlayState.Starting;
   }
 }

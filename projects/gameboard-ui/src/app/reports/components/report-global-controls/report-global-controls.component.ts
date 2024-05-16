@@ -1,7 +1,7 @@
 import { ActiveReportService } from '@/reports/services/active-report.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-report-global-controls',
@@ -9,6 +9,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./report-global-controls.component.scss']
 })
 export class ReportGlobalControlsComponent {
+  @Input() enableExport = true;
   @Output() exportRequestCsv = new EventEmitter<void>();
 
   constructor(

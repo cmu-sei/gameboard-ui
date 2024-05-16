@@ -255,7 +255,7 @@ export class GameboardPageComponent implements OnDestroy {
     let isUrl = false;
 
     try {
-      let url = new URL(vm.id);
+      new URL(vm.id);
       isUrl = true;
     } catch (_) {
       isUrl = false;

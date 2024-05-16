@@ -1,0 +1,42 @@
+<app-modal-content [title]="title" [subtitle]="subtitle" [hideCancel]="true">
+    <table class="gameboard-table" *ngIf="!isLoading; else loading">
+        <col> <!--challenge (spec)-->
+        <colgroup span="3"></colgroup> <!--attempts/solves-->
+
+        <thead>
+            <tr class="super-headers-row">
+                <th scope="col"></th>
+                <th scope="colgroup" colspan="3" class="group-header">Solves</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr class="headers-row">
+                <td>Challenge</td>
+                <td>Attempts</td>
+                <td>Partial</td>
+                <td>Complete</td>
+            </tr>
+
+            <tr *ngFor="let challenge of results?.items">
+                <td class="my-2">
+                    <div class="fs-12">{{ challenge.name }}</div>
+                    <div class="text-muted">{{ challenge.usedInGames | simpleEntitiesToTooltip }}</div>
+                </td>
+                <td class="text-center">{{challenge.deployCount}}</td>
+                <td class="text-center">{{challenge.solvePartialCount}}</td>
+                <td class="text-center">{{challenge.solveCompleteCount}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-container *ngIf="(results?.paging?.itemCount || 0) > (results?.paging?.pageSize || 0)">
+        <hr />
+        <app-select-pager [pageSize]="results?.paging?.pageSize" [itemCount]="results?.paging?.itemCount"
+            (change)="load($event)"></app-select-pager>
+    </ng-container>
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading challenges...</app-spinner>
+</ng-template>

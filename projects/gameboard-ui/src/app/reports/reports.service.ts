@@ -1,20 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, map } from 'rxjs';
-import { ReportViewModel, ReportKey, ReportTimeSpan, ReportSponsor, ReportMetaData } from './reports-models';
-import { PagingArgs, SimpleEntity } from '../api/models';
+import { ReportViewModel, ReportKey, ReportSponsor, ReportMetaData } from './reports-models';
+import { SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
-import { LogService } from '../services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ApiUser } from '@/api/user-models';
+import { DateTime } from 'luxon';
 
 @Injectable({ providedIn: 'root' })
 export class ReportsService {
   constructor(
     private apiUrlService: ApiUrlService,
     private filesService: FilesService,
-    private http: HttpClient,
-    private logService: LogService
+    private http: HttpClient
   ) { }
 
   canAccessReporting(user: ApiUser | null) {
@@ -58,7 +57,10 @@ export class ReportsService {
   }
 
   getReportMetaData(key: ReportKey): Observable<ReportMetaData> {
-    return this.http.get<ReportMetaData>(this.apiUrlService.build("/reports/metaData", { reportKey: key }));
+    return this.http.get<ReportMetaData>(this.apiUrlService.build("/reports/metaData", { reportKey: key })).pipe(map(m => {
+      m.runAt = DateTime.fromISO(m.runAt.toString());
+      return m;
+    }));
   }
 
   dateToQueryStringEncoded(date: Date | null | undefined) {
@@ -73,20 +75,6 @@ export class ReportsService {
       return undefined;
 
     return new Date(Date.parse(dateString));
-  }
-
-  flattenMultiSelectValues(input?: string[]): string | undefined {
-    if (!input)
-      return undefined;
-
-    return input.join(",") || undefined;
-  }
-
-  unflattenMultiSelectValues(input?: string): string[] {
-    if (!input)
-      return [];
-
-    return input.split(",");
   }
 
   async openExport<T>(reportKey: ReportKey, parameters: T) {

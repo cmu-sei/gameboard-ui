@@ -9,9 +9,10 @@ import { Game, GameEngineMode, GamePlayState } from '../../../api/game-models';
 import { Player } from '../../../api/player-models';
 import { RouterService } from '@/services/router.service';
 import { GameHubService } from '@/services/signalR/game-hub.service';
-import { GameStartState } from '@/services/signalR/game-hub.models';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { TeamService } from '@/api/team.service';
+import { GameHubEventWith, GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
 
 interface GameLaunchContext {
   game: Game;
@@ -29,10 +30,12 @@ export class ExternalGameLoadingPageComponent implements OnInit {
   private gameId: string | null;
   private playerId: string | null;
 
-  errors: string[] = [];
-  gameLaunchCtx?: GameLaunchContext;
-  launchCompleted = false;
-  state?: GameStartState;
+  protected challengesCreatedCount = 0;
+  protected gamespacesDeployCount = 0;
+  protected errors: string[] = [];
+  protected gameLaunchCtx?: GameLaunchContext;
+  protected launchCompleted = false;
+  protected status?: GameHubResourcesDeployStatus;
 
   constructor(
     route: ActivatedRoute,
@@ -43,6 +46,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     private playerApi: PlayerService,
     private routerService: RouterService,
     private titleService: AppTitleService,
+    private teamService: TeamService,
     private unsub: UnsubscriberService) {
     this.gameId = route.snapshot.paramMap.get("gameId") || null;
     this.playerId = route.snapshot.paramMap.get("playerId") || null;
@@ -96,7 +100,7 @@ export class ExternalGameLoadingPageComponent implements OnInit {
     this.log.logInfo("Launching game with context", ctx);
 
     // if the player already has a session for the game and it's happening right now, move them along
-    const playState = await firstValueFrom(this.gameApi.getGamePlayState(ctx.game.id));
+    const playState = await firstValueFrom(this.teamService.getGamePlayState(ctx.player.teamId));
     if (playState == GamePlayState.Started) {
       this.log.logInfo("The game is already started - move them to the game page", ctx.player);
       this.handleGameReady(ctx);
@@ -111,24 +115,27 @@ export class ExternalGameLoadingPageComponent implements OnInit {
       throw new Error(error);
     }
 
-    if (ctx.game.mode == GameEngineMode.External) {
-      this.log.logInfo("Wiring up game hub external game event listeners...", ctx);
-      this.unsub.add(this.gameHub.externalGameLaunchStarted$.subscribe(state => this.updateGameStartState.bind(this)(state)));
-      this.unsub.add(this.gameHub.externalGameLaunchProgressChanged$.subscribe(state => this.updateGameStartState.bind(this)(state)));
-      this.unsub.add(this.gameHub.externalGameLaunchFailure$.subscribe(state => this.errors.push(state.error)));
-      this.unsub.add(
-        this.gameHub.externalGameLaunchEnded$.subscribe(state => {
-          this.updateGameStartState(state);
-          this.handleGameReady(ctx);
-        })
-      );
+    this.log.logInfo("Wiring up game hub external game event listeners...", ctx);
+    this.unsub.add(this.gameHub.launchStarted$.subscribe(ev => this.updateGameStartState.bind(this)(ev)));
+    this.unsub.add(this.gameHub.launchProgressChanged$.subscribe(ev => this.updateGameStartState.bind(this)(ev)));
+    this.unsub.add(this.gameHub.launchFailure$.subscribe(ev => this.errors.push(ev.data.message || "Unknown error")));
+    this.unsub.add(
+      this.gameHub.launchEnded$.subscribe(ev => {
+        this.updateGameStartState(ev);
+        this.handleGameReady(ctx);
+      })
+    );
 
-      this.log.logInfo("External game event listeners wired.");
-    }
+    this.log.logInfo("External game event listeners wired.");
   }
 
-  private updateGameStartState(state: GameStartState) {
-    this.log.logInfo("Game start state update:", state);
-    this.state = state;
+  private updateGameStartState(ev: GameHubEventWith<GameHubResourcesDeployStatus>) {
+    this.log.logInfo("Game start state update:", ev);
+    this.status = ev.data;
+
+    if (ev.data.challenges) {
+      this.challengesCreatedCount = ev.data.challenges.length;
+      this.gamespacesDeployCount = ev.data.challenges.filter(c => c.hasGamespace).length;
+    }
   }
 }

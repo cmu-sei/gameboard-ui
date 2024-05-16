@@ -1,0 +1,31 @@
+<div class="d-flex align-items-center">
+    <div class="flex-grow-1">
+        <select id="external-host-picker" *ngIf="hosts.length; else noHosts" name="external-host-picker" #hostsSelect
+            class="form-control d-block" [(ngModel)]="selectedHost" (ngModelChange)="handleHostSelect(selectedHost)">
+            <option *ngFor="let host of hosts" [ngValue]="host">
+                {{host.name}} ({{ host.hostUrl }})
+            </option>
+        </select>
+    </div>
+
+    <div class="btn-group ml-2">
+        <button *ngIf="selectedHostId" class="btn btn-danger" (click)="handleDeleteClick(selectedHostId)"
+            [disabled]="hosts.length <= 1" tooltip="Delete this host">
+            <fa-icon [icon]="fa.trash"></fa-icon>
+        </button>
+        <button *ngIf="selectedHostId" class="btn btn-info" (click)="handleEditClick(selectedHostId)"
+            tooltip="Edit this host's settings">
+            <fa-icon [icon]="fa.edit"></fa-icon>
+        </button>
+        <button class="btn btn-info" (click)="handleAddClick()" tooltip="Create a new external host">
+            <fa-icon [icon]="fa.plus"></fa-icon>
+        </button>
+    </div>
+</div>
+
+<ng-template #noHosts>
+    <span class="text-muted">
+        No external hosts have been created. You'll need to <button type="text" class="btn btn-link text-info px-0"
+            (click)="handleAddClick()">add one</button> to configure this external game.
+    </span>
+</ng-template>

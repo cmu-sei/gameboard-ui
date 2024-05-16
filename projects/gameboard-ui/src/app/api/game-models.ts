@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { FeedbackTemplate } from "./feedback-models";
+import { SimpleEntity } from "./models";
 import { Player, PlayerMode, TimeWindow } from "./player-models";
 import { ApiUser } from "./user-models";
 
@@ -22,6 +23,7 @@ export interface GameDetail {
   gameMarkdown: string;
   feedbackConfig: string;
   certificateTemplate: string;
+  externalHostId?: string;
   feedbackTemplate?: FeedbackTemplate;
   registrationMarkdown: string;
   registrationOpen: Date;
@@ -36,9 +38,6 @@ export interface GameDetail {
   gamespaceLimitPerSession: number;
   isPublished: boolean;
   requireSponsoredTeam: boolean;
-  externalGameClientUrl?: string;
-  externalGameTeamExtendedEndpoint?: string;
-  externalGameStartupEndpoint?: string;
   requireSynchronizedStart: boolean;
   requireTeam: boolean;
   showOnHomePageInPracticeMode: boolean;
@@ -84,7 +83,6 @@ export interface NewGame extends GameDetail {
 export type ChangedGame = Game
 
 export enum GameEngineMode {
-  Cubespace = "unity",
   External = "external",
   Standard = "vm"
 }
@@ -135,6 +133,39 @@ export enum GamePlayState {
 }
 
 export type ExternalGameDeployStatus = "notStarted" | "partiallyDeployed" | "deploying" | "deployed";
+
+export interface ExternalGameHostClientInfo {
+  id: string;
+  name: string;
+  clientUrl: string;
+}
+
+export interface ExternalGameHost {
+  id: string;
+  name: string;
+  clientUrl: string;
+  destroyResourcesOnDeployFailure?: boolean;
+  gamespaceDeployBatchSize?: number;
+  hostApiKey?: string;
+  hostUrl: string;
+  pingEndpoint?: string;
+  startupEndpoint: string;
+  teamExtendedEndpoint?: string;
+  usedByGames: SimpleEntity[];
+}
+
+export interface UpsertExternalGameHost {
+  id?: string;
+  name: string;
+  clientUrl: string;
+  hostUrl: string;
+  startupEndpoint: string;
+  destroyResourcesOnDeployFailure?: boolean;
+  gamespaceDeployBatchSize?: number;
+  hostApiKey?: string;
+  pingEndpoint?: string;
+  teamExtendedEndpoint?: string;
+}
 
 export interface GetExternalTeamDataResponse {
   teamId: string;

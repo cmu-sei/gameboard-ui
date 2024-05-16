@@ -279,12 +279,6 @@ export class NotificationService {
     }
   }
 
-  private maybeClearExternalGameLocalStorage(teamId: string, action: HubEventAction) {
-    if (action === HubEventAction.sessionReset) {
-      this.externalGameService.clearLocalStorageKeys(teamId);
-    }
-  }
-
   private async resolveOpenConnection(channelId: string, connection: HubConnection, attemptCount = 0, maxAttempts = 5): Promise<void> {
     if (attemptCount >= maxAttempts) {
       throw new Error("Couldn't connect to the SignalR hub.");

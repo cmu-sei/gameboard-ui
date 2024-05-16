@@ -1,30 +1,31 @@
 import { SimpleEntity } from "@/api/models";
 import { SignalRHubEventType } from "./signalr-hub.models";
 import { GameEngineType } from "@/api/spec-models";
+import { GameState } from "@/api/board-models";
 
-export interface GameHubEvent<T> {
+export interface GameHubEvent {
     gameId: string;
+    teamIds: string[];
+}
+
+export interface GameHubEventWith<T> extends GameHubEvent {
     data: T;
-    eventType: GameHubEventType;
 }
 
 export class GameHubEventType implements SignalRHubEventType {
-    static ExternalGameChallengesDeployStart = "externalGameChallengesDeployStart";
-    static ExternalGameChallengesDeployProgressChange = "externalGameChallengesDeployProgressChange";
-    static ExternalGameChallengesDeployEnd = "externalGameChallengesDeployEnd";
-    static ExternalGameGamespacesDeployStart = "externalGameGamespacesDeployStart";
-    static ExternalGameGamespacesDeployProgressChange = "externalGameGamespacesDeployProgressChange";
-    static ExternalGameGamespacesDeployEnd = "externalGameGamespacesDeployEnd";
-    static ExternalGameLaunchStart = "externalGameLaunchStart";
-    static ExternalGameLaunchEnd = "externalGameLaunchEnd";
-    static ExternalGameLaunchFailure = "externalGameLaunchFailure";
-    static SyncStartGameStarted = "syncStartGameStarted";
-    static SyncStartGameStarting = "syncStartGameStarting";
-    static SyncStartGameStateChanged = "syncStartGameStateChanged";
-    static VerifyAllPlayersConnectedStart = "verifyAllPlayersConnectedStart";
-    static VerifyAllPlayersConnectedCountChange = "verifyAllPlayersConnectedCountChange";
-    static VerifyAllPlayersConnectedEnd = "verifyAllPlayersConnectedEnd";
-    // static YourActiveGamesChanged = "YourActiveGamesChanged";
+    static ChallengesDeployStart = "ChallengesDeployStart";
+    static ChallengesDeployProgressChange = "ChallengesDeployProgressChange";
+    static ChallengesDeployEnd = "ChallengesDeployEnd";
+    static GamespacesDeployStart = "GamespacesDeployStart";
+    static GamespacesDeployProgressChange = "GamespacesDeployProgressChange";
+    static GamespacesDeployEnd = "GamespacesDeployEnd";
+    static LaunchStart = "LaunchStart";
+    static LaunchEnd = "LaunchEnd";
+    static LaunchFailure = "LaunchFailure";
+    static LaunchProgressChanged = "LaunchProgressChanged";
+    static SyncStartGameStarted = "SyncStartGameStarted";
+    static SyncStartGameStarting = "SyncStartGameStarting";
+    static SyncStartGameStateChanged = "SyncStartGameStateChanged";
 }
 
 export interface GameHubActiveEnrollment {
@@ -32,43 +33,36 @@ export interface GameHubActiveEnrollment {
     player: SimpleEntity;
 }
 
-// export interface YourActiveGamesChanged {
-//     userId: string;
-//     activeEnrollments: GameHubActiveEnrollment[];
-// }
-
-export interface GameStartState {
+export interface GameHubResourcesDeployStatus {
     game: SimpleEntity;
-    challengesCreated: number;
-    challengesTotal: number;
-    gamespacesStarted: number;
-    gamespacesStartFailed: number;
-    gamespacesTotal: number;
-
-    startTime: Date,
-    now: Date,
-
-    error: string;
+    challengeSpecs: SimpleEntity[];
+    challenges: GameHubResourcesDeployChallenge[];
+    teams: GameHubResourcesDeployTeam[];
+    failedGamespaceDeployChallengeIds: string[];
+    err?: string;
 }
 
-export interface GameStartStateChallenge {
-    challenge: SimpleEntity;
-    gameEngineType: GameEngineType;
+export interface GameHubResourcesDeployChallenge {
+    id: string;
+    name: string;
+    engine: GameEngineType;
+    hasGamespace: boolean;
+    isActive: boolean;
+    isFullySolved: boolean;
+    specId: string;
+    state: GameState;
     teamId: string;
 }
 
-export interface GameStartStatePlayer {
-    player: SimpleEntity;
-    teamId: string;
-}
-
-export interface GameStartStateTeam {
-    team: SimpleEntity;
-    captain: GameStartStateCaptain;
-    headlessUrl: string;
-}
-
-export interface GameStartStateCaptain {
-    player: SimpleEntity;
+export interface GameHubResourcesDeployPlayer {
+    id: string;
+    name: string;
     userId: string;
+}
+
+export interface GameHubResourcesDeployTeam {
+    id: string;
+    name: string;
+    captain: GameHubResourcesDeployPlayer;
+    players: GameHubResourcesDeployPlayer[];
 }
