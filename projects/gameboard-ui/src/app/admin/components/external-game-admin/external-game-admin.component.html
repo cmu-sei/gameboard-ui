@@ -124,7 +124,9 @@
                             <h5>Game Host URL</h5>
 
                             <div class="cursor-pointer text-info" [appCopyOnClick]="team.externalGameHostUrl"
-                                appCopyOnClickMessage="Copied this team's external host URL to your clipboard."></div>
+                                appCopyOnClickMessage="Copied this team's external host URL to your clipboard.">
+                                {{team.externalGameHostUrl}}
+                            </div>
                         </div>
                     </div>
                     <button type="button" href="#" class="btn btn-info"
