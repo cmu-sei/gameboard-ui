@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { LocalStorageService, StorageKey } from './local-storage.service';
 import { ConfigService } from '@/utility/config.service';
 import { LogService } from './log.service';
@@ -84,6 +84,29 @@ export class ExternalGameService {
 
   public preDeployTeams(gameId: string, ...teamIds: string[]) {
     return this.httpClient.post<void>(this.apiUrl.build(`admin/games/external/${gameId}/pre-deploy`), { teamIds: teamIds });
+  }
+
+  public async tryPingHost(host: UpsertExternalGameHost): Promise<{ success: boolean; response?: string; }> {
+    if (!host.pingEndpoint)
+      return { success: false, response: "Host doesn't have a configured ping endpoint." };
+
+    const pingUrl = `${host.hostUrl}${host.hostUrl.endsWith("/") ? "" : "/"}${host.pingEndpoint}`;
+    let headers: HttpHeaders = new HttpHeaders;
+
+    if (host.hostApiKey) {
+      headers = new HttpHeaders({ "x-api-key": host.hostApiKey });
+    }
+
+    try {
+      const response = await firstValueFrom(this.httpClient.get<HttpResponse<any>>(pingUrl, { headers: headers, observe: "response" }));
+      if (response.ok)
+        return { success: true };
+
+      return { success: false, response: `${response.status} (${response.statusText}): ${response.body}` };
+    }
+    catch (err: any) {
+      return { success: false, response: JSON.stringify(err) };
+    }
   }
 
   public upsertExternalGameHost(host: UpsertExternalGameHost): Promise<ExternalGameHost> {

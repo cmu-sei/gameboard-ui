@@ -103,9 +103,11 @@ export class GameEditorComponent implements AfterViewInit {
   }
 
   async handleExternalGameHostChanged(host: ExternalGameHost) {
-    this.game.externalHostId = host.id;
-    await firstValueFrom(this.api.update(this.game));
-    this.toast.showMessage(`Changed to host **${host.name}**`);
+    if (this.game.mode == "external" && this.game.externalHostId != host.id) {
+      this.game.externalHostId = host.id;
+      await firstValueFrom(this.api.update(this.game));
+      this.toast.showMessage(`Changed to host **${host.name}**`);
+    }
   }
 
   async handleFeedbackTemplateChange(template?: FeedbackTemplate) {
@@ -121,9 +123,14 @@ export class GameEditorComponent implements AfterViewInit {
     await firstValueFrom(this.api.update(this.game));
   }
 
-  handleModeChange(event: Event) {
+  async handleModeChange(event: Event) {
     const gameMode = ((event?.target as any).value as GameEngineMode);
     this.game.mode = gameMode;
+
+    if (this.game.mode != "external")
+      this.game.externalHostId = undefined;
+
+    await firstValueFrom(this.api.update(this.game));
   }
 
   protected handleSpecsUpdated(specs: Spec[]) {

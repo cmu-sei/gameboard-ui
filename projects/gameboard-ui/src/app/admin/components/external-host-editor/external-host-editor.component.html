@@ -21,7 +21,7 @@
         <div class="form-group">
             <label for="client-url">Client URL</label>
             <input id="clientUrl" name="client-url" type="text" class="form-control px-0"
-                [(ngModel)]="editHost.clientUrl" placeholder="https://my-site.com/theClient" required>
+                [(ngModel)]="editHost.clientUrl" placeholder="https://my-site.com/the-client" required>
         </div>
 
         <div class="form-group">
@@ -32,7 +32,7 @@
 
         <div class="form-group">
             <label for="challenge-deploy-batch-size">Challenge Deploy Batch Size</label>
-            <input id="clientUrl" name="challenge-deploy-batch-size" type="number" class="form-control px-0"
+            <input id="batchSize" name="challenge-deploy-batch-size" type="number" class="form-control px-0"
                 [(ngModel)]="editHost.gamespaceDeployBatchSize" placeholder="2">
         </div>
 
@@ -50,12 +50,29 @@
                 [(ngModel)]="editHost.teamExtendedEndpoint" placeholder="team/extended">
         </div>
 
-        <div class="form-group">
+        <div class="form-group pb-0">
             <label for="ping-endpoint">"Ping" Endpoint (GET)</label>
-            <input id="ping-endpoint" name="ping-endpoint" type="input" class="form-control px-0"
-                [(ngModel)]="editHost.pingEndpoint" placeholder="status">
+            <div class="input-group">
+                <input id="ping-endpoint" name="ping-endpoint" type="input" class="form-control"
+                    [(ngModel)]="editHost.pingEndpoint" placeholder="status">
+                <div class="input-group-append">
+                    <button class="btn btn-info" (click)="handleTryPing(editHost)"
+                        [disabled]="!editHost.pingEndpoint">Try It</button>
+                </div>
+            </div>
+
+            <div *ngIf="tryPingResult" class="try-ping-result-container my-3">
+                <alert *ngIf="!tryPingResult.success" type="danger">
+                    {{ tryPingResult.response }}
+                </alert>
+            </div>
+
         </div>
     </form>
 
     <app-error-div [errors]="errors" footer></app-error-div>
 </app-modal-content>
+
+<ng-template #pingSuccess>
+    <alert type="success">All set!</alert>
+</ng-template>

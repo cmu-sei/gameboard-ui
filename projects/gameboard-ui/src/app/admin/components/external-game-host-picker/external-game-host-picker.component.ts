@@ -26,6 +26,12 @@ export class ExternalGameHostPickerComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.loadHosts(this.selectedHostId);
+
+    if (!this.selectedHostId && this.hosts.length) {
+      this.selectedHostId = this.hosts[0].id;
+      this.selectedHostIdChange.emit(this.selectedHostId);
+      this.selectedHostChange.emit(this.hosts[0]);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
