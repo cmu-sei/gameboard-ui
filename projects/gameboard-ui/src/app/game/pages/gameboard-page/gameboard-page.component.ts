@@ -1,10 +1,10 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { firstValueFrom, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { firstValueFrom, merge, Observable, of, Subject, timer } from 'rxjs';
 import { catchError, debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
 
@@ -27,14 +27,13 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
   styleUrls: ['./gameboard-page.component.scss'],
   providers: [UnsubscriberService]
 })
-export class GameboardPageComponent implements OnDestroy {
+export class GameboardPageComponent {
   refresh$ = new Subject<string>();
   ctx!: BoardPlayer;
   hoveredItem: BoardSpec | null = null;
   selected!: BoardSpec;
   selecting$ = new Subject<BoardSpec>();
   launching$ = new Subject<BoardSpec>();
-  fetch$: Subscription;
 
   etd$!: Observable<number>;
   errors: any[] = [];
@@ -63,68 +62,68 @@ export class GameboardPageComponent implements OnDestroy {
   ) {
 
     this.user$ = usersvc.user$;
-
+    this.unsub.add(hub.challengeEvents.subscribe(ev => this.syncOne(ev.model as Challenge)));
     this.unsub.add(
-      hub.challengeEvents.subscribe(ev => this.syncOne(ev.model as Challenge))
+      merge(
+        route.params.pipe(
+          tap(p => this.cid = p.cid),
+          map(p => p.playerId)
+        ),
+        this.refresh$
+      ).pipe(
+        filter(id => !!id),
+        debounceTime(300),
+        switchMap(id => api.load(id).pipe(
+          catchError(err => of({} as BoardPlayer))
+        )),
+        tap(b => {
+          this.ctx = b;
+          title.setTitle(`${b.game.name} | ${this.config.appName}`);
+
+          this.performanceSummaryViewModel = {
+            player: {
+              id: b.id,
+              teamId: b.teamId,
+              session: b.session,
+              scoring: {
+                rank: b.rank,
+                score: b.score,
+                partialCount: b.partialCount,
+                correctCount: b.correctCount
+              }
+            }
+          };
+        }),
+        tap(b => this.startHub(b)),
+        tap(() => this.reselect())
+      ).subscribe()
     );
 
-    this.fetch$ = merge(
-      route.params.pipe(
-        tap(p => this.cid = p.cid),
-        map(p => p.playerId)
-      ),
-      this.refresh$
-    ).pipe(
-      filter(id => !!id),
-      debounceTime(300),
-      switchMap(id => api.load(id).pipe(
-        catchError(err => of({} as BoardPlayer))
-      )),
-      tap(b => {
-        this.ctx = b;
-        title.setTitle(`${b.game.name} | ${this.config.appName}`);
+    this.unsub.add(
+      this.launching$.pipe(
+        switchMap(async s => {
+          try {
+            const launchedSpec = await firstValueFrom(
+              api.launch({
+                playerId: this.ctx.id,
+                specId: s.id,
+                variant: this.variant,
+                userId: usersvc.user$.value!.id
+              })
+            );
 
-        this.performanceSummaryViewModel = {
-          player: {
-            id: b.id,
-            teamId: b.teamId,
-            session: b.session,
-            scoring: {
-              rank: b.rank,
-              score: b.score,
-              partialCount: b.partialCount,
-              correctCount: b.correctCount
-            }
+            return launchedSpec;
           }
-        };
-      }),
-      tap(b => this.startHub(b)),
-      tap(() => this.reselect())
-    ).subscribe();
-
-    this.unsub.add(this.launching$.pipe(
-      switchMap(async s => {
-        try {
-          const launchedSpec = await firstValueFrom(
-            api.launch({
-              playerId: this.ctx.id,
-              specId: s.id,
-              variant: this.variant,
-              userId: usersvc.user$.value!.id
-            })
-          );
-
-          return launchedSpec;
-        }
-        catch (err: any) {
-          this.renderLaunchError(err);
-          return s.instance || null as unknown as Challenge;
-        }
-      }),
-      tap(c => this.deploying = false),
-      filter(c => !!c),
-      map(c => this.syncOne(c))
-    ).subscribe());
+          catch (err: any) {
+            this.renderLaunchError(err);
+            return s.instance || null as unknown as Challenge;
+          }
+        }),
+        tap(c => this.deploying = false),
+        filter(c => !!c),
+        map(c => this.syncOne(c))
+      ).subscribe()
+    );
 
     this.unsub.add(
       this.selecting$.pipe(
@@ -146,11 +145,8 @@ export class GameboardPageComponent implements OnDestroy {
         // don't persist the "confirming" state if they switch challenges (#178)
         tap(c => this.startChallengeConfirmButton?.stopConfirming()),
         tap(s => this.selected = s)
-      ).subscribe());
-  }
-
-  ngOnDestroy(): void {
-    if (this.fetch$) { this.fetch$.unsubscribe(); }
+      ).subscribe()
+    );
   }
 
   private startHub(b: BoardPlayer): void {

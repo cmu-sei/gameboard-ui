@@ -1,18 +1,16 @@
 <ng-container *ngIf="ctx">
     <div class="results">
-        <table class="report-table table-hover gameboard-report">
+        <table class="table table-hover gameboard-table gameboard-report">
             <colgroup span="3"></colgroup>
             <colgroup span="5"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row">
                     <th scope="col" colSpan="3" class="group-header">Enrollment</th>
                     <th scope="col" colSpan="5" class="group-header">Performance</th>
                 </tr>
-            </thead>
 
-            <tbody>
-                <tr class="headers headers-row">
+                <tr class="headers-row">
                     <td>Player</td>
                     <td>Enroll Date</td>
                     <td>Game</td>
@@ -22,7 +20,9 @@
                     <td>Completely Solved</td>
                     <td>Score</td>
                 </tr>
+            </thead>
 
+            <tbody>
                 <tr class="data-row" *ngFor="let record of ctx.results.records">
                     <td>
                         <div class="d-flex align-items-center">

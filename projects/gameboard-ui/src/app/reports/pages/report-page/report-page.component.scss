@@ -37,8 +37,6 @@ $subtleSize: 0.9rem;
   }
 
   table.gameboard-report {
-    width: 100%;
-
     th,
     td {
       padding: 4px 8px;
@@ -50,7 +48,7 @@ $subtleSize: 0.9rem;
     }
 
     .data-row {
-      border-bottom: dotted 1px #dddddd;
+      border-bottom: dashed 1px #dddddd;
       font-size: 1.1rem;
 
       td {

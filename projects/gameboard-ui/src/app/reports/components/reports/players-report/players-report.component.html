@@ -23,13 +23,13 @@
     <ng-container *ngIf="!ctx.isLoading; else loading">
         <div class="report-body mt-4">
             <table *ngIf="ctx.results?.records?.length; else noRecords"
-                class="report-table table-hover gameboard-report">
+                class="table table-hover gameboard-table gameboard-report">
                 <colgroup span="3"></colgroup>
                 <colgroup span="2"></colgroup>
                 <colgroup span="4"></colgroup>
 
-                <thead class="thead-light">
-                    <tr class="headers super-headers-row">
+                <thead>
+                    <tr class="super-headers-row">
                         <th scope="col" colspan="3" class="group-header">Player</th>
                         <th scope="col" colspan="2" class="group-header">
                             Deployed Challenges
@@ -38,10 +38,8 @@
                             Participation
                         </th>
                     </tr>
-                </thead>
 
-                <tbody>
-                    <tr class="headers headers-row">
+                    <tr class="headers-row">
                         <td>Name &amp; Sponsor</td>
                         <td>Account Created On</td>
                         <td>Last Played On</td>
@@ -52,7 +50,9 @@
                         <td>Tracks</td>
                         <td>Games</td>
                     </tr>
+                </thead>
 
+                <tbody>
                     <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
                         <td>
                             <div class="d-flex align-items-center">

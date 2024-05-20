@@ -1,20 +1,18 @@
 <div class="practice-mode-report-prac-vs-comp-component" *ngIf="!isLoading; else loading">
     <ng-container *ngIf="results?.records?.length; else noRecords">
-        <table class="report-table table-hover gameboard-report" *ngIf="results?.records; else noRecords">
+        <table class="table table-hover gameboard-table gameboard-report" *ngIf="results?.records; else noRecords">
             <col>
             <colgroup span="5"></colgroup>
             <colgroup span="5"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row">
                     <th scope="col"></th>
                     <th scope="col" colSpan="5">Practice Area</th>
                     <th scope="col" colSpan="5">Competitive Mode</th>
                 </tr>
-            </thead>
 
-            <tbody>
-                <tr class="headers headers-row">
+                <tr class="headers-row">
                     <td>Player</td>
                     <td>Last Played</td>
                     <td>Attempts</td>
@@ -27,7 +25,9 @@
                     <td>Avg. % Points Scored</td>
                     <td>Avg. Score Percentile</td>
                 </tr>
+            </thead>
 
+            <tbody>
                 <tr class="data-row" *ngFor="let record of results?.records">
                     <td>
                         <app-player-field

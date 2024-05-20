@@ -1,19 +1,17 @@
 <div class="practice-mode-by-user-component" *ngIf="results; else loading">
     <div *ngIf="results && results.records.length; else noRecords" class="results">
-        <table class="report-table table-hover gameboard-report">
+        <table class="table table-hover gameboard-table gameboard-report">
             <col span="2">
             <colgroup span="6"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row">
                     <th scope="col" colSpan="2"></th>
                     <th scope="col" colSpan="2" class="group-header">Attempts</th>
                     <th scope="col" colSpan="4" class="group-header">Best Attempt</th>
                 </tr>
-            </thead>
 
-            <tbody>
-                <tr class="headers headers-row">
+                <tr class="headers-row">
                     <td>Player</td>
                     <td>Challenge</td>
                     <td>Total</td>
@@ -23,7 +21,9 @@
                     <td>Total Time</td>
                     <td>Result</td>
                 </tr>
+            </thead>
 
+            <tbody>
                 <tr class="data-row" *ngFor="let record of results.records">
                     <!--PLAYER-->
                     <td>

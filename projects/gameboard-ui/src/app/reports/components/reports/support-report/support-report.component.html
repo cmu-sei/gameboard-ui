@@ -25,13 +25,13 @@
         <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else noRecords">
             <tab heading="Summary Table" id="tab-summary-table">
                 <div class="report-body mt-4" #supportReport>
-                    <table class="report-table table-hover gameboard-report">
+                    <table class="table table-hover gameboard-table gameboard-report">
                         <col>
                         <colgroup span="4"></colgroup>
                         <colgroup span="3"></colgroup>
                         <col>
 
-                        <thead class="thead-light">
+                        <thead>
                             <tr class="headers super-headers-row">
                                 <th scope="col" class="super-column-ticket-key"></th>
                                 <th scope="col" colspan="4" class="group-header super-column-about">About the ticket
