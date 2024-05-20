@@ -172,6 +172,7 @@ table.gameboard-table {
       border-top: solid 1px $foreground;
       padding-bottom: 0.5rem;
       padding-top: 0.5rem;
+      vertical-align: middle;
     }
 
     .super-headers-row {
@@ -212,7 +213,12 @@ table.gameboard-table {
 
       td {
         border-bottom: solid 1px $foreground;
+        vertical-align: middle;
       }
+    }
+
+    td.numeric-col {
+      text-align: center;
     }
   }
 

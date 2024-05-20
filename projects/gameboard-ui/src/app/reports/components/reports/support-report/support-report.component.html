@@ -32,7 +32,7 @@
                         <col>
 
                         <thead>
-                            <tr class="headers super-headers-row">
+                            <tr class="super-headers-row chill-headers">
                                 <th scope="col" class="super-column-ticket-key"></th>
                                 <th scope="col" colspan="4" class="group-header super-column-about">About the ticket
                                 </th>
@@ -41,21 +41,21 @@
                                 </th>
                                 <th scope="col super-column-actions"></th>
                             </tr>
+
+                            <tr class="headers-row">
+                                <td>Ticket</td>
+                                <td>Summary</td>
+                                <td class="numeric-col">Status</td>
+                                <td class="numeric-col">Labels</td>
+                                <td class="numeric-col">Act. Count</td>
+                                <td class="numeric-col">Assigned to</td>
+                                <td class="numeric-col">Created</td>
+                                <td class="numeric-col">Updated</td>
+                                <td></td>
+                            </tr>
                         </thead>
 
                         <tbody>
-                            <tr class="headers headers-row">
-                                <td>Ticket</td>
-                                <td>Summary</td>
-                                <td>Status</td>
-                                <td>Labels</td>
-                                <td>Act. Count</td>
-                                <td>Assigned to</td>
-                                <td>Created</td>
-                                <td>Updated</td>
-                                <td></td>
-                            </tr>
-
                             <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
                                 <td><a [routerLink]="['/support/tickets/' + record.key.toString()]"
                                         target="_blank">{{record.prefixedKey}}</a></td>
