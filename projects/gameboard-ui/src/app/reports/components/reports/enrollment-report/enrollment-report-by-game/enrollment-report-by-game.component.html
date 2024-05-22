@@ -1,28 +1,44 @@
 <ng-container *ngIf="results; else loading">
     <div *ngIf="results && results.records.length; else noRecords" class="results">
-        <table class="report-table table-hover gameboard-report">
+        <table class="table table-hover gameboard-table gameboard-report">
             <colgroup span="5"></colgroup>
             <colgroup span="3"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row chill-headers">
                     <th scope="col" colspan="5" class="group-header game-column">Game</th>
                     <th scope="col" colSpan="3" class="group-header">Enrollment</th>
+                </tr>
+
+                <tr class="headers-row">
+                    <th>
+                        <app-sort-header sortBy="game">Game</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="registration-open">Registration Open</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="registration-close">Registration Close</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="execution-start">Execution Start</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="execution-end">Execution End</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-players">Total Players</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-sponsors">Total Sponsors</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="top-sponsor">Top Sponsor</app-sort-header>
+                    </th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr class="headers headers-row">
-                    <td>Game</td>
-                    <td>Registration Open</td>
-                    <td>Registration Closed</td>
-                    <td>Execution Start</td>
-                    <td>Execution End</td>
-                    <td>Total Players</td>
-                    <td>Total Sponsors</td>
-                    <td>Top Sponsor</td>
-                </tr>
-
                 <tr class="data-row" *ngFor="let record of results.records">
                     <!--GAME-->
                     <td>
@@ -53,12 +69,13 @@
                         <p class="tooltipped-value" (click)="handleSponsorsCountClick(record.game, record.sponsors)">
                             {{ record.sponsors.length }}</p>
                     </td>
+
                     <td class="report-field numerical">
                         <app-parameter-change-link *ngIf="record.topSponsor"
                             [config]="{ parameterChange: { sponsors: record.topSponsor.id} }">
-                            <app-player-avatar-legacy class="d-block mr-2"
-                                [avatarUri]="record.topSponsor.logoFileName | relativeImage"
-                                [tooltip]="record.topSponsor.name" size="small"></app-player-avatar-legacy>
+                            <app-avatar class="d-block"
+                                [imageUrl]="{ logo: record.topSponsor.logoFileName } | sponsorToLogoUri" size="tiny"
+                                [tooltip]="record.topSponsor.name"></app-avatar>
                         </app-parameter-change-link>
                         <small class="subtle-info">
                             {{record.topSponsor.playerCount}} {{ "player" | pluralizer:record.topSponsor.playerCount }}

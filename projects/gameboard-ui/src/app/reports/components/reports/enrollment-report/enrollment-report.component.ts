@@ -106,7 +106,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
 
   protected handleTabClick(tab: EnrollmentReportTab) {
     if (tab != this.selectedParameters?.tab) {
-      this.routerService.updateQueryParams({ parameters: { tab }, resetParams: ["pageNumber"] });
+      this.routerService.updateQueryParams({ parameters: { tab }, resetParams: ["pageNumber", "sort", "sortDirection"] });
     }
   }
 

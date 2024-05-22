@@ -163,43 +163,78 @@ th[align="center"] {
   border-left: solid 1px white;
 }
 
-.gameboard-table {
+table.gameboard-table {
   width: 100%;
 
   thead {
-    border-bottom: solid 1px $foreground;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    width: 100%;
+    tr > th:not(:first-child) {
+      border-left: solid 1px $foreground;
+    }
 
     th {
-      padding-bottom: 0.25rem;
-      padding-top: 0.25rem;
+      border-bottom: solid 1px $foreground;
+      border-top: solid 1px $foreground;
+      // padding: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .super-headers-row {
+      background-color: $foreground;
+      font-size: 1.25rem;
+      font-weight: bold;
+      border-bottom: solid 1px $foreground;
+      border-top: solid 1px $foreground;
+      text-transform: uppercase;
+      vertical-align: middle;
+
+      th {
+        color: $body-bg;
+      }
+
+      &.chill-headers {
+        background-color: rgba(0, 0, 0, 0);
+        th {
+          color: $foreground;
+          text-align: center;
+        }
+      }
+    }
+
+    .headers-row {
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-bottom: solid 1px $foreground;
+      vertical-align: middle;
+
+      td:not(:first-of-type) {
+        border-left: solid 1px $foreground;
+      }
+
+      td {
+        border-bottom: solid 1px $foreground;
+        vertical-align: middle;
+      }
+    }
+
+    th {
+      padding-left: 4px;
+    }
+
+    td.numeric-col,
+    th.numeric-col,
+    th.date-col {
+      padding: 0;
+      text-align: center;
     }
   }
 
-  .headers-row {
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-align: center;
-    border-bottom: solid 1px #ffffff;
-
-    td:not(:first-of-type) {
-      border-left: solid 1px #ffffff;
-    }
+  tbody td {
+    vertical-align: middle;
   }
 
-  .super-headers-row {
-    font-size: 1.25rem;
-    font-weight: bold;
-    text-align: center;
-    border-bottom: solid 1px #ffffff;
-    border-top: solid 1px #ffffff;
-    text-transform: uppercase;
-
-    th:not(:first-of-type) {
-      border-left: solid 1px #ffffff;
-    }
+  .data-row td {
+    border-top: none !important;
+    border-bottom: 1px dashed $foreground !important;
   }
 }
 
@@ -442,6 +477,7 @@ th[align="left"] {
 
 .overflow-ellipsis {
   overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

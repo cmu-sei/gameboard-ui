@@ -1,12 +1,12 @@
 <app-modal-content [title]="title" [subtitle]="subtitle" [hideCancel]="true">
-    <table class="gameboard-table" *ngIf="!isLoading; else loading">
+    <table class="table gameboard-table" *ngIf="!isLoading; else loading">
         <col> <!--player-->
         <col> <!--last active-->
         <col> <!--competitive count-->
         <col> <!--practice count-->
 
         <thead>
-            <tr class="headers">
+            <tr class="headers-row">
                 <th>Player</th>
                 <th>Last Active</th>
                 <th>Competitive Challenges</th>
@@ -16,18 +16,18 @@
 
         <tbody>
             <tr *ngFor="let player of results?.items">
-                <td class="d-flex align-items-center my-2">
+                <td class="d-flex align-items-center">
                     <app-avatar [imageUrl]="player.sponsor | sponsorToLogoUri"></app-avatar>
                     <div class="ml-2">
                         <div class="fs-12">{{player.name}}</div>
                         <div class="text-muted">{{player.sponsor.name}}</div>
                     </div>
                 </td>
-                <td>
+                <td class="fs-12">
                     {{ player.lastActive | friendlyDateAndTime }}
                 </td>
-                <td class="text-center">{{player.challengeCountCompetitive}}</td>
-                <td class="text-center">{{player.challengeCountPractice}}</td>
+                <td class="text-center fs-12">{{player.challengeCountCompetitive}}</td>
+                <td class="text-center fs-12">{{player.challengeCountPractice}}</td>
             </tr>
         </tbody>
     </table>

@@ -1,33 +1,53 @@
 <div class="practice-mode-report-prac-vs-comp-component" *ngIf="!isLoading; else loading">
     <ng-container *ngIf="results?.records?.length; else noRecords">
-        <table class="report-table table-hover gameboard-report" *ngIf="results?.records; else noRecords">
+        <table class="table table-hover gameboard-table gameboard-report" *ngIf="results?.records; else noRecords">
             <col>
             <colgroup span="5"></colgroup>
             <colgroup span="5"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row chill-headers">
                     <th scope="col"></th>
                     <th scope="col" colSpan="5">Practice Area</th>
                     <th scope="col" colSpan="5">Competitive Mode</th>
                 </tr>
+
+                <tr class="headers-row">
+                    <th>
+                        <app-sort-header sortBy="player">Player</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="last-played-practice">Last Played</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="attempts-practice">Attempts</app-sort-header>
+                    </th>
+                    <th class="numeric-col">Zero / Partial / Complete</th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-pct-practice">Avg. % Points Scored</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-percentile-practice">Avg. Score Percentile</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="last-played-competitive">Last Played</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="attempts-competitive">Attempts</app-sort-header>
+                    </th>
+                    <th class="numeric-col">Zero / Partial / Complete</th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-pct-competitive">Avg. % Points Scored</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-percentile-competitive">
+                            Avg. Score Percentile
+                        </app-sort-header>
+                    </th>
+                </tr>
             </thead>
 
             <tbody>
-                <tr class="headers headers-row">
-                    <td>Player</td>
-                    <td>Last Played</td>
-                    <td>Attempts</td>
-                    <td>Zero / Partial / Complete</td>
-                    <td>Avg. % Points Scored</td>
-                    <td>Avg. Score Percentile</td>
-                    <td>Last Played</td>
-                    <td>Attempts</td>
-                    <td>Zero / Partial / Complete</td>
-                    <td>Avg. % Points Scored</td>
-                    <td>Avg. Score Percentile</td>
-                </tr>
-
                 <tr class="data-row" *ngFor="let record of results?.records">
                     <td>
                         <app-player-field

@@ -75,7 +75,7 @@
                                 <col>
                                 <col>
 
-                                <thead class="thead-light">
+                                <thead>
                                     <tr>
                                         <th></th>
                                         <th class="text-center">Created</th>
@@ -123,11 +123,15 @@
                         <div class="card-section" *ngIf="team.externalGameHostUrl">
                             <h5>Game Host URL</h5>
 
-                            <div class="cursor-pointer text-info" [appCopyOnClick]="team.externalGameHostUrl"
-                                appCopyOnClickMessage="Copied this team's external host URL to your clipboard."></div>
+                            <div class="cursor-pointer text-info"
+                                tooltip="Copy this team's external host URL to your clipboard"
+                                [appCopyOnClick]="team.externalGameHostUrl"
+                                appCopyOnClickMessage="Copied this team's external host URL to your clipboard.">
+                                {{team.externalGameHostUrl}}
+                            </div>
                         </div>
                     </div>
-                    <button type="button" href="#" class="btn btn-info"
+                    <button type="button" class="btn btn-info"
                         [disabled]="(team.deployStatus != 'notStarted' && team.deployStatus != 'partiallyDeployed') || !canDeploy"
                         (click)="handlePreDeployTeamClick(ctx.game.id, team.id)">Deploy</button>
                 </div>

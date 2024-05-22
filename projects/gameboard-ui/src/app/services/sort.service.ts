@@ -1,4 +1,4 @@
-import { SortDirection } from '@/api/models';
+import { SortDirection } from '@/core/models/sort-direction';
 import { Injectable } from '@angular/core';
 
 export interface SortArgs<TItems, TTransformed> {

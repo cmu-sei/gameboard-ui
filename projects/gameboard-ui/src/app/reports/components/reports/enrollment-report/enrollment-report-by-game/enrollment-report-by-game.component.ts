@@ -44,7 +44,7 @@ export class EnrollmentReportByGameComponent implements OnChanges {
           sponsors: sponsors,
         }
       },
-      modalClasses: ["modal-xl"]
+      modalClasses: ["modal-lg"]
     });
   }
 

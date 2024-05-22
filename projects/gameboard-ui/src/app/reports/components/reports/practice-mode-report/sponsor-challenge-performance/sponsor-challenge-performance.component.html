@@ -9,32 +9,33 @@
         </button>
     </div>
     <div class="modal-body">
-        <table class="report-table table-hover gameboard-report">
+        <table class="table table-hover gameboard-table gameboard-report">
             <col>
             <colgroup span="2"></colgroup>
             <colgroup span="2"></colgroup>
             <colgroup span="3"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row chill-headers">
                     <th scope="col"></th>
                     <th scope="col" colSpan="2" class="group-header">Engagement</th>
                     <th scope="col" colSpan="2" class="group-header">Scoring</th>
                     <th scope="col" colSpan="3" class="group-header">Solves</th>
                 </tr>
+
+                <tr class="headers-row">
+                    <td>Sponsor</td>
+                    <td clas="numeric-col">Player Count</td>
+                    <td clas="numeric-col">Total Attempts</td>
+                    <td clas="numeric-col">High</td>
+                    <td clas="numeric-col">Avg</td>
+                    <td clas="numeric-col">Complete</td>
+                    <td clas="numeric-col">Partial</td>
+                    <td clas="numeric-col">Zero</td>
+                </tr>
             </thead>
 
             <tbody>
-                <tr class="headers headers-row">
-                    <td>Sponsor</td>
-                    <td>Player Count</td>
-                    <td>Total Attempts</td>
-                    <td>High</td>
-                    <td>Avg</td>
-                    <td>Complete</td>
-                    <td>Partial</td>
-                    <td>Zero</td>
-                </tr>
                 <tr class="data-row" *ngFor="let sponsorPerformance of context.sponsorPerformance">
                     <td>
                         <div class="d-flex align-items-center">

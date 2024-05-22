@@ -1,7 +1,7 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<a class="btn btn-link" routerLink="../">
+<a class="btn btn-link" routerLink="/reports">
   <fa-icon [icon]="faArrowLeft"></fa-icon>
   <span>Back</span>
 </a>
@@ -14,12 +14,14 @@
     </div>
     <div class="col-2 p-2 font-weight-bold" *ngIf="users">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadUserDetailsReport()">Export User Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadUserDetailsReport()">Export User Report to
+          CSV</button>
       </div>
     </div>
     <div class="col-2 p-2 font-weight-bold" *ngIf="players">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadPlayerDetailsReport()">Export Player Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadPlayerDetailsReport()">Export Player Report to
+          CSV</button>
       </div>
     </div>
   </div>
@@ -54,7 +56,7 @@
   </div>
   <div class="row border-top p-3" *ngFor="let p of players.stats">
     <div class="col-6">{{p.gameName}}</div>
-    <div class="col-3">{{p.playerCount}}</div>  
+    <div class="col-3">{{p.playerCount}}</div>
     <div class="col-3">{{p.sessionPlayerCount}}</div>
   </div>
 </div>

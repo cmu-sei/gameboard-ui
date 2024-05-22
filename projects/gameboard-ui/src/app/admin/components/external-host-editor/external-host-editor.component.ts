@@ -19,8 +19,11 @@ export class ExternalHostEditorComponent implements OnInit {
   public onSave?: (host: UpsertExternalGameHost) => void | Promise<void>;
   protected subtitle?: string;
   protected title = "New External Game Host";
+  protected tryPingResult?: { success: boolean; response?: string };
 
-  constructor(private externalGameService: ExternalGameService) { }
+  constructor(
+    private externalGameService: ExternalGameService,
+  ) { }
 
   async ngOnInit() {
     if (this.hostId) {
@@ -39,5 +42,9 @@ export class ExternalHostEditorComponent implements OnInit {
   protected async handleConfirm(host: UpsertExternalGameHost) {
     if (this.onSave)
       await this.onSave(host);
+  }
+
+  protected async handleTryPing(host: UpsertExternalGameHost) {
+    this.tryPingResult = await this.externalGameService.tryPingHost(host);
   }
 }

@@ -1,0 +1,12 @@
+@import "../../../../scss/variables";
+
+.component-container {
+  background-color: unset;
+  color: $info;
+  text-decoration: dotted;
+
+  &.active {
+    background-color: $info;
+    color: $foreground;
+  }
+}

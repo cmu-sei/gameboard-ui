@@ -4,11 +4,12 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
-import { Search, SortDirection } from '../../api/models';
+import { Search } from '../../api/models';
 import { ApiUser, UserRole } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { fa } from '@/services/font-awesome.service';
 import { SortService } from '@/services/sort.service';
+import { SortDirection } from '@/core/models/sort-direction';
 
 type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 

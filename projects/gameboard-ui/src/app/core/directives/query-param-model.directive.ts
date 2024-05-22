@@ -139,30 +139,6 @@ export class QueryParamModelDirective<T> implements OnChanges {
       resetParams: this.config?.resetQueryParams
     });
   }
-
-  private deserializeModel<T>(params: Params, config: QueryParamModelConfig<T>): T | null {
-    if (!config) {
-      return null;
-    }
-
-    if (!this._isMultiConfig) {
-      // we're deserializing a simple type using a provided serializer
-      // and mapping it to config.name
-
-      if (!config.name) {
-        throw new Error("Can't deserialize a query param model with no name.");
-      }
-
-      return (config.deserialize || defaultDeserializer)(params[config.name]);
-    }
-
-    // otherwise, we're deserializing an object with multiple properties
-    if (!config.deserializeMulti || !config.propertyNameToQueryParamNameMap) {
-      throw new Error("Can't deserialize a multiproperty query param model without a deserializer and a param names map.");
-    }
-
-    return config.deserializeMulti!(params, this._toQueryStringParamNames) as T;
-  }
 }
 
 export const defaultSerializer = <T>(value: T | null): string | null => value?.toString() || null;

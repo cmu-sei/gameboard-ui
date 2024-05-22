@@ -18,8 +18,6 @@
                 <a class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
                     Reports
                 </a>
-
-                <span class="badge badge-info">[BETA]</span>
             </div>
             <ng-container *ngIf="(user$ | async)?.id">
                 <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"

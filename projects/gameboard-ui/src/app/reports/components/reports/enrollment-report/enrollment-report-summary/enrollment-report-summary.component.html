@@ -1,28 +1,44 @@
 <ng-container *ngIf="ctx">
     <div class="results">
-        <table class="report-table table-hover gameboard-report">
+        <table class="table table-hover gameboard-table gameboard-report">
             <colgroup span="3"></colgroup>
             <colgroup span="5"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row chill-headers">
                     <th scope="col" colSpan="3" class="group-header">Enrollment</th>
                     <th scope="col" colSpan="5" class="group-header">Performance</th>
+                </tr>
+
+                <tr class="headers-row">
+                    <th>
+                        <app-sort-header sortBy="player">Player</app-sort-header>
+                    </th>
+                    <th>
+                        <app-sort-header sortBy="enroll-date">Enroll Date</app-sort-header>
+                    </th>
+                    <th>
+                        <app-sort-header sortBy="game">Game</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="time">Cumulative Time</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-attempted">Attempted</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-solve-partial">Partially Solved</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-solve-complete">Completely Solved</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="score">Score</app-sort-header>
+                    </th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr class="headers headers-row">
-                    <td>Player</td>
-                    <td>Enroll Date</td>
-                    <td>Game</td>
-                    <td>Cumulative Time</td>
-                    <td>Attempted</td>
-                    <td>Partially Solved</td>
-                    <td>Completely Solved</td>
-                    <td>Score</td>
-                </tr>
-
                 <tr class="data-row" *ngFor="let record of ctx.results.records">
                     <td>
                         <div class="d-flex align-items-center">

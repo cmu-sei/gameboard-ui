@@ -37,9 +37,10 @@ $subtleSize: 0.9rem;
   }
 
   table.gameboard-report {
-    width: 100%;
+    th {
+      padding: 0;
+    }
 
-    th,
     td {
       padding: 4px 8px;
     }
@@ -50,7 +51,7 @@ $subtleSize: 0.9rem;
     }
 
     .data-row {
-      border-bottom: dotted 1px #dddddd;
+      border-bottom: dashed 1px #dddddd;
       font-size: 1.1rem;
 
       td {
@@ -71,12 +72,6 @@ $subtleSize: 0.9rem;
       color: $info;
       cursor: pointer;
       font-weight: bold;
-    }
-
-    .overflow-to-ellipsis {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
   }
 

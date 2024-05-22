@@ -1,43 +1,49 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<a class="btn btn-link" routerLink="../">
-    <fa-icon [icon]="faArrowLeft"></fa-icon>
-    <span>Back</span>
-  </a>
-  
-  <h4>Participation Reports</h4>
+<a class="btn btn-link" routerLink="/reports">
+  <fa-icon [icon]="faArrowLeft"></fa-icon>
+  <span>Back</span>
+</a>
 
-  <div class="container table-dark border mb-4">
+<h4>Participation Reports</h4>
+
+<div class="container table-dark border mb-4">
   <div class="row">
     <div class="col-2 p-2 font-weight-bold" *ngIf="series">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadSeriesReport()">Export Series Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadSeriesReport()">Export Series Report to
+          CSV</button>
       </div>
     </div>
     <div class="col-2 p-2 font-weight-bold" *ngIf="tracks">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTrackReport()">Export Track Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadTrackReport()">Export Track Report to
+          CSV</button>
       </div>
     </div>
     <div class="col-2 p-2 font-weight-bold" *ngIf="seasons">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadSeasonReport()">Export Season Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadSeasonReport()">Export Season Report to
+          CSV</button>
       </div>
     </div>
     <div class="col-2 p-2 font-weight-bold" *ngIf="divisions">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadDivisionReport()">Export Division Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadDivisionReport()">Export Division Report to
+          CSV</button>
       </div>
     </div>
     <div class="col-2 p-2 font-weight-bold" *ngIf="modes">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadModeReport()">Export Mode Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadModeReport()">Export Mode Report to
+          CSV</button>
       </div>
     </div>
     <div class="col-2 p-2 front-weight-bold" *ngIf="correlations">
       <div>
-        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadCorrelationReport()">Export Correlation Report to CSV</button>
+        <button class="btn btn-outline-info btn-sm mx-1" (click)="downloadCorrelationReport()">Export Correlation Report
+          to CSV</button>
       </div>
     </div>
   </div>

@@ -1,29 +1,39 @@
 <div class="practice-mode-by-user-component" *ngIf="results; else loading">
     <div *ngIf="results && results.records.length; else noRecords" class="results">
-        <table class="report-table table-hover gameboard-report">
+        <table class="table table-hover gameboard-table gameboard-report">
             <col span="2">
             <colgroup span="6"></colgroup>
 
-            <thead class="thead-light">
-                <tr class="headers super-headers-row">
+            <thead>
+                <tr class="super-headers-row chill-headers">
                     <th scope="col" colSpan="2"></th>
                     <th scope="col" colSpan="2" class="group-header">Attempts</th>
                     <th scope="col" colSpan="4" class="group-header">Best Attempt</th>
                 </tr>
+
+                <tr class="headers-row">
+                    <th>Player</th>
+                    <th>Challenge</th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="attempts">Total</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="most-recent">Most Recent</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="best-score">Score</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="best-date">Date</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="best-time">Total Time</app-sort-header>
+                    </th>
+                    <th class="numeric-col">Result</th>
+                </tr>
             </thead>
 
             <tbody>
-                <tr class="headers headers-row">
-                    <td>Player</td>
-                    <td>Challenge</td>
-                    <td>Total</td>
-                    <td>Most Recent</td>
-                    <td>Score</td>
-                    <td>Date</td>
-                    <td>Total Time</td>
-                    <td>Result</td>
-                </tr>
-
                 <tr class="data-row" *ngFor="let record of results.records">
                     <!--PLAYER-->
                     <td>
