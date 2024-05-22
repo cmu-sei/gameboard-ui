@@ -13,16 +13,34 @@
             </tr>
 
             <tr class="headers-row">
-                <td>Challenge</td>
-                <td class="numeric-col">Players</td>
-                <td class="numeric-col">Attempts</td>
-                <td class="numeric-col">Sponsors</td>
-                <td class="numeric-col">Max Possible</td>
-                <td class="numeric-col">High</td>
-                <td class="numeric-col">Average</td>
-                <td class="numeric-col">Complete</td>
-                <td class="numeric-col">Partial</td>
-                <td class="numeric-col">Zero</td>
+                <th>Challenge</th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="players">Players</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="attempts">Attempts</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="count-sponsors">Sponsors</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="score-max">Max Possible</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="score-high">High</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="score-avg">Average</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="count-solve-complete">Complete</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="count-solve-partial">Partial</app-sort-header>
+                </th>
+                <th class="numeric-col">
+                    <app-sort-header sortBy="count-solve-none">None</app-sort-header>
+                </th>
             </tr>
         </thead>
 

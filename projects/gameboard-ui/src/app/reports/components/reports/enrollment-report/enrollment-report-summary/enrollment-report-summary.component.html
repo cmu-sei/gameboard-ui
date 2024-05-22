@@ -11,14 +11,30 @@
                 </tr>
 
                 <tr class="headers-row">
-                    <td>Player</td>
-                    <td>Enroll Date</td>
-                    <td>Game</td>
-                    <td class="numeric-col">Cumulative Time</td>
-                    <td class="numeric-col">Attempted</td>
-                    <td class="numeric-col">Partially Solved</td>
-                    <td class="numeric-col">Completely Solved</td>
-                    <td class="numeric-col">Score</td>
+                    <th>
+                        <app-sort-header sortBy="player">Player</app-sort-header>
+                    </th>
+                    <th>
+                        <app-sort-header sortBy="enroll-date">Enroll Date</app-sort-header>
+                    </th>
+                    <th>
+                        <app-sort-header sortBy="game">Game</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="time">Cumulative Time</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-attempted">Attempted</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-solve-partial">Partially Solved</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-solve-complete">Completely Solved</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="score">Score</app-sort-header>
+                    </th>
                 </tr>
             </thead>
 

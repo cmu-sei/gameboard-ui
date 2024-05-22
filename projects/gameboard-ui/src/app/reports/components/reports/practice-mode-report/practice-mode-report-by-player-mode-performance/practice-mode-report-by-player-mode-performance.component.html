@@ -13,17 +13,37 @@
                 </tr>
 
                 <tr class="headers-row">
-                    <td>Player</td>
-                    <td class="numeric-col">Last Played</td>
-                    <td class="numeric-col">Attempts</td>
-                    <td class="numeric-col">Zero / Partial / Complete</td>
-                    <td class="numeric-col">Avg. % Points Scored</td>
-                    <td class="numeric-col">Avg. Score Percentile</td>
-                    <td class="numeric-col">Last Played</td>
-                    <td class="numeric-col">Attempts</td>
-                    <td class="numeric-col">Zero / Partial / Complete</td>
-                    <td class="numeric-col">Avg. % Points Scored</td>
-                    <td class="numeric-col">Avg. Score Percentile</td>
+                    <th>
+                        <app-sort-header sortBy="player">Player</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="last-played-practice">Last Played</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="attempts-practice">Attempts</app-sort-header>
+                    </th>
+                    <th class="numeric-col">Zero / Partial / Complete</th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-pct-practice">Avg. % Points Scored</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-percentile-practice">Avg. Score Percentile</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="last-played-competitive">Last Played</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="attempts-competitive">Attempts</app-sort-header>
+                    </th>
+                    <th class="numeric-col">Zero / Partial / Complete</th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-pct-competitive">Avg. % Points Scored</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score-percentile-competitive">
+                            Avg. Score Percentile
+                        </app-sort-header>
+                    </th>
                 </tr>
             </thead>
 

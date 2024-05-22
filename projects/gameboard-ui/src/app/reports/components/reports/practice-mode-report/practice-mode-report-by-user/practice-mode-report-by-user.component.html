@@ -12,14 +12,24 @@
                 </tr>
 
                 <tr class="headers-row">
-                    <td>Player</td>
-                    <td>Challenge</td>
-                    <td class="numeric-col">Total</td>
-                    <td class="numeric-col">Most Recent</td>
-                    <td class="numeric-col">Score</td>
-                    <td class="numeric-col">Date</td>
-                    <td class="numeric-col">Total Time</td>
-                    <td class="numeric-col">Result</td>
+                    <th>Player</th>
+                    <th>Challenge</th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="attempts">Total</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="most-recent">Most Recent</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="best-score">Score</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="best-date">Date</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="best-time">Total Time</app-sort-header>
+                    </th>
+                    <th class="numeric-col">Result</th>
                 </tr>
             </thead>
 

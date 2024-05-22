@@ -11,14 +11,30 @@
                 </tr>
 
                 <tr class="headers-row">
-                    <td>Game</td>
-                    <td class="numeric-col">Registration Open</td>
-                    <td class="numeric-col">Registration Closed</td>
-                    <td class="numeric-col">Execution Start</td>
-                    <td class="numeric-col">Execution End</td>
-                    <td class="numeric-col">Total Players</td>
-                    <td class="numeric-col">Total Sponsors</td>
-                    <td class="numeric-col">Top Sponsor</td>
+                    <th>
+                        <app-sort-header sortBy="game">Game</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="registration-open">Registration Open</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="registration-close">Registration Close</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="execution-start">Execution Start</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="execution-end">Execution End</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-players">Total Players</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="count-sponsors">Total Sponsors</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="top-sponsor">Top Sponsor</app-sort-header>
+                    </th>
                 </tr>
             </thead>
 
@@ -53,12 +69,13 @@
                         <p class="tooltipped-value" (click)="handleSponsorsCountClick(record.game, record.sponsors)">
                             {{ record.sponsors.length }}</p>
                     </td>
+
                     <td class="report-field numerical">
                         <app-parameter-change-link *ngIf="record.topSponsor"
                             [config]="{ parameterChange: { sponsors: record.topSponsor.id} }">
-                            <app-player-avatar-legacy class="d-block mr-2"
-                                [avatarUri]="record.topSponsor.logoFileName | relativeImage"
-                                [tooltip]="record.topSponsor.name" size="small"></app-player-avatar-legacy>
+                            <app-avatar class="d-block"
+                                [imageUrl]="{ logo: record.topSponsor.logoFileName } | sponsorToLogoUri" size="tiny"
+                                [tooltip]="record.topSponsor.name"></app-avatar>
                         </app-parameter-change-link>
                         <small class="subtle-info">
                             {{record.topSponsor.playerCount}} {{ "player" | pluralizer:record.topSponsor.playerCount }}

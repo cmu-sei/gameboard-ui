@@ -7,7 +7,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 
 @Component({
   selector: 'app-sort-header',
-  template: `<div class="component-container cursor-pointer d-flex w-100 justify-content-center align-items-stretch" [class.active]="isActive" (click)="handleClick()">
+  template: `<div class="component-container cursor-pointer d-flex w-100 justify-content-center align-items-center" [class.active]="isActive" (click)="handleClick()">
     <div class="content-container">
       <ng-content></ng-content>
     </div>

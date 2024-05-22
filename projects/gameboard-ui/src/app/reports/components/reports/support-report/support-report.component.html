@@ -23,7 +23,7 @@
 
     <ng-container *ngIf="!isLoading; else loading">
         <tabset class="mt-5" *ngIf="ctx?.results?.records?.length; else noRecords">
-            <tab heading="Summary Table" id="tab-summary-table">
+            <tab heading="Summary" id="tab-summary-table">
                 <div class="report-body mt-4" #supportReport>
                     <table class="table table-hover gameboard-table gameboard-report">
                         <col>
@@ -43,15 +43,29 @@
                             </tr>
 
                             <tr class="headers-row">
-                                <td>Ticket</td>
-                                <td>Summary</td>
-                                <td class="numeric-col">Status</td>
-                                <td class="numeric-col">Labels</td>
-                                <td class="numeric-col">Act. Count</td>
-                                <td class="numeric-col">Assigned to</td>
-                                <td class="numeric-col">Created</td>
-                                <td class="numeric-col">Updated</td>
-                                <td></td>
+                                <th class="px-2">
+                                    <app-sort-header sortBy="ticket">Ticket</app-sort-header>
+                                </th>
+                                <th class="pl-2">
+                                    <app-sort-header sortBy="summary">Summary</app-sort-header>
+                                </th>
+                                <th class="numeric-col">
+                                    <app-sort-header sortBy="status">Status</app-sort-header>
+                                </th>
+                                <th class="numeric-col">Labels</th>
+                                <th class="numeric-col">
+                                    <app-sort-header sortBy="count-activity">Touches</app-sort-header>
+                                </th>
+                                <th class="numeric-col">
+                                    <app-sort-header sortBy="assigned-to">Assigned to</app-sort-header>
+                                </th>
+                                <th class="numeric-col">
+                                    <app-sort-header sortBy="created-by">Created</app-sort-header>
+                                </th>
+                                <th class="numeric-col">
+                                    <app-sort-header sortBy="updated">Updated</app-sort-header>
+                                </th>
+                                <th></th>
                             </tr>
                         </thead>
 
