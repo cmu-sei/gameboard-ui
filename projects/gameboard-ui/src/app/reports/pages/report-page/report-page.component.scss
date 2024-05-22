@@ -37,7 +37,10 @@ $subtleSize: 0.9rem;
   }
 
   table.gameboard-report {
-    th,
+    th {
+      padding: 0;
+    }
+
     td {
       padding: 4px 8px;
     }
@@ -69,12 +72,6 @@ $subtleSize: 0.9rem;
       color: $info;
       cursor: pointer;
       font-weight: bold;
-    }
-
-    .overflow-to-ellipsis {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
   }
 

@@ -167,11 +167,14 @@ table.gameboard-table {
   width: 100%;
 
   thead {
+    tr > th:not(:first-child) {
+      border-left: solid 1px $foreground;
+    }
+
     th {
       border-bottom: solid 1px $foreground;
       border-top: solid 1px $foreground;
-      padding-bottom: 0.5rem;
-      padding-top: 0.5rem;
+      // padding: 0.5rem;
       vertical-align: middle;
     }
 
@@ -186,10 +189,6 @@ table.gameboard-table {
 
       th {
         color: $body-bg;
-      }
-
-      th:not(:first-of-type) {
-        border-left: solid 1px $foreground;
       }
 
       &.chill-headers {
@@ -217,7 +216,13 @@ table.gameboard-table {
       }
     }
 
-    td.numeric-col {
+    th {
+      padding-left: 4px;
+    }
+
+    td.numeric-col,
+    th.numeric-col {
+      padding: 0;
       text-align: center;
     }
   }
@@ -470,6 +475,7 @@ th[align="left"] {
 
 .overflow-ellipsis {
   overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

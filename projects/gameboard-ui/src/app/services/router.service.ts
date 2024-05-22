@@ -11,7 +11,7 @@ import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/tools/functions";
 
 export interface QueryParamsUpdate {
-  parameters: Params,
+  parameters?: Params,
   resetParams?: string[]
 }
 

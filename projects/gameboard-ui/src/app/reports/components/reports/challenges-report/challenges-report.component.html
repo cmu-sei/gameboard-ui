@@ -10,7 +10,7 @@
             [itemTemplate]="multiSelectGame" [getSearchText]="displayGameName"
             [value]="getGameValue"></app-multi-select>
         <app-parameter-date-range ngDefaultControl name="startDateRange" [(ngModel)]="startDateRangeModel"
-            label="Include Challenge Stats From"></app-parameter-date-range>
+            label="Include Challenge Stats from"></app-parameter-date-range>
     </app-report-parameters-container>
 
     <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats; else loading"
@@ -43,16 +43,35 @@
                     </tr>
 
                     <tr class="headers-row">
-                        <td>Challenge</td>
-                        <td>Game</td>
-                        <td class="numeric-col">Players</td>
-                        <td class="numeric-col">Avg. Score</td>
-                        <td class="numeric-col">Avg. Solve Time</td>
-                        <td class="numeric-col">Competitive</td>
-                        <td class="numeric-col">Practice</td>
-                        <td class="numeric-col">None</td>
-                        <td class="numeric-col">Partial</td>
-                        <td class="numeric-col">Complete</td>
+                        <th>Challenge</th>
+                        <th>Game</th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="player-count" justifyContent="center">Players</app-sort-header>
+                        </th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="avg-score" justifyContent="center">Avg. Score</app-sort-header>
+                        </th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="avg-solve-time" justifyContent="center">Avg. Solve Time
+                            </app-sort-header>
+                        </th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="deploy-count-competitive"
+                                justifyContent="center">Competitive</app-sort-header>
+                        </th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="deploy-count-practice"
+                                justifyContent="center">Practice</app-sort-header>
+                        </th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="score-none" justifyContent="center">None</app-sort-header>
+                        </th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="score-partial" justifyContent="center">Partial</app-sort-header>
+                        </th>
+                        <th class="numeric-col">
+                            <app-sort-header sortBy="score-complete" justifyContent="center">Complete</app-sort-header>
+                        </th>
                     </tr>
                 </thead>
 

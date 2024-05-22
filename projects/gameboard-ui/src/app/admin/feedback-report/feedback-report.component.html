@@ -1,4 +1,4 @@
-<a class="btn btn-link" routerLink="../">
+<a class="btn btn-link" routerLink="/reports">
   <fa-icon [icon]="faArrowLeft"></fa-icon>
   <span>Back</span>
 </a>
@@ -40,7 +40,7 @@
 
 <div class="d-flex justify-content-between">
   <h2>{{currentGame?.name}}<ng-container *ngIf="currentType == 'challenge'"> - {{currentChallengeSpec?.name ?? 'All ' +
-    challengeSpecs?.length + ' Challenges'}}</ng-container>
+      challengeSpecs?.length + ' Challenges'}}</ng-container>
   </h2>
   <div class="align-self-center">
     <button class="btn btn-outline-info" (click)="refresh()" [disabled]="!configQuestions.length">
@@ -86,7 +86,8 @@
           <div class="col-2">{{feedbackStats.responsesCount}} <span class="m-0 p-0 text-muted">responses</span></div>
           <div class="col-2">{{feedbackStats.submittedCount}} <span class="m-0 p-0 text-muted">submitted</span></div>
           <div class="col-2">{{feedbackStats.inProgressCount}} <span class="m-0 p-0 text-muted">in progress</span></div>
-          <div class="col-2">{{feedbackStats.maxResponseCount - feedbackStats.responsesCount}} <span class="m-0 p-0 text-muted">not started</span></div>
+          <div class="col-2">{{feedbackStats.maxResponseCount - feedbackStats.responsesCount}} <span
+              class="m-0 p-0 text-muted">not started</span></div>
         </div>
       </ng-container>
     </ng-container>
@@ -124,9 +125,12 @@
         <ng-container *ngIf="feedbackStats; else loading">
           <div *ngFor="let q of feedbackStats.questionStats" class="row border-top p-2 pl-4 text-left">
             <div class="col-4">{{q.id}}) {{q.prompt}}<span *ngIf="q.required" class="required">*</span></div>
-            <div class="col-2">{{!!q.count ? (q.average | number:'1.2-2'): ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
-            <div class="col-2">{{!!q.count ? q.lowest : ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
-            <div class="col-2">{{!!q.count ? q.highest : ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
+            <div class="col-2">{{!!q.count ? (q.average | number:'1.2-2'): ''}}<span
+                class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
+            <div class="col-2">{{!!q.count ? q.lowest : ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span>
+            </div>
+            <div class="col-2">{{!!q.count ? q.highest : ''}}<span class="m-0 p-0 text-muted">/{{q.scaleMax}}</span>
+            </div>
             <div class="col-2">{{q.count}}</div>
           </div>
         </ng-container>
@@ -162,19 +166,29 @@
             <th class="time-col">Time</th>
             <th *ngIf="currentType == 'challenge'">Challenge</th>
             <th>Name</th>
-            <th *ngFor="let q of configQuestions" [class]="q.type =='text' ? 'text-col' : 'num-col'" class="pt-1 font-weight-bold">
+            <th *ngFor="let q of configQuestions" [class]="q.type =='text' ? 'text-col' : 'num-col'"
+              class="pt-1 font-weight-bold">
               <small class="q-id">{{q.id}})</small>
               <div class="prompt">{{q.shortName ?? q.prompt}}</div>
             </th>
           </tr>
         </thead>
         <tbody *ngIf="feedback; else loading">
-          <tr *ngFor="let r of feedback; let i = index" (click)="toggleRow(i)" id="row-{{i}}" class="minimized table-row">
-            <td><div class="text-align-left">{{ r.timestamp | shorttime:true }}</div></td>
-            <td *ngIf="currentType == 'challenge'"><div>{{r.challengeId | slice:0:8}} {{r.challengeTag}}</div></td>
-            <td><div>{{ r.approvedName }}</div></td>
-            <td *ngFor="let q of r.questions" class="table-cell" [class]="(q.answer?.length ?? 0) > 500 ? 'long-text' : ''">
-              <div [class]="(q.answer && q.answer.length) ? '' : 'text-muted blank-cell'">{{(q.answer && q.answer.length) ? q.answer : "--"}}</div>
+          <tr *ngFor="let r of feedback; let i = index" (click)="toggleRow(i)" id="row-{{i}}"
+            class="minimized table-row">
+            <td>
+              <div class="text-align-left">{{ r.timestamp | shorttime:true }}</div>
+            </td>
+            <td *ngIf="currentType == 'challenge'">
+              <div>{{r.challengeId | slice:0:8}} {{r.challengeTag}}</div>
+            </td>
+            <td>
+              <div>{{ r.approvedName }}</div>
+            </td>
+            <td *ngFor="let q of r.questions" class="table-cell"
+              [class]="(q.answer?.length ?? 0) > 500 ? 'long-text' : ''">
+              <div [class]="(q.answer && q.answer.length) ? '' : 'text-muted blank-cell'">{{(q.answer &&
+                q.answer.length) ? q.answer : "--"}}</div>
             </td>
           </tr>
         </tbody>
@@ -183,7 +197,7 @@
       <div *ngIf="feedback && feedback.length == 0 && skip == 0" class="m-4 text-center">
         No feedback yet.
       </div>
-      
+
     </div>
 
     <div *ngIf="feedback" class="d-flex justify-content-between">

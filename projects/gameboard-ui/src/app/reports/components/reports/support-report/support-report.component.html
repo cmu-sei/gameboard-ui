@@ -60,7 +60,7 @@
                                 <td><a [routerLink]="['/support/tickets/' + record.key.toString()]"
                                         target="_blank">{{record.prefixedKey}}</a></td>
                                 <td class="cell-summary m-1">
-                                    <p class="overflow-to-ellipsis">{{record.summary}}</p>
+                                    <p class="overflow-ellipsis">{{record.summary}}</p>
 
                                     <p class="secondary-info-text mt-1" *ngIf="record.game || record.challenge">
                                         <a *ngIf="record.game" [routerLink]="['/game/' + record.game.id]"
