@@ -297,10 +297,15 @@
 
           <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
             <label for="gameEnd-input">Closes</label>
-            <input type="text" class="form-control" id="gameEnd-input" name="gameEnd" [(ngModel)]="game.gameEnd">
+            <input type="text" class="form-control" id="gameEnd-input" name="gameEnd" [(ngModel)]="game.gameEnd"
+              [min]="game.gameStart">
             <small>yyyy-mm-ddT00:00:00+00:00</small>
           </div>
 
+        </div>
+
+        <div *ngIf="game.gameStart > game.gameEnd" class="row form-group">
+          <alert type="warning" class="col-12">The game's open date must be less than its close date.</alert>
         </div>
 
         <div class="form-group pb-0 pt-1">
@@ -417,6 +422,7 @@
               <input type="text" class="form-control" id="registrationOpen-input" name="registrationOpen"
                 [(ngModel)]="game.registrationOpen">
               <small>yyyy-mm-ddT00:00:00+00:00</small>
+              <small></small>
             </div>
 
             <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
@@ -425,10 +431,20 @@
                 [(ngModel)]="game.registrationClose">
               <small>yyyy-mm-ddT00:00:00+00:00</small>
             </div>
+          </div>
 
+          <div class="row">
+            <div *ngIf="game.registrationOpen > game.registrationClose" class="col-12 form-group pb-0 pt-1">
+              <alert type="warning">
+                The registration period's open date must be prior to its close date.
+              </alert>
+            </div>
+          </div>
+
+          <div class="row">
             <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
               <label for="minTeamSize-input">Minimum Team Size</label>
-              <input type="number" class="form-control" id="minTeamSize-input" name="minTeamSize"
+              <input type="number" class="form-control" id="minTeamSize-input" name="minTeamSize" [min]="1"
                 [(ngModel)]="game.minTeamSize">
               <small></small>
             </div>
@@ -436,9 +452,23 @@
             <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
               <label for="maxTeamSize-input">Maximum Team Size</label>
               <input type="number" class="form-control" id="maxTeamSize-input" name="maxTeamSize"
-                [(ngModel)]="game.maxTeamSize">
+                [min]="game.minTeamSize" [(ngModel)]="game.maxTeamSize">
               <small></small>
             </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div *ngIf="game.minTeamSize > game.maxTeamSize" class="col-12 form-group pb-0 pt-1">
+            <alert type="warning">
+              The minimum team size must be less than (or equal to) the maximum team size.
+            </alert>
+          </div>
+
+          <div *ngIf="game.minTeamSize <= 0" class="col-12 form-group pb-0 pt-1">
+            <alert type="warning">
+              The minimum team size must be a positive integer.
+            </alert>
           </div>
         </div>
 
