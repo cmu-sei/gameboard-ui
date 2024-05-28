@@ -6,12 +6,11 @@ import { FormGroup, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
-import { ExternalGameHost, Game, GameEngineMode } from '../../api/game-models';
+import { ExternalGameHost, Game, GameEngineMode, GameRegistrationType } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { KeyValue } from '@angular/common';
 import { AppTitleService } from '@/services/app-title.service';
 import { fa } from '@/services/font-awesome.service';
-import { PlayerMode } from '@/api/player-models';
 import { ToastService } from '@/utility/services/toast.service';
 import { PracticeService } from '@/services/practice.service';
 import { FeedbackTemplate } from '@/api/feedback-models';
@@ -81,7 +80,7 @@ export class GameEditorComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.updated$ = this.form.valueChanges.pipe(
-      filter(f => !this.form.pristine && (this.form.valid || false)),
+      filter(f => !this.form.pristine && (this.form.valid || false) && this.doAdditionalValidation(f)),
       tap(values => {
         this.dirty = true;
         this.needsPracticeModeEnabledRefresh = values.playerMode !== this.game.playerMode;
@@ -180,5 +179,18 @@ export class GameEditorComponent implements AfterViewInit {
     if (a.key < b.key) return -1;
     if (a.key > b.key) return 1;
     return 0;
+  }
+
+  private doAdditionalValidation(game: Game) {
+    if (game.minTeamSize > game.maxTeamSize)
+      return false;
+
+    if (game.gameStart > game.gameEnd)
+      return false;
+
+    if (game.registrationType == GameRegistrationType.open && game.registrationOpen > game.registrationClose)
+      return false;
+
+    return true;
   }
 }
