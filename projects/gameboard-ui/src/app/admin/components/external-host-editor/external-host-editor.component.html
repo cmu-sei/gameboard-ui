@@ -15,7 +15,8 @@
         <div class="form-group">
             <label for="host-api-key">Host API Key</label>
             <input id="hostApiKey" name="host-api-key" type="password" class="form-control px-0"
-                [(ngModel)]="editHost.hostApiKey" placeholder="(e.g. 123thisIsMyKey!)">
+                [(ngModel)]="editHost.hostApiKey"
+                [placeholder]="hasApiKey ? '(key configured - enter a new key here to change it)' : '(e.g. 123ThisIsMyKey!)'">
         </div>
 
         <div class="form-group">

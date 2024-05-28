@@ -146,7 +146,7 @@ export interface ExternalGameHost {
   clientUrl: string;
   destroyResourcesOnDeployFailure?: boolean;
   gamespaceDeployBatchSize?: number;
-  hostApiKey?: string;
+  hasApiKey: boolean;
   hostUrl: string;
   pingEndpoint?: string;
   startupEndpoint: string;

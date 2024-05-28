@@ -15,15 +15,14 @@ export class ExternalHostEditorComponent implements OnInit {
     startupEndpoint: ""
   };
   protected errors: any[] = [];
+  protected hasApiKey = false;
   public hostId?: string;
   public onSave?: (host: UpsertExternalGameHost) => void | Promise<void>;
   protected subtitle?: string;
   protected title = "New External Game Host";
   protected tryPingResult?: { success: boolean; response?: string };
 
-  constructor(
-    private externalGameService: ExternalGameService,
-  ) { }
+  constructor(private externalGameService: ExternalGameService) { }
 
   async ngOnInit() {
     if (this.hostId) {
@@ -34,6 +33,7 @@ export class ExternalHostEditorComponent implements OnInit {
         throw new Error(`Couldn't resolve host ${this.hostId}.`);
 
       this.editHost = host;
+      this.hasApiKey = host.hasApiKey;
       this.subtitle = "Edit External Game Host";
       this.title = host.name;
     }
