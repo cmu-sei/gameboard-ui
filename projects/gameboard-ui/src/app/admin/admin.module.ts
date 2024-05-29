@@ -66,6 +66,10 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
 import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
 import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
 import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
+import { GameCenterComponent } from './components/game-center/game-center.component';
+import { GameClassificationToStringPipe } from './pipes/game-classification-to-string.pipe';
+import { GameModule } from '@/game/game.module';
+import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 
 @NgModule({
   declarations: [
@@ -121,6 +125,8 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
     ExternalGameHostPickerComponent,
     ExternalHostEditorComponent,
     DeleteExternalGameHostModalComponent,
+    GameCenterComponent,
+    GameClassificationToStringPipe,
   ],
   imports: [
     CommonModule,
@@ -132,7 +138,16 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           { path: 'designer/:id', component: GameEditorComponent },
-          { path: "game/:gameId/external", component: ExternalGameAdminComponent },
+          {
+            path: 'game/:gameId',
+            component: GameCenterComponent,
+            children: [
+              { path: "teams", component: PlayerRegistrarComponent }
+            ]
+          },
+          {
+            path: "game/:gameId/external", pathMatch: 'full', component: ExternalGameAdminComponent
+          },
           {
             path: "practice", component: PracticeComponent, children: [
               { path: "", pathMatch: "full", redirectTo: "settings" },
@@ -161,6 +176,7 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
     CoreModule,
     ApiModule,
     UtilityModule,
+    ScoreboardModule,
     SponsorsModule,
     SystemNotificationsModule,
   ]

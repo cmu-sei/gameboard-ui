@@ -73,6 +73,10 @@
         <app-game-card [game]="g"></app-game-card>
 
         <div class="overlay d-flex flex-column justify-content-center align-items-center" *ngIf="hot===g">
+          <a class="btn btn-outline-info my-2" [routerLink]="['../game', g.id]">
+            <fa-icon [icon]="faUsers"></fa-icon>
+            <span>Game Center</span>
+          </a>
           <a class="btn btn-outline-info my-2" [routerLink]="['../registrar', g.id]">
             <fa-icon [icon]="faUsers"></fa-icon>
             <span>Players</span>

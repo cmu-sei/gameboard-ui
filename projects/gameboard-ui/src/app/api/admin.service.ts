@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
+import { GameCenterContext, GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
 import { DateTime } from 'luxon';
 
@@ -37,6 +37,15 @@ export class AdminService {
         }
       })
     );
+  }
+
+  async getGameCenterContext(gameId: string): Promise<GameCenterContext> {
+    return firstValueFrom(this.http.get<GameCenterContext>(this.apiUrl.build(`admin/games/${gameId}/game-center`)).pipe(
+      tap(ctx => {
+        ctx.executionWindow.start = DateTime.fromJSDate(new Date(ctx.executionWindow.start.toString()));
+        ctx.executionWindow.end = DateTime.fromJSDate(new Date(ctx.executionWindow.end.toString()));
+      })
+    ));
   }
 
   getOverallSiteStats(): Observable<GetSiteOverviewStatsResponse> {

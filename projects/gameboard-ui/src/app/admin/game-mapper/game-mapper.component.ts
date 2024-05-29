@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
@@ -20,6 +20,7 @@ import { ToastService } from '@/utility/services/toast.service';
   styleUrls: ['./game-mapper.component.scss']
 })
 export class GameMapperComponent implements OnInit, AfterViewInit {
+  @Input() gameId?: string;
   @Input() game!: Game;
   @Output() specsUpdated = new EventEmitter<Spec[]>();
   @ViewChild('mapbox') mapboxRef!: ElementRef;
@@ -133,11 +134,14 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
     this.deleted$ = this.deleting$.pipe(
       switchMap(s => api.delete(s.id)),
-      tap(() => this.refresh$.next(this.game.id)),
+      tap(() => this.refresh$.next(this.gameId || this.game.id)),
     );
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    if (this.gameId && !this.game)
+      this.game = await firstValueFrom(this.gameSvc.retrieve(this.gameId));
+
     this.game.mapUrl = this.game.background
       ? `${this.config.imagehost}/${this.game.background}`
       : `${this.config.basehref}assets/map.png`

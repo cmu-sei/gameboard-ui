@@ -1,0 +1,57 @@
+<ng-container *ngIf="gameCenterCtx as ctx; else loading">
+    <div class="hero-thing my-4 d-flex flex-wrap align-content-center">
+        <app-game-card-image class="d-block" [game]="ctx"></app-game-card-image>
+        <div class="game-info-container ml-3 pt-2">
+            <h1 class="fs-20 m-0">{{ ctx.name }}</h1>
+
+            <h2 class="fs-13 font-weight-bold text-info text-upper">
+                {{ ctx.isExternal ? "External" : "Standard" }}
+                {{ ctx.isPractice ? "Practice" : "Competitive" }}
+                {{ ctx.isTeamGame ? "Team" : "Individual" }}
+                Game
+            </h2>
+
+            <h3 class="fs-12">
+                {{ ctx | gameClassificationToString }}
+            </h3>
+
+            <h4 class="fs-10" *ngIf="ctx.executionWindow.start && ctx.executionWindow.end">
+                {{ ctx.executionWindow.start | friendlyDateAndTime }}
+                &mdash;
+                {{ ctx.executionWindow.end | friendlyDateAndTime }}
+            </h4>
+
+            <div *ngIf="ctx.isLive || ctx.isRegistrationActive" class="d-flex align-content-center mt-2">
+                <div *ngIf="ctx.isRegistrationActive" class="badge badge-info text-upper mr-2 p-1">
+                    Registration Available
+                </div>
+                <div *ngIf="ctx.isLive" class="badge badge-info text-upper p-1">Live</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs-container d-block mt-5">
+        <tabset>
+            <tab heading="Settings"></tab>
+            <tab [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
+                <app-game-mapper class="d-block mt-3" [gameId]="ctx.id"></app-game-mapper>
+            </tab>
+            <tab [heading]="ctx.isTeamGame ? 'Teams' : 'Players'" [routerLink]="['admin', 'game', ctx.id, 'teams']">
+            </tab>
+            <tab heading="Scoreboard">
+                <app-scoreboard [gameId]="ctx.id"></app-scoreboard>
+            </tab>
+            <tab heading="Observe"></tab>
+            <tab [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')"></tab>
+            <tab heading="Tools"></tab>
+        </tabset>
+
+        <div class="router-container">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading the game...</app-spinner>
+</ng-template>

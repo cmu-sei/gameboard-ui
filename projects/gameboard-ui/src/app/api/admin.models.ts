@@ -54,6 +54,28 @@ export interface AppActiveTeam {
     score: number;
 }
 
+export interface GameCenterContext {
+    id: string;
+    name: string;
+    logo?: string;
+    competition: string | null;
+    season: string | null;
+    track: string | null;
+    executionWindow: {
+        start: DateTime,
+        end: DateTime
+    },
+    isExternal: boolean;
+    isLive: boolean;
+    isPractice: boolean;
+    isRegistrationActive: boolean;
+    isTeamGame: boolean;
+
+    challengeCount: number;
+    openTicketCount: number;
+    pointsAvailable: number;
+}
+
 export interface GetSiteOverviewStatsResponse {
     activeCompetitiveChallenges: number;
     activePracticeChallenges: number;
