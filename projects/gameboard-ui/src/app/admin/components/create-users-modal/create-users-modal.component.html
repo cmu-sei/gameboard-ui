@@ -1,0 +1,70 @@
+<app-modal-content title="Create Users" (confirm)="confirm()" [confirmDisabled]="!userIds.length"
+    *ngIf="!isWorking; else loading">
+    <div class="mb-4">
+        Enter space-delimited user GUIDs (globally unique identifiers) in the textbox below to create a new
+        {{appName}} user account for each. You can use the settings below to control some initial settings for
+        the created users.
+    </div>
+
+    <div class="input-controls">
+        <textarea appAutofocus class="w-100 font-monospace form-control" rows="10" (input)="handleTextInput()"
+            [placeholder]="placeholder" [(ngModel)]="rawText"></textarea>
+
+        <alert *ngIf="invalidIds.length" type="danger" class="mt-3">
+            {{appName}} user IDs may only contain the letters <strong>A through F</strong> (in upper or lowercase),
+            <strong>hyphens</strong>, and <strong>digits</strong>. The following IDs can't be used:
+
+            <ul class="mt-3">
+                <li class="li-style-type-circle ml-4" *ngFor="let invalidId of invalidIds">{{invalidId}}</li>
+            </ul>
+        </alert>
+
+        <div class="settings mt-4">
+            <h2 class=fs-12>Settings</h2>
+            <div class="form-check ml-2">
+                <input type="checkbox" class="form-check-input" name="allow-subset-creation"
+                    [(ngModel)]="allowSubsetCreation">
+                <label for="allow-subset-creation">Show an error if one of these IDs already exists</label>
+            </div>
+
+            <div class="form-check ml-2">
+                <input type="checkbox" class="form-check-input" name="unset-default-sponsor-flag"
+                    [(ngModel)]="unsetDefaultSponsorFlag">
+                <label for="unset-default-sponsor-flag">Don't force users to select their sponsor before playing</label>
+            </div>
+
+            <div class="my-3">
+                <label for="createWithSponsorId">Create users with sponsor</label>
+                <select class="form-control" name="createWithSponsorId" [(ngModel)]="createWithSponsorId">
+                    <option [ngValue]="undefined">[the default sponsor]</option>
+                    <ng-container *ngFor="let parent of sponsors">
+                        <option [value]="parent.id" class="group-parent">{{ parent.name }}</option>
+                        <option *ngFor="let child of parent.childSponsors" class="group-child" [value]="child.id">
+                            &nbsp;&nbsp; &nbsp; -
+                            {{ child.name }}
+                        </option>
+                    </ng-container>
+                </select>
+            </div>
+
+            <div class="my-3">
+                <label for="enrollInGameId">Enroll users in game</label>
+                <select class="form-control" name="enrollInGameId" [(ngModel)]="enrollInGameId">
+                    <option [ngValue]="undefined">[don't enroll them]</option>
+                    <option *ngFor="let game of games" [value]="game.id">{{ game.name }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div footer>
+        <div *ngIf="(userIds.length - invalidIds.length) > 0">
+            <strong class="text-info">{{userIds.length}}</strong>
+            {{ "user" | pluralizer:userIds.length - invalidIds.length }} will be created.
+        </div>
+    </div>
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading...</app-spinner>
+</ng-template>

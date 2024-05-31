@@ -61,6 +61,13 @@
   </div>
 </div>
 
+<div class="global-controls d-flex mt-3 align-items-center justify-content-end">
+  <button type="button" class="btn btn-info" (click)="handleAddUsersClick()">
+    <fa-icon [icon]="fa.plus" class="mr-2"></fa-icon>
+    Add Users
+  </button>
+</div>
+
 <small *ngIf="source.length === 200" class="text-warning">
   Results limited to 200. Refine search term if necessary.
 </small>
