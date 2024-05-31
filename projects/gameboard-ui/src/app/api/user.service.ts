@@ -3,10 +3,10 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult, UpdateUserSettingsRequest, UserSettings } from './user-models';
+import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
 import { LogService } from '@/services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
 
@@ -44,6 +44,10 @@ export class UserService {
         return r;
       })
     );
+  }
+
+  public tryCreateMany(req: TryCreateUsersRequest) {
+    return firstValueFrom(this.http.post<TryCreateUsersResponse>(this.apiUrl.build("users"), req));
   }
 
   public update(model: ChangedUser, disallowedName: string | null = null): Observable<ApiUser> {
@@ -138,8 +142,7 @@ export class UserService {
 
     user.roleTag = user.role.split(', ')
       .map(a => a.substring(0, 1).toUpperCase() + (a.startsWith('d') ? a.substring(1, 2) : ''))
-      .join('')
-      ;
+      .join('');
     return user;
   }
 }

@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 
 import { ApiModule } from '../api/api.module';
 import { CoreModule } from '../core/core.module';
+import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { UtilityModule } from '../utility/utility.module';
 
@@ -19,6 +20,7 @@ import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser
 import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
 import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
+import { CreateUsersModalComponent } from './components/create-users-modal/create-users-modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
 import { ExternalGameAdminPlayerContextMenuComponent } from './components/external-game-admin-player-context-menu/external-game-admin-player-context-menu.component';
@@ -30,6 +32,8 @@ import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challe
 import { ExternalGamePlayerStatusToFriendlyPipe } from './pipes/external-game-player-status-to-friendly.pipe';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
+import { GameCenterComponent } from './components/game-center/game-center.component';
+import { GameClassificationToStringPipe } from './pipes/game-classification-to-string.pipe';
 import { GameDesignerComponent } from './game-designer/game-designer.component';
 import { GameEditorComponent } from './game-editor/game-editor.component';
 import { GameMapperComponent } from './game-mapper/game-mapper.component';
@@ -66,10 +70,6 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
 import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
 import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
 import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
-import { GameCenterComponent } from './components/game-center/game-center.component';
-import { GameClassificationToStringPipe } from './pipes/game-classification-to-string.pipe';
-import { GameModule } from '@/game/game.module';
-import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 
 @NgModule({
   declarations: [
@@ -80,6 +80,7 @@ import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
     ChallengeObserverComponent,
     ChallengeReportComponent,
     ChallengeSpecEditorComponent,
+    CreateUsersModalComponent,
     DashboardComponent,
     ExternalGameAdminComponent,
     ExternalGameAdminPlayerContextMenuComponent,
@@ -90,6 +91,8 @@ import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
     ExternalTeamToChallengeCreatedPipe,
     ExternalTeamChallengesToIsPredeployablePipe,
     FeedbackReportComponent,
+    GameCenterComponent,
+    GameClassificationToStringPipe,
     GameDesignerComponent,
     GameEditorComponent,
     GameMapperComponent,
@@ -125,8 +128,6 @@ import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
     ExternalGameHostPickerComponent,
     ExternalHostEditorComponent,
     DeleteExternalGameHostModalComponent,
-    GameCenterComponent,
-    GameClassificationToStringPipe,
   ],
   imports: [
     CommonModule,

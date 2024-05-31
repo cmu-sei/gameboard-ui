@@ -5,11 +5,14 @@ import { Component } from '@angular/core';
 import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
-import { ApiUser, UserRole } from '../../api/user-models';
+import { ApiUser, TryCreateUsersResponse, UserRole } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { fa } from '@/services/font-awesome.service';
 import { SortService } from '@/services/sort.service';
 import { SortDirection } from '@/core/models/sort-direction';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { CreateUsersModalComponent } from '../components/create-users-modal/create-users-modal.component';
+import { ToastService } from '@/utility/services/toast.service';
 
 type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 
@@ -34,7 +37,9 @@ export class UserRegistrarComponent {
 
   constructor(
     private api: UserService,
+    private modalService: ModalConfirmService,
     private sortService: SortService,
+    private toastService: ToastService
   ) {
     this.source$ = merge(
       this.refresh$,
@@ -121,6 +126,18 @@ export class UserRegistrarComponent {
       ? a.join(', ') as UserRole : UserRole.member;
 
     this.update(model);
+  }
+
+  protected handleAddUsersClick() {
+    this.modalService.openComponent({
+      content: CreateUsersModalComponent,
+      context: {
+        onCreated: (response: TryCreateUsersResponse) => {
+          this.toastService.showMessage(`Created **${response.users.length}** user${response.users.length == 1 ? "s" : ""}.`);
+          this.refresh$.next(true);
+        }
+      }
+    });
   }
 
   private sortResults(results: ApiUser[], sort: UserRegistrarSort, direction: SortDirection) {

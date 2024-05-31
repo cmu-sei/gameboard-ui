@@ -1,6 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { SimpleEntity } from "./models";
 import { Sponsor } from "./sponsor-models";
 
 export interface ApiUser {
@@ -91,9 +92,26 @@ export interface Announcement {
   message: string;
 }
 
+export interface TryCreateUsersRequest {
+  allowSubsetCreation: boolean;
+  enrollInGameId?: string;
+  sponsorId?: string;
+  unsetDefaultSponsorFlag?: boolean;
+  userIds: string[];
+}
+
 export interface TryCreateUserResult {
   isNewUser: boolean;
   user: ApiUser;
+}
+
+export interface TryCreateUsersResponse {
+  users: {
+    id: string;
+    name: string;
+    sponsor: SimpleEntity;
+    isNewUser: boolean;
+  }[]
 }
 
 // just use this for convenience during the authentication process (see the utiltiy user service).
