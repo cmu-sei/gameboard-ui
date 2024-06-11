@@ -116,11 +116,11 @@ export class RouterService implements OnDestroy {
   }
 
   public buildVmConsoleUrl(vm: VmState, isPractice = false) {
-    if (!vm || !vm.isolationId || !vm.name) {
-      throw new Error(`Can't launch a VM console without an isolationId and a name.`);
+    if (!vm || !vm.isolationId) {
+      throw new Error(`Can't launch a VM console without an isolationId.`);
     }
 
-    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name}${isPractice ? "&l=true" : ""}`;
+    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name || 'Console'}${isPractice ? "&l=true" : ""}`;
   }
 
   public toVmConsole(vm: VmState) {
