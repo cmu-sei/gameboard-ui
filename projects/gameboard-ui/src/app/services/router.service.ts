@@ -59,6 +59,14 @@ export class RouterService implements OnDestroy {
     return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
+  public getObserveChallengeUrl(gameId: string, challengeId: string) {
+    return `/admin/observer/challenges/${gameId}?search=${challengeId}`;
+  }
+
+  public getObserveTeamsUrl(gameId: string, teamId: string) {
+    return `admin/observer/teams/${gameId}?search=${teamId}`;
+  }
+
   public getPracticeAreaWithSearchUrl(searchTerm: string) {
     return this.router.createUrlTree(["practice"], { queryParams: { term: searchTerm } });
   }
