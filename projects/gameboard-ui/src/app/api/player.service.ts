@@ -53,7 +53,11 @@ export class PlayerService {
   }
 
   public start(player: Player): Observable<Player> {
-    return this.http.put<Player>(`${this.url}/player/${player.id}/start`, {}).pipe(
+    return this.startPlayerId(player.id);
+  }
+
+  public startPlayerId(playerId: string): Observable<Player> {
+    return this.http.put<Player>(`${this.url}/player/${playerId}/start`, {}).pipe(
       map(p => this.transform(p) as Player),
       tap(p => this._playerSessionStarted$.next(p.id))
     );

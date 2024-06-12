@@ -1,0 +1,46 @@
+<app-modal-content *ngIf="context; else loading" title="Question Performance"
+    [subtitle]="context.challengeSpec.name + ' (' + context.game.name + ')'" [hideCancel]="true">
+
+    <table class="gameboard-table">
+        <col>
+        <col>
+        <col>
+        <col>
+
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th class="text-center">Point Value</th>
+                <th class="text-center">Submissions</th>
+                <th class="text-center">Correct</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let question of context.questions">
+                <td>
+                    <div>{{question.prompt}}</div>
+                    <em class="mt-2" *ngIf="question.hint">{{question.hint}}</em>
+                </td>
+                <td class="text-center">
+                    {{ question.pointValue }}
+                </td>
+                <td class="text-center">
+                    {{question.countSubmitted}}
+                </td>
+                <td class="text-center">
+                    {{question.countCorrect}}
+                    <ng-container *ngIf="question.countSubmitted > 0 && question.countCorrect > 0">
+                        <span class="correct-percentage text-muted">
+                            ({{ ((question.countCorrect / question.countSubmitted) * 100) | number:"1.0-2" }}%)
+                        </span>
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading question performance...</app-spinner>
+</ng-template>

@@ -70,6 +70,10 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
 import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
 import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
 import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
+import { GameCenterPlayersComponent } from './components/game-center/game-center-players/game-center-players.component';
+import { GameCenterTeamContextMenuComponent } from './components/game-center/game-center-team-context-menu/game-center-team-context-menu.component';
+import { GameCenterSettingsComponent } from './components/game-center/game-center-settings/game-center-settings.component';
+import { GameCenterTicketsComponent } from './components/game-center/game-center-tickets/game-center-tickets.component';
 
 @NgModule({
   declarations: [
@@ -128,6 +132,10 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
     ExternalGameHostPickerComponent,
     ExternalHostEditorComponent,
     DeleteExternalGameHostModalComponent,
+    GameCenterPlayersComponent,
+    GameCenterTeamContextMenuComponent,
+    GameCenterSettingsComponent,
+    GameCenterTicketsComponent,
   ],
   imports: [
     CommonModule,

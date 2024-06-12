@@ -6,7 +6,7 @@
 <ng-container *ngIf="deleted$ | async"></ng-container>
 <ng-container *ngIf="gameBonusesConfig$ | async"></ng-container>
 
-<div class="row">
+<div class="row" *ngIf="game">
   <!-- search external specs -->
   <div class="col-2">
     <div class="d-flex flex-column">
@@ -94,7 +94,7 @@
           <span>Reset</span>
         </button>
         <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.cursor-pointer]="!!specHover">
-          <div #callout class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
+          <div class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
             <span>{{this.specHover?.name}}</span><br />
             <span>Points: {{this.specHover?.points}}</span>
           </div>

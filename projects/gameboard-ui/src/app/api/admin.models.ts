@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { GameEngineType } from "./spec-models";
-import { SimpleEntity } from "./models";
+import { PagedArray, SimpleEntity, SimpleSponsor } from "./models";
 
 export interface AppActiveChallengeSpec {
     id: string;
@@ -75,6 +75,43 @@ export interface GameCenterContext {
     openTicketCount: number;
     pointsAvailable: number;
 }
+
+export interface GameCenterTeamsResults {
+    teams: PagedArray<GameCenterTeamsResultsTeam>;
+}
+
+export interface GameCenterTeamsResultsTeam {
+    id: string;
+    name: string;
+
+    captain: GameCenterTeamsPlayer;
+    challengesCompleteCount: number;
+    challengesPartialCount: number;
+    challengesRemainingCount: number;
+    isExtended: boolean;
+    isReady: boolean;
+    players: GameCenterTeamsPlayer[];
+    rank?: number;
+    registeredOn?: DateTime;
+    session: GameCenterTeamsSession;
+    ticketCount: number;
+}
+
+export interface GameCenterTeamsPlayer {
+    id: string;
+    name: string;
+    isReady: boolean;
+    sponsor: SimpleSponsor;
+}
+
+export interface GameCenterTeamsSession {
+    start?: number;
+    end?: number;
+    timeRemainingMs?: number;
+    timeSinceStartMs?: number;
+}
+
+export type GameCenterTeamsStatus = "complete" | "notStarted" | "playing";
 
 export interface GetSiteOverviewStatsResponse {
     activeCompetitiveChallenges: number;

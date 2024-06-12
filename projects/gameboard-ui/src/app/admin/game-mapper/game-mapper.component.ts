@@ -20,14 +20,11 @@ import { ToastService } from '@/utility/services/toast.service';
   styleUrls: ['./game-mapper.component.scss']
 })
 export class GameMapperComponent implements OnInit, AfterViewInit {
-  @Input() gameId?: string;
   @Input() game!: Game;
   @Output() specsUpdated = new EventEmitter<Spec[]>();
   @ViewChild('mapbox') mapboxRef!: ElementRef;
-  @ViewChild('callout') calloutRef!: ElementRef;
 
   protected fa = fa;
-  mapbox!: HTMLDivElement;
   callout!: HTMLDivElement;
   specDrag: Spec | null = null;
   specHover: Spec | null = null;
@@ -134,13 +131,13 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
     this.deleted$ = this.deleting$.pipe(
       switchMap(s => api.delete(s.id)),
-      tap(() => this.refresh$.next(this.gameId || this.game.id)),
+      tap(() => this.refresh$.next(this.game.id)),
     );
   }
 
   async ngOnInit(): Promise<void> {
-    if (this.gameId && !this.game)
-      this.game = await firstValueFrom(this.gameSvc.retrieve(this.gameId));
+    if (!this.game?.id)
+      this.game = await firstValueFrom(this.gameSvc.retrieve(this.game.id));
 
     this.game.mapUrl = this.game.background
       ? `${this.config.imagehost}/${this.game.background}`
@@ -150,13 +147,13 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.refresh();
-    this.mapbox = this.mapboxRef.nativeElement as HTMLDivElement;
-    this.callout = this.calloutRef.nativeElement as HTMLDivElement;
   }
 
   refresh(): void {
-    this.refresh$.next(this.game.id);
-    this.recentExternals$.next();
+    if (this.game?.id) {
+      this.refresh$.next(this.game.id);
+      this.recentExternals$.next();
+    }
   }
 
   view(v: string): void {
@@ -216,22 +213,23 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
   mousemove(e: MouseEvent) {
     if (!this.specDrag) { return; }
+    const mapBox = this.mapboxRef.nativeElement;
 
     if (this.altkey) {
       // resize radius as percentage of mapbox/svg
-      const centerx = this.specDrag.x * this.mapbox.clientWidth;
-      const centery = this.specDrag.y * this.mapbox.clientHeight;
+      const centerx = this.specDrag.x * mapBox.clientWidth;
+      const centery = this.specDrag.y * mapBox.clientHeight;
       const deltaX = e.offsetX - centerx;
       const deltaY = e.offsetY - centery;
       const r = Math.sqrt(
         Math.pow(Math.abs(deltaX), 2) +
         Math.pow(Math.abs(deltaY), 2)
       );
-      this.specDrag.r = Math.max(.01, r / this.mapbox.clientWidth);
+      this.specDrag.r = Math.max(.01, r / mapBox.clientWidth);
     } else {
       // set location as percentage of mapbox/svg
-      this.specDrag.x = e.offsetX / this.mapbox.clientWidth;
-      this.specDrag.y = e.offsetY / this.mapbox.clientHeight;
+      this.specDrag.x = e.offsetX / mapBox.clientWidth;
+      this.specDrag.y = e.offsetY / mapBox.clientHeight;
     }
 
     this.updating$.next(this.specDrag);
@@ -248,12 +246,13 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   mouseenter(e: MouseEvent, spec: Spec) {
     this.specHover = spec;
     spec.c = 'purple';
+    const mapBox = this.mapboxRef.nativeElement;
 
     if (this.showCallout) {
-      const middle = this.mapbox.clientWidth / 2;
-      const centerr = spec.r * this.mapbox.clientWidth;
-      const centerx = spec.x * this.mapbox.clientWidth + centerr;
-      const centery = spec.y * this.mapbox.clientHeight + centerr;
+      const middle = mapBox.clientWidth / 2;
+      const centerr = spec.r * mapBox.clientWidth;
+      const centerx = spec.x * mapBox.clientWidth + centerr;
+      const centery = spec.y * mapBox.clientHeight + centerr;
       const deltaX = middle - centerx;
       const deltaY = middle - centery;
       const vectorX = deltaX / Math.abs(deltaX);

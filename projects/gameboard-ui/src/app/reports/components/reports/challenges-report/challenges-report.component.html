@@ -21,15 +21,16 @@
         <div class="report-body mt-4">
             <table *ngIf="ctx.results?.records?.length; else noRecords"
                 class="table table-hover gameboard-table gameboard-report">
-                <colgroup span="2"></colgroup>
+                <col>
                 <col>
                 <colgroup span="2"></colgroup>
+                <col>
                 <colgroup span="2"></colgroup>
                 <colgroup span="3"></colgroup>
 
                 <thead>
                     <tr class="super-headers-row chill-headers">
-                        <th scope="col" colspan="2" class="group-header">Summary</th>
+                        <th scope="col" class="group-header">Summary</th>
                         <th scope="col" class="group-header">Players</th>
                         <th scope="col" colspan="2" class="group-header">
                             Average Performance
@@ -44,15 +45,17 @@
 
                     <tr class="headers-row">
                         <th>Challenge</th>
-                        <th>Game</th>
                         <th class="numeric-col">
                             <app-sort-header sortBy="player-count" justifyContent="center">Players</app-sort-header>
                         </th>
                         <th class="numeric-col">
-                            <app-sort-header sortBy="avg-score" justifyContent="center">Avg. Score</app-sort-header>
+                            <app-sort-header sortBy="avg-score" justifyContent="center">
+                                Score
+                            </app-sort-header>
                         </th>
                         <th class="numeric-col">
-                            <app-sort-header sortBy="avg-solve-time" justifyContent="center">Avg. Solve Time
+                            <app-sort-header sortBy="avg-solve-time" justifyContent="center">
+                                Solve Time
                             </app-sort-header>
                         </th>
                         <th class="numeric-col">
@@ -76,12 +79,12 @@
                 </thead>
 
                 <tbody>
-                    <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
+                    <tr class="data-row my-2 cursor-pointer" *ngFor="let record of ctx?.results?.records"
+                        (click)="handleSpecClick(record.challengeSpec)">
                         <td class="report-field">
-                            {{ record.challengeSpec.name }}
-                        </td>
-                        <td class="report-field">
-                            <app-challenge-or-game-field [game]="record.game"></app-challenge-or-game-field>
+                            {{record.challengeSpec.name}}
+                            <app-challenge-or-game-field [game]="record.game"
+                                mainLabelClass="text-muted font-weight-bold"></app-challenge-or-game-field>
                         </td>
                         <td class="report-field numerical">
                             {{ record.distinctPlayerCount }}

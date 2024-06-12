@@ -8,7 +8,7 @@ import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, GameEngineMode, GameGroup, GamePlayState, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 

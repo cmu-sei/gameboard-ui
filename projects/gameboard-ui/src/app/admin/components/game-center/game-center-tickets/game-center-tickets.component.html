@@ -1,0 +1,22 @@
+<ng-container *ngIf="!isLoading; else loading">
+    <ul *ngIf="tickets.length; else noTickets" class="d-flex flex-wrap align-items-center">
+        <li *ngFor="let ticket of tickets" class="w-25">
+            <a [routerLink]="['/', 'support', 'tickets', ticket.key]" target="_blank">
+                <div class="card mr-2 mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title overflow-ellipsis">{{ticket.summary}}</h5>
+                        <h6 class="card-subtitle">{{ ticket.requester?.approvedName }}</h6>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Looking for tickets...</app-spinner>
+</ng-template>
+
+<ng-template #noTickets>
+    <p class="text-center my-2 text-muted">No tickets have been created for this game. Nice!</p>
+</ng-template>

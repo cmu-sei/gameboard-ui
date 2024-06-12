@@ -1,11 +1,11 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
-import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { ExternalGameHost, Game, GameEngineMode, GameRegistrationType } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { KeyValue } from '@angular/common';
@@ -22,7 +22,7 @@ import { YamlService } from '@/services/yaml.service';
   templateUrl: './game-editor.component.html',
   styleUrls: ['./game-editor.component.scss']
 })
-export class GameEditorComponent implements AfterViewInit {
+export class GameEditorComponent implements AfterViewInit, OnChanges {
   @Input() game!: Game;
   @ViewChild(NgForm) form!: FormGroup;
 
@@ -58,24 +58,23 @@ export class GameEditorComponent implements AfterViewInit {
   ) {
 
     // one-time get list of all games for field suggestions
-    api.list({}).subscribe(
-      games => this.addSuggestions(games)
-    );
+    api.list({}).pipe(first()).subscribe(games => this.addSuggestions(games));
 
     this.game$ = route.params.pipe(
       map(p => p.id),
       filter(id => !!id),
       switchMap(id => api.retrieve(id)),
       tap(g => {
-        this.game = g;
         this.title.set(`Edit "${g.name}"`);
-
-        // ensure that the feedback template yaml string is consistent with the configuration
-        if (this.game.feedbackConfig) {
-          this.game.feedbackTemplate = this.yamlService.parse(this.game.feedbackConfig);
-        }
+        this.loadGame(g);
       })
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.game?.currentValue?.id !== this.game.id) {
+      this.loadGame(this.game);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -192,5 +191,14 @@ export class GameEditorComponent implements AfterViewInit {
       return false;
 
     return true;
+  }
+
+  private loadGame(game: Game) {
+    this.game = game;
+
+    // ensure that the feedback template yaml string is consistent with the configuration
+    if (this.game.feedbackConfig) {
+      this.game.feedbackTemplate = this.yamlService.parse(this.game.feedbackConfig);
+    }
   }
 }

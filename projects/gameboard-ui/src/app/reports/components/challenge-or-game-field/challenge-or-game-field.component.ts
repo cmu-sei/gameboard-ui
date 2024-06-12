@@ -10,5 +10,6 @@ export class ChallengeOrGameFieldComponent {
   @Input() challengeName?: string;
   @Input() game?: ReportGame;
   @Input() disableLinks = false;
+  @Input() mainLabelClass = "";
   @Input() fontSize: "small" | "large" = "small";
 }

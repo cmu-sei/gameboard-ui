@@ -7,6 +7,8 @@ import { ChallengesReportService } from '../challenges-report.service';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { SimpleEntity } from '@/api/models';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { SpecQuestionPerformanceModalComponent } from '../../spec-question-performance-modal/spec-question-performance-modal.component';
 
 export interface ChallengesReportContext {
   isLoading: boolean,
@@ -56,8 +58,18 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     dateEndParamName: "startDateEnd"
   });
 
-  constructor(private challengesReportService: ChallengesReportService) {
+  constructor(
+    private challengesReportService: ChallengesReportService,
+    private modalService: ModalConfirmService) {
     super();
+  }
+
+  protected handleSpecClick(spec: SimpleEntity) {
+    this.modalService.openComponent<SpecQuestionPerformanceModalComponent>({
+      content: SpecQuestionPerformanceModalComponent,
+      context: { specId: spec.id },
+      modalClasses: ["modal-lg", "modal-dialog-centered"]
+    });
   }
 
   protected async updateView(parameters: ChallengesReportFlatParameters): Promise<ReportViewUpdate> {

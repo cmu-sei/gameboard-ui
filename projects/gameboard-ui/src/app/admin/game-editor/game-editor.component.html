@@ -51,6 +51,20 @@
         </div>
 
         <div class="form-group pb-0 pt-1">
+          <label class="mb-0" for="feature-toggle">Feature</label>
+          <div class="form-control auto-h d-flex align-items-center">
+            <label>Normal</label>
+            <label class="btn text-info" btnCheckbox [ngModelOptions]="{updateOn: 'change'}" id="is-featured-input"
+              name="is-featured" [(ngModel)]="game.isFeatured">
+              <fa-icon *ngIf="!game.isFeatured" [icon]="fa.toggleOff" size="lg"></fa-icon>
+              <fa-icon *ngIf="game.isFeatured" [icon]="fa.toggleOn" size="lg"></fa-icon>
+            </label>
+            <label>Featured</label>
+          </div>
+          <small>Featured games always show at the top of the homepage</small>
+        </div>
+
+        <div class="form-group pb-0 pt-1">
           <label for="key-input">Key</label>
           <input type="text" class="form-control" id="key-input" name="key" [(ngModel)]="game.key">
           <small>short, unique key distinguishing <em>this</em> event</small>

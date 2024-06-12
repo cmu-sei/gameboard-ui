@@ -49,6 +49,7 @@ import { SiteUsagePlayerListComponent } from './components/reports/site-usage-re
 import { SiteUsageReportSponsorsModalComponent } from './components/reports/site-usage-report/site-usage-report-sponsors-modal/site-usage-report-sponsors-modal.component';
 import { SiteUsageReportChallengesListComponent } from './components/reports/site-usage-report/site-usage-report-challenges-list/site-usage-report-challenges-list.component';
 import { SortHeaderComponent } from './components/sort-header/sort-header.component';
+import { SpecQuestionPerformanceModalComponent } from './components/spec-question-performance-modal/spec-question-performance-modal.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { SortHeaderComponent } from './components/sort-header/sort-header.compon
     SiteUsagePlayerListComponent,
     SiteUsageReportSponsorsModalComponent,
     SiteUsageReportChallengesListComponent,
-    SortHeaderComponent
+    SortHeaderComponent,
+    SpecQuestionPerformanceModalComponent
   ],
   imports: [
     CommonModule,

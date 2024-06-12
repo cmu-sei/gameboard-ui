@@ -30,20 +30,31 @@
         </div>
     </div>
 
+    <alert type="warning" class="my-3">
+        <strong>NOTE: </strong> This feature is under active development, and some things might not as expected just
+        yet. Stay tuned as we continue to improve the game management process! 🚀
+    </alert>
+
     <div class="tabs-container d-block mt-5">
         <tabset>
-            <tab heading="Settings"></tab>
-            <tab [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
-                <app-game-mapper class="d-block mt-3" [gameId]="ctx.id"></app-game-mapper>
+            <tab heading="Settings">
+                <app-game-center-settings [gameId]="ctx.id"></app-game-center-settings>
             </tab>
-            <tab [heading]="ctx.isTeamGame ? 'Teams' : 'Players'" [routerLink]="['admin', 'game', ctx.id, 'teams']">
+            <tab [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
+                <app-game-mapper *ngIf="game" class="d-block mt-3" [game]="game"></app-game-mapper>
+            </tab>
+            <tab [heading]="ctx.isTeamGame ? 'Teams' : 'Players'">
+                <app-game-center-players [gameId]="ctx.id"></app-game-center-players>
             </tab>
             <tab heading="Scoreboard">
                 <app-scoreboard [gameId]="ctx.id"></app-scoreboard>
             </tab>
-            <tab heading="Observe"></tab>
-            <tab [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')"></tab>
-            <tab heading="Tools"></tab>
+            <tab heading="Observe">
+                <p class="my-2 text-center text-muted">This feature is in development. Check back soon!</p>
+            </tab>
+            <tab [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')">
+                <app-game-center-tickets [gameId]="ctx.id"></app-game-center-tickets>
+            </tab>
         </tabset>
 
         <div class="router-container">

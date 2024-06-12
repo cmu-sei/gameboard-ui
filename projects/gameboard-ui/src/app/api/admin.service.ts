@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { GameCenterContext, GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
+import { GameCenterContext, GameCenterTeamsResults, GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
 import { DateTime } from 'luxon';
 
@@ -44,6 +44,17 @@ export class AdminService {
       tap(ctx => {
         ctx.executionWindow.start = DateTime.fromJSDate(new Date(ctx.executionWindow.start.toString()));
         ctx.executionWindow.end = DateTime.fromJSDate(new Date(ctx.executionWindow.end.toString()));
+      })
+    ));
+  }
+
+  async getGameCenterTeams(gameId: string): Promise<GameCenterTeamsResults> {
+    return firstValueFrom(this.http.get<GameCenterTeamsResults>(this.apiUrl.build(`admin/games/${gameId}/game-center/teams`)).pipe(
+      tap(results => {
+        for (const team of results.teams.items) {
+          if (team.registeredOn)
+            team.registeredOn = DateTime.fromJSDate(new Date(team.registeredOn?.toString()));
+        }
       })
     ));
   }

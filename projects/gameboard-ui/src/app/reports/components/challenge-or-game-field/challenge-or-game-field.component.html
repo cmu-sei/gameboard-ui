@@ -1,6 +1,8 @@
 <div *ngIf="game">
-    <p class="entity-name m-0" [class.fs-13]="fontSize == 'large'" [class.fs-10]="fontSize == 'small'">{{
-        challengeName || game.name }}</p>
+    <p [class]="'entity-name m-0 ' + mainLabelClass" [class.fs-13]="fontSize == 'large'"
+        [class.fs-10]="fontSize == 'small'">
+        {{ challengeName || game.name }}
+    </p>
     <p class="game-info subtle-info" [class.fs-10]="fontSize == 'large'" [class.fs-09]="fontSize == 'small'">
         <span *ngIf="game.series">
             <app-parameter-change-link [config]="{ parameterChange: { series: game.series}, disable: disableLinks }">
