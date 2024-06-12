@@ -23,7 +23,7 @@
                     <em class="mt-2" *ngIf="question.hint">{{question.hint}}</em>
                 </td>
                 <td class="text-center">
-                    {{ question.pointValue }}
+                    {{ question.pointValue | number:"1.0-2" }}
                 </td>
                 <td class="text-center">
                     {{question.countSubmitted}}
