@@ -60,7 +60,7 @@ export class RouterService implements OnDestroy {
   }
 
   public getObserveChallengeUrl(gameId: string, challengeId: string) {
-    return `/admin/observer/challenges/${gameId}?search=${challengeId}`;
+    return `admin/observer/challenges/${gameId}?search=${challengeId}`;
   }
 
   public getObserveTeamsUrl(gameId: string, teamId: string) {

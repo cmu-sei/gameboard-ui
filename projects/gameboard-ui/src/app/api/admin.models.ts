@@ -76,6 +76,10 @@ export interface GameCenterContext {
     pointsAvailable: number;
 }
 
+export interface GameCenterTeamsRequestArgs {
+    sort: "name" | "rank" | "timeRemaining" | "timeSinceStart";
+}
+
 export interface GameCenterTeamsResults {
     teams: PagedArray<GameCenterTeamsResultsTeam>;
 }
