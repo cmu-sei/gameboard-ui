@@ -35,6 +35,7 @@ export class GameEditorComponent implements AfterViewInit, OnChanges {
   viewing = 1;
   showCertificateInfo = false;
   showExternalGameFields = false;
+  protected executionRangeInvalid = false;
   protected specCount = 0;
 
   // store unique values of each game field with their frequencies for ordered suggestion lists
@@ -184,8 +185,16 @@ export class GameEditorComponent implements AfterViewInit, OnChanges {
     if (game.minTeamSize > game.maxTeamSize)
       return false;
 
-    if (game.gameStart > game.gameEnd)
+    this.executionRangeInvalid = false;
+    const gameStart = game.gameStart ? new Date(game.gameStart) : new Date(0);
+    const gameEnd = game.gameEnd ? new Date(game.gameEnd) : new Date(0);
+    if (gameStart.getFullYear() > 1 && gameEnd?.getFullYear() > 1 && game.gameStart > game.gameEnd) {
+      this.executionRangeInvalid = true;
       return false;
+    }
+
+    game.gameStart = gameStart;
+    game.gameEnd = gameEnd;
 
     if (game.registrationType == GameRegistrationType.open && game.registrationOpen > game.registrationClose)
       return false;

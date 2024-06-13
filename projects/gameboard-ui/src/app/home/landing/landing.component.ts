@@ -18,6 +18,7 @@ import { GameService } from '../../api/game.service';
 export class LandingComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
   featured$: Observable<Game[]>;
+  ongoing$: Observable<Game[]>;
   past$: Observable<GameGroup[]>;
   present$: Observable<Game[]>;
   future$: Observable<GameGroup[]>;
@@ -38,22 +39,26 @@ export class LandingComponent implements OnInit {
   ) {
     this.featured$ = this.refresh$.pipe(
       debounceTime(400),
-      switchMap(() => api.list({ isFeatured: true, filter: [], term: this.searchText })),
+      switchMap(() => api.list({ isFeatured: true, term: this.searchText })),
       tap(g => { if (g.length > 0) { this.showSearchBar = true; } }),
     );
-    this.past$ = this.refresh$.pipe(
+    this.ongoing$ = this.refresh$.pipe(
       debounceTime(400),
-      switchMap(() => api.listGrouped({ filter: ['past', "competitive"], term: this.searchText })),
-      tap(g => { if (g.length > 0) { this.showSearchBar = true; } }),
-    );
+      switchMap(() => api.list({ isOngoing: true, term: this.searchText }))
+    ),
+      this.past$ = this.refresh$.pipe(
+        debounceTime(400),
+        switchMap(() => api.listGrouped({ filter: ['past', "competitive"], isOngoing: false, term: this.searchText })),
+        tap(g => { if (g.length > 0) { this.showSearchBar = true; } }),
+      );
     this.present$ = this.refresh$.pipe(
       debounceTime(200),
-      switchMap(() => api.list({ filter: ["present", "competitive"], term: this.searchText })),
+      switchMap(() => api.list({ filter: ["present", "competitive"], isOngoing: false, term: this.searchText })),
       tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
     );
     this.future$ = this.refresh$.pipe(
       debounceTime(300),
-      switchMap(() => api.listGrouped({ filter: ['future', "competitive"], term: this.searchText })),
+      switchMap(() => api.listGrouped({ filter: ['future', "competitive"], isOngoing: false, term: this.searchText })),
       tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
     );
   }
