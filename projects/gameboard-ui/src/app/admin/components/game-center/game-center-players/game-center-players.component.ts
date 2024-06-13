@@ -31,7 +31,7 @@ export class GameCenterPlayersComponent implements OnInit {
 
   private async load() {
     this.isLoading = true;
-    this.results = await this.adminService.getGameCenterTeams(this.gameId!);
+    this.results = await this.adminService.getGameCenterTeams(this.gameId!, { sort: "rank" });
     this.isLoading = false;
   }
 }

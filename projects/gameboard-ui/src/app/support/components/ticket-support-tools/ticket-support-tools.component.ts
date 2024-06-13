@@ -8,6 +8,7 @@ export interface TicketSupportToolsContext {
   challenge?: SimpleEntity;
   player?: SimpleEntity;
   game?: SimpleEntity;
+  timeTilSessionEndMs?: number;
   team: {
     id: string,
     name: string,
@@ -20,7 +21,7 @@ export interface TicketSupportToolsContext {
   styleUrls: ['./ticket-support-tools.component.scss'],
   template: `
   <ul *ngIf="hasGameContext; else noGameContext">
-    <li *ngIf="observeChallengeUrl || observeTeamUrl">
+    <li *ngIf="isActiveSession && (observeChallengeUrl || observeTeamUrl)">
       Observe
         <ul>
           <li>
@@ -72,6 +73,7 @@ export class TicketSupportToolsComponent implements OnInit {
   protected hasGameContext = false;
   protected challengeStateUrl?: string;
   protected gameboardUrl?: string;
+  protected isActiveSession = false;
   protected observeChallengeUrl?: string;
   protected observeTeamUrl?: string;
   protected playerAdminUrl?: string;
@@ -100,6 +102,7 @@ export class TicketSupportToolsComponent implements OnInit {
       }
     }
 
+    this.isActiveSession = !!this.context?.timeTilSessionEndMs && this.context.timeTilSessionEndMs > 0;
     this.hasGameContext = hasGame || !!this.challengeStateUrl || !!this.gameboardUrl || !!this.playerAdminUrl;
   }
 

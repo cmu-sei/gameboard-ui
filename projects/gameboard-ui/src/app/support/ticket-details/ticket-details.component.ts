@@ -135,6 +135,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
           challenge: t.challenge ? { id: t.challengeId, name: t.challenge?.name } : undefined,
           game: hasGame ? { id: t.player!.gameId, name: t.player!.gameName } : undefined,
           player: hasPlayer ? { id: t.playerId, name: t.player!.approvedName } : undefined,
+          timeTilSessionEndMs: t.timeTilSessionEndMs,
           team: {
             id: t.teamId,
             name: t.teamName,

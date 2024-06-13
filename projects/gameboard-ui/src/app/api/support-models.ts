@@ -27,6 +27,7 @@ export interface Ticket {
   label: string;
   selfCreated: boolean;
   staffCreated: boolean;
+  timeTilSessionEndMs?: number;
 
   created: Date;
   lastUpdated: Date;
