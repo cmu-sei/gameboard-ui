@@ -318,7 +318,7 @@
 
         </div>
 
-        <div *ngIf="game.gameStart > game.gameEnd" class="row form-group">
+        <div *ngIf="executionRangeInvalid" class="row form-group">
           <alert type="warning" class="col-12">The game's open date must be less than its close date.</alert>
         </div>
 
