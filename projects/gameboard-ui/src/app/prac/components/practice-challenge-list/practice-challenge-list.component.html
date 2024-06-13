@@ -41,7 +41,7 @@
                 [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 
-        <app-pager *ngIf="count > 0" [skip]="skip || 0" [take]="take || 0" [count]="count"
+        <app-pager *ngIf="count > 0" display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
             (changed)="paged($event)"></app-pager>
 
         <table class="table" *ngIf="count > 0; else noMatches">

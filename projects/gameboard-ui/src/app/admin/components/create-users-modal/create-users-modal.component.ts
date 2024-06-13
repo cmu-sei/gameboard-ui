@@ -1,0 +1,84 @@
+import { Component } from '@angular/core';
+import { UserService } from '@/api/user.service';
+import { ConfigService } from '@/utility/config.service';
+import { TryCreateUsersResponse } from '@/api/user-models';
+import { SponsorService } from '@/api/sponsor.service';
+import { SponsorWithChildSponsors } from '@/api/sponsor-models';
+import { firstValueFrom } from 'rxjs';
+import { GameService } from '@/api/game.service';
+import { SimpleEntity } from '@/api/models';
+
+@Component({
+  selector: 'app-create-users-modal',
+  templateUrl: './create-users-modal.component.html',
+  styleUrls: ['./create-users-modal.component.scss']
+})
+export class CreateUsersModalComponent {
+  onCreated?: (response: TryCreateUsersResponse) => void | Promise<void>;
+
+  protected allowSubsetCreation = false;
+  protected createWithSponsorId?: string;
+  protected unsetDefaultSponsorFlag = false;
+
+  protected appName: string;
+  protected enrollInGameId?: string;
+  protected games: SimpleEntity[] = [];
+  protected hasInvalidIds = false;
+  protected invalidIds: string[] = [];
+  protected isWorking = false;
+  protected placeholder: string;
+  protected rawText: string = "";
+  protected sponsors: SponsorWithChildSponsors[] = [];
+  protected userIds: string[] = [];
+
+  private invalidIdsRegex = /[a-fA-F0-9-]{2,}/;
+  private onePerLineRegex = /\s+/gm;
+
+  constructor(
+    config: ConfigService,
+    private gameService: GameService,
+    private sponsorService: SponsorService,
+    private usersService: UserService) {
+    this.appName = config.appName;
+    this.placeholder = "// one ID per line, e.g.:\n\n3496da07-d19e-440d-a246-e35f7b7bfcac\n9a53d8cd-ef88-44c0-96b2-fc8766b518dd\n\n//and so on";
+  }
+
+  async ngOnInit() {
+    this.isWorking = true;
+    this.games = (await firstValueFrom(this.gameService.list({ "orderBy": "name" }))).map(game => ({
+      id: game.id,
+      name: game.name
+    }));
+    this.sponsors = await firstValueFrom(this.sponsorService.listWithChildren());
+    this.isWorking = false;
+  }
+
+  async confirm() {
+    this.isWorking = true;
+    const result = await this.usersService.tryCreateMany({
+      allowSubsetCreation: this.allowSubsetCreation,
+      enrollInGameId: this.enrollInGameId,
+      sponsorId: this.createWithSponsorId,
+      unsetDefaultSponsorFlag: this.unsetDefaultSponsorFlag,
+      userIds: this.userIds
+    });
+    this.isWorking = false;
+
+    if (this.onCreated)
+      this.onCreated(result);
+  }
+
+  protected handleTextInput() {
+    this.userIds = this.rawText
+      .split(this.onePerLineRegex)
+      .map(entry => entry.trim())
+      .filter(entry => entry.length > 2);
+
+    this.invalidIds = [];
+    for (const id of this.userIds) {
+      if (!id.match(this.invalidIdsRegex)) {
+        this.invalidIds.push(id);
+      }
+    }
+  }
+}

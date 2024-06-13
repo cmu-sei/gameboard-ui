@@ -47,10 +47,6 @@
         <fa-icon [hidden]="mode!=='practice'" [icon]="fa.filter"></fa-icon>
         <span>prac</span>
       </button>
-      <button class="mr-1 btn btn-link text-warning btn-sm" (click)="toggleMode('test')">
-        <fa-icon [hidden]="mode!=='test'" [icon]="fa.filter"></fa-icon>
-        <span>test</span>
-      </button>
 
       <ng-container *ngIf="ctx.game.allowTeam">
         <span class="text-warning"> | </span>

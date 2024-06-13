@@ -27,7 +27,7 @@
                 {{ cancelButtonText || "Cancel" }}
             </button>
             <button type="button" class="btn" [class.btn-danger]="isDangerConfirm" [class.btn-info]="!isDangerConfirm"
-                (click)="handleConfirm()">
+                [disabled]="confirmDisabled" (click)="handleConfirm()">
                 {{ confirmButtonText || 'OK' }}
             </button>
         </div>

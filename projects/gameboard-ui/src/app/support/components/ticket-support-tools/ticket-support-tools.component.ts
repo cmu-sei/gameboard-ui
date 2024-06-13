@@ -20,6 +20,21 @@ export interface TicketSupportToolsContext {
   styleUrls: ['./ticket-support-tools.component.scss'],
   template: `
   <ul *ngIf="hasGameContext; else noGameContext">
+    <li *ngIf="observeChallengeUrl || observeTeamUrl">
+      Observe
+        <ul>
+          <li>
+            <a target="_blank" rel="noopener noreferrer" [href]="observeChallengeUrl">
+              The challenge
+            </a>
+          </li>
+          <li>
+            <a target="_blank" rel="noopener noreferrer" [href]="observeTeamUrl">
+              The team
+            </a>
+          </li>
+        </ul>
+    </li>
     <li *ngIf="challengeStateUrl">
       <a target="_blank" rel="noopener noreferer" [href]="challengeStateUrl">
           View the challenge's state
@@ -57,6 +72,8 @@ export class TicketSupportToolsComponent implements OnInit {
   protected hasGameContext = false;
   protected challengeStateUrl?: string;
   protected gameboardUrl?: string;
+  protected observeChallengeUrl?: string;
+  protected observeTeamUrl?: string;
   protected playerAdminUrl?: string;
 
   constructor(
@@ -68,6 +85,11 @@ export class TicketSupportToolsComponent implements OnInit {
 
     if (this.context?.challenge?.id) {
       this.challengeStateUrl = this.context?.challenge ? this.routerService.getAdminChallengeUrl(this.context?.challenge.id) : undefined;
+
+      if (this.context?.game?.id) {
+        this.observeChallengeUrl = this.routerService.getObserveChallengeUrl(this.context.game.id, this.context.challenge.id);
+        this.observeTeamUrl = this.routerService.getObserveTeamsUrl(this.context.game.id, this.context.team.id);
+      }
     }
 
     if (this.context?.game) {

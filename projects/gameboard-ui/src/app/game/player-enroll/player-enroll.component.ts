@@ -177,6 +177,8 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     catch (err) {
       this.errors.push(err);
     }
+
+    this.isEnrolling = false;
   }
 
   protected async handleUnenroll(p: Player): Promise<void> {

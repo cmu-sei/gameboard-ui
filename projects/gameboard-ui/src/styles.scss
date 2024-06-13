@@ -75,6 +75,16 @@ markdown ol li {
   margin-left: 1rem;
 }
 
+select option {
+  .group-parent {
+    font-weight: bold;
+  }
+
+  .group-child {
+    padding-left: 12px;
+  }
+}
+
 app-root {
   display: block;
   min-height: 100vh;
@@ -248,6 +258,10 @@ table.gameboard-table {
   margin: 0;
 }
 
+.li-style-type-circle {
+  list-style-type: disc;
+}
+
 .form-group {
   padding: 1.5rem;
   margin-bottom: 0.5rem;
@@ -400,6 +414,10 @@ th[align="left"] {
 
 .page-min-height {
   min-height: 85vh;
+}
+
+.flex-basis-25 {
+  flex-basis: 25%;
 }
 
 .flex-basis-50 {

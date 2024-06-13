@@ -60,7 +60,7 @@
                     <span>Enroll</span>
                   </app-confirm-button>
 
-                  <app-confirm-button btnClass="btn btn-warning btn-lg"
+                  <app-confirm-button *ngIf="canAdminEnroll" btnClass="btn btn-warning btn-lg"
                     (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
                     <fa-icon [icon]="faEdit"></fa-icon>
                     <span>Admin Enroll</span>

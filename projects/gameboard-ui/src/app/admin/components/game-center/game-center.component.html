@@ -1,0 +1,68 @@
+<ng-container *ngIf="gameCenterCtx as ctx; else loading">
+    <div class="hero-thing my-4 d-flex flex-wrap align-content-center">
+        <app-game-card-image class="d-block" [game]="ctx"></app-game-card-image>
+        <div class="game-info-container ml-3 pt-2">
+            <h1 class="fs-20 m-0">{{ ctx.name }}</h1>
+
+            <h2 class="fs-13 font-weight-bold text-info text-upper">
+                {{ ctx.isExternal ? "External" : "Standard" }}
+                {{ ctx.isPractice ? "Practice" : "Competitive" }}
+                {{ ctx.isTeamGame ? "Team" : "Individual" }}
+                Game
+            </h2>
+
+            <h3 class="fs-12">
+                {{ ctx | gameClassificationToString }}
+            </h3>
+
+            <h4 class="fs-10" *ngIf="ctx.executionWindow.start && ctx.executionWindow.end">
+                {{ ctx.executionWindow.start | friendlyDateAndTime }}
+                &mdash;
+                {{ ctx.executionWindow.end | friendlyDateAndTime }}
+            </h4>
+
+            <div *ngIf="ctx.isLive || ctx.isRegistrationActive" class="d-flex align-content-center mt-2">
+                <div *ngIf="ctx.isRegistrationActive" class="badge badge-info text-upper mr-2 p-1">
+                    Registration Available
+                </div>
+                <div *ngIf="ctx.isLive" class="badge badge-info text-upper p-1">Live</div>
+            </div>
+        </div>
+    </div>
+
+    <alert type="warning" class="my-3">
+        <strong>NOTE: </strong> This feature is under active development, and some things might not as expected just
+        yet. Stay tuned as we continue to improve the game management process! 🚀
+    </alert>
+
+    <div class="tabs-container d-block mt-5">
+        <tabset>
+            <tab heading="Settings">
+                <app-game-center-settings [gameId]="ctx.id"></app-game-center-settings>
+            </tab>
+            <tab [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
+                <app-game-mapper *ngIf="game" class="d-block mt-3" [game]="game"></app-game-mapper>
+            </tab>
+            <tab [heading]="ctx.isTeamGame ? 'Teams' : 'Players'">
+                <app-game-center-players [gameId]="ctx.id"></app-game-center-players>
+            </tab>
+            <tab heading="Scoreboard">
+                <app-scoreboard [gameId]="ctx.id"></app-scoreboard>
+            </tab>
+            <tab heading="Observe">
+                <p class="my-2 text-center text-muted">This feature is in development. Check back soon!</p>
+            </tab>
+            <tab [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')">
+                <app-game-center-tickets [gameId]="ctx.id"></app-game-center-tickets>
+            </tab>
+        </tabset>
+
+        <div class="router-container">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading the game...</app-spinner>
+</ng-template>

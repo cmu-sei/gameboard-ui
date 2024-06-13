@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { first, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-modal-content',
@@ -14,6 +13,7 @@ export class ModalContentComponent<T> {
   @Input() subSubtitle?: string;
   @Input() cancelButtonText?: string;
   @Input() confirmButtonText?: string;
+  @Input() confirmDisabled = false;
   @Input() isDangerConfirm = false;
 
   @Output() confirm = new EventEmitter<void>();

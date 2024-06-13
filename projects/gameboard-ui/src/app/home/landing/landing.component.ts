@@ -17,6 +17,7 @@ import { GameService } from '../../api/game.service';
 })
 export class LandingComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);
+  featured$: Observable<Game[]>;
   past$: Observable<GameGroup[]>;
   present$: Observable<Game[]>;
   future$: Observable<GameGroup[]>;
@@ -35,10 +36,15 @@ export class LandingComponent implements OnInit {
     private router: Router,
     api: GameService
   ) {
+    this.featured$ = this.refresh$.pipe(
+      debounceTime(400),
+      switchMap(() => api.list({ isFeatured: true, filter: [], term: this.searchText })),
+      tap(g => { if (g.length > 0) { this.showSearchBar = true; } }),
+    );
     this.past$ = this.refresh$.pipe(
       debounceTime(400),
       switchMap(() => api.listGrouped({ filter: ['past', "competitive"], term: this.searchText })),
-      tap(g => { if (g.length > 0) { this.showSearchBar = true; } })
+      tap(g => { if (g.length > 0) { this.showSearchBar = true; } }),
     );
     this.present$ = this.refresh$.pipe(
       debounceTime(200),

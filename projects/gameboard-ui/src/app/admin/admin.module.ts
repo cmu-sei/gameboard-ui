@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 
 import { ApiModule } from '../api/api.module';
 import { CoreModule } from '../core/core.module';
+import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { UtilityModule } from '../utility/utility.module';
 
@@ -19,6 +20,7 @@ import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser
 import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
 import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
+import { CreateUsersModalComponent } from './components/create-users-modal/create-users-modal.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
 import { ExternalGameAdminPlayerContextMenuComponent } from './components/external-game-admin-player-context-menu/external-game-admin-player-context-menu.component';
@@ -30,6 +32,8 @@ import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challe
 import { ExternalGamePlayerStatusToFriendlyPipe } from './pipes/external-game-player-status-to-friendly.pipe';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
+import { GameCenterComponent } from './components/game-center/game-center.component';
+import { GameClassificationToStringPipe } from './pipes/game-classification-to-string.pipe';
 import { GameDesignerComponent } from './game-designer/game-designer.component';
 import { GameEditorComponent } from './game-editor/game-editor.component';
 import { GameMapperComponent } from './game-mapper/game-mapper.component';
@@ -66,6 +70,10 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
 import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
 import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
 import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
+import { GameCenterPlayersComponent } from './components/game-center/game-center-players/game-center-players.component';
+import { GameCenterTeamContextMenuComponent } from './components/game-center/game-center-team-context-menu/game-center-team-context-menu.component';
+import { GameCenterSettingsComponent } from './components/game-center/game-center-settings/game-center-settings.component';
+import { GameCenterTicketsComponent } from './components/game-center/game-center-tickets/game-center-tickets.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +84,7 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
     ChallengeObserverComponent,
     ChallengeReportComponent,
     ChallengeSpecEditorComponent,
+    CreateUsersModalComponent,
     DashboardComponent,
     ExternalGameAdminComponent,
     ExternalGameAdminPlayerContextMenuComponent,
@@ -86,6 +95,8 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
     ExternalTeamToChallengeCreatedPipe,
     ExternalTeamChallengesToIsPredeployablePipe,
     FeedbackReportComponent,
+    GameCenterComponent,
+    GameClassificationToStringPipe,
     GameDesignerComponent,
     GameEditorComponent,
     GameMapperComponent,
@@ -121,6 +132,10 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
     ExternalGameHostPickerComponent,
     ExternalHostEditorComponent,
     DeleteExternalGameHostModalComponent,
+    GameCenterPlayersComponent,
+    GameCenterTeamContextMenuComponent,
+    GameCenterSettingsComponent,
+    GameCenterTicketsComponent,
   ],
   imports: [
     CommonModule,
@@ -132,7 +147,16 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           { path: 'designer/:id', component: GameEditorComponent },
-          { path: "game/:gameId/external", component: ExternalGameAdminComponent },
+          {
+            path: 'game/:gameId',
+            component: GameCenterComponent,
+            children: [
+              { path: "teams", component: PlayerRegistrarComponent }
+            ]
+          },
+          {
+            path: "game/:gameId/external", pathMatch: 'full', component: ExternalGameAdminComponent
+          },
           {
             path: "practice", component: PracticeComponent, children: [
               { path: "", pathMatch: "full", redirectTo: "settings" },
@@ -161,6 +185,7 @@ import { DeleteExternalGameHostModalComponent } from './components/delete-extern
     CoreModule,
     ApiModule,
     UtilityModule,
+    ScoreboardModule,
     SponsorsModule,
     SystemNotificationsModule,
   ]

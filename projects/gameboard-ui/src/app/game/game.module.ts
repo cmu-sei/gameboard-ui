@@ -25,21 +25,18 @@ import { GamePageComponent } from './pages/game-page/game-page.component';
 import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
 import { IndexToSubmittedAnswersPipe } from './pipes/index-to-submitted-answers.pipe';
-import { ChallengeBonusesToTooltip } from './pipes/manual-bonuses-to-tooltip.pipe';
 import { PlayComponent } from './components/play/play.component';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
 import { PlayerSessionComponent } from './player-session/player-session.component';
-import { ScoreboardComponent } from './components/scoreboard/scoreboard.component';
 import { ScoreboardPageComponent } from './pages/scoreboard-page/scoreboard-page.component';
 import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
-import { ScoreboardTeamDetailModalComponent } from './components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
-import { ScoreToTooltipPipe } from './pipes/score-to-tooltip.pipe';
 import { SessionForecastComponent } from './session-forecast/session-forecast.component';
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
 import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
+import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -55,19 +52,15 @@ const MODULE_DECLARATIONS = [
   HubStateToPlayerStatusPipe,
   IndexToSubmittedAnswersPipe,
   LateStartBannerComponent,
-  ChallengeBonusesToTooltip,
   PlayComponent,
   PlayerEnrollComponent,
   PlayerPresenceComponent,
   PlayerSessionComponent,
-  ScoreboardComponent,
   ScoreboardPageComponent,
   ScoreboardTableComponent,
-  ScoreboardTeamDetailModalComponent,
   SessionForecastComponent,
   SessionStartControlsComponent,
   SessionStartCountdownComponent,
-  ScoreToTooltipPipe,
   TeamChallengeScoresToChallengeResultTypeCountPipe,
 ];
 
@@ -87,7 +80,8 @@ const MODULE_DECLARATIONS = [
       { path: ':id', component: GamePageComponent, children: [] }
     ]),
     CoreModule,
-    UtilityModule
+    UtilityModule,
+    ScoreboardModule
   ],
   exports: [
     ChallengeDeployCountdownComponent,

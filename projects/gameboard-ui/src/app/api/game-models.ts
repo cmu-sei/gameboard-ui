@@ -53,6 +53,7 @@ export interface GameDetail {
   cardText1: string;
   cardText2: string;
   cardText3: string;
+  isFeatured: boolean;
   isLive: boolean;
   hasEnded: boolean;
 }

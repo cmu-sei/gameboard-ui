@@ -3,10 +3,9 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject, firstValueFrom, of } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { ChallengeSpecBonusViewModel, ChangedSpec, ExternalSpec, NewSpec, Spec, SpecSummary } from './spec-models';
+import { ChallengeSpecBonusViewModel, ChangedSpec, ExternalSpec, GetChallengeSpecQuestionPerformanceResult, NewSpec, Spec, SpecSummary } from './spec-models';
 
 @Injectable({ providedIn: 'root' })
 export class SpecService {
@@ -18,6 +17,10 @@ export class SpecService {
     private config: ConfigService
   ) {
     this.url = config.apphost + 'api';
+  }
+
+  public getQuestionPerformance(specId: string): Promise<GetChallengeSpecQuestionPerformanceResult> {
+    return firstValueFrom(this.http.get<GetChallengeSpecQuestionPerformanceResult>(`${this.url}/challengespecs/${specId}/question-performance`));
   }
 
   public list(filter: any): Observable<ExternalSpec[]> {

@@ -1,0 +1,80 @@
+<div class="btn-group" dropdown *ngIf="team && game">
+    <button [id]="'context-trigger-basic-' + team.id" dropdownToggle type="button"
+        class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic">
+        <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <!-- <li role="menuitem">
+            <button class="dropdown-item btn" (click)="viewRequest.emit(player)">
+                {{ isViewing ? "Collapse" : "View" }}
+            </button>
+        </li> -->
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="copy(team.captain.id, 'player ID')">Copy Player ID</button>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="copy(team.id, 'team ID')">Copy Team ID</button>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleManageBonuses(team)">
+                Manual Bonuses
+            </button>
+        </li>
+        <ng-container *ngIf="!game!.isSyncStart || !hasStartedSession">
+            <li class="divider dropdown-divider"></li>
+            <li role="menuitem" *ngIf="!hasStartedSession">
+                <button class="dropdown-item btn btn-warning" (click)="handleDeployResources(team)">
+                    <strong>Deploy</strong> Game Resources
+                    <span class="badge badge-warn">[ALPHA]</span>
+                </button>
+            </li>
+
+            <li role="menuitem" *ngIf="!game.isSyncStart; else syncStartGameItems">
+                <button class="dropdown-item btn btn-warning" (click)="handleStartSession(team!.captain)">
+                    Start <strong>{{ team!.name }}</strong>'s Session
+                </button>
+            </li>
+
+            <li *ngIf="game.isSyncStart && !hasStartedSession">
+                <button class="dropdown-item btn btn-warning" [disabled]="hasStartedSession"
+                    (click)="handleUpdateReady(team, !team.isReady)">
+                    <strong>
+                        {{ team.isReady ? "Unready" : "Ready" }}
+                        {{ team.name }}
+                    </strong>
+                </button>
+            </li>
+        </ng-container>
+        <li class="divider dropdown-divider"></li>
+        <ng-container *ngIf="hasStartedSession; else unenroll">
+            <li role="menuitem">
+                <button class="dropdown-item btn btn-danger" (click)="handleResetRequest(team, 'preserveChallenges')">
+                    Reset Session (Preserve Challenges)
+                </button>
+            </li>
+
+            <li role="menuitem">
+                <button class="dropdown-item btn btn-danger" (click)="handleResetRequest(team, 'archiveChallenges')">
+                    Reset Session
+                </button>
+            </li>
+
+            <li role="menuitem">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="handleResetRequest(team, 'unenrollAndArchiveChallenges')">
+                    Reset Session &amp; Unenroll
+                </button>
+            </li>
+        </ng-container>
+    </ul>
+</div>
+
+<ng-template #syncStartGameItems>
+</ng-template>
+
+<ng-template #unenroll>
+    <li role="menuitem">
+        <button type="button" class="dropdown-item btn btn-danger"
+            (click)="handleResetRequest(team!, 'unenrollAndArchiveChallenges')">Unenroll</button>
+    </li>
+</ng-template>

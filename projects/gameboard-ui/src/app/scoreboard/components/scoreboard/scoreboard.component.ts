@@ -4,13 +4,11 @@ import { ScoringService } from '@/services/scoring/scoring.service';
 import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
-import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-scoreboard',
   templateUrl: './scoreboard.component.html',
   styleUrls: ['./scoreboard.component.scss'],
-  providers: [UnsubscriberService]
 })
 export class ScoreboardComponent implements OnInit, OnDestroy {
   @Input() gameId?: string;
@@ -29,8 +27,7 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalConfirmService: ModalConfirmService,
-    private scoreService: ScoringService,
-    private unsub: UnsubscriberService) { }
+    private scoreService: ScoringService) { }
 
   async ngOnInit() {
     if (!this.gameId)

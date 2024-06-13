@@ -14,9 +14,20 @@
   </div>
 </div>
 
+<!-- Featured -->
+<div class="row mt-1" *ngIf="featured$ | async as featured; else loadingFeatured">
+  <ng-container *ngIf="!!featured.length">
+    <div class="col-12 mx-0 px-0 mb-2">
+      <h2>Featured Games</h2>
+    </div>
+    <ng-container *ngFor="let game of featured">
+      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+    </ng-container>
+  </ng-container>
+</div>
+
 <!-- Live -->
 <div class="row mt-1" *ngIf="present$ | async as present; else loading">
-
   <ng-container *ngIf="!!present.length">
     <div class="col-12 mx-0 px-0 mb-2">
       <h2>Live!</h2>
@@ -25,7 +36,6 @@
       <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
     </ng-container>
   </ng-container>
-
 </div>
 
 <!-- Upcoming -->
@@ -95,6 +105,12 @@
 
 <ng-template #registrationClosed>
   <p><em>Closed</em></p>
+</ng-template>
+
+<ng-template #loadingFeatured>
+  <div class="text-center">
+    <app-spinner>Loading featured games...</app-spinner>
+  </div>
 </ng-template>
 
 <ng-template #loading>

@@ -32,7 +32,6 @@
     </div>
 
     <div class="row">
-
       <div class="dropzone">
         <app-dropzone class="m-0" (dropped)="dropped($event)">
           <pre>Drag in a yaml game array</pre>
@@ -42,10 +41,7 @@
       <app-game-card *ngFor="let g of games$ | async; trackBy:trackById" [game]="g" (selected)="game=$event"
         class="col-lg-3 col-md-4 col-6 mb-4">
       </app-game-card>
-
     </div>
-
-
   </div>
 
   <!-- game editor -->

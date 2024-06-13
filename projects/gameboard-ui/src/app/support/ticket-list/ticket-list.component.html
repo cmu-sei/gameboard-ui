@@ -39,9 +39,8 @@
           <fa-icon [icon]="fa.search"></fa-icon>
         </span>
       </div>
-      <input type="search" [(ngModel)]="searchText"
-        placeholder="Search by description, label, player, user, or challenge" class="form-control border-0"
-        (input)="refresh$.next(true)">
+      <input type="search" [(ngModel)]="searchText" placeholder="Search description / label / player / user / challenge"
+        class="form-control border-0" (input)="refresh$.next(true)">
     </div>
   </div>
 
