@@ -1,0 +1,58 @@
+<app-error-div [errors]="errors"></app-error-div>
+
+<app-modal-content *ngIf="results; else loading" [title]="results.spec.name" subtitle="Practice Mode Performance"
+    [subSubtitle]="results.game.name" [hideCancel]="true">
+
+    <table class="table gameboard-table">
+        <col>
+        <col>
+        <colgroup span="4"></colgroup>
+
+        <thead>
+            <tr class="super-headers-row chill-headers">
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="colgroup" colspan="4" class="group-header">Best Attempt</th>
+            </tr>
+
+            <tr class="headers-row">
+                <th>Player</th>
+                <th class="numeric-col">Attempts</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th class="numeric-col">Score</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let player of results.users">
+                <td class="d-flex align-items-center">
+                    <app-player-avatar class="d-block mr-2" [player]="player.user"></app-player-avatar>
+                    <div class="">
+                        <div>{{ player.user.name }}</div>
+                        <div class="text-muted fs-09"> {{ player.user.sponsor.name }} </div>
+                    </div>
+                </td>
+
+                <td class="numeric-col">{{ player.attemptCount }}</td>
+                <td>{{ player.bestAttemptDate | friendlyDateAndTime }}</td>
+                <td>{{ player.bestAttemptDurationMs | msToDuration }}</td>
+                <td class="numeric-col">{{ player.bestAttemptScore | number:"1.0-2" }}</td>
+                <td [class]="player.bestAttemptResult | challengeResultColor">
+                    <strong>{{ player.bestAttemptResult | challengeResultPretty }}</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="(results.paging.itemCount || 0) > (results.paging.pageSize || 0)">
+        <hr />
+        <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
+            (change)="handlePaging($event)"></app-select-pager>
+    </div>
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading challenge data...</app-spinner>
+</ng-template>

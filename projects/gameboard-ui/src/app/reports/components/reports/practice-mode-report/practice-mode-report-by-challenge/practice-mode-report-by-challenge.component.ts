@@ -8,6 +8,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';
 import { PagingArgs, SimpleEntity } from '@/api/models';
 import { LogService } from '@/services/log.service';
+import { ChallengeDetailModalComponent } from '../challenge-detail-modal/challenge-detail-modal.component';
 
 @Component({
   selector: 'app-practice-mode-report-by-challenge',
@@ -33,6 +34,17 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
 
     this.results = await firstValueFrom(this.reportService.getByChallengeData(this.parameters));
     this.overallStatsUpdate.emit(this.results.overallStats);
+  }
+
+  handlePlayersClicked(specId: string) {
+    this.modalService.openComponent<ChallengeDetailModalComponent>({
+      content: ChallengeDetailModalComponent,
+      context: {
+        challengeSpecId: specId,
+        parameters: this.parameters || undefined
+      },
+      modalClasses: ["modal-dialog-centered", "modal-xl"]
+    });
   }
 
   handleSponsorsClicked(challenge: SimpleEntity, sponsorPerformance: PracticeModeReportSponsorPerformance[]) {

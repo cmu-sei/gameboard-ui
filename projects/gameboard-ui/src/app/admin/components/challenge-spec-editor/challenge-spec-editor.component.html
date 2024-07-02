@@ -44,7 +44,7 @@
             <input type="checkbox" class="form-check-input" id="hidden-input-{{spec.id}}" name="disabled"
                 [(ngModel)]="spec.isHidden" (ngModelChange)="handleSpecUpdated(spec)">
             <app-whats-this
-                whatItIs="Hidden challenge specs are invisible to players and don't contribute to their score.">
+                whatItIs="Hidden challenge specs are invisible to players and don't contribute to their score. They also don't appear in reports.">
                 <label for="hidden-input-{{spec.id}}">Hidden</label>
             </app-whats-this>
         </div>

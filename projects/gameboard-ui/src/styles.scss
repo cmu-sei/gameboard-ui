@@ -175,6 +175,7 @@ th[align="center"] {
 
 table.gameboard-table {
   width: 100%;
+  margin-bottom: 0;
 
   thead {
     tr > th:not(:first-child) {
@@ -227,15 +228,16 @@ table.gameboard-table {
     }
 
     th {
-      padding-left: 4px;
+      padding-left: 6px;
     }
+  }
 
-    td.numeric-col,
-    th.numeric-col,
-    th.date-col {
-      padding: 0;
-      text-align: center;
-    }
+  td.numeric-col,
+  td.date-col,
+  th.numeric-col,
+  th.date-col {
+    padding: 0;
+    text-align: center;
   }
 
   tbody td {

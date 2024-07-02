@@ -25,13 +25,13 @@
 
                 <tr class="headers-row">
                     <td>Sponsor</td>
-                    <td clas="numeric-col">Player Count</td>
-                    <td clas="numeric-col">Total Attempts</td>
-                    <td clas="numeric-col">High</td>
-                    <td clas="numeric-col">Avg</td>
-                    <td clas="numeric-col">Complete</td>
-                    <td clas="numeric-col">Partial</td>
-                    <td clas="numeric-col">Zero</td>
+                    <td class="numeric-col">Player Count</td>
+                    <td class="numeric-col">Total Attempts</td>
+                    <td class="numeric-col">High</td>
+                    <td class="numeric-col">Avg</td>
+                    <td class="numeric-col">Complete</td>
+                    <td class="numeric-col">Partial</td>
+                    <td class="numeric-col">Zero</td>
                 </tr>
             </thead>
 
@@ -63,13 +63,28 @@
                     </td>
 
                     <td class="report-field numerical">
-                        <p>{{ sponsorPerformance.performance.percentageCompleteSolved | percent }}</p>
+                        <div>
+                            {{ sponsorPerformance.performance.completeSolves }}
+                            <span class="text-muted">
+                                ({{ sponsorPerformance.performance.percentageCompleteSolved | percent }})
+                            </span>
+                        </div>
                     </td>
                     <td class="report-field numerical">
-                        <p>{{ sponsorPerformance.performance.percentagePartiallySolved | percent }}</p>
+                        <div>
+                            {{ sponsorPerformance.performance.partialSolves }}
+                            <span class="text-muted">
+                                ({{ sponsorPerformance.performance.percentagePartiallySolved | percent }})
+                            </span>
+                        </div>
                     </td>
                     <td class="report-field numerical">
-                        <p>{{ sponsorPerformance.performance.percentageZeroScoreSolved | percent }}</p>
+                        <div>
+                            {{ sponsorPerformance.performance.zeroScoreSolves }}
+                            <span class="text-muted">
+                                ({{ sponsorPerformance.performance.percentageZeroScoreSolved | percent }})
+                            </span>
+                        </div>
                     </td>
                 </tr>
             </tbody>

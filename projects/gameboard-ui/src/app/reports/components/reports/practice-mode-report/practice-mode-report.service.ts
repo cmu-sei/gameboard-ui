@@ -1,10 +1,12 @@
 import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats } from './practice-mode-report.models';
-import { Observable, map } from 'rxjs';
+import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats, PracticeModeReportChallengeDetail } from './practice-mode-report.models';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { ReportResultsWithOverallStats } from '../../../reports-models';
 import { ReportsService } from '../../../reports.service';
+import { DateTime } from 'luxon';
+import { PagingArgs } from '@/api/models';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeModeReportService {
@@ -17,6 +19,22 @@ export class PracticeModeReportService {
   getByChallengeData(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>> {
     const finalParams = { ... (parameters || {}), ...{ grouping: PracticeModeReportGrouping.challenge } };
     return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>>(this.apiUrl.build("reports/practice-area", finalParams));
+  }
+
+  getChallengeDetail(challengeSpecId: string, parameters: PracticeModeReportFlatParameters | null | undefined, paging: PagingArgs | null | undefined): Promise<PracticeModeReportChallengeDetail> {
+    return firstValueFrom(this.http.get<PracticeModeReportChallengeDetail>(this.apiUrl.build(`reports/practice-area/challenge-spec/${challengeSpecId}`, { ...parameters, ...paging })).pipe(
+      map(result => {
+        return {
+          ...result,
+          users: result.users.map(u => {
+            u.lastAttemptDate = DateTime.fromJSDate(new Date(u.lastAttemptDate.toString()));
+            u.bestAttemptDate = DateTime.fromJSDate(new Date(u.bestAttemptDate.toString()));
+
+            return u;
+          })
+        };
+      })
+    ));
   }
 
   getByPlayerModePerformance(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByPlayerModePerformanceRecord>> {

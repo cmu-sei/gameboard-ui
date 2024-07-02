@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
 import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt-summary/challenge-attempt-summary.component';
+import { ChallengeDetailModalComponent } from './components/reports/practice-mode-report/challenge-detail-modal/challenge-detail-modal.component';
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
 import { ChallengesReportComponent } from './components/reports/challenges-report/challenges-report.component';
 import { ChallengesReportSummaryToStatsPipe } from './components/reports/challenges-report/challenges-report-summary-to-stats.pipe';
@@ -56,6 +57,7 @@ import { SpecQuestionPerformanceModalComponent } from './components/spec-questio
     ArrayFieldToClassPipe,
     CountToTooltipClassPipe,
     ChallengeAttemptSummaryComponent,
+    ChallengeDetailModalComponent,
     ChallengesReportComponent,
     ChallengesReportSummaryToStatsPipe,
     EnrollmentReportComponent,
@@ -98,7 +100,7 @@ import { SpecQuestionPerformanceModalComponent } from './components/spec-questio
     SiteUsageReportSponsorsModalComponent,
     SiteUsageReportChallengesListComponent,
     SortHeaderComponent,
-    SpecQuestionPerformanceModalComponent
+    SpecQuestionPerformanceModalComponent,
   ],
   imports: [
     CommonModule,

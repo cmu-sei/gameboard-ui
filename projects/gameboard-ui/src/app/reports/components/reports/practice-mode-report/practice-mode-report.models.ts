@@ -1,6 +1,7 @@
 import { ChallengeResult } from "@/api/board-models";
-import { PagingArgs, SimpleEntity } from "@/api/models";
-import { ReportDateRange, ReportGame, ReportSponsor, ReportTeam } from "@/reports/reports-models";
+import { PagingResults, PlayerWithSponsor, SimpleEntity, SimpleSponsor } from "@/api/models";
+import { ReportGame, ReportSponsor, ReportTeam } from "@/reports/reports-models";
+import { DateTime } from "luxon";
 
 export enum PracticeModeReportGrouping {
     challenge = "challenge",
@@ -123,4 +124,22 @@ export interface PracticeModeReportPlayerModeSummaryChallenge {
     result: ChallengeResult;
     pctAvailablePointsEarned: number;
     scorePercentile: number;
+}
+
+export interface PracticeModeReportChallengeDetail {
+    game: SimpleEntity;
+    spec: SimpleEntity;
+    paging: PagingResults;
+    users: PracticeModeReportChallengeDetailUser[];
+}
+
+export interface PracticeModeReportChallengeDetailUser {
+    user: PlayerWithSponsor;
+    sponsor: SimpleSponsor;
+    attemptCount: number;
+    bestAttemptDate: DateTime;
+    bestAttemptDurationMs: number;
+    bestAttemptResult: ChallengeResult;
+    bestAttemptScore: number;
+    lastAttemptDate: DateTime;
 }
