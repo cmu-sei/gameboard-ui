@@ -48,7 +48,7 @@ export class ModalConfirmService implements OnDestroy {
 
     return this.bsModalService.show(config.content, {
       initialState: config.context as unknown as Partial<TComponent>,
-      class: config.modalClasses?.join(" ") || "modal-dialog-centered",
+      class: ["modal-dialog-centered", ...(config.modalClasses || [])].join(" "),
       focus: true,
       ignoreBackdropClick: config.ignoreBackdropClick || false,
       scrollable: true

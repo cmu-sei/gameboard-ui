@@ -64,7 +64,7 @@ export class PracticeModeReportByUserComponent implements OnChanges {
           }))
         }
       },
-      modalClasses: ["modal-dialog-centered", "modal-md"]
+      modalClasses: ["modal-md"]
     });
   }
 }

@@ -10,6 +10,8 @@ export interface SiteUsageReport {
     deployedChallengesCompetitiveCount: number;
     deployedChallengesPracticeCount: number;
     deployedChallengesSpecCount: number;
+    competitivePlayDurationHours: number;
+    practicePlayDurationHours: number;
     practiceUsersWithNoCompetitiveCount: number;
     sponsorCount: number;
     userCount: number;

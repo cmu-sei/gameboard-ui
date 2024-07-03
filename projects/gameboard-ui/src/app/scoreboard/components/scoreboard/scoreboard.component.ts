@@ -48,8 +48,7 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
       content: ScoreboardTeamDetailModalComponent,
       context: { teamId: teamData.score.teamId },
       modalClasses: [
-        teamData.players.length > 1 ? "modal-xl" : "modal-lg",
-        "modal-dialog-centered"
+        teamData.players.length > 1 ? "modal-xl" : "modal-lg"
       ]
     });
   }

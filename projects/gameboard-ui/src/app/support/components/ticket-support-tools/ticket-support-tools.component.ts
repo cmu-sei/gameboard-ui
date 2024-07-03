@@ -113,7 +113,7 @@ export class TicketSupportToolsComponent implements OnInit {
     this.modalService.openComponent<EventHorizonModalComponent>({
       content: EventHorizonModalComponent,
       context: this.context,
-      modalClasses: ["modal-lg", "modal-dialog-centered"],
+      modalClasses: ["modal-lg"],
       ignoreBackdropClick: true
     });
   }

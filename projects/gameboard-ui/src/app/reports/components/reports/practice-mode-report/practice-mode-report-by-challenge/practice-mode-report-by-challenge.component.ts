@@ -43,7 +43,7 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
         challengeSpecId: specId,
         parameters: this.parameters || undefined
       },
-      modalClasses: ["modal-dialog-centered", "modal-xl"]
+      modalClasses: ["modal-xl"]
     });
   }
 
@@ -60,7 +60,7 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
           sponsorPerformance
         }
       },
-      modalClasses: ["modal-dialog-centered", "modal-xl"]
+      modalClasses: ["modal-xl"]
     });
   }
 
