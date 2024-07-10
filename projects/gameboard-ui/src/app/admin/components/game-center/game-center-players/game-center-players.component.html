@@ -1,20 +1,52 @@
+<div class="filters-container d-flex align-items-center mb-4">
+    <input type="text" minlength="2" placeholder="Search players/teams..." class="form-control flex-grow-1">
+
+    <select class="form-control ml-2">
+        <option>[Any advancement]</option>
+        <option>Advanced to next game</option>
+        <option>Not advanced to next game</option>
+    </select>
+
+    <select class="form-control ml-2">
+        <option>[Any status]</option>
+        <option>Finished</option>
+        <option>Playing now</option>
+        <option>Not Started</option>
+    </select>
+
+    <select class="form-control ml-2">
+        <option>Sort by rank</option>
+        <option>Sort by name</option>
+        <option>Sort by time remaining</option>
+    </select>
+</div>
+
 <ng-container *ngIf="!isLoading || !results || !game; else loading">
     <ul *ngIf="results?.teams?.items?.length">
         <li *ngFor="let team of results?.teams?.items">
             <div class="card my-2">
                 <div class="card-body">
                     <div class="d-flex">
-                        <div class="d-flex flex-grow-1">
-                            <div *ngIf="team.rank" class="fs-20 mr-4">
-                                {{team.rank}}
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <div class="fs-20 mr-4 text-center team-rank">
+                                {{ team.rank || "--" }}
                             </div>
 
                             <app-avatar *ngIf="team.players.length == 1" [tooltip]="team.captain.sponsor.name"
                                 [imageUrl]="team.captain.sponsor | sponsorToLogoUri" size="small"
-                                class="mr-2"></app-avatar>
-                            <div>
-                                <h5 class="card-title my-1">{{ team.name }}</h5>
+                                class="mr-3"></app-avatar>
+                            <div class="flex-grow-1">
+                                <h5 class="card-title my-1 overflow-ellipsis">{{ team.name }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted"> {{ team.captain.sponsor.name }}</h6>
+                            </div>
+
+                            <div class="mx-4 width-20" [class.text-dashed-underline]="team.score | scoreToTooltip"
+                                [tooltip]="team.score | scoreToTooltip">
+                                {{ team.score.totalScore }} points
+
+                                <span *ngIf="(team.session.timeRemainingMs || 0) > 0" class="text-info">
+                                    ({{ team.session.timeRemainingMs | countdown }} remaining)
+                                </span>
                             </div>
                         </div>
 
@@ -23,7 +55,8 @@
                     </div>
 
                     <ul class="d-flex align-items-center" *ngIf="team.players.length > 1">
-                        <li class="mr-3" *ngTemplateOutlet="playerAvatar; context: { $implicit: team.captain}">
+                        <li class="mr-3" *ngFor="let player of team.players">
+                            <div *ngTemplateOutlet="playerAvatar; context: { $implicit: player }"></div>
                         </li>
                     </ul>
                 </div>

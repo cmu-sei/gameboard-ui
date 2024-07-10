@@ -1,7 +1,7 @@
 import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats, PracticeModeReportChallengeDetail } from './practice-mode-report.models';
+import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats, PracticeModeReportChallengeDetail, PracticeModeReportChallengeDetailParameters } from './practice-mode-report.models';
 import { Observable, firstValueFrom, map } from 'rxjs';
 import { ReportResultsWithOverallStats } from '../../../reports-models';
 import { ReportsService } from '../../../reports.service';
@@ -21,8 +21,9 @@ export class PracticeModeReportService {
     return this.http.get<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord>>(this.apiUrl.build("reports/practice-area", finalParams));
   }
 
-  getChallengeDetail(challengeSpecId: string, parameters: PracticeModeReportFlatParameters | null | undefined, paging: PagingArgs | null | undefined): Promise<PracticeModeReportChallengeDetail> {
-    return firstValueFrom(this.http.get<PracticeModeReportChallengeDetail>(this.apiUrl.build(`reports/practice-area/challenge-spec/${challengeSpecId}`, { ...parameters, ...paging })).pipe(
+  getChallengeDetail(challengeSpecId: string, parameters: PracticeModeReportFlatParameters | null | undefined, challengeDetailParameters: PracticeModeReportChallengeDetailParameters | null | undefined, paging: PagingArgs | null | undefined): Promise<PracticeModeReportChallengeDetail> {
+    console.log("get!", challengeDetailParameters);
+    return firstValueFrom(this.http.get<PracticeModeReportChallengeDetail>(this.apiUrl.build(`reports/practice-area/challenge-spec/${challengeSpecId}`, { ...parameters, ...challengeDetailParameters, ...paging })).pipe(
       map(result => {
         return {
           ...result,

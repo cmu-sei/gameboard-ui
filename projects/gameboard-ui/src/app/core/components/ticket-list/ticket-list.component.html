@@ -7,7 +7,7 @@
         tooltip="Export these tickets to CSV">
         <fa-icon [icon]="fa.fileCsv"></fa-icon>
       </button>
-      <a class="btn btn-info" [routerLink]="['../create']">
+      <a class="btn btn-info" *ngIf="!isReadOnly" [routerLink]="['../create']">
         <span>Create Ticket</span>
       </a>
     </div>
@@ -43,6 +43,8 @@
         class="form-control border-0" (input)="refresh$.next(true)">
     </div>
   </div>
+
+  <hr class="light my-4" />
 
   <div class="row mx-0 mt-4 p-0 mb-1">
     <!-- Key column with ordering -->

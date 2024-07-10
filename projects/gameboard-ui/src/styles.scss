@@ -418,6 +418,14 @@ th[align="left"] {
   min-height: 85vh;
 }
 
+.flex-basis-10 {
+  flex-basis: 10%;
+}
+
+.flex-basis-15 {
+  flex-basis: 15%;
+}
+
 .flex-basis-25 {
   flex-basis: 25%;
 }
@@ -436,6 +444,13 @@ th[align="left"] {
 
 .text-capitalize {
   text-transform: capitalize;
+}
+
+.text-dashed-underline {
+  text-decoration: underline;
+  text-decoration-style: dotted !important;
+  text-decoration-color: #fff !important;
+  text-decoration-thickness: 2px !important;
 }
 
 .text-upper {

@@ -30,6 +30,7 @@ import { markedOptionsFactory } from './config/marked.config';
 // internal components/pipes/directives
 import { AbsoluteValuePipe } from './pipes/absolute-value.pipe';
 import { AddDurationPipe } from './pipes/add-duration.pipe';
+import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
@@ -101,6 +102,7 @@ import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-
 import { StatusLightComponent } from './components/status-light/status-light.component';
 import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
+import { TicketListComponent } from './components/ticket-list/ticket-list.component';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { ToSupportCodePipe } from './pipes/to-support-code.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
@@ -114,10 +116,13 @@ import { YamlBlockComponent } from './components/yaml-block/yaml-block.component
 import { YamlPipe } from './pipes/yaml.pipe';
 import { ApiStatusInterceptor } from '@/api-status.interceptor';
 import { AuthInterceptor } from '@/utility/auth.interceptor';
+import { ObserverConsoleComponent } from './components/observer-console/observer-console.component';
+import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
   AddDurationPipe,
+  AgedDatePipe,
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
@@ -162,11 +167,13 @@ const PUBLIC_DECLARATIONS = [
   PlayerAvatarListComponent,
   PlayerStatusComponent,
   NumbersToPercentage,
+  ObserverConsoleComponent,
   QueryParamModelDirective,
   RefreshIframeOnReconnectDirective,
   RelativeUrlsPipe,
   RenderLinksInTextComponent,
   SpinnerComponent,
+  TicketListComponent,
   ToggleSwitchComponent,
   TrimPipe,
   UrlRewritePipe,
@@ -198,6 +205,8 @@ const PUBLIC_DECLARATIONS = [
   ToggleClassPipe,
   ToSupportCodePipe,
   ToTemplateContextPipe,
+  TicketLabelPickerComponent,
+  TicketListComponent,
   TicketStatusBadgePipe,
   UrlRewritePipe,
   WhatsThisComponent,

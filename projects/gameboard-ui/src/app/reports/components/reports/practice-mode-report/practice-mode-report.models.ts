@@ -30,6 +30,10 @@ export interface PracticeModeReportFlatParameters {
     grouping: PracticeModeReportGrouping;
 }
 
+export interface PracticeModeReportChallengeDetailParameters {
+    playersWithSolveType?: ChallengeResult;
+}
+
 export interface PracticeModeReportRecord { }
 
 export interface PracticeModeReportByUserRecord extends PracticeModeReportRecord {

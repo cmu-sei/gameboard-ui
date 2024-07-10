@@ -81,7 +81,7 @@
 
                 <!--PERFORMANCE-->
                 <td class="report-field numerical">
-                    <div>
+                    <div class="tooltipped-value" (click)="handleSolveTypeClicked(record.id, 'success')">
                         {{ record.overallPerformance.completeSolves }}
                         <span class="text-muted">
                             ({{ record.overallPerformance.percentageCompleteSolved | percent }})
@@ -89,7 +89,7 @@
                     </div>
                 </td>
                 <td class="report-field numerical">
-                    <div>
+                    <div class="tooltipped-value" (click)="handleSolveTypeClicked(record.id, 'partial')">
                         {{ record.overallPerformance.partialSolves }}
                         <span class="text-muted">
                             ({{ record.overallPerformance.percentagePartiallySolved | percent }})
@@ -97,7 +97,7 @@
                     </div>
                 </td>
                 <td class="report-field numerical">
-                    <div>
+                    <div class="tooltipped-value" (click)="handleSolveTypeClicked(record.id, 'none')">
                         {{ record.overallPerformance.zeroScoreSolves }}
                         <span class="text-muted">
                             ({{ record.overallPerformance.percentageZeroScoreSolved | percent }})

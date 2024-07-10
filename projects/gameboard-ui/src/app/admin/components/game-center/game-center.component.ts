@@ -2,6 +2,7 @@ import { GameCenterContext } from '@/api/admin.models';
 import { AdminService } from '@/api/admin.service';
 import { Game } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
+import { fa } from '@/services/font-awesome.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -14,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
   providers: [UnsubscriberService]
 })
 export class GameCenterComponent {
+  protected fa = fa;
   protected game?: Game;
   protected gameCenterCtx?: GameCenterContext;
 

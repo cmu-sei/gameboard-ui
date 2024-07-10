@@ -9,14 +9,14 @@ import { ScoreToTooltipPipe } from './pipes/score-to-tooltip.pipe';
 
 const PUBLIC_DECLARATIONS = [
   ScoreboardComponent,
-  ScoreboardTeamDetailModalComponent
+  ScoreboardTeamDetailModalComponent,
+  ScoreToTooltipPipe
 ];
 
 @NgModule({
   declarations: [
     ...PUBLIC_DECLARATIONS,
-    ChallengeBonusesToTooltip,
-    ScoreToTooltipPipe
+    ChallengeBonusesToTooltip
   ],
   imports: [
     CommonModule,

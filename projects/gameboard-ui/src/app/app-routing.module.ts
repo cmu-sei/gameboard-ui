@@ -46,12 +46,10 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
   },
   { path: '', component: HomePageComponent, pathMatch: 'full' }
-
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
   providers: [
     {
       provide: TitleStrategy,

@@ -37,7 +37,10 @@
 
     <div class="tabs-container d-block mt-5">
         <tabset>
-            <tab heading="Settings">
+            <tab>
+                <ng-template tabHeading>
+                    <fa-icon [icon]="fa.gear"></fa-icon>
+                </ng-template>
                 <app-game-center-settings [gameId]="ctx.id"></app-game-center-settings>
             </tab>
             <tab [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
@@ -46,7 +49,7 @@
             <tab [heading]="ctx.isTeamGame ? 'Teams' : 'Players'">
                 <app-game-center-players [gameId]="ctx.id"></app-game-center-players>
             </tab>
-            <tab heading="Scoreboard">
+            <tab *ngIf="ctx.hasScoreboard" heading="Scoreboard">
                 <app-scoreboard [gameId]="ctx.id"></app-scoreboard>
             </tab>
             <tab heading="Observe">

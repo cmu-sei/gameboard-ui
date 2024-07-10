@@ -9,6 +9,7 @@ import { SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalC
 import { PagingArgs, SimpleEntity } from '@/api/models';
 import { LogService } from '@/services/log.service';
 import { ChallengeDetailModalComponent } from '../challenge-detail-modal/challenge-detail-modal.component';
+import { ChallengeResult } from '@/api/board-models';
 
 @Component({
   selector: 'app-practice-mode-report-by-challenge',
@@ -42,6 +43,20 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
       context: {
         challengeSpecId: specId,
         parameters: this.parameters || undefined
+      },
+      modalClasses: ["modal-xl"]
+    });
+  }
+
+  handleSolveTypeClicked(specId: string, type: ChallengeResult) {
+    this.modalService.openComponent<ChallengeDetailModalComponent>({
+      content: ChallengeDetailModalComponent,
+      context: {
+        challengeSpecId: specId,
+        challengeDetailParameters: {
+          playersWithSolveType: type
+        },
+        parameters: this.parameters || undefined,
       },
       modalClasses: ["modal-xl"]
     });

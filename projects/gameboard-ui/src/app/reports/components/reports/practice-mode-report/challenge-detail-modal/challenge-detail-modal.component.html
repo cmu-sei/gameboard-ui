@@ -1,9 +1,9 @@
 <app-error-div [errors]="errors"></app-error-div>
 
-<app-modal-content *ngIf="results; else loading" [title]="results.spec.name" subtitle="Practice Mode Performance"
+<app-modal-content *ngIf="results; else loading" [title]="results.spec.name" [subtitle]="subtitleComputed"
     [subSubtitle]="results.game.name" [hideCancel]="true">
 
-    <table class="table gameboard-table">
+    <table *ngIf="results.users.length; else noUsers" class="table gameboard-table">
         <col>
         <col>
         <colgroup span="4"></colgroup>
@@ -55,4 +55,10 @@
 
 <ng-template #loading>
     <app-spinner>Loading challenge data...</app-spinner>
+</ng-template>
+
+<ng-template #noUsers>
+    <p class="text-muted text-center my-2">
+        There aren't any users with matching data for this practice challenge.
+    </p>
 </ng-template>

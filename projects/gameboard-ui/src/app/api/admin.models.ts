@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { GameEngineType } from "./spec-models";
 import { PagedArray, SimpleEntity, SimpleSponsor } from "./models";
+import { Score } from "@/services/scoring/scoring.models";
 
 export interface AppActiveChallengeSpec {
     id: string;
@@ -65,6 +66,7 @@ export interface GameCenterContext {
         start: DateTime,
         end: DateTime
     },
+    hasScoreboard: boolean;
     isExternal: boolean;
     isLive: boolean;
     isPractice: boolean;
@@ -97,6 +99,7 @@ export interface GameCenterTeamsResultsTeam {
     players: GameCenterTeamsPlayer[];
     rank?: number;
     registeredOn?: DateTime;
+    score: Score;
     session: GameCenterTeamsSession;
     ticketCount: number;
 }
