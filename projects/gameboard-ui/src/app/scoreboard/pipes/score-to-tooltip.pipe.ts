@@ -4,6 +4,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'scoreToTooltip' })
 export class ScoreToTooltipPipe implements PipeTransform {
   transform(value: DenormalizedTeamScore | Score): string {
+    if (!value)
+      return "";
+
     if ("scoreOverall" in value) {
       const denormalizedScore = value as DenormalizedTeamScore;
       return this.buildTooltip({

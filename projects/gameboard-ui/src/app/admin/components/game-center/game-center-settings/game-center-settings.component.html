@@ -1,16 +1,8 @@
 <form #form="ngForm" [ngFormOptions]="{updateOn: 'blur'}" autocomplete="off">
     <ng-container *ngIf="game; else loading">
-        <h1 class="mb-0">
-            {{game.name}}
-            <span class="mr-2 f-2" [ngClass]="isDirty ? 'text-warning' : 'text-success'">
-                <fa-icon [icon]="fa.cloudUploadAlt"></fa-icon>
-            </span>
-        </h1>
-        <app-clipspan class="text-muted text-sm">{{game.id}}</app-clipspan>
-        <a class="btn btn-link" [routerLink]="['/game', game.id]">
-            <fa-icon [icon]="fa.gamepad"></fa-icon>
-            <span>Lobby</span>
-        </a>
+        <span class="f-2" [ngClass]="isDirty ? 'text-warning' : 'text-success'">
+            <fa-icon [icon]="fa.cloudUploadAlt"></fa-icon>
+        </span>
 
         <div class="section-header" tabindex="0" (click)="selectedSubTab = 'settings'">
             <fa-icon [icon]="selectedSubTab === 'settings' ? fa.caretDown : fa.caretRight"></fa-icon>

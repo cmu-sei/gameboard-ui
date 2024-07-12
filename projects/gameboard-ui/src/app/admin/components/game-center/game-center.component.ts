@@ -1,4 +1,3 @@
-import { GameCenterContext } from '@/api/admin.models';
 import { AdminService } from '@/api/admin.service';
 import { Game } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
@@ -7,6 +6,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { GameCenterContext } from './game-center.models';
 
 @Component({
   selector: 'app-game-center',

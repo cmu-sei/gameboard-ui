@@ -1,12 +1,7 @@
-<div class="modal-content" *ngIf="game">
-    <div class="modal-header">
-        <h2 class="modal-title">Add {{isTeamGame ? "Team" : "Player"}}</h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div class="modal-body my-2" *ngIf="!isWorking; else loading">
+<app-modal-content *ngIf="game" title="Add {{isTeamGame ? 'Team' : 'Player'}}" [subtitle]="game.name"
+    (confirm)="handleAddClick()"
+    [confirmDisabled]="selectedUsers.length === 0 || (!!game.minTeamSize && (selectedUsers.length < game.minTeamSize)) || (!!game.maxTeamSize && (selectedUsers.length > game.maxTeamSize))">
+    <ng-container *ngIf="!isWorking; else loading">
         <app-error-div [errors]="errors"></app-error-div>
         <div class="input-group">
             <input [(ngModel)]="searchTerm" appAutofocus [typeahead]="typeaheadSearch$" [typeaheadAsync]="true"
@@ -32,21 +27,8 @@
                 </li>
             </ul>
         </div>
-    </div>
-
-    <div class="modal-footer">
-        <!-- <div *ngIf="this.selectedUsers.length >= 2 && isTeamGame" class="form-group form-check flex-grow-1">
-            <input type="checkbox" class="form-check-input" id="addAsTeam">
-            <label class="form-check-label" for="addAsTeam">Add these users as a team</label>
-        </div> -->
-
-        <button type="button" class="btn link-button" (click)="close()">Cancel</button>
-        <button type="button" class="btn btn-success" (click)="handleAddClick()"
-            [disabled]="selectedUsers.length === 0 || (game.minTeamSize && (selectedUsers.length < game.minTeamSize)) || (game.maxTeamSize && (selectedUsers.length > game.maxTeamSize))">
-            {{ (game.maxTeamSize || 0) > 1 ? "Create this team" : "Add this player" }}
-        </button>
-    </div>
-</div>
+    </ng-container>
+</app-modal-content>
 
 <ng-template #loading>
     <app-spinner></app-spinner>

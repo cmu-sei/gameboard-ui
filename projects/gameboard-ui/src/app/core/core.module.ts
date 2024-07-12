@@ -53,12 +53,14 @@ import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
+import { DateTimeIsFuturePipe } from './pipes/datetime-is-future.pipe';
 import { DateTimeIsPastPipe } from './pipes/datetime-is-past.pipe';
 import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
 import { DateToDatetimePipe } from './pipes/date-to-datetime.pipe';
 import { DelimitedPipe } from './pipes/delimited.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
+import { EpochMsToDateTimePipe as EpochMsToDateTimePipe } from './pipes/epoch-ms-to-datetime.pipe';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { FeedbackFormComponent } from './components/feedback-form/feedback-form.component';
 import { FilterPipe } from './pipes/filter.pipe';
@@ -143,11 +145,13 @@ const PUBLIC_DECLARATIONS = [
   CumulativeTimeClockComponent,
   DateToCountdownPipe,
   DateToDatetimePipe,
+  DateTimeIsFuturePipe,
   DateTimeIsPastPipe,
   DatetimeToDatePipe,
   DelimitedPipe,
   DoughnutChartComponent,
   DropzoneComponent,
+  EpochMsToDateTimePipe,
   ErrorDivComponent,
   FeedbackFormComponent,
   FriendlyDateAndTimePipe,

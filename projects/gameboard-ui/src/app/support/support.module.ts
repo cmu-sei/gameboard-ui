@@ -19,7 +19,7 @@ import { TicketSupportToolsComponent } from './components/ticket-support-tools/t
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { TicketLabelPickerModalComponent } from './components/ticket-label-picker-modal/ticket-label-picker-modal.component';
 import { TicketListPageComponent } from './components/ticket-list-page/ticket-list-page.component';
-import { SupportRoutingModule } from './support-routing.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -33,6 +33,16 @@ import { SupportRoutingModule } from './support-routing.module';
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule.forChild([
+      {
+        path: '', component: SupportPageComponent, children: [
+          { path: 'create', component: TicketFormComponent, title: "New Ticket" },
+          { path: 'tickets', component: TicketListPageComponent, title: "Support" },
+          { path: 'tickets/:id', component: TicketDetailsComponent },
+          { path: '', pathMatch: 'full', redirectTo: 'tickets' },
+        ]
+      },
+    ]),
     CoreModule,
     UtilityModule,
     FontAwesomeModule,
@@ -41,7 +51,6 @@ import { SupportRoutingModule } from './support-routing.module';
     ButtonsModule,
     ModalModule,
     TooltipModule,
-    SupportRoutingModule,
     EventHorizonModule
   ],
 })

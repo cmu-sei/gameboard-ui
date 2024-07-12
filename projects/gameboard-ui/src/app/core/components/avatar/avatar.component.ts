@@ -7,13 +7,16 @@ export type AvatarSize = 'tiny' | 'small' | 'medium' | 'large';
   selector: 'app-avatar',
   styleUrls: ['./avatar.component.scss'],
   template: `
-    <div [class]="'avatar-container avatar-size ' + this.sizeClass" [style.background-image]="escapedImgUrl" [tooltip]="tooltip ? tooltip : ''"></div>
+    <ng-template #tolTemplate>
+      <ng-content [select]="avatarTooltip"></ng-content>
+    </ng-template>
+    <div [class]="'avatar-container avatar-size ' + this.sizeClass" [style.background-image]="escapedImgUrl" [tooltip]="tolTemplate"></div>
   `,
 })
 export class AvatarComponent implements OnChanges {
   @Input() imageUrl?: SafeUrl;
   @Input() size: AvatarSize = "medium";
-  @Input() tooltip = "";
+  @Input() appTooltip = "";
 
   @ViewChild("searchBox") searchBox?: ElementRef<Input>;
 

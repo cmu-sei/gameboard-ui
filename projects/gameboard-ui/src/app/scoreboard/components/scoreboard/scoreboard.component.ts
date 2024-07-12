@@ -12,6 +12,7 @@ import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-mo
 })
 export class ScoreboardComponent implements OnInit, OnDestroy {
   @Input() gameId?: string;
+  @Input() suppressLiveGameBanner = false;
 
   protected canViewAllScores = false;
   protected cumulativeTimeTooltip = "Cumulative Time is only used for tiebreaking purposes. When a challenge is started, a timer tracks how long it takes to solve that challenge. The sum time of all successfully solved challenges is the value in this column.";

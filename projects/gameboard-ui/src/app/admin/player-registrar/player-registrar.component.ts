@@ -13,9 +13,8 @@ import { PlayerService } from '../../api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
-import { ManageManualChallengeBonusesModalComponent } from '../components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { TeamService } from '@/api/team.service';
-import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
+import { TeamAdminContextMenuSessionResetRequest, TeamAdminContextMenuTeam } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
@@ -290,56 +289,7 @@ export class PlayerRegistrarComponent {
     });
   }
 
-  protected handlePlayerChange(player: Player) {
-    this.refresh$.next(true);
-  }
-
-  protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
-    // this is all really window-dressing around the "reset" operation, which we describe as an unenroll if the team's session hasn't started
-    const isUnenroll = request.resetType === "unenrollAndArchiveChallenges" && this.gameSessionService.canUnenroll(request.player);
-    let confirmMessage = `Are you sure you want to unenroll ${this.game.allowTeam ? " team" : ""} **${request.player.approvedName}** from the game?`;
-    let confirmTitle = `Unenroll ${request.player.approvedName}?`;
-    let confirmToast = `**${request.player.approvedName}** has been unenrolled.`;
-
-    if (!isUnenroll) {
-      confirmMessage = `Are you sure you want to reset the session for ${this.game.allowTeam ? " team" : ""} **${request.player.approvedName}**?`;
-      confirmTitle = `Reset ${request.player.approvedName}'s session?`;
-      confirmToast = `${this.game.allowTeam ? "Team " : ""}**${request.player.approvedName}**'s session has been reset.`;
-
-      // accommodate various "types" of reset that can happen (e.g. keep challenges, don't keep challenges, destroy the universe and the unenroll)
-      if (request.resetType === "preserveChallenges")
-        confirmMessage += " Their challenges **won't** be archived automatically, and they'll remain enrolled in the game.";
-      else if (request.resetType == "unenrollAndArchiveChallenges")
-        confirmMessage += " Their challenges will be archived, and they'll be unenrolled from the game.";
-    }
-
-    this.modalConfirmService.openConfirm({
-      bodyContent: confirmMessage,
-      renderBodyAsMarkdown: true,
-      title: confirmTitle,
-      onConfirm: () => {
-        this.resetSession(request);
-        this.toastService.showMessage(confirmToast);
-      },
-      confirmButtonText: "Yes, reset",
-      cancelButtonText: "No, don't reset"
-    });
-  }
-
-  protected manageManualBonuses(player: Player) {
-    this.bsModalService.show(ManageManualChallengeBonusesModalComponent, {
-      class: "modal-xl",
-      initialState: {
-        gameName: player.gameName,
-        playerName: player.approvedName,
-        teamId: player.teamId
-      }
-    });
-  }
-
-  private async resetSession(request: TeamAdminContextMenuSessionResetRequest): Promise<void> {
-    this.isLoading = true;
-    await firstValueFrom(this.teamService.resetSession({ teamId: request.player.teamId, resetType: request.resetType }));
+  protected handleTeamUpdated(team: TeamAdminContextMenuTeam) {
     this.refresh$.next(true);
   }
 }

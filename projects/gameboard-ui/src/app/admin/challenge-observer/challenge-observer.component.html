@@ -1,7 +1,7 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<a class="btn btn-link mr-2" routerLink="/admin">
+<a class="btn btn-link mr-2" *ngIf="isLegacyMode" routerLink="/admin">
   <fa-icon [icon]="faArrowLeft"></fa-icon>
   <span>Back</span>
 </a>
@@ -9,12 +9,14 @@
   <fa-icon [icon]="faSync"></fa-icon>
   <span>Refresh</span>
 </button>
-<div class="d-flex">
+
+<div *ngIf="isLegacyMode" class="d-flex">
   <h2>Observe Challenges</h2>
   <a *ngIf="!!game" class="btn btn-link mr-2 align-self-center" [routerLink]="['/admin/observer/teams', gid]">
     <span>Observe {{game.allowTeam ? 'Teams' : 'Players'}} </span>
   </a>
 </div>
+
 <div class="row">
   <div class="input-group mt-2 mb-3 col-5">
     <div class="input-group-prepend">

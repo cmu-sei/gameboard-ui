@@ -31,25 +31,27 @@
 
                     <ul *ngIf="apiTeams">
                         <li *ngFor="let team of apiTeams" class="session-list-item d-flex align-items-center">
-                            <div class="flex-grow-1">{{team.approvedName}}</div>
+                            <ng-container *ngIf="(team.sessionEnd | dateToDateTime) as sessionEndDateTime">
+                                <div class="flex-grow-1">{{team.approvedName}}</div>
 
-                            <div *ngIf="team.sessionEnd  | dateToDateTime | addDuration: { minutes: extensionInMinutes } | dateTimeIsPast"
-                                class="badge badge-danger mr-2">Session will end</div>
-                            <div>
-                                (from
+                                <div *ngIf="((team.sessionEnd | dateToDateTime) != null) && (sessionEndDateTime | addDuration: { minutes: extensionInMinutes } | dateTimeIsPast)"
+                                    class="badge badge-danger mr-2">Session will end</div>
+                                <div>
+                                    (from
 
-                                <strong class="font-bold old-session-time">
-                                    {{team.sessionEnd | friendlyDateAndTime}}
-                                </strong>
-                                to
-                                <ng-container
-                                    *ngIf="team.sessionEnd | dateToDateTime | addDuration: { minutes: extensionInMinutes } as newSessionEnd">
-                                    <strong class="font-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
-                                        [class.text-info]="!(newSessionEnd | dateTimeIsPast)">
-                                        {{ newSessionEnd | datetimeToDate | friendlyDateAndTime }}
-                                    </strong>)
-                                </ng-container>
-                            </div>
+                                    <strong class="font-bold old-session-time">
+                                        {{team.sessionEnd | friendlyDateAndTime}}
+                                    </strong>
+                                    to
+                                    <ng-container
+                                        *ngIf="sessionEndDateTime | addDuration: { minutes: extensionInMinutes } as newSessionEnd">
+                                        <strong class="font-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
+                                            [class.text-info]="!(newSessionEnd | dateTimeIsPast)">
+                                            {{ newSessionEnd | datetimeToDate | friendlyDateAndTime }}
+                                        </strong>)
+                                    </ng-container>
+                                </div>
+                            </ng-container>
                         </li>
                     </ul>
                 </div>

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DateTime } from 'luxon';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { GameCenterContext, GameCenterTeamsRequestArgs, GameCenterTeamsResults, GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
+import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
-import { DateTime } from 'luxon';
+import { GameCenterContext, GameCenterTeamsRequestArgs, GameCenterTeamsResults } from '@/admin/components/game-center/game-center.models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -49,14 +50,7 @@ export class AdminService {
   }
 
   async getGameCenterTeams(gameId: string, args: GameCenterTeamsRequestArgs): Promise<GameCenterTeamsResults> {
-    return firstValueFrom(this.http.get<GameCenterTeamsResults>(this.apiUrl.build(`admin/games/${gameId}/game-center/teams`, args)).pipe(
-      tap(results => {
-        for (const team of results.teams.items) {
-          if (team.registeredOn)
-            team.registeredOn = DateTime.fromJSDate(new Date(team.registeredOn?.toString()));
-        }
-      })
-    ));
+    return firstValueFrom(this.http.get<GameCenterTeamsResults>(this.apiUrl.build(`admin/games/${gameId}/game-center/teams`, args)));
   }
 
   getOverallSiteStats(): Observable<GetSiteOverviewStatsResponse> {

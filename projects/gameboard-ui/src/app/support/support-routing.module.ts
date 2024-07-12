@@ -13,10 +13,10 @@ import { TicketDetailsComponent } from './ticket-details/ticket-details.componen
     RouterModule.forChild([
       {
         path: '', component: SupportPageComponent, children: [
-          { path: '', pathMatch: 'full', redirectTo: 'tickets' },
           { path: 'create', component: TicketFormComponent, title: "New Ticket" },
           { path: 'tickets', component: TicketListPageComponent, title: "Support" },
           { path: 'tickets/:id', component: TicketDetailsComponent },
+          { path: '', pathMatch: 'full', redirectTo: 'tickets' },
         ]
       },
     ]),

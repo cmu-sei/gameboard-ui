@@ -1,14 +1,9 @@
-<div class="btn-group" dropdown *ngIf="team && game">
+<div class="btn-group d-flex align-items-center" dropdown *ngIf="team && game">
     <button [id]="'context-trigger-basic-' + team.id" dropdownToggle type="button"
         class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic">
         <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-        <!-- <li role="menuitem">
-            <button class="dropdown-item btn" (click)="viewRequest.emit(player)">
-                {{ isViewing ? "Collapse" : "View" }}
-            </button>
-        </li> -->
         <li role="menuitem">
             <button class="dropdown-item btn" (click)="copy(team.captain.id, 'player ID')">Copy Player ID</button>
         </li>
@@ -20,7 +15,9 @@
                 Manual Bonuses
             </button>
         </li>
-        <ng-container *ngIf="!game!.isSyncStart || !hasStartedSession">
+
+
+        <ng-container *ngIf="!hasStartedSession">
             <li class="divider dropdown-divider"></li>
             <li role="menuitem" *ngIf="!hasStartedSession">
                 <button class="dropdown-item btn btn-warning" (click)="handleDeployResources(team)">
@@ -29,13 +26,13 @@
                 </button>
             </li>
 
-            <li role="menuitem" *ngIf="!game.isSyncStart; else syncStartGameItems">
+            <li role="menuitem" *ngIf="!game.isSyncStart">
                 <button class="dropdown-item btn btn-warning" (click)="handleStartSession(team!.captain)">
                     Start <strong>{{ team!.name }}</strong>'s Session
                 </button>
             </li>
 
-            <li *ngIf="game.isSyncStart && !hasStartedSession">
+            <li *ngIf="game.isSyncStart">
                 <button class="dropdown-item btn btn-warning" [disabled]="hasStartedSession"
                     (click)="handleUpdateReady(team, !team.isReady)">
                     <strong>
@@ -45,6 +42,7 @@
                 </button>
             </li>
         </ng-container>
+
         <li class="divider dropdown-divider"></li>
         <ng-container *ngIf="hasStartedSession; else unenroll">
             <li role="menuitem">
@@ -68,9 +66,6 @@
         </ng-container>
     </ul>
 </div>
-
-<ng-template #syncStartGameItems>
-</ng-template>
 
 <ng-template #unenroll>
     <li role="menuitem">

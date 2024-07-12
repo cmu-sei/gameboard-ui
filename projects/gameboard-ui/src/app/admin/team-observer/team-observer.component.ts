@@ -1,9 +1,9 @@
 import { KeyValue } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faSyncAlt, faTv, faExternalLinkAlt, faExpandAlt, faUser, faThLarge, faMinusSquare, faPlusSquare, faCompressAlt, faSortAlphaDown, faSortAmountDownAlt, faAngleDoubleUp, faUsers, faWindowMaximize, faBullseye, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, timer, BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { debounceTime, tap, switchMap, map } from 'rxjs/operators';
+import { debounceTime, tap, switchMap, map, filter } from 'rxjs/operators';
 import { ConsoleActor } from '../../api/board-models';
 import { BoardService } from '../../api/board.service';
 import { Game } from '../../api/game-models';
@@ -17,7 +17,9 @@ import { ConfigService } from '../../utility/config.service';
   templateUrl: './team-observer.component.html',
   styleUrls: ['./team-observer.component.scss']
 })
-export class TeamObserverComponent implements OnDestroy {
+export class TeamObserverComponent implements OnInit, OnDestroy {
+  @Input() gameId?: string;
+
   refresh$ = new BehaviorSubject<boolean>(true);
   game?: Game; // game info like team or individual
   table: Map<string, ObserveTeam> = new Map<string, ObserveTeam>(); // table of teams to display
@@ -48,6 +50,7 @@ export class TeamObserverComponent implements OnDestroy {
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
 
+  protected isLegacyMode = false;
   protected searchText = "";
 
   constructor(
@@ -59,6 +62,7 @@ export class TeamObserverComponent implements OnDestroy {
   ) {
     this.mksHost = conf.mkshost;
     this.gameData = route.params.pipe(
+      filter(a => !!a.id),
       switchMap(a => this.gameApi.retrieve(a.id))
     ).subscribe(game => this.game = game);
     this.tableData = combineLatest([
@@ -67,7 +71,7 @@ export class TeamObserverComponent implements OnDestroy {
       timer(0, 60_000) // *every 60 sec* refresh challenge data (score/duration updates and new deploys) 
     ]).pipe(
       debounceTime(500),
-      tap(([a, b, c]) => this.gid = a.id),
+      tap(([a, b, c]) => this.gid = this.gameId || a.id),
       tap(() => this.isLoading = true),
       switchMap(() => this.playerApi.observeTeams(this.gid)) // tomorrow do this instead of players
     ).subscribe(data => {
@@ -91,6 +95,10 @@ export class TeamObserverComponent implements OnDestroy {
     this.term$ = this.typing$.pipe(
       debounceTime(500)
     );
+  }
+
+  public ngOnInit(): void {
+    this.isLegacyMode = !this.gameId;
   }
 
   updateTable(data: Team[]) {

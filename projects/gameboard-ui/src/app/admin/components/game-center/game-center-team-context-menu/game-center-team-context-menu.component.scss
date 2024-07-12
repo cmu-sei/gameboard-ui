@@ -1,0 +1,10 @@
+@import "../../../../../scss/_variables.scss";
+
+.btn-danger {
+  color: red;
+  font-weight: bold;
+}
+
+.btn-warning {
+  color: $warning;
+}

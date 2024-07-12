@@ -1,4 +1,4 @@
-<a class="btn btn-link mr-2" routerLink="/admin">
+<a class="btn btn-link mr-2" *ngIf="isLegacyMode" routerLink="/admin">
   <fa-icon [icon]="faArrowLeft"></fa-icon>
   <span>Back</span>
 </a>
@@ -7,12 +7,14 @@
   <span>Refresh</span>
 </button>
 
-<div *ngIf="!!game" class="d-flex">
+<!--For now, we assume an input gameId to mean that we're working in admin, which doesn't need the titling-->
+<div *ngIf="!!game && isLegacyMode" class="d-flex">
   <h2>Observe {{game.allowTeam ? 'Teams' : 'Players'}}</h2>
   <a *ngIf="!!gid" class="btn btn-link mr-2 align-self-center" [routerLink]="['/admin/observer/challenges', gid]">
     <span>Observe Challenges</span>
   </a>
 </div>
+
 <div class="row">
   <div class="input-group mt-2 mb-3 col-5">
     <div class="input-group-prepend">

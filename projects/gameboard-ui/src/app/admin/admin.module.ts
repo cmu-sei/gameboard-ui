@@ -74,6 +74,7 @@ import { GameCenterPlayersComponent } from './components/game-center/game-center
 import { GameCenterTeamContextMenuComponent } from './components/game-center/game-center-team-context-menu/game-center-team-context-menu.component';
 import { GameCenterSettingsComponent } from './components/game-center/game-center-settings/game-center-settings.component';
 import { GameCenterTicketsComponent } from './components/game-center/game-center-tickets/game-center-tickets.component';
+import { GameCenterObserveComponent } from './components/game-center/game-center-observe/game-center-observe.component';
 
 @NgModule({
   declarations: [
@@ -136,6 +137,7 @@ import { GameCenterTicketsComponent } from './components/game-center/game-center
     GameCenterTeamContextMenuComponent,
     GameCenterSettingsComponent,
     GameCenterTicketsComponent,
+    GameCenterObserveComponent,
   ],
   imports: [
     CommonModule,
@@ -177,7 +179,7 @@ import { GameCenterTicketsComponent } from './components/game-center/game-center
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: "notifications", component: AdminSystemNotificationsComponent },
-          { path: "support/settings", component: SupportSettingsComponent },
+          { path: "support/settings", component: SupportSettingsComponent, title: "Admin | Support" },
           { path: 'support', component: ChallengeBrowserComponent }
         ]
       },
