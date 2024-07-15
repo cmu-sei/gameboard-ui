@@ -18,6 +18,7 @@ export class GameCenterComponent {
   protected fa = fa;
   protected game?: Game;
   protected gameCenterCtx?: GameCenterContext;
+  protected useLegacyPlayerList = true;
 
   constructor(
     route: ActivatedRoute,

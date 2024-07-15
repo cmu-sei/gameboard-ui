@@ -1,9 +1,8 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, interval, Observable, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
@@ -14,14 +13,13 @@ import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
 import { TeamService } from '@/api/team.service';
-import { TeamAdminContextMenuSessionResetRequest, TeamAdminContextMenuTeam } from '../components/team-admin-context-menu/team-admin-context-menu.component';
+import { TeamAdminContextMenuTeam } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
 import { unique } from 'projects/gameboard-ui/src/tools';
 import { ToastService } from '@/utility/services/toast.service';
 import { AdminEnrollTeamModalComponent } from '../components/admin-enroll-team-modal/admin-enroll-team-modal.component';
-import { GameSessionService } from '@/services/game-session.service';
 
 @Component({
   selector: 'app-player-registrar',
@@ -30,6 +28,7 @@ import { GameSessionService } from '@/services/game-session.service';
   providers: [UnsubscriberService]
 })
 export class PlayerRegistrarComponent {
+  @Input() gameId?: string;
   refresh$ = new BehaviorSubject<boolean>(true);
   game!: Game;
   ctx$: Observable<{ game: Game, advanceTargetGames: Game[], players: Player[] }>;
@@ -65,8 +64,6 @@ export class PlayerRegistrarComponent {
   constructor(
     route: ActivatedRoute,
     private gameapi: GameService,
-    private gameSessionService: GameSessionService,
-    private bsModalService: BsModalService,
     private modalConfirmService: ModalConfirmService,
     private api: PlayerService,
     private clipboard: ClipboardService,
@@ -78,8 +75,8 @@ export class PlayerRegistrarComponent {
 
     const game$ = route.params.pipe(
       debounceTime(500),
-      filter(p => !!p.id),
-      switchMap(p => gameapi.retrieve(p.id)),
+      filter(p => !!this.gameId || !!p.id),
+      switchMap(p => gameapi.retrieve(this.gameId || p.id)),
       tap(r => this.game = r),
       tap(r => this.teamView = r.allowTeam ? 'collapse' : ''),
       tap(r => this.title.set(`Players: ${r.name}`))
@@ -94,7 +91,7 @@ export class PlayerRegistrarComponent {
     ]).pipe(
       tap(() => this.isLoading = true),
       debounceTime(500),
-      tap(([a, b, c]) => this.search.gid = a.id),
+      tap(([a, b, c]) => this.search.gid = (this.gameId || a.id)),
       switchMap(() => this.api.list(this.search)),
       tap(r => this.source = r),
       tap(() => this.isLoading = false),
@@ -105,9 +102,7 @@ export class PlayerRegistrarComponent {
     const players$ = scheduled([
       fetch$,
       interval(1000).pipe(map(() => this.source))
-    ], asyncScheduler).pipe(
-      mergeAll()
-    );
+    ], asyncScheduler).pipe(mergeAll());
 
     this.ctx$ = combineLatest([
       game$,

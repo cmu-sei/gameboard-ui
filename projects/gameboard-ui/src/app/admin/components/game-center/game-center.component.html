@@ -54,7 +54,19 @@
                 <app-game-mapper *ngIf="game" class="d-block mt-3" [game]="game"></app-game-mapper>
             </tab>
             <tab heading="{{ ctx.isTeamGame ? 'Teams' : 'Players' }} ({{ ctx.stats.teamCountTotal }})">
-                <app-game-center-players [gameId]="ctx.id"></app-game-center-players>
+                <div class="d-flex align-content-center">
+                    <app-whats-this
+                        whatItIs="Game Center is still under development. Uncheck this to preview our new player list!">
+                        <div class="form-check ml-2">
+                            <input type="checkbox" class="mr-2" [(ngModel)]="useLegacyPlayerList"
+                                id="use-legacy-player-list">
+                            <label for="use-legacy-player-list">Use legacy player list</label>
+                        </div>
+                    </app-whats-this>
+                </div>
+
+                <app-game-center-players *ngIf="!useLegacyPlayerList" [gameId]="ctx.id"></app-game-center-players>
+                <app-player-registrar *ngIf="useLegacyPlayerList" [gameId]="ctx.id"></app-player-registrar>
             </tab>
             <tab *ngIf="ctx.hasScoreboard" heading="Scoreboard">
                 <app-scoreboard [gameId]="ctx.id" [suppressLiveGameBanner]="true"></app-scoreboard>

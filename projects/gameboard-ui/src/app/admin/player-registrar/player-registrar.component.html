@@ -1,13 +1,13 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<a class="btn btn-link" routerLink="../../">
+<a class="btn btn-link" routerLink="../../" *ngIf="!gameId">
   <fa-icon [icon]="fa.arrowLeft"></fa-icon>
   <span>Back</span>
 </a>
 
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
-  <h4>Players &mdash; {{ctx.game.name}}</h4>
+  <h4 *ngIf="!gameId">Players &mdash; {{ctx.game.name}}</h4>
   <div>
     <div class="input-group input-group-sm">
       <div class="input-group-prepend">
