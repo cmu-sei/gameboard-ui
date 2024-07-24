@@ -1,7 +1,6 @@
 import { DateTime } from "luxon";
 import { GameEngineType } from "./spec-models";
-import { PagedArray, SimpleEntity, SimpleSponsor } from "./models";
-import { Score } from "@/services/scoring/scoring.models";
+import { DateTimeRange, SimpleEntity } from "./models";
 
 export interface AppActiveChallengeSpec {
     id: string;
@@ -53,6 +52,24 @@ export interface AppActiveTeam {
     hasTickets: boolean;
     isLateStart: boolean;
     score: number;
+}
+
+export interface GetPlayersCsvExportResponsePlayer {
+    id: string;
+    name: string;
+    game: SimpleEntity;
+    rank?: number;
+    score?: number;
+    session: DateTimeRange;
+    solvesCorrectCount: number;
+    solvesPartialCount: number;
+    team: SimpleEntity;
+    timeMs: number;
+    user: SimpleEntity;
+}
+
+export interface GetPlayersCsvExportResponse {
+    players: GetPlayersCsvExportResponsePlayer[];
 }
 
 export interface GetSiteOverviewStatsResponse {

@@ -22,7 +22,6 @@ export class PracticeModeReportService {
   }
 
   getChallengeDetail(challengeSpecId: string, parameters: PracticeModeReportFlatParameters | null | undefined, challengeDetailParameters: PracticeModeReportChallengeDetailParameters | null | undefined, paging: PagingArgs | null | undefined): Promise<PracticeModeReportChallengeDetail> {
-    console.log("get!", challengeDetailParameters);
     return firstValueFrom(this.http.get<PracticeModeReportChallengeDetail>(this.apiUrl.build(`reports/practice-area/challenge-spec/${challengeSpecId}`, { ...parameters, ...challengeDetailParameters, ...paging })).pipe(
       map(result => {
         return {

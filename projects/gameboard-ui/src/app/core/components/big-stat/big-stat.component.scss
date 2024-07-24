@@ -1,8 +1,17 @@
 @import "../../../../scss/variables";
 
+.big-stat-component {
+  padding: 4px 0;
+}
+
 .value {
   font-size: 4rem;
   font-weight: bold;
+  line-height: 4.2rem;
+}
+
+.stat-button .value {
+  line-height: unset;
 }
 
 .stat-button {
@@ -11,4 +20,8 @@
   .value span {
     border-bottom: dotted 3px $info;
   }
+}
+
+.label {
+  padding: 0 !important;
 }

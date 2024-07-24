@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 export enum StorageKey {
   ExternalGameOidc = "oidcLink",
   ExternalGameUrl = "gameServerUrl",
+  GameCenterTeamsFilterSettings = "gameCenterTeamsFilterSettings",
   Gameboard = "gameboard",
 }
 
@@ -11,15 +12,15 @@ export class LocalStorageService {
   readonly Client: Storage = window.localStorage;
   private _client = this.Client;
 
-
-  add(key: StorageKey, value: string, throwIfExists = false): void {
+  add<T extends {}>(key: StorageKey, value: T, throwIfExists = false): void {
     const finalKey = this.prependKey(key);
 
     if (throwIfExists && this._client.getItem(finalKey) !== null) {
       throw new Error(`Storage key ${finalKey} already exists in local storage.`);
     }
 
-    this._client.setItem(finalKey, value);
+    const isObjectValue = typeof value == "object";
+    this._client.setItem(finalKey, isObjectValue ? JSON.stringify(value) : value.toString());
   }
 
   /**
@@ -52,6 +53,16 @@ export class LocalStorageService {
     }
 
     return value;
+  }
+
+  getAs<T extends {}>(key: StorageKey, defaultValue: T): T {
+    const value = this._client.getItem(this.prependKey(key));
+
+    if (value === null) {
+      return defaultValue;
+    }
+
+    return JSON.parse(value) as T;
   }
 
   getArbitrary = (key: string, throwIfNotExists = false) => this.get(key as StorageKey, throwIfNotExists);

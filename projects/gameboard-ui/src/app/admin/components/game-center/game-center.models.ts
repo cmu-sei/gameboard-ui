@@ -1,7 +1,9 @@
 import { DateTime } from "luxon";
-import { PagedArray, SimpleSponsor } from "@/api/models";
+import { PagedArray, SimpleEntity, SimpleSponsor } from "@/api/models";
 import { Score } from "@/services/scoring/scoring.models";
+import { ChallengeResult } from "@/api/board-models";
 
+export type GameCenterTab = "settings" | "challenges" | "teams" | "deployment" | "practice" | "observe" | "tickets" | "scoreboard";
 export type GameCenterTeamsAdvancementFilter = "advancedFromPreviousGame" | "advancedToNextGame"
 export type GameCenterTeamsSort = "name" | "rank" | "timeRemaining" | "timeSinceStart";
 export type GameCenterTeamSessionStatus = "complete" | "notStarted" | "playing";
@@ -21,12 +23,18 @@ export interface GameCenterContext {
     isExternal: boolean;
     isLive: boolean;
     isPractice: boolean;
+    isPublished: boolean;
     isRegistrationActive: boolean;
     isTeamGame: boolean;
     stats: {
+        attemptCountPractice: number;
         playerCountActive: number;
+        playerCountCompetitive: number;
+        playerCountPractice: number;
         playerCountTotal: number;
         teamCountActive: number;
+        teamCountCompetitive: number;
+        teamCountPractice: number;
         teamCountNotStarted: number;
         teamCountTotal: number;
         topScore?: number;
@@ -38,11 +46,32 @@ export interface GameCenterContext {
     pointsAvailable: number;
 }
 
+export interface GameCenterPracticeContext {
+    users: GameCenterPracticeContextUser[];
+}
+
+export interface GameCenterPracticeContextUser {
+    id: string;
+    name: string;
+    sponsor: SimpleSponsor;
+    challenges: {
+        id: string;
+        spec: SimpleEntity;
+        attemptCount: number;
+        lastAttemptDate?: number;
+        bestAttempt?: {
+            attemptTimestamp: number;
+            result: ChallengeResult;
+            score: number;
+        }
+    }[]
+}
+
 export interface GameCenterTeamsRequestArgs {
     advancement?: GameCenterTeamsAdvancementFilter;
-    search?: string;
+    searchTerm?: string;
     sessionStatus?: GameCenterTeamSessionStatus;
-    sort: GameCenterTeamsSort;
+    sort?: GameCenterTeamsSort;
 }
 
 export interface GameCenterTeamsResults {

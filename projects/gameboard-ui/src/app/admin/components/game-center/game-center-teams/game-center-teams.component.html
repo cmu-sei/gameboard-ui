@@ -1,0 +1,142 @@
+<div *ngIf="game" class="controls-container d-flex align-items-center justify-content-end mb-3">
+    <app-confirm-button btnClass="btn btn-warning mr-2" (confirm)="handleRerankClick(game.id)"
+        tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
+    <div class="gb-button-group btn-group mr-2">
+        <button type="button" class="btn btn-info" disabled="disabled">
+            {{ selectedTeamIds.length ? selectedTeamIds.length : "All" }} {{ game.isTeamGame ? "Team" :
+            "Player" }}{{ selectedTeamIds.length === 1 ? "" : "s" }}
+        </button>
+
+        <button type="button" class="btn btn-info" tooltip="Deploy game resources"
+            (click)="handleDeployGameResources()">
+            <fa-icon [icon]="fa.computer"></fa-icon>
+        </button>
+
+        <button type="button" class="btn btn-info"
+            tooltip="Extend Sessions {{ selectedTeamIds.length ? '' : ' (select teams to extend)'}}"
+            (click)="handleExtendClick(selectedTeamIds )" [disabled]="!selectedTeamIds.length">
+            <fa-icon [icon]="fa.clock"></fa-icon>
+        </button>
+
+        <button type="button" class="btn btn-info" tooltip="Copy all players to CSV"
+            (click)="handleExportCsvData(selectedTeamIds)">
+            <fa-icon [icon]="fa.fileCsv"></fa-icon>
+        </button>
+
+        <button type="button" class="btn btn-info"
+            tooltip="Copy all {{ game.isTeamGame ? 'teams' : 'players' }} to mail format"
+            (click)="handleExportMailMetaData()">
+            <fa-icon [icon]="fa.envelope"></fa-icon>
+        </button>
+    </div>
+
+    <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(game)">
+        <fa-icon [icon]="fa.plus"></fa-icon>
+        Add {{game.isTeamGame ? "Team" : "Player"}}
+    </button>
+</div>
+
+<div class="filters-container d-flex align-items-center mb-4">
+    <input type="text" minlength="2" placeholder="Search {{ game?.isTeamGame ? 'teams' : 'players' }}"
+        [(ngModel)]="filterSettings.searchTerm" (input)="searchInput$.next($event)" class="form-control flex-grow-1">
+
+    <select class="form-control ml-2" [(ngModel)]="filterSettings.advancement" (change)="load()">
+        <option [ngValue]="undefined">[Any advancement]</option>
+        <option value="advancedFromPreviousGame">Advanced from a previous game</option>
+        <option value="advancedToNextGame">Advanced to next game</option>
+    </select>
+
+    <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
+        <option [ngValue]="undefined" (change)="load()">[Any status]</option>
+        <option value="complete">Finished</option>
+        <option value="playing">Playing now</option>
+        <option value="notStarted">Not Started</option>
+    </select>
+
+    <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
+        <option value="rank">Sort by rank</option>
+        <option value="name">Sort by name</option>
+        <option value="timeRemaining">Sort by time remaining</option>
+    </select>
+
+    <ng-container
+        *ngIf="filterSettings.sort != 'rank' || filterSettings.sessionStatus || filterSettings.advancement || filterSettings.searchTerm">
+        <button type="button" class="btn btn-warning ml-2" (click)="handleClearAllFilters()">Clear</button>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="!isLoading || !results || !game; else loading">
+    <ul *ngIf="results?.teams?.items?.length">
+        <li *ngFor="let team of results?.teams?.items">
+            <app-team-list-card [team]="team" (teamSelected)="handleTeamSelected($event)">
+                <div primaryDetail>
+                    <div [class.cursor-pointer]="team.score.totalScore > 0"
+                        [class.text-dashed-underline]="team.score | scoreToTooltip"
+                        (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)"
+                        triggers="mouseenter:mouseleave">
+
+                        {{ team.score.totalScore }} points
+                    </div>
+
+                    <div *ngIf="team.score.totalScore > 0" class="text-muted">
+                        ({{ team.challengesCompleteCount }} complete / {{ team.challengesPartialCount }} partial)
+                    </div>
+                </div>
+
+                <div secondaryDetail>
+                    <ng-container *ngIf="team.session.start && team.session.end | epochMsToDateTime | datetimeIsFuture">
+                        <div>Playing now</div>
+                        (<strong class="text-info"
+                            [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
+                            team.session.timeRemainingMs | countdown }}</strong>
+                        remaining)
+                    </ng-container>
+
+                    <ng-container *ngIf="!team.session.start">
+                        <div class="text-muted">Not playing yet</div>
+
+                        <span *ngIf="!team.session.start">
+                            (Registered <strong class="text-success"
+                                [tooltip]="(team.registeredOn | epochMsToDateTime | friendlyDateAndTime) || ''">{{
+                                team.registeredOn | epochMsToDateTime |
+                                shortdate }}</strong>)
+                        </span>
+                    </ng-container>
+
+                    <span *ngIf="team.session.end | epochMsToDateTime | dateTimeIsPast">
+                        Finished
+                        <strong class="text-danger"
+                            [tooltip]="(team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">
+                            {{ team.session.end | epochMsToDateTime | shortdate }}
+                        </strong>
+                    </span>
+                </div>
+
+                <div contextMenu>
+                    <app-game-center-team-context-menu *ngIf="game" [team]="team"
+                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart}"
+                        (teamUpdated)="load()"></app-game-center-team-context-menu>
+                </div>
+            </app-team-list-card>
+        </li>
+    </ul>
+</ng-container>
+
+<ng-template #playerAvatar let-player>
+    <app-avatar [imageUrl]="player.sponsor | sponsorToLogoUri" size="tiny">
+        <div avatarTooltip>
+            <div>{{player.name}}</div>
+            <div class="text-muted">
+                {{player.sponsor.name}}
+            </div>
+        </div>
+    </app-avatar>
+</ng-template>
+
+<ng-template #noMatches>
+    <p class="my-2 text-muted text-center">No players match your search.</p>
+</ng-template>
+
+<ng-template #loading>
+    <app-spinner>Finding players...</app-spinner>
+</ng-template>

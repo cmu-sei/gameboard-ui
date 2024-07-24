@@ -92,9 +92,7 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
       switchMap(() => this.api.consoleActors(this.gid)),
       map(data => new Map(data.map(i => [i.userId, i])))
     );
-    this.term$ = this.typing$.pipe(
-      debounceTime(500)
-    );
+    this.term$ = this.typing$.pipe(debounceTime(500));
   }
 
   public ngOnInit(): void {

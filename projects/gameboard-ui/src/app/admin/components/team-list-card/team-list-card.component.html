@@ -1,0 +1,50 @@
+<div *ngIf="team" class="card my-2">
+    <div class="card-body d-flex align-items-center flex-grow-1">
+        <div class="team-select text-center">
+            <input type="checkbox" (change)="handleTeamSelected($event, team.id)">
+        </div>
+
+        <div *ngIf="!hideRanks" class="fs-20 mx-2 text-center team-rank">
+            {{ team.rank || "--" }}
+        </div>
+
+        <app-avatar *ngIf="team.players.length == 1" [tooltip]="team.captain.sponsor.name"
+            [imageUrl]="team.captain.sponsor | sponsorToLogoUri" size="small" class="mr-3"></app-avatar>
+
+        <div class="flex-grow-1">
+            <h5 class="card-title my-1 overflow-ellipsis">{{ team.name }}</h5>
+            <h6 class="fs-10 text-muted"> {{ team.captain.sponsor.name }}</h6>
+
+            <div class="mt-3" *ngIf="team.players.length > 1">
+                <ul class="d-flex align-items-center" *ngIf="team.players.length > 1">
+                    <li class="mr-3" *ngFor="let player of team.players">
+                        <div *ngTemplateOutlet="playerAvatar; context: { $implicit: player }"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mx-4 width-20 fs-10">
+            <ng-content select="[secondaryDetail]"></ng-content>
+        </div>
+
+        <div class="mx-4 width-20 fs-10">
+            <ng-content select="[primaryDetail]"></ng-content>
+        </div>
+
+        <div class="width-5">
+            <ng-content selected="[contextMenu]"></ng-content>
+        </div>
+    </div>
+</div>
+
+<ng-template #playerAvatar let-player>
+    <app-avatar [imageUrl]="player.sponsor | sponsorToLogoUri" size="tiny">
+        <div avatarTooltip>
+            <div>{{player.name}}</div>
+            <div class="text-muted">
+                {{player.sponsor.name}}
+            </div>
+        </div>
+    </app-avatar>
+</ng-template>

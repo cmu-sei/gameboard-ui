@@ -1,0 +1,17 @@
+<ng-container *ngIf="!isLoading; else loading">
+    <div *ngIf="ctx && ctx.users">
+        <ul>
+            <li *ngFor="let user of ctx!.users">
+                <app-team-list-card [team]="teamCardContexts[user.id]" [hideRanks]="true">
+                    <div contextMenu>
+                        <button type="button" class="btn btn-info">More</button>
+                    </div>
+                </app-team-list-card>
+            </li>
+        </ul>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading practice data...</app-spinner>
+</ng-template>

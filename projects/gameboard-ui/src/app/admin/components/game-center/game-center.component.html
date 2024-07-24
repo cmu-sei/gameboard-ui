@@ -1,7 +1,7 @@
 <ng-container *ngIf="gameCenterCtx as ctx; else loading">
     <div class="hero-thing my-4 d-flex flex-wrap align-content-center">
         <app-game-card-image class="d-block" [game]="ctx"></app-game-card-image>
-        <div class="game-info-container ml-3 pt-2">
+        <div class="game-info-container d-flex flex-column ml-3 pt-2">
             <h1 class="fs-20 m-0">{{ ctx.name }}</h1>
 
             <h2 class="fs-13 font-weight-bold text-info text-upper">
@@ -11,71 +11,81 @@
                 Game
             </h2>
 
-            <h3 class="fs-12">
-                {{ ctx | gameClassificationToString }}
-            </h3>
+            <div class="flex-grow-1"></div>
+            <div>
+                <h3 class="fs-12">
+                    {{ ctx | gameClassificationToString }}
+                </h3>
+                <h4 class="fs-10" *ngIf="ctx.executionWindow.start && ctx.executionWindow.end">
+                    {{ ctx.executionWindow.start | friendlyDateAndTime }}
+                    &mdash;
+                    {{ ctx.executionWindow.end | friendlyDateAndTime }}
+                </h4>
 
-            <h4 class="fs-10" *ngIf="ctx.executionWindow.start && ctx.executionWindow.end">
-                {{ ctx.executionWindow.start | friendlyDateAndTime }}
-                &mdash;
-                {{ ctx.executionWindow.end | friendlyDateAndTime }}
-            </h4>
-
-            <div *ngIf="ctx.isLive || ctx.isRegistrationActive" class="d-flex align-content-center mt-2">
-                <div *ngIf="ctx.isRegistrationActive" class="badge badge-info text-upper mr-2 p-1">
-                    Registration Available
+                <div *ngIf="!ctx.isPractice && (ctx.isLive || ctx.isRegistrationActive)"
+                    class="d-flex align-content-center mt-2">
+                    <div *ngIf="!ctx.isPublished" class="badge badge-warning mr-2 text-upper p-1">Unpublished</div>
+                    <div *ngIf="ctx.isRegistrationActive" class="badge badge-info text-upper mr-2 p-1">
+                        Registration Available
+                    </div>
+                    <div *ngIf="ctx.isLive" class="badge badge-info text-upper p-1">Live</div>
                 </div>
-                <div *ngIf="ctx.isLive" class="badge badge-info text-upper p-1">Live</div>
             </div>
         </div>
     </div>
 
     <div class="stats-container mt-3 d-flex flex-wrap align-items-baseline justify-content-between">
         <app-big-stat *ngIf="ctx.stats.teamCountNotStarted" [value]="ctx.stats.teamCountNotStarted"
-            [label]="(game?.isTeamGame ? 'Teams' : 'Players') + ' not started'"></app-big-stat>
+            [label]="(ctx.isTeamGame ? 'Teams' : 'Players') + ' not started'"></app-big-stat>
         <app-big-stat [value]="ctx.stats.playerCountActive" label="Active players"></app-big-stat>
-        <app-big-stat *ngIf="game?.isTeamGame" [value]="ctx.stats.teamCountActive" label="Active teams"></app-big-stat>
+        <app-big-stat *ngIf="ctx.isTeamGame" [value]="ctx.stats.teamCountActive" label="Active teams"></app-big-stat>
         <app-big-stat [value]="ctx.stats.playerCountTotal" label="Total players"></app-big-stat>
-        <app-big-stat *ngIf="game?.isTeamGame" [value]="ctx.stats.teamCountTotal" label="Total teams"></app-big-stat>
+        <app-big-stat *ngIf="ctx.isTeamGame" [value]="ctx.stats.teamCountTotal" label="Total teams"></app-big-stat>
         <app-big-stat *ngIf="ctx.stats.topScore" [value]="ctx.stats.topScore" label="Top Score"
             [subLabel]="ctx.stats.topScoreTeamName"></app-big-stat>
+        <app-big-stat *ngIf="ctx.isPractice" [value]="ctx.stats.attemptCountPractice"
+            label="Practice attempts"></app-big-stat>
     </div>
-
 
     <div class="tabs-container d-block mt-5">
         <tabset>
-            <tab>
+            <tab [active]="selectedTab === 'settings'" (selectTab)="handleSelect('settings')">
                 <ng-template tabHeading>
                     <fa-icon [icon]="fa.gear"></fa-icon>
                 </ng-template>
-                <app-game-center-settings [gameId]="ctx.id"></app-game-center-settings>
+                <app-game-center-settings *ngIf="selectedTab === 'settings'"
+                    [gameId]="ctx.id"></app-game-center-settings>
             </tab>
-            <tab [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
-                <app-game-mapper *ngIf="game" class="d-block mt-3" [game]="game"></app-game-mapper>
+            <tab [active]="selectedTab === 'challenges'" (selectTab)="handleSelect('challenges')"
+                [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
+                <app-game-mapper *ngIf="selectedTab === 'challenges' && game" class="d-block mt-3"
+                    [game]="game"></app-game-mapper>
             </tab>
-            <tab heading="{{ ctx.isTeamGame ? 'Teams' : 'Players' }} ({{ ctx.stats.teamCountTotal }})">
-                <div class="d-flex align-content-center">
-                    <app-whats-this
-                        whatItIs="Game Center is still under development. Uncheck this to preview our new player list!">
-                        <div class="form-check ml-2">
-                            <input type="checkbox" class="mr-2" [(ngModel)]="useLegacyPlayerList"
-                                id="use-legacy-player-list">
-                            <label for="use-legacy-player-list">Use legacy player list</label>
-                        </div>
-                    </app-whats-this>
-                </div>
-
-                <app-game-center-players *ngIf="!useLegacyPlayerList" [gameId]="ctx.id"></app-game-center-players>
-                <app-player-registrar *ngIf="useLegacyPlayerList" [gameId]="ctx.id"></app-player-registrar>
+            <tab [active]="selectedTab === 'teams'" (selectTab)="handleSelect('teams')"
+                heading="{{ ctx.isTeamGame ? 'Teams' : 'Players' }} ({{ ctx.stats.teamCountCompetitive }})">
+                <app-game-center-teams *ngIf="selectedTab === 'teams'" [gameId]="ctx.id"></app-game-center-teams>
             </tab>
-            <tab *ngIf="ctx.hasScoreboard" heading="Scoreboard">
-                <app-scoreboard [gameId]="ctx.id" [suppressLiveGameBanner]="true"></app-scoreboard>
+            <tab [active]="selectedTab === 'practice'" (selectTab)="handleSelect('practice')" *ngIf="ctx.isPractice"
+                heading="Practice">
+                <app-game-center-practice *ngIf="selectedTab === 'practice'"
+                    [gameId]="ctx.id"></app-game-center-practice>
             </tab>
-            <tab heading="Observe">
-                <app-game-center-observe [gameId]="ctx.id"></app-game-center-observe>
+            <tab [active]="selectedTab === 'deployment'" *ngIf="ctx.isExternal" (selectTab)="handleSelect('deployment')"
+                heading="Deployment">
+                <app-external-game-admin *ngIf="selectedTab === 'deployment' && ctx.isExternal"
+                    [gameId]="ctx.id"></app-external-game-admin>
             </tab>
-            <tab [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')">
-                <app-game-center-tickets [gameId]="ctx.id"></app-game-center-tickets>
+            <tab [active]="selectedTab === 'scoreboard'" (selectTab)="handleSelect('scoreboard')"
+                *ngIf="ctx.hasScoreboard" heading="Scoreboard">
+                <app-scoreboard *ngIf="selectedTab === 'scoreboard'" [gameId]="ctx.id"
+                    [suppressLiveGameBanner]="true"></app-scoreboard>
+            </tab>
+            <tab [active]="selectedTab === 'observe'" (selectTab)="handleSelect('observe')" heading="Observe">
+                <app-game-center-observe *ngIf="selectedTab === 'observe'" [gameId]="ctx.id"></app-game-center-observe>
+            </tab>
+            <tab [active]="selectedTab === 'tickets'" (selectTab)="handleSelect('tickets')"
+                [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')">
+                <app-game-center-tickets *ngIf="selectedTab === 'tickets'" [gameId]="ctx.id"></app-game-center-tickets>
             </tab>
         </tabset>
 

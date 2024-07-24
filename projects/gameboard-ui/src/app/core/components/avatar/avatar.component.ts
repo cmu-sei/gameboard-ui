@@ -16,7 +16,6 @@ export type AvatarSize = 'tiny' | 'small' | 'medium' | 'large';
 export class AvatarComponent implements OnChanges {
   @Input() imageUrl?: SafeUrl;
   @Input() size: AvatarSize = "medium";
-  @Input() appTooltip = "";
 
   @ViewChild("searchBox") searchBox?: ElementRef<Input>;
 

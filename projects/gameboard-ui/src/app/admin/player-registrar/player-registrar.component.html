@@ -210,9 +210,7 @@
             </select>
           </div>
         </div>
-        <!-- <app-admin-player-session [player]="player" (onManageManualBonusesRequest)="manageManualBonuses(player)"
-          (onResetSessionRequest)="confirmReset($event)"
-          (onUnenrollRequest)="unenroll(player)"></app-admin-player-session> -->
+        <app-admin-player-session [player]="player" (onUnenrollRequest)="unenroll(player)"></app-admin-player-session>
       </div>
     </div>
   </ng-container>

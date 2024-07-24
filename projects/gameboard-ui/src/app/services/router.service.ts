@@ -9,6 +9,7 @@ import { PlayerMode } from '@/api/player-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/tools/functions";
+import { GameCenterTab } from '@/admin/components/game-center/game-center.models';
 
 export interface QueryParamsUpdate {
   parameters?: Params,
@@ -105,6 +106,10 @@ export class RouterService implements OnDestroy {
 
   public toCertificatePrintable(mode: PlayerMode, challengeSpecOrGameId: string) {
     return this.router.navigateByUrl(this.getCertificatePrintableUrl(mode, challengeSpecOrGameId));
+  }
+
+  public toGameCenter(gameId: string, selectedTab?: GameCenterTab) {
+    return this.router.navigateByUrl(`/admin/game/${gameId}` + ('/' + selectedTab));
   }
 
   public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): Promise<boolean> {

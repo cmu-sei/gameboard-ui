@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { DateTime } from 'luxon';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
+import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetPlayersCsvExportResponse, GetPlayersCsvExportResponsePlayer, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
-import { GameCenterContext, GameCenterTeamsRequestArgs, GameCenterTeamsResults } from '@/admin/components/game-center/game-center.models';
+import { GameCenterContext, GameCenterPracticeContext, GameCenterTeamsRequestArgs, GameCenterTeamsResults } from '@/admin/components/game-center/game-center.models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -40,6 +40,19 @@ export class AdminService {
     );
   }
 
+  async getPlayersExport(gameId: string, teamIds?: string[]): Promise<GetPlayersCsvExportResponsePlayer[]> {
+    return firstValueFrom(this.http.get<GetPlayersCsvExportResponse>(this.apiUrl.build(`admin/games/${gameId}/players/export`, { gameId, teamIds })).pipe(
+      map(res => {
+        for (const player of res.players) {
+          player.session.start = player.session.start ? DateTime.fromISO(player.session.start.toString()) : undefined;
+          player.session.end = player.session.end ? DateTime.fromISO(player.session.end.toString()) : undefined;
+        }
+
+        return res.players;
+      })
+    ));
+  }
+
   async getGameCenterContext(gameId: string): Promise<GameCenterContext> {
     return firstValueFrom(this.http.get<GameCenterContext>(this.apiUrl.build(`admin/games/${gameId}/game-center`)).pipe(
       tap(ctx => {
@@ -47,6 +60,10 @@ export class AdminService {
         ctx.executionWindow.end = DateTime.fromJSDate(new Date(ctx.executionWindow.end.toString()));
       })
     ));
+  }
+
+  async getGameCenterPracticeContext(gameId: string): Promise<GameCenterPracticeContext> {
+    return firstValueFrom(this.http.get<GameCenterPracticeContext>(this.apiUrl.build(`admin/games/${gameId}/game-center/practice`)));
   }
 
   async getGameCenterTeams(gameId: string, args: GameCenterTeamsRequestArgs): Promise<GameCenterTeamsResults> {

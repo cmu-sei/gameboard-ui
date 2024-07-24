@@ -9,6 +9,14 @@
     <div class="modal-body">
         <app-error-div [errors]="errors"></app-error-div>
         <ng-container *ngIf="!isWorking; else loading">
+            <alert *ngIf="ineligibleTeamIds.length" type="warning">
+                The following teamIds are ineligible for extension. They may not have started their session yet:
+
+                <ul class="mt-2 mb-0">
+                    <li *ngFor="let ineligibleTeamId of ineligibleTeamIds">{{ ineligibleTeamId }}</li>
+                </ul>
+            </alert>
+
             <div class="form-group px-0">
                 <label for="extensionInMinutes">Extension Length</label>
                 <input type="number" class="form-control" id="extensionInMinutes" [(ngModel)]="extensionInMinutes"
@@ -62,8 +70,8 @@
     <div class="modal-footer">
         <button type="button" class="btn" (click)="close()" [disabled]="isWorking">Cancel</button>
         <button type="button" [class.btn-success]="extensionInMinutes > 0 ||  !!extensionInMinutes"
-            [class.btn-warning]="extensionInMinutes < 0" class="btn btn-success"
-            (click)="extend(teamIds, extensionInMinutes)" [disabled]="isWorking || !extensionInMinutes">{{
+            [class.btn-warning]="extensionInMinutes < 0" class="btn btn-success" (click)="extend(extensionInMinutes)"
+            [disabled]="isWorking || !extensionInMinutes">{{
             extensionInMinutes > 0 ? "Extend" : "Shorten" }} </button>
     </div>
 </div>

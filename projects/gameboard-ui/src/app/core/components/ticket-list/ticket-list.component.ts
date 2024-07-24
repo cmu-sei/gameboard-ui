@@ -31,6 +31,7 @@ export class TicketListComponent implements OnDestroy {
   assignFilter: string = "Any Assignment";
 
   curOrderItem: string = "created";
+  hideTitle = false;
   isDescending: boolean = true;
   hoverOrderItem: string = "";
   showHoverCaret: boolean = false;
@@ -57,6 +58,7 @@ export class TicketListComponent implements OnDestroy {
     this.statusFilter = config.local.ticketFilter || "Any Status";
     this.assignFilter = config.local.ticketType || "Any Assignment";
     this.curOrderItem = config.local.ticketOrder || "created";
+    this.hideTitle = !!this.gameId;
     this.isDescending = config.local.ticketOrderDesc || true;
 
     const canManage$ = local.user$.pipe(
