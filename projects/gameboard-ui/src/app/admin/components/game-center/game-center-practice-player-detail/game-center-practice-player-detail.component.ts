@@ -1,4 +1,15 @@
 import { Component } from '@angular/core';
+import { GameCenterPracticeChallengeSpec } from '../game-center.models';
+import { SimpleEntity } from '@/api/models';
+
+export interface GameCenterPracticePlayerDetailContext {
+  id: string;
+  name: string;
+  game: SimpleEntity;
+  totalAttempts: number;
+  uniqueChallengeSpecs: number;
+  challengeSpecs: GameCenterPracticeChallengeSpec[]
+}
 
 @Component({
   selector: 'app-game-center-practice-player-detail',
@@ -6,5 +17,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./game-center-practice-player-detail.component.scss']
 })
 export class GameCenterPracticePlayerDetailComponent {
-
+  ctx?: GameCenterPracticePlayerDetailContext;
 }

@@ -1,0 +1,51 @@
+<app-modal-content *ngIf="ctx" [title]="ctx.name" subtitle="{{ ctx.game.name }} (Practice)" [hideCancel]="true">
+    <div class="d-flex flex-wrap align-items-start">
+        <div class="flex-grow-1">
+            <h5 class="fs-11 font-weight-bold text-uppercase m-0">Total Challenges Attempted</h5>
+            <div>{{ ctx.uniqueChallengeSpecs }}</div>
+        </div>
+        <div class="flex-grow-1">
+            <h5 class="fs-11 font-weight-bold text-uppercase m-0">Total Attempts</h5>
+            <div>{{ ctx.totalAttempts }}</div>
+        </div>
+    </div>
+
+    <table class="table gameboard-table mt-5">
+        <col>
+        <col>
+        <col>
+        <col>
+
+        <thead>
+            <tr>
+                <th>Challenge</th>
+                <th class="numeric-col">Attempts</th>
+                <th class="date-col">Last Attempt</th>
+                <th class="numeric-col">Best Score</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let spec of ctx.challengeSpecs">
+                <td>{{ spec.name }}</td>
+                <td class="numeric-col">{{ spec.attemptCount}}</td>
+                <td class="date-col">
+                    {{ spec.lastAttemptDate | epochMsToDateTime | shortdate }}
+                    <div class="text-muted">{{ spec.lastAttemptDate | epochMsToDateTime | friendlyTime }}</div>
+                </td>
+                <td class="numeric-col">
+                    <ng-container *ngIf="spec.bestAttempt">
+                        <div class="font-weight-bold {{ spec.bestAttempt.result | challengeResultColor }}">
+                            {{ spec.bestAttempt.result | challengeResultPretty }}
+                        </div>
+                        <div class="text-muted">({{ spec.bestAttempt.score}} points)</div>
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading player data...</app-spinner>
+</ng-template>

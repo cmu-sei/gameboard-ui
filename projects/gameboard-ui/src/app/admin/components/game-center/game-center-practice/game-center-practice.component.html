@@ -1,10 +1,43 @@
+<div class="filters-container d-flex align-items-center mb-4">
+    <input type="text" minlength="2" placeholder="Search players" [(ngModel)]="filterSettings.searchTerm"
+        (input)="searchInput$.next(searchInput.value)" class="form-control d-block flex-grow-1" #searchInput>
+
+    <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
+        <option [ngValue]="undefined" (change)="load()">[Any status]</option>
+        <option value="playing">Playing</option>
+        <option value="notPlaying">Not playing</option>
+    </select>
+
+    <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
+        <option value="attemptCount">Sort by attempt count</option>
+        <option value="name">Sort by name</option>
+    </select>
+
+    <ng-container *ngIf="filterSettings.sort != 'name' || filterSettings.sessionStatus || filterSettings.searchTerm">
+        <button type="button" class="btn btn-warning ml-2" (click)="handleClearAllFilters()">Clear</button>
+    </ng-container>
+</div>
+
 <ng-container *ngIf="!isLoading; else loading">
     <div *ngIf="ctx && ctx.users">
         <ul>
             <li *ngFor="let user of ctx!.users">
                 <app-team-list-card [team]="teamCardContexts[user.id]" [hideRanks]="true">
+                    <div primaryDetail>
+                        {{ user.totalAttempts }} {{ "attempt" | pluralizer:user.totalAttempts }}
+                        <div class="text-muted">
+                            ({{ user.uniqueChallengeSpecs }} {{ "challenge" | pluralizer:user.uniqueChallengeSpecs }})
+                        </div>
+                    </div>
+                    <div secondaryDetail *ngIf="user.activeChallenge">
+                        Playing "{{ user.activeChallenge.name }}" now
+                        <div class="badge badge-info">
+                            <app-countdown [countdownTo]="user.activeChallengeEndTimestamp"></app-countdown>
+                            remaining
+                        </div>
+                    </div>
                     <div contextMenu>
-                        <button type="button" class="btn btn-info">More</button>
+                        <button type="button" class="btn btn-info" (click)="handleUserDetailClick(user)">More</button>
                     </div>
                 </app-team-list-card>
             </li>
@@ -14,4 +47,9 @@
 
 <ng-template #loading>
     <app-spinner>Loading practice data...</app-spinner>
+</ng-template>
+
+<ng-template #noUsers>
+    <div class="text-center mt-4 text-muted">No one has attempted challenges from this game in the Practice Area yet.
+    </div>
 </ng-template>

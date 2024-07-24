@@ -3,6 +3,9 @@ import { PagedArray, SimpleEntity, SimpleSponsor } from "@/api/models";
 import { Score } from "@/services/scoring/scoring.models";
 import { ChallengeResult } from "@/api/board-models";
 
+export type GameCenterPracticeSessionStatus = "playing" | "notPlaying";
+export type GameCenterPracticeSort = "attemptCount" | "name";
+
 export type GameCenterTab = "settings" | "challenges" | "teams" | "deployment" | "practice" | "observe" | "tickets" | "scoreboard";
 export type GameCenterTeamsAdvancementFilter = "advancedFromPreviousGame" | "advancedToNextGame"
 export type GameCenterTeamsSort = "name" | "rank" | "timeRemaining" | "timeSinceStart";
@@ -47,24 +50,37 @@ export interface GameCenterContext {
 }
 
 export interface GameCenterPracticeContext {
+    game: SimpleEntity;
     users: GameCenterPracticeContextUser[];
+}
+
+export interface GameCenterPracticeChallengeSpec {
+    id: string;
+    name: string;
+    tag?: string;
+    activeAttempt: {
+        attemptTimestamp: number;
+        result: ChallengeResult;
+        score: number;
+    }
+    attemptCount: number;
+    lastAttemptDate?: number;
+    bestAttempt?: {
+        attemptTimestamp: number;
+        result: ChallengeResult;
+        score: number;
+    }
 }
 
 export interface GameCenterPracticeContextUser {
     id: string;
     name: string;
     sponsor: SimpleSponsor;
-    challenges: {
-        id: string;
-        spec: SimpleEntity;
-        attemptCount: number;
-        lastAttemptDate?: number;
-        bestAttempt?: {
-            attemptTimestamp: number;
-            result: ChallengeResult;
-            score: number;
-        }
-    }[]
+    totalAttempts: number;
+    activeChallenge?: SimpleEntity;
+    activeChallengeEndTimestamp?: number;
+    uniqueChallengeSpecs: number;
+    challengeSpecs: GameCenterPracticeChallengeSpec[]
 }
 
 export interface GameCenterTeamsRequestArgs {
@@ -115,3 +131,9 @@ export interface GameCenterTeamsSession {
 }
 
 export type GameCenterTeamsStatus = "complete" | "notStarted" | "playing";
+
+export interface GetGameCenterPracticeContextRequest {
+    searchTerm?: string;
+    sessionStatus?: GameCenterPracticeSessionStatus;
+    sort?: GameCenterPracticeSort;
+}

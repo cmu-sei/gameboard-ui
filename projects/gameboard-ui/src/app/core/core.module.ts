@@ -111,6 +111,7 @@ import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.component';
 import { ToTemplateContextPipe } from './pipes/to-template-context.pipe';
 import { TrimPipe } from './pipes/trim.pipe';
+import { UntilDateTimePipe } from './pipes/until-datetime.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhatsThisComponent } from './components/whats-this/whats-this.component';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
@@ -212,6 +213,7 @@ const PUBLIC_DECLARATIONS = [
   TicketLabelPickerComponent,
   TicketListComponent,
   TicketStatusBadgePipe,
+  UntilDateTimePipe,
   UrlRewritePipe,
   WhatsThisComponent,
   WhitespacePipe,

@@ -5,7 +5,7 @@ import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
 import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetPlayersCsvExportResponse, GetPlayersCsvExportResponsePlayer, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
-import { GameCenterContext, GameCenterPracticeContext, GameCenterTeamsRequestArgs, GameCenterTeamsResults } from '@/admin/components/game-center/game-center.models';
+import { GameCenterContext, GameCenterPracticeContext, GameCenterPracticeSessionStatus, GameCenterTeamsRequestArgs, GameCenterTeamsResults, GetGameCenterPracticeContextRequest } from '@/admin/components/game-center/game-center.models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -62,8 +62,8 @@ export class AdminService {
     ));
   }
 
-  async getGameCenterPracticeContext(gameId: string): Promise<GameCenterPracticeContext> {
-    return firstValueFrom(this.http.get<GameCenterPracticeContext>(this.apiUrl.build(`admin/games/${gameId}/game-center/practice`)));
+  async getGameCenterPracticeContext(gameId: string, args: GetGameCenterPracticeContextRequest): Promise<GameCenterPracticeContext> {
+    return firstValueFrom(this.http.get<GameCenterPracticeContext>(this.apiUrl.build(`admin/games/${gameId}/game-center/practice`, args)));
   }
 
   async getGameCenterTeams(gameId: string, args: GameCenterTeamsRequestArgs): Promise<GameCenterTeamsResults> {
