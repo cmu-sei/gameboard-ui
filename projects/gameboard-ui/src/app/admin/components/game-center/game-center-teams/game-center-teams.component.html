@@ -71,14 +71,15 @@
             <app-team-list-card [team]="team" (teamClicked)="handleTeamClick($event)"
                 (teamSelected)="handleTeamSelected($event)">
                 <div primaryDetail>
-                    <div [class.cursor-pointer]="team.score.totalScore > 0"
+                    <div class="font-weight-bold" [class.cursor-pointer]="team.score.totalScore > 0"
                         (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)">
                         <span [class.text-dashed-underline]="team.score | scoreToTooltip">
                             {{ team.score.totalScore }} points
                         </span>
 
-                        <span *ngIf="team.session.timeCumulativeMs">({{ team.session.timeCumulativeMs | msToDuration
-                            }})</span>
+                        <span *ngIf="team.session.timeCumulativeMs" class="text-muted">
+                            ({{ team.session.timeCumulativeMs | msToDuration }})
+                        </span>
                     </div>
 
                     <div *ngIf="team.score.totalScore > 0" class="text-muted">
