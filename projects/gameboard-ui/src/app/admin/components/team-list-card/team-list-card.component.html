@@ -8,10 +8,11 @@
             {{ team.rank || "--" }}
         </div>
 
-        <app-avatar *ngIf="team.players.length <= 1" [tooltip]="team.captain.sponsor.name"
-            [imageUrl]="team.captain.sponsor | sponsorToLogoUri" size="small" class="ml-3"></app-avatar>
+        <app-avatar (click)="handleTeamClicked(team.id)" class="cursor-pointer" *ngIf="team.players.length <= 1"
+            [tooltip]="team.captain.sponsor.name" [imageUrl]="team.captain.sponsor | sponsorToLogoUri" size="small"
+            class="ml-3"></app-avatar>
 
-        <div class="flex-grow-1 ml-3">
+        <div class="flex-grow-1 ml-3 cursor-pointer" (click)="handleTeamClicked(team.id)">
             <h5 class="card-title my-1 overflow-ellipsis">{{ team.name }}</h5>
             <h6 class="fs-10 text-muted"> {{ team.captain.sponsor.name }}</h6>
 

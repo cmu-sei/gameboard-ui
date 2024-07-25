@@ -68,7 +68,8 @@
 <ng-container *ngIf="!isLoading || !results || !game; else loading">
     <ul *ngIf="results?.teams?.items?.length">
         <li *ngFor="let team of results?.teams?.items">
-            <app-team-list-card [team]="team" (teamSelected)="handleTeamSelected($event)">
+            <app-team-list-card [team]="team" (teamClicked)="handleTeamClick($event)"
+                (teamSelected)="handleTeamSelected($event)">
                 <div primaryDetail>
                     <div [class.cursor-pointer]="team.score.totalScore > 0"
                         [class.text-dashed-underline]="team.score | scoreToTooltip"
@@ -114,7 +115,7 @@
 
                 <div contextMenu>
                     <app-game-center-team-context-menu *ngIf="game" [team]="team"
-                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart}"
+                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart, isTeamGame: game.isTeamGame }"
                         (teamUpdated)="load()"></app-game-center-team-context-menu>
                 </div>
             </app-team-list-card>

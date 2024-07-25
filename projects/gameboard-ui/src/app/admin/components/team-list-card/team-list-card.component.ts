@@ -17,11 +17,17 @@ export type TeamListCardContext = {
 export class TeamListCardComponent implements OnInit {
   @Input() hideRanks = false;
   @Input() team?: TeamListCardContext;
+
+  @Output() teamClicked = new EventEmitter<string>();
   @Output() teamSelected = new EventEmitter<{ teamId: string, isSelected: boolean }>();
 
   ngOnInit(): void {
     if (!this.team)
       throw new Error("team is required");
+  }
+
+  protected handleTeamClicked(teamId: string) {
+    this.teamClicked.emit(teamId);
   }
 
   protected handleTeamSelected(event: Event, teamId: string) {

@@ -102,6 +102,11 @@ export interface GameCenterTeamsResultsTeam {
     id: string;
     name: string;
 
+    advancement?: {
+        fromGame: SimpleEntity;
+        fromTeam: SimpleEntity;
+        score: number;
+    }
     captain: GameCenterTeamsPlayer;
     challengesCompleteCount: number;
     challengesPartialCount: number;

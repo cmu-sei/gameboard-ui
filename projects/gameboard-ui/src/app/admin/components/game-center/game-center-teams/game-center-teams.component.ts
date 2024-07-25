@@ -9,7 +9,7 @@ import { ToastService } from '@/utility/services/toast.service';
 import { AdminEnrollTeamModalComponent } from '../../admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { ManageManualChallengeBonusesModalComponent } from '../../manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { SimpleEntity } from '@/api/models';
-import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCenterTeamsResults, GameCenterTeamsSort } from '../game-center.models';
+import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCenterTeamsResults, GameCenterTeamsResultsTeam, GameCenterTeamsSort } from '../game-center.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { unique } from 'projects/gameboard-ui/src/tools';
 import { ScoreboardTeamDetailModalComponent } from '@/scoreboard/components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
@@ -18,6 +18,7 @@ import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
 import { NowService } from '@/services/now.service';
+import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
@@ -116,7 +117,6 @@ export class GameCenterTeamsComponent implements OnInit {
       appendInvalidTeamsClause = `\n\nSessions for some teams have ended, so their resources won't be deployed:\n\n${invalidTeamNames.map(tId => `- ${tId}\n`)}`;
     }
 
-
     this.modalService.openConfirm({
       bodyContent: `Are you sure you want to deploy resources for ${validTeamIds.length} teams?${appendInvalidTeamsClause}`,
       onConfirm: async () => {
@@ -124,7 +124,7 @@ export class GameCenterTeamsComponent implements OnInit {
           return;
 
         await this.gameService.deployResources(this.gameId!, validTeamIds);
-        this.toastService.showMessage(`Deploying resources for **${validTeamIds.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`)
+        this.toastService.showMessage(`Deploying resources for **${validTeamIds.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`);
         this.selectedTeamIds = [];
       },
       renderBodyAsMarkdown: true,
@@ -187,6 +187,20 @@ export class GameCenterTeamsComponent implements OnInit {
       content: ScoreboardTeamDetailModalComponent,
       context: { teamId },
       modalClasses: ["modal-lg"]
+    });
+  }
+
+  protected handleTeamClick(teamId: string) {
+    const team = this.results?.teams.items.find(t => t.id === teamId);
+
+    this.modalService.openComponent({
+      content: GameCenterTeamDetailComponent,
+      context: {
+        team,
+        game: this.game
+      },
+      ignoreBackdropClick: true,
+      modalClasses: ["modal-xl"]
     });
   }
 

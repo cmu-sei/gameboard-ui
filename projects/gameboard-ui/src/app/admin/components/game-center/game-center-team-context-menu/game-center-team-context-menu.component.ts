@@ -11,7 +11,8 @@ import { PlayerService } from '@/api/player.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ManageManualChallengeBonusesModalComponent } from '../../manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { TeamService } from '@/api/team.service';
-import { GameCenterTeamsSession } from '../game-center.models';
+import { GameCenterTeamsResultsTeam } from '../game-center.models';
+import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -24,19 +25,12 @@ export interface TeamSessionResetRequest {
   styleUrls: ['./game-center-team-context-menu.component.scss']
 })
 export class GameCenterTeamContextMenuComponent {
-  @Input() game?: { id: string; name: string; isSyncStart: boolean; };
-  @Input() team?: {
-    id: string;
-    name: string;
-    captain: SimpleEntity;
-    isReady: boolean;
-    session: GameCenterTeamsSession;
-  };
+  @Input() game?: { id: string; name: string; isSyncStart: boolean; isTeamGame: boolean };
+  @Input() team?: GameCenterTeamsResultsTeam;
   @Output() teamUpdated = new EventEmitter<SimpleEntity>();
 
   protected fa = fa;
   protected hasStartedSession = false;
-
 
   constructor(
     private clipboard: ClipboardService,
@@ -96,5 +90,17 @@ export class GameCenterTeamContextMenuComponent {
     await firstValueFrom(this.playerService.startPlayerId(this.team!.captain.id));
     this.teamUpdated.emit(team);
     this.toastService.showMessage(`Session started for **${team.name}**`);
+  }
+
+  async handleView(team: GameCenterTeamsResultsTeam) {
+    this.modalService.openComponent({
+      content: GameCenterTeamDetailComponent,
+      context: {
+        team,
+        game: this.game
+      },
+      ignoreBackdropClick: true,
+      modalClasses: ["modal-xl"]
+    });
   }
 }
