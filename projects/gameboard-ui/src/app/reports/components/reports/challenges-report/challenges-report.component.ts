@@ -68,7 +68,7 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     this.modalService.openComponent<SpecQuestionPerformanceModalComponent>({
       content: SpecQuestionPerformanceModalComponent,
       context: { specId: spec.id },
-      modalClasses: ["modal-lg", "modal-dialog-centered"]
+      modalClasses: ["modal-lg"]
     });
   }
 

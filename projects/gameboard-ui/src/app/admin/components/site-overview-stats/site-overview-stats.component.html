@@ -12,6 +12,7 @@
             (click)="showTeamsModal()"></app-big-stat>
     </li>
     <li>
-        <app-big-stat label="Registered Users" [value]="registeredUsers.toString()"></app-big-stat>
+        <app-big-stat label="Registered Users" [value]="registeredUsers.toString()" [isClickable]="true"
+            routerLink="/admin/registrar/users"></app-big-stat>
     </li>
 </ul>

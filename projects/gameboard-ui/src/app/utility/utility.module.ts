@@ -16,7 +16,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 // internal components/services
-import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ClipspanComponent } from './components/clipspan/clipspan.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
 import { ImageManagerComponent } from './components/image-manager/image-manager.component';
@@ -44,7 +43,6 @@ const components = [
   LoginComponent,
   MessageBoardComponent,
   InplaceEditorComponent,
-  AgedDatePipe,
   UntilPipe,
   ShortTimePipe,
   UntagPipe,

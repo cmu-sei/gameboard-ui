@@ -1,4 +1,4 @@
-import { Ticket, TicketSummary } from '@/api/support-models';
+import { TicketSummary } from '@/api/support-models';
 import { SupportService } from '@/api/support.service';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { firstValueFrom } from 'rxjs';

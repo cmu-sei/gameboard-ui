@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { EnrollmentReportFlatParameters } from '../enrollment-report.models';
 import { EnrollmentReportService } from '../enrollment-report.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
@@ -15,7 +15,10 @@ export class EnrollmentReportTrendComponent implements OnInit {
 
   constructor(private enrollmentReportService: EnrollmentReportService) { }
 
-  async ngOnInit(): Promise<void> {
+  async ngOnChanges(changes: SimpleChanges) {
+    if (!changes.parameters)
+      return;
+
     const lineChartResults = await this.enrollmentReportService.getTrendData(this.parameters);
     this.chartConfig = {
       type: 'line',
@@ -54,5 +57,9 @@ export class EnrollmentReportTrendComponent implements OnInit {
         }
       }
     };
+  }
+
+  async ngOnInit(): Promise<void> {
+
   }
 }

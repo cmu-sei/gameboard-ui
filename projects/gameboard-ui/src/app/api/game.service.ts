@@ -3,7 +3,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, firstValueFrom, of } from 'rxjs';
+import { Observable, Subject, firstValueFrom, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
@@ -14,8 +14,12 @@ import { Spec } from './spec-models';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
+
   url = '';
   private cache: CachedGame[] = [];
+
+  private _gameUpdated$ = new Subject<Game>();
+  public gameUpdated$ = this._gameUpdated$.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -61,7 +65,8 @@ export class GameService {
 
   public update(model: ChangedGame): Observable<any> {
     return this.http.put<any>(`${this.url}/game`, model).pipe(
-      tap(m => this.removeCache(model.id))
+      tap(m => this.removeCache(model.id)),
+      tap(m => this._gameUpdated$.next(m))
     );
   }
 

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { fa } from "@/services/font-awesome.service";
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { TicketLabelPickerModalComponent } from '../ticket-label-picker-modal/ticket-label-picker-modal.component';
+import { TicketLabelPickerModalComponent } from '../../../support/components/ticket-label-picker-modal/ticket-label-picker-modal.component';
 
 @Component({
   selector: 'app-ticket-label-picker',

@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { TeamSessionResetType } from '@/api/teams.models';
-import { GameCenterTeamsSession } from '@/api/admin.models';
 import { SimpleEntity } from '@/api/models';
 import { fa } from '@/services/font-awesome.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { GameService } from '@/api/game.service';
-import { firstValueFrom } from 'rxjs';
 import { SyncStartService } from '@/services/sync-start.service';
 import { PlayerService } from '@/api/player.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ManageManualChallengeBonusesModalComponent } from '../../manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { TeamService } from '@/api/team.service';
+import { GameCenterTeamsSession } from '../game-center.models';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -72,6 +72,7 @@ export class GameCenterTeamContextMenuComponent {
       context: {
         teamId: team.id
       },
+      modalClasses: ["modal-xl"]
     });
   }
 

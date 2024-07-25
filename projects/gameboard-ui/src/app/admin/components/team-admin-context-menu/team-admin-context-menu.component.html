@@ -1,69 +1,64 @@
-<div class="btn-group" dropdown>
+<div class="btn-group" *ngIf="team" dropdown>
     <button id="button-basic" dropdownToggle type="button" class="btn ctx-menu-button rounded-circle"
         aria-controls="dropdown-basic">
         <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
         <li role="menuitem">
-            <button class="dropdown-item btn" (click)="viewRequest.emit(player)">
-                {{ isViewing ? "Collapse" : "View" }}
-            </button>
+            <button class="dropdown-item btn" (click)="copy(team.id, 'team ID')">Copy Team ID</button>
         </li>
         <li role="menuitem">
-            <button class="dropdown-item btn" (click)="copy(player.id, 'player ID')">Copy Player ID</button>
+            <button class="dropdown-item btn" (click)="copy(team.captainPlayerId, 'player ID')">Copy Player ID</button>
         </li>
         <li role="menuitem">
-            <button class="dropdown-item btn" (click)="copy(player.teamId, 'team ID')">Copy Team ID</button>
-        </li>
-        <li role="menuitem">
-            <button class="dropdown-item btn" (click)="bonusManageRequest.emit(player)">
+            <button class="dropdown-item btn" (click)="handleManageManualBonuses(team)">
                 Manual Bonuses
             </button>
         </li>
         <ng-container *ngIf="!isSyncStartGame || !hasStartedSession">
             <li class="divider dropdown-divider"></li>
             <li role="menuitem" *ngIf="!hasStartedSession">
-                <button class="dropdown-item btn btn-warning" (click)="handleDeployResources(player)">
+                <button class="dropdown-item btn btn-warning" (click)="handleDeployResources(team)">
                     <strong>Deploy</strong> Game Resources
                     <span class="badge badge-warn">[ALPHA]</span>
                 </button>
             </li>
 
             <li role="menuitem" *ngIf="!isSyncStartGame; else syncStartGameItems">
-                <button class="dropdown-item btn btn-warning" (click)="handleStartSession(player)">
-                    Start <strong>{{ player.approvedName }}</strong>'s Session
+                <button class="dropdown-item btn btn-warning" (click)="handleStartSession(team)">
+                    Start <strong>{{ team.name }}</strong>'s Session
                 </button>
             </li>
 
             <li *ngIf="isSyncStartGame && !hasStartedSession">
                 <button class="dropdown-item btn btn-warning" [disabled]="hasStartedSession"
-                    (click)="handleUpdatePlayerReady(player, !player.isReady)">
+                    (click)="handleUpdatePlayerReady(team, !team.isReady)">
                     <strong>
-                        {{ player.isReady ? "Unready" : "Ready" }}
-                        {{ player.approvedName }}
+                        {{ team.isReady ? "Unready" : "Ready" }}
+                        {{ team.name }}
                     </strong>
                 </button>
             </li>
         </ng-container>
         <li class="divider dropdown-divider"></li>
-        <ng-container *ngIf="isResettingSession; else unenroll">
+        <ng-container *ngIf="hasStartedSession; else unenroll">
             <li role="menuitem">
                 <button class="dropdown-item btn btn-danger"
-                    (click)="sessionResetRequest.emit({ player, resetType: 'preserveChallenges' })">
+                    (click)="confirmReset({ team, resetType: 'preserveChallenges' })">
                     Reset Session (Preserve Challenges)
                 </button>
             </li>
 
             <li role="menuitem">
                 <button class="dropdown-item btn btn-danger"
-                    (click)="sessionResetRequest.emit({ player, resetType: 'archiveChallenges' })">
+                    (click)="confirmReset({ team, resetType: 'archiveChallenges' })">
                     Reset Session
                 </button>
             </li>
 
             <li role="menuitem">
                 <button class="dropdown-item btn btn-danger"
-                    (click)="sessionResetRequest.emit({ player, resetType: 'unenrollAndArchiveChallenges' })">
+                    (click)="confirmReset({ team, resetType: 'unenrollAndArchiveChallenges' })">
                     Reset Session &amp; Unenroll
                 </button>
             </li>
@@ -75,8 +70,8 @@
 </ng-template>
 
 <ng-template #unenroll>
-    <li role="menuitem">
+    <li role="menuitem" *ngIf="team">
         <button type="button" class="dropdown-item btn btn-danger"
-            (click)="sessionResetRequest.emit({ player, resetType: 'unenrollAndArchiveChallenges' })">Unenroll</button>
+            (click)="confirmReset({ team, resetType: 'unenrollAndArchiveChallenges' })">Unenroll</button>
     </li>
 </ng-template>

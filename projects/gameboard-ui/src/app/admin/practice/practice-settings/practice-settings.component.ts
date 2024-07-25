@@ -59,7 +59,7 @@ export class PracticeSettingsComponent implements OnInit {
     this.modalService.open({
       title: "Creating a certificate template",
       bodyContent: this.certificateHtmlPlaceholder,
-      modalClasses: ["modal-lg", "modal-dialog-centered"],
+      modalClasses: ["modal-lg"],
       renderBodyAsMarkdown: true
     });
   }

@@ -177,7 +177,7 @@ export class ConfigService {
 
   storeLocal(model: LocalAppSettings): void {
     try {
-      this.storage.add(StorageKey.Gameboard, JSON.stringify(model));
+      this.storage.add(StorageKey.Gameboard, model);
     } catch (e) {
       this.log.logError("Couldn't save app settings to local storage", model);
     }

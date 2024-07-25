@@ -7,7 +7,7 @@
         tooltip="Export these tickets to CSV">
         <fa-icon [icon]="fa.fileCsv"></fa-icon>
       </button>
-      <a class="btn btn-info" [routerLink]="['../create']">
+      <a class="btn btn-info" *ngIf="!isReadOnly" [routerLink]="['../create']">
         <span>Create Ticket</span>
       </a>
     </div>
@@ -43,6 +43,8 @@
         class="form-control border-0" (input)="refresh$.next(true)">
     </div>
   </div>
+
+  <hr class="light my-4" />
 
   <div class="row mx-0 mt-4 p-0 mb-1">
     <!-- Key column with ordering -->
@@ -116,13 +118,14 @@
       <div class="col-1">
         <fa-icon *ngIf="ticket.lastSeen < ticket.lastUpdated" class="text-warning"
           [icon]="fa.exclamationCircle"></fa-icon>
-        <a class="btn btn-link p-0 text-left h5" [routerLink]="[ticket.key]">{{ticket.fullKey}}</a>
+        <a class="btn btn-link p-0 text-left h5"
+          [routerLink]="['/support', 'tickets', ticket.key]">{{ticket.fullKey}}</a>
       </div>
 
       <div class="flex flex-wrap" [class.col-4]="ctx.canManage" [class.col-5]="!ctx.canManage">
         <div class="ml-2">
           <div class="d-inline flex-wrap">
-            <a class="p-0 text-left" [routerLink]="[ticket.key]">
+            <a class="p-0 text-left" [routerLink]="['/support', 'tickets', ticket.key]">
               <span class="mr-2 h5 summary-break">
                 {{ticket.summary || "No summary"}}
               </span>

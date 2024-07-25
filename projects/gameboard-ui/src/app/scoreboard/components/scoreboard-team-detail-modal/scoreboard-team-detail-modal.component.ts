@@ -52,19 +52,23 @@ export class ScoreboardTeamDetailModalComponent implements OnInit {
     // the scoring endpoint currently doesn't provide the total of challenge manual bonuses 
     // vs team manual bonuses
     if (this.hasManualTeamBonuses) {
-      this.challengeManualBonusTotal = this
-        .context
-        .score
-        .challenges
-        .map(c => c.score.manualBonusScore)
-        .reduce((accumulator, nextValue) => accumulator + nextValue);
+      this.challengeManualBonusTotal = 0;
+
+      if (this.context.score.challenges?.length) {
+        this.challengeManualBonusTotal = this
+          .context
+          .score
+          .challenges
+          .map(c => c.score.manualBonusScore)
+          .reduce((accumulator, nextValue) => (accumulator || 0) + nextValue);
+      }
 
       this.teamManualBonusTotal = this
         .context
         .score
         .manualBonuses
         .map(b => b.pointValue)
-        .reduce((accumulator, nextValue) => accumulator + nextValue);
+        .reduce((accumulator, nextValue) => (accumulator || 0) + nextValue);
     }
   }
 

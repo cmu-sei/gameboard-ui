@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 export class FriendlyDateAndTimePipe implements PipeTransform {
   constructor(private friendlyDates: FriendlyDatesService) { }
 
-  transform(value?: Date | DateTime): string | null {
+  transform(value?: Date | DateTime | null): string | null {
     if (!value)
       return null;
 

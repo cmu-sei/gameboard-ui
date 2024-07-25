@@ -48,6 +48,10 @@ export class GameSessionService {
     return session ? session.isBefore : true;
   }
 
+  public canUnenrollSessionWithDateTIme(session: { start: DateTime | null, end: DateTime | null }) {
+    return session.start === null || this.nowService.nowToDateTime() < session.start;
+  }
+
   public getCumulativeTime(session: TimeWindow) {
     const now = this.nowService.now();
 

@@ -1,16 +1,16 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, timer, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, switchMap, map, tap, first } from 'rxjs/operators';
-import { ReportService } from '../../api/report.service';
-import { TicketNotification, TicketSummary } from '../../api/support-models';
-import { SupportService } from '../../api/support.service';
-import { ConfigService } from '../../utility/config.service';
-import { NotificationService } from '../../services/notification.service';
-import { UserService as LocalUserService } from '../../utility/user.service';
-import { ToastService } from '../../utility/services/toast.service';
-import { ClipboardService } from '../../utility/services/clipboard.service';
 import { fa } from '@/services/font-awesome.service';
-import { ActivatedRoute } from '@angular/router';
+import { ReportService } from '@/api/report.service';
+import { TicketNotification, TicketSummary } from '@/api/support-models';
+import { SupportService } from '@/api/support.service';
+import { ConfigService } from '@/utility/config.service';
+import { NotificationService } from '@/services/notification.service';
+import { UserService as LocalUserService } from '@/utility/user.service';
+import { ToastService } from '@/utility/services/toast.service';
+import { ClipboardService } from '@/utility/services/clipboard.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -18,6 +18,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./ticket-list.component.scss']
 })
 export class TicketListComponent implements OnDestroy {
+  @Input() gameId?: string;
+  @Input() isReadOnly = false;
+
   subs: Subscription[] = [];
   refresh$ = new BehaviorSubject<any>(true);
   ctx$: Observable<{ tickets: TicketSummary[]; nextTicket: TicketSummary[]; canManage: boolean; }>;
@@ -28,6 +31,7 @@ export class TicketListComponent implements OnDestroy {
   assignFilter: string = "Any Assignment";
 
   curOrderItem: string = "created";
+  hideTitle = false;
   isDescending: boolean = true;
   hoverOrderItem: string = "";
   showHoverCaret: boolean = false;
@@ -54,6 +58,7 @@ export class TicketListComponent implements OnDestroy {
     this.statusFilter = config.local.ticketFilter || "Any Status";
     this.assignFilter = config.local.ticketType || "Any Assignment";
     this.curOrderItem = config.local.ticketOrder || "created";
+    this.hideTitle = !!this.gameId;
     this.isDescending = config.local.ticketOrderDesc || true;
 
     const canManage$ = local.user$.pipe(
@@ -77,6 +82,7 @@ export class TicketListComponent implements OnDestroy {
       switchMap(() => api.list({
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase(), this.selectedLabels],
+        gameId: this.gameId,
         withAllLabels: this.selectedLabels.join(","),
         take: this.take,
         skip: this.skip,

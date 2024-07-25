@@ -15,6 +15,7 @@ import { UtilityModule } from '../utility/utility.module';
 import { ActiveChallengesModalComponent } from './components/active-challenges-modal/active-challenges-modal.component';
 import { AdminOverviewComponent } from './components/admin-overview/admin-overview.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
+import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 import { AnnounceComponent } from './announce/announce.component';
 import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
 import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
@@ -33,6 +34,14 @@ import { ExternalGamePlayerStatusToFriendlyPipe } from './pipes/external-game-pl
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
 import { GameCenterComponent } from './components/game-center/game-center.component';
+import { GameCenterDeployComponent } from './components/game-center/game-center-deploy/game-center-deploy.component';
+import { GameCenterObserveComponent } from './components/game-center/game-center-observe/game-center-observe.component';
+import { GameCenterPracticePlayerDetailComponent } from './components/game-center/game-center-practice-player-detail/game-center-practice-player-detail.component';
+import { GameCenterPracticeComponent } from './components/game-center/game-center-practice/game-center-practice.component';
+import { GameCenterSettingsComponent } from './components/game-center/game-center-settings/game-center-settings.component';
+import { GameCenterTeamContextMenuComponent } from './components/game-center/game-center-team-context-menu/game-center-team-context-menu.component';
+import { GameCenterTeamsComponent } from './components/game-center/game-center-teams/game-center-teams.component';
+import { GameCenterTicketsComponent } from './components/game-center/game-center-tickets/game-center-tickets.component';
 import { GameClassificationToStringPipe } from './pipes/game-classification-to-string.pipe';
 import { GameDesignerComponent } from './game-designer/game-designer.component';
 import { GameEditorComponent } from './game-editor/game-editor.component';
@@ -54,11 +63,11 @@ import { SupportReportLegacyComponent } from './support-report-legacy/support-re
 import { SyncStartTeamPlayerReadyCountPipe } from './pipes/sync-start-team-player-ready-count.pipe';
 import { SystemNotificationsModule } from '@/system-notifications/system-notifications.module';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
+import { TeamListCardComponent } from './components/team-list-card/team-list-card.component';
 import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
-import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
 import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
@@ -70,10 +79,6 @@ import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state
 import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
 import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
 import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
-import { GameCenterPlayersComponent } from './components/game-center/game-center-players/game-center-players.component';
-import { GameCenterTeamContextMenuComponent } from './components/game-center/game-center-team-context-menu/game-center-team-context-menu.component';
-import { GameCenterSettingsComponent } from './components/game-center/game-center-settings/game-center-settings.component';
-import { GameCenterTicketsComponent } from './components/game-center/game-center-tickets/game-center-tickets.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +101,14 @@ import { GameCenterTicketsComponent } from './components/game-center/game-center
     ExternalTeamChallengesToIsPredeployablePipe,
     FeedbackReportComponent,
     GameCenterComponent,
+    GameCenterDeployComponent,
+    GameCenterPracticeComponent,
+    GameCenterPracticePlayerDetailComponent,
+    GameCenterSettingsComponent,
+    GameCenterObserveComponent,
+    GameCenterTeamContextMenuComponent,
+    GameCenterTeamsComponent,
+    GameCenterTicketsComponent,
     GameClassificationToStringPipe,
     GameDesignerComponent,
     GameEditorComponent,
@@ -132,10 +145,7 @@ import { GameCenterTicketsComponent } from './components/game-center/game-center
     ExternalGameHostPickerComponent,
     ExternalHostEditorComponent,
     DeleteExternalGameHostModalComponent,
-    GameCenterPlayersComponent,
-    GameCenterTeamContextMenuComponent,
-    GameCenterSettingsComponent,
-    GameCenterTicketsComponent,
+    TeamListCardComponent,
   ],
   imports: [
     CommonModule,
@@ -148,11 +158,13 @@ import { GameCenterTicketsComponent } from './components/game-center/game-center
           { path: 'dashboard', component: DashboardComponent },
           { path: 'designer/:id', component: GameEditorComponent },
           {
+            path: "game/:gameId/:selectedTab",
+            component: GameCenterComponent
+          },
+          {
             path: 'game/:gameId',
             component: GameCenterComponent,
-            children: [
-              { path: "teams", component: PlayerRegistrarComponent }
-            ]
+            pathMatch: 'full'
           },
           {
             path: "game/:gameId/external", pathMatch: 'full', component: ExternalGameAdminComponent
@@ -177,7 +189,7 @@ import { GameCenterTicketsComponent } from './components/game-center/game-center
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: "notifications", component: AdminSystemNotificationsComponent },
-          { path: "support/settings", component: SupportSettingsComponent },
+          { path: "support/settings", component: SupportSettingsComponent, title: "Admin | Support" },
           { path: 'support', component: ChallengeBrowserComponent }
         ]
       },

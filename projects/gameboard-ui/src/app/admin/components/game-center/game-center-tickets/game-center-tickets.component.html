@@ -1,16 +1,5 @@
 <ng-container *ngIf="!isLoading; else loading">
-    <ul *ngIf="tickets.length; else noTickets" class="d-flex flex-wrap align-items-center">
-        <li *ngFor="let ticket of tickets" class="w-25">
-            <a [routerLink]="['/', 'support', 'tickets', ticket.key]" target="_blank">
-                <div class="card mr-2 mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title overflow-ellipsis">{{ticket.summary}}</h5>
-                        <h6 class="card-subtitle">{{ ticket.requester?.approvedName }}</h6>
-                    </div>
-                </div>
-            </a>
-        </li>
-    </ul>
+    <app-ticket-list [gameId]="gameId" [isReadOnly]="true"></app-ticket-list>
 </ng-container>
 
 <ng-template #loading>

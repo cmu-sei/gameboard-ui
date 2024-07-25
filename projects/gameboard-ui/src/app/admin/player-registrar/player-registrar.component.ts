@@ -1,9 +1,8 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { asyncScheduler, BehaviorSubject, combineLatest, firstValueFrom, interval, Observable, scheduled, timer } from 'rxjs';
 import { debounceTime, filter, first, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
@@ -13,16 +12,14 @@ import { PlayerService } from '../../api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '../../services/modal-confirm.service';
 import { ClipboardService } from '../../utility/services/clipboard.service';
-import { ManageManualChallengeBonusesModalComponent } from '../components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { TeamService } from '@/api/team.service';
-import { TeamAdminContextMenuSessionResetRequest } from '../components/team-admin-context-menu/team-admin-context-menu.component';
+import { TeamAdminContextMenuTeam } from '../components/team-admin-context-menu/team-admin-context-menu.component';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ExtendTeamsModalComponent } from '../components/extend-teams-modal/extend-teams-modal.component';
 import { unique } from 'projects/gameboard-ui/src/tools';
 import { ToastService } from '@/utility/services/toast.service';
 import { AdminEnrollTeamModalComponent } from '../components/admin-enroll-team-modal/admin-enroll-team-modal.component';
-import { GameSessionService } from '@/services/game-session.service';
 
 @Component({
   selector: 'app-player-registrar',
@@ -31,6 +28,7 @@ import { GameSessionService } from '@/services/game-session.service';
   providers: [UnsubscriberService]
 })
 export class PlayerRegistrarComponent {
+  @Input() gameId?: string;
   refresh$ = new BehaviorSubject<boolean>(true);
   game!: Game;
   ctx$: Observable<{ game: Game, advanceTargetGames: Game[], players: Player[] }>;
@@ -66,8 +64,6 @@ export class PlayerRegistrarComponent {
   constructor(
     route: ActivatedRoute,
     private gameapi: GameService,
-    private gameSessionService: GameSessionService,
-    private bsModalService: BsModalService,
     private modalConfirmService: ModalConfirmService,
     private api: PlayerService,
     private clipboard: ClipboardService,
@@ -79,8 +75,8 @@ export class PlayerRegistrarComponent {
 
     const game$ = route.params.pipe(
       debounceTime(500),
-      filter(p => !!p.id),
-      switchMap(p => gameapi.retrieve(p.id)),
+      filter(p => !!this.gameId || !!p.id),
+      switchMap(p => gameapi.retrieve(this.gameId || p.id)),
       tap(r => this.game = r),
       tap(r => this.teamView = r.allowTeam ? 'collapse' : ''),
       tap(r => this.title.set(`Players: ${r.name}`))
@@ -95,7 +91,7 @@ export class PlayerRegistrarComponent {
     ]).pipe(
       tap(() => this.isLoading = true),
       debounceTime(500),
-      tap(([a, b, c]) => this.search.gid = a.id),
+      tap(([a, b, c]) => this.search.gid = (this.gameId || a.id)),
       switchMap(() => this.api.list(this.search)),
       tap(r => this.source = r),
       tap(() => this.isLoading = false),
@@ -106,9 +102,7 @@ export class PlayerRegistrarComponent {
     const players$ = scheduled([
       fetch$,
       interval(1000).pipe(map(() => this.source))
-    ], asyncScheduler).pipe(
-      mergeAll()
-    );
+    ], asyncScheduler).pipe(mergeAll());
 
     this.ctx$ = combineLatest([
       game$,
@@ -290,56 +284,7 @@ export class PlayerRegistrarComponent {
     });
   }
 
-  protected handlePlayerChange(player: Player) {
-    this.refresh$.next(true);
-  }
-
-  protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
-    // this is all really window-dressing around the "reset" operation, which we describe as an unenroll if the team's session hasn't started
-    const isUnenroll = request.resetType === "unenrollAndArchiveChallenges" && this.gameSessionService.canUnenroll(request.player);
-    let confirmMessage = `Are you sure you want to unenroll ${this.game.allowTeam ? " team" : ""} **${request.player.approvedName}** from the game?`;
-    let confirmTitle = `Unenroll ${request.player.approvedName}?`;
-    let confirmToast = `**${request.player.approvedName}** has been unenrolled.`;
-
-    if (!isUnenroll) {
-      confirmMessage = `Are you sure you want to reset the session for ${this.game.allowTeam ? " team" : ""} **${request.player.approvedName}**?`;
-      confirmTitle = `Reset ${request.player.approvedName}'s session?`;
-      confirmToast = `${this.game.allowTeam ? "Team " : ""}**${request.player.approvedName}**'s session has been reset.`;
-
-      // accommodate various "types" of reset that can happen (e.g. keep challenges, don't keep challenges, destroy the universe and the unenroll)
-      if (request.resetType === "preserveChallenges")
-        confirmMessage += " Their challenges **won't** be archived automatically, and they'll remain enrolled in the game.";
-      else if (request.resetType == "unenrollAndArchiveChallenges")
-        confirmMessage += " Their challenges will be archived, and they'll be unenrolled from the game.";
-    }
-
-    this.modalConfirmService.openConfirm({
-      bodyContent: confirmMessage,
-      renderBodyAsMarkdown: true,
-      title: confirmTitle,
-      onConfirm: () => {
-        this.resetSession(request);
-        this.toastService.showMessage(confirmToast);
-      },
-      confirmButtonText: "Yes, reset",
-      cancelButtonText: "No, don't reset"
-    });
-  }
-
-  protected manageManualBonuses(player: Player) {
-    this.bsModalService.show(ManageManualChallengeBonusesModalComponent, {
-      class: "modal-xl",
-      initialState: {
-        gameName: player.gameName,
-        playerName: player.approvedName,
-        teamId: player.teamId
-      }
-    });
-  }
-
-  private async resetSession(request: TeamAdminContextMenuSessionResetRequest): Promise<void> {
-    this.isLoading = true;
-    await firstValueFrom(this.teamService.resetSession({ teamId: request.player.teamId, resetType: request.resetType }));
+  protected handleTeamUpdated(team: TeamAdminContextMenuTeam) {
     this.refresh$.next(true);
   }
 }

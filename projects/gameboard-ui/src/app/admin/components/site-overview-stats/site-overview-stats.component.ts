@@ -36,7 +36,7 @@ export class SiteOverviewStatsComponent implements OnInit {
       context: {
         playerMode: playerMode == "practice" ? PlayerMode.practice : PlayerMode.competition
       },
-      modalClasses: ["modal-dialog-centered", "modal-xl"]
+      modalClasses: ["modal-xl"]
     });
   }
 
@@ -44,7 +44,7 @@ export class SiteOverviewStatsComponent implements OnInit {
     this.modalService.openComponent({
       content: ActiveTeamsModalComponent,
       context: {},
-      modalClasses: ["modal-dialog-centered", "modal-xl"]
+      modalClasses: ["modal-xl"]
     });
   }
 }

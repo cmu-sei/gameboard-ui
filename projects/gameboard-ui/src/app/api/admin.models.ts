@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { GameEngineType } from "./spec-models";
-import { PagedArray, SimpleEntity, SimpleSponsor } from "./models";
+import { DateTimeRange, SimpleEntity } from "./models";
 
 export interface AppActiveChallengeSpec {
     id: string;
@@ -54,68 +54,23 @@ export interface AppActiveTeam {
     score: number;
 }
 
-export interface GameCenterContext {
+export interface GetPlayersCsvExportResponsePlayer {
     id: string;
     name: string;
-    logo?: string;
-    competition: string | null;
-    season: string | null;
-    track: string | null;
-    executionWindow: {
-        start: DateTime,
-        end: DateTime
-    },
-    isExternal: boolean;
-    isLive: boolean;
-    isPractice: boolean;
-    isRegistrationActive: boolean;
-    isTeamGame: boolean;
-
-    challengeCount: number;
-    openTicketCount: number;
-    pointsAvailable: number;
-}
-
-export interface GameCenterTeamsRequestArgs {
-    sort: "name" | "rank" | "timeRemaining" | "timeSinceStart";
-}
-
-export interface GameCenterTeamsResults {
-    teams: PagedArray<GameCenterTeamsResultsTeam>;
-}
-
-export interface GameCenterTeamsResultsTeam {
-    id: string;
-    name: string;
-
-    captain: GameCenterTeamsPlayer;
-    challengesCompleteCount: number;
-    challengesPartialCount: number;
-    challengesRemainingCount: number;
-    isExtended: boolean;
-    isReady: boolean;
-    players: GameCenterTeamsPlayer[];
+    game: SimpleEntity;
     rank?: number;
-    registeredOn?: DateTime;
-    session: GameCenterTeamsSession;
-    ticketCount: number;
+    score?: number;
+    session: DateTimeRange;
+    solvesCorrectCount: number;
+    solvesPartialCount: number;
+    team: SimpleEntity;
+    timeMs: number;
+    user: SimpleEntity;
 }
 
-export interface GameCenterTeamsPlayer {
-    id: string;
-    name: string;
-    isReady: boolean;
-    sponsor: SimpleSponsor;
+export interface GetPlayersCsvExportResponse {
+    players: GetPlayersCsvExportResponsePlayer[];
 }
-
-export interface GameCenterTeamsSession {
-    start?: number;
-    end?: number;
-    timeRemainingMs?: number;
-    timeSinceStartMs?: number;
-}
-
-export type GameCenterTeamsStatus = "complete" | "notStarted" | "playing";
 
 export interface GetSiteOverviewStatsResponse {
     activeCompetitiveChallenges: number;

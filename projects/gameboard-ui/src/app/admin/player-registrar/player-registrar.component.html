@@ -1,13 +1,13 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<a class="btn btn-link" routerLink="../../">
+<a class="btn btn-link" routerLink="../../" *ngIf="!gameId">
   <fa-icon [icon]="fa.arrowLeft"></fa-icon>
   <span>Back</span>
 </a>
 
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
-  <h4>Players &mdash; {{ctx.game.name}}</h4>
+  <h4 *ngIf="!gameId">Players &mdash; {{ctx.game.name}}</h4>
   <div>
     <div class="input-group input-group-sm">
       <div class="input-group-prepend">
@@ -187,10 +187,9 @@
           <fa-icon [icon]="viewed === player ? fa.chevronUp : fa.chevronDown"></fa-icon>
         </button>
 
-        <app-team-admin-context-menu class="ml-2" [player]="player" [isViewing]="viewed === player"
-          [isSyncStartGame]="game.requireSynchronizedStart" (bonusManageRequest)="manageManualBonuses(player)"
-          (playerChange)="handlePlayerChange($event)" (sessionResetRequest)="confirmReset($event)"
-          (viewRequest)="view($event)">
+        <app-team-admin-context-menu class="ml-2"
+          [team]="{ id: player.teamId, name: player.approvedName, gameId: player.gameId, captainPlayerId: player.id, isReady: player.isReady, isTeamGame: ctx.game.isTeamGame, session: { start: player.sessionBegin | dateToDateTime, end: player.sessionEnd | dateToDateTime } }"
+          [isSyncStartGame]="game.requireSynchronizedStart" (teamUpdated)="handleTeamUpdated($event)">
         </app-team-admin-context-menu>
       </div>
       <div *ngIf="viewed === player" class="col-12">
@@ -211,9 +210,7 @@
             </select>
           </div>
         </div>
-        <app-admin-player-session [player]="player" (onManageManualBonusesRequest)="manageManualBonuses(player)"
-          (onResetSessionRequest)="confirmReset($event)"
-          (onUnenrollRequest)="unenroll(player)"></app-admin-player-session>
+        <app-admin-player-session [player]="player" (onUnenrollRequest)="unenroll(player)"></app-admin-player-session>
       </div>
     </div>
   </ng-container>

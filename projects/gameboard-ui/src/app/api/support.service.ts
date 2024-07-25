@@ -12,6 +12,7 @@ import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSett
 import { UserSummary } from './user-models';
 import { Search } from './models';
 import { ApiUrlService } from '@/services/api-url.service';
+import { cloneNonNullAndDefinedProperties } from '@/tools/object-tools.lib';
 
 @Injectable({ providedIn: 'root' })
 export class SupportService {
@@ -29,7 +30,8 @@ export class SupportService {
   }
 
   public list(search: any): Observable<TicketSummary[]> {
-    return this.http.get<TicketSummary[]>(`${this.url}/ticket/list`, { params: search }).pipe(
+    const params = !search ? {} : cloneNonNullAndDefinedProperties(search);
+    return this.http.get<TicketSummary[]>(`${this.url}/ticket/list`, { params }).pipe(
       map(r => this.transform(r))
     );
   }

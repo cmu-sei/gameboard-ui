@@ -29,7 +29,7 @@ export class SponsorAdminEntryComponent {
         editingSponsor: sponsor,
         onSave: () => this.requestRefresh.emit()
       },
-      modalClasses: ["modal-dialog-centered", "modal-xl"]
+      modalClasses: ["modal-xl"]
     });
   }
 }

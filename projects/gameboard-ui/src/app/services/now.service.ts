@@ -10,4 +10,8 @@ export class NowService {
   nowToDateTime(): DateTime {
     return DateTime.now();
   }
+
+  nowToMsEpoch(): number {
+    return DateTime.now().toUnixInteger() * 1000;
+  }
 }

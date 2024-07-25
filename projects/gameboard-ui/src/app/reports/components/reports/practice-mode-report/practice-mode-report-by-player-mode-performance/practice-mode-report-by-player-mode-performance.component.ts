@@ -39,7 +39,7 @@ export class PracticeModeReportByPlayerModePerformanceComponent implements OnCha
     this.modalService.openComponent({
       content: PlayerModePerformanceSummaryComponent,
       context: { context: { ...event } },
-      modalClasses: ["modal-dialog-centered", "modal-lg"]
+      modalClasses: ["modal-lg"]
     });
   }
 

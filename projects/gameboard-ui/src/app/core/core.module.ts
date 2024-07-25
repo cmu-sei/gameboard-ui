@@ -30,6 +30,7 @@ import { markedOptionsFactory } from './config/marked.config';
 // internal components/pipes/directives
 import { AbsoluteValuePipe } from './pipes/absolute-value.pipe';
 import { AddDurationPipe } from './pipes/add-duration.pipe';
+import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
@@ -52,12 +53,14 @@ import { CountdownComponent } from './components/countdown/countdown.component';
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
+import { DateTimeIsFuturePipe } from './pipes/datetime-is-future.pipe';
 import { DateTimeIsPastPipe } from './pipes/datetime-is-past.pipe';
 import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
 import { DateToDatetimePipe } from './pipes/date-to-datetime.pipe';
 import { DelimitedPipe } from './pipes/delimited.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
+import { EpochMsToDateTimePipe as EpochMsToDateTimePipe } from './pipes/epoch-ms-to-datetime.pipe';
 import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { FeedbackFormComponent } from './components/feedback-form/feedback-form.component';
 import { FilterPipe } from './pipes/filter.pipe';
@@ -101,12 +104,14 @@ import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-
 import { StatusLightComponent } from './components/status-light/status-light.component';
 import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
+import { TicketListComponent } from './components/ticket-list/ticket-list.component';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { ToSupportCodePipe } from './pipes/to-support-code.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.component';
 import { ToTemplateContextPipe } from './pipes/to-template-context.pipe';
 import { TrimPipe } from './pipes/trim.pipe';
+import { UntilDateTimePipe } from './pipes/until-datetime.pipe';
 import { UrlRewritePipe } from './pipes/url-rewrite.pipe';
 import { WhatsThisComponent } from './components/whats-this/whats-this.component';
 import { WhitespacePipe } from './pipes/whitespace.pipe';
@@ -114,10 +119,13 @@ import { YamlBlockComponent } from './components/yaml-block/yaml-block.component
 import { YamlPipe } from './pipes/yaml.pipe';
 import { ApiStatusInterceptor } from '@/api-status.interceptor';
 import { AuthInterceptor } from '@/utility/auth.interceptor';
+import { ObserverConsoleComponent } from './components/observer-console/observer-console.component';
+import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
   AddDurationPipe,
+  AgedDatePipe,
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
@@ -138,11 +146,13 @@ const PUBLIC_DECLARATIONS = [
   CumulativeTimeClockComponent,
   DateToCountdownPipe,
   DateToDatetimePipe,
+  DateTimeIsFuturePipe,
   DateTimeIsPastPipe,
   DatetimeToDatePipe,
   DelimitedPipe,
   DoughnutChartComponent,
   DropzoneComponent,
+  EpochMsToDateTimePipe,
   ErrorDivComponent,
   FeedbackFormComponent,
   FriendlyDateAndTimePipe,
@@ -162,11 +172,13 @@ const PUBLIC_DECLARATIONS = [
   PlayerAvatarListComponent,
   PlayerStatusComponent,
   NumbersToPercentage,
+  ObserverConsoleComponent,
   QueryParamModelDirective,
   RefreshIframeOnReconnectDirective,
   RelativeUrlsPipe,
   RenderLinksInTextComponent,
   SpinnerComponent,
+  TicketListComponent,
   ToggleSwitchComponent,
   TrimPipe,
   UrlRewritePipe,
@@ -198,7 +210,10 @@ const PUBLIC_DECLARATIONS = [
   ToggleClassPipe,
   ToSupportCodePipe,
   ToTemplateContextPipe,
+  TicketLabelPickerComponent,
+  TicketListComponent,
   TicketStatusBadgePipe,
+  UntilDateTimePipe,
   UrlRewritePipe,
   WhatsThisComponent,
   WhitespacePipe,

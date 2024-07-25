@@ -5,6 +5,17 @@ import { SortDirection } from "@/core/models/sort-direction";
 import { Game } from "./game-models";
 import { Player } from "./player-models";
 import { ApiUser } from "./user-models";
+import { DateTime } from "luxon";
+
+export interface DateTimeRange {
+  start?: DateTime;
+  end?: DateTime;
+}
+
+export interface EpochTimeRange {
+  start?: number;
+  end?: number;
+}
 
 export interface Search {
   term?: string;

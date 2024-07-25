@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ExternalGameDeployStatus } from '@/api/game-models';
-import { Subject, combineLatest, debounceTime, filter, firstValueFrom, map, timer } from 'rxjs';
 import { DateTime } from 'luxon';
+import { Subject, combineLatest, debounceTime, filter, firstValueFrom, map, timer } from 'rxjs';
+import { ExternalGameDeployStatus } from '@/api/game-models';
 import { SimpleEntity, SimpleSponsor } from '@/api/models';
 import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
@@ -55,10 +55,10 @@ export interface ExternalGameAdminContext {
   styleUrls: ['./external-game-admin.component.scss'],
   providers: [UnsubscriberService]
 })
-export class ExternalGameAdminComponent implements OnInit {
+export class ExternalGameAdminComponent implements OnInit, OnChanges {
+  @Input() gameId?: string;
   private autoUpdateInterval = 30000;
   private forceRefresh$ = new Subject<void>();
-  private gameId?: string;
 
   protected ctx?: ExternalGameAdminContext;
   protected errors: any[] = [];
@@ -91,6 +91,16 @@ export class ExternalGameAdminComponent implements OnInit {
     if (!this.gameId)
       this.errors.push("No gameId passed to the component.");
     this.forceRefresh$.next();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes?.gameId?.currentValue) {
+      const paramGameId = this.route.snapshot.paramMap?.get("gameId");
+
+      if (paramGameId !== changes.gameId.currentValue) {
+        throw new Error("The gameId detected in the route param map is different than the component's input gameId. This will cause the component to misbehave.");
+      }
+    }
   }
 
   protected async handlePreDeployAllClick(gameId: string) {

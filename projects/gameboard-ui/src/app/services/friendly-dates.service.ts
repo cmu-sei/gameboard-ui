@@ -19,7 +19,7 @@ export class FriendlyDatesService {
     });
   }
 
-  toFriendlyTime(date?: string | Date | DateTime) {
+  toFriendlyTime(date?: null | string | Date | DateTime) {
     const transformed = this.transformDateInput(date);
     if (!transformed)
       return "";
@@ -34,7 +34,7 @@ export class FriendlyDatesService {
     return `${this.toFriendlyDate(date)} @ ${this.toFriendlyTime(date)}`;
   }
 
-  private transformDateInput(input?: string | Date | DateTime): Date | null {
+  private transformDateInput(input?: null | string | Date | DateTime): Date | null {
     if (!input)
       return null;
 

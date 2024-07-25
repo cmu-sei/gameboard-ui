@@ -54,7 +54,8 @@
 
                 <!--ENGAGEMENT-->
                 <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.players.length }}</p>
+                    <p class="tooltipped-value" (click)="handlePlayersClicked(record.id)">{{
+                        record.overallPerformance.players.length }}</p>
                 </td>
                 <td class="report-field numerical">
                     <p>{{ record.overallPerformance.totalAttempts }}</p>
@@ -80,13 +81,28 @@
 
                 <!--PERFORMANCE-->
                 <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.percentageCompleteSolved | percent }}</p>
+                    <div class="tooltipped-value" (click)="handleSolveTypeClicked(record.id, 'success')">
+                        {{ record.overallPerformance.completeSolves }}
+                        <span class="text-muted">
+                            ({{ record.overallPerformance.percentageCompleteSolved | percent }})
+                        </span>
+                    </div>
                 </td>
                 <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.percentagePartiallySolved | percent }}</p>
+                    <div class="tooltipped-value" (click)="handleSolveTypeClicked(record.id, 'partial')">
+                        {{ record.overallPerformance.partialSolves }}
+                        <span class="text-muted">
+                            ({{ record.overallPerformance.percentagePartiallySolved | percent }})
+                        </span>
+                    </div>
                 </td>
                 <td class="report-field numerical">
-                    <p>{{ record.overallPerformance.percentageZeroScoreSolved | percent }}</p>
+                    <div class="tooltipped-value" (click)="handleSolveTypeClicked(record.id, 'none')">
+                        {{ record.overallPerformance.zeroScoreSolves }}
+                        <span class="text-muted">
+                            ({{ record.overallPerformance.percentageZeroScoreSolved | percent }})
+                        </span>
+                    </div>
                 </td>
             </tr>
         </tbody>

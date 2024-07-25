@@ -76,7 +76,7 @@ export class DashboardComponent implements OnInit {
     this.created$ = this.creating$.pipe(
       mergeMap(m => api.create(m)),
       tap(m => this.games.unshift(m)),
-      tap(m => this.select(m))
+      tap(g => this.router.navigateByUrl(`/admin/game/${g.id}`))
     );
 
     // use local storage to keep toggle preference when returning to dashboard for continuity
@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit {
   }
 
   create(): void {
-    this.creating$.next({ name: 'NewGame' } as Game);
+    this.creating$.next({ name: 'New Game' } as Game);
   }
 
   async delete(game: Game): Promise<void> {
