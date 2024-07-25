@@ -27,7 +27,7 @@ export class GameCenterSettingsComponent implements AfterViewInit, OnChanges {
   protected fa = fa;
   protected game?: Game;
   protected isDirty = false;
-  protected selectedSubTab: SelectedSubTab = "settings";
+  protected selectedSubTab?: SelectedSubTab = "settings";
   protected showCertificateInfo = false;
   protected suggestions = {
     competition: new Map<string, number>(),
@@ -148,6 +148,15 @@ export class GameCenterSettingsComponent implements AfterViewInit, OnChanges {
     if (a.key < b.key) return -1;
     if (a.key > b.key) return 1;
     return 0;
+  }
+
+  protected handleTabSelect(tab: SelectedSubTab) {
+    if (tab === this.selectedSubTab) {
+      this.selectedSubTab = undefined;
+      return;
+    }
+
+    this.selectedSubTab = tab;
   }
 
   protected upload(files: File[], type: string): void {

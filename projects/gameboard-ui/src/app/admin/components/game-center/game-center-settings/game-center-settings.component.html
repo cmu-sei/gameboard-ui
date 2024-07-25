@@ -4,7 +4,7 @@
             <fa-icon [icon]="fa.cloudUploadAlt"></fa-icon>
         </span>
 
-        <div class="section-header" tabindex="0" (click)="selectedSubTab = 'settings'">
+        <div class="section-header" tabindex="0" (click)="handleTabSelect('settings')">
             <fa-icon [icon]="selectedSubTab === 'settings' ? fa.caretDown : fa.caretRight"></fa-icon>
             <span class="lead text-light"> Metadata </span>
         </div>
@@ -203,7 +203,7 @@
             </div>
         </div>
 
-        <div class="section-header" tabindex="0" (click)="selectedSubTab = 'modes'">
+        <div class="section-header" tabindex="0" (click)="handleTabSelect('modes')">
             <fa-icon [icon]="selectedSubTab === 'modes' ? fa.caretDown : fa.caretRight"></fa-icon>
             <span class="lead text-light"> Modes </span>
         </div>
@@ -277,7 +277,7 @@
             </div>
         </div>
 
-        <div class="section-header" tabindex="0" (click)="selectedSubTab = 'registration'">
+        <div class="section-header" tabindex="0" (click)="handleTabSelect('registration')">
             <fa-icon [icon]="selectedSubTab === 'registration' ? fa.caretDown : fa.caretRight"></fa-icon>
             <span class="lead text-light"> Settings </span>
         </div>

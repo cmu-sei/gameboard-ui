@@ -67,7 +67,7 @@ export class AdminService {
   }
 
   async getGameCenterTeams(gameId: string, args: GameCenterTeamsRequestArgs): Promise<GameCenterTeamsResults> {
-    return firstValueFrom(this.http.get<GameCenterTeamsResults>(this.apiUrl.build(`admin/games/${gameId}/game-center/teams`, args)));
+    return firstValueFrom(this.http.get<GameCenterTeamsResults>(this.apiUrl.build(`admin/games/${gameId}/game-center/teams`, { ...args, pageSize: 10000 })));
   }
 
   getOverallSiteStats(): Observable<GetSiteOverviewStatsResponse> {

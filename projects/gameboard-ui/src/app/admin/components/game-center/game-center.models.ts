@@ -131,6 +131,7 @@ export interface GameCenterTeamsPlayer {
 export interface GameCenterTeamsSession {
     start?: number;
     end?: number;
+    timeCumulativeMs?: number;
     timeRemainingMs?: number;
     timeSinceStartMs?: number;
 }

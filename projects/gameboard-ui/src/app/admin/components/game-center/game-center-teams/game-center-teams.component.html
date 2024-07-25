@@ -66,17 +66,19 @@
 </div>
 
 <ng-container *ngIf="!isLoading || !results || !game; else loading">
-    <ul *ngIf="results?.teams?.items?.length">
+    <ul *ngIf="results?.teams?.items?.length; else noMatches">
         <li *ngFor="let team of results?.teams?.items">
             <app-team-list-card [team]="team" (teamClicked)="handleTeamClick($event)"
                 (teamSelected)="handleTeamSelected($event)">
                 <div primaryDetail>
                     <div [class.cursor-pointer]="team.score.totalScore > 0"
-                        [class.text-dashed-underline]="team.score | scoreToTooltip"
-                        (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)"
-                        triggers="mouseenter:mouseleave">
+                        (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)">
+                        <span [class.text-dashed-underline]="team.score | scoreToTooltip">
+                            {{ team.score.totalScore }} points
+                        </span>
 
-                        {{ team.score.totalScore }} points
+                        <span *ngIf="team.session.timeCumulativeMs">({{ team.session.timeCumulativeMs | msToDuration
+                            }})</span>
                     </div>
 
                     <div *ngIf="team.score.totalScore > 0" class="text-muted">
@@ -104,13 +106,15 @@
                         </span>
                     </ng-container>
 
-                    <span *ngIf="team.session.end | epochMsToDateTime | dateTimeIsPast">
-                        Finished
-                        <strong class="text-danger"
-                            [tooltip]="(team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">
-                            {{ team.session.end | epochMsToDateTime | shortdate }}
-                        </strong>
-                    </span>
+                    <ng-container *ngIf="team.session.end | epochMsToDateTime | dateTimeIsPast">
+                        <div>
+                            Finished
+                            <strong class="text-danger"
+                                [tooltip]="(team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">
+                                {{ team.session.end | epochMsToDateTime | shortdate }}
+                            </strong>
+                        </div>
+                    </ng-container>
                 </div>
 
                 <div contextMenu>
@@ -135,7 +139,9 @@
 </ng-template>
 
 <ng-template #noMatches>
-    <p class="my-2 text-muted text-center">No players match your search.</p>
+    <p class="my-2 text-muted text-center">
+        No {{ (game?.isTeamGame ? "team" : "player") | pluralizer:0 }} match your search.
+    </p>
 </ng-template>
 
 <ng-template #loading>

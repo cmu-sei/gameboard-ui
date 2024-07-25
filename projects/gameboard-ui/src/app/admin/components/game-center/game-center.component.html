@@ -1,7 +1,7 @@
 <ng-container *ngIf="gameCenterCtx as ctx; else loading">
-    <div class="hero-thing my-4 d-flex flex-wrap align-content-center">
+    <div class="hero-thing mt-4 mb-5 d-flex flex-wrap align-content-center">
         <app-game-card-image class="d-block" [game]="ctx"></app-game-card-image>
-        <div class="game-info-container d-flex flex-column ml-3 pt-2">
+        <div class="game-info-container d-flex flex-column ml-3">
             <h1 class="fs-20 m-0">{{ ctx.name }}</h1>
 
             <h2 class="fs-13 font-weight-bold text-info text-upper">
@@ -34,20 +34,20 @@
         </div>
     </div>
 
-    <div class="stats-container mt-3 d-flex flex-wrap align-items-baseline justify-content-between">
+    <div class="stats-container mt-4 d-flex flex-wrap align-items-baseline justify-content-between">
         <app-big-stat *ngIf="ctx.stats.teamCountNotStarted" [value]="ctx.stats.teamCountNotStarted"
             [label]="(ctx.isTeamGame ? 'Teams' : 'Players') + ' not started'"></app-big-stat>
         <app-big-stat [value]="ctx.stats.playerCountActive" label="Active players"></app-big-stat>
         <app-big-stat *ngIf="ctx.isTeamGame" [value]="ctx.stats.teamCountActive" label="Active teams"></app-big-stat>
         <app-big-stat [value]="ctx.stats.playerCountTotal" label="Total players"></app-big-stat>
         <app-big-stat *ngIf="ctx.isTeamGame" [value]="ctx.stats.teamCountTotal" label="Total teams"></app-big-stat>
-        <app-big-stat *ngIf="ctx.stats.topScore" [value]="ctx.stats.topScore" label="Top Score"
+        <app-big-stat *ngIf="ctx.stats.topScore" [value]="ctx.stats.topScore" label="Top Performance"
             [subLabel]="ctx.stats.topScoreTeamName"></app-big-stat>
         <app-big-stat *ngIf="ctx.isPractice" [value]="ctx.stats.attemptCountPractice"
             label="Practice attempts"></app-big-stat>
     </div>
 
-    <div class="tabs-container d-block mt-5">
+    <div class="tabs-container d-block mt-4">
         <tabset>
             <tab [active]="selectedTab === 'settings'" (selectTab)="handleSelect('settings')">
                 <ng-template tabHeading>
@@ -66,7 +66,7 @@
                 <app-game-center-teams *ngIf="selectedTab === 'teams'" [gameId]="ctx.id"></app-game-center-teams>
             </tab>
             <tab [active]="selectedTab === 'practice'" (selectTab)="handleSelect('practice')" *ngIf="ctx.isPractice"
-                heading="Practice">
+                heading="Practice ({{ ctx.stats.playerCountPractice }})">
                 <app-game-center-practice *ngIf="selectedTab === 'practice'"
                     [gameId]="ctx.id"></app-game-center-practice>
             </tab>

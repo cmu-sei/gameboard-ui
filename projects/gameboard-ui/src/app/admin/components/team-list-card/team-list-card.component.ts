@@ -15,6 +15,7 @@ export type TeamListCardContext = {
   styleUrls: ['./team-list-card.component.scss']
 })
 export class TeamListCardComponent implements OnInit {
+  @Input() allowSelection = true;
   @Input() hideRanks = false;
   @Input() team?: TeamListCardContext;
 
@@ -31,6 +32,9 @@ export class TeamListCardComponent implements OnInit {
   }
 
   protected handleTeamSelected(event: Event, teamId: string) {
+    if (!this.allowSelection)
+      return;
+
     this.teamSelected.emit({ teamId, isSelected: (event.target as HTMLInputElement).checked });
   }
 }

@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'msToDuration' })
 export class MsToDurationPipe implements PipeTransform {
   transform(value?: number): string {
+    console.log("gort a value", value);
     if (!value)
       return "";
 

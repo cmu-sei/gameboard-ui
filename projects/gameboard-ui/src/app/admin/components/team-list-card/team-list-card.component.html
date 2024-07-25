@@ -1,16 +1,16 @@
 <div *ngIf="team" class="card my-2">
     <div class="card-body d-flex align-items-center flex-grow-1">
-        <div class="team-select text-center">
+        <div *ngIf="allowSelection" class="team-select text-center mr-2">
             <input type="checkbox" (change)="handleTeamSelected($event, team.id)">
         </div>
 
-        <div *ngIf="!hideRanks" class="fs-20 mx-2 text-center team-rank">
+        <div *ngIf="!hideRanks" class="fs-20 mr-2 text-center team-rank">
             {{ team.rank || "--" }}
         </div>
 
         <app-avatar (click)="handleTeamClicked(team.id)" class="cursor-pointer" *ngIf="team.players.length <= 1"
             [tooltip]="team.captain.sponsor.name" [imageUrl]="team.captain.sponsor | sponsorToLogoUri" size="small"
-            class="ml-3"></app-avatar>
+            class="ml-1"></app-avatar>
 
         <div class="flex-grow-1 ml-3 cursor-pointer" (click)="handleTeamClicked(team.id)">
             <h5 class="card-title my-1 overflow-ellipsis">{{ team.name }}</h5>
