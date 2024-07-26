@@ -22,7 +22,8 @@
     <div *ngIf="ctx?.users?.length; else noUsers">
         <ul>
             <li *ngFor="let user of ctx!.users">
-                <app-team-list-card [team]="teamCardContexts[user.id]" [hideRanks]="true" [allowSelection]="false">
+                <app-team-list-card [team]="teamCardContexts[user.id]" [hideRanks]="true" [allowSelection]="false"
+                    (teamClicked)="handleUserDetailClick(user)">
                     <div primaryDetail>
                         {{ user.totalAttempts }} {{ "attempt" | pluralizer:user.totalAttempts }}
                         <div class="text-muted">

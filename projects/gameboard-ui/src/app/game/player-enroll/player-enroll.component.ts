@@ -155,14 +155,18 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // If the user's name isn't the disallowed one, mark it as pending
-    if (p.name != this.disallowedName) p.nameStatus = "pending";
     // Otherwise, if there is a disallowed reason as well, mark it as that reason
-    else if (this.disallowedReason) p.nameStatus = this.disallowedReason;
+    if (this.disallowedReason) p.nameStatus = this.disallowedReason;
 
     this.api.update(p).pipe(first()).subscribe(
       p => this.api.transform(p)
     );
+
+    this.ctx.player = {
+      ...this.ctx.player,
+      name: p.name,
+      approvedName: p.approvedName
+    };
   }
 
   protected async handleEnroll(userId: string, gameId: string): Promise<void> {
