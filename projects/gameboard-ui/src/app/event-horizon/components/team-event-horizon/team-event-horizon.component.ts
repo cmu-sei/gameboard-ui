@@ -61,12 +61,12 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
       timelineViewOptions
     );
 
-    this.timeline.on("select", ev => {
-      if (ev.items.length) {
-        this.handleEventSelected(ev.items[0]);
-        this.timeline?.setSelection([]);
-      }
-    });
+    // this.timeline.on("select", ev => {
+    //   if (ev.items.length) {
+    //     this.handleEventSelected(ev.items[0]);
+    //     this.timeline?.setSelection([]);
+    //   }
+    // });
   }
 
   ngOnDestroy(): void {

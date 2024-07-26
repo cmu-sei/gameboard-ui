@@ -182,6 +182,17 @@ export class GameCenterTeamsComponent implements OnInit {
     this.toastService.showMessage(`${this.game?.name} has been **reranked**!`);
   }
 
+  protected handleSelectAll() {
+    if (!this.results)
+      return;
+
+    if (this.selectedTeamIds.length === this.results.teams.items.length) {
+      this.selectedTeamIds = [];
+    } else {
+      this.selectedTeamIds = this.results.teams.items.map(t => t.id);
+    }
+  }
+
   protected handleTeamScoreClick(teamId: string) {
     this.modalService.openComponent({
       content: ScoreboardTeamDetailModalComponent,
@@ -199,7 +210,6 @@ export class GameCenterTeamsComponent implements OnInit {
         team,
         game: this.game
       },
-      ignoreBackdropClick: true,
       modalClasses: ["modal-xl"]
     });
   }

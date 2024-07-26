@@ -1,4 +1,9 @@
-<div *ngIf="game" class="controls-container d-flex align-items-center justify-content-end mb-3">
+<div *ngIf="game" class="controls-container d-flex align-items-center mb-3">
+    <button class="d-block btn btn-info" (click)="handleSelectAll()">
+        <fa-icon [icon]="fa.checkSquare"></fa-icon>
+        Select All {{ (game.isTeamGame ? "Team" : "Player") | pluralizer }}
+    </button>
+    <div class="flex-grow-1"></div>
     <app-confirm-button btnClass="btn btn-warning mr-2" (confirm)="handleRerankClick(game.id)"
         tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
     <div class="gb-button-group btn-group mr-2">
@@ -69,7 +74,7 @@
     <ul *ngIf="results?.teams?.items?.length; else noMatches">
         <li *ngFor="let team of results?.teams?.items">
             <app-team-list-card [team]="team" (teamClicked)="handleTeamClick($event)"
-                (teamSelected)="handleTeamSelected($event)">
+                [selected]="team.id | arrayContains:selectedTeamIds" (teamSelected)="handleTeamSelected($event)">
                 <div primaryDetail>
                     <div class="font-weight-bold" [class.cursor-pointer]="team.score.totalScore > 0"
                         (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)">

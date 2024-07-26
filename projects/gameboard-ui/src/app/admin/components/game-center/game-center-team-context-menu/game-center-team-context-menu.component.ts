@@ -99,7 +99,6 @@ export class GameCenterTeamContextMenuComponent {
         team,
         game: this.game
       },
-      ignoreBackdropClick: true,
       modalClasses: ["modal-xl"]
     });
   }

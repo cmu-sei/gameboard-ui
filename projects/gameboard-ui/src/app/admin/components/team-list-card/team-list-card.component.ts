@@ -18,7 +18,9 @@ export class TeamListCardComponent implements OnInit {
   @Input() allowSelection = true;
   @Input() hideRanks = false;
   @Input() team?: TeamListCardContext;
+  @Input() selected = false;
 
+  @Output() selectedChange = new EventEmitter<string>();
   @Output() teamClicked = new EventEmitter<string>();
   @Output() teamSelected = new EventEmitter<{ teamId: string, isSelected: boolean }>();
 

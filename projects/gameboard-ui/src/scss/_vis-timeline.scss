@@ -1,0 +1,54 @@
+@import "./variables";
+// overrides for default styling of vis-timeline
+
+div.vis-timeline {
+  // this is here to stop tooltips from being cut off outside the box, but it
+  // may get weird
+  overflow: unset !important;
+}
+
+div.vis-tooltip {
+  background-color: $body-bg !important;
+  border: solid 1px #999 !important;
+  border-radius: 4px !important;
+  color: $foreground;
+  font-family: $font-family-sans-serif !important;
+  padding: 1rem !important;
+
+  p {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  strong {
+    color: #999 !important;
+  }
+
+  h4 {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  h5 {
+    border-bottom: solid 1px $foreground;
+    color: #999;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-bottom: 0.5rem !important;
+  }
+
+  ol,
+  ul {
+    margin: 0 !important;
+  }
+
+  li {
+    list-style-type: square !important;
+    margin-left: 2rem;
+  }
+}
+
+.eh-group {
+  font-family: $font-family-sans-serif;
+}
