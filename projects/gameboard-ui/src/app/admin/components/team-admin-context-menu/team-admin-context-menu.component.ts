@@ -64,7 +64,7 @@ export class TeamAdminContextMenuComponent implements OnInit {
 
   protected confirmReset(request: TeamAdminContextMenuSessionResetRequest) {
     // this is all really window-dressing around the "reset" operation, which we describe as an unenroll if the team's session hasn't started
-    const isUnenroll = request.resetType === "unenrollAndArchiveChallenges" && this.gameSessionService.canUnenrollSessionWithDateTIme(request.team.session);
+    const isUnenroll = request.resetType === "unenrollAndArchiveChallenges" && this.gameSessionService.canUnenrollSessionWithDateTime(request.team.session);
     let confirmMessage = `Are you sure you want to unenroll ${this.team?.isTeamGame ? " team" : ""} **${request.team.name}** from the game?`;
     let confirmTitle = `Unenroll ${request.team.name}?`;
     let confirmToast = `**${request.team.name}** has been unenrolled.`;

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { debounceTime, firstValueFrom, map, Subject } from 'rxjs';
+import { debounceTime, firstValueFrom, map, Subject, tap } from 'rxjs';
 import { AdminService } from '@/api/admin.service';
 import { fa } from '@/services/font-awesome.service';
 import { Game } from '@/api/game-models';
@@ -18,10 +18,14 @@ import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
 import { NowService } from '@/services/now.service';
+import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
+import { TeamService } from '@/api/team.service';
+import { GameCenterPlayerNameManagementComponent } from '../game-center-player-name-management/game-center-player-name-management.component';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
   searchTerm?: string;
+  hasPendingNames?: boolean;
   sort?: GameCenterTeamsSort;
   sessionStatus?: GameCenterTeamSessionStatus;
 }
@@ -52,15 +56,25 @@ export class GameCenterTeamsComponent implements OnInit {
     private modalService: ModalConfirmService,
     private nowService: NowService,
     private playerService: PlayerService,
+    private teamService: TeamService,
     private toastService: ToastService,
     private unsub: UnsubscriberService) {
 
-    this.unsub.add(this.searchInput$.pipe(
-      debounceTime(300)
-    ).subscribe(async event => {
-      this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
-      this.load();
-    })
+    this.unsub.add(
+      this.searchInput$.pipe(
+        debounceTime(300)
+      ).subscribe(async event => {
+        this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
+        this.load();
+      }),
+      this.teamService.teamSessionExtended$.subscribe(async teamIds => {
+        for (const teamId of teamIds) {
+          if (this.results?.teams?.items?.find(t => t.id === teamId)) {
+            await this.load();
+            return;
+          }
+        }
+      })
     );
   }
 
@@ -116,7 +130,6 @@ export class GameCenterTeamsComponent implements OnInit {
       appendInvalidTeamsClause = `\n\nSessions for some teams have ended, so their resources won't be deployed:\n\n${invalidTeamNames.map(tId => `- ${tId}\n`)}`;
     }
 
-
     this.modalService.openConfirm({
       bodyContent: `Are you sure you want to deploy resources for ${validTeamIds.length} teams?${appendInvalidTeamsClause}`,
       onConfirm: async () => {
@@ -124,7 +137,7 @@ export class GameCenterTeamsComponent implements OnInit {
           return;
 
         await this.gameService.deployResources(this.gameId!, validTeamIds);
-        this.toastService.showMessage(`Deploying resources for **${validTeamIds.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`)
+        this.toastService.showMessage(`Deploying resources for **${validTeamIds.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`);
         this.selectedTeamIds = [];
       },
       renderBodyAsMarkdown: true,
@@ -176,10 +189,26 @@ export class GameCenterTeamsComponent implements OnInit {
     });
   }
 
+  protected async handlePendingNamesClick(gameId: string) {
+    this.filterSettings.hasPendingNames = true;
+    await this.load();
+  }
+
   protected async handleRerankClick(gameId: string) {
     await firstValueFrom(this.gameService.rerank(gameId));
     await this.load();
     this.toastService.showMessage(`${this.game?.name} has been **reranked**!`);
+  }
+
+  protected handleSelectAll() {
+    if (!this.results)
+      return;
+
+    if (this.selectedTeamIds.length === this.results.teams.items.length) {
+      this.selectedTeamIds = [];
+    } else {
+      this.selectedTeamIds = this.results.teams.items.map(t => t.id);
+    }
   }
 
   protected handleTeamScoreClick(teamId: string) {
@@ -187,6 +216,19 @@ export class GameCenterTeamsComponent implements OnInit {
       content: ScoreboardTeamDetailModalComponent,
       context: { teamId },
       modalClasses: ["modal-lg"]
+    });
+  }
+
+  protected handleTeamClick(teamId: string) {
+    const team = this.results?.teams.items.find(t => t.id === teamId);
+
+    this.modalService.openComponent({
+      content: GameCenterTeamDetailComponent,
+      context: {
+        team,
+        game: this.game
+      },
+      modalClasses: ["modal-xl"]
     });
   }
 

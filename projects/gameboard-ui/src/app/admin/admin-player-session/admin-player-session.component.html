@@ -77,18 +77,6 @@
         (click)="onManageManualBonusesRequest.emit(team.teamId)">Manage Challenge Bonuses</button>
       <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="canUnenroll"
         (confirm)="onUnenrollRequest.emit(team.teamId)">Unenroll</app-confirm-button>
-      <!-- <app-confirm-button btnClass="btn btn-sm btn-danger mr-2" *ngIf="!canUnenroll"
-        (confirm)="onResetSessionRequest.emit({ teamId: player.teamId, resetType: 'preserveChallenges' })">
-        Reset Session (Preserve Challenges)
-      </app-confirm-button>
-      <app-confirm-button btnClass="btn btn-sm btn-danger mr-2" *ngIf="!canUnenroll"
-        (confirm)="onResetSessionRequest.emit({ teamId: player.teamId, resetType: 'archiveChallenges' })">
-        Reset Session
-      </app-confirm-button>
-      <app-confirm-button btnClass="btn btn-sm btn-danger" *ngIf="!canUnenroll"
-        (confirm)="onResetSessionRequest.emit({ teamId: player.teamId })">
-        Reset Session &amp; Unenroll
-      </app-confirm-button> -->
     </div>
   </div>
 

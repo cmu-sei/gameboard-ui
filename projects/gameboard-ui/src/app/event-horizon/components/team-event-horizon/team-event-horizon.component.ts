@@ -3,6 +3,8 @@ import { EventHorizonService } from '@/api/event-horizon.service';
 import { EventHorizonRenderingService } from '@/services/event-horizon-rendering.service';
 import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { ClipboardService } from '@/utility/services/clipboard.service';
+import { ToastService } from '@/utility/services/toast.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DateTime } from 'luxon';
 import { Timeline } from 'vis-timeline/esnext';
@@ -22,10 +24,12 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
   private timeline?: Timeline;
 
   constructor(
+    private clipboardService: ClipboardService,
     private eventHorizonService: EventHorizonService,
     private eventHorizonRenderingService: EventHorizonRenderingService,
     private logService: LogService,
-    private modalService: ModalConfirmService) { }
+    private modalService: ModalConfirmService,
+    private toastService: ToastService) { }
 
   ngOnInit() {
     // load available event types
@@ -73,7 +77,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     this.timeline?.destroy();
   }
 
-  protected handleEventSelected(eventId: string) {
+  protected async handleEventSelected(eventId: string) {
     if (!this.timelineViewModel) {
       this.logService.logError("Couldn't handle event selection - timeline not loaded.");
       return;
@@ -81,18 +85,13 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
 
     const timelineEvent = this.eventHorizonService.getEventId(eventId, this.timelineViewModel);
     const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, timelineEvent.id);
-    const bodyContent = this.eventHorizonRenderingService.toModalContent(timelineEvent, spec);
+    const bodyContent = this.eventHorizonRenderingService.toModalHtmlContent(timelineEvent, spec);
 
     if (!bodyContent)
       return;
 
-    this.modalService.openConfirm({
-      title: `${spec.name}: ${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}`,
-      subtitle: `${timelineEvent.timestamp.toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS)}`,
-      bodyContent: this.eventHorizonRenderingService.toModalContent(timelineEvent, spec),
-      renderBodyAsMarkdown: true,
-      hideCancel: true
-    });
+    await this.clipboardService.copy(bodyContent);
+    this.toastService.showMessage(`Copied this **${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}** event to your clipboard.`);
   }
 
   protected async handleEventTypeToggled(eventType: EventHorizonEventType) {

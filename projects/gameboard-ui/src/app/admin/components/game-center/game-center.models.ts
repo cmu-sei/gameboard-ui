@@ -95,6 +95,7 @@ export interface GameCenterTeamsResults {
     playerCountTotal: number;
     teamCountActive: number;
     teamCountTotal: number;
+    namesPendingApproval: number;
     teams: PagedArray<GameCenterTeamsResultsTeam>;
 }
 
@@ -102,6 +103,11 @@ export interface GameCenterTeamsResultsTeam {
     id: string;
     name: string;
 
+    advancement?: {
+        fromGame: SimpleEntity;
+        fromTeam: SimpleEntity;
+        score: number;
+    }
     captain: GameCenterTeamsPlayer;
     challengesCompleteCount: number;
     challengesPartialCount: number;
@@ -119,6 +125,7 @@ export interface GameCenterTeamsResultsTeam {
 export interface GameCenterTeamsPlayer {
     id: string;
     name: string;
+    pendingName?: string;
     isReady: boolean;
     sponsor: SimpleSponsor;
 }
@@ -126,6 +133,7 @@ export interface GameCenterTeamsPlayer {
 export interface GameCenterTeamsSession {
     start?: number;
     end?: number;
+    timeCumulativeMs?: number;
     timeRemainingMs?: number;
     timeSinceStartMs?: number;
 }

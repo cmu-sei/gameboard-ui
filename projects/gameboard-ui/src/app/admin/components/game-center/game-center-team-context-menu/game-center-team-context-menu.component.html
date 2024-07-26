@@ -5,6 +5,9 @@
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
         <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleView(team)">View</button>
+        </li>
+        <li role="menuitem">
             <button class="dropdown-item btn" (click)="copy(team.captain.id, 'player ID')">Copy Player ID</button>
         </li>
         <li role="menuitem">
@@ -22,13 +25,12 @@
             <li role="menuitem" *ngIf="!hasStartedSession">
                 <button class="dropdown-item btn btn-warning" (click)="handleDeployResources(team)">
                     <strong>Deploy</strong> Game Resources
-                    <span class="badge badge-warn">[ALPHA]</span>
                 </button>
             </li>
 
             <li role="menuitem" *ngIf="!game.isSyncStart">
                 <button class="dropdown-item btn btn-warning" (click)="handleStartSession(team!.captain)">
-                    Start <strong>{{ team!.name }}</strong>'s Session
+                    <strong>Start</strong> {{ team!.name }}'s Session
                 </button>
             </li>
 
@@ -46,20 +48,22 @@
         <li class="divider dropdown-divider"></li>
         <ng-container *ngIf="hasStartedSession; else unenroll">
             <li role="menuitem">
-                <button class="dropdown-item btn btn-danger" (click)="handleResetRequest(team, 'preserveChallenges')">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="confirmReset({ teamId: team.id, resetType: 'preserveChallenges' })">
                     Reset Session (Preserve Challenges)
                 </button>
             </li>
 
             <li role="menuitem">
-                <button class="dropdown-item btn btn-danger" (click)="handleResetRequest(team, 'archiveChallenges')">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="confirmReset({ teamId: team.id, resetType: 'archiveChallenges' })">
                     Reset Session
                 </button>
             </li>
 
             <li role="menuitem">
                 <button class="dropdown-item btn btn-danger"
-                    (click)="handleResetRequest(team, 'unenrollAndArchiveChallenges')">
+                    (click)="confirmReset({ teamId: team.id, resetType: 'unenrollAndArchiveChallenges'})">
                     Reset Session &amp; Unenroll
                 </button>
             </li>

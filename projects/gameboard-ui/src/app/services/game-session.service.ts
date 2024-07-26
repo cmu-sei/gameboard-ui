@@ -48,7 +48,11 @@ export class GameSessionService {
     return session ? session.isBefore : true;
   }
 
-  public canUnenrollSessionWithDateTIme(session: { start: DateTime | null, end: DateTime | null }) {
+  public canUnerollSessionWithEpochMs(session: { start?: number | null, end?: number | null }) {
+    return this.canUnenrollSessionWithDateTime({ start: session.start ? DateTime.fromMillis(session.start) : null, end: session.end ? DateTime.fromMillis(session.end) : null });
+  }
+
+  public canUnenrollSessionWithDateTime(session: { start: DateTime | null, end: DateTime | null }) {
     return session.start === null || this.nowService.nowToDateTime() < session.start;
   }
 

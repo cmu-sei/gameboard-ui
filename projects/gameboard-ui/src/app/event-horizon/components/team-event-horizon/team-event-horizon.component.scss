@@ -23,6 +23,8 @@
   }
 
   .vis-item {
+    font-family: $font-family-sans-serif !important;
+
     .vis-item-content {
       text-align: left !important;
     }
@@ -46,8 +48,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     color: $foreground;
+    justify-content: center;
   }
 
   // force foreground color
@@ -63,6 +65,13 @@
   // .vis-item.vis-line {
   //   border-left: none !important;
   // }
+
+  .vis-tooltip {
+    em {
+      display: block !important;
+      margin-top: 1rem;
+    }
+  }
 }
 
 .btn-group > .btn:not(:first-child) {

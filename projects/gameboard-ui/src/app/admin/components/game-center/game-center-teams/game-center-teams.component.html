@@ -1,4 +1,15 @@
-<div *ngIf="game" class="controls-container d-flex align-items-center justify-content-end mb-3">
+<alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
+    There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
+    who have pending name change requests. Click <span class="link-button"
+        (click)="handlePendingNamesClick(game.id)">here</span> to review them.
+</alert>
+
+<div *ngIf="game" class="controls-container d-flex align-items-center mb-3">
+    <button class="d-block btn btn-info" (click)="handleSelectAll()">
+        <fa-icon [icon]="fa.checkSquare"></fa-icon>
+        Select All {{ (game.isTeamGame ? "Team" : "Player") | pluralizer }}
+    </button>
+    <div class="flex-grow-1"></div>
     <app-confirm-button btnClass="btn btn-warning mr-2" (confirm)="handleRerankClick(game.id)"
         tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
     <div class="gb-button-group btn-group mr-2">
@@ -32,54 +43,69 @@
 
     <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(game)">
         <fa-icon [icon]="fa.plus"></fa-icon>
-        Add {{game.isTeamGame ? "Team" : "Player"}}
-    </button>
+        Add {{ game.isTeamGame ? "Team" : "Player" }} </button>
 </div>
 
-<div class="filters-container d-flex align-items-center mb-4">
-    <input type="text" minlength="2" placeholder="Search {{ game?.isTeamGame ? 'teams' : 'players' }}"
-        [(ngModel)]="filterSettings.searchTerm" (input)="searchInput$.next($event)" class="form-control flex-grow-1">
+<div class="mb-4">
+    <div class="mb-2">
+        <input type="text" class="form-control" minlength="2"
+            placeholder="Search {{ game?.isTeamGame ? 'teams' : 'players' }}" [(ngModel)]="filterSettings.searchTerm"
+            (input)="searchInput$.next($event)" class="form-control flex-grow-1">
+    </div>
 
-    <select class="form-control ml-2" [(ngModel)]="filterSettings.advancement" (change)="load()">
-        <option [ngValue]="undefined">[Any advancement]</option>
-        <option value="advancedFromPreviousGame">Advanced from a previous game</option>
-        <option value="advancedToNextGame">Advanced to next game</option>
-    </select>
+    <div class="select-flex d-flex align-items-center">
+        <select class="form-control" [(ngModel)]="filterSettings.advancement" (change)="load()">
+            <option [ngValue]="undefined">[Any advancement]</option>
+            <option value="advancedFromPreviousGame">Advanced from a previous game</option>
+            <option value="advancedToNextGame">Advanced to next game</option>
+        </select>
 
-    <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
-        <option [ngValue]="undefined" (change)="load()">[Any status]</option>
-        <option value="complete">Finished</option>
-        <option value="playing">Playing now</option>
-        <option value="notStarted">Not Started</option>
-    </select>
+        <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
+            <option [ngValue]="undefined" (change)="load()">[Any status]</option>
+            <option value="complete">Finished</option>
+            <option value="playing">Playing now</option>
+            <option value="notStarted">Not Started</option>
+        </select>
 
-    <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
-        <option value="rank">Sort by rank</option>
-        <option value="name">Sort by name</option>
-        <option value="timeRemaining">Sort by time remaining</option>
-    </select>
+        <select [(ngModel)]="filterSettings.hasPendingNames" (change)="load()" class="form-control ml-2">
+            <option [ngValue]="undefined">[Any]</option>
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
+        </select>
 
-    <ng-container
-        *ngIf="filterSettings.sort != 'rank' || filterSettings.sessionStatus || filterSettings.advancement || filterSettings.searchTerm">
-        <button type="button" class="btn btn-warning ml-2" (click)="handleClearAllFilters()">Clear</button>
-    </ng-container>
+        <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
+            <option value="rank">Sort by rank</option>
+            <option value="name">Sort by name</option>
+            <option value="timeRemaining">Sort by time remaining</option>
+        </select>
+
+        <ng-container
+            *ngIf="filterSettings.sort != 'rank' || filterSettings.sessionStatus || filterSettings.advancement || filterSettings.searchTerm">
+            <button type="button" class="btn btn-warning ml-2" (click)="handleClearAllFilters()">Clear</button>
+        </ng-container>
+    </div>
 </div>
 
 <ng-container *ngIf="!isLoading || !results || !game; else loading">
-    <ul *ngIf="results?.teams?.items?.length">
+    <ul *ngIf="results?.teams?.items?.length; else noMatches">
         <li *ngFor="let team of results?.teams?.items">
-            <app-team-list-card [team]="team" (teamSelected)="handleTeamSelected($event)">
+            <app-team-list-card [team]="team" (teamClicked)="handleTeamClick($event)"
+                [selected]="team.id | arrayContains:selectedTeamIds" (teamSelected)="handleTeamSelected($event)">
                 <div primaryDetail>
-                    <div [class.cursor-pointer]="team.score.totalScore > 0"
-                        [class.text-dashed-underline]="team.score | scoreToTooltip"
-                        (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)"
-                        triggers="mouseenter:mouseleave">
+                    <div class="font-weight-bold" [class.cursor-pointer]="team.score.totalScore > 0"
+                        (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)">
+                        <span [class.text-dashed-underline]="team.score | scoreToTooltip">
+                            {{ team.score.totalScore }} points
+                        </span>
 
-                        {{ team.score.totalScore }} points
+                        <span *ngIf="team.session.timeCumulativeMs" class="text-muted">
+                            ({{ team.session.timeCumulativeMs | msToDuration }})
+                        </span>
                     </div>
 
                     <div *ngIf="team.score.totalScore > 0" class="text-muted">
-                        ({{ team.challengesCompleteCount }} complete / {{ team.challengesPartialCount }} partial)
+                        ({{ team.challengesCompleteCount }} complete / {{ team.challengesPartialCount }}
+                        partial)
                     </div>
                 </div>
 
@@ -88,7 +114,8 @@
                         <div>Playing now</div>
                         (<strong class="text-info"
                             [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
-                            team.session.timeRemainingMs | countdown }}</strong>
+                            team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async
+                            }}</strong>
                         remaining)
                     </ng-container>
 
@@ -103,18 +130,20 @@
                         </span>
                     </ng-container>
 
-                    <span *ngIf="team.session.end | epochMsToDateTime | dateTimeIsPast">
-                        Finished
-                        <strong class="text-danger"
-                            [tooltip]="(team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">
-                            {{ team.session.end | epochMsToDateTime | shortdate }}
-                        </strong>
-                    </span>
+                    <ng-container *ngIf="team.session.end | epochMsToDateTime | dateTimeIsPast">
+                        <div>
+                            Finished
+                            <strong class="text-danger"
+                                [tooltip]="(team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">
+                                {{ team.session.end | epochMsToDateTime | shortdate }}
+                            </strong>
+                        </div>
+                    </ng-container>
                 </div>
 
                 <div contextMenu>
                     <app-game-center-team-context-menu *ngIf="game" [team]="team"
-                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart}"
+                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart, isTeamGame: game.isTeamGame }"
                         (teamUpdated)="load()"></app-game-center-team-context-menu>
                 </div>
             </app-team-list-card>
@@ -134,7 +163,9 @@
 </ng-template>
 
 <ng-template #noMatches>
-    <p class="my-2 text-muted text-center">No players match your search.</p>
+    <p class="my-2 text-muted text-center">
+        No {{ (game?.isTeamGame ? "team" : "player") | pluralizer }} match your search.
+    </p>
 </ng-template>
 
 <ng-template #loading>

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { firstValueFrom, map, tap } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { TeamService } from '@/api/team.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { Team } from '@/api/player-models';
-import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-extend-teams-modal',
@@ -18,6 +17,7 @@ export class ExtendTeamsModalComponent implements OnInit {
     isTeamGame: boolean;
   };
   extensionInMinutes = 30;
+  onExtend?: () => Promise<void> | Observable<void>;
   teamIds: string[] = [];
 
   protected errors: any[] = [];
@@ -53,8 +53,12 @@ export class ExtendTeamsModalComponent implements OnInit {
     try {
       const teamIds = this.apiTeams.map(t => t.teamId);
       const result = await firstValueFrom(this.teamService.adminExtendSession({ teamIds, extensionDurationInMinutes }));
-      this.modalService.hide();
-      this.toastService.showMessage(`Extended sessions by ${extensionDurationInMinutes} minutes for ${result.teams.length} teams.`);
+
+      if (this.onExtend)
+        await this.onExtend();
+
+      this.close();
+      this.toastService.showMessage(`Extended sessions by **${extensionDurationInMinutes}** minutes for **${result.teams.length}** teams.`);
     }
     catch (err: any) {
       this.errors.push(err);

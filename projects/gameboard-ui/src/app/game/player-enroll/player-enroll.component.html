@@ -75,14 +75,14 @@
       <!-- already enrolled -->
       <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore && ctx.game.registration.isDuring">
         <div *ngIf="isManager$ | async" class="form-group mb-0">
-          <ng-container *ngIf="ctx.player.name !== ctx.player.approvedName">
-            <ng-container *ngIf="ctx.player.nameStatus == 'pending' && ctx.player.name != disallowedName">
+          <ng-container *ngIf="ctx.player | hasPendingName">
+            <ng-container *ngIf="!ctx.player.nameStatus">
               <div class="alert alert-info">
                 Your name is pending approval from an administrator. Return later or select "Update" to see if it's
                 been approved.
               </div>
             </ng-container>
-            <ng-container *ngIf="ctx.player.nameStatus && ctx.player.nameStatus != 'pending'">
+            <ng-container *ngIf="(ctx.player | hasPendingName) && ctx.player.nameStatus">
               <div class="alert alert-danger">
                 <p>Your name was rejected by an administrator for the following reason:</p>
                 <p><strong>{{ctx.player.nameStatus}}</strong></p>
@@ -96,14 +96,15 @@
             <input id="name-input" type="text" class="form-control" [(ngModel)]="ctx.player.name" maxlength="64"
               autocomplete="off" placeholder="display name">
             <div class="input-group-append">
-              <button id="name-update-button" class="btn btn-outline-info" (click)="update(ctx.player)">
+              <button id="name-update-button" class="btn btn-info" (click)="update(ctx.player)"
+                [disabled]="!ctx.player.name">
                 <span>Update</span>
               </button>
             </div>
           </div>
           <small>
             Your name will be visible on the public scoreboard. It's also subject to approval - until an administrator
-            has approved it, a generic name will be displayed instead.
+            has approved it, a randomly-generated name will be displayed instead.
           </small>
         </div>
 

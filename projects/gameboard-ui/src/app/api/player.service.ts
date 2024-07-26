@@ -113,17 +113,21 @@ export class PlayerService {
     return this.http.get<PlayerCertificate[]>(`${this.url}/certificates`);
   }
 
+  public hasPendingName(player: { name: string, approvedName: string, nameStatus: string }) {
+    return !player.nameStatus && !player.name;
+  }
+
   public promoteToCaptain(teamId: string, playerId: string, ctx: { currentCaptainId: string, asAdmin?: boolean }): Observable<void> {
     return this.http.put<void>(`${this.url}/team/${teamId}/manager/${playerId}`, ctx);
   }
 
   public transform(p: Player, disallowedName: string | null = null): Player {
     // If the user has no name status but they changed their name, it's pending approval
-    if (!p.nameStatus && p.approvedName !== p.name) {
-      p.nameStatus = 'pending';
-    }
+    // if (!p.nameStatus && p.approvedName !== p.name) {
+    //   p.nameStatus = 'pending';
+    // }
     // Otherwise, if the user entered a name and an admin rejected it, but the new name entered is different, it's pending
-    else if (p.nameStatus != 'pending' && disallowedName && disallowedName !== p.name) {
+    if (p.nameStatus != 'pending' && disallowedName && disallowedName !== p.name) {
       p.nameStatus = 'pending';
     }
 

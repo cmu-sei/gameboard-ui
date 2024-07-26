@@ -26,4 +26,8 @@ export class MarkdownHelpersService {
 
     return paragraphs.join("\n\n").trim();
   }
+
+  toHtml(markdownContent: string) {
+    return this.markdownService.parse(markdownContent);
+  }
 }

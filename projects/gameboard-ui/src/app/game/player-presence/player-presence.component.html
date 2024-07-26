@@ -31,7 +31,7 @@
             <li *ngIf="teamMember.isManager" class="badge badge-info mr-4">Captain</li>
             <li *ngIf="isSyncStartGame && teamMember.isReady" class="badge badge-success mr-4">Ready</li>
             <li *ngIf="isSyncStartGame && !teamMember.isReady" class="badge badge-danger mr-4">Not Ready</li>
-            <li *ngIf="teamMember.nameStatus == 'pending'" class="badge badge-secondary">
+            <li *ngIf="teamMember | hasPendingName" class="badge badge-secondary">
               pending name: "{{ teamMember.name }}"
             </li>
           </ul>

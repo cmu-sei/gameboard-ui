@@ -25,7 +25,7 @@ export class DateToCountdownPipe implements PipeTransform {
         if (duration.as("milliseconds") < 0)
           return null;
 
-        return duration.toHuman({ listStyle: "narrow", unitDisplay: "short" } as Intl.NumberFormatOptions);
+        return duration.toHuman({ compactDisplay: "short", unitDisplay: "short" } as Intl.NumberFormatOptions);
       })
     );
   }
