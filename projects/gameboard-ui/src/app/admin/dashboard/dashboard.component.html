@@ -164,19 +164,8 @@
                         <fa-icon [icon]="fa.peopleGroup" class="mr-1"></fa-icon>
                         Game Center
                       </a>
-                      <a class="dropdown-item px-3" [routerLink]="['../registrar', game.id]"><fa-icon class="mr-1"
-                          [icon]="faUsers"></fa-icon>Players</a>
-                      <a class="dropdown-item px-3" *ngIf="game.mode == 'external'"
-                        [routerLink]="['../game', game.id, 'external']">
-                        <fa-icon [icon]="fa.rocket"></fa-icon>
-                        Deployment
-                      </a>
-                      <a class="dropdown-item px-3" [routerLink]="['../observer/challenges', game.id]"><fa-icon
-                          class="mr-1" [icon]="faTv"></fa-icon>Observe</a>
                       <a class="dropdown-item px-3" [routerLink]="['/game', game.id]"><fa-icon class="mr-1"
                           [icon]="faGamepad"></fa-icon>Lobby</a>
-                      <a class="dropdown-item px-3" [routerLink]="['../designer', game.id]"><fa-icon class="mr-1"
-                          [icon]="faCog"></fa-icon>Settings</a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item px-3" (click)="clone(game)"><fa-icon class="mr-1"
                           [icon]="faClone"></fa-icon>Clone</a>
