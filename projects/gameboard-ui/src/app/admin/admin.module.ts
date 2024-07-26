@@ -81,6 +81,7 @@ import { ExternalHostEditorComponent } from './components/external-host-editor/e
 import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
 import { GameCenterTeamDetailComponent } from './components/game-center/game-center-team-detail/game-center-team-detail.component';
 import { TeamCenterComponent } from './components/team-center/team-center.component';
+import { GameCenterPlayerNameManagementComponent } from './components/game-center/game-center-player-name-management/game-center-player-name-management.component';
 
 @NgModule({
   declarations: [
@@ -150,6 +151,7 @@ import { TeamCenterComponent } from './components/team-center/team-center.compon
     TeamListCardComponent,
     GameCenterTeamDetailComponent,
     TeamCenterComponent,
+    GameCenterPlayerNameManagementComponent,
   ],
   imports: [
     CommonModule,

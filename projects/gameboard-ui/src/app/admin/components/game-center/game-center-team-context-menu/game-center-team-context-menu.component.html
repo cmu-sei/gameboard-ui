@@ -48,20 +48,22 @@
         <li class="divider dropdown-divider"></li>
         <ng-container *ngIf="hasStartedSession; else unenroll">
             <li role="menuitem">
-                <button class="dropdown-item btn btn-danger" (click)="handleResetRequest(team, 'preserveChallenges')">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="confirmReset({ teamId: team.id, resetType: 'preserveChallenges' })">
                     Reset Session (Preserve Challenges)
                 </button>
             </li>
 
             <li role="menuitem">
-                <button class="dropdown-item btn btn-danger" (click)="handleResetRequest(team, 'archiveChallenges')">
+                <button class="dropdown-item btn btn-danger"
+                    (click)="confirmReset({ teamId: team.id, resetType: 'archiveChallenges' })">
                     Reset Session
                 </button>
             </li>
 
             <li role="menuitem">
                 <button class="dropdown-item btn btn-danger"
-                    (click)="handleResetRequest(team, 'unenrollAndArchiveChallenges')">
+                    (click)="confirmReset({ teamId: team.id, resetType: 'unenrollAndArchiveChallenges'})">
                     Reset Session &amp; Unenroll
                 </button>
             </li>

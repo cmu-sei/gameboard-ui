@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 @Pipe({ name: 'datetimeToDate' })
 export class DatetimeToDatePipe implements PipeTransform {
 
-  transform(value: DateTime): Date {
+  transform(value?: DateTime | null): Date | null | undefined {
     if (!value)
       return value;
 

@@ -21,6 +21,7 @@ export class EventHorizonRenderingService {
       groupTemplate: (groupData: any, element: any) => this.toGroupTemplate(groupData),
       min: eventHorizonVm.team.session.start.toJSDate(),
       max: sessionEnd.toJSDate(),
+      selectable: true,
       stack: true,
       start: eventHorizonVm.team.session.start.toJSDate(),
       tooltip: {
@@ -70,7 +71,7 @@ export class EventHorizonRenderingService {
     return `<div class="eh-group">${groupData.content}</div>`;
   }
 
-  public toModalContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): string {
+  public toModalHtmlContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): string {
     if (!timelineEvent)
       return "";
 
@@ -90,7 +91,7 @@ export class EventHorizonRenderingService {
     }
 
     if (detail) {
-      return `${header}\n\n${detail}`;
+      return `${header}\n\n${detail}\n\n_Click to copy this event to your clipboard as markdown_`;
     }
 
     return "";
@@ -123,9 +124,7 @@ export class EventHorizonRenderingService {
     if (challengeSpec.maxAttempts)
       attemptSummary = `${attemptSummary}/${challengeSpec.maxAttempts}`;
 
-    return `#### Completed
-
-**Attempts Used:** ${attemptSummary}
+    return `**Attempts Used:** ${attemptSummary}
 
 **Final Score:** ${timelineEvent.eventData.finalScore}/${challengeSpec.maxPossibleScore}
     `.trim();
@@ -139,7 +138,7 @@ export class EventHorizonRenderingService {
       content: eventName,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
       isClickable,
-      title: this.markdownHelpers.toHtml(this.toModalContent(timelineEvent, challengeSpec)),
+      title: this.markdownHelpers.toHtml(this.toModalHtmlContent(timelineEvent, challengeSpec)),
       eventData: null
     };
   }
@@ -158,7 +157,6 @@ export class EventHorizonRenderingService {
   private toSolveCompleteDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as unknown as EventHorizonSolveCompleteEvent;
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Completed", "eh-event-type-challenge-complete", true);
-
     baseItem.eventData = typedEvent;
 
     return baseItem;

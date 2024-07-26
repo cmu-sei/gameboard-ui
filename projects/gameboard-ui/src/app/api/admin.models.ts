@@ -31,6 +31,11 @@ export interface AppActiveChallengeGame {
     isTeamGame: boolean;
 }
 
+export interface ApprovePlayerNameRequest {
+    name: string;
+    revisionReason?: string;
+}
+
 export interface GetAppActiveChallengesResponse {
     specs: AppActiveChallengeSpec[];
 }

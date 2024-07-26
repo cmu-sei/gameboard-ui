@@ -12,6 +12,9 @@ export class TeamService {
     private _playerSessionChanged$ = new Subject<string>();
     public playerSessionChanged$ = this._playerSessionChanged$.asObservable();
 
+    private _teamSessionExtended$ = new Subject<string[]>();
+    public teamSessionExtended$ = this._teamSessionExtended$.asObservable();
+
     private _teamSessionsChanged$ = new Subject<string[]>();
     public teamSessionsChanged$ = this._teamSessionsChanged$.asObservable();
 
@@ -29,7 +32,8 @@ export class TeamService {
 
     adminExtendSession(request: { teamIds: string[], extensionDurationInMinutes: number }) {
         return this.http.put<AdminExtendTeamSessionResponse>(this.apiUrl.build("admin/team/session"), request).pipe(
-            tap(teamSessions => this._teamSessionsChanged$.next(teamSessions.teams.map(t => t.id)))
+            tap(teamSessions => this._teamSessionsChanged$.next(teamSessions.teams.map(t => t.id))),
+            tap(teamSessions => this._teamSessionExtended$.next(teamSessions.teams.map(t => t.id)))
         );
     }
 

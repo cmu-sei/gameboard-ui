@@ -37,6 +37,7 @@ import { SessionStartCountdownComponent } from './components/session-start-count
 import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-challenge-scores-to-challenge-result-type-count.pipe';
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
+import { HasPendingNamePipe } from './pipes/has-pending-name.pipe';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -67,6 +68,7 @@ const MODULE_DECLARATIONS = [
 @NgModule({
   declarations: [
     ...MODULE_DECLARATIONS,
+    HasPendingNamePipe,
   ],
   imports: [
     CommonModule,

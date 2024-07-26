@@ -7,7 +7,7 @@ export class ApiDateTimeService {
     if (!input || input === "undefine") return null;
 
     // as of now, the API returns date objects as string (blargh)
-    const parsedDateTime = DateTime.fromISO(input);
+    const parsedDateTime = DateTime.fromJSDate(new Date(input));
 
     // also, it stores null dates as 1/1/01 (which gets converted to a time on 12/31/0000 because timezones),
     // so account for that too

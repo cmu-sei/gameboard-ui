@@ -24,6 +24,10 @@ div.vis-tooltip {
     color: #999 !important;
   }
 
+  em {
+    color: #999 !important;
+  }
+
   h4 {
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
@@ -41,6 +45,7 @@ div.vis-tooltip {
   ol,
   ul {
     margin: 0 !important;
+    margin-bottom: 1rem !important;
   }
 
   li {

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { DateTime } from 'luxon';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetPlayersCsvExportResponse, GetPlayersCsvExportResponsePlayer, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
+import { ApprovePlayerNameRequest, GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetPlayersCsvExportResponse, GetPlayersCsvExportResponsePlayer, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
 import { GameCenterContext, GameCenterPracticeContext, GameCenterPracticeSessionStatus, GameCenterTeamsRequestArgs, GameCenterTeamsResults, GetGameCenterPracticeContextRequest } from '@/admin/components/game-center/game-center.models';
 
@@ -12,6 +12,10 @@ export class AdminService {
   constructor(
     private apiUrl: ApiUrlService,
     private http: HttpClient) { }
+
+  async approvePlayerName(playerId: string, request: ApprovePlayerNameRequest) {
+    return await firstValueFrom(this.http.put(this.apiUrl.build(`admin/players/${playerId}/name`), request));
+  }
 
   getActiveChallenges(mode: PlayerMode) {
     return this.http.get<GetAppActiveChallengesResponse>(this.apiUrl.build(`admin/active-challenges?playerMode=${mode.toLowerCase()}`)).pipe(

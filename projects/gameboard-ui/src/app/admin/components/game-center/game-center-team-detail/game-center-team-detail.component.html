@@ -1,20 +1,3 @@
-<!-- <div class="row">
-    <div class="form-group col-9">
-        <label class="mb-0" for="name-input">Approved Name</label>
-        <input id="name-input" class="form-control" type="text" [(ngModel)]="player.approvedName"
-            (change)="update(player)">
-    </div>
-
-    <div class="form-group col-3">
-        <label class="mb-0" for="reason-input">Disapproved Reason</label>
-        <select name="reason-select" class="form-control" [(ngModel)]="player.nameStatus" (change)="update(player)">
-            <option [ngValue]="''">[not disapproved]</option>
-            <option *ngFor="let reason of reasons" [value]="reason">
-                {{reason}}
-            </option>
-        </select>
-    </div>
-</div> -->
 <app-modal-content *ngIf="team" [title]="team.name" [subtitle]="game.name" [hideCancel]="true">
     <div *ngIf="team.advancement" class="advancement-container px-3">
         <h4 class="mt-4">Advancement</h4>
@@ -31,13 +14,54 @@
         </div>
     </div>
 
+    <ng-container>
+        <h4 class="mt-4 px-3">Name Management</h4>
+        <div class="name-management">
+            <ul class="container mx-0">
+                <li class="row">
+                    <div class="col-3">
+                        <label class="mb-0">Current Name</label>
+                    </div>
+                    <div class="col-4">
+                        <label class="mb-0">Requested Name</label>
+                    </div>
+                    <div class="col-3">
+                        <label class="mb-0" for="reason-input">Reason for Change</label>
+                    </div>
+                </li>
+                <li *ngFor="let player of team.players" class="row mb-2">
+                    <div class="col-3">
+                        <div class="fs-10 player-current-name">{{ player.name }}</div>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" name="pending-name-input-{{player.id}}" type="text"
+                            [placeholder]="(player.pendingName ? 'Name this player (requested: ' + player.pendingName + ')' : 'No pending name change requests from this player')"
+                            minlength="2" [value]="player.pendingName" #pendingNameInput>
+                    </div>
+                    <div class="col-3">
+                        <select name="reason-select" class="form-control" #reasonSelect>
+                            <option [value]="''">[not disapproved]</option>
+                            <option *ngFor="let reason of reasons" [value]="reason">
+                                {{reason}}
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-warning" [disabled]="pendingNameInput.value.length < 2"
+                            (click)="approveName(player.id, { name: pendingNameInput.value, revisionReason: reasonSelect.value })">Approve</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </ng-container>
+
     <ng-container *ngIf="team.session.start">
-        <h4 class="mt-4 px-3">Session Extension</h4>
+        <h4 class="mt-4 px-3">Session</h4>
         <div class="form-group" *ngIf="!isExtending; else loading">
-            <label class="mb-0" for="duration-input">By Duration</label>
+            <label class="mb-0" for="duration-input">Extend</label>
             <div class="input-group">
                 <input id="duration-input" class="form-control" type="number"
-                    placeholder="Extension length (in minutes)" [(ngModel)]="durationExtensionInMinutes">
+                    placeholder="Extension duration (in minutes)" [(ngModel)]="durationExtensionInMinutes">
                 <div class="input-group-append">
                     <button class="btn" [class.btn-info]="(durationExtensionInMinutes || 0) >= 0"
                         [class.btn-warning]="(durationExtensionInMinutes || 0) < 0"
@@ -50,13 +74,14 @@
             </div>
         </div>
 
-        <h4 class="px-3">Timeline</h4>
+        <h4 class="px-3 mr-1">Timeline</h4>
+        <!-- <div class="d-flex align-items-baseline">
+            
+        </div> -->
         <div class="timeline-container px-3 mb-4">
             <app-team-event-horizon [teamId]="team.id"></app-team-event-horizon>
         </div>
     </ng-container>
-
-    <!-- <app-admin-player-session [player]="player" (onUnenrollRequest)="unenroll(player)"></app-admin-player-session> -->
 
     <div class="other-tools-container mb-2">
         <h4 class="mb-2 px-3">Other tools</h4>
@@ -69,7 +94,8 @@
                 <span>{{ (showChallengeYaml ? "Hide" : "View") }} Data</span>
             </button>
 
-            <app-yaml-block *ngIf="showChallengeYaml && !isLoadingChallenges" [source]="team"></app-yaml-block>
+            <app-yaml-block *ngIf="showChallengeYaml && !isLoadingChallenges"
+                [source]="teamChallenges"></app-yaml-block>
         </div>
     </div>
 </app-modal-content>

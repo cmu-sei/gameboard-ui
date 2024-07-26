@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { debounceTime, firstValueFrom, map, Subject } from 'rxjs';
+import { debounceTime, firstValueFrom, map, Subject, tap } from 'rxjs';
 import { AdminService } from '@/api/admin.service';
 import { fa } from '@/services/font-awesome.service';
 import { Game } from '@/api/game-models';
@@ -9,7 +9,7 @@ import { ToastService } from '@/utility/services/toast.service';
 import { AdminEnrollTeamModalComponent } from '../../admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { ManageManualChallengeBonusesModalComponent } from '../../manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { SimpleEntity } from '@/api/models';
-import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCenterTeamsResults, GameCenterTeamsResultsTeam, GameCenterTeamsSort } from '../game-center.models';
+import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCenterTeamsResults, GameCenterTeamsSort } from '../game-center.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { unique } from 'projects/gameboard-ui/src/tools';
 import { ScoreboardTeamDetailModalComponent } from '@/scoreboard/components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
@@ -19,10 +19,13 @@ import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams
 import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
 import { NowService } from '@/services/now.service';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
+import { TeamService } from '@/api/team.service';
+import { GameCenterPlayerNameManagementComponent } from '../game-center-player-name-management/game-center-player-name-management.component';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
   searchTerm?: string;
+  hasPendingNames?: boolean;
   sort?: GameCenterTeamsSort;
   sessionStatus?: GameCenterTeamSessionStatus;
 }
@@ -53,15 +56,20 @@ export class GameCenterTeamsComponent implements OnInit {
     private modalService: ModalConfirmService,
     private nowService: NowService,
     private playerService: PlayerService,
+    private teamService: TeamService,
     private toastService: ToastService,
     private unsub: UnsubscriberService) {
 
-    this.unsub.add(this.searchInput$.pipe(
-      debounceTime(300)
-    ).subscribe(async event => {
-      this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
-      this.load();
-    })
+    this.unsub.add(
+      this.searchInput$.pipe(
+        debounceTime(300)
+      ).subscribe(async event => {
+        this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
+        this.load();
+      }),
+      this.teamService.teamSessionExtended$.subscribe(async () => {
+        await this.load();
+      })
     );
   }
 
@@ -174,6 +182,11 @@ export class GameCenterTeamsComponent implements OnInit {
       },
       modalClasses: ["modal-lg"]
     });
+  }
+
+  protected async handlePendingNamesClick(gameId: string) {
+    this.filterSettings.hasPendingNames = true;
+    await this.load();
   }
 
   protected async handleRerankClick(gameId: string) {

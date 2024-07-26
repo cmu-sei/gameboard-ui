@@ -95,6 +95,7 @@ export interface GameCenterTeamsResults {
     playerCountTotal: number;
     teamCountActive: number;
     teamCountTotal: number;
+    namesPendingApproval: number;
     teams: PagedArray<GameCenterTeamsResultsTeam>;
 }
 
@@ -124,6 +125,7 @@ export interface GameCenterTeamsResultsTeam {
 export interface GameCenterTeamsPlayer {
     id: string;
     name: string;
+    pendingName?: string;
     isReady: boolean;
     sponsor: SimpleSponsor;
 }

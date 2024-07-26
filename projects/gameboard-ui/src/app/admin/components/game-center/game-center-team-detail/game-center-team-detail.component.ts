@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { SimpleEntity } from '@/api/models';
-import { first, firstValueFrom } from 'rxjs';
-import { Player, TeamChallenge } from '@/api/player-models';
+import { firstValueFrom } from 'rxjs';
+import { TeamChallenge } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { GameCenterTeamsResultsTeam } from '../game-center.models';
+import { AdminService } from '@/api/admin.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-game-center-team-detail',
@@ -41,8 +42,10 @@ export class GameCenterTeamDetailComponent implements OnInit {
   ];
 
   constructor(
+    private adminService: AdminService,
     private modalService: ModalConfirmService,
-    private playerService: PlayerService) { }
+    private playerService: PlayerService,
+    private toastService: ToastService) { }
 
   public ngOnInit() {
     if (!this.game)
@@ -88,7 +91,7 @@ export class GameCenterTeamDetailComponent implements OnInit {
     if (isExpanding) {
       this.isLoadingChallenges = true;
 
-      const challenges = await firstValueFrom(
+      this.teamChallenges = await firstValueFrom(
         this
           .playerService
           .getTeamChallenges(this.team.id)
@@ -100,7 +103,19 @@ export class GameCenterTeamDetailComponent implements OnInit {
     this.showChallengeYaml = isExpanding;
   }
 
-  protected async update(model: Player) {
-    await firstValueFrom(this.playerService.update(model));
+  protected async approveName(playerId: string, args: { name: string, revisionReason: string }) {
+    const finalName = args.name.trim();
+    await this.adminService.approvePlayerName(playerId, args);
+
+    const player = this.team.players.find(p => p.id === playerId);
+    if (player) {
+      player.pendingName = "";
+      player.name = args.name;
+    }
+
+    if (this.team.captain.id === playerId)
+      this.team.name = args.name;
+
+    this.toastService.showMessage(`This player's name has been changed to **${args.name}**.${args.revisionReason ? ` (reason: **${args.revisionReason}**)` : ""}`);
   }
 }

@@ -1,3 +1,9 @@
+<alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
+    There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
+    who have pending name change requests. Click <span class="link-button"
+        (click)="handlePendingNamesClick(game.id)">here</span> to review them.
+</alert>
+
 <div *ngIf="game" class="controls-container d-flex align-items-center mb-3">
     <button class="d-block btn btn-info" (click)="handleSelectAll()">
         <fa-icon [icon]="fa.checkSquare"></fa-icon>
@@ -37,37 +43,48 @@
 
     <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(game)">
         <fa-icon [icon]="fa.plus"></fa-icon>
-        Add {{game.isTeamGame ? "Team" : "Player"}}
+        Add {{ game.isTeamGame ? "Team" : "Player" }}
     </button>
 </div>
 
-<div class="filters-container d-flex align-items-center mb-4">
-    <input type="text" minlength="2" placeholder="Search {{ game?.isTeamGame ? 'teams' : 'players' }}"
-        [(ngModel)]="filterSettings.searchTerm" (input)="searchInput$.next($event)" class="form-control flex-grow-1">
+<div class="mb-4">
+    <div class="mb-2">
+        <input type="text" class="form-control" minlength="2"
+            placeholder="Search {{ game?.isTeamGame ? 'teams' : 'players' }}" [(ngModel)]="filterSettings.searchTerm"
+            (input)="searchInput$.next($event)" class="form-control flex-grow-1">
+    </div>
 
-    <select class="form-control ml-2" [(ngModel)]="filterSettings.advancement" (change)="load()">
-        <option [ngValue]="undefined">[Any advancement]</option>
-        <option value="advancedFromPreviousGame">Advanced from a previous game</option>
-        <option value="advancedToNextGame">Advanced to next game</option>
-    </select>
+    <div class="select-flex d-flex align-items-center">
+        <select class="form-control" [(ngModel)]="filterSettings.advancement" (change)="load()">
+            <option [ngValue]="undefined">[Any advancement]</option>
+            <option value="advancedFromPreviousGame">Advanced from a previous game</option>
+            <option value="advancedToNextGame">Advanced to next game</option>
+        </select>
 
-    <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
-        <option [ngValue]="undefined" (change)="load()">[Any status]</option>
-        <option value="complete">Finished</option>
-        <option value="playing">Playing now</option>
-        <option value="notStarted">Not Started</option>
-    </select>
+        <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
+            <option [ngValue]="undefined" (change)="load()">[Any status]</option>
+            <option value="complete">Finished</option>
+            <option value="playing">Playing now</option>
+            <option value="notStarted">Not Started</option>
+        </select>
 
-    <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
-        <option value="rank">Sort by rank</option>
-        <option value="name">Sort by name</option>
-        <option value="timeRemaining">Sort by time remaining</option>
-    </select>
+        <select [(ngModel)]="filterSettings.hasPendingNames" (change)="load()" class="form-control ml-2">
+            <option [ngValue]="undefined">[Any]</option>
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
+        </select>
 
-    <ng-container
-        *ngIf="filterSettings.sort != 'rank' || filterSettings.sessionStatus || filterSettings.advancement || filterSettings.searchTerm">
-        <button type="button" class="btn btn-warning ml-2" (click)="handleClearAllFilters()">Clear</button>
-    </ng-container>
+        <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
+            <option value="rank">Sort by rank</option>
+            <option value="name">Sort by name</option>
+            <option value="timeRemaining">Sort by time remaining</option>
+        </select>
+
+        <ng-container
+            *ngIf="filterSettings.sort != 'rank' || filterSettings.sessionStatus || filterSettings.advancement || filterSettings.searchTerm">
+            <button type="button" class="btn btn-warning ml-2" (click)="handleClearAllFilters()">Clear</button>
+        </ng-container>
+    </div>
 </div>
 
 <ng-container *ngIf="!isLoading || !results || !game; else loading">
@@ -97,7 +114,7 @@
                         <div>Playing now</div>
                         (<strong class="text-info"
                             [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
-                            team.session.timeRemainingMs | countdown }}</strong>
+                            team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async }}</strong>
                         remaining)
                     </ng-container>
 
@@ -146,7 +163,7 @@
 
 <ng-template #noMatches>
     <p class="my-2 text-muted text-center">
-        No {{ (game?.isTeamGame ? "team" : "player") | pluralizer:0 }} match your search.
+        No {{ (game?.isTeamGame ? "team" : "player") | pluralizer }} match your search.
     </p>
 </ng-template>
 
