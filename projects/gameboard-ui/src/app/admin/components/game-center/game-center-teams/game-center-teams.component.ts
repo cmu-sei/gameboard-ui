@@ -67,8 +67,13 @@ export class GameCenterTeamsComponent implements OnInit {
         this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
         this.load();
       }),
-      this.teamService.teamSessionExtended$.subscribe(async () => {
-        await this.load();
+      this.teamService.teamSessionExtended$.subscribe(async teamIds => {
+        for (const teamId of teamIds) {
+          if (this.results?.teams?.items?.find(t => t.id === teamId)) {
+            await this.load();
+            return;
+          }
+        }
       })
     );
   }
