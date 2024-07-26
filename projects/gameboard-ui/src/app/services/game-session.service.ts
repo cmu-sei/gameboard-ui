@@ -48,7 +48,7 @@ export class GameSessionService {
     return session ? session.isBefore : true;
   }
 
-  canUnerollSessionWithEpochMs(session: { start?: number | null, end?: number | null }) {
+  public canUnerollSessionWithEpochMs(session: { start?: number | null, end?: number | null }) {
     return this.canUnenrollSessionWithDateTime({ start: session.start ? DateTime.fromMillis(session.start) : null, end: session.end ? DateTime.fromMillis(session.end) : null });
   }
 

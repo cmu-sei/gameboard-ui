@@ -43,8 +43,7 @@
 
     <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(game)">
         <fa-icon [icon]="fa.plus"></fa-icon>
-        Add {{ game.isTeamGame ? "Team" : "Player" }}
-    </button>
+        Add {{ game.isTeamGame ? "Team" : "Player" }} </button>
 </div>
 
 <div class="mb-4">
@@ -105,7 +104,8 @@
                     </div>
 
                     <div *ngIf="team.score.totalScore > 0" class="text-muted">
-                        ({{ team.challengesCompleteCount }} complete / {{ team.challengesPartialCount }} partial)
+                        ({{ team.challengesCompleteCount }} complete / {{ team.challengesPartialCount }}
+                        partial)
                     </div>
                 </div>
 
@@ -114,7 +114,8 @@
                         <div>Playing now</div>
                         (<strong class="text-info"
                             [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
-                            team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async }}</strong>
+                            team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async
+                            }}</strong>
                         remaining)
                     </ng-container>
 
