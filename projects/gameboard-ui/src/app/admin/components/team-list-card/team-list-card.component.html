@@ -1,6 +1,6 @@
 <div *ngIf="team" class="card my-2">
     <div class="card-body d-flex align-items-center flex-grow-1">
-        <div class="team-select text-center mr-2">
+        <div *ngIf="allowSelection" class="team-select text-center mr-2">
             <input type="checkbox" [(ngModel)]="selected" (change)="handleTeamSelected($event, team.id)">
         </div>
 

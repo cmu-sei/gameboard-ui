@@ -77,23 +77,6 @@
             <fa-icon [icon]="faUsers"></fa-icon>
             <span>Game Center</span>
           </a>
-          <a class="btn btn-outline-info my-2" [routerLink]="['../registrar', g.id]">
-            <fa-icon [icon]="faUsers"></fa-icon>
-            <span>Players</span>
-          </a>
-          <a class="btn btn-outline-info my-2" [routerLink]="['../observer/challenges', g.id]">
-            <fa-icon [icon]="faTv"></fa-icon>
-            <span>Observe</span>
-          </a>
-          <a class="btn btn-outline-info my-2" *ngIf="g.mode == 'external'"
-            [routerLink]="['../game', g.id, 'external']">
-            <fa-icon [icon]="fa.rocket"></fa-icon>
-            <span>Deployment</span>
-          </a>
-          <a class="btn btn-outline-info my-2" [routerLink]="['../designer', g.id]">
-            <fa-icon [icon]="faCog"></fa-icon>
-            <span>Settings</span>
-          </a>
           <div>
             <button class="btn btn-outline-info btn-sm mx-1" (click)="clone(g)">
               <fa-icon [icon]="faClone"></fa-icon>
@@ -177,19 +160,12 @@
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     </button>
                     <div *dropdownMenu class="dropdown-menu">
-                      <a class="dropdown-item px-3" [routerLink]="['../registrar', game.id]"><fa-icon class="mr-1"
-                          [icon]="faUsers"></fa-icon>Players</a>
-                      <a class="dropdown-item px-3" *ngIf="game.mode == 'external'"
-                        [routerLink]="['../game', game.id, 'external']">
-                        <fa-icon [icon]="fa.rocket"></fa-icon>
-                        Deployment
+                      <a class="dropdown-item px-3" [routerLink]="['../game', game.id]">
+                        <fa-icon [icon]="fa.peopleGroup" class="mr-1"></fa-icon>
+                        Game Center
                       </a>
-                      <a class="dropdown-item px-3" [routerLink]="['../observer/challenges', game.id]"><fa-icon
-                          class="mr-1" [icon]="faTv"></fa-icon>Observe</a>
                       <a class="dropdown-item px-3" [routerLink]="['/game', game.id]"><fa-icon class="mr-1"
                           [icon]="faGamepad"></fa-icon>Lobby</a>
-                      <a class="dropdown-item px-3" [routerLink]="['../designer', game.id]"><fa-icon class="mr-1"
-                          [icon]="faCog"></fa-icon>Settings</a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item px-3" (click)="clone(game)"><fa-icon class="mr-1"
                           [icon]="faClone"></fa-icon>Clone</a>

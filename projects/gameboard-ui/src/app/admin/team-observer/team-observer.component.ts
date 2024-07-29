@@ -62,8 +62,8 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
   ) {
     this.mksHost = conf.mkshost;
     this.gameData = route.params.pipe(
-      filter(a => !!a.id),
-      switchMap(a => this.gameApi.retrieve(a.id))
+      filter(a => !!(this.gameId || a.id)),
+      switchMap(a => this.gameApi.retrieve(this.gameId || a.id))
     ).subscribe(game => this.game = game);
     this.tableData = combineLatest([
       route.params,
@@ -88,7 +88,7 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
       timer(0, 10_000) // *every 10 sec* refresh which users are one which consoles 
     ]).pipe(
       debounceTime(500),
-      tap(([a, b, c]) => this.gid = a.id),
+      tap(([a, b, c]) => this.gid = this.gameId || a.id),
       switchMap(() => this.api.consoleActors(this.gid)),
       map(data => new Map(data.map(i => [i.userId, i])))
     );
