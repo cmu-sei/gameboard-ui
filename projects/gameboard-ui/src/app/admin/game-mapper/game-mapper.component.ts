@@ -25,12 +25,6 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   @ViewChild('mapbox') mapboxRef!: ElementRef;
 
   protected fa = fa;
-  callout!: HTMLDivElement;
-  specDrag: Spec | null = null;
-  specHover: Spec | null = null;
-  altkey = false;
-  showGrid = false;
-  showCallout = false;
   specConfigMap: { [specId: string]: ChallengeSpecScoringConfig } = {};
 
   gameBonusesConfig$: Observable<GameScoringConfig>;
@@ -209,102 +203,5 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
   private checkForZeroPointActiveSpecs(specs: Spec[]) {
     this.hasZeroPointSpecs = specs.some(s => s.points <= 0);
-  }
-
-  mousemove(e: MouseEvent) {
-    if (!this.specDrag) { return; }
-    const mapBox = this.mapboxRef.nativeElement;
-
-    if (this.altkey) {
-      // resize radius as percentage of mapbox/svg
-      const centerx = this.specDrag.x * mapBox.clientWidth;
-      const centery = this.specDrag.y * mapBox.clientHeight;
-      const deltaX = e.offsetX - centerx;
-      const deltaY = e.offsetY - centery;
-      const r = Math.sqrt(
-        Math.pow(Math.abs(deltaX), 2) +
-        Math.pow(Math.abs(deltaY), 2)
-      );
-      this.specDrag.r = Math.max(.01, r / mapBox.clientWidth);
-    } else {
-      // set location as percentage of mapbox/svg
-      this.specDrag.x = e.offsetX / mapBox.clientWidth;
-      this.specDrag.y = e.offsetY / mapBox.clientHeight;
-    }
-
-    this.updating$.next(this.specDrag);
-  }
-
-  mousedrag(e: MouseEvent, spec: Spec) {
-    if (this.showCallout) { return; }
-    this.specDrag = e.type === 'mousedown'
-      ? spec
-      : null
-      ;
-  }
-
-  mouseenter(e: MouseEvent, spec: Spec) {
-    this.specHover = spec;
-    spec.c = 'purple';
-    const mapBox = this.mapboxRef.nativeElement;
-
-    if (this.showCallout) {
-      const middle = mapBox.clientWidth / 2;
-      const centerr = spec.r * mapBox.clientWidth;
-      const centerx = spec.x * mapBox.clientWidth + centerr;
-      const centery = spec.y * mapBox.clientHeight + centerr;
-      const deltaX = middle - centerx;
-      const deltaY = middle - centery;
-      const vectorX = deltaX / Math.abs(deltaX);
-      const vectorY = deltaY / Math.abs(deltaY);
-      let left = 0, top = 0, right = 0, bottom = 0;
-      if (vectorX > 0) {
-        left = centerx + centerr;
-        if (vectorY > 0) {
-          top = centery + centerr;
-        } else {
-          bottom = middle * 2 - centery + (2 * centerr);
-        }
-      } else {
-        right = middle * 2 - centerx + (2 * centerr);
-        if (vectorY > 0) {
-          top = centery + centerr;
-        } else {
-          bottom = middle * 2 - centery + (2 * centerr);
-        }
-      }
-
-      if (!!left) {
-        this.renderer.setStyle(this.callout, 'left', left + 'px');
-      } else {
-        this.renderer.removeStyle(this.callout, 'left');
-      }
-      if (!!top) {
-        this.renderer.setStyle(this.callout, 'top', top + 'px');
-      } else {
-        this.renderer.removeStyle(this.callout, 'top');
-      }
-      if (!!right) {
-        this.renderer.setStyle(this.callout, 'right', right + 'px');
-      } else {
-        this.renderer.removeStyle(this.callout, 'right');
-      }
-      if (!!bottom) {
-        this.renderer.setStyle(this.callout, 'bottom', bottom + 'px');
-      } else {
-        this.renderer.removeStyle(this.callout, 'bottom');
-      }
-    }
-  }
-
-  mouseleave(e: MouseEvent, spec: Spec) {
-    this.specHover = null;
-    spec.c = 'blue';
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  @HostListener('document:keyup', ['$event'])
-  onKeydown(ev: KeyboardEvent) {
-    this.altkey = ev.altKey;
   }
 }

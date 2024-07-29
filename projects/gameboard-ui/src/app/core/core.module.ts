@@ -121,6 +121,7 @@ import { ApiStatusInterceptor } from '@/api-status.interceptor';
 import { AuthInterceptor } from '@/utility/auth.interceptor';
 import { ObserverConsoleComponent } from './components/observer-console/observer-console.component';
 import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
+import { GameMapImageUrlPipe } from './pipes/game-map-image-url.pipe';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -158,6 +159,7 @@ const PUBLIC_DECLARATIONS = [
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,
+  GameMapImageUrlPipe,
   GbProgressBarComponent,
   LineChartComponent,
   LinkRendererPipe,

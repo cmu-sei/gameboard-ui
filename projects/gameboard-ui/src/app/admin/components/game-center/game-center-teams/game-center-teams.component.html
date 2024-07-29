@@ -14,8 +14,8 @@
         tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
     <div class="gb-button-group btn-group mr-2">
         <button type="button" class="btn btn-info" disabled="disabled">
-            {{ selectedTeamIds.length ? selectedTeamIds.length : "All" }} {{ game.isTeamGame ? "Team" :
-            "Player" }}{{ selectedTeamIds.length === 1 ? "" : "s" }}
+            {{ selectedTeamIds.length ? selectedTeamIds.length : "All" }}
+            {{ game.isTeamGame ? "Team" : "Player" }}{{ selectedTeamIds.length === 1 ? "" : "s" }}
         </button>
 
         <button type="button" class="btn btn-info" tooltip="Deploy game resources"
@@ -68,7 +68,7 @@
         </select>
 
         <select [(ngModel)]="filterSettings.hasPendingNames" (change)="load()" class="form-control ml-2">
-            <option [ngValue]="undefined">[Any]</option>
+            <option [ngValue]="undefined">[Any pending names]</option>
             <option [ngValue]="true">Yes</option>
             <option [ngValue]="false">No</option>
         </select>

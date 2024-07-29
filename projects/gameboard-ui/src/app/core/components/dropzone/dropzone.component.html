@@ -3,8 +3,9 @@
 
 <div class="dropzone cursor-pointer" (click)="clickToLaunchFilePicker && fileInput.click()"
   [class.dropzone-active]="isDropping">
-  <button *ngIf="!clickToLaunchFilePicker" type="button" class="btn btn-sm btn-info mb-2"
-    (click)="fileInput.click()">Browse</button>
+  <button *ngIf="!clickToLaunchFilePicker" type="button" class="btn btn-sm btn-info mb-2" (click)="fileInput.click()">
+    {{ browseText }}
+  </button>
 
   <ng-content></ng-content>
 </div>
