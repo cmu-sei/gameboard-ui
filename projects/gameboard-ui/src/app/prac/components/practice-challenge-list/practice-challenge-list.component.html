@@ -60,7 +60,9 @@
                     </td>
                     <td class="align-middle">
                         <div class="practice-challenge-description">
-                            {{c.description}}
+                            <ng-container *ngIf="c.description; else noDescription">
+                                {{c.description}}
+                            </ng-container>
                         </div>
 
                         <div *ngIf="c.tags?.length" class="practice-challenge-tags mt-2">
@@ -107,6 +109,10 @@
         [tooltip]="canPlayChallengesTooltip || ''">
         {{challenge.name}}
     </p>
+</ng-template>
+
+<ng-template #noDescription>
+    <em class="text-muted">No description</em>
 </ng-template>
 
 <ng-template #noMatches>

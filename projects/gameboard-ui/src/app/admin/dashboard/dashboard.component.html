@@ -67,34 +67,40 @@
         </app-dropzone>
       </div>
 
-      <div class="wrapper col-3 my-3" *ngFor="let g of games; trackBy:trackById" (mouseenter)="on(g)"
-        (mouseleave)="off(g)" (focus)="on(g)" tabindex="0">
+      <div class="wrapper col-3 my-3 position-relative" *ngFor="let g of games">
+        <app-game-card [game]="g" [routerLink]="['/admin', 'game', g.id]"></app-game-card>
 
-        <app-game-card [game]="g"></app-game-card>
-
-        <div class="overlay d-flex flex-column justify-content-center align-items-center" *ngIf="hot===g">
-          <a class="btn btn-outline-info my-2" [routerLink]="['../game', g.id]">
-            <fa-icon [icon]="faUsers"></fa-icon>
-            <span>Game Center</span>
-          </a>
-          <div>
-            <button class="btn btn-outline-info btn-sm mx-1" (click)="clone(g)">
-              <fa-icon [icon]="faClone"></fa-icon>
-              <span>Clone</span>
+        <div class="context-menu-container">
+          <div class="btn-group context-menu" dropdown>
+            <button id="button-basic" dropdownToggle type="button" class="btn ctx-menu-button rounded-circle"
+              aria-controls="dropdown-basic">
+              <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
             </button>
-            <button class="btn btn-outline-info btn-sm mx-1" (click)="yaml(g)">
-              <fa-icon [icon]="faCopy"></fa-icon>
-              <span>yaml</span>
-            </button>
-            <button class="btn btn-outline-info btn-sm mx-1" (click)="json(g)">
-              <fa-icon [icon]="faCopy"></fa-icon>
-              <span>json</span>
-            </button>
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+              <li role="menuitem">
+                <button class="dropdown-item btn" (click)="yaml(g)">
+                  Export to <strong>YAML</strong>
+                </button>
+              </li>
+              <li role="menuitem">
+                <button class="dropdown-item btn" (click)="json(g)">
+                  Export to <strong>JSON</strong>
+                </button>
+              </li>
+              <li class="divider dropdown-divider"></li>
+              <li role="menuitem">
+                <button class="dropdown-item btn" (click)="clone(g)">
+                  Clone
+                </button>
+              </li>
+              <li class="divider dropdown-divider"></li>
+              <li role="menuitem">
+                <button class="dropdown-item btn btn-danger text-danger" (click)="delete(g)">
+                  Delete
+                </button>
+              </li>
+            </ul>
           </div>
-          <app-confirm-button btnClass="btn btn-outline-danger my-2" (confirm)="delete(g)">
-            <fa-icon [icon]="faTrash"></fa-icon>
-            <span>Delete</span>
-          </app-confirm-button>
         </div>
       </div>
     </ng-container> <!-- End card view -->

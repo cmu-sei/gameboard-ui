@@ -14,8 +14,8 @@ export const environment = {
     custom_background: 'custom-bg-blue',
     isProduction: false,
     oidc: {
-      client_id: 'gameboard-ui-dev',
-      authority: 'https://foundry.local/identity',
+      client_id: 'dev.gameboard.web',
+      authority: 'http://localhost:8080/realms/foundry',
       redirect_uri: 'http://localhost:4202/oidc',
       silent_redirect_uri: 'http://localhost:4202/assets/oidc-silent.html',
       response_type: 'code',

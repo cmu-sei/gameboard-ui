@@ -1,0 +1,91 @@
+@import "../../../../../scss/variables";
+
+h3 {
+  margin-top: 3rem !important;
+  margin-left: 1rem;
+}
+
+.text-col {
+  min-width: 400px;
+}
+
+.num-col {
+  min-width: 80px;
+  max-width: 150px;
+}
+
+.table-cell {
+  max-width: 900px;
+}
+
+.long-text {
+  min-width: 800px;
+}
+
+.num-col > .prompt {
+  max-width: 200px;
+}
+
+.q-id {
+  opacity: 70%;
+}
+
+.time-col {
+  min-width: 120px;
+}
+
+.feedback-table {
+  width: 100%;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+td {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.required {
+  color: red;
+  opacity: 40%;
+  position: relative;
+  top: -0.2rem;
+  padding-left: 0.1rem;
+}
+
+.minimized > td > div {
+  height: 80px;
+  overflow: hidden;
+}
+
+:not(.minimized) > td,
+.minimized:hover {
+  background-color: rgba($dark, 0.5);
+}
+
+.table-row > td > div {
+  min-height: 80px;
+}
+
+.table-row {
+  cursor: pointer;
+}
+
+.blank-cell {
+  opacity: 50%;
+}
+
+// for table scroll bar to match theme
+.table-wrapper::-webkit-scrollbar {
+  background: $black;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: $dark;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: darken($dark, 5%);
+}

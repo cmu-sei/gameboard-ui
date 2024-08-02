@@ -58,7 +58,6 @@ import { TeamCenterComponent } from './components/team-center/team-center.compon
 import { TeamListCardComponent } from './components/team-list-card/team-list-card.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
-import { GameDesignerComponent } from './game-designer/game-designer.component';
 import { GameEditorComponent } from './game-editor/game-editor.component';
 import { GameMapperComponent } from './game-mapper/game-mapper.component';
 import { ParticipationReportComponent } from './participation-report/participation-report.component';
@@ -71,7 +70,6 @@ import { GameClassificationToStringPipe } from './pipes/game-classification-to-s
 import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state-description.pipe';
 import { SyncStartTeamPlayerReadyCountPipe } from './pipes/sync-start-team-player-ready-count.pipe';
 import { PlayerNamesComponent } from './player-names/player-names.component';
-import { PlayerRegistrarComponent } from './player-registrar/player-registrar.component';
 import { PlayerSponsorReportComponent } from './player-sponsor-report/player-sponsor-report.component';
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
 import { PracticeComponent } from './practice/practice.component';
@@ -114,7 +112,6 @@ import { UserReportComponent } from './user-report/user-report.component';
     GameCenterTeamsComponent,
     GameCenterTicketsComponent,
     GameClassificationToStringPipe,
-    GameDesignerComponent,
     GameEditorComponent,
     GameMapperComponent,
     ManageManualChallengeBonusesComponent,
@@ -122,7 +119,6 @@ import { UserReportComponent } from './user-report/user-report.component';
     GameBonusesConfigComponent,
     ParticipationReportComponent,
     PlayerNamesComponent,
-    PlayerRegistrarComponent,
     PlayerSessionComponent,
     PlayerSponsorReportComponent,
     PracticeComponent,
@@ -186,7 +182,6 @@ import { UserReportComponent } from './user-report/user-report.component';
           { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Admin | Sponsors" },
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
           { path: 'registrar/players', component: PlayerNamesComponent },
-          { path: 'registrar/:id', component: PlayerRegistrarComponent },
           { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
           { path: 'overview', component: AdminOverviewComponent, title: "Admin | Overview" },

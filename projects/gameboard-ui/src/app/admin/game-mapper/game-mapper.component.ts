@@ -49,7 +49,6 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   constructor(
     private api: SpecService,
     private gameSvc: GameService,
-    private renderer: Renderer2,
     private config: ConfigService,
     private toastService: ToastService,
     scoringService: ScoringService

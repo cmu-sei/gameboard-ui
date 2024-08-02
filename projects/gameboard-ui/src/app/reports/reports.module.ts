@@ -51,6 +51,7 @@ import { SiteUsageReportSponsorsModalComponent } from './components/reports/site
 import { SiteUsageReportChallengesListComponent } from './components/reports/site-usage-report/site-usage-report-challenges-list/site-usage-report-challenges-list.component';
 import { SortHeaderComponent } from './components/sort-header/sort-header.component';
 import { SpecQuestionPerformanceModalComponent } from './components/spec-question-performance-modal/spec-question-performance-modal.component';
+import { FeedbackGameReportComponent } from './components/reports/feedback-game-report/feedback-game-report.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { SpecQuestionPerformanceModalComponent } from './components/spec-questio
     EnrollmentReportSponsorPlayerCountModalComponent,
     EnrollmentReportSummaryComponent,
     EnrollmentReportTrendComponent,
+    FeedbackGameReportComponent,
     ParameterGameChallengespecComponent,
     ParameterDateRangeComponent,
     ParameterTicketStatusComponent,
@@ -112,6 +114,7 @@ import { SpecQuestionPerformanceModalComponent } from './components/spec-questio
         children: [
           { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
+          { path: 'feedback-games', component: FeedbackGameReportComponent, title: "Feedback (Games) Report" },
           { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
           { path: 'players', component: PlayersReportComponent, title: "Players Report" },
           { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report" },

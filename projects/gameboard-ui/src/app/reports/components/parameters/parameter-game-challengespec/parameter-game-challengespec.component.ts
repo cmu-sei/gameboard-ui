@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReportsService } from '@/reports/reports.service';
 import { SimpleEntity } from '@/api/models';
 import { Observable } from 'rxjs';
@@ -18,6 +18,7 @@ export interface ReportGameChallengeSpec {
 })
 export class ParameterGameChallengespecComponent
   extends CustomInputComponent<GameChallengeSpecQueryModel> {
+
   games$: Observable<SimpleEntity[]>;
   challengeSpecs$!: Observable<SimpleEntity[]>;
 
