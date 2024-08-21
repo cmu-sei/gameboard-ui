@@ -13,7 +13,6 @@ export const environment: Environment = {
     tochost: '',
     tocfile: 'toc.json',
     supporthost: '',
-    consoleHypervisor: 'topo',
     custom_background: '',
     oidc: {
       authority: '',

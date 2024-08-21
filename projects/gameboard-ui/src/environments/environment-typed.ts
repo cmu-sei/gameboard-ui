@@ -1,5 +1,3 @@
-export type EnvironmentConsoleHypervisor = "topo" | "proxmox";
-
 export interface Environment {
     production: boolean;
     settingsJson?: string;
@@ -12,7 +10,6 @@ export interface Environment {
         tochost: string,
         supporthost: string,
         tocfile?: string,
-        consoleHypervisor: EnvironmentConsoleHypervisor,
         countdownStartSecondsAtMinute: number,
         custom_background?: string,
         isProduction: boolean,

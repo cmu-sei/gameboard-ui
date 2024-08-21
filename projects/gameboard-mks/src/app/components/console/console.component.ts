@@ -206,7 +206,7 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     // resolve the appropriate console service for this hypervisor
     if (this.isMock) {
       this.console = this.injector.get(MockConsoleService);
-    } else if (this.config.consoleHypervisor === "proxmox") {
+    } else if (info.ticket != null) {
       this.console = this.injector.get(NoVNCConsoleService);
     } else {
       this.console = this.injector.get(WmksConsoleService);

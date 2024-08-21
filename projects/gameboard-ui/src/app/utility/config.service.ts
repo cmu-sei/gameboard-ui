@@ -12,7 +12,6 @@ import { LocalStorageService, StorageKey } from '../services/local-storage.servi
 import { LogService } from '../services/log.service';
 import { VmState } from '@/api/board-models';
 import { BrowserService } from '@/services/browser.service';
-import { EnvironmentConsoleHypervisor } from '../../environments/environment-typed';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
@@ -109,10 +108,6 @@ export class ConfigService {
       path += '/';
     }
     return path;
-  }
-
-  get consoleHypervisor(): EnvironmentConsoleHypervisor {
-    return this.settings.consoleHypervisor || "topo";
   }
 
   get imagehost(): string {
@@ -220,7 +215,6 @@ export interface Settings {
   tochost?: string;
   supporthost?: string;
   tocfile?: string;
-  consoleHypervisor: "topo" | "proxmox",
   custom_background?: string;
   countdownStartSecondsAtMinute?: number;
   oidc: AppUserManagerSettings;

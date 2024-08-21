@@ -11,7 +11,6 @@ export const environment: Environment = {
     tochost: 'http://localhost:5002/doc',
     supporthost: 'http://localhost:5002/supportfiles',
     tocfile: '',
-    consoleHypervisor: 'proxmox',
     countdownStartSecondsAtMinute: 5,
     custom_background: 'custom-bg-blue',
     isProduction: false,
