@@ -34,6 +34,7 @@ import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
+import { ArrayPropertyPipe } from './pipes/array-property.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { AutofocusDirective } from './directives/autofocus.directive';
@@ -130,6 +131,7 @@ const PUBLIC_DECLARATIONS = [
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
+  ArrayPropertyPipe,
   ArrayToCountPipe,
   AssetPathPipe,
   AutofocusDirective,

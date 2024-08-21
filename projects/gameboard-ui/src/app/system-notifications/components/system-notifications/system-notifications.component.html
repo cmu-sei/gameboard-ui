@@ -1,5 +1,5 @@
-<div class="notificatons-container">
-    <alert *ngFor="let notification of notifications" [dismissible]="true"
+<div class="notificatons-container sticky-top">
+    <alert *ngFor="let notification of notifications" [dismissible]="notification.isDismissible"
         [type]="notification.notificationType | notificationTypeToAlertType" (onClose)="handleClosed(notification)">
         <div class="container" (click)="handleClicked(notification)">
             <h2 class="fs-11 m-0 cursor-pointer">

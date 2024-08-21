@@ -1,0 +1,69 @@
+<h2>User Roles</h2>
+
+<!-- <div class="input-group">
+    <select class="form-control width-100" [(ngModel)]="selectedRole">
+        <optgroup label="Elevated Roles">
+            <option value="admin">Admin</option>
+            <option>Designer</option>
+            <option>Director</option>
+            <option>Observer</option>
+            <option>Registrar</option>
+            <option>Support</option>
+            <option>Tester</option>
+        </optgroup>
+
+        <option>Player</option>
+    </select>
+</div> -->
+
+<table *ngIf="appPermissionsOverview; else loading" class="table gameboard-table">
+    <colgroup>
+        <col style="width: 40%">
+        <col>
+        <col>
+        <col>
+        <col>
+        <col>
+        <col>
+    </colgroup>
+    <thead>
+        <tr class="header-row">
+            <th>Permission</th>
+            <th class="centered-col">Admin</th>
+            <th class="centered-col">Designer</th>
+            <th class="centered-col">Director</th>
+            <th class="centered-col">Support</th>
+            <th class="centered-col">Tester</th>
+            <th class="centered-col">Observer</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let category of appPermissionsOverview.categories">
+            <tr class="category-header">
+                <td colspan="7" class="category-header">
+                    <h3>{{category.name}}</h3>
+                </td>
+            </tr>
+            <tr *ngFor="let permission of category.permissions">
+                <td>
+                    <h4 class="fs-11">{{permission.name}}</h4>
+                    <p class="text-muted m-0 p-0">{{permission.description}}</p>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
+
+
+<!-- <app-admin-roles-permission-group *ngFor="let category of categories" class="mt-5" [category]="category"
+    [rolePermissions]="selectedRole === 'admin' ? rolePermissions['admin'] : rolePermissions['support']"></app-admin-roles-permission-group> -->
+
+<ng-template #loading>
+    <app-spinner>Loading role information...</app-spinner>
+</ng-template>

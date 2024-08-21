@@ -27,6 +27,7 @@ export class CreateEditSystemNotificationModalComponent implements OnInit {
         model: {
           title: "",
           markdownContent: "",
+          isDismissible: true,
           notificationType: "generalInfo"
         },
         onSave: () => new Promise(() => { })

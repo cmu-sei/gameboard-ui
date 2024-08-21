@@ -128,6 +128,7 @@ export interface GameCenterTeamsPlayer {
     pendingName?: string;
     isReady: boolean;
     sponsor: SimpleSponsor;
+    userId: string;
 }
 
 export interface GameCenterTeamsSession {

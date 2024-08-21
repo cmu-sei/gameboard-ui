@@ -81,11 +81,14 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { AdminRolesComponent } from './components/admin-roles/admin-roles.component';
+import { AdminRolesPermissionGroupComponent } from './components/admin-roles-permission-group/admin-roles-permission-group.component';
 
 @NgModule({
   declarations: [
     ActiveChallengesModalComponent,
     AdminPageComponent,
+    AdminRolesComponent,
     AnnounceComponent,
     ChallengeBrowserComponent,
     ChallengeObserverComponent,
@@ -150,6 +153,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     TeamCenterComponent,
     GameCenterPlayerNameManagementComponent,
     GameMapEditorComponent,
+    AdminRolesPermissionGroupComponent,
   ],
   imports: [
     CommonModule,
@@ -191,6 +195,7 @@ import { UserReportComponent } from './user-report/user-report.component';
           { path: 'report/feedback', component: FeedbackReportComponent },
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
+          { path: "roles", component: AdminRolesComponent },
           { path: "notifications", component: AdminSystemNotificationsComponent },
           { path: "support/settings", component: SupportSettingsComponent, title: "Admin | Support" },
           { path: 'support', component: ChallengeBrowserComponent }

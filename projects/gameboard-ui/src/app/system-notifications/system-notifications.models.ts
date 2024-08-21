@@ -5,6 +5,7 @@ export type SystemNotificationType = "generalInfo" | "warning" | "emergency";
 export interface CreateEditSystemNotification {
     id?: string;
     title: string;
+    isDismissible?: boolean;
     markdownContent: string;
     startsOn?: Date;
     endsOn?: Date;
@@ -14,6 +15,7 @@ export interface CreateEditSystemNotification {
 export interface ViewSystemNotification {
     id: string;
     title: string;
+    isDismissible: boolean;
     markdownContent: string;
     startsOn?: Date;
     endsOn?: Date;
