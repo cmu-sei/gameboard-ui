@@ -63,6 +63,7 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     private api: ApiService,
     private titleSvc: Title,
     private clipSvc: ClipboardService,
+    private hubSvc: HubService,
     private renderer: Renderer2
   ) {
     this.audience = hubSvc.audience;
