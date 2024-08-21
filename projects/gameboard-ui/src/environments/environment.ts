@@ -1,6 +1,7 @@
-export const environment = {
+import { Environment } from "./environment-typed";
+
+export const environment: Environment = {
   production: false,
-  settingsJson: null,
   settings: {
     appname: 'Gameboard',
     apphost: 'http://localhost:5002',
@@ -10,6 +11,7 @@ export const environment = {
     tochost: 'http://localhost:5002/doc',
     supporthost: 'http://localhost:5002/supportfiles',
     tocfile: '',
+    consoleHypervisor: 'proxmox',
     countdownStartSecondsAtMinute: 5,
     custom_background: 'custom-bg-blue',
     isProduction: false,

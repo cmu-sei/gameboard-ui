@@ -5,11 +5,11 @@ import {
   Component, ViewChild, AfterViewInit,
   ElementRef, Input, Injector, HostListener, OnDestroy, Renderer2
 } from '@angular/core';
-import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
-import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, Subject, firstValueFrom } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { NoVNCConsoleService } from './services/novnc-console.service';
+import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, Subject, firstValueFrom } from 'rxjs';
+import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
 import { MockConsoleService } from './services/mock-console.service';
+import { NoVNCConsoleService } from './services/novnc-console.service';
 import { WmksConsoleService } from './services/wmks-console.service';
 import { ConsoleService } from './services/console.service';
 import { ConsoleActor, ConsolePresence, ConsoleRequest, ConsoleSummary } from '../../api.models';

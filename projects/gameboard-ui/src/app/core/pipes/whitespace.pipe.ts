@@ -8,7 +8,7 @@ export class WhitespacePipe implements PipeTransform {
     if (!text)
       return [];
 
-    const retVal = [];
+    const retVal: string[] = [];
     const whitespaceSplits = text.split(WhitespacePipe.WHITESPACE_REGEX);
 
     for (const whitespaceSplit of whitespaceSplits) {

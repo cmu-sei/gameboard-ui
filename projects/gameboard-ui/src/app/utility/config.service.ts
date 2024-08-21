@@ -215,6 +215,7 @@ export interface Settings {
   tochost?: string;
   supporthost?: string;
   tocfile?: string;
+  consoleHypervisor: "topo" | "proxmox",
   custom_background?: string;
   countdownStartSecondsAtMinute?: number;
   oidc: AppUserManagerSettings;

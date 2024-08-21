@@ -61,11 +61,11 @@ export class FeedbackService {
   }
 
   private validateFeedbackQuestionSet(type: "Game" | "Challenge", set: FeedbackQuestion[]): string[] {
-    const retVal = [];
     if (!set?.length) {
       return [];
     }
 
+    const retVal: string[] = [];
     const requiredProperties: (keyof FeedbackQuestion)[] = ["id", "prompt", "type"];
     const uniqueIds = unique(set.map(q => q?.id));
 
