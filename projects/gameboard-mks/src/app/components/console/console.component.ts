@@ -17,6 +17,7 @@ import { ApiService } from '../../api.service';
 import { ClipboardService } from '../../clipboard.service';
 import { HubService } from '../../hub.service';
 import { UserActivityListenerEventType } from '../user-activity-listener/user-activity-listener.component';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-console',
@@ -58,11 +59,12 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
   private audiencePos!: MouseEvent | null;
 
   constructor(
+    hubSvc: HubService,
+    private config: ConfigService,
     private injector: Injector,
     private api: ApiService,
     private titleSvc: Title,
     private clipSvc: ClipboardService,
-    private hubSvc: HubService,
     private renderer: Renderer2
   ) {
     this.audience = hubSvc.audience;
@@ -204,7 +206,7 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     // resolve the appropriate console service for this hypervisor
     if (this.isMock) {
       this.console = this.injector.get(MockConsoleService);
-    } else if (info.ticket != null) {
+    } else if (this.config.consoleHypervisor === "proxmox") {
       this.console = this.injector.get(NoVNCConsoleService);
     } else {
       this.console = this.injector.get(WmksConsoleService);
