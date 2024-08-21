@@ -6,7 +6,7 @@ import {
   ElementRef, Input, Injector, HostListener, OnDestroy, Renderer2
 } from '@angular/core';
 import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
-import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, of, Subject, firstValueFrom } from 'rxjs';
+import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, Subject, firstValueFrom } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { NoVNCConsoleService } from './services/novnc-console.service';
 import { MockConsoleService } from './services/mock-console.service';
@@ -24,6 +24,7 @@ import { UserActivityListenerEventType } from '../user-activity-listener/user-ac
   styleUrls: ['./console.component.scss'],
   providers: [
     MockConsoleService,
+    NoVNCConsoleService,
     WmksConsoleService
   ]
 })
@@ -55,8 +56,6 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
   subs: Array<Subscription> = [];
   audience: Observable<ConsolePresence[]>;
   private audiencePos!: MouseEvent | null;
-  private audienceEl: any;
-  private hotspot = { x: 0, y: 0, w: 8, h: 8 };
 
   constructor(
     private injector: Injector,
@@ -174,14 +173,6 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     this.changeState('loading');
     this.api.action({ ...this.request, action: 'ticket' }).pipe(
       catchError((err: Error) => {
-        // // testing
-        // return of({
-        //   id: '1234',
-        //   name: 'vm',
-        //   isolationId: '5555',
-        //   url: 'ws://local.mock/ticket/1234',
-        //   isRunning: true
-        // });
         return ObservableThrower(err);
       })
     ).subscribe(
