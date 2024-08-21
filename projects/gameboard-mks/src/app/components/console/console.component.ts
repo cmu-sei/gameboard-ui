@@ -8,6 +8,7 @@ import {
 import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
 import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, of, Subject, firstValueFrom } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { NoVNCConsoleService } from './services/novnc-console.service';
 import { MockConsoleService } from './services/mock-console.service';
 import { WmksConsoleService } from './services/wmks-console.service';
 import { ConsoleService } from './services/console.service';
@@ -62,7 +63,6 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     private api: ApiService,
     private titleSvc: Title,
     private clipSvc: ClipboardService,
-    private hubSvc: HubService,
     private renderer: Renderer2
   ) {
     this.audience = hubSvc.audience;
@@ -208,19 +208,22 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
 
     this.vmId = info.id;
     this.isMock = !!(info.url.match(/mock/i));
-    this.console = this.isMock
-      ? this.injector.get(MockConsoleService)
-      : this.injector.get(WmksConsoleService);
 
-    this.console.connect(
-      info.url,
-      (state: string) => this.changeState(state),
-      {
-        canvasId: this.canvasId,
-        viewOnly: !!info.isObserver || !!this.request.observer || !!this.viewOnly,
-        changeResolution: !!this.request.fullbleed
-      }
-    );
+    // resolve the appropriate console service for this hypervisor
+    if (this.isMock) {
+      this.console = this.injector.get(MockConsoleService);
+    } else if (info.ticket != null) {
+      this.console = this.injector.get(NoVNCConsoleService);
+    } else {
+      this.console = this.injector.get(WmksConsoleService);
+    }
+
+    this.console.connect(info.url, (state: string) => this.changeState(state), {
+      canvasId: this.canvasId,
+      viewOnly: this.viewOnly,
+      changeResolution: !!this.request.fullbleed,
+      ticket: info.ticket,
+    });
   }
 
   start(): void {

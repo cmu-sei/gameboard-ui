@@ -30,6 +30,7 @@ export interface ConsoleSummary {
   url: string;
   isRunning?: boolean;
   isObserver?: boolean;
+  ticket: string;
   error?: string;
 }
 
