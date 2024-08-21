@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { ConsoleService } from './console.service';
-import NoVncClient from '@novnc/novnc/lib/rfb';
+import NoVncClient from '@novnc/novnc/core/rfb';
 
 @Injectable()
 export class NoVNCConsoleService implements ConsoleService {
@@ -51,7 +51,7 @@ export class NoVNCConsoleService implements ConsoleService {
       stateCallback('disconnected');
     });
 
-    this.client.addEventListener('clipboard', (e) => {
+    this.client.addEventListener('clipboard', (e: CustomEvent<{ text: string }>) => {
       stateCallback('clip:' + e.detail.text);
     });
   }
