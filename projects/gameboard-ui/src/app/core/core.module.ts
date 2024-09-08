@@ -34,6 +34,7 @@ import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
+import { ArrayPropertyPipe } from './pipes/array-property.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { AutofocusDirective } from './directives/autofocus.directive';
@@ -41,6 +42,7 @@ import { AvatarChipComponent } from './components/avatar-chip/avatar-chip.compon
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { BigStatComponent } from './components/big-stat/big-stat.component';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
+import { CanPipe } from "./pipes/can.pipe";
 import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
 import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
 import { ChallengeSolutionGuideComponent } from './components/challenge-solution-guide/challenge-solution-guide.component';
@@ -130,6 +132,7 @@ const PUBLIC_DECLARATIONS = [
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
+  ArrayPropertyPipe,
   ArrayToCountPipe,
   AssetPathPipe,
   AutofocusDirective,
@@ -137,6 +140,7 @@ const PUBLIC_DECLARATIONS = [
   AvatarChipComponent,
   BigStatComponent,
   CamelspacePipe,
+  CanPipe,
   ChallengeResultColorPipe,
   ChallengeResultPrettyPipe,
   ChallengeSolutionGuideComponent,

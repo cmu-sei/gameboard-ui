@@ -94,12 +94,6 @@ export class UserService {
     return this.http.put<void>(this.apiUrl.build("user/login"), {});
   }
 
-  public canEnrollAndPlayOutsideExecutionWindow(user: ApiUser) {
-    return user && (
-      user.isAdmin || user.isTester || user.isRegistrar
-    );
-  }
-
   private mapToTree(list: string[]): TreeNode {
     const root: TreeNode = { name: '', path: `${this.config.apphost}doc`, folders: [], files: [] };
     list.forEach(f => {
@@ -136,13 +130,8 @@ export class UserService {
     }
 
     user.pendingName = user.approvedName !== user.name
-      ? user.name + (!!user.nameStatus ? `...${user.nameStatus}` : '...pending')
-      : ''
-      ;
+      ? user.name + (!!user.nameStatus ? `...${user.nameStatus}` : '...pending') : '';
 
-    user.roleTag = user.role.split(', ')
-      .map(a => a.substring(0, 1).toUpperCase() + (a.startsWith('d') ? a.substring(1, 2) : ''))
-      .join('');
     return user;
   }
 }

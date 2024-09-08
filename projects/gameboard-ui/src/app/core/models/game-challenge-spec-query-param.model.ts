@@ -1,7 +1,8 @@
-import { RouterService } from "@/services/router.service";
-import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { inject } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
+import { RouterService } from "@/services/router.service";
+import { UnsubscriberService } from "@/services/unsubscriber.service";
+import { cloneNonNullAndDefinedProperties } from "@/tools/object-tools.lib";
 
 interface GameChallengeSpec {
     gameId: string | null;
@@ -53,7 +54,7 @@ export class GameChallengeSpecQueryModel {
     }
 
     private updateQueryParams(model: GameChallengeSpec) {
-        const params: Params = { ...model };
+        const params: Params = cloneNonNullAndDefinedProperties(model);
 
         this.routerService.updateQueryParams({
             parameters: params

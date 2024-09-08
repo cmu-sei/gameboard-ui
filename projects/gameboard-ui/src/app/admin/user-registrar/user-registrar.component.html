@@ -17,9 +17,10 @@
   <div class="filter-and-sort-container mt-3 d-flex align-items-center justify-content-center">
     <div class="btn-group d-block mr-2 button-toggle-group filter" role="group" aria-label="Filter group">
       <button type="button" class="btn btn-sm btn-dark button-group-label" disabled>Filter:</button>
-      <button type="button" [class]="filter ==='roles' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm'"
-        (click)="toggleFilter('roles')">
-        Has Roles
+      <button type="button"
+        [class]="filter ==='elevated-role' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm'"
+        (click)="toggleFilter('elevated-role')">
+        Has Elevated Role
       </button>
       <button type="button" [class]="filter ==='pending' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm'"
         (click)="toggleFilter('pending')">
@@ -71,32 +72,34 @@
 <small *ngIf="source.length === 200" class="text-warning">
   Results limited to 200. Refine search term if necessary.
 </small>
+
 <hr />
 
 <ng-container *ngIf="source$ | async as list; else loading">
   <small class="text-warning d-block mx-2 mb-2">count: {{list.length}}</small>
   <div *ngFor="let user of list" class="d-flex p-3 flex-wrap align-items-center bg-secondary rounded">
     <div class="user-avatar-container mr-2">
-      <app-player-avatar-legacy [avatarUri]="user.sponsor | sponsorToLogoUri"></app-player-avatar-legacy>
+      <app-avatar [imageUrl]="user.sponsor | sponsorToLogoUri">
+        {{ user.sponsor.name }}
+      </app-avatar>
     </div>
     <div>
       <span class="mr-2 fs-11">{{user.approvedName || user.name}}</span>
       <span class="text-muted">{{user.pendingName}}</span><br />
 
       <div class="d-flex align-items-center">
-        <small class="text-muted">
-          <app-clipspan>{{user.id | slice:0:8}}</app-clipspan>
-        </small>
+        <div class="fs-08 mr-3 badge badge-info" *ngIf="user.role != 'member'">{{ user.role | titlecase }}</div>
+        <div class="text-info fs-08 cursor-pointer" appCopyOnClick>{{ user.id | slice:0:8 }}</div>
       </div>
 
       <p *ngIf="user.lastLoginDate" class="text-muted fs-08 m-0">
         <strong>Last login:</strong>
-        {{ user.lastLoginDate | shortdate }} @ {{ user.lastLoginDate | friendlyTime}}
+        {{ user.lastLoginDate | shortdate }} &#64; {{ user.lastLoginDate | friendlyTime}}
       </p>
 
       <p class="text-muted fs-08 m-0">
         <strong>Created on:</strong>
-        {{ user.createdOn | shortdate }} @ {{ user.createdOn | friendlyTime}}
+        {{ user.createdOn | shortdate }} &#64; {{ user.createdOn | friendlyTime}}
       </p>
     </div>
     <app-error-div [errors]="errors"></app-error-div>
@@ -109,9 +112,6 @@
       <span>Disapprove</span>
     </button>
     <div class="spacer"></div>
-    <button class="btn btn-outline-warning btn-sm" *ngIf="user.role !== 'member'" (click)="view(user)">
-      <span>Role: {{user.roleTag}}</span>
-    </button>
     <div class="">
       <button class="btn btn-outline-info btn-sm mx-1" (click)="view(user)">
         <fa-icon [icon]="fa.list"></fa-icon>
@@ -145,23 +145,11 @@
 
       <div class="role-info mb-4">
         <h5>Roles</h5>
-        <div class="form-group">
-          <div class="btn-group" id="role-button-group">
-            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isObserver" (click)="role(user, 'observer')"
-              btnCheckbox tabindex="0" role="button">Observer</label>
-            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isSupport" (click)="role(user, 'support')"
-              btnCheckbox tabindex="0" role="button">Support</label>
-            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isTester" (click)="role(user, 'tester')"
-              btnCheckbox tabindex="0" role="button">Tester</label>
-            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDesigner" (click)="role(user, 'designer')"
-              btnCheckbox tabindex="0" role="button">Designer</label>
-            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isRegistrar"
-              (click)="role(user, 'registrar')" btnCheckbox tabindex="0" role="button">Registrar</label>
-            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isDirector" (click)="role(user, 'director')"
-              btnCheckbox tabindex="0" role="button">Director</label>
-            <label class="btn btn-outline-warning btn-sm" [(ngModel)]="user.isAdmin" (click)="role(user, 'admin')"
-              btnCheckbox tabindex="0" role="button">Admin</label>
-          </div>
+
+        <div>
+          <select class="form-control" [(ngModel)]="user.role" (change)="update(user)">
+            <option *ngFor="let role of roles$ | async" [value]="role">{{ role | titlecase }}</option>
+          </select>
         </div>
       </div>
 

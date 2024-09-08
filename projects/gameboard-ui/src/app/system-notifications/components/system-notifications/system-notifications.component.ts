@@ -46,7 +46,9 @@ export class SystemNotificationsComponent implements OnInit {
       hideCancel: true,
       onConfirm: async () => {
         await this.loadNotifications();
-        await firstValueFrom(this.systemNotificationsService.logInteraction("dismissed", notification.id));
+
+        if (notification.isDismissible)
+          await firstValueFrom(this.systemNotificationsService.logInteraction("dismissed", notification.id));
       }
     });
   }

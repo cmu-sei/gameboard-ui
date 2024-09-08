@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateChild, ActivatedRoute, Route, UrlSegment } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateChild, Route, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AuthService, AuthTokenState } from './auth.service';
@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(
     private auth: AuthService,
     private router: Router
-  ){}
+  ) { }
 
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,

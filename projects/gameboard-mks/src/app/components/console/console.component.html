@@ -21,8 +21,6 @@
 
     <div #audienceDiv class="audience overlay overlay-tr">
       <div class="audience-item" *ngFor="let c of audience | async">{{c.username}}</div>
-      <!-- <div class="audience-item">t1-player2</div> -->
-      <!-- <div class="audience-item">t1-player3</div> -->
     </div>
 
     <div *ngIf="state==='stopped'||state==='disconnected'" class="align-mm" [class.hidden]="isConnected">
@@ -40,7 +38,6 @@
       <h1 class="text-danger">{{stateIcon}}</h1>
       <button class="btn" (click)="stateButtonClicked()">Retry</button>
     </div>
-
   </div>
 
   <div *ngIf="isConnected && showTools" class="tools">

@@ -38,6 +38,18 @@
         </div>
 
         <div class="form-group">
+            <label for="is-dismissible">Dismissible?</label>
+            <div class="">
+                <input type="checkbox" id="is-dismissible" [(ngModel)]="context.model.isDismissible">
+            </div>
+            <div class="text-muted mt-2 fs-08">
+                <strong>Note:</strong> If you disable dismissal, every user will see this notification
+                and will be unable to dismiss it until the notification is deleted or passes its
+                availability end date.
+            </div>
+        </div>
+
+        <div class="form-group">
             <label for="title" class="d-block">Type</label>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn" [class.btn-info]="context.model.notificationType == 'generalInfo'"

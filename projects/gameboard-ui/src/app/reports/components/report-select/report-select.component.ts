@@ -12,7 +12,7 @@ export class ReportSelectComponent {
   @Output() reportSelect = new EventEmitter<ReportKey>();
   reports$: Observable<{ key: string, name: string }[]>;
 
-  constructor(private reportsService: ReportsService) {
+  constructor(reportsService: ReportsService) {
     this.reports$ = from(reportsService.list())
       .pipe(map(reports => reports.map(r => ({
         key: r.key,

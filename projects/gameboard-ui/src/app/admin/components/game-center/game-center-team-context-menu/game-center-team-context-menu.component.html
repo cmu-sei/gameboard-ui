@@ -7,18 +7,24 @@
         <li role="menuitem">
             <button class="dropdown-item btn" (click)="handleView(team)">View</button>
         </li>
+        <li class="divider dropdown-divider"></li>
         <li role="menuitem">
             <button class="dropdown-item btn" (click)="copy(team.captain.id, 'player ID')">Copy Player ID</button>
         </li>
         <li role="menuitem">
             <button class="dropdown-item btn" (click)="copy(team.id, 'team ID')">Copy Team ID</button>
         </li>
+        <li role="menuitem" *ngIf="!game.isTeamGame || team.players.length == 1; else teamCopyUserIds">
+            <button class="dropdown-item btn" (click)="copy(team.captain.userId, 'user ID')">
+                Copy User ID ({{team.players.length}})
+            </button>
+        </li>
+        <li class="divider dropdown-divider"></li>
         <li role="menuitem">
             <button class="dropdown-item btn" (click)="handleManageBonuses(team)">
                 Manual Bonuses
             </button>
         </li>
-
 
         <ng-container *ngIf="!hasStartedSession">
             <li class="divider dropdown-divider"></li>
@@ -70,6 +76,20 @@
         </ng-container>
     </ul>
 </div>
+
+<ng-template #teamCopyUserIds>
+    <li role="menuitem">
+        <button class="dropdown-item btn" (click)="copy(team?.captain?.userId || '', 'user ID')">
+            Copy Captain's User ID
+        </button>
+    </li>
+    <li role="menuitem">
+        <button class="dropdown-item btn" *ngIf="team?.players | arrayProperty:'userId' as userIds"
+            (click)="copy(userIds, 'user IDs for team ' + team?.name)">
+            Copy All User IDs
+        </button>
+    </li>
+</ng-template>
 
 <ng-template #unenroll>
     <li role="menuitem">

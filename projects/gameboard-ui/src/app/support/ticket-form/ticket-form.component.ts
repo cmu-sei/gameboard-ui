@@ -12,6 +12,7 @@ import { RouterService } from '@/services/router.service';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from '@/api/board.service';
 import { LogService } from '@/services/log.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-ticket-form',
@@ -45,13 +46,14 @@ export class TicketFormComponent implements OnDestroy {
   constructor(
     private api: SupportService,
     private log: LogService,
+    private permissionsService: UserRolePermissionsService,
     private routerService: RouterService,
     private userApi: UserService,
     boardApi: BoardService,
     route: ActivatedRoute,
     localUserService: LocalUserService
   ) {
-    this.canManage$ = localUserService.user$.pipe(map(u => !!u?.isSupport));
+    this.canManage$ = localUserService.user$.pipe(map(u => this.permissionsService.can(u, "support_ManageTickets")));
 
     this.routeSub = route.queryParams.pipe(
       filter(p => !!p.cid),

@@ -92,8 +92,7 @@ export class PlayerSessionComponent implements OnDestroy {
         }
       }),
       tap(ctx => {
-        const localUser = this.localUserService.user$.value;
-        this.canAdminStart = !!localUser && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
+        this.canAdminStart = this.localUserService.can('play_IgnoreExecutionWindow');
       }),
       // set up countdown
       tap(ctx => {

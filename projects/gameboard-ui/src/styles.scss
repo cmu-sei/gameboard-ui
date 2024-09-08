@@ -233,12 +233,14 @@ table.gameboard-table {
     }
   }
 
+  td.centered-col,
   td.numeric-col,
   td.date-col,
+  th.centered-col,
   th.numeric-col,
   th.date-col {
-    padding: 0;
-    text-align: center;
+    padding: 0 !important;
+    text-align: center !important;
   }
 
   tbody td {

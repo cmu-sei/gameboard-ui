@@ -30,7 +30,6 @@ export class NotificationService {
     config: ConfigService,
     private auth: AuthService,
     private apiUserSvc: UserService,
-    private externalGameService: ExternalGameService,
     private log: LogService,
   ) {
     this.connection = this.getConnection(`${config.apphost}hub`);

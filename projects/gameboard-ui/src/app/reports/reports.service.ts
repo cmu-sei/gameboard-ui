@@ -5,7 +5,6 @@ import { ReportViewModel, ReportKey, ReportSponsor, ReportMetaData } from './rep
 import { SimpleEntity } from '../api/models';
 import { FilesService } from '../services/files.service';
 import { ApiUrlService } from '@/services/api-url.service';
-import { ApiUser } from '@/api/user-models';
 import { DateTime } from 'luxon';
 
 @Injectable({ providedIn: 'root' })
@@ -15,13 +14,6 @@ export class ReportsService {
     private filesService: FilesService,
     private http: HttpClient
   ) { }
-
-  canAccessReporting(user: ApiUser | null) {
-    if (!user)
-      return false;
-
-    return user.isAdmin || user.isSupport || user.isRegistrar;
-  }
 
   async list(): Promise<ReportViewModel[]> {
     return await firstValueFrom(this.http.get<ReportViewModel[]>(this.apiUrlService.build("/reports")));

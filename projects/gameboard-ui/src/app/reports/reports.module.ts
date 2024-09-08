@@ -114,7 +114,7 @@ import { FeedbackGameReportComponent } from './components/reports/feedback-game-
         children: [
           { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
-          { path: 'feedback-games', component: FeedbackGameReportComponent, title: "Feedback (Games) Report" },
+          { path: 'feedback', component: FeedbackGameReportComponent, title: "Feedback Report" },
           { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
           { path: 'players', component: PlayersReportComponent, title: "Players Report" },
           { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report" },
