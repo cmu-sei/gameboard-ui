@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, firstValueFrom, map, tap } from "rxjs";
-import { SessionEndRequest, SessionExtendRequest, Team } from "./player-models";
+import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
 import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools";
@@ -45,6 +45,10 @@ export class TeamService {
 
     public get(teamId: string) {
         return this.http.get<Team>(this.apiUrl.build(`/team/${teamId}`));
+    }
+
+    public getMailMetadata(gameId: string) {
+        return this.http.get<TeamSummary[]>(this.apiUrl.build(`/teams/${gameId}`));
     }
 
     public getGamePlayState(teamId: string): Observable<GamePlayState> {

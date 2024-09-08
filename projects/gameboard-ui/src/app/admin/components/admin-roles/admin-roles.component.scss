@@ -15,3 +15,23 @@
     padding: 0;
   }
 }
+
+.has-permission {
+  color: $info;
+}
+
+.no-permission {
+  color: $light;
+}
+
+.your-role {
+  background-color: $info;
+
+  .has-permission {
+    color: $foreground;
+  }
+
+  .no-permission {
+    color: darken($foreground, 20%);
+  }
+}

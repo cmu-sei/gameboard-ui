@@ -9,7 +9,6 @@ import { ConfigService } from '../utility/config.service';
 import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
 import { LogService } from '@/services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
-import { UserRolePermissionsOverviewResponse } from './user-role-permissions.models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -30,10 +29,6 @@ export class UserService {
         return r;
       })
     );
-  }
-
-  public listRoles(): Promise<UserRolePermissionsOverviewResponse> {
-    return firstValueFrom(this.http.get<UserRolePermissionsOverviewResponse>(this.apiUrl.build("users/roles/permissions")));
   }
 
   public retrieve(id: string): Observable<ApiUser> {
@@ -99,12 +94,6 @@ export class UserService {
     return this.http.put<void>(this.apiUrl.build("user/login"), {});
   }
 
-  public canEnrollAndPlayOutsideExecutionWindow(user: ApiUser) {
-    return user && (
-      user.isAdmin || user.isTester || user.isRegistrar
-    );
-  }
-
   private mapToTree(list: string[]): TreeNode {
     const root: TreeNode = { name: '', path: `${this.config.apphost}doc`, folders: [], files: [] };
     list.forEach(f => {
@@ -143,9 +132,6 @@ export class UserService {
     user.pendingName = user.approvedName !== user.name
       ? user.name + (!!user.nameStatus ? `...${user.nameStatus}` : '...pending') : '';
 
-    user.roleTag = user.role.split(', ')
-      .map(a => a.substring(0, 1).toUpperCase() + (a.startsWith('d') ? a.substring(1, 2) : ''))
-      .join('');
     return user;
   }
 }

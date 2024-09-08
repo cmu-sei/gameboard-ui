@@ -11,7 +11,6 @@ import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserService as LocalUserService } from '../../utility/user.service';
-import { UserService } from '@/api/user.service';
 import { fa } from '@/services/font-awesome.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
@@ -64,8 +63,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     private clipboard: ClipboardService,
     private hubService: NotificationService,
     private localUserService: LocalUserService,
-    private toastService: ToastService,
-    private userService: UserService
+    private toastService: ToastService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
       map(i => this.ctx),
@@ -87,8 +85,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       tap(ctx => {
         const localUser = this.localUserService.user$.value;
         const hasPlayerSession = (!!ctx.player.id && !!ctx.player.session && !ctx.player.session.isBefore);
-
-        this.canAdminEnroll = !!localUser && !hasPlayerSession && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
+        this.canAdminEnroll = !!this.localUserService.can('play_IgnoreExecutionWindow') && !hasPlayerSession;
 
         this.canStandardEnroll = !!localUser && !hasPlayerSession &&
           ctx.game.registration.isDuring && (

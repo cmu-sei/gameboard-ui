@@ -48,7 +48,6 @@ export class PlayerNamesComponent {
       tap(r => this.source = r),
       tap(() => this.review())
     );
-
   }
 
   toggleFilter(role: string): void {

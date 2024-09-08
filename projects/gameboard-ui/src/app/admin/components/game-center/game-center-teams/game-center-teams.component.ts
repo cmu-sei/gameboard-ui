@@ -13,14 +13,12 @@ import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCent
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { unique } from 'projects/gameboard-ui/src/tools';
 import { ScoreboardTeamDetailModalComponent } from '@/scoreboard/components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
-import { PlayerService } from '@/api/player.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
 import { NowService } from '@/services/now.service';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { TeamService } from '@/api/team.service';
-import { GameCenterPlayerNameManagementComponent } from '../game-center-player-name-management/game-center-player-name-management.component';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
@@ -55,7 +53,6 @@ export class GameCenterTeamsComponent implements OnInit {
     private localStorageClient: LocalStorageService,
     private modalService: ModalConfirmService,
     private nowService: NowService,
-    private playerService: PlayerService,
     private teamService: TeamService,
     private toastService: ToastService,
     private unsub: UnsubscriberService) {
@@ -164,7 +161,7 @@ export class GameCenterTeamsComponent implements OnInit {
     if (!this.gameId)
       throw new Error("Requires gameId");
 
-    this.playerService.getTeams(this.gameId)
+    this.teamService.getMailMetadata(this.gameId)
       .pipe(
         map(r => r.filter(s => this.selectedTeamIds?.length === 0 || this.selectedTeamIds.indexOf(s.id) >= 0))
       )

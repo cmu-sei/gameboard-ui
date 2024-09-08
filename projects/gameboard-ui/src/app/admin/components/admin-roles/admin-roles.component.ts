@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserRole } from '@/api/user-models';
 import { UserRolePermissionKey, UserRolePermissionsOverviewResponse } from '@/api/user-role-permissions.models';
-import { UserService } from '@/api/user.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-admin-roles',
@@ -10,10 +9,14 @@ import { UserService } from '@/api/user.service';
 })
 export class AdminRolesComponent implements OnInit {
   protected appPermissionsOverview?: UserRolePermissionsOverviewResponse;
+  protected rolePermissions: { [role: string]: UserRolePermissionKey[] } = {};
 
-  public constructor(private userService: UserService) { }
+  public constructor(private permissionsService: UserRolePermissionsService) { }
 
   public async ngOnInit() {
-    this.appPermissionsOverview = await this.userService.listRoles();
+    this.appPermissionsOverview = await this.permissionsService.getRolePermissionsOverview();
+
+    if (!this.appPermissionsOverview)
+      throw new Error("Couldn't load role permissions.");
   }
 }

@@ -15,16 +15,17 @@ import { UtilityModule } from '../utility/utility.module';
 import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { AdminSystemNotificationsComponent } from '@/system-notifications/components/admin-system-notifications/admin-system-notifications.component';
 import { SystemNotificationsModule } from '@/system-notifications/system-notifications.module';
-import { AdminPageComponent } from './admin-page/admin-page.component';
-import { PlayerSessionComponent } from './admin-player-session/admin-player-session.component';
-import { AnnounceComponent } from './announce/announce.component';
-import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
-import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
-import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
+
 import { ActiveChallengesModalComponent } from './components/active-challenges-modal/active-challenges-modal.component';
 import { ActiveTeamsModalComponent } from './components/active-teams-modal/active-teams-modal.component';
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { AdminOverviewComponent } from './components/admin-overview/admin-overview.component';
+import { AdminPageComponent } from './admin-page/admin-page.component';
+import { AdminRolesComponent } from './components/admin-roles/admin-roles.component';
+import { AnnounceComponent } from './announce/announce.component';
+import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
+import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
+import { ChallengeReportComponent } from './challenge-report/challenge-report.component';
 import { ChallengeSpecEditorComponent } from './components/challenge-spec-editor/challenge-spec-editor.component';
 import { CreateUsersModalComponent } from './components/create-users-modal/create-users-modal.component';
 import { DeleteExternalGameHostModalComponent } from './components/delete-external-game-host-modal/delete-external-game-host-modal.component';
@@ -38,7 +39,6 @@ import { FeedbackEditorComponent } from './components/feedback-editor/feedback-e
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
 import { GameCenterDeployComponent } from './components/game-center/game-center-deploy/game-center-deploy.component';
 import { GameCenterObserveComponent } from './components/game-center/game-center-observe/game-center-observe.component';
-import { GameCenterPlayerNameManagementComponent } from './components/game-center/game-center-player-name-management/game-center-player-name-management.component';
 import { GameCenterPracticePlayerDetailComponent } from './components/game-center/game-center-practice-player-detail/game-center-practice-player-detail.component';
 import { GameCenterPracticeComponent } from './components/game-center/game-center-practice/game-center-practice.component';
 import { GameCenterSettingsComponent } from './components/game-center/game-center-settings/game-center-settings.component';
@@ -51,6 +51,7 @@ import { GameMapEditorComponent } from './components/game-map-editor/game-map-ed
 import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
 import { ManageManualChallengeBonusesModalComponent } from './components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { ManageManualChallengeBonusesComponent } from './components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
+import { PlayerSessionComponent } from './admin-player-session/admin-player-session.component';
 import { SiteOverviewStatsComponent } from './components/site-overview-stats/site-overview-stats.component';
 import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
 import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
@@ -81,8 +82,6 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
-import { AdminRolesComponent } from './components/admin-roles/admin-roles.component';
-import { AdminRolesPermissionGroupComponent } from './components/admin-roles-permission-group/admin-roles-permission-group.component';
 
 @NgModule({
   declarations: [
@@ -151,9 +150,7 @@ import { AdminRolesPermissionGroupComponent } from './components/admin-roles-per
     TeamListCardComponent,
     GameCenterTeamDetailComponent,
     TeamCenterComponent,
-    GameCenterPlayerNameManagementComponent,
     GameMapEditorComponent,
-    AdminRolesPermissionGroupComponent,
   ],
   imports: [
     CommonModule,

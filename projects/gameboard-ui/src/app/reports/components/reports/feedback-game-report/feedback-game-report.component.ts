@@ -7,9 +7,10 @@ import { ReportKey, ReportViewUpdate } from '@/reports/reports-models';
 import { NowService } from '@/services/now.service';
 import { GameChallengeSpecQueryModel } from '@/core/models/game-challenge-spec-query-param.model';
 import { fa } from '@/services/font-awesome.service';
-import { FeedbackGameReportService } from './feedback-game-report.service';
+import { FeedbackReportService } from './feedback-report.service';
 import { FeedbackService } from '@/api/feedback.service';
 import { ReportService } from '@/api/report.service';
+import { cloneNonNullAndDefinedProperties } from '@/tools/object-tools.lib';
 
 @Component({
   selector: 'app-feedback-game-report',
@@ -35,7 +36,7 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
     private feedbackService: FeedbackService,
     private reportServiceLegacy: ReportService,
     private nowService: NowService,
-    private reportService: FeedbackGameReportService) {
+    private reportService: FeedbackReportService) {
     super();
   }
 
@@ -75,6 +76,9 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
   }
 
   protected async updateView(parameters: FeedbackGameReportParameters): Promise<ReportViewUpdate> {
+    if (!this.reportService)
+      return { metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.FeedbackReport)) };
+
     this._currentParams = parameters;
     this.hasParameterSelection = !!this._currentParams?.gameId;
     if (!this._currentParams?.gameId) {
@@ -88,7 +92,7 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
 
     return {
       metaData: {
-        key: ReportKey.FeedbackGamesReport,
+        key: ReportKey.FeedbackReport,
         title: "Feedback (Games) Report",
         description: "",
         isExportable: true,
@@ -107,7 +111,7 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
 
   private async fetchFeedback() {
     this.feedback = undefined;
-    const params = this.makeSearchParams();
+    const params = cloneNonNullAndDefinedProperties(this.makeSearchParams());
     this.feedback = await firstValueFrom(this.feedbackService.list(params));
   }
 

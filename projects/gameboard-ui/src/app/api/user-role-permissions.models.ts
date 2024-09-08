@@ -1,28 +1,31 @@
 import { UserRole } from "./user-models";
 
-export enum UserRolePermissionKey {
-    Admin_CreateEditSponsors,
-    Admin_View,
-    Games_AdminExternal,
-    Games_ConfigureChallenges,
-    Games_CreateEditDelete,
-    Play_IgnoreSessionResetSettings,
-    Play_IgnoreExecutionWindow,
-    Practice_EditSettings,
-    Reports_View,
-    Scores_AwardManualBonuses,
-    Scores_ViewLive,
-    Support_EditSettings,
-    Support_ManageTickets,
-    SystemNotifications_CreateEdit,
-    Teams_ApproveNameChanges,
-    Teams_DeployGameResources,
-    Teams_EditSession,
-    Teams_Enroll,
-    Teams_Observe,
-    Teams_SendAnnouncements,
-    Users_Create
-}
+export type UserRolePermissionKey = "admin_CreateApiKeys"
+    | "admin_CreateEditSponsors"
+    | "admin_View"
+    | "games_AdminExternal"
+    | "games_CreateEditDelete"
+    | "games_ViewUnpublished"
+    | "play_ChooseChallengeVariant"
+    | "play_IgnoreSessionResetSettings"
+    | "play_IgnoreExecutionWindow"
+    | "practice_EditSettings"
+    | "reports_View"
+    | "scores_AwardManualBonuses"
+    | "scores_RegradeAndRerank"
+    | "scores_ViewLive"
+    | "support_EditSettings"
+    | "support_ManageTickets"
+    | "support_ViewTickets"
+    | "systemNotifications_CreateEdit"
+    | "teams_ApproveNameChanges"
+    | "teams_DeployGameResources"
+    | "teams_EditSession"
+    | "teams_Enroll"
+    | "teams_Observe"
+    | "teams_SendAnnouncements"
+    | "users_CreateEditDelete"
+    | "users_EditRoles"
 
 export interface UserRolePermissionsCategory {
     name: string;

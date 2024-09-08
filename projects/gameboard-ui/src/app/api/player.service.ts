@@ -77,29 +77,12 @@ export class PlayerService {
     );
   }
 
-  public scores(search: any): Observable<Standing[]> {
-    return this.http.get<Standing[]>(this.url + '/scores', { params: search }).pipe(
-      map(r => {
-        r.forEach(s => this.transformStanding(s));
-        return r;
-      })
-    );
-  }
-
   public getTeam(id: string): Observable<Team> {
     return this.http.get<Team>(`${this.url}/team/${id}`);
   }
 
-  public getTeams(id: string): Observable<TeamSummary[]> {
-    return this.http.get<TeamSummary[]>(`${this.url}/teams/${id}`);
-  }
-
   public getTeamChallenges = (id: string): Observable<TeamChallenge[]> =>
     this.http.get<TeamChallenge[]>(`${this.url}/team/${id}/challenges`);
-
-  public advanceTeams(model: TeamAdvancement): Observable<any> {
-    return this.http.post<any>(this.url + '/team/advance', model);
-  }
 
   public observeTeams(id: string): Observable<any> {
     return this.http.get<Team>(`${this.url}/teams/observe/${id}`);
@@ -117,7 +100,7 @@ export class PlayerService {
     return !player.nameStatus && !player.name;
   }
 
-  public promoteToCaptain(teamId: string, playerId: string, ctx: { currentCaptainId: string, asAdmin?: boolean }): Observable<void> {
+  public promoteToCaptain(teamId: string, playerId: string, ctx: { currentCaptainId: string }): Observable<void> {
     return this.http.put<void>(`${this.url}/team/${teamId}/manager/${playerId}`, ctx);
   }
 

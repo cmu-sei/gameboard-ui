@@ -160,7 +160,7 @@
         <!-- unenroll -->
         <ng-container *ngIf="!isEnrolling; else unenrolling">
           <div
-            *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
+            *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || (ctx.user | can:'play_IgnoreExecutionWindow'))"
             class="form-group text-center">
             <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
               <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"

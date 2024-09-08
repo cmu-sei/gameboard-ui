@@ -20,8 +20,7 @@
                 </a>
             </div>
             <ng-container *ngIf="(user$ | async)?.id">
-                <a *ngIf="user.isAdmin || user.isDirector || user.isRegistrar || user.isDesigner || user.isObserver || user.isSupport"
-                    class="btn btn-link text-success mx-1" routerLinkActive="text-info"
+                <a *ngIf="user | can:'admin_View'" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
                     [routerLink]="['/admin']">Admin</a>
                 <a class="btn btn-link text-success mx-1" (click)="logout()">Log out</a>
             </ng-container>
@@ -66,8 +65,7 @@
                     </a>
                     <span class="badge badge-info">[BETA]</span>
                 </li>
-                <li *ngIf="user.isAdmin || user.isDirector || user.isRegistrar ||
-                                user.isDesigner || user.isObserver || user.isSupport">
+                <li *ngIf="user | can:'admin_View'">
                     <a routerLinkActive="active" [routerLink]="['/admin']">
                         Admin
                     </a>

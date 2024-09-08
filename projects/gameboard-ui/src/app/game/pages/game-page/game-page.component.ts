@@ -24,6 +24,7 @@ import { AppTitleService } from '@/services/app-title.service';
 import { UserService } from '@/api/user.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { GameHubEventWith, GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
+import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 
 interface GameEnrollmentContext {
   game: Game;
@@ -72,7 +73,7 @@ export class GamePageComponent implements OnDestroy {
     private windowService: WindowService
   ) {
     const user$ = localUser.user$.pipe(map(u => !!u ? u : {} as ApiUser));
-    this.canAdminEnroll$ = localUser.user$.pipe(map(u => !!u && userService.canEnrollAndPlayOutsideExecutionWindow(u)));
+    this.canAdminEnroll$ = localUser.can$('play_IgnoreExecutionWindow');
 
     const game$ = route.params.pipe(
       filter(p => !!p.id),

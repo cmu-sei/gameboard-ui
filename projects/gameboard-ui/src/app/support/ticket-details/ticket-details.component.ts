@@ -104,10 +104,8 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     private http: HttpClient,
     private toastsService: ToastService,
   ) {
-    const canManage$ = local.user$.pipe(
-      tap(u => this.currentUser = u),
-      map(u => !!u?.isSupport)
-    );
+    const canManage$ = local.can$("support_ManageTickets");
+    this.currentUser = local.user$.value;
 
     const ticket$ = combineLatest([
       route.params,
