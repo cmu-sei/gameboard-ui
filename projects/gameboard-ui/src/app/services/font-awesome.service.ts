@@ -69,6 +69,7 @@ import {
   faXmark,
   faArrowsSpin
 } from '@fortawesome/free-solid-svg-icons';
+import { faOpenid } from "@fortawesome/free-brands-svg-icons";
 
 export const fa = {
   arrowDown: faLongArrowAltDown,
@@ -113,6 +114,7 @@ export const fa = {
   gear: faGear,
   infoCircle: faInfoCircle,
   mapMarker: faMapMarker,
+  openId: faOpenid,
   paperclip: faPaperclip,
   peopleGroup: faPeopleGroup,
   person: faPerson,

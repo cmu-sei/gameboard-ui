@@ -1,33 +1,23 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
-import { faOpenid } from '@fortawesome/free-brands-svg-icons';
+import { Component, } from '@angular/core';
+import { fa } from '@/services/font-awesome.service';
 import { AuthService, AuthTokenState } from '@/utility/auth.service';
-import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  providers: [UnsubscriberService]
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  authority: string | undefined;
-  faOpenid = faOpenid;
+  protected authority: string | undefined;
+  protected fa = fa;
   working = false;
 
   constructor(
-    private auth: AuthService,
-    private routerService: RouterService,
-    private unsub: UnsubscriberService) {
+    private auth: AuthService) {
     this.authority = auth.authority;
-    this.unsub.add(this.auth.tokenState$.subscribe(state => {
-      if (state == AuthTokenState.valid) {
-        this.routerService.goHome();
-      }
-    }));
   }
 
   login(): void {

@@ -31,8 +31,7 @@ export class AuthService {
 
   constructor(
     private config: ConfigService,
-    private log: LogService,
-    private userService: UserService
+    private log: LogService
   ) {
     config.settings$.pipe(filter(s => !!s.oidc.authority)).subscribe((s: Settings) => {
       if (s.oidc.debug) {
