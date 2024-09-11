@@ -5,7 +5,7 @@
 </alert>
 
 <div *ngIf="game" class="controls-container d-flex align-items-center mb-3">
-    <button class="d-block btn btn-info" (click)="handleSelectAll()">
+    <button class="d-block btn btn-info" (click)="handleSelectAll()" [disabled]="!results?.teams?.items?.length">
         <fa-icon [icon]="fa.checkSquare"></fa-icon>
         Select All {{ (game.isTeamGame ? "Team" : "Player") | pluralizer }}
     </button>
@@ -112,11 +112,11 @@
                 <div secondaryDetail>
                     <ng-container *ngIf="team.session.start && team.session.end | epochMsToDateTime | datetimeIsFuture">
                         <div>Playing now</div>
-                        (<strong class="text-info"
+                        <strong class="text-info d-block"
                             [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
                             team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async
                             }}</strong>
-                        remaining)
+                        <div class="fs-08 text-muted">remaining</div>
                     </ng-container>
 
                     <ng-container *ngIf="!team.session.start">
