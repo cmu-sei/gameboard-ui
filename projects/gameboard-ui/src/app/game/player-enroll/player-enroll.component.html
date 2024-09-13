@@ -73,7 +73,7 @@
       </ng-container>
 
       <!-- already enrolled -->
-      <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore && ctx.game.registration.isDuring">
+      <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore">
         <div *ngIf="isManager$ | async" class="form-group mb-0">
           <ng-container *ngIf="ctx.player | hasPendingName">
             <ng-container *ngIf="!ctx.player.nameStatus">
