@@ -71,6 +71,7 @@ import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { GameCardImageComponent } from './components/game-card-image/game-card-image.component';
 import { GbProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
@@ -276,11 +277,13 @@ const RELAYED_MODULES = [
     }),
     PopoverModule.forRoot(),
     TypeaheadModule.forRoot(),
-    ...RELAYED_MODULES
+    ...RELAYED_MODULES,
+    IfHasPermissionDirective
   ],
   exports: [
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
+    IfHasPermissionDirective
   ]
 })
 export class CoreModule { }
