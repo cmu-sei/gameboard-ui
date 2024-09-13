@@ -6,6 +6,7 @@ import { PlayerOverview } from "./player-models";
 import { UserSummary } from "./user-models";
 
 export interface SupportSettings {
+  autoTagPracticeTicketsWith?: string;
   supportPageGreeting?: string;
 }
 
