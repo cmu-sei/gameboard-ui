@@ -48,7 +48,7 @@
             <div *ngIf="!spec.instance!.id" class="text-center mb-4">
               <ng-container *ngIf="ctx.session.isDuring && !deploying">
                 <ng-container *ngIf="this.user$ | async as user">
-                  <div *ngIf="user | can:'play_ChooseChallengeVariant'" class="form-group">
+                  <div *ngIfHasPermission="'play_ChooseChallengeVariant'" class="form-group">
                     <label for="variant-input">Variant</label>
                     <input type="number" class="form-control" [(ngModel)]="variant">
                   </div>

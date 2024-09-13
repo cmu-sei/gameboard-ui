@@ -30,11 +30,7 @@ export class IfHasPermissionDirective {
   }
 
   private evaluate(user: ApiUser | null | undefined) {
-    if (!this.requiredPermission) {
-      throw new Error("Using the *appIfHasPermission directive requires a permission setting.");
-    }
-
-    const hasPermission = user && this.permissionsService.can(user, this.requiredPermission);
+    const hasPermission = this.requiredPermission && user && this.permissionsService.can(user, this.requiredPermission);
 
     if (hasPermission && !this.hasView) {
       this.viewContainer.createEmbeddedView(this.templateRef);
