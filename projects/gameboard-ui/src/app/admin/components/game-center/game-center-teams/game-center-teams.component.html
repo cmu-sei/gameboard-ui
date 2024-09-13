@@ -1,7 +1,7 @@
 <alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
     There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
-    who have pending name change requests. Click
-    <span class="link-button" (click)="handlePendingNamesClick(game.id)">here</span>
+    who have pending name change requests. Click <span class="link-button"
+        (click)="handlePendingNamesClick(game.id)">here</span>
     to review them.
 </alert>
 
@@ -42,7 +42,8 @@
         </button>
     </div>
 
-    <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(game)">
+    <button *appIfHasPermission="'Teams_Enroll'" type="button" class="btn btn-info"
+        (click)="handlePlayerAddClick(game)">
         <fa-icon [icon]="fa.plus"></fa-icon>
         Add {{ game.isTeamGame ? "Team" : "Player" }} </button>
 </div>
