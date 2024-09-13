@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
     ".whats-this-container { display: inline }",
     ".has-tooltip { cursor: help }"
   ],
-  template: `<div class="whats-this-container" [class.has-tooltip]="!!whatItIs" [popover]="whatItIs" [placement]="placement">
+  template: `<div class="whats-this-container" [class.has-tooltip]="!!whatItIs" [tooltip]="whatItIs" [placement]="placement">
     <ng-content></ng-content>
   </div>`,
 })

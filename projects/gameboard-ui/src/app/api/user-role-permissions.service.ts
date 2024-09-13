@@ -15,10 +15,6 @@ export class UserRolePermissionsService {
     if (!user?.rolePermissions?.length)
       return false;
 
-    if (key == "Admin_View") {
-      console.log("yo", key, user.rolePermissions.map(p => p.toLowerCase()).indexOf(key.toLowerCase()) >= 0);
-    }
-
     return user.rolePermissions.map(p => p.toLowerCase()).indexOf(key.toLowerCase()) >= 0;
   }
 
