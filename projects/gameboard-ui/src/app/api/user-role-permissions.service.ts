@@ -24,7 +24,7 @@ export class UserRolePermissionsService {
 
   public listRoles(): Observable<UserRoleKey[]> {
     return this.http.get<UserRolePermissionsOverviewResponse>(this.apiUrl.build("users/roles/permissions")).pipe(
-      map(overview => Object.keys(overview).map(key => key as UserRoleKey))
+      map(overview => Object.keys(overview.roles).map(key => key as UserRoleKey))
     );
   }
 }
