@@ -88,6 +88,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
         this.canAdminEnroll = !!this.localUserService.can('Play_IgnoreExecutionWindow') && !hasPlayerSession;
 
         this.canStandardEnroll = !!localUser && !hasPlayerSession &&
+          ctx.game.registrationType != "none" &&
           ctx.game.registration.isDuring && (
             !ctx.player.id ||
             !ctx.player.session ||
