@@ -39,6 +39,7 @@ export class PlayerSessionComponent implements OnDestroy {
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
   protected canAdminStart = false;
+  protected canIgnoreSessionResetSettings$ = this.localUserService.can$("play_IgnoreSessionResetSettings");
   protected hasTimeRemaining = false;
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
   protected timeRemainingMs$?: Observable<number>;
