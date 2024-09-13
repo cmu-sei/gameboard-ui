@@ -12,7 +12,7 @@ import { ApiUser } from '@/api/user-models';
 })
 export class IfHasPermissionDirective {
   private hasView = false;
-  @Input() private requiredPermission?: UserRolePermissionKey;
+  @Input('[appIfHasPermission]') private requiredPermission?: UserRolePermissionKey;
 
   constructor(
     private localUser: UserService,

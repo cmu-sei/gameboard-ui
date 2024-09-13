@@ -37,7 +37,7 @@ export interface GameInfoBubbleProperties {
   template: `
     <ul class="game-info-bubbles d-flex align-items-center py-0 px-2" *ngIf="game">
       <li *ngIf="game.isLive" class="rounded-circle">
-        <fa-icon [size]="bubbleSize" [icon]="fa.towerBroadcast" tooltip="Live now!" animation="beat-fade" style="--fa-animation-duration: 3s; --fa-beat-scale; 1.2; --fa-animation-timing: ease-in-out;"></fa-icon>
+        <fa-icon [size]="bubbleSize" [icon]="fa.towerBroadcast" tooltip="Live now!" animation="beat-fade" style="--fa-animation-duration: 3s; --fa-beat-scale; 1.1; --fa-animation-timing: ease-in-out;"></fa-icon>
       </li>
       <li class="rounded-circle">
         <fa-icon [size]="bubbleSize" [icon]="fa.infoCircle" [tooltip]="tooltipTemplate"></fa-icon>
