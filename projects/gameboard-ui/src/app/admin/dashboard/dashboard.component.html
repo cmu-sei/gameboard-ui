@@ -20,7 +20,7 @@
   </div>
 
   <div *ngIf="tableView" class="col-4">
-    <button class="btn btn-secondary btn-sm" (click)="create()">
+    <button class="btn btn-secondary btn-sm" *appIfHasPermission="'Games_CreateEditDelete'" (click)="create()">
       <fa-icon [icon]="faPlus"></fa-icon>
       <span>New Game</span>
     </button>
@@ -42,7 +42,8 @@
   <ng-container *ngIf="games$ | async as games; else loading">
     <!-- Card view mode -->
     <ng-container *ngIf="!tableView">
-      <div class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
+      <div *appIfHasPermission="'Games_CreateEditDelete'"
+        class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
         <button class="btn btn-info flex-grow-1 w-100" (click)="create()">
           <fa-icon [icon]="faPlus"></fa-icon>
           <span>New Game</span>
