@@ -35,3 +35,10 @@
     color: darken($foreground, 20%);
   }
 }
+
+.sticky-header {
+  top: 0px;
+  left: 0px;
+  position: sticky;
+  z-index: 999;
+}
