@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, OnChanges, SimpleChanges, TemplateRef, ViewContainerRef } from '@angular/core';
 import { UserService } from '@/utility/user.service';
 import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
@@ -10,7 +10,7 @@ import { ApiUser } from '@/api/user-models';
   selector: '[appIfHasPermission]',
   standalone: true
 })
-export class IfHasPermissionDirective {
+export class IfHasPermissionDirective implements OnChanges {
   private hasView = false;
   @Input('[appIfHasPermission]') private requiredPermission?: UserRolePermissionKey;
 
@@ -27,6 +27,11 @@ export class IfHasPermissionDirective {
   @Input() set appIfHasPermission(permission: UserRolePermissionKey) {
     this.requiredPermission = permission;
     this.evaluate(this.localUser.user$.value);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.requiredPermission)
+      this.evaluate(this.localUser.user$.value);
   }
 
   private evaluate(user: ApiUser | null | undefined) {
