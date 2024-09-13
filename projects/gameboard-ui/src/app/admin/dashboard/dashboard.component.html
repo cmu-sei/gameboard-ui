@@ -67,39 +67,44 @@
         </app-dropzone>
       </div>
 
-      <div class="wrapper col-3 my-3 position-relative" *ngFor="let g of games">
+      <div class="wrapper col-3 my-4" *ngFor="let g of games">
         <app-game-card [game]="g" [routerLink]="['/admin', 'game', g.id]"></app-game-card>
 
-        <div class="context-menu-container">
-          <div class="btn-group context-menu" dropdown>
-            <button id="button-basic" dropdownToggle type="button" class="btn ctx-menu-button rounded-circle"
-              aria-controls="dropdown-basic">
-              <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
-            </button>
-            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-              <li role="menuitem">
-                <button class="dropdown-item btn" (click)="yaml(g)">
-                  Export to <strong>YAML</strong>
-                </button>
-              </li>
-              <li role="menuitem">
-                <button class="dropdown-item btn" (click)="json(g)">
-                  Export to <strong>JSON</strong>
-                </button>
-              </li>
-              <li class="divider dropdown-divider"></li>
-              <li role="menuitem">
-                <button class="dropdown-item btn" (click)="clone(g)">
-                  Clone
-                </button>
-              </li>
-              <li class="divider dropdown-divider"></li>
-              <li role="menuitem">
-                <button class="dropdown-item btn btn-danger text-danger" (click)="delete(g)">
-                  Delete
-                </button>
-              </li>
-            </ul>
+        <div class="info-bubbles d-flex align-items-center">
+          <app-game-info-bubbles class="d-block mt-2" [game]="g" bubbleSize="xl">
+          </app-game-info-bubbles>
+
+          <div class="context-menu-container ml-auto" contextMenu>
+            <div class="btn-group context-menu" dropdown>
+              <button id="button-basic" dropdownToggle type="button" class="btn ctx-menu-button rounded-circle"
+                aria-controls="dropdown-basic">
+                <fa-icon [icon]="fa.ellipsisVertical" size="xl"></fa-icon>
+              </button>
+              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+                <li role="menuitem">
+                  <button class="dropdown-item btn" (click)="yaml(g)">
+                    Export to <strong>YAML</strong>
+                  </button>
+                </li>
+                <li role="menuitem">
+                  <button class="dropdown-item btn" (click)="json(g)">
+                    Export to <strong>JSON</strong>
+                  </button>
+                </li>
+                <li class="divider dropdown-divider"></li>
+                <li role="menuitem">
+                  <button class="dropdown-item btn" (click)="clone(g)">
+                    Clone
+                  </button>
+                </li>
+                <li class="divider dropdown-divider"></li>
+                <li role="menuitem">
+                  <button class="dropdown-item btn btn-danger text-danger bold-text" (click)="delete(g)">
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -117,7 +122,6 @@
                 <td class="thin-col"></td>
                 <td class="thin-col sticky-options sticky-header"></td>
                 <td class="sticky-name sticky-header">Name</td>
-                <td>Key</td>
                 <td>Series</td>
                 <td>Track</td>
                 <td>Season</td>
@@ -193,7 +197,6 @@
                     <small class="text-muted">{{game.id | slice:0:12}}</small>
                   </div>
                 </td>
-                <td>{{game.key}}</td>
                 <td>{{game.competition}}</td>
                 <td>{{game.track}}</td>
                 <td>{{game.season}}</td>
@@ -220,9 +223,7 @@
 </div>
 
 <ng-template #loading>
-  <div class="text-center w-100">
-    <app-spinner></app-spinner>
-  </div>
+  <app-spinner></app-spinner>
 </ng-template>
 
 <ng-template #gameAcceptsFeedback>

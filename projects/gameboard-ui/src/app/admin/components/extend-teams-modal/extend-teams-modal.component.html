@@ -47,13 +47,13 @@
                                 <div>
                                     (from
 
-                                    <strong class="font-bold old-session-time">
+                                    <strong class="fw-bold old-session-time">
                                         {{team.sessionEnd | friendlyDateAndTime}}
                                     </strong>
                                     to
                                     <ng-container
                                         *ngIf="sessionEndDateTime | addDuration: { minutes: extensionInMinutes } as newSessionEnd">
-                                        <strong class="font-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
+                                        <strong class="fw-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
                                             [class.text-info]="!(newSessionEnd | dateTimeIsPast)">
                                             {{ newSessionEnd | datetimeToDate | friendlyDateAndTime }}
                                         </strong>)

@@ -15,24 +15,6 @@
   padding: 0.25rem;
 }
 
-.context-menu-container {
-  position: absolute;
-  z-index: 5;
-  top: 0;
-  right: 0;
-}
-
-.overlay {
-  position: absolute;
-  top: 0rem;
-  bottom: 0rem;
-  left: 0rem;
-  right: 0rem;
-  border-radius: 0.25rem;
-  background-color: rgba(black, 0.8);
-  z-index: 10;
-}
-
 .table-wrapper {
   overflow-x: auto;
   overflow-y: none;

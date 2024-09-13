@@ -59,7 +59,6 @@ import { TeamCenterComponent } from './components/team-center/team-center.compon
 import { TeamListCardComponent } from './components/team-list-card/team-list-card.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FeedbackReportComponent } from './feedback-report/feedback-report.component';
-import { GameEditorComponent } from './game-editor/game-editor.component';
 import { GameMapperComponent } from './game-mapper/game-mapper.component';
 import { ParticipationReportComponent } from './participation-report/participation-report.component';
 import { ExternalGamePlayerStatusToFriendlyPipe } from './pipes/external-game-player-status-to-friendly.pipe';
@@ -82,6 +81,7 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
+import { GameInfoBubblesComponent } from "../standalone/components/game-info-bubbles/game-info-bubbles.component";
 
 @NgModule({
   declarations: [
@@ -114,7 +114,6 @@ import { UserReportComponent } from './user-report/user-report.component';
     GameCenterTeamsComponent,
     GameCenterTicketsComponent,
     GameClassificationToStringPipe,
-    GameEditorComponent,
     GameMapperComponent,
     ManageManualChallengeBonusesComponent,
     ManageManualChallengeBonusesModalComponent,
@@ -161,7 +160,6 @@ import { UserReportComponent } from './user-report/user-report.component';
         path: '', component: AdminPageComponent, title: "Admin", children: [
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
-          { path: 'designer/:id', component: GameEditorComponent },
           {
             path: "game/:gameId/:selectedTab",
             component: GameCenterComponent
@@ -205,6 +203,7 @@ import { UserReportComponent } from './user-report/user-report.component';
     ScoreboardModule,
     SponsorsModule,
     SystemNotificationsModule,
+    GameInfoBubblesComponent
   ]
 })
 export class AdminModule { }

@@ -1,7 +1,8 @@
 <alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
     There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
-    who have pending name change requests. Click <span class="link-button"
-        (click)="handlePendingNamesClick(game.id)">here</span> to review them.
+    who have pending name change requests. Click
+    <span class="link-button" (click)="handlePendingNamesClick(game.id)">here</span>
+    to review them.
 </alert>
 
 <div *ngIf="game" class="controls-container d-flex align-items-center mb-3">
@@ -169,5 +170,5 @@
 </ng-template>
 
 <ng-template #loading>
-    <app-spinner>Finding players...</app-spinner>
+    <app-spinner>{{ (game?.isTeamGame ? "team" : "player") | pluralizer }}...</app-spinner>
 </ng-template>

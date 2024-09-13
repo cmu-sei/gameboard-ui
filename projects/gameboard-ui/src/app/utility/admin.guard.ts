@@ -27,19 +27,28 @@ export class AdminGuard implements CanActivate, CanActivateChild {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.validateRole();
+    return this.canActivateChild(route, state);
   }
 
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.validateRole();
-  }
-
-  private validateRole(): Observable<boolean | UrlTree> {
     return this.localUser.user$.pipe(
       map(u => this.permissionsService.can(u, "admin_View")),
-      map(v => v ? v : this.router.parseUrl('/forbidden'))
+      map(can => {
+        if (can)
+          return true;
+
+        if (!state.url.includes("forbidden")) {
+          return this.router.createUrlTree(["forbidden"], {
+            queryParams: {
+              requestedUrl: state.url
+            }
+          });
+        }
+
+        return this.router.createUrlTree(["forbidden"]);
+      })
     );
   }
 }

@@ -76,18 +76,18 @@
         </td>
         <td>
             <div class="challenge-count" *ngIf="teamScore.score.solveCountComplete">
-                <span class="font-bold text-info">{{ teamScore.score.solveCountComplete }}</span>
+                <span class="fw-bold text-info">{{ teamScore.score.solveCountComplete }}</span>
                 <span class="challenge-count-desc"> complete</span>
             </div>
 
             <div class="challenge-count" *ngIf="teamScore.score.solveCountPartial">
-                <span class="font-bold">{{ teamScore.score.solveCountPartial }}</span>
+                <span class="fw-bold">{{ teamScore.score.solveCountPartial }}</span>
                 <span class="challenge-count-desc"> partial</span>
             </div>
 
             <div class="challenge-count"
                 *ngIf="scoreboardData && teamScore.score.solveCountPartial + teamScore.score.solveCountComplete < scoreboardData.game.specCount">
-                <span class="font-bold">
+                <span class="fw-bold">
                     {{ scoreboardData.game.specCount - (teamScore.score.solveCountPartial +
                     teamScore.score.solveCountComplete) }}
                 </span>

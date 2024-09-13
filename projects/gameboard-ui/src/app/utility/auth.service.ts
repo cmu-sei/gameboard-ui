@@ -7,7 +7,6 @@ import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { ConfigService, Settings } from './config.service';
 import { LogService } from '../services/log.service';
-import { UserService } from '@/api/user.service';
 
 export enum AuthTokenState {
   unknown = 'unknown' as any,
@@ -124,7 +123,7 @@ export class AuthService {
     this.expireToken();
 
     this.mgr.signinRedirect({ state: this.redirectUrl || currentUrl })
-      .then(() => { this.log.logInfo("User authenticated", this.oidcUser); })
+      .then(() => this.log.logInfo("User authenticated", this.oidcUser))
       .catch(err => this.log.logError(err));
   }
 

@@ -65,7 +65,7 @@
 
 <ng-template #hasPermission let-context>
     <span *ngIf="context.permissionKey | arrayContains:context.rolePermissions; else noPermission"
-        class="has-permission font-bold">
+        class="has-permission fw-bold">
         Yes
     </span>
 </ng-template>
