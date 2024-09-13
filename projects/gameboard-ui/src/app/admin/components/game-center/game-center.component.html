@@ -49,14 +49,16 @@
 
     <div class="tabs-container d-block mt-4">
         <tabset>
-            <tab [active]="selectedTab === 'settings'" (selectTab)="handleSelect('settings')">
+            <tab *appIfHasPermission="'Games_CreateEditDelete'" [active]="selectedTab === 'settings'"
+                (selectTab)="handleSelect('settings')">
                 <ng-template tabHeading>
                     <fa-icon [icon]="fa.gear"></fa-icon>
                 </ng-template>
                 <app-game-center-settings *ngIf="selectedTab === 'settings'"
                     [gameId]="ctx.id"></app-game-center-settings>
             </tab>
-            <tab [active]="selectedTab === 'challenges'" (selectTab)="handleSelect('challenges')"
+            <tab *appIfHasPermission="'Games_CreateEditDelete'" [active]="selectedTab === 'challenges'"
+                (selectTab)="handleSelect('challenges')"
                 [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
                 <app-game-mapper *ngIf="selectedTab === 'challenges' && game" class="d-block mt-3"
                     [game]="game"></app-game-mapper>
@@ -80,7 +82,8 @@
                 <app-scoreboard *ngIf="selectedTab === 'scoreboard'" [gameId]="ctx.id"
                     [suppressLiveGameBanner]="true"></app-scoreboard>
             </tab>
-            <tab [active]="selectedTab === 'observe'" (selectTab)="handleSelect('observe')" heading="Observe">
+            <tab *appIfHasPermission="'Teams_Observe'" [active]="selectedTab === 'observe'"
+                (selectTab)="handleSelect('observe')" heading="Observe">
                 <app-game-center-observe *ngIf="selectedTab === 'observe'" [gameId]="ctx.id"></app-game-center-observe>
             </tab>
             <tab [active]="selectedTab === 'tickets'" (selectTab)="handleSelect('tickets')"
