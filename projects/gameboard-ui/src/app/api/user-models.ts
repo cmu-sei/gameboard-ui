@@ -16,7 +16,7 @@ export interface ApiUser {
   lastLoginDate?: Date;
   loginCount: number;
   pendingName: string;
-  role: UserRole;
+  role: UserRoleKey;
   rolePermissions: UserRolePermissionKey[]
 }
 
@@ -30,7 +30,7 @@ export interface ChangedUser {
   approvedName?: string;
   nameStatus?: string;
   sponsorId?: string;
-  role?: UserRole;
+  role?: UserRoleKey;
 }
 
 export interface SelfChangedUser {
@@ -45,7 +45,7 @@ export interface TeamMember {
   role: PlayerRole;
 }
 
-export type UserRole = "member" | "tester" | "support" | "director" | "admin";
+export type UserRoleKey = "member" | "tester" | "support" | "director" | "admin";
 
 export interface UserSettings {
   playAudioOnBrowserNotification: boolean;

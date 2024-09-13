@@ -17,7 +17,6 @@ import { fa } from '@/services/font-awesome.service';
 export class AppNavComponent implements OnInit {
   user$!: Observable<ApiUser | null>;
   toc$!: Observable<TocFile[]>;
-  canAccessReporting$?: Observable<boolean>;
   customBackground = "";
   env: any;
 
@@ -38,9 +37,6 @@ export class AppNavComponent implements OnInit {
     this.user$ = this.localUser.user$;
     this.toc$ = this.toc.toc$;
     this.profileUrl = this.routerService.getProfileUrl();
-
-    // set availability of practice/reporting
-    this.canAccessReporting$ = this.localUser.can$('reports_View');
 
     this.isPracticeModeEnabled = await this.practiceService.isEnabled();
     this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));

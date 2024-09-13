@@ -31,7 +31,7 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
     // if the user is admin/tester, they can ignore start phase restrictions
     const localUser = this.localUserService.user$.getValue();
 
-    if (await firstValueFrom(this.localUserService.can$("play_IgnoreExecutionWindow"))) {
+    if (await firstValueFrom(this.localUserService.can$("Play_IgnoreExecutionWindow"))) {
       return true;
     }
 

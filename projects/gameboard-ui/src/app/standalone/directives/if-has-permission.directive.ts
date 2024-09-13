@@ -29,6 +29,10 @@ export class IfHasPermissionDirective implements OnChanges {
     this.evaluate(this.localUser.user$.value);
   }
 
+  ngOnInit() {
+    this.evaluate(this.localUser.user$.value);
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.requiredPermission)
       this.evaluate(this.localUser.user$.value);

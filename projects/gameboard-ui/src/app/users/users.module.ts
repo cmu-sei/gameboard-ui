@@ -60,7 +60,7 @@ const DECLARED_COMPONENTS = [
               const permissionsService = inject(UserRolePermissionsService);
               const localUser = inject(LocalUserService);
 
-              return permissionsService.can(localUser.user$.value, "admin_View");
+              return permissionsService.can(localUser.user$.value, "Admin_View");
             }]
           }
         ]

@@ -70,7 +70,7 @@ export class GamePageComponent implements OnDestroy {
     private windowService: WindowService
   ) {
     const user$ = localUser.user$.pipe(map(u => !!u ? u : {} as ApiUser));
-    this.canAdminEnroll$ = localUser.can$('play_IgnoreExecutionWindow');
+    this.canAdminEnroll$ = localUser.can$('Play_IgnoreExecutionWindow');
 
     const game$ = route.params.pipe(
       filter(p => !!p.id),

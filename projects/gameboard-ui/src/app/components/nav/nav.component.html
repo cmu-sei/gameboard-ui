@@ -14,14 +14,14 @@
                 <app-support-pill></app-support-pill>
             </a>
             <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Profile</a>
-            <div *ngIf="canAccessReporting$ | async" class="d-flex align-items-center">
+            <div *appIfHasPermission="'Reports_View'" class="d-flex align-items-center">
                 <a class="btn btn-link text-success-mx-1" routerLinkActive="text-info" [routerLink]="['reports']">
                     Reports
                 </a>
             </div>
             <ng-container *ngIf="(user$ | async)?.id">
-                <a *ngIf="user | can:'admin_View'" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
-                    [routerLink]="['/admin']">Admin</a>
+                <a *appIfHasPermission="'Admin_View'" class="btn btn-link text-success mx-1"
+                    routerLinkActive="text-info" [routerLink]="['/admin']">Admin</a>
                 <a class="btn btn-link text-success mx-1" (click)="logout()">Log out</a>
             </ng-container>
         </ng-container>
@@ -59,13 +59,13 @@
                 <li>
                     <a routerLinkActive="active" [routerLink]="profileUrl">Profile</a>
                 </li>
-                <li *ngIf="canAccessReporting$ | async">
+                <li *appIfHasPermission="'Reports_View'">
                     <a routerLinkActive="active" [routerLink]="['/reports']">
                         Reports
                     </a>
                     <span class="badge badge-info">[BETA]</span>
                 </li>
-                <li *ngIf="user | can:'admin_View'">
+                <li *appIfHasPermission="'Admin_View'">
                     <a routerLinkActive="active" [routerLink]="['/admin']">
                         Admin
                     </a>

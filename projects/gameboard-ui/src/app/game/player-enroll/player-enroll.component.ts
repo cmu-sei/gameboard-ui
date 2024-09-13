@@ -6,7 +6,7 @@ import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-soli
 import { firstValueFrom, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { map, tap, delay, first } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
-import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TeamInvitation, TimeWindow } from '../../api/player-models';
+import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TimeWindow } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { NotificationService } from '../../services/notification.service';
@@ -85,7 +85,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       tap(ctx => {
         const localUser = this.localUserService.user$.value;
         const hasPlayerSession = (!!ctx.player.id && !!ctx.player.session && !ctx.player.session.isBefore);
-        this.canAdminEnroll = !!this.localUserService.can('play_IgnoreExecutionWindow') && !hasPlayerSession;
+        this.canAdminEnroll = !!this.localUserService.can('Play_IgnoreExecutionWindow') && !hasPlayerSession;
 
         this.canStandardEnroll = !!localUser && !hasPlayerSession &&
           ctx.game.registration.isDuring && (

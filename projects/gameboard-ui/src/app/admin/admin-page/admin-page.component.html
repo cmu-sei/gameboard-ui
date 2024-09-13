@@ -10,17 +10,17 @@
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['overview']">Overview</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['dashboard']">Games</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['practice']"
-      *ngIfHasPermission="'practice_EditSettings'">Practice Area</a>
+      *appIfHasPermission="'Practice_EditSettings'">Practice Area</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'users']">Users</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'players']">Players</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'sponsors']"
-      *appIfHasPermission="'admin_CreateEditSponsors'">Sponsors</a>
-    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['support']" *appIfHasPermission="'teams_Observe'"
+      *appIfHasPermission="'Sponsors_CreateEdit'">Sponsors</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['support']" *appIfHasPermission="'Teams_Observe'"
       [routerLinkActiveOptions]="{exact: true}">Challenges</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['support', 'settings']"
-      *appIfHasPermission="'support_EditSettings'" [routerLinkActiveOptions]="{exact: true}">Support</a>
+      *appIfHasPermission="'Support_EditSettings'" [routerLinkActiveOptions]="{exact: true}">Support</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['notifications']"
-      *appIfHasPermission="'systemNotifications_CreateEdit'">Notifications</a>
+      *appIfHasPermission="'SystemNotifications_CreateEdit'">Notifications</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['roles']">Roles</a>
   </nav>
   <main>

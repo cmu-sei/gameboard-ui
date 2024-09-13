@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
-import { ApiUser, TryCreateUsersResponse, UserRole, UserRoleLegacy } from '../../api/user-models';
+import { ApiUser, TryCreateUsersResponse, UserRoleKey, UserRoleLegacy } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { fa } from '@/services/font-awesome.service';
 import { SortService } from '@/services/sort.service';
@@ -23,7 +23,7 @@ type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
   styleUrls: ['./user-registrar.component.scss']
 })
 export class UserRegistrarComponent {
-  protected roles$: Observable<UserRole[]>;
+  protected roles$: Observable<UserRoleKey[]>;
   refresh$ = new BehaviorSubject<boolean>(true);
   source$: Observable<ApiUser[]>;
   source: ApiUser[] = [];

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { UserRolePermissionKey, UserRolePermissionsOverviewResponse } from './user-role-permissions.models';
 import { ApiUrlService } from '@/services/api-url.service';
-import { UserRole } from './user-models';
+import { UserRoleKey } from './user-models';
 
 @Injectable({ providedIn: 'root' })
 export class UserRolePermissionsService {
@@ -15,16 +15,20 @@ export class UserRolePermissionsService {
     if (!user?.rolePermissions?.length)
       return false;
 
-    return user.rolePermissions.indexOf(key) >= 0;
+    if (key == "Admin_View") {
+      console.log("yo", key, user.rolePermissions.map(p => p.toLowerCase()).indexOf(key.toLowerCase()) >= 0);
+    }
+
+    return user.rolePermissions.map(p => p.toLowerCase()).indexOf(key.toLowerCase()) >= 0;
   }
 
   public getRolePermissionsOverview(): Promise<UserRolePermissionsOverviewResponse> {
     return firstValueFrom(this.http.get<UserRolePermissionsOverviewResponse>(this.apiUrl.build("users/roles/permissions")));
   }
 
-  public listRoles(): Observable<UserRole[]> {
+  public listRoles(): Observable<UserRoleKey[]> {
     return this.http.get<UserRolePermissionsOverviewResponse>(this.apiUrl.build("users/roles/permissions")).pipe(
-      map(overview => Object.keys(overview.rolePermissions).map(key => key as UserRole))
+      map(overview => Object.keys(overview).map(key => key as UserRoleKey))
     );
   }
 }

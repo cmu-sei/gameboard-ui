@@ -15,10 +15,30 @@
         <thead>
             <tr class="header-row">
                 <th>Permission</th>
-                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'admin'">Admin</th>
-                <th class="centered-col">Director</th>
-                <th class="centered-col">Support</th>
-                <th class="centered-col">Tester</th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'admin'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['admin'].description"
+                        class="text-dashed-underline">
+                        Admin
+                    </app-whats-this>
+                </th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole == 'director'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['director'].description"
+                        class="text-dashed-underline">
+                        Director
+                    </app-whats-this>
+                </th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole == 'support'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['support'].description"
+                        class="text-dashed-underline">
+                        Support
+                    </app-whats-this>
+                </th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole == 'tester'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['tester'].description"
+                        class="text-dashed-underline">
+                        Tester
+                    </app-whats-this>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -35,22 +55,22 @@
                     </td>
                     <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'admin'">
                         <ng-container
-                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.rolePermissions['admin'] } }">
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['admin'].permissions } }">
                         </ng-container>
                     </td>
                     <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'director'">
                         <ng-container
-                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.rolePermissions['director'] } }">
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['director'].permissions } }">
                         </ng-container>
                     </td>
                     <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'support'">
                         <ng-container
-                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.rolePermissions['support'] } }">
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['support'].permissions } }">
                         </ng-container>
                     </td>
                     <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'tester'">
                         <ng-container
-                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.rolePermissions['tester'] } }">
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['tester'].permissions } }">
                         </ng-container>
                     </td>
                 </tr>

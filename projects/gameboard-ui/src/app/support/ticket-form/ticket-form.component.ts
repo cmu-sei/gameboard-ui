@@ -53,7 +53,7 @@ export class TicketFormComponent implements OnDestroy {
     route: ActivatedRoute,
     localUserService: LocalUserService
   ) {
-    this.canManage$ = localUserService.user$.pipe(map(u => this.permissionsService.can(u, "support_ManageTickets")));
+    this.canManage$ = localUserService.user$.pipe(map(u => this.permissionsService.can(u, "Support_ManageTickets")));
 
     this.routeSub = route.queryParams.pipe(
       filter(p => !!p.cid),

@@ -34,7 +34,7 @@ export class AdminGuard implements CanActivate, CanActivateChild {
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.localUser.user$.pipe(
-      map(u => this.permissionsService.can(u, "admin_View")),
+      map(u => this.permissionsService.can(u, "Admin_View")),
       map(can => {
         if (can)
           return true;

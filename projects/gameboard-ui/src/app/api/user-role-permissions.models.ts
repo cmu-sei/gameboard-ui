@@ -1,31 +1,32 @@
-import { UserRole } from "./user-models";
+import { UserRoleKey } from "./user-models";
 
-export type UserRolePermissionKey = "admin_CreateApiKeys"
-    | "admin_CreateEditSponsors"
-    | "admin_View"
-    | "games_AdminExternal"
-    | "games_CreateEditDelete"
-    | "games_ViewUnpublished"
-    | "play_ChooseChallengeVariant"
-    | "play_IgnoreSessionResetSettings"
-    | "play_IgnoreExecutionWindow"
-    | "practice_EditSettings"
-    | "reports_View"
-    | "scores_AwardManualBonuses"
-    | "scores_RegradeAndRerank"
-    | "scores_ViewLive"
-    | "support_EditSettings"
-    | "support_ManageTickets"
-    | "support_ViewTickets"
-    | "systemNotifications_CreateEdit"
-    | "teams_ApproveNameChanges"
-    | "teams_DeployGameResources"
-    | "teams_EditSession"
-    | "teams_Enroll"
-    | "teams_Observe"
-    | "teams_SendAnnouncements"
-    | "users_CreateEditDelete"
-    | "users_EditRoles"
+export type UserRolePermissionKey =
+    "Admin_View" |
+    "ApiKeys_CreateRevoke" |
+    "Games_CreateEditDelete" |
+    "Games_ViewUnpublished" |
+    "Play_ChooseChallengeVariant" |
+    "Play_IgnoreSessionResetSettings" |
+    "Play_IgnoreExecutionWindow" |
+    "Practice_EditSettings" |
+    "Reports_View" |
+    "Scores_AwardManualBonuses" |
+    "Scores_RegradeAndRerank" |
+    "Scores_ViewLive" |
+    "Sponsors_CreateEdit" |
+    "Support_EditSettings" |
+    "Support_ManageTickets" |
+    "Support_ViewTickets" |
+    "SystemNotifications_CreateEdit" |
+    "Teams_ApproveNameChanges" |
+    "Teams_DeployGameResources" |
+    "Teams_EditSession" |
+    "Teams_Enroll" |
+    "Teams_Observe" |
+    "Teams_SendAnnouncements" |
+    "Teams_SetSyncStartReady" |
+    "Users_CreateEditDelete" |
+    "Users_EditRoles"
 
 export interface UserRolePermissionsCategory {
     name: string;
@@ -39,8 +40,13 @@ export interface UserRolePermission {
     description: string;
 }
 
+export interface UserRole {
+    description: string;
+    permissions: UserRolePermissionKey[];
+}
+
 export interface UserRolePermissionsOverviewResponse {
     categories: UserRolePermissionsCategory[];
-    rolePermissions: { [key: string]: UserRolePermissionKey[]; };
-    yourRole: UserRole;
+    roles: { [key: string]: UserRole };
+    yourRole: UserRoleKey;
 }

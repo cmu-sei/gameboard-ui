@@ -34,7 +34,7 @@
             <input type="checkbox" class="form-check-input" id="disabled-input-{{spec.id}}" name="disabled"
                 [(ngModel)]="spec.disabled" (ngModelChange)="handleSpecUpdated(spec)">
 
-            <app-whats-this whatItIs="Playrs can see disabled challenge specs but can't deploy them.">
+            <app-whats-this whatItIs="Players can see disabled challenge specs but can't deploy them.">
                 <label for="disabled-input-{{spec.id}}">Disabled</label>
             </app-whats-this>
         </div>
