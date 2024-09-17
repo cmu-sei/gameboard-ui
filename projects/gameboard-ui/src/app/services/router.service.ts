@@ -60,6 +60,10 @@ export class RouterService implements OnDestroy {
     return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
+  public getGameCenterUrl(gameId: string, tab?: GameCenterTab) {
+    return this.router.parseUrl(`/admin/game/${gameId}` + (tab ? '/' + tab : ""));
+  }
+
   public getObserveChallengeUrl(gameId: string, challengeId: string) {
     return `admin/observer/challenges/${gameId}?search=${challengeId}`;
   }
@@ -109,7 +113,7 @@ export class RouterService implements OnDestroy {
   }
 
   public toGameCenter(gameId: string, selectedTab?: GameCenterTab) {
-    return this.router.navigateByUrl(`/admin/game/${gameId}` + ('/' + selectedTab));
+    return this.getGameCenterUrl(gameId, selectedTab);
   }
 
   public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): Promise<boolean> {
