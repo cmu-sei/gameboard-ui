@@ -1,6 +1,4 @@
-<h1>
-    Support Settings
-</h1>
+<h1>Support Settings</h1>
 
 <div class="settings-section mt-4 mb-4" *ngIf="settings; else loading">
     <h2>Greeting</h2>
@@ -10,15 +8,48 @@
     </p>
 
     <label for="supportPageGreeting">Enter a greeting (allows markdown)</label>
-    <textarea id="supportPageGreeting" rows="8" [placeholder]="'Welcome to **' + appName + '** Support!'"
-        class="form-control" [(ngModel)]="settings.supportPageGreeting" (input)="handleSettingsChanged()"></textarea>
+    <textarea id="supportPageGreeting" rows="8" [placeholder]="'Welcome to **{{appName}}** Support!'"
+        class="form-control" name="supportPageGreeting" [(ngModel)]="settings.supportPageGreeting"
+        (input)="handleSettingsChanged()"></textarea>
 
     <h2 class="mt-4">Auto-Tagging</h2>
-    <label for="autoTagPracticeChallengesWith">Automatically tag tickets generated from the Practice Area with this
-        tag</label>
-    <input type="text" id="auto-tag-practice-challengesWith" name="autoTagPracticeChallengesWith" class="form-control"
+
+    <label for="autoTagPracticeChallengesWith">
+        Automatically tag tickets generated from the Practice Area with this tag
+    </label>
+    <input type="text" id="autoTagPracticeChallengesWith" name="autoTagPracticeChallengesWith" class="form-control"
         [(ngModel)]="settings.autoTagPracticeTicketsWith" (input)="handleSettingsChanged()"
         placeholder="(e.g. &quot;practice-challenge&quot;)">
+
+    <hr class="light my-2" />
+
+    <ng-container *ngIf="!isSaving; else loading">
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <input type="text" class="form-control" name="newTagName" [(ngModel)]="newAutoTag.tag"
+                    placeholder="Enter a tag (like &quot;priority&quot; or &quot;nonurgent&quot;)">
+            </div>
+
+            <div class="width-20 mx-2">
+                <select class="form-control" id="new-tag-condition-type" name="newTagConditionType"
+                    [(ngModel)]="newAutoTag.conditionType">
+                    <option *ngFor="let conditionType of conditionTypes" [value]="conditionType.id">{{
+                        conditionType.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="width-20">
+                <input required type="text" class="form-control" name="newTagConditionValue"
+                    [(ngModel)]="newAutoTag.conditionValue">
+            </div>
+        </div>
+
+        <div class="new-tag-add-button mt-2">
+            <button type="button" class="btn btn-info width-100"
+                [disabled]="!newAutoTag.conditionValue || !newAutoTag.tag" (click)="handleAddAutoTag()">Add
+                Auto-Tag</button>
+        </div>
+    </ng-container>
 </div>
 
 <ng-template #loading>

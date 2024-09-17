@@ -6,9 +6,21 @@ import { PlayerOverview } from "./player-models";
 import { UserSummary } from "./user-models";
 
 export interface SupportSettings {
+  autoTags: SupportSettingsAutoTag[];
   autoTagPracticeTicketsWith?: string;
   supportPageGreeting?: string;
 }
+
+export interface SupportSettingsAutoTag {
+  id?: string;
+  conditionType: SupportSettingsAutoTagConditionType;
+  conditionValue: string;
+  description?: string;
+  isEnabled: boolean;
+  tag: string;
+}
+
+export type SupportSettingsAutoTagConditionType = "ChallengeSpecId" | "GameId" | "PlayerMode" | "SponsorId";
 
 export interface Ticket {
   id: string;

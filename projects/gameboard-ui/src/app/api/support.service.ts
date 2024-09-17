@@ -3,12 +3,12 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { catchError, first, last, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeOverview } from './board-models';
 import { PlayerService } from './player.service';
-import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSettings, Ticket, TicketActivity, TicketSummary } from './support-models';
+import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSettings, SupportSettingsAutoTag, Ticket, TicketActivity, TicketSummary } from './support-models';
 import { UserSummary } from './user-models';
 import { Search } from './models';
 import { ApiUrlService } from '@/services/api-url.service';
@@ -84,6 +84,10 @@ export class SupportService {
       });
     }
     return this.http.post<Ticket>(`${this.url}/ticket`, payload);
+  }
+
+  public upsertAutoTag(autoTag: SupportSettingsAutoTag) {
+    return firstValueFrom(this.http.post(`${this.url}/support/settings/autotag`, { tag: autoTag }));
   }
 
   public listAttachments(id: string): Observable<AttachmentFile[]> {
