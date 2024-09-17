@@ -5,8 +5,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-error-div',
-  templateUrl: './error-div.component.html',
-  styleUrls: ['./error-div.component.scss']
+  template: `
+    <alert class="d-block m-2" *ngFor="let e of errors" type="danger" [dismissible]="true" (onClosed)="closed(e)">
+      {{e.error?.message || e.message || e | camelspace}}
+    </alert>
+  `
 })
 export class ErrorDivComponent {
   @Input() errors!: any[];

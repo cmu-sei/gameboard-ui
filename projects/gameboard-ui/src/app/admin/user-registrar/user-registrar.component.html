@@ -16,18 +16,16 @@
   </div>
   <div class="filter-and-sort-container mt-3 d-flex align-items-center justify-content-center">
     <div class="btn-group d-block mr-2 button-toggle-group filter" role="group" aria-label="Filter group">
-      <button type="button" class="btn btn-sm btn-dark button-group-label" disabled>Filter:</button>
-      <button type="button"
-        [class]="filter ==='elevated-role' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm'"
+      <button type="button" class="btn btn-dark button-group-label" disabled>Filter:</button>
+      <button type="button" [class]="filter ==='elevated-role' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn'"
         (click)="toggleFilter('elevated-role')">
         Has Elevated Role
       </button>
-      <button type="button" [class]="filter ==='pending' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm'"
+      <button type="button" [class]="filter ==='pending' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn'"
         (click)="toggleFilter('pending')">
         Has Pending Name
       </button>
-      <button type="button"
-        [class]="filter ==='disallowed' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm'"
+      <button type="button" [class]="filter ==='disallowed' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn'"
         (click)="toggleFilter('disallowed')">
         Has Disallowed Name
       </button>
@@ -36,23 +34,23 @@
     <div class="spacer"></div>
 
     <div class="btn-group d-block button-toggle-group sort" me-2 role="group" aria-label="Sort group">
-      <button type="button" class="btn btn-sm btn-dark button-group-label" disabled>Sort:</button>
+      <button type="button" class="btn btn-dark button-group-label" disabled>Sort:</button>
       <button type="button"
-        [class]="search.sort ==='name' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm toggle-button'"
+        [class]="search.sort ==='name' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn toggle-button'"
         (click)="setSort('name')">
         <fa-icon [icon]="(search.sortDirection || 'asc') === 'asc' ? fa.caretUp : fa.caretDown"
           [hidden]="search.sort !== 'name'"></fa-icon>
         Name
       </button>
       <button type="button"
-        [class]="search.sort ==='lastLogin' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm toggle-button'"
+        [class]="search.sort ==='lastLogin' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn toggle-button'"
         (click)="setSort('lastLogin')">
         <fa-icon [icon]="(search.sortDirection || 'asc') === 'asc' ? fa.caretUp : fa.caretDown"
           [hidden]="search.sort !== 'lastLogin'"></fa-icon>
         Last Login
       </button>
       <button type="button"
-        [class]="search.sort ==='createdOn' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn btn-sm toggle-button'"
+        [class]="search.sort ==='createdOn' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn toggle-button'"
         (click)="setSort('createdOn')">
         <fa-icon [icon]="(search.sortDirection || 'asc') === 'asc' ? fa.caretUp : fa.caretDown"
           [hidden]="search.sort !== 'createdOn'"></fa-icon>

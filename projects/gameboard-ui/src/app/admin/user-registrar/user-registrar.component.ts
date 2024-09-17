@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component } from '@angular/core';
-import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, interval, merge, Observable } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
 import { ApiUser, TryCreateUsersResponse, UserRoleKey, UserRoleLegacy } from '../../api/user-models';
@@ -98,10 +98,13 @@ export class UserRegistrarComponent {
     });
   }
 
-  update(model: ApiUser): void {
-    this.api.update(model).subscribe(
-      (err) => this.errors.push(err)
-    );
+  async update(model: ApiUser) {
+    try {
+      await firstValueFrom(this.api.update(model));
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
   }
 
   approveName(model: ApiUser): void {
