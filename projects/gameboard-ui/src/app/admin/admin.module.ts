@@ -82,6 +82,7 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { GameInfoBubblesComponent } from "../standalone/components/game-info-bubbles/game-info-bubbles.component";
+import { SupportAutoTagAdminComponent } from './components/support-auto-tag-admin/support-auto-tag-admin.component';
 
 @NgModule({
   declarations: [
@@ -150,6 +151,7 @@ import { GameInfoBubblesComponent } from "../standalone/components/game-info-bub
     GameCenterTeamDetailComponent,
     TeamCenterComponent,
     GameMapEditorComponent,
+    SupportAutoTagAdminComponent,
   ],
   imports: [
     CommonModule,
@@ -184,13 +186,13 @@ import { GameInfoBubblesComponent } from "../standalone/components/game-info-bub
           { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
           { path: 'overview', component: AdminOverviewComponent, title: "Admin | Overview" },
+          { path: "permissions", component: AdminRolesComponent },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },
           { path: 'report/feedback', component: FeedbackReportComponent },
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
-          { path: "roles", component: AdminRolesComponent },
           { path: "notifications", component: AdminSystemNotificationsComponent },
           { path: "support/settings", component: SupportSettingsComponent, title: "Admin | Support" },
           { path: 'support', component: ChallengeBrowserComponent }

@@ -23,6 +23,7 @@ export function isObject<T>(thing: T): boolean {
 
 export function slug(input: string): string {
     return input
+        .trim()
         .replace(/[^a-zA-Z0-9]+/igm, '-')
         .replace(/-^/, "")
         .replace(/$-/, "")

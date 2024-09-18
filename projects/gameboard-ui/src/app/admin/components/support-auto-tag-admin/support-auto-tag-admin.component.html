@@ -1,0 +1,67 @@
+<label for="autoTagPracticeChallengesWith">
+    Automatically label incoming tickets based on the game, challenge, player sponsor, or mode.
+</label>
+
+<ng-container *ngIf="!isLoading; else loading">
+    <div class="d-flex my-3" *ngFor="let autoTag of autoTags">
+        <div class="flex-grow-1">
+            <app-colored-text-chip [text]="autoTag.tag"></app-colored-text-chip>
+        </div>
+        <div class="width-20">{{ autoTag.conditionTypeDescription }}</div>
+        <div class="width-20">{{ autoTag.conditionValue }}</div>
+        <div class="width-10">
+            <button type="button" class="btn btn-sm btn-danger">Delete</button>
+        </div>
+    </div>
+
+    <hr class="light my-2" />
+
+    <div class="d-flex">
+        <div class="flex-grow-1">
+            <input type="text" class="form-control" name="newTagName" [(ngModel)]="newAutoTag.tag"
+                placeholder="Enter a tag (like &quot;priority&quot; or &quot;non-urgent&quot;)">
+        </div>
+
+        <div class="width-20 mx-2">
+            <select class="form-control" id="new-tag-condition-type" name="newTagConditionType"
+                [(ngModel)]="newAutoTag.conditionType">
+                <option *ngFor="let conditionType of conditionTypes" [value]="conditionType.id">
+                    {{ conditionType.name }}
+                </option>
+            </select>
+        </div>
+        <div class="width-20">
+            <select *ngIf="newAutoTag.conditionType == 'sponsorId'" class="form-control" name="new-auto-tag-sponsorId"
+                [(ngModel)]="newAutoTag.conditionValue">
+                <ng-container *ngFor="let parent of sponsors">
+                    <option [value]="parent.id" class="group-parent">{{ parent.name }}</option>
+                    <option *ngFor="let child of parent.childSponsors" class="group-child" [value]="child.id">
+                        &nbsp;&nbsp; &nbsp; -
+                        {{ child.name }}
+                    </option>
+                </ng-container>
+            </select>
+            <select *ngIf="newAutoTag.conditionType == 'playerMode'" [(ngModel)]="newAutoTag.conditionValue"
+                class="form-control">
+                <option value="0" selected>Competition</option>
+                <option value="1">Practice</option>
+            </select>
+            <input *ngIf="newAutoTag.conditionType == 'gameId'" required type="text" class="form-control"
+                name="newTagConditionValue" [(ngModel)]="newAutoTag.conditionValue">
+        </div>
+        <div class="width-10">
+            <!--spacer to match the (Delete) column above-->
+        </div>
+    </div>
+
+    <div class="new-tag-add-button mt-2">
+        <button type="button" class="btn btn-info width-100" [disabled]="!newAutoTag.conditionValue || !newAutoTag.tag"
+            (click)="handleAddAutoTag()">
+            Add Auto-Tag
+        </button>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner></app-spinner>
+</ng-template>

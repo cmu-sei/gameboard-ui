@@ -20,7 +20,23 @@ export interface SupportSettingsAutoTag {
   tag: string;
 }
 
-export type SupportSettingsAutoTagConditionType = "ChallengeSpecId" | "GameId" | "PlayerMode" | "SponsorId";
+export interface SupportSettingsAutoTagViewModel {
+  id: string;
+  conditionType: SupportSettingsAutoTagConditionType;
+  conditionTypeDescription: string;
+  conditionValue: string;
+  tag: string;
+}
+
+export interface UpsertSupportSettingsAutoTagRequest {
+  id?: string;
+  conditionType: SupportSettingsAutoTagConditionType;
+  conditionValue: string;
+  isEnabled?: boolean;
+  tag: string;
+}
+
+export type SupportSettingsAutoTagConditionType = "challengeSpecId" | "gameId" | "playerMode" | "sponsorId";
 
 export interface Ticket {
   id: string;

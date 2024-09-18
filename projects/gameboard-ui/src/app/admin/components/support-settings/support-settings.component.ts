@@ -1,10 +1,9 @@
-import { SimpleEntity } from '@/api/models';
-import { SupportSettings, SupportSettingsAutoTag, SupportSettingsAutoTagConditionType } from '@/api/support-models';
+import { Component, OnInit } from '@angular/core';
+import { Subject, debounceTime, firstValueFrom } from 'rxjs';
+import { SupportSettings } from '@/api/support-models';
 import { SupportService } from '@/api/support.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ConfigService } from '@/utility/config.service';
-import { Component, OnInit } from '@angular/core';
-import { Subject, debounceTime, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-support-settings',
@@ -14,20 +13,6 @@ import { Subject, debounceTime, firstValueFrom } from 'rxjs';
 })
 export class SupportSettingsComponent implements OnInit {
   protected appName: string;
-  protected conditionTypes: SimpleEntity[] = [
-    { id: "ChallengeSpecId", name: "Challenge Spec" },
-    { id: "GameId", name: "Game" },
-    { id: "PlayerMode", name: "Mode" },
-    { id: "SponsorId", name: "Sponsor" }
-  ];
-  protected newAutoTag: SupportSettingsAutoTag = {
-    conditionType: "ChallengeSpecId",
-    conditionValue: "",
-    isEnabled: true,
-    tag: ""
-  };
-  protected isSaving = false;
-
   protected settings?: SupportSettings;
   private update$ = new Subject<SupportSettings>();
 
@@ -50,13 +35,6 @@ export class SupportSettingsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.load();
-  }
-
-  protected async handleAddAutoTag() {
-    this.isSaving = true;
-    await this.supportService.upsertAutoTag(this.newAutoTag);
-    this.newAutoTag = { conditionType: "ChallengeSpecId", isEnabled: true, tag: "", conditionValue: "" };
-    this.isSaving = false;
   }
 
   protected async handleSettingsChanged() {

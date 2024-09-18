@@ -59,12 +59,9 @@ export class UserService implements OnDestroy {
     });
 
     // log the login event for the current user (we track date of last login and total login count)
-    this._userSub = this.user$.pipe(
-      // when the user's id changes
-      distinctUntilChanged((prev, current) => (prev?.id || null) === (current?.id || null)),
-      // and when the user is truthy
-      filter(u => !!u),
-      // record a login event
+    this._userSub = this.auth.tokenState$.pipe(
+      distinctUntilChanged(),
+      filter(t => t === AuthTokenState.valid && !!auth.oidcUser?.profile)
     ).subscribe(async u => await firstValueFrom(api.updateLoginEvents()));
   }
 

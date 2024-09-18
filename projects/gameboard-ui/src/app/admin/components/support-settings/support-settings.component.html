@@ -12,44 +12,9 @@
         class="form-control" name="supportPageGreeting" [(ngModel)]="settings.supportPageGreeting"
         (input)="handleSettingsChanged()"></textarea>
 
-    <h2 class="mt-4">Auto-Tagging</h2>
+    <h2 class="mt-4">Ticket Auto-Labeling</h2>
 
-    <label for="autoTagPracticeChallengesWith">
-        Automatically tag tickets generated from the Practice Area with this tag
-    </label>
-    <input type="text" id="autoTagPracticeChallengesWith" name="autoTagPracticeChallengesWith" class="form-control"
-        [(ngModel)]="settings.autoTagPracticeTicketsWith" (input)="handleSettingsChanged()"
-        placeholder="(e.g. &quot;practice-challenge&quot;)">
-
-    <hr class="light my-2" />
-
-    <ng-container *ngIf="!isSaving; else loading">
-        <div class="d-flex">
-            <div class="flex-grow-1">
-                <input type="text" class="form-control" name="newTagName" [(ngModel)]="newAutoTag.tag"
-                    placeholder="Enter a tag (like &quot;priority&quot; or &quot;nonurgent&quot;)">
-            </div>
-
-            <div class="width-20 mx-2">
-                <select class="form-control" id="new-tag-condition-type" name="newTagConditionType"
-                    [(ngModel)]="newAutoTag.conditionType">
-                    <option *ngFor="let conditionType of conditionTypes" [value]="conditionType.id">{{
-                        conditionType.name }}
-                    </option>
-                </select>
-            </div>
-            <div class="width-20">
-                <input required type="text" class="form-control" name="newTagConditionValue"
-                    [(ngModel)]="newAutoTag.conditionValue">
-            </div>
-        </div>
-
-        <div class="new-tag-add-button mt-2">
-            <button type="button" class="btn btn-info width-100"
-                [disabled]="!newAutoTag.conditionValue || !newAutoTag.tag" (click)="handleAddAutoTag()">Add
-                Auto-Tag</button>
-        </div>
-    </ng-container>
+    <app-support-auto-tag-admin></app-support-auto-tag-admin>
 </div>
 
 <ng-template #loading>

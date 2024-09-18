@@ -13,6 +13,7 @@ import { Observable, firstValueFrom } from 'rxjs';
   styleUrls: ['./sponsor-with-children-picker.component.scss']
 })
 export class SponsorWithChildrenPickerComponent implements OnInit {
+  @Input() forceSelection = false;
   @Input() parentSponsor?: Sponsor;
   @Input() childSponsors?: Sponsor[];
   @Input() hideHeader = false;

@@ -8,7 +8,7 @@ import { catchError, first, last, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeOverview } from './board-models';
 import { PlayerService } from './player.service';
-import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSettings, SupportSettingsAutoTag, Ticket, TicketActivity, TicketSummary } from './support-models';
+import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSettings, SupportSettingsAutoTag, SupportSettingsAutoTagViewModel, Ticket, TicketActivity, TicketSummary, UpsertSupportSettingsAutoTagRequest } from './support-models';
 import { UserSummary } from './user-models';
 import { Search } from './models';
 import { ApiUrlService } from '@/services/api-url.service';
@@ -54,6 +54,10 @@ export class SupportService {
     return this.http.post<Ticket>(`${this.url}/ticket`, model);
   }
 
+  public getAutoTags(): Promise<SupportSettingsAutoTagViewModel[]> {
+    return firstValueFrom(this.http.get<SupportSettingsAutoTagViewModel[]>(`${this.url}/support/settings/autotags`));
+  }
+
   public update(model: ChangedTicket): Observable<Ticket> {
     return this.http.put<Ticket>(`${this.url}/ticket`, model);
   }
@@ -73,7 +77,7 @@ export class SupportService {
   }
 
   public upload(model: NewTicket): Observable<Ticket> {
-    const payload: FormData = new FormData();
+    const payload = new FormData();
     Object.keys(model).forEach(key => {
       if (key != "uploads")
         payload.append(key, { ...model as any }[key]);
@@ -86,8 +90,8 @@ export class SupportService {
     return this.http.post<Ticket>(`${this.url}/ticket`, payload);
   }
 
-  public upsertAutoTag(autoTag: SupportSettingsAutoTag) {
-    return firstValueFrom(this.http.post(`${this.url}/support/settings/autotag`, { tag: autoTag }));
+  public upsertAutoTag(autoTag: UpsertSupportSettingsAutoTagRequest) {
+    return firstValueFrom(this.http.post(`${this.url}/support/settings/autotag`, autoTag));
   }
 
   public listAttachments(id: string): Observable<AttachmentFile[]> {
