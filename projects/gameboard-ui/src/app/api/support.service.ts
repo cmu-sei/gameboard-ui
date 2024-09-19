@@ -54,6 +54,10 @@ export class SupportService {
     return this.http.post<Ticket>(`${this.url}/ticket`, model);
   }
 
+  public deleteAutoTag(id: string): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`${this.url}/support/settings/autotag/${id}`));
+  }
+
   public getAutoTags(): Promise<SupportSettingsAutoTagViewModel[]> {
     return firstValueFrom(this.http.get<SupportSettingsAutoTagViewModel[]>(`${this.url}/support/settings/autotags`));
   }

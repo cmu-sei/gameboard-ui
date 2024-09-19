@@ -3,20 +3,27 @@
 </label>
 
 <ng-container *ngIf="!isLoading; else loading">
-    <div class="d-flex my-3" *ngFor="let autoTag of autoTags">
-        <div class="flex-grow-1">
-            <app-colored-text-chip [text]="autoTag.tag"></app-colored-text-chip>
+    <ng-container *ngIf="autoTags.length; else noAutoTags">
+        <div class="d-flex align-items-center my-3" *ngFor="let autoTag of autoTags">
+            <div class="flex-grow-1">
+                <app-colored-text-chip [text]="autoTag.tag"></app-colored-text-chip>
+            </div>
+            <div class="width-40">
+                <span class="text-muted">
+                    {{ autoTag.conditionTypeDescription }}:
+                </span>
+                {{ autoTag.conditionValue }}
+            </div>
+            <div class="flex-grow-1">
+                <app-confirm-button btnClass="btn btn-sm btn-danger"
+                    (confirm)="handleDelete(autoTag)">Delete</app-confirm-button>
+            </div>
         </div>
-        <div class="width-20">{{ autoTag.conditionTypeDescription }}</div>
-        <div class="width-20">{{ autoTag.conditionValue }}</div>
-        <div class="width-10">
-            <button type="button" class="btn btn-sm btn-danger">Delete</button>
-        </div>
-    </div>
+    </ng-container>
 
     <hr class="light my-2" />
 
-    <div class="d-flex">
+    <div class="d-flex align-items-center">
         <div class="flex-grow-1">
             <input type="text" class="form-control" name="newTagName" [(ngModel)]="newAutoTag.tag"
                 placeholder="Enter a tag (like &quot;priority&quot; or &quot;non-urgent&quot;)">
@@ -46,8 +53,10 @@
                 <option value="0" selected>Competition</option>
                 <option value="1">Practice</option>
             </select>
-            <input *ngIf="newAutoTag.conditionType == 'gameId'" required type="text" class="form-control"
-                name="newTagConditionValue" [(ngModel)]="newAutoTag.conditionValue">
+            <select *ngIf="newAutoTag.conditionType == 'gameId'" [(ngModel)]="newAutoTag.conditionValue"
+                class="form-control">
+                <option *ngFor="let game of games" [value]="game.id">{{ game.name }}</option>
+            </select>
         </div>
         <div class="width-10">
             <!--spacer to match the (Delete) column above-->
@@ -64,4 +73,10 @@
 
 <ng-template #loading>
     <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #noAutoTags>
+    <div class="text-muted text-center my-4">
+        <em>No autotags configured.</em>
+    </div>
 </ng-template>

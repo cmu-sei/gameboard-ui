@@ -67,6 +67,7 @@ import { ExternalSpecIdToChallengePipe } from './pipes/external-specid-to-challe
 import { ExternalTeamChallengesToIsPredeployablePipe } from './pipes/external-team-challenges-to-is-predeployable.pipe';
 import { ExternalTeamToChallengeCreatedPipe } from './pipes/external-team-to-challenge-created.pipe';
 import { GameClassificationToStringPipe } from './pipes/game-classification-to-string.pipe';
+import { SupportAutoTagAdminComponent } from './components/support-auto-tag-admin/support-auto-tag-admin.component';
 import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state-description.pipe';
 import { SyncStartTeamPlayerReadyCountPipe } from './pipes/sync-start-team-player-ready-count.pipe';
 import { PlayerNamesComponent } from './player-names/player-names.component';
@@ -82,7 +83,6 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { GameInfoBubblesComponent } from "../standalone/components/game-info-bubbles/game-info-bubbles.component";
-import { SupportAutoTagAdminComponent } from './components/support-auto-tag-admin/support-auto-tag-admin.component';
 
 @NgModule({
   declarations: [
@@ -128,6 +128,7 @@ import { SupportAutoTagAdminComponent } from './components/support-auto-tag-admi
     PrereqsComponent,
     SpecBrowserComponent,
     SponsorBrowserComponent,
+    SupportAutoTagAdminComponent,
     SupportReportLegacyComponent,
     TeamAdminContextMenuComponent,
     TeamObserverComponent,
@@ -151,7 +152,6 @@ import { SupportAutoTagAdminComponent } from './components/support-auto-tag-admi
     GameCenterTeamDetailComponent,
     TeamCenterComponent,
     GameMapEditorComponent,
-    SupportAutoTagAdminComponent,
   ],
   imports: [
     CommonModule,
