@@ -1,7 +1,7 @@
-<h1>Support Settings</h1>
+<h2>Support Settings</h2>
 
 <div class="settings-section mt-4 mb-4" *ngIf="settings; else loading">
-    <h2>Greeting</h2>
+    <h3>Greeting</h3>
     <p>
         This text appears as a banner on the Support page to welcome players. Edit it below
         to customize it to your needs.
@@ -12,7 +12,7 @@
         class="form-control" name="supportPageGreeting" [(ngModel)]="settings.supportPageGreeting"
         (input)="handleSettingsChanged()"></textarea>
 
-    <h2 class="mt-4">Ticket Auto-Labeling</h2>
+    <h3 class="mt-5">Ticket Auto-Labeling</h3>
 
     <app-support-auto-tag-admin></app-support-auto-tag-admin>
 </div>

@@ -12,7 +12,7 @@ import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSett
 import { UserSummary } from './user-models';
 import { Search } from './models';
 import { ApiUrlService } from '@/services/api-url.service';
-import { cloneNonNullAndDefinedProperties } from '@/tools/object-tools.lib';
+import { cloneNonNullAndDefinedProperties } from '@/../tools/object-tools.lib';
 
 @Injectable({ providedIn: 'root' })
 export class SupportService {

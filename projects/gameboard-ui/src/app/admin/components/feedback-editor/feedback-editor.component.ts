@@ -3,7 +3,7 @@ import { BehaviorSubject, debounceTime, tap } from 'rxjs';
 import { FeedbackTemplate } from '@/api/feedback-models';
 import { YamlService } from '@/services/yaml.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { isObject } from '@/tools/functions';
+import { isObject } from '@/../tools/functions';
 import { YAMLParseError } from 'yaml';
 import { FeedbackService } from '@/api/feedback.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';

@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { RouterService } from "@/services/router.service";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
-import { cloneNonNullAndDefinedProperties } from "@/tools/object-tools.lib";
+import { cloneNonNullAndDefinedProperties } from "@/../tools/object-tools.lib";
 
 interface GameChallengeSpec {
     gameId: string | null;
@@ -10,8 +10,8 @@ interface GameChallengeSpec {
 }
 
 export class GameChallengeSpecQueryModel {
-    private challengeSpecIdParamName;
-    private gameIdParamName;
+    private challengeSpecIdParamName: string;
+    private gameIdParamName: string;
 
     private route: ActivatedRoute = inject(ActivatedRoute);
     private routerService: RouterService = inject(RouterService);

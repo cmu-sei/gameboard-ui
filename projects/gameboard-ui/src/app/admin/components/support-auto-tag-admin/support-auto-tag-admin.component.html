@@ -5,17 +5,17 @@
 <ng-container *ngIf="!isLoading; else loading">
     <ng-container *ngIf="autoTags.length; else noAutoTags">
         <div class="d-flex align-items-center my-3" *ngFor="let autoTag of autoTags">
-            <div class="flex-grow-1">
+            <div class="width-50">
                 <app-colored-text-chip [text]="autoTag.tag"></app-colored-text-chip>
             </div>
-            <div class="width-40">
+            <div class="width-40 mx-3">
                 <span class="text-muted">
                     {{ autoTag.conditionTypeDescription }}:
                 </span>
                 {{ autoTag.conditionValue }}
             </div>
             <div class="flex-grow-1">
-                <app-confirm-button btnClass="btn btn-sm btn-danger"
+                <app-confirm-button btnClass="btn btn-sm btn-danger width-100"
                     (confirm)="handleDelete(autoTag)">Delete</app-confirm-button>
             </div>
         </div>
@@ -24,52 +24,44 @@
     <hr class="light my-2" />
 
     <div class="d-flex align-items-center">
-        <div class="flex-grow-1">
+        <div class="width-50">
             <input type="text" class="form-control" name="newTagName" [(ngModel)]="newAutoTag.tag"
                 placeholder="Enter a tag (like &quot;priority&quot; or &quot;non-urgent&quot;)">
         </div>
 
         <div class="width-20 mx-2">
             <select class="form-control" id="new-tag-condition-type" name="newTagConditionType"
-                [(ngModel)]="newAutoTag.conditionType">
+                [(ngModel)]="newAutoTag.conditionType" (change)="handleConditionTypeChange(newAutoTag.conditionType)">
                 <option *ngFor="let conditionType of conditionTypes" [value]="conditionType.id">
                     {{ conditionType.name }}
                 </option>
             </select>
         </div>
-        <div class="width-20">
-            <select *ngIf="newAutoTag.conditionType == 'sponsorId'" class="form-control" name="new-auto-tag-sponsorId"
-                [(ngModel)]="newAutoTag.conditionValue">
-                <ng-container *ngFor="let parent of sponsors">
-                    <option [value]="parent.id" class="group-parent">{{ parent.name }}</option>
-                    <option *ngFor="let child of parent.childSponsors" class="group-child" [value]="child.id">
-                        &nbsp;&nbsp; &nbsp; -
-                        {{ child.name }}
-                    </option>
+        <div class="width-20 mr-2">
+            <select [(ngModel)]="newAutoTag.conditionValue" class="form-control">
+                <ng-container *ngFor="let value of conditionValues">
+                    <ng-container
+                        *ngTemplateOutlet="value.isGroup ? optGroup : option; context: value | toTemplateContext"></ng-container>
                 </ng-container>
             </select>
-            <select *ngIf="newAutoTag.conditionType == 'playerMode'" [(ngModel)]="newAutoTag.conditionValue"
-                class="form-control">
-                <option value="0" selected>Competition</option>
-                <option value="1">Practice</option>
-            </select>
-            <select *ngIf="newAutoTag.conditionType == 'gameId'" [(ngModel)]="newAutoTag.conditionValue"
-                class="form-control">
-                <option *ngFor="let game of games" [value]="game.id">{{ game.name }}</option>
-            </select>
         </div>
-        <div class="width-10">
-            <!--spacer to match the (Delete) column above-->
+        <div class="flex-grow-1">
+            <button type="button" class="btn btn-info width-100"
+                [disabled]="!newAutoTag.conditionValue || !newAutoTag.tag" (click)="handleAddAutoTag()">
+                Add
+            </button>
         </div>
     </div>
 
-    <div class="new-tag-add-button mt-2">
-        <button type="button" class="btn btn-info width-100" [disabled]="!newAutoTag.conditionValue || !newAutoTag.tag"
-            (click)="handleAddAutoTag()">
-            Add Auto-Tag
-        </button>
-    </div>
 </ng-container>
+
+<ng-template #option let-value>
+    <option [value]="value.id">{{ value.name }}</option>
+</ng-template>
+
+<ng-template #optGroup let-value>
+    <optgroup [label]="value.name"></optgroup>
+</ng-template>
 
 <ng-template #loading>
     <app-spinner></app-spinner>

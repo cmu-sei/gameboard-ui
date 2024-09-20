@@ -1,4 +1,4 @@
-import { hasProperty } from '@/tools/functions';
+import { hasProperty } from '@/../tools/functions';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'arrayProperty' })

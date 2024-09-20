@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { SupportSettingsAutoTag, SupportSettingsAutoTagViewModel } from '@/api/support-models';
+import { SupportSettingsAutoTag, SupportSettingsAutoTagConditionType, SupportSettingsAutoTagViewModel } from '@/api/support-models';
 import { SimpleEntity } from '@/api/models';
-import { slug } from "@/tools/functions";
+import { slug } from "@/../tools/functions";
 import { SupportService } from '@/api/support.service';
 import { SponsorService } from '@/api/sponsor.service';
-import { SponsorWithChildSponsors } from '@/api/sponsor-models';
 import { GameService } from '@/api/game.service';
+import { SpecService } from '@/api/spec.service';
 
 @Component({
   selector: 'app-support-auto-tag-admin',
@@ -21,7 +21,7 @@ export class SupportAutoTagAdminComponent implements OnInit {
     { id: "playerMode", name: "Mode" },
     { id: "sponsorId", name: "Sponsor" }
   ];
-  protected games: SimpleEntity[] = [];
+  protected conditionValues: { id: string, name: string, isGroup?: boolean }[] = [];
   protected isLoading = false;
   protected newAutoTag: SupportSettingsAutoTag = {
     conditionType: "challengeSpecId",
@@ -29,17 +29,16 @@ export class SupportAutoTagAdminComponent implements OnInit {
     isEnabled: true,
     tag: ""
   };
-  protected sponsors: SponsorWithChildSponsors[] = [];
 
   constructor(
     private gameService: GameService,
+    private specService: SpecService,
     private sponsorsService: SponsorService,
     private supportService: SupportService) { }
 
   async ngOnInit(): Promise<void> {
-    this.autoTags = await this.supportService.getAutoTags();
-    this.games = await firstValueFrom(this.gameService.list());
-    this.sponsors = await firstValueFrom(this.sponsorsService.listWithChildren());
+    await this.load();
+    await this.handleConditionTypeChange(this.newAutoTag.conditionType);
   }
 
   protected async handleAddAutoTag() {
@@ -47,6 +46,50 @@ export class SupportAutoTagAdminComponent implements OnInit {
     await this.supportService.upsertAutoTag(this.newAutoTag);
     this.newAutoTag = { conditionType: "challengeSpecId", isEnabled: true, tag: "", conditionValue: "" };
     await this.load();
+  }
+
+  protected async handleConditionTypeChange(conditionType: SupportSettingsAutoTagConditionType) {
+    this.conditionValues = [];
+
+    switch (conditionType) {
+      case "challengeSpecId": {
+        const games = await this.specService.listByGame();
+
+        for (const game of games) {
+          this.conditionValues.push({ id: game.game.id, name: game.game.name, isGroup: true });
+
+          for (const spec of game.challengeSpecs) {
+            this.conditionValues.push({ isGroup: false, ...spec });
+          }
+        }
+
+        break;
+      }
+      case "gameId": {
+        this.conditionValues = await firstValueFrom(this.gameService.list());
+        break;
+      }
+      case "playerMode": {
+        this.conditionValues = [
+          { id: "0", name: "Competition" },
+          { id: "1", name: "Practice" },
+        ];
+        break;
+      }
+      case "sponsorId": {
+        const sponsors = await firstValueFrom(this.sponsorsService.listWithChildren());
+
+        for (const sponsor of sponsors) {
+          this.conditionValues.push(sponsor);
+
+          if (sponsor.childSponsors?.length) {
+            for (const childSponsor of sponsor.childSponsors) {
+              this.conditionValues.push({ id: childSponsor.id, name: ` - ${childSponsor.name}` });
+            }
+          }
+        }
+      }
+    }
   }
 
   protected async handleDelete(tag: SupportSettingsAutoTagViewModel) {

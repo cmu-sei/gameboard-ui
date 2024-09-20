@@ -1,7 +1,7 @@
-import { MonoTypeOperatorFunction, Observable, Subscriber } from "rxjs";
+import { inject } from "@angular/core";
+import { MonoTypeOperatorFunction } from "rxjs";
 import { TapObserver, tap } from "rxjs/internal/operators/tap";
 import { LogService } from "@/services/log.service";
-import { inject } from "@angular/core";
 
 export function logTap<T>(
     observerOrNext?: Partial<TapObserver<T>> | ((value: T) => void) | null,

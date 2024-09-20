@@ -7,7 +7,7 @@ import { ActivatedRoute } from "@angular/router";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { ObjectService } from "@/services/object.service";
 import { RouterService } from "@/services/router.service";
-import { deepEquals } from "@/tools/object-tools.lib";
+import { deepEquals } from "@/../tools/object-tools.lib";
 
 @Component({ template: '', providers: [UnsubscriberService] })
 export abstract class ReportComponentBase<TFlatParameters extends {}> {

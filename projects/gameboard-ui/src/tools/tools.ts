@@ -1,5 +1,5 @@
 import { Subject, tap } from "rxjs";
-import { environment } from "./environments/environment";
+import { environment } from "../environments/environment";
 
 // thank you, SO: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
 /**
@@ -29,14 +29,6 @@ export function groupBy<K, V>(list: V[], keyGetter: (item: V) => K) {
     });
 
     return map;
-}
-
-/* eslint-disable no-console */
-export function pipeTapLog<T extends Subject<any>>(obs: T, message?: string): T {
-    if (!environment.production)
-        obs.pipe(tap(obsOut => console.debug(`[PipeTapLog]:${message ? ` ${message}` : ""}`, obsOut)));
-
-    return obs;
 }
 
 export function unique<T>(array: T[]): T[] {

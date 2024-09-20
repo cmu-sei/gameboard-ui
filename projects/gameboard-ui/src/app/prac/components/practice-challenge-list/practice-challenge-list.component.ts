@@ -7,7 +7,7 @@ import { SpecSummary } from '@/api/spec-models';
 import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
-import { slug } from '@/tools/functions';
+import { slug } from '@/../tools/functions';
 import { ApiUser } from '@/api/user-models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 

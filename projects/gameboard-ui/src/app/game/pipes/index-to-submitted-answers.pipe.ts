@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ChallengeSubmissionViewModel } from '@/api/challenges.models';
-import { unique } from 'projects/gameboard-ui/src/tools';
+import { unique } from '@/../tools/tools';
 
 // takes the index of a challenge question (e.g. 1 = the second question of the challenge), returns a string which concatenates
 // all unique answers submitted for the question

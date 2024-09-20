@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { slug } from '@/tools/functions';
+import { slug } from '@/../tools/functions';
 import { CertificatesService } from '@/api/certificates.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { ConfigService } from '@/utility/config.service';

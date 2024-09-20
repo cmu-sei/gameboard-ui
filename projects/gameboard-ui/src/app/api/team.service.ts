@@ -4,7 +4,7 @@ import { Observable, Subject, firstValueFrom, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
 import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
-import { unique } from "../../tools";
+import { unique } from "../../tools/tools";
 import { GamePlayState } from "./game-models";
 
 @Injectable({ providedIn: 'root' })

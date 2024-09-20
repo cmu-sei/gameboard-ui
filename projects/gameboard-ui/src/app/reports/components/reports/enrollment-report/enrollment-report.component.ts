@@ -8,7 +8,7 @@ import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
-import { deepEquals } from '@/tools/object-tools.lib';
+import { deepEquals } from '@/../tools/object-tools.lib';
 
 interface EnrollmentReportContext {
   stats$: Observable<EnrollmentReportSummaryStats>

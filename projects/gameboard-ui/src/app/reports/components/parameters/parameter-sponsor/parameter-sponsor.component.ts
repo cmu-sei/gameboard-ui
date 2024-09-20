@@ -8,8 +8,8 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { RouterService } from '@/services/router.service';
-import { unique } from 'projects/gameboard-ui/src/tools';
-import { arraysEqual } from '@/tools/object-tools.lib';
+import { unique } from '@/../tools/tools';
+import { arraysEqual } from '@/../tools/object-tools.lib';
 
 @Component({
   selector: 'app-parameter-sponsor',

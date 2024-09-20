@@ -11,7 +11,7 @@ import { ManageManualChallengeBonusesModalComponent } from '../../manage-manual-
 import { SimpleEntity } from '@/api/models';
 import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCenterTeamsResults, GameCenterTeamsSort } from '../game-center.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { unique } from 'projects/gameboard-ui/src/tools';
+import { unique } from '@/../tools/tools';
 import { ScoreboardTeamDetailModalComponent } from '@/scoreboard/components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';

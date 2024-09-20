@@ -10,7 +10,7 @@ import { fa } from '@/services/font-awesome.service';
 import { FeedbackReportService } from './feedback-report.service';
 import { FeedbackService } from '@/api/feedback.service';
 import { ReportService } from '@/api/report.service';
-import { cloneNonNullAndDefinedProperties } from '@/tools/object-tools.lib';
+import { cloneNonNullAndDefinedProperties } from '@/../tools/object-tools.lib';
 
 @Component({
   selector: 'app-feedback-game-report',
