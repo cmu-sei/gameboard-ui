@@ -1,5 +1,5 @@
 <div class="long-content-hider-component">
-    <div #contentContainer class="content-container" [class.fade-out]="!isExpanded"
+    <div #contentContainer class="content-container" [class.fade-out]="isExpandEnabled && !isExpanded"
         (cdkObserveContent)="setIsExpandEnabled()" [style.maxHeight]="isExpanded ? 'none' : maxHeightCollapsed">
         <ng-content></ng-content>
     </div>
