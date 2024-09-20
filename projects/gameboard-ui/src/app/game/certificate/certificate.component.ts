@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, SecurityContext } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { faPrint } from '@fortawesome/free-solid-svg-icons';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { GameContext } from '../../api/game-models';
-import { PlayerService } from '../../api/player.service';
+import { faPrint } from '@fortawesome/free-solid-svg-icons';
+import { GameContext } from '@/api/game-models';
+import { PlayerService } from '@/api/player.service';
 
 @Component({
   selector: 'app-certificate',
