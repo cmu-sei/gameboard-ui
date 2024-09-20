@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { AdminService } from '@/api/admin.service';
 import { fa } from "@/services/font-awesome.service";
 import { TeamListCardContext } from '../../team-list-card/team-list-card.component';
@@ -7,6 +7,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { GameCenterPracticePlayerDetailComponent } from '../game-center-practice-player-detail/game-center-practice-player-detail.component';
 import { debounceTime, Subject } from 'rxjs';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface GameCenterPracticeFilterSettings {
   searchTerm?: string;
@@ -19,9 +20,7 @@ interface GameCenterPracticeFilterSettings {
   templateUrl: './game-center-practice.component.html',
   styleUrls: ['./game-center-practice.component.scss']
 })
-export class GameCenterPracticeComponent implements OnChanges {
-  @Input() gameId?: string;
-
+export class GameCenterPracticeComponent {
   protected ctx?: GameCenterPracticeContext;
   protected fa = fa;
   protected filterSettings: GameCenterPracticeFilterSettings = { sort: "name" };
@@ -31,27 +30,24 @@ export class GameCenterPracticeComponent implements OnChanges {
   protected selectedUserIds: string[] = [];
 
   constructor(
+    route$: ActivatedRoute,
     unsub: UnsubscriberService,
     private adminService: AdminService,
     private modalService: ModalConfirmService) {
+    unsub.add(route$.data.subscribe(async d => await this.load(d.gameId)));
     unsub.add(this.searchInput$.pipe(debounceTime(500)).subscribe(async searchTerm => {
       this.filterSettings.searchTerm = searchTerm;
-      await this.load();
+      await this.load(this.ctx?.game?.id);
     }));
-  }
-
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    await this.load();
   }
 
   protected async handleClearAllFilters() {
     this.filterSettings = { sort: "name" };
-    await this.load();
+    await this.load(this.ctx?.game?.id);
   }
 
   protected async handleSearch(value: string) {
     this.filterSettings.searchTerm = value;
-
   }
 
   protected handleUserDetailClick(user: GameCenterPracticeContextUser) {
@@ -70,11 +66,11 @@ export class GameCenterPracticeComponent implements OnChanges {
     });
   }
 
-  protected async load(): Promise<void> {
-    if (!this.gameId)
-      throw new Error("GameId is required.");
+  protected async load(gameId?: string): Promise<void> {
+    if (!gameId)
+      return;
 
-    this.ctx = await this.adminService.getGameCenterPracticeContext(this.gameId, this.filterSettings);
+    this.ctx = await this.adminService.getGameCenterPracticeContext(gameId, this.filterSettings);
     this.teamCardContexts = {};
     for (let user of this.ctx.users) {
       this.teamCardContexts[user.id] = {

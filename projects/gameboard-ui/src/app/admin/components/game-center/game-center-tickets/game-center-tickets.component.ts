@@ -1,6 +1,8 @@
 import { TicketSummary } from '@/api/support-models';
 import { SupportService } from '@/api/support.service';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -8,16 +10,21 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './game-center-tickets.component.html',
   styleUrls: ['./game-center-tickets.component.scss']
 })
-export class GameCenterTicketsComponent implements OnChanges {
-  @Input() gameId!: string;
-
+export class GameCenterTicketsComponent {
+  protected gameId?: string;
   protected isLoading = false;
   protected tickets: TicketSummary[] = [];
 
-  constructor(private supportService: SupportService) { }
+  constructor(
+    route$: ActivatedRoute,
+    private supportService: SupportService,
+    private unsub: UnsubscriberService) {
+    this.unsub.add(route$.data.subscribe(async d => await this.load(d.gameId)));
+  }
 
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+  private async load(gameId?: string) {
     this.isLoading = true;
+    this.gameId = gameId;
     this.tickets = await firstValueFrom(this.supportService.list({ orderItem: 'key', gameId: this.gameId }));
     this.isLoading = false;
   }

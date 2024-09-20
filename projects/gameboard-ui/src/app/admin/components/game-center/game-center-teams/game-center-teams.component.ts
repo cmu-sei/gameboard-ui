@@ -19,6 +19,7 @@ import { LocalStorageService, StorageKey } from '@/services/local-storage.servic
 import { NowService } from '@/services/now.service';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { TeamService } from '@/api/team.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
@@ -53,21 +54,23 @@ export class GameCenterTeamsComponent implements OnInit {
     private localStorageClient: LocalStorageService,
     private modalService: ModalConfirmService,
     private nowService: NowService,
+    private route: ActivatedRoute,
     private teamService: TeamService,
     private toastService: ToastService,
     private unsub: UnsubscriberService) {
 
     this.unsub.add(
+      this.route.data.subscribe(async d => await this.load(d.gameId)),
       this.searchInput$.pipe(
         debounceTime(300)
       ).subscribe(async event => {
         this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
-        this.load();
+        await this.load(this.game?.id);
       }),
       this.teamService.teamSessionExtended$.subscribe(async teamIds => {
         for (const teamId of teamIds) {
           if (this.results?.teams?.items?.find(t => t.id === teamId)) {
-            await this.load();
+            await this.load(this.game?.id);
             return;
           }
         }
@@ -76,12 +79,7 @@ export class GameCenterTeamsComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    if (!this.gameId)
-      throw new Error("Component requires a gameId");
-
-    this.game = await firstValueFrom(this.gameService.retrieve(this.gameId));
     this.filterSettings = this.localStorageClient.getAs<GameCenterTeamsFilterSettings>(StorageKey.GameCenterTeamsFilterSettings, this.filterSettings);
-    await this.load();
   }
 
   protected async handleClearAllFilters() {
@@ -89,7 +87,7 @@ export class GameCenterTeamsComponent implements OnInit {
     this.filterSettings.searchTerm = "";
     this.filterSettings.sort = "rank";
     this.filterSettings.sessionStatus = undefined;
-    await this.load();
+    await this.load(this.game?.id);
   }
 
   protected async handleDeployGameResources() {
@@ -188,12 +186,12 @@ export class GameCenterTeamsComponent implements OnInit {
 
   protected async handlePendingNamesClick(gameId: string) {
     this.filterSettings.hasPendingNames = true;
-    await this.load();
+    await this.load(this.game?.id);
   }
 
   protected async handleRerankClick(gameId: string) {
     await firstValueFrom(this.gameService.rerank(gameId));
-    await this.load();
+    await this.load(this.game?.id);
     this.toastService.showMessage(`${this.game?.name} has been **reranked**!`);
   }
 
@@ -254,19 +252,24 @@ export class GameCenterTeamsComponent implements OnInit {
         game: game,
         onConfirm: async result => {
           this.toastService.showMessage(`Enrolled **${result.name}** in the game.`);
-          await this.load();
+          await this.load(this.game?.id);
         }
       },
       modalClasses: ["modal-xl"]
     });
   }
 
-  protected async load() {
-    if (!this.gameId)
-      throw new Error("gameId is required.");
+  protected async load(gameId?: string) {
+    if (!gameId) {
+      return;
+    }
+
+    if (!this.game || this.game.id != gameId) {
+      this.game = await firstValueFrom(this.gameService.retrieve(gameId));
+    }
 
     this.isLoading = true;
-    this.results = await this.adminService.getGameCenterTeams(this.gameId, this.filterSettings);
+    this.results = await this.adminService.getGameCenterTeams(gameId, this.filterSettings);
     this.isLoading = false;
     this.updateFilterConfig();
   }

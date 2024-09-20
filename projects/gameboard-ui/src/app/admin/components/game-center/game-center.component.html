@@ -49,46 +49,64 @@
 
     <div class="tabs-container d-block mt-4">
         <tabset>
-            <tab *appIfHasPermission="'Games_CreateEditDelete'" [active]="selectedTab === 'settings'"
+            <tab [active]="selectedTab === 'settings'"
+                [class]="(localUser$ | async | can:'Games_CreateEditDelete') ? '' : 'd-none'"
                 (selectTab)="handleSelect('settings')">
                 <ng-template tabHeading>
-                    <fa-icon [icon]="fa.gear"></fa-icon>
+                    <a routerLink="settings">
+                        <fa-icon [icon]="fa.gear"></fa-icon>
+                    </a>
                 </ng-template>
-                <app-game-center-settings *ngIf="selectedTab === 'settings'"
-                    [gameId]="ctx.id"></app-game-center-settings>
             </tab>
-            <tab *appIfHasPermission="'Games_CreateEditDelete'" [active]="selectedTab === 'challenges'"
-                (selectTab)="handleSelect('challenges')"
-                [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
-                <app-game-mapper *ngIf="selectedTab === 'challenges' && game" class="d-block mt-3"
-                    [game]="game"></app-game-mapper>
+            <tab [active]="selectedTab === 'challenges'"
+                [class]="(localUser$ | async | can:'Games_CreateEditDelete') ? '' : 'd-none'"
+                (selectTab)="handleSelect('challenges')">
+                <ng-template tabHeading>
+                    <a routerLink="challenges">
+                        Challenges {{(ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '') }}
+                    </a>
+                </ng-template>
             </tab>
-            <tab [active]="selectedTab === 'teams'" (selectTab)="handleSelect('teams')"
-                heading="{{ ctx.isTeamGame ? 'Teams' : 'Players' }} ({{ ctx.stats.teamCountCompetitive }})">
-                <app-game-center-teams *ngIf="selectedTab === 'teams'" [gameId]="ctx.id"></app-game-center-teams>
+            <tab [active]="selectedTab === 'teams'" (selectTab)="handleSelect('teams')">
+                <ng-template tabHeading>
+                    <a routerLink="teams">
+                        {{ ctx.isTeamGame ? 'Teams' : 'Players' }} ({{ ctx.stats.teamCountCompetitive }})
+                    </a>
+                </ng-template>
             </tab>
-            <tab [active]="selectedTab === 'practice'" (selectTab)="handleSelect('practice')" *ngIf="ctx.isPractice"
-                heading="Practice ({{ ctx.stats.playerCountPractice }})">
-                <app-game-center-practice *ngIf="selectedTab === 'practice'"
-                    [gameId]="ctx.id"></app-game-center-practice>
+            <tab [active]="selectedTab === 'practice'" (selectTab)="handleSelect('practice')"
+                [class]="ctx.isPractice ? '' : 'd-none'">
+                <ng-template tabHeading>
+                    <a routerLink="practice">Practice ({{ ctx.stats.playerCountPractice }})</a>
+                </ng-template>
             </tab>
-            <tab [active]="selectedTab === 'deployment'" *ngIf="ctx.isExternal" (selectTab)="handleSelect('deployment')"
-                heading="Deployment">
-                <app-external-game-admin *ngIf="selectedTab === 'deployment' && ctx.isExternal"
-                    [gameId]="ctx.id"></app-external-game-admin>
+            <tab [active]="selectedTab === 'deployment'" (selectTab)="handleSelect('deployment')"
+                [class]="ctx.isExternal ? '' : 'd-none'">
+                <ng-template tabHeading>
+                    <a routerLink="deployment">Deployment</a>
+                </ng-template>
             </tab>
             <tab [active]="selectedTab === 'scoreboard'" (selectTab)="handleSelect('scoreboard')"
-                *ngIf="ctx.hasScoreboard" heading="Scoreboard">
-                <app-scoreboard *ngIf="selectedTab === 'scoreboard'" [gameId]="ctx.id"
-                    [suppressLiveGameBanner]="true"></app-scoreboard>
+                [class]="ctx.hasScoreboard ? '' : 'd-none'">
+                <ng-template tabHeading>
+                    <a routerLink="scoreboard">Scoreboard</a>
+                </ng-template>
             </tab>
-            <tab *appIfHasPermission="'Teams_Observe'" [active]="selectedTab === 'observe'"
-                (selectTab)="handleSelect('observe')" heading="Observe">
-                <app-game-center-observe *ngIf="selectedTab === 'observe'" [gameId]="ctx.id"></app-game-center-observe>
+            <tab [active]="selectedTab === 'observe'"
+                [class]="(localUser$ | async | can:'Teams_Observe') ? '' : 'd-none'"
+                (selectTab)="handleSelect('observe')">
+                <ng-template tabHeading>
+                    <a routerLink="observe">
+                        Observe
+                    </a>
+                </ng-template>
             </tab>
-            <tab [active]="selectedTab === 'tickets'" (selectTab)="handleSelect('tickets')"
-                [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')">
-                <app-game-center-tickets *ngIf="selectedTab === 'tickets'" [gameId]="ctx.id"></app-game-center-tickets>
+            <tab [active]="selectedTab === 'tickets'" (selectTab)="handleSelect('tickets')" routerLink="tickets">
+                <ng-template tabHeading>
+                    <a routerLink="tickets">
+                        Tickets {{ (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '') }}
+                    </a>
+                </ng-template>
             </tab>
         </tabset>
 

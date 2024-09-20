@@ -2,9 +2,9 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
@@ -37,7 +37,6 @@ import { ExternalGameHostPickerComponent } from './components/external-game-host
 import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
 import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
-import { GameCenterDeployComponent } from './components/game-center/game-center-deploy/game-center-deploy.component';
 import { GameCenterObserveComponent } from './components/game-center/game-center-observe/game-center-observe.component';
 import { GameCenterPracticePlayerDetailComponent } from './components/game-center/game-center-practice-player-detail/game-center-practice-player-detail.component';
 import { GameCenterPracticeComponent } from './components/game-center/game-center-practice/game-center-practice.component';
@@ -83,6 +82,8 @@ import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
 import { GameInfoBubblesComponent } from "../standalone/components/game-info-bubbles/game-info-bubbles.component";
+import { ScoreboardComponent } from '@/scoreboard/components/scoreboard/scoreboard.component';
+import { GameIdResolver } from './resolvers/game-id.resolver';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,6 @@ import { GameInfoBubblesComponent } from "../standalone/components/game-info-bub
     ExternalTeamChallengesToIsPredeployablePipe,
     FeedbackReportComponent,
     GameCenterComponent,
-    GameCenterDeployComponent,
     GameCenterPracticeComponent,
     GameCenterPracticePlayerDetailComponent,
     GameCenterSettingsComponent,
@@ -163,8 +163,20 @@ import { GameInfoBubblesComponent } from "../standalone/components/game-info-bub
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           {
-            path: "game/:gameId/:selectedTab",
-            component: GameCenterComponent
+            path: "game/:gameId",
+            component: GameCenterComponent,
+            title: "Game Center",
+            children: [
+              { path: "settings", component: GameCenterSettingsComponent, resolve: { gameId: GameIdResolver } },
+              { path: "challenges", component: GameMapperComponent, resolve: { gameId: GameIdResolver } },
+              { path: "teams", component: GameCenterTeamsComponent, resolve: { gameId: GameIdResolver } },
+              { path: "observe", component: GameCenterObserveComponent, resolve: { gameId: GameIdResolver } },
+              { path: "practice", component: GameCenterPracticeComponent, resolve: { gameId: GameIdResolver } },
+              { path: "deployment", component: ExternalGameAdminComponent, resolve: { gameId: GameIdResolver } },
+              { path: "tickets", component: GameCenterTicketsComponent, resolve: { gameId: GameIdResolver } },
+              { path: "scoreboard", component: ScoreboardComponent, resolve: { gameId: GameIdResolver } },
+              { path: '', pathMatch: 'full', redirectTo: "teams" }
+            ]
           },
           {
             path: 'game/:gameId',

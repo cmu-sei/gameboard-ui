@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
@@ -13,6 +13,7 @@ import { fa } from '@/services/font-awesome.service';
 import { ChallengeSpecScoringConfig, GameScoringConfig } from '@/services/scoring/scoring.models';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-game-mapper',
@@ -50,6 +51,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     private api: SpecService,
     private gameSvc: GameService,
     private config: ConfigService,
+    private route: ActivatedRoute,
     private toastService: ToastService,
     scoringService: ScoringService
   ) {
@@ -129,13 +131,14 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
-    if (!this.game?.id)
-      this.game = await firstValueFrom(this.gameSvc.retrieve(this.game.id));
+    if (!this.game?.id) {
+      const gameId = this.route.snapshot.paramMap.get("gameId") || this.route.snapshot.data.gameId;
 
-    this.game.mapUrl = this.game.background
-      ? `${this.config.imagehost}/${this.game.background}`
-      : `${this.config.basehref}assets/map.png`
-      ;
+      if (!gameId)
+        throw new Error("Component requires gameId either as an input or from the route.");
+
+      this.game = await firstValueFrom(this.gameSvc.retrieve(gameId));
+    }
   }
 
   ngAfterViewInit(): void {
