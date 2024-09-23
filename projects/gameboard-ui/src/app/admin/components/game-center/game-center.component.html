@@ -48,67 +48,41 @@
     </div>
 
     <div class="tabs-container d-block mt-4">
-        <tabset>
-            <tab [active]="selectedTab === 'settings'"
-                [class]="(localUser$ | async | can:'Games_CreateEditDelete') ? '' : 'd-none'"
-                (selectTab)="handleSelect('settings')">
-                <ng-template tabHeading>
-                    <a routerLink="settings">
-                        <fa-icon [icon]="fa.gear"></fa-icon>
-                    </a>
-                </ng-template>
-            </tab>
-            <tab [active]="selectedTab === 'challenges'"
-                [class]="(localUser$ | async | can:'Games_CreateEditDelete') ? '' : 'd-none'"
-                (selectTab)="handleSelect('challenges')">
-                <ng-template tabHeading>
-                    <a routerLink="challenges">
-                        Challenges {{(ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '') }}
-                    </a>
-                </ng-template>
-            </tab>
-            <tab [active]="selectedTab === 'teams'" (selectTab)="handleSelect('teams')">
-                <ng-template tabHeading>
-                    <a routerLink="teams">
-                        {{ ctx.isTeamGame ? 'Teams' : 'Players' }} ({{ ctx.stats.teamCountCompetitive }})
-                    </a>
-                </ng-template>
-            </tab>
-            <tab [active]="selectedTab === 'practice'" (selectTab)="handleSelect('practice')"
-                [class]="ctx.isPractice ? '' : 'd-none'">
-                <ng-template tabHeading>
-                    <a routerLink="practice">Practice ({{ ctx.stats.playerCountPractice }})</a>
-                </ng-template>
-            </tab>
-            <tab [active]="selectedTab === 'deployment'" (selectTab)="handleSelect('deployment')"
-                [class]="ctx.isExternal ? '' : 'd-none'">
-                <ng-template tabHeading>
-                    <a routerLink="deployment">Deployment</a>
-                </ng-template>
-            </tab>
-            <tab [active]="selectedTab === 'scoreboard'" (selectTab)="handleSelect('scoreboard')"
-                [class]="ctx.hasScoreboard ? '' : 'd-none'">
-                <ng-template tabHeading>
-                    <a routerLink="scoreboard">Scoreboard</a>
-                </ng-template>
-            </tab>
-            <tab [active]="selectedTab === 'observe'"
-                [class]="(localUser$ | async | can:'Teams_Observe') ? '' : 'd-none'"
-                (selectTab)="handleSelect('observe')">
-                <ng-template tabHeading>
-                    <a routerLink="observe">
-                        Observe
-                    </a>
-                </ng-template>
-            </tab>
-            <tab [active]="selectedTab === 'tickets'" (selectTab)="handleSelect('tickets')" routerLink="tickets">
-                <ng-template tabHeading>
-                    <a routerLink="tickets">
-                        Tickets {{ (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '') }}
-                    </a>
-                </ng-template>
-            </tab>
-        </tabset>
+        <!--have to do a manual bootstrap tabset here because dumb ngx-bootstrap mutilates tab order if you use structurals-->
+        <ul role="tablist" class="nav nav-tabs" aria-label="tabs">
+            <li *appIfHasPermission="'Games_CreateEditDelete'">
+                <ng-container
+                    *ngTemplateOutlet="tabIconItem; context: { $implicit: { tabKey: 'settings', icon: fa.gear, routerLink: 'settings' } }"></ng-container>
+            </li>
+            <li *appIfHasPermission="'Games_CreateEditDelete'">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'challenges', label: 'Challenges (' + ctx.challengeCount + ')', routerLink: 'challenges' } }"></ng-container>
+            </li>
+            <li>
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'teams', routerLink: 'teams', label: (ctx.isTeamGame ? 'Teams' : 'Players') + ' (' + ctx.stats.teamCountCompetitive + ')' } }"></ng-container>
+            </li>
+            <li *ngIf="ctx.isPractice">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'practice', routerLink: 'practice', label: 'Practice' + ' (' + ctx.stats.playerCountPractice + ')' } }"></ng-container>
+            </li>
+            <li>
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'deployment', label: 'Deployment', routerLink: 'deployment' } }"></ng-container>
+            </li>
+            <li *appIfHasPermission="'Teams_Observe'">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'observe', label: 'Observe', routerLink: 'observe' } }"></ng-container>
+            </li>
+            <li *ngIf="ctx.hasScoreboard">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'scoreboard', label: 'Scoreboard', routerLink: 'scoreboard' } }"></ng-container>
+            </li>
+            <li>
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'tickets', routerLink: 'tickets', label: 'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '') } }"></ng-container>
+            </li>
+        </ul>
 
         <div class="router-container">
             <router-outlet></router-outlet>
@@ -118,4 +92,19 @@
 
 <ng-template #loading>
     <app-spinner>Loading the game...</app-spinner>
+</ng-template>
+
+<ng-template #tabItem let-tabCtx>
+    <li class="nav-item" [class.active]="selectedTab === tabCtx.tabKey" (click)="handleSelect(tabCtx.tabKey)">
+        <a class="nav-link" [class.active]="selectedTab === tabCtx.tabKey" [routerLink]="tabCtx.routerLink">{{
+            tabCtx.label }}</a>
+    </li>
+</ng-template>
+
+<ng-template #tabIconItem let-tabCtx>
+    <li class="nav-item" [class.active]="selectedTab === tabCtx.tabKey" (click)="handleSelect(tabCtx.tabKey)">
+        <a class="nav-link" [class.active]="selectedTab === tabCtx.tabKey" [routerLink]="tabCtx.routerLink">
+            <fa-icon [icon]="tabCtx.icon"></fa-icon>
+        </a>
+    </li>
 </ng-template>

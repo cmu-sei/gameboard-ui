@@ -8,16 +8,11 @@ app-big-stat {
   margin-bottom: 1.2rem;
 }
 
-::ng-deep .tab-container {
-  a.nav-link {
-    margin: 0 !important;
-    padding: 0 !important;
-
-    a {
-      color: $foreground !important;
-      display: block;
-      padding: 8px 20px 8px 20px;
-      text-decoration: none;
-    }
+::ng-deep .tabs-container {
+  a {
+    color: $foreground !important;
+    display: block;
+    padding: 8px 20px 8px 20px;
+    text-decoration: none;
   }
 }
