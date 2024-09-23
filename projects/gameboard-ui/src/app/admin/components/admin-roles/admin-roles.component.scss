@@ -1,0 +1,44 @@
+@import "../../../../scss/variables";
+
+.category-header {
+  background-color: $foreground;
+  color: lighten($body-bg, 20%);
+  margin: 0;
+  padding: 0.5rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.has-permission {
+  color: $info;
+}
+
+.no-permission {
+  color: $light;
+}
+
+.your-role {
+  background-color: $info;
+
+  .has-permission {
+    color: $foreground;
+  }
+
+  .no-permission {
+    color: darken($foreground, 20%);
+  }
+}
+
+.sticky-header {
+  top: 0px;
+  left: 0px;
+  position: sticky;
+  z-index: 999;
+}

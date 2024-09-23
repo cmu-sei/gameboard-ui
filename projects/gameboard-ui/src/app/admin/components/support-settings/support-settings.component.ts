@@ -1,9 +1,9 @@
+import { Component, OnInit } from '@angular/core';
+import { Subject, debounceTime, firstValueFrom } from 'rxjs';
 import { SupportSettings } from '@/api/support-models';
 import { SupportService } from '@/api/support.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ConfigService } from '@/utility/config.service';
-import { Component, OnInit } from '@angular/core';
-import { Subject, debounceTime, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-support-settings',
@@ -34,11 +34,15 @@ export class SupportSettingsComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.settings = await firstValueFrom(this.supportService.getSettings());
+    this.load();
   }
 
   protected async handleSettingsChanged() {
     if (this.settings)
       this.update$.next(this.settings);
+  }
+
+  private async load() {
+    this.settings = await firstValueFrom(this.supportService.getSettings());
   }
 }

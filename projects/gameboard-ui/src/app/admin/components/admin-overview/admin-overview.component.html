@@ -2,8 +2,10 @@
     <h4>Live Stats</h4>
     <app-site-overview-stats></app-site-overview-stats>
 
-    <h4>Send Announcement to All Players</h4>
-    <app-announce></app-announce>
+    <ng-container *appIfHasPermission="'SystemNotifications_CreateEdit'">
+        <h4>Send Announcement to All Players</h4>
+        <app-announce></app-announce>
+    </ng-container>
 
     <h4 class="mt-4">Your connections</h4>
     <ul>

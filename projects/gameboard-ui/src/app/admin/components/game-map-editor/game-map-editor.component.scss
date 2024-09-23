@@ -1,0 +1,22 @@
+@import "../../../../scss/variables";
+
+a,
+circle {
+  border: none !important;
+  outline: none !important;
+}
+
+.mapbox-active {
+  cursor: crosshair !important;
+}
+
+.spec-circle {
+  fill: $secondary;
+  fill-opacity: 0.6;
+  stroke: $info;
+  stroke-width: 0.25;
+
+  &.active {
+    fill: $info;
+  }
+}

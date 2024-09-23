@@ -1,3 +1,4 @@
+import { WindowService } from '@/services/window.service';
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 
 @Component({
@@ -13,7 +14,9 @@ export class LongContentHiderComponent implements AfterViewInit {
   private nativeElement!: HTMLDivElement;
 
   protected isExpanded = false;
-  protected isExpandEnabled = true;
+  protected isExpandEnabled?: boolean;
+
+  constructor(private windowService: WindowService) { }
 
   public ngOnInit() {
     if (this.defaultExpanded) {
@@ -27,13 +30,11 @@ export class LongContentHiderComponent implements AfterViewInit {
 
   public ngAfterContentChecked() {
     // determine if we need to show the expand/collapse control at all
-    this.setIsExpandEnabled();
-  }
-
-  protected setIsExpandEnabled() {
     // if the client height (the space the element is actually taking up) is equal to the scroll height (the amount of space
     // the element WANTS to take up), we don't need the expand/collapse controls.
-    this.isExpandEnabled = this.nativeElement && this.nativeElement.clientHeight < this.nativeElement.scrollHeight;
+    if (this.nativeElement?.clientHeight) {
+      this.isExpandEnabled = this.nativeElement && this.nativeElement.clientHeight >= this.windowService.remToPx(this.maxHeightCollapsed);
+    }
   }
 
   protected toggleExpanded() {

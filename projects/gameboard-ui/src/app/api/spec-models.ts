@@ -25,6 +25,11 @@ export interface SpecDetail extends ExternalSpec {
 
 }
 
+export interface GameChallengeSpecs {
+  game: SimpleEntity;
+  challengeSpecs: SimpleEntity[];
+}
+
 export interface Spec extends SpecDetail {
   id: string;
   gameId: string;

@@ -5,10 +5,11 @@ import {
   Component, ViewChild, AfterViewInit,
   ElementRef, Input, Injector, HostListener, OnDestroy, Renderer2
 } from '@angular/core';
-import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
-import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, of, Subject, firstValueFrom } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { throwError as ObservableThrower, fromEvent, Subscription, timer, Observable, Subject, firstValueFrom } from 'rxjs';
+import { catchError, debounceTime, map, distinctUntilChanged, tap, finalize, switchMap, filter } from 'rxjs/operators';
 import { MockConsoleService } from './services/mock-console.service';
+import { NoVNCConsoleService } from './services/novnc-console.service';
 import { WmksConsoleService } from './services/wmks-console.service';
 import { ConsoleService } from './services/console.service';
 import { ConsoleActor, ConsolePresence, ConsoleRequest, ConsoleSummary } from '../../api.models';
@@ -16,6 +17,7 @@ import { ApiService } from '../../api.service';
 import { ClipboardService } from '../../clipboard.service';
 import { HubService } from '../../hub.service';
 import { UserActivityListenerEventType } from '../user-activity-listener/user-activity-listener.component';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-console',
@@ -23,6 +25,7 @@ import { UserActivityListenerEventType } from '../user-activity-listener/user-ac
   styleUrls: ['./console.component.scss'],
   providers: [
     MockConsoleService,
+    NoVNCConsoleService,
     WmksConsoleService
   ]
 })
@@ -54,15 +57,14 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
   subs: Array<Subscription> = [];
   audience: Observable<ConsolePresence[]>;
   private audiencePos!: MouseEvent | null;
-  private audienceEl: any;
-  private hotspot = { x: 0, y: 0, w: 8, h: 8 };
 
   constructor(
+    hubSvc: HubService,
+    private config: ConfigService,
     private injector: Injector,
     private api: ApiService,
     private titleSvc: Title,
     private clipSvc: ClipboardService,
-    private hubSvc: HubService,
     private renderer: Renderer2
   ) {
     this.audience = hubSvc.audience;
@@ -173,14 +175,6 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     this.changeState('loading');
     this.api.action({ ...this.request, action: 'ticket' }).pipe(
       catchError((err: Error) => {
-        // // testing
-        // return of({
-        //   id: '1234',
-        //   name: 'vm',
-        //   isolationId: '5555',
-        //   url: 'ws://local.mock/ticket/1234',
-        //   isRunning: true
-        // });
         return ObservableThrower(err);
       })
     ).subscribe(
@@ -208,19 +202,22 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
 
     this.vmId = info.id;
     this.isMock = !!(info.url.match(/mock/i));
-    this.console = this.isMock
-      ? this.injector.get(MockConsoleService)
-      : this.injector.get(WmksConsoleService);
 
-    this.console.connect(
-      info.url,
-      (state: string) => this.changeState(state),
-      {
-        canvasId: this.canvasId,
-        viewOnly: !!info.isObserver || !!this.request.observer || !!this.viewOnly,
-        changeResolution: !!this.request.fullbleed
-      }
-    );
+    // resolve the appropriate console service for this hypervisor
+    if (this.isMock) {
+      this.console = this.injector.get(MockConsoleService);
+    } else if (info.ticket != null) {
+      this.console = this.injector.get(NoVNCConsoleService);
+    } else {
+      this.console = this.injector.get(WmksConsoleService);
+    }
+
+    this.console.connect(info.url, (state: string) => this.changeState(state), {
+      canvasId: this.canvasId,
+      viewOnly: this.viewOnly,
+      changeResolution: !!this.request.fullbleed,
+      ticket: info.ticket,
+    });
   }
 
   start(): void {

@@ -17,6 +17,7 @@ import {
   faChessBoard,
   faChevronDown,
   faChevronUp,
+  faCircleUser,
   faClipboard,
   faClock,
   faCloudUploadAlt,
@@ -24,6 +25,7 @@ import {
   faComputer,
   faCopy,
   faEdit,
+  faEllipsis,
   faEllipsisVertical,
   faEnvelope,
   faEraser,
@@ -61,6 +63,7 @@ import {
   faTimes,
   faToggleOff,
   faToggleOn,
+  faTowerBroadcast,
   faTrash,
   faTriangleExclamation,
   faTv,
@@ -69,6 +72,7 @@ import {
   faXmark,
   faArrowsSpin
 } from '@fortawesome/free-solid-svg-icons';
+import { faOpenid } from "@fortawesome/free-brands-svg-icons";
 
 export const fa = {
   arrowDown: faLongArrowAltDown,
@@ -88,6 +92,7 @@ export const fa = {
   chessBoard: faChessBoard,
   chevronDown: faChevronDown,
   chevronUp: faChevronUp,
+  circleUser: faCircleUser,
   clipboard: faClipboard,
   clock: faClock,
   cloudUploadAlt: faCloudUploadAlt,
@@ -95,6 +100,7 @@ export const fa = {
   computer: faComputer,
   copy: faCopy,
   edit: faEdit,
+  ellipsis: faEllipsis,
   ellipsisVertical: faEllipsisVertical,
   envelope: faEnvelope,
   eraser: faEraser,
@@ -113,6 +119,7 @@ export const fa = {
   gear: faGear,
   infoCircle: faInfoCircle,
   mapMarker: faMapMarker,
+  openId: faOpenid,
   paperclip: faPaperclip,
   peopleGroup: faPeopleGroup,
   person: faPerson,
@@ -131,6 +138,7 @@ export const fa = {
   table: faTable,
   toggleOff: faToggleOff,
   toggleOn: faToggleOn,
+  towerBroadcast: faTowerBroadcast,
   trash: faTrash,
   triangleExclamation: faTriangleExclamation,
   tv: faTv,

@@ -9,6 +9,7 @@ import { GameCenterContext, GameCenterTab } from './game-center.models';
 import { AppTitleService } from '@/services/app-title.service';
 import { RouterService } from '@/services/router.service';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from '@/utility/user.service';
 
 @Component({
   selector: 'app-game-center',
@@ -20,7 +21,8 @@ export class GameCenterComponent {
   protected fa = fa;
   protected game?: Game;
   protected gameCenterCtx?: GameCenterContext;
-  protected selectedTab: GameCenterTab = "settings";
+  protected selectedTab: GameCenterTab = "teams";
+  protected localUser$ = this.localUserService.user$;
 
   constructor(
     unsub: UnsubscriberService,
@@ -28,6 +30,7 @@ export class GameCenterComponent {
     private adminService: AdminService,
     private appTitle: AppTitleService,
     private gameService: GameService,
+    private localUserService: UserService,
     private routerService: RouterService) {
     unsub.add(this.activatedRoute.paramMap.subscribe(async paramMap => {
       const gameId = paramMap.get("gameId") || this.gameCenterCtx?.id;
@@ -52,18 +55,10 @@ export class GameCenterComponent {
         };
       }
     }));
-
-    // route changes
-    unsub.add(this.activatedRoute.paramMap.subscribe(params => {
-      this.selectedTab = params.get("selectedTab") as GameCenterTab || "settings";
-    }));
   }
 
   protected handleSelect(tab: GameCenterTab) {
-    if (!this.gameCenterCtx)
-      return;
-
-    this.routerService.toGameCenter(this.gameCenterCtx.id, tab);
+    this.selectedTab = tab;
   }
 
   private async load(gameId: string | null) {

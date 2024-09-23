@@ -17,6 +17,11 @@ export class WindowService {
     this.document.defaultView!.print();
   }
 
+  remToPx(rem: string): number {
+    const remVal = parseInt(rem.replace("rem", ""));
+    return parseInt(getComputedStyle(document.documentElement).fontSize.replace("px", "")) * remVal;
+  }
+
   scrollToBottom() {
     this.document.defaultView?.scrollTo(0, this.document.body.scrollHeight);
   }

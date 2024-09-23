@@ -7,17 +7,21 @@
 
 <div class="container mb-4 pb-4">
   <nav class="my-2">
-    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['overview']">Overview</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['overview']">Live</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['dashboard']">Games</a>
-    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['practice']">Practice Area</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['practice']"
+      *appIfHasPermission="'Practice_EditSettings'">Practice Area</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'users']">Users</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'players']">Players</a>
-    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'sponsors']">Sponsors</a>
-    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['support']"
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['registrar', 'sponsors']"
+      *appIfHasPermission="'Sponsors_CreateEdit'">Sponsors</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['support']" *appIfHasPermission="'Teams_Observe'"
       [routerLinkActiveOptions]="{exact: true}">Challenges</a>
     <a class="btn btn-link" routerLinkActive="active" [routerLink]="['support', 'settings']"
-      [routerLinkActiveOptions]="{exact: true}">Support</a>
-    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['notifications']">Notifications</a>
+      *appIfHasPermission="'Support_EditSettings'" [routerLinkActiveOptions]="{exact: true}">Support</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['notifications']"
+      *appIfHasPermission="'SystemNotifications_CreateEdit'">Notifications</a>
+    <a class="btn btn-link" routerLinkActive="active" [routerLink]="['permissions']">Permissions</a>
   </nav>
   <main>
     <router-outlet></router-outlet>

@@ -85,7 +85,7 @@ export class PrereqsComponent implements OnChanges {
   }
 
   private validateNewGate(gate: ChallengeGate, targetSpec?: Spec, requiredSpec?: Spec): string[] {
-    const errors = [];
+    const errors: string[] = [];
 
     if (!targetSpec) {
       errors.push(`Couldn't find the target spec with tag "${this.newgate.targetTag}".`);

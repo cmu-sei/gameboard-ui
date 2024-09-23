@@ -61,10 +61,6 @@ export class BoardService {
     return this.http.put<VmConsole>(`${this.url}/challenge/console`, model);
   }
 
-  public delete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.url}/challenge/${id}`);
-  }
-
   public audit(id: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.url}/challenge/${id}/audit`);
   }

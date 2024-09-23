@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { ChangedSponsor, NewSponsor, Sponsor, SponsorWithChildSponsors, SponsorWithParent } from './sponsor-models';
-import { MimeTypes } from '../../tools';
+import { MimeTypes } from '../../tools/tools';
 import { ApiUrlService } from '@/services/api-url.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 

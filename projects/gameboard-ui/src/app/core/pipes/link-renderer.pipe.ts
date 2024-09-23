@@ -13,7 +13,7 @@ export class LinkRendererPipe implements PipeTransform {
     if (!text)
       return [];
 
-    const retVal = [];
+    const retVal: LinkRendererToken[] = [];
     const splits = text.split(LinkRendererPipe.URL_REGEX);
 
     for (const split of splits) {

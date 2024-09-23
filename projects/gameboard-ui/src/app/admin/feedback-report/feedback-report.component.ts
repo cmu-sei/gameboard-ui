@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { faArrowLeft, faCaretDown, faCaretRight, faCaretLeft, faSync, faFileDownload } from '@fortawesome/free-solid-svg-icons';
-import { BoardService } from '../../api/board.service';
 import { FeedbackQuestion, FeedbackReportDetails, FeedbackStats } from '../../api/feedback-models';
 import { FeedbackService } from '../../api/feedback.service';
 import { Game } from '../../api/game-models';
@@ -44,7 +43,6 @@ export class FeedbackReportComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
-    private boardService: BoardService,
     private api: FeedbackService,
     private reportService: ReportService,
   ) {

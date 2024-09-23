@@ -3,9 +3,8 @@ import { ApiUser } from '@/api/user-models';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Component, Inject, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { ReportsService } from '@/reports/reports.service';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RouterService } from '@/services/router.service';
 import { fa } from '@/services/font-awesome.service';
 
@@ -18,7 +17,6 @@ import { fa } from '@/services/font-awesome.service';
 export class AppNavComponent implements OnInit {
   user$!: Observable<ApiUser | null>;
   toc$!: Observable<TocFile[]>;
-  canAccessReporting$?: Observable<boolean>;
   customBackground = "";
   env: any;
 
@@ -30,7 +28,6 @@ export class AppNavComponent implements OnInit {
   constructor(
     private localUser: LocalUser,
     private practiceService: PracticeService,
-    private reportsService: ReportsService,
     private routerService: RouterService,
     private toc: TocService,
     private unsub: UnsubscriberService
@@ -40,12 +37,6 @@ export class AppNavComponent implements OnInit {
     this.user$ = this.localUser.user$;
     this.toc$ = this.toc.toc$;
     this.profileUrl = this.routerService.getProfileUrl();
-
-    // set availability of practice/reporting
-    this.canAccessReporting$ = this
-      .localUser
-      .user$
-      .pipe(map(u => this.reportsService.canAccessReporting(u)));
 
     this.isPracticeModeEnabled = await this.practiceService.isEnabled();
     this.unsub.add(this.practiceService.isEnabled$.subscribe(isEnabled => this.updatePracticeModeEnabled(isEnabled)));

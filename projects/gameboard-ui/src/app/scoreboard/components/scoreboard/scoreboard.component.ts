@@ -4,6 +4,7 @@ import { ScoringService } from '@/services/scoring/scoring.service';
 import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-scoreboard',
@@ -28,11 +29,16 @@ export class ScoreboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalConfirmService: ModalConfirmService,
+    private route: ActivatedRoute,
     private scoreService: ScoringService) { }
 
   async ngOnInit() {
-    if (!this.gameId)
-      throw new Error("Couldn't resolve the gameId.");
+    if (!this.gameId) {
+      this.gameId = this.route.snapshot.data.gameId;
+
+      if (!this.gameId)
+        throw new Error("Couldn't resolve the gameId.");
+    }
 
     await this.loadGame(this.gameId);
   }

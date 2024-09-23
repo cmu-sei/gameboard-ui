@@ -34,6 +34,7 @@ import { AgedDatePipe } from './pipes/aged-date.pipe';
 import { ApiDatePipe } from './pipes/api-date.pipe';
 import { ApiUrlPipe } from './pipes/api-url.pipe';
 import { ArrayContainsPipe } from './pipes/array-contains.pipe';
+import { ArrayPropertyPipe } from './pipes/array-property.pipe';
 import { ArrayToCountPipe } from './pipes/array-to-count.pipe';
 import { AssetPathPipe } from './pipes/asset-path.pipe';
 import { AutofocusDirective } from './directives/autofocus.directive';
@@ -41,6 +42,7 @@ import { AvatarChipComponent } from './components/avatar-chip/avatar-chip.compon
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { BigStatComponent } from './components/big-stat/big-stat.component';
 import { CamelspacePipe } from './pipes/camelspace.pipe';
+import { CanPipe } from "./pipes/can.pipe";
 import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
 import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
 import { ChallengeSolutionGuideComponent } from './components/challenge-solution-guide/challenge-solution-guide.component';
@@ -69,6 +71,7 @@ import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { GameCardImageComponent } from './components/game-card-image/game-card-image.component';
 import { GbProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
@@ -121,6 +124,7 @@ import { ApiStatusInterceptor } from '@/api-status.interceptor';
 import { AuthInterceptor } from '@/utility/auth.interceptor';
 import { ObserverConsoleComponent } from './components/observer-console/observer-console.component';
 import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
+import { GameMapImageUrlPipe } from './pipes/game-map-image-url.pipe';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -129,6 +133,7 @@ const PUBLIC_DECLARATIONS = [
   ApiDatePipe,
   ApiUrlPipe,
   ArrayContainsPipe,
+  ArrayPropertyPipe,
   ArrayToCountPipe,
   AssetPathPipe,
   AutofocusDirective,
@@ -136,6 +141,7 @@ const PUBLIC_DECLARATIONS = [
   AvatarChipComponent,
   BigStatComponent,
   CamelspacePipe,
+  CanPipe,
   ChallengeResultColorPipe,
   ChallengeResultPrettyPipe,
   ChallengeSolutionGuideComponent,
@@ -158,6 +164,7 @@ const PUBLIC_DECLARATIONS = [
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,
+  GameMapImageUrlPipe,
   GbProgressBarComponent,
   LineChartComponent,
   LinkRendererPipe,
@@ -270,11 +277,13 @@ const RELAYED_MODULES = [
     }),
     PopoverModule.forRoot(),
     TypeaheadModule.forRoot(),
-    ...RELAYED_MODULES
+    ...RELAYED_MODULES,
+    IfHasPermissionDirective
   ],
   exports: [
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
+    IfHasPermissionDirective
   ]
 })
 export class CoreModule { }

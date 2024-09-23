@@ -1,7 +1,18 @@
+@import "../../../../scss/variables";
+
 app-game-card-image {
   max-width: 120px;
 }
 
 app-big-stat {
   margin-bottom: 1.2rem;
+}
+
+::ng-deep .tabs-container {
+  a {
+    color: $foreground !important;
+    display: block;
+    padding: 8px 20px 8px 20px;
+    text-decoration: none;
+  }
 }

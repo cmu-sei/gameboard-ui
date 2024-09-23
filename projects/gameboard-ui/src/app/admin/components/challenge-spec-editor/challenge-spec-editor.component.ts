@@ -5,7 +5,7 @@ import { SpecService } from '@/api/spec.service';
 import { fa } from '@/services/font-awesome.service';
 import { ChallengeSpecScoringConfig } from '@/services/scoring/scoring.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { slug } from '@/tools/functions';
+import { slug } from '@/../tools/functions';
 
 @Component({
   selector: 'app-challenge-spec-editor',

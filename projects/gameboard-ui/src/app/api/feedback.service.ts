@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmission, FeedbackTemplate, QuestionType } from './feedback-models';
 import { YamlService } from '@/services/yaml.service';
-import { hasProperty } from '@/tools/functions';
-import { unique } from '../../tools';
+import { hasProperty } from '@/../tools/functions';
+import { unique } from '@/../tools/tools';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
@@ -61,11 +61,11 @@ export class FeedbackService {
   }
 
   private validateFeedbackQuestionSet(type: "Game" | "Challenge", set: FeedbackQuestion[]): string[] {
-    const retVal = [];
     if (!set?.length) {
       return [];
     }
 
+    const retVal: string[] = [];
     const requiredProperties: (keyof FeedbackQuestion)[] = ["id", "prompt", "type"];
     const uniqueIds = unique(set.map(q => q?.id));
 

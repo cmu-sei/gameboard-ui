@@ -48,46 +48,41 @@
     </div>
 
     <div class="tabs-container d-block mt-4">
-        <tabset>
-            <tab [active]="selectedTab === 'settings'" (selectTab)="handleSelect('settings')">
-                <ng-template tabHeading>
-                    <fa-icon [icon]="fa.gear"></fa-icon>
-                </ng-template>
-                <app-game-center-settings *ngIf="selectedTab === 'settings'"
-                    [gameId]="ctx.id"></app-game-center-settings>
-            </tab>
-            <tab [active]="selectedTab === 'challenges'" (selectTab)="handleSelect('challenges')"
-                [heading]="'Challenges' + (ctx.challengeCount ? ' (' + ctx.challengeCount + ')' : '')">
-                <app-game-mapper *ngIf="selectedTab === 'challenges' && game" class="d-block mt-3"
-                    [game]="game"></app-game-mapper>
-            </tab>
-            <tab [active]="selectedTab === 'teams'" (selectTab)="handleSelect('teams')"
-                heading="{{ ctx.isTeamGame ? 'Teams' : 'Players' }} ({{ ctx.stats.teamCountCompetitive }})">
-                <app-game-center-teams *ngIf="selectedTab === 'teams'" [gameId]="ctx.id"></app-game-center-teams>
-            </tab>
-            <tab [active]="selectedTab === 'practice'" (selectTab)="handleSelect('practice')" *ngIf="ctx.isPractice"
-                heading="Practice ({{ ctx.stats.playerCountPractice }})">
-                <app-game-center-practice *ngIf="selectedTab === 'practice'"
-                    [gameId]="ctx.id"></app-game-center-practice>
-            </tab>
-            <tab [active]="selectedTab === 'deployment'" *ngIf="ctx.isExternal" (selectTab)="handleSelect('deployment')"
-                heading="Deployment">
-                <app-external-game-admin *ngIf="selectedTab === 'deployment' && ctx.isExternal"
-                    [gameId]="ctx.id"></app-external-game-admin>
-            </tab>
-            <tab [active]="selectedTab === 'scoreboard'" (selectTab)="handleSelect('scoreboard')"
-                *ngIf="ctx.hasScoreboard" heading="Scoreboard">
-                <app-scoreboard *ngIf="selectedTab === 'scoreboard'" [gameId]="ctx.id"
-                    [suppressLiveGameBanner]="true"></app-scoreboard>
-            </tab>
-            <tab [active]="selectedTab === 'observe'" (selectTab)="handleSelect('observe')" heading="Observe">
-                <app-game-center-observe *ngIf="selectedTab === 'observe'" [gameId]="ctx.id"></app-game-center-observe>
-            </tab>
-            <tab [active]="selectedTab === 'tickets'" (selectTab)="handleSelect('tickets')"
-                [heading]="'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '')">
-                <app-game-center-tickets *ngIf="selectedTab === 'tickets'" [gameId]="ctx.id"></app-game-center-tickets>
-            </tab>
-        </tabset>
+        <!--have to do a manual bootstrap tabset here because dumb ngx-bootstrap mutilates tab order if you use structurals-->
+        <ul role="tablist" class="nav nav-tabs" aria-label="tabs">
+            <li *appIfHasPermission="'Games_CreateEditDelete'">
+                <ng-container
+                    *ngTemplateOutlet="tabIconItem; context: { $implicit: { tabKey: 'settings', icon: fa.gear, routerLink: 'settings' } }"></ng-container>
+            </li>
+            <li *appIfHasPermission="'Games_CreateEditDelete'">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'challenges', label: 'Challenges (' + ctx.challengeCount + ')', routerLink: 'challenges' } }"></ng-container>
+            </li>
+            <li>
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'teams', routerLink: 'teams', label: (ctx.isTeamGame ? 'Teams' : 'Players') + ' (' + ctx.stats.teamCountCompetitive + ')' } }"></ng-container>
+            </li>
+            <li *ngIf="ctx.isPractice">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'practice', routerLink: 'practice', label: 'Practice' + ' (' + ctx.stats.playerCountPractice + ')' } }"></ng-container>
+            </li>
+            <li>
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'deployment', label: 'Deployment', routerLink: 'deployment' } }"></ng-container>
+            </li>
+            <li *appIfHasPermission="'Teams_Observe'">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'observe', label: 'Observe', routerLink: 'observe' } }"></ng-container>
+            </li>
+            <li *ngIf="ctx.hasScoreboard">
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'scoreboard', label: 'Scoreboard', routerLink: 'scoreboard' } }"></ng-container>
+            </li>
+            <li>
+                <ng-container
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'tickets', routerLink: 'tickets', label: 'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '') } }"></ng-container>
+            </li>
+        </ul>
 
         <div class="router-container">
             <router-outlet></router-outlet>
@@ -97,4 +92,19 @@
 
 <ng-template #loading>
     <app-spinner>Loading the game...</app-spinner>
+</ng-template>
+
+<ng-template #tabItem let-tabCtx>
+    <li class="nav-item" [class.active]="selectedTab === tabCtx.tabKey" (click)="handleSelect(tabCtx.tabKey)">
+        <a class="nav-link" [class.active]="selectedTab === tabCtx.tabKey" [routerLink]="tabCtx.routerLink">{{
+            tabCtx.label }}</a>
+    </li>
+</ng-template>
+
+<ng-template #tabIconItem let-tabCtx>
+    <li class="nav-item" [class.active]="selectedTab === tabCtx.tabKey" (click)="handleSelect(tabCtx.tabKey)">
+        <a class="nav-link" [class.active]="selectedTab === tabCtx.tabKey" [routerLink]="tabCtx.routerLink">
+            <fa-icon [icon]="tabCtx.icon"></fa-icon>
+        </a>
+    </li>
 </ng-template>

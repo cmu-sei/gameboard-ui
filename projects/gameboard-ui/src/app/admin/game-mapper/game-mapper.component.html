@@ -23,16 +23,6 @@
         <fa-icon [icon]="fa.mapMarker"></fa-icon>
         <span>Map</span>
       </button>
-      <ng-container *ngIf="viewing==='map'">
-        <button btnCheckbox class="btn btn-outline-info my-2" [(ngModel)]="showGrid">
-          <span>Show Grid</span>
-        </button>
-        <app-dropzone inputId="map-input" btnClass="btn btn-sm btn-primary" (dropped)="upload($event)">
-        </app-dropzone>
-        <div>
-          Alt+Drag (Option+Drag on Macs) to resize hotspots
-        </div>
-      </ng-container>
     </div>
   </div>
 
@@ -56,7 +46,7 @@
       <app-error-div [errors]="syncErrors"></app-error-div>
 
       <ul class="spec-list mt-4">
-        <li *ngFor="let spec of list$ | async">
+        <li *ngFor="let spec of specs">
           <app-challenge-spec-editor class="d-block mb-3" [spec]="spec" [scoringConfig]="specConfigMap[spec.id]"
             (specDelete)="this.deleting$.next(spec)" (specUpdate)="handleSpecUpdated(spec)"></app-challenge-spec-editor>
         </li>
@@ -65,21 +55,21 @@
       <!-- pre reqs -->
       <div class="prereqs-container my-5">
         <h3>Prereqs</h3>
-        <app-prereqs [gameId]="game.id" [specs]="list"></app-prereqs>
+        <app-prereqs [gameId]="game.id" [specs]="specs"></app-prereqs>
       </div>
 
       <div class="bonus-config my-5">
         <h3>Automatic Bonuses</h3>
 
         <p>
-          If configured, Gameboard can automatically award bonus points to competing teams and players
-          based on the order in which they solve a challenge. For example, the first team to solve a challenge might
-          earn an extra 100 points, while the second might earn an extra 50, and so on. To set this up, enter
-          a configuration in the YAML format described in the text box below.
+          Gameboard can automatically award bonus points to competing teams and players based on the order in which they
+          solve a challenge. For example, the first team to solve a challenge might earn an extra 100 points, while the
+          second might earn an extra 50, and so on. To set this up, enter a configuration in the YAML format described
+          in the text box below.
         </p>
 
         <app-game-bonuses-config [gameId]="game.id" (delete)="handleBonusesChanged()" (update)="handleBonusesChanged()"
-          [isEnabled]="!!(list$ | async)?.length"></app-game-bonuses-config>
+          [isEnabled]="specs.length > 0"></app-game-bonuses-config>
       </div>
     </div>
 
@@ -87,39 +77,6 @@
     <app-spec-browser [hidden]="viewing!=='search'"></app-spec-browser>
 
     <!-- edit spec map locations -->
-    <div [hidden]="viewing!=='map'">
-      <app-dropzone (dropped)="upload($event)" [clickToLaunchFilePicker]="false">
-        <button class="btn btn-sm btn-warning ml-2 mb-2" (click)="clearImage()">
-          <fa-icon [icon]="fa.trash"></fa-icon>
-          <span>Reset</span>
-        </button>
-        <div #mapbox class="mapbox" [class.mapbox-active]="!!this.specDrag" [class.cursor-pointer]="!!specHover">
-          <div class="callout bg-primary m-0 p-4" [hidden]="!this.specHover">
-            <span>{{this.specHover?.name}}</span><br />
-            <span>Points: {{this.specHover?.points}}</span>
-          </div>
-          <svg viewBox="0 0 100 100" (mousemove)="mousemove($event)">
-            <svg:image [attr.href]="this.game.mapUrl" width="100" height="100" />
-
-            <ng-container *ngIf="showGrid">
-              <ng-container *ngFor="let i of [0,10,20,30,40,50,60,70,80,90,100]">
-                <svg:line [attr.x1]=i y1=0 [attr.x2]=i y2=100 stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
-                </svg:line>
-                <svg:line x1=0 [attr.y1]=i x2=100 [attr.y2]=i stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
-                </svg:line>
-              </ng-container>
-            </ng-container>
-
-            <ng-container *ngFor="let c of list">
-              <a class="mapbox-dot" (mousedown)="mousedrag($event, c)" (mouseup)="mousedrag($event, c)"
-                (mouseenter)="mouseenter($event, c)" (mouseleave)="mouseleave($event, c)">
-                <svg:circle [attr.cx]="c.x *100" [attr.cy]="c.y*100" [attr.r]="c.r*100" [attr.fill]="c.c"></svg:circle>
-              </a>
-
-            </ng-container>
-          </svg>
-        </div>
-      </app-dropzone>
-    </div>
+    <app-game-map-editor *ngIf="viewing === 'map'" [gameId]="game.id"></app-game-map-editor>
   </div>
 </div>

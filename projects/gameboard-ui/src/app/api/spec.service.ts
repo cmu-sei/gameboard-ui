@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, firstValueFrom, of } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { ChallengeSpecBonusViewModel, ChangedSpec, ExternalSpec, GetChallengeSpecQuestionPerformanceResult, NewSpec, Spec, SpecSummary } from './spec-models';
+import { ChallengeSpecBonusViewModel, ChangedSpec, ExternalSpec, GameChallengeSpecs, GetChallengeSpecQuestionPerformanceResult, NewSpec, Spec } from './spec-models';
 
 @Injectable({ providedIn: 'root' })
 export class SpecService {
@@ -13,8 +13,8 @@ export class SpecService {
   selected$ = new Subject<ExternalSpec>();
 
   constructor(
-    private http: HttpClient,
-    private config: ConfigService
+    config: ConfigService,
+    private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
   }
@@ -25,6 +25,10 @@ export class SpecService {
 
   public list(filter: any): Observable<ExternalSpec[]> {
     return this.http.get<Spec[]>(this.url + '/challengespecs', { params: filter });
+  }
+
+  public listByGame(): Promise<GameChallengeSpecs[]> {
+    return firstValueFrom(this.http.get<GameChallengeSpecs[]>(this.url + "/challengespecs/by-game"));
   }
 
   public retrieve(id: string): Observable<Spec> {

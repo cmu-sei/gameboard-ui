@@ -1,0 +1,41 @@
+<app-dropzone (dropped)="uploadMapImage(gameId, $event)" [allowMultiple]="false" [clickToLaunchFilePicker]="false"
+    browseText="Upload New Map Image">
+    <app-confirm-button btnClass="btn btn-sm btn-danger ml-2 mb-2" (confirm)="clearImage(gameId)">
+        Reset to Default Map Image
+    </app-confirm-button>
+    <div #mapbox class="mapbox" [class.mapbox-active]="!!draggingSpec">
+        <svg viewBox="0 0 100 100" (mousemove)="mousemove($event)">
+            <svg:image [attr.href]="mapImageUrl | gameMapImageUrl" width="100" height="100" />
+
+            <ng-container *ngIf="isGridVisible">
+                <ng-container *ngFor="let i of [0,10,20,30,40,50,60,70,80,90,100]">
+                    <svg:line [attr.x1]="i" y1="0" [attr.x2]="i" y2=100 stroke="lime"
+                        [attr.stroke-width]="i===50 ? .1 : .05">
+                    </svg:line>
+                    <svg:line x1=0 [attr.y1]=i x2=100 [attr.y2]=i stroke="lime" [attr.stroke-width]="i===50 ? .1 : .05">
+                    </svg:line>
+                </ng-container>
+            </ng-container>
+
+            <ng-container *ngFor="let c of specs">
+                <a class="mapbox-dot cursor-pointer" tooltip="{{c.name}} ({{c.points}} points)" container="body"
+                    (mousedown)="mousedrag($event, c)" (mouseup)="mousedrag($event, c)"
+                    (mouseenter)="mouseenter($event, c)">
+                    <svg:circle class="spec-circle" [attr.cx]="c.x * 100" [attr.cy]="c.y * 100" [attr.r]="c.r * 100"
+                        [class.active]="draggingSpec?.id === c.id">
+                    </svg:circle>
+                </a>
+            </ng-container>
+        </svg>
+    </div>
+</app-dropzone>
+<div class="help-text mt-2 d-flex">
+    <div class="text-muted flex-grow-1">
+        <strong>Alt+Drag</strong>
+        (<strong>Option+Drag</strong> on Mac) to resize hotspots
+    </div>
+
+    <div class="link-button text-info" (click)="isGridVisible = !isGridVisible">
+        [{{ isGridVisible ? "Hide" : "Show" }} Gridlines]
+    </div>
+</div>

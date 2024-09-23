@@ -1,0 +1,74 @@
+<label for="autoTagPracticeChallengesWith">
+    Automatically label incoming tickets based on the game, challenge, player sponsor, or mode.
+</label>
+
+<ng-container *ngIf="!isLoading; else loading">
+    <ng-container *ngIf="autoTags.length; else noAutoTags">
+        <div class="d-flex align-items-center my-3" *ngFor="let autoTag of autoTags">
+            <div class="width-50">
+                <app-colored-text-chip [text]="autoTag.tag"></app-colored-text-chip>
+            </div>
+            <div class="width-40 mx-3">
+                <span class="text-muted">
+                    {{ autoTag.conditionTypeDescription }}:
+                </span>
+                {{ autoTag.conditionValue }}
+            </div>
+            <div class="flex-grow-1">
+                <app-confirm-button btnClass="btn btn-sm btn-danger width-100"
+                    (confirm)="handleDelete(autoTag)">Delete</app-confirm-button>
+            </div>
+        </div>
+    </ng-container>
+
+    <hr class="light my-2" />
+
+    <div class="d-flex align-items-center">
+        <div class="width-50">
+            <input type="text" class="form-control" name="newTagName" [(ngModel)]="newAutoTag.tag"
+                placeholder="Enter a tag (like &quot;priority&quot; or &quot;non-urgent&quot;)">
+        </div>
+
+        <div class="width-20 mx-2">
+            <select class="form-control" id="new-tag-condition-type" name="newTagConditionType"
+                [(ngModel)]="newAutoTag.conditionType" (change)="handleConditionTypeChange(newAutoTag.conditionType)">
+                <option *ngFor="let conditionType of conditionTypes" [value]="conditionType.id">
+                    {{ conditionType.name }}
+                </option>
+            </select>
+        </div>
+        <div class="width-20 mr-2">
+            <select [(ngModel)]="newAutoTag.conditionValue" class="form-control">
+                <ng-container *ngFor="let value of conditionValues">
+                    <ng-container
+                        *ngTemplateOutlet="value.isGroup ? optGroup : option; context: value | toTemplateContext"></ng-container>
+                </ng-container>
+            </select>
+        </div>
+        <div class="flex-grow-1">
+            <button type="button" class="btn btn-info width-100"
+                [disabled]="!newAutoTag.conditionValue || !newAutoTag.tag" (click)="handleAddAutoTag()">
+                Add
+            </button>
+        </div>
+    </div>
+
+</ng-container>
+
+<ng-template #option let-value>
+    <option [value]="value.id">{{ value.name }}</option>
+</ng-template>
+
+<ng-template #optGroup let-value>
+    <optgroup [label]="value.name"></optgroup>
+</ng-template>
+
+<ng-template #loading>
+    <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #noAutoTags>
+    <div class="text-muted text-center my-4">
+        <em>No autotags configured.</em>
+    </div>
+</ng-template>

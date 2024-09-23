@@ -2,20 +2,19 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, NavigationStart, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, NavigationStart, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { UserService } from './user.service';
+import { UserService as LocalUserService } from './user.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
-
+@Injectable({ providedIn: 'root' })
+export class AdminGuard implements CanActivate, CanActivateChild {
   destinationUrl: string = "";
 
-  constructor (
-    private userSvc: UserService,
+  constructor(
+    private localUser: LocalUserService,
+    private permissionsService: UserRolePermissionsService,
     private router: Router
   ) {
     this.router.events.pipe(
@@ -28,29 +27,28 @@ export class AdminGuard implements CanActivate, CanActivateChild, CanLoad {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.validateRole();
+    return this.canActivateChild(route, state);
   }
+
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.validateRole();
-  }
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.validateRole();
-  }
+    return this.localUser.user$.pipe(
+      map(u => this.permissionsService.can(u, "Admin_View")),
+      map(can => {
+        if (can)
+          return true;
 
-  private validateRole(): Observable<boolean | UrlTree> {
-    return this.userSvc.user$.pipe(
-      map(u => u?.isRegistrar || u?.isDirector || u?.isAdmin || u?.isObserver || (u?.isSupport && this.isLinkAllowedForSupportRole()) || false),
-      map(v => v ? v : this.router.parseUrl('/forbidden'))
+        if (!state.url.includes("forbidden")) {
+          return this.router.createUrlTree(["forbidden"], {
+            queryParams: {
+              requestedUrl: state.url
+            }
+          });
+        }
+
+        return this.router.createUrlTree(["forbidden"]);
+      })
     );
-  }
-
-  private isLinkAllowedForSupportRole(): boolean {
-    return !(this.destinationUrl.startsWith("/admin/registrar")
-      || this.destinationUrl.startsWith("/admin/designer")
-      || this.destinationUrl.startsWith("/admin/report"));
   }
 }

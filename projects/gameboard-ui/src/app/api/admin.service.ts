@@ -5,7 +5,7 @@ import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ApprovePlayerNameRequest, GetAppActiveChallengesResponse, GetAppActiveTeamsResponse, GetPlayersCsvExportResponse, GetPlayersCsvExportResponsePlayer, GetSiteOverviewStatsResponse, SendAnnouncement } from './admin.models';
 import { PlayerMode } from './player-models';
-import { GameCenterContext, GameCenterPracticeContext, GameCenterPracticeSessionStatus, GameCenterTeamsRequestArgs, GameCenterTeamsResults, GetGameCenterPracticeContextRequest } from '@/admin/components/game-center/game-center.models';
+import { GameCenterContext, GameCenterPracticeContext, GameCenterTeamsRequestArgs, GameCenterTeamsResults, GetGameCenterPracticeContextRequest } from '@/admin/components/game-center/game-center.models';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {

@@ -1,7 +1,7 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<div class="card bg-dark comp-card h-100 mx-auto" (click)="select()">
+<div class="card bg-dark comp-card h-100 mx-auto cursor-pointer" (click)="select()">
   <div class="game-front position-absolute" style="top: 15px; left: 2px;">
     <h2>
       <span class="badge badge-indigo cool-badge m-1 lb-font upper">
@@ -11,26 +11,12 @@
   </div>
   <app-game-card-image [game]="game"></app-game-card-image>
   <div class="d-flex flex-column p-0 position-absolute h-100 w-100">
-    <div class="game-front d-flex justify-content-end p-3">
-      <h6 class="text-white mt-0">
-        <span *ngIf="!game.isPublished" class="badge badge-pill badge-unpublished game-type mr-1">
-          <fa-icon [icon]="fa.eyeSlash"></fa-icon>
-        </span>
-        <span class="badge badge-pill badge-tag badge-dark game-type">
-          {{ game.key }}
-          <fa-icon [icon]="game.allowTeam ? fa.users : fa.user"></fa-icon>
-        </span>
-      </h6>
-    </div>
     <div class="game-tag-bg px-1 my-auto">
       <h1 class="text-white text-center">
         {{ game.cardText2 }}
       </h1>
     </div>
-    <div *ngIf="game.mode" class="d-flex justify-content-start p-3 game-front w-100 h-100 position-absolute">
-      <img *ngIf="game.modeUrl" [src]="game.modeUrl" class="mt-auto mode-logo rounded-circle bg-white"
-        alt="Environment Logo">
-    </div>
+
     <h2>
       <span class="badge d-flex justify-content-end m-1 lb-font upper">{{ game.cardText3 }}</span>
     </h2>

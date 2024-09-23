@@ -1,11 +1,12 @@
 <alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
     There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
     who have pending name change requests. Click <span class="link-button"
-        (click)="handlePendingNamesClick(game.id)">here</span> to review them.
+        (click)="handlePendingNamesClick(game.id)">here</span>
+    to review them.
 </alert>
 
 <div *ngIf="game" class="controls-container d-flex align-items-center mb-3">
-    <button class="d-block btn btn-info" (click)="handleSelectAll()">
+    <button class="d-block btn btn-info" (click)="handleSelectAll()" [disabled]="!results?.teams?.items?.length">
         <fa-icon [icon]="fa.checkSquare"></fa-icon>
         Select All {{ (game.isTeamGame ? "Team" : "Player") | pluralizer }}
     </button>
@@ -14,8 +15,8 @@
         tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
     <div class="gb-button-group btn-group mr-2">
         <button type="button" class="btn btn-info" disabled="disabled">
-            {{ selectedTeamIds.length ? selectedTeamIds.length : "All" }} {{ game.isTeamGame ? "Team" :
-            "Player" }}{{ selectedTeamIds.length === 1 ? "" : "s" }}
+            {{ selectedTeamIds.length ? selectedTeamIds.length : "All" }}
+            {{ game.isTeamGame ? "Team" : "Player" }}{{ selectedTeamIds.length === 1 ? "" : "s" }}
         </button>
 
         <button type="button" class="btn btn-info" tooltip="Deploy game resources"
@@ -41,7 +42,8 @@
         </button>
     </div>
 
-    <button type="button" class="btn btn-info" (click)="handlePlayerAddClick(game)">
+    <button *appIfHasPermission="'Teams_Enroll'" type="button" class="btn btn-info"
+        (click)="handlePlayerAddClick(game)">
         <fa-icon [icon]="fa.plus"></fa-icon>
         Add {{ game.isTeamGame ? "Team" : "Player" }} </button>
 </div>
@@ -68,7 +70,7 @@
         </select>
 
         <select [(ngModel)]="filterSettings.hasPendingNames" (change)="load()" class="form-control ml-2">
-            <option [ngValue]="undefined">[Any]</option>
+            <option [ngValue]="undefined">[Any pending names]</option>
             <option [ngValue]="true">Yes</option>
             <option [ngValue]="false">No</option>
         </select>
@@ -112,11 +114,11 @@
                 <div secondaryDetail>
                     <ng-container *ngIf="team.session.start && team.session.end | epochMsToDateTime | datetimeIsFuture">
                         <div>Playing now</div>
-                        (<strong class="text-info"
+                        <strong class="text-info d-block"
                             [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
                             team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async
                             }}</strong>
-                        remaining)
+                        <div class="fs-08 text-muted">remaining</div>
                     </ng-container>
 
                     <ng-container *ngIf="!team.session.start">
@@ -169,5 +171,5 @@
 </ng-template>
 
 <ng-template #loading>
-    <app-spinner>Finding players...</app-spinner>
+    <app-spinner>{{ (game?.isTeamGame ? "team" : "player") | pluralizer }}...</app-spinner>
 </ng-template>

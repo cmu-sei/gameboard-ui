@@ -8,7 +8,6 @@ import { ApiUser } from "./user-models";
 
 export interface GameDetail {
   name: string;
-  key: string;
   competition: string;
   track: string;
   season: string;

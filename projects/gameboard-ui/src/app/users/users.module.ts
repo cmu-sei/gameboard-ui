@@ -15,6 +15,7 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UserService as LocalUserService } from '@/utility/user.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -55,7 +56,12 @@ const DECLARED_COMPONENTS = [
             path: 'settings',
             title: "Settings",
             component: SettingsComponent,
-            canActivate: [() => inject(LocalUserService).user$.value?.isAdmin || inject(LocalUserService).user$.value?.isSupport]
+            canActivate: [() => {
+              const permissionsService = inject(UserRolePermissionsService);
+              const localUser = inject(LocalUserService);
+
+              return permissionsService.can(localUser.user$.value, "Admin_View");
+            }]
           }
         ]
       },

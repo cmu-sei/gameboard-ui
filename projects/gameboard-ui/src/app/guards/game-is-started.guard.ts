@@ -11,7 +11,6 @@ import { Observable, firstValueFrom, map } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class GameIsStarted implements CanActivate, CanActivateChild {
   constructor(
-    private gameService: GameService,
     private localUserService: UserService,
     private log: LogService,
     private playerService: PlayerService,
@@ -31,7 +30,8 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
   private async _canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
     // if the user is admin/tester, they can ignore start phase restrictions
     const localUser = this.localUserService.user$.getValue();
-    if (localUser && (localUser.isAdmin || localUser.isTester)) {
+
+    if (await firstValueFrom(this.localUserService.can$("Play_IgnoreExecutionWindow"))) {
       return true;
     }
 
@@ -49,8 +49,7 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
     if (!resolvedGameId) {
       resolvedGameId = player.gameId;
     }
-    this.log.logInfo("Resolved gameId for GameIsStartedGuard", gameId);
-    this.log.logInfo("Resolved teamId for GameIsStartedGuard", player.teamId);
+    this.log.logInfo("Resolved gameId, teamId for GameIsStartedGuard", gameId, player.teamId);
 
     return await firstValueFrom(this.teamService.getGamePlayState(player.teamId).pipe(map(phase => phase == GamePlayState.Started)));
   }

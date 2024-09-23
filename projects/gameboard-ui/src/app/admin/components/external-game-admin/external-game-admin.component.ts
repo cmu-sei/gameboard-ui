@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DateTime } from 'luxon';
 import { Subject, combineLatest, debounceTime, filter, firstValueFrom, map, timer } from 'rxjs';
@@ -55,8 +55,8 @@ export interface ExternalGameAdminContext {
   styleUrls: ['./external-game-admin.component.scss'],
   providers: [UnsubscriberService]
 })
-export class ExternalGameAdminComponent implements OnInit, OnChanges {
-  @Input() gameId?: string;
+export class ExternalGameAdminComponent implements OnInit {
+  private gameId?: string;
   private autoUpdateInterval = 30000;
   private forceRefresh$ = new Subject<void>();
 
@@ -82,25 +82,16 @@ export class ExternalGameAdminComponent implements OnInit, OnChanges {
         timer(0, this.autoUpdateInterval).pipe(debounceTime(5000)),
         this.forceRefresh$
       ]).pipe(
-        map(([tick, _]) => this.route.snapshot.paramMap?.get("gameId")),
+        map(([tick, _]) => this.gameId),
         filter(gameId => !!gameId)
-      ).subscribe(gameId => this.load(gameId!))
+      ).subscribe(gameId => this.load(gameId!)),
+
+      // listen for router data
+      this.route.data.subscribe(async d => {
+        this.gameId = d.gameId;
+        this.forceRefresh$.next();
+      })
     );
-
-    this.gameId = this.route.snapshot.paramMap?.get("gameId") || undefined;
-    if (!this.gameId)
-      this.errors.push("No gameId passed to the component.");
-    this.forceRefresh$.next();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes?.gameId?.currentValue) {
-      const paramGameId = this.route.snapshot.paramMap?.get("gameId");
-
-      if (paramGameId !== changes.gameId.currentValue) {
-        throw new Error("The gameId detected in the route param map is different than the component's input gameId. This will cause the component to misbehave.");
-      }
-    }
   }
 
   protected async handlePreDeployAllClick(gameId: string) {

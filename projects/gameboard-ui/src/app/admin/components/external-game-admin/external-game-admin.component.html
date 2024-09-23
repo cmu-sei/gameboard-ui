@@ -1,12 +1,4 @@
 <div class="external-game-admin-component py-2" *ngIf="ctx; else loading">
-    <h2 class="text-upper fs-10 m-0 p-0">Deployment</h2>
-    <h1>{{ctx.game.name}}</h1>
-    <h3 class="sync-session-date fs-12" *ngIf="sessionDateDescription">
-        {{sessionDateDescription}}
-    </h3>
-
-    <hr class="light" />
-
     <div class="w-100">
         <app-error-div [errors]="errors"></app-error-div>
 

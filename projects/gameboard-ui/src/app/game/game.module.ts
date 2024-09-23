@@ -29,8 +29,6 @@ import { PlayComponent } from './components/play/play.component';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
 import { PlayerSessionComponent } from './player-session/player-session.component';
-import { ScoreboardPageComponent } from './pages/scoreboard-page/scoreboard-page.component';
-import { ScoreboardTableComponent } from './scoreboard-table/scoreboard-table.component';
 import { SessionForecastComponent } from './session-forecast/session-forecast.component';
 import { SessionStartControlsComponent } from './components/session-start-controls/session-start-controls.component';
 import { SessionStartCountdownComponent } from './components/session-start-countdown/session-start-countdown.component';
@@ -50,6 +48,7 @@ const MODULE_DECLARATIONS = [
   GamePageComponent,
   GameboardPageComponent,
   GamespaceQuizComponent,
+  HasPendingNamePipe,
   HubStateToPlayerStatusPipe,
   IndexToSubmittedAnswersPipe,
   LateStartBannerComponent,
@@ -57,8 +56,6 @@ const MODULE_DECLARATIONS = [
   PlayerEnrollComponent,
   PlayerPresenceComponent,
   PlayerSessionComponent,
-  ScoreboardPageComponent,
-  ScoreboardTableComponent,
   SessionForecastComponent,
   SessionStartControlsComponent,
   SessionStartCountdownComponent,
@@ -67,8 +64,7 @@ const MODULE_DECLARATIONS = [
 
 @NgModule({
   declarations: [
-    ...MODULE_DECLARATIONS,
-    HasPendingNamePipe,
+    ...MODULE_DECLARATIONS
   ],
   imports: [
     CommonModule,
@@ -78,7 +74,6 @@ const MODULE_DECLARATIONS = [
       { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
       { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalGameGuard], component: ExternalGamePageComponent },
-      { path: 'scores/:id', component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),
     CoreModule,

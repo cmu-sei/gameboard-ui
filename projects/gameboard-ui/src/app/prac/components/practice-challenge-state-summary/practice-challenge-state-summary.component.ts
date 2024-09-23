@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 import { DateTime } from 'luxon';
 import { Observable, combineLatest, firstValueFrom, map, tap, timer } from 'rxjs';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
-import { slug } from '@/tools/functions';
+import { slug } from '@/../tools/functions';
 import { TeamService } from '@/api/team.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { HubEventAction, NotificationService } from '@/services/notification.service';

@@ -2,10 +2,10 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component } from '@angular/core';
-import { BehaviorSubject, interval, merge, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, interval, merge, Observable } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
-import { ApiUser, TryCreateUsersResponse, UserRole } from '../../api/user-models';
+import { ApiUser, TryCreateUsersResponse, UserRoleKey, UserRoleLegacy } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { fa } from '@/services/font-awesome.service';
 import { SortService } from '@/services/sort.service';
@@ -13,6 +13,7 @@ import { SortDirection } from '@/core/models/sort-direction';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { CreateUsersModalComponent } from '../components/create-users-modal/create-users-modal.component';
 import { ToastService } from '@/utility/services/toast.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 
@@ -22,6 +23,7 @@ type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
   styleUrls: ['./user-registrar.component.scss']
 })
 export class UserRegistrarComponent {
+  protected roles$: Observable<UserRoleKey[]>;
   refresh$ = new BehaviorSubject<boolean>(true);
   source$: Observable<ApiUser[]>;
   source: ApiUser[] = [];
@@ -38,9 +40,12 @@ export class UserRegistrarComponent {
   constructor(
     private api: UserService,
     private modalService: ModalConfirmService,
+    private permissionsService: UserRolePermissionsService,
     private sortService: SortService,
     private toastService: ToastService
   ) {
+    this.roles$ = this.permissionsService.listRoles();
+
     this.source$ = merge(
       this.refresh$,
       interval(60000)
@@ -74,11 +79,6 @@ export class UserRegistrarComponent {
 
   view(u: ApiUser): void {
     this.viewed = this.viewed !== u ? u : undefined;
-
-    if (this.viewed) {
-      this.updateRoleString(u);
-    }
-
     this.viewChange$.next(this.viewed);
   }
 
@@ -98,11 +98,13 @@ export class UserRegistrarComponent {
     });
   }
 
-  update(model: ApiUser): void {
-    this.api.update(model).subscribe(
-      () => this.updateRoleString(model),
-      (err) => this.errors.push(err)
-    );
+  async update(model: ApiUser) {
+    try {
+      await firstValueFrom(this.api.update(model));
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
   }
 
   approveName(model: ApiUser): void {
@@ -112,21 +114,6 @@ export class UserRegistrarComponent {
     this.update(model);
   }
 
-  role(model: ApiUser, r: string): void {
-    let a = model.role.split(', ');
-    const b = a.find(i => i === r);
-
-    if (b) {
-      a = a.filter(i => i !== b);
-    } else {
-      a.push(r);
-    }
-
-    model.role = !!a.length
-      ? a.join(', ') as UserRole : UserRole.member;
-
-    this.update(model);
-  }
 
   protected handleAddUsersClick() {
     this.modalService.openComponent({
@@ -162,13 +149,6 @@ export class UserRegistrarComponent {
         });
     }
 
-  }
-
-  private updateRoleString(u: ApiUser) {
-    for (let role of u.role.split(",")) {
-      const roleName = role.trim();
-      (u as any)[`is${roleName.substring(0, 1).toUpperCase()}${roleName.substring(1)}`] = true;
-    }
   }
 
   trackById(index: number, model: ApiUser): string {

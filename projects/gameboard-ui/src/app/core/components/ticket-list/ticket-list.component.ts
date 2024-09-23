@@ -61,9 +61,7 @@ export class TicketListComponent implements OnDestroy {
     this.hideTitle = !!this.gameId;
     this.isDescending = config.local.ticketOrderDesc || true;
 
-    const canManage$ = local.user$.pipe(
-      map(u => !!u?.isObserver || !!u?.isSupport)
-    );
+    const canManage$ = local.can$('Support_ManageTickets');
 
     const ticket$ = combineLatest([
       this.refresh$,

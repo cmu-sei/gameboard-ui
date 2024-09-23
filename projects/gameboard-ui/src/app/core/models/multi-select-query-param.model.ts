@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 import { RouterService } from "@/services/router.service";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
-import { arraysEqual } from "@/tools/object-tools.lib";
+import { arraysEqual } from "@/../tools/object-tools.lib";
 
 export interface MultiSelectQueryParamModelConfig<T> {
     paramName: string;

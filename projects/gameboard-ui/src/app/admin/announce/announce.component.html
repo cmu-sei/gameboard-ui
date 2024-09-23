@@ -1,22 +1,24 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<app-error-div [errors]="errors"></app-error-div>
+<ng-container *appIfHasPermission="'Teams_SendAnnouncements'">
+  <app-error-div [errors]="errors"></app-error-div>
 
-<div class="form-group" *ngIf="!isLoading; else loading">
-  <label class="mb-0" for="input-announce">Announcement</label>
-  <div class="input-group">
-    <textarea name="input-announce" id="input-announce" rows="7" [placeholder]="placeholderText" class="form-control"
-      [(ngModel)]="message">
-    </textarea>
-    <div class="input-group-append">
-      <button class="btn btn-outline-info" (click)="announce()" [disabled]="!message">
-        <fa-icon [icon]="faSend"></fa-icon>
-        <span>Announce</span>
-      </button>
+  <div class="form-group" *ngIf="!isLoading; else loading">
+    <label class="mb-0" for="input-announce">Announcement</label>
+    <div class="input-group">
+      <textarea name="input-announce" id="input-announce" rows="7" [placeholder]="placeholderText" class="form-control"
+        [(ngModel)]="message">
+      </textarea>
+      <div class="input-group-append">
+        <button class="btn btn-outline-info" (click)="announce()" [disabled]="!message">
+          <fa-icon [icon]="faSend"></fa-icon>
+          <span>Announce</span>
+        </button>
+      </div>
     </div>
   </div>
-</div>
+</ng-container>
 
 <ng-template #loading>
   <app-spinner></app-spinner>

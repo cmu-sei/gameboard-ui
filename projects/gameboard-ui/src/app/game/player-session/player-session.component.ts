@@ -39,6 +39,7 @@ export class PlayerSessionComponent implements OnDestroy {
   protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
   protected canAdminStart = false;
+  protected canIgnoreSessionResetSettings$ = this.localUserService.can$("Play_IgnoreSessionResetSettings");
   protected hasTimeRemaining = false;
   protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
   protected timeRemainingMs$?: Observable<number>;
@@ -92,8 +93,7 @@ export class PlayerSessionComponent implements OnDestroy {
         }
       }),
       tap(ctx => {
-        const localUser = this.localUserService.user$.value;
-        this.canAdminStart = !!localUser && this.userService.canEnrollAndPlayOutsideExecutionWindow(localUser);
+        this.canAdminStart = this.localUserService.can('Play_IgnoreExecutionWindow');
       }),
       // set up countdown
       tap(ctx => {

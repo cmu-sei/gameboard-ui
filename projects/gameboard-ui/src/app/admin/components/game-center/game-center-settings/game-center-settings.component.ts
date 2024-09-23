@@ -1,3 +1,7 @@
+import { KeyValue } from '@angular/common';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { FormGroup, NgForm } from '@angular/forms';
+import { debounceTime, filter, firstValueFrom, switchMap, tap } from 'rxjs';
 import { FeedbackTemplate } from '@/api/feedback-models';
 import { ExternalGameHost, Game, GameEngineMode, GameRegistrationType } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
@@ -6,10 +10,7 @@ import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { YamlService } from '@/services/yaml.service';
 import { ToastService } from '@/utility/services/toast.service';
-import { KeyValue } from '@angular/common';
-import { AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { FormGroup, NgForm } from '@angular/forms';
-import { debounceTime, filter, firstValueFrom, switchMap, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 export type SelectedSubTab = "settings" | "modes" | "registration";
 
@@ -18,10 +19,10 @@ export type SelectedSubTab = "settings" | "modes" | "registration";
   templateUrl: './game-center-settings.component.html',
   styleUrls: ['./game-center-settings.component.scss']
 })
-export class GameCenterSettingsComponent implements AfterViewInit, OnChanges {
-  @Input() gameId?: string;
+export class GameCenterSettingsComponent implements AfterViewInit {
   @ViewChild(NgForm) form?: FormGroup;
 
+  private gameId?: string;
   private needsPracticeModeEnabledRefresh = false;
 
   protected fa = fa;
@@ -42,9 +43,12 @@ export class GameCenterSettingsComponent implements AfterViewInit, OnChanges {
   constructor(
     private gameService: GameService,
     private practiceService: PracticeService,
+    private route: ActivatedRoute,
     private toastService: ToastService,
     private unsub: UnsubscriberService,
-    private yamlService: YamlService) { }
+    private yamlService: YamlService) {
+    this.unsub.add(this.route.data.subscribe(d => this.handleGameChange(d.gameId)));
+  }
 
   ngAfterViewInit(): void {
     if (!this.form)
@@ -71,24 +75,6 @@ export class GameCenterSettingsComponent implements AfterViewInit, OnChanges {
         )
       ).subscribe()
     );
-  }
-
-  async ngOnChanges(changes: SimpleChanges) {
-    if (!this.gameId || this.gameId === this.game?.id)
-      return;
-
-    const games = await firstValueFrom(this.gameService.list({}));
-    for (const game of games) {
-      this.countGameField(this.suggestions.competition, game.competition);
-      this.countGameField(this.suggestions.track, game.track);
-      this.countGameField(this.suggestions.season, game.season);
-      this.countGameField(this.suggestions.division, game.division);
-      this.countGameField(this.suggestions.cardText1, game.cardText1);
-      this.countGameField(this.suggestions.cardText1, game.cardText1);
-      this.countGameField(this.suggestions.cardText1, game.cardText1);
-    }
-
-    this.game = games.find(g => g.id === this.gameId);
   }
 
   async handleExternalGameHostChanged(host: ExternalGameHost) {
@@ -185,5 +171,24 @@ export class GameCenterSettingsComponent implements AfterViewInit, OnChanges {
       return false;
 
     return true;
+  }
+
+  private async handleGameChange(gameId?: string) {
+    this.gameId = gameId;
+    if (!this.gameId || this.gameId === this.game?.id)
+      return;
+
+    const games = await firstValueFrom(this.gameService.list({}));
+    for (const game of games) {
+      this.countGameField(this.suggestions.competition, game.competition);
+      this.countGameField(this.suggestions.track, game.track);
+      this.countGameField(this.suggestions.season, game.season);
+      this.countGameField(this.suggestions.division, game.division);
+      this.countGameField(this.suggestions.cardText1, game.cardText1);
+      this.countGameField(this.suggestions.cardText1, game.cardText1);
+      this.countGameField(this.suggestions.cardText1, game.cardText1);
+    }
+
+    this.game = games.find(g => g.id === this.gameId);
   }
 }

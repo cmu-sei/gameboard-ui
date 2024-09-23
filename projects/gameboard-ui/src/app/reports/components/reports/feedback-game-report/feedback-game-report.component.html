@@ -1,0 +1,203 @@
+<app-report-parameters-container>
+    <app-parameter-game-challengespec [(ngModel)]="gameChallengeQuerystringModel"
+        [requireGameSelection]="true"></app-parameter-game-challengespec>
+</app-report-parameters-container>
+
+<ng-container *ngIf="hasParameterSelection; else noParameterSelection">
+    <ng-container *ngIf="results; else loading">
+        <div class="d-flex justify-content-between">
+            <h2>{{results.game.name}}</h2>
+        </div>
+
+        <div *ngIf="!results.questions.length" class="pt-3 text-center text-warning">
+            Feedback questions not configured for this game yet.
+        </div>
+
+        <div class="container" *ngIf="results">
+            <div class="row">
+                <div class="col-10 p-2 cursor-pointer">
+                    <div class="section-header my-2" tabindex="0" (click)="toggle('summary')">
+                        <fa-icon [icon]="showSummary ? fa.caretDown : fa.caretRight" size="lg"></fa-icon>
+                        <h3 class="d-inline">Overview</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container my-2" [hidden]="!showSummary">
+                <ng-container *ngIf="results.questions?.length">
+                    <ng-container *ngIf="results; else loading">
+                        <div class="row border-top p-2 text-left">
+                            <div class="col-4 font-weight-bold text-left">Feedback Config</div>
+                            <div class="col-2">{{results.stats.configuredCount}}
+                                <span class="m-0 p-0 text-muted">questions</span>
+                            </div>
+                            <div class="col-2">{{results.stats.likertCount}} <span
+                                    class="m-0 p-0 text-muted">likert</span>
+                            </div>
+                            <div class="col-2">{{results.stats.textCount}} <span class="m-0 p-0 text-muted">text</span>
+                            </div>
+                            <div class="col-2">{{results.stats.selectOneCount}} <span
+                                    class="m-0 p-0 text-muted">selectOne</span></div>
+                            <div class="col-2">{{results.stats.selectManyCount}} <span
+                                    class="m-0 p-0 text-muted">selectMany</span></div>
+                            <div class="col-2">{{results.stats.requiredCount}} <span
+                                    class="m-0 p-0 text-muted">required</span>
+                            </div>
+                        </div>
+                        <div class="row border-top p-2 text-left">
+                            <div class="col-4 font-weight-bold text-left">Responses</div>
+                            <div class="col-2">{{results.stats.responsesCount}}
+                                <span class="m-0 p-0 text-muted">responses</span>
+                            </div>
+                            <div class="col-2">{{results.stats.submittedCount}} <span
+                                    class="m-0 p-0 text-muted">submitted</span></div>
+                            <div class="col-2">{{results.stats.inProgressCount}} <span class="m-0 p-0 text-muted">in
+                                    progress</span></div>
+                            <div class="col-2">{{results.stats.maxResponseCount - results.stats.responsesCount}} <span
+                                    class="m-0 p-0 text-muted">not started</span></div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+
+            <div class="row">
+                <div class="col-10 p-2 cursor-pointer">
+                    <div class="section-header my-2" tabindex="0" (click)="toggle('questions')">
+                        <fa-icon [icon]="showQuestions ? fa.caretDown : fa.caretRight" size="lg"></fa-icon>
+                        <h3 class="d-inline">Question Summary</h3>
+                    </div>
+                </div>
+                <div class="col-2 p-2 font-weight-bold">
+                    <div class="text-right">
+                        <button class="btn btn-outline-info p-2" (click)="export('stats')"
+                            [disabled]="!results.questions.length">
+                            <fa-icon [icon]="fa.fileDownload"></fa-icon>
+                            <span>Export to CSV</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div [hidden]="!showQuestions" class="mb-2">
+                <div class="container my-2">
+                    <div class="row border-top p-2 text-left">
+                        <div class="col-4 font-weight-bold text-left">Likert Questions</div>
+                        <div class="col-2 font-weight-bold">Average</div>
+                        <div class="col-2 font-weight-bold">Lowest Rating</div>
+                        <div class="col-2 font-weight-bold">Highest Rating</div>
+                        <div class="col-2 font-weight-bold">Answered</div>
+                    </div>
+                    <ng-container *ngIf="results.questions.length">
+                        <ng-container *ngIf="results; else loading">
+                            <div *ngFor="let q of results.stats.questionStats"
+                                class="row border-top p-2 pl-4 text-left">
+                                <div class="col-4">{{q.id}}) {{q.prompt}}<span *ngIf="q.required"
+                                        class="required">*</span>
+                                </div>
+                                <div class="col-2">{{!!q.count ? (q.average | number:'1.2-2'): ''}}<span
+                                        class="m-0 p-0 text-muted">/{{q.scaleMax}}</span></div>
+                                <div class="col-2">{{!!q.count ? q.lowest : ''}}<span
+                                        class="m-0 p-0 text-muted">/{{q.scaleMax}}</span>
+                                </div>
+                                <div class="col-2">{{!!q.count ? q.highest : ''}}<span
+                                        class="m-0 p-0 text-muted">/{{q.scaleMax}}</span>
+                                </div>
+                                <div class="col-2">{{q.count}}</div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-10 p-2 cursor-pointer">
+                    <div class="section-header my-2" tabindex="0" (click)="toggle('table')">
+                        <fa-icon [icon]="showTable ? fa.caretDown : fa.caretRight" size="lg"></fa-icon>
+                        <h3 class="d-inline">
+                            Individual Submissions
+                            {{ feedback?.length ? "(" + feedback?.length + ")" : "" }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-2 p-2 font-weight-bold">
+                    <div class="text-right">
+                        <button class="btn btn-outline-info p-2" (click)="export('details')"
+                            [disabled]="!results.questions.length">
+                            <fa-icon [icon]="fa.fileDownload"></fa-icon>
+                            <span>Export to CSV</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div [hidden]="!showTable">
+                <div class="container table-wrapper mb-2">
+                    <table *ngIf="results.questions.length" class="table mt-2 feedback-table">
+                        <thead class="thead-dark border-0 table-header">
+                            <tr>
+                                <th class="time-col">Time</th>
+                                <th>Name</th>
+                                <th *ngFor="let q of results.questions"
+                                    [class]="q.type =='text' ? 'text-col' : 'num-col'" class="pt-1 font-weight-bold">
+                                    <small class="q-id">{{q.id}})</small>
+                                    <div class="prompt">{{q.shortName ?? q.prompt}}</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="feedback; else loading">
+                            <tr *ngFor="let r of feedback; let i = index" (click)="toggleRow(i)" id="row-{{i}}"
+                                class="minimized table-row">
+                                <td>
+                                    <div class="text-align-left">{{ r.timestamp | friendlyTime }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ r.approvedName }}</div>
+                                </td>
+                                <td *ngFor="let q of r.questions" class="table-cell"
+                                    [class]="(q.answer?.length ?? 0) > 500 ? 'long-text' : ''">
+                                    <div [class]="(q.answer && q.answer.length) ? '' : 'text-muted blank-cell'">
+                                        {{(q.answer
+                                        &&
+                                        q.answer.length) ? q.answer : "--"}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div *ngIf="feedback && feedback.length == 0 && skip == 0" class="m-4 text-center">
+                        No feedback yet.
+                    </div>
+
+                </div>
+
+                <div *ngIf="feedback" class="d-flex justify-content-between">
+                    <div>
+                        <a class="btn btn-link" (click)="prev()" [hidden]="skip == 0">
+                            <fa-icon class="m-0 p-1" [icon]="fa.caretLeft"></fa-icon>
+                            <span class="m-0 p-1">prev</span>
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn btn-link" (click)="next()" [hidden]="feedback.length == 0">
+                            <span class="m-0 p-1">next</span>
+                            <fa-icon class="m-0 p-1" [icon]="fa.caretRight"></fa-icon>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </ng-container>
+</ng-container>
+
+<ng-template #loading>
+    <div class="text-center">
+        <app-spinner></app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noParameterSelection>
+    <p class="text-center text-muted">
+        Select a game and/or challenge spec to review feedback.
+    </p>
+</ng-template>

@@ -13,7 +13,7 @@
     <ng-container *ngIf="metaData$ | async as metaData">
         <div class="header-content">
             <h1>{{metaData.title}}</h1>
-            <h5 class="text-muted font-bold">{{metaData.runAt | friendlyDateAndTime }} </h5>
+            <h5 class="text-muted fw-bold">{{metaData.runAt | friendlyDateAndTime }} </h5>
             <p>{{ metaData.description }}</p>
         </div>
 

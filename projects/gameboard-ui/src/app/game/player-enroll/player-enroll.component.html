@@ -52,10 +52,10 @@
             <ng-container *ngIf="!isEnrolling; else enrolling">
               <div class="d-flex align-items-center justify-content-center mt-5"
                 *ngIf="ctxDelayed$ | async as delay; else loading">
-                <div class="text-center"
-                  *ngIf="!!(ctx.user.name && hasSelectedSponsor) && ctx.game.registration.isDuring">
-                  <app-confirm-button btnClass="btn btn-primary btn-lg mr-4" [disabled]="!isRegistrationOpen"
-                    [tooltip]="enrollTooltip" (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
+                <div class="text-center" *ngIf="!!ctx.user.name && hasSelectedSponsor">
+                  <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
+                    [disabled]="!isRegistrationOpen && !canStandardEnroll && !canAdminEnroll" [tooltip]="enrollTooltip"
+                    (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
                     <fa-icon [icon]="faEdit"></fa-icon>
                     <span>Enroll</span>
                   </app-confirm-button>
@@ -73,7 +73,7 @@
       </ng-container>
 
       <!-- already enrolled -->
-      <ng-container *ngIf="!!ctx.player.id && ctx.player.session?.isBefore && ctx.game.registration.isDuring">
+      <ng-container *ngIf="!!ctx.player.id && !ctx.player.session?.isAfter">
         <div *ngIf="isManager$ | async" class="form-group mb-0">
           <ng-container *ngIf="ctx.player | hasPendingName">
             <ng-container *ngIf="!ctx.player.nameStatus">
@@ -160,7 +160,7 @@
         <!-- unenroll -->
         <ng-container *ngIf="!isEnrolling; else unenrolling">
           <div
-            *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || ctx.user.isTester)"
+            *ngIf="ctx.player.id && (!ctx.player.session || ctx.player.session.isBefore) && (!ctx.game.registration.isAfter || (ctx.user | can:'Play_IgnoreExecutionWindow'))"
             class="form-group text-center">
             <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
               <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
@@ -199,6 +199,6 @@
 <ng-template #invitationGenerated>
   <div class="invitation-generated-wrapper">
     <span class="text-muted">Your invitation code: </span>
-    <strong [appCopyOnClick]="code" class="invitation-code text-info font-bold cursor-pointer">{{code}}</strong>
+    <strong [appCopyOnClick]="code" class="invitation-code text-info fw-bold cursor-pointer">{{code}}</strong>
   </div>
 </ng-template>

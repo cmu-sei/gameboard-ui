@@ -233,12 +233,14 @@ table.gameboard-table {
     }
   }
 
+  td.centered-col,
   td.numeric-col,
   td.date-col,
+  th.centered-col,
   th.numeric-col,
   th.date-col {
-    padding: 0;
-    text-align: center;
+    padding: 0 !important;
+    text-align: center !important;
   }
 
   tbody td {
@@ -439,8 +441,12 @@ th[align="left"] {
   width: 100%;
 }
 
-.font-bold {
+.fw-bold {
   font-weight: bold !important;
+}
+
+.rounded-circle {
+  aspect-ratio: 1/1;
 }
 
 .text-capitalize {
@@ -488,6 +494,10 @@ th[align="left"] {
 
 .width-40 {
   width: 40%;
+}
+
+.width-45 {
+  width: 45%;
 }
 
 .width-50 {

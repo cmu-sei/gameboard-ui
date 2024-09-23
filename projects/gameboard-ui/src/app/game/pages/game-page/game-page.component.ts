@@ -21,7 +21,6 @@ import { LogService } from '@/services/log.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 import { AppTitleService } from '@/services/app-title.service';
-import { UserService } from '@/api/user.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { GameHubEventWith, GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
 
@@ -62,7 +61,6 @@ export class GamePageComponent implements OnDestroy {
     apiPlayer: PlayerService,
     appTitle: AppTitleService,
     localUser: LocalUserService,
-    userService: UserService,
     private hub: NotificationService,
     private logService: LogService,
     private gameHubService: GameHubService,
@@ -72,7 +70,7 @@ export class GamePageComponent implements OnDestroy {
     private windowService: WindowService
   ) {
     const user$ = localUser.user$.pipe(map(u => !!u ? u : {} as ApiUser));
-    this.canAdminEnroll$ = localUser.user$.pipe(map(u => !!u && userService.canEnrollAndPlayOutsideExecutionWindow(u)));
+    this.canAdminEnroll$ = localUser.can$('Play_IgnoreExecutionWindow');
 
     const game$ = route.params.pipe(
       filter(p => !!p.id),
@@ -155,7 +153,6 @@ export class GamePageComponent implements OnDestroy {
 
         if (playerEvent.hubEvent.action == HubEventAction.started) {
           const currentPlayer = this.player$.getValue();
-
           if (currentPlayer && playerEvent.hubEvent.model.sessionBegin) {
             currentPlayer.session = new TimeWindow(playerEvent.hubEvent.model.sessionBegin, playerEvent.hubEvent.model.sessionEnd);
             this.onSessionStarted(currentPlayer);
@@ -173,7 +170,10 @@ export class GamePageComponent implements OnDestroy {
           player: c.player = c.player || { userId: c.user.id } as Player
         };
       }),
-      tap(c => { if (!c.game) { router.navigateByUrl("/"); } }),
+      tap(c => {
+        if (!c.game)
+          this.routerService.goHome();
+      }),
       filter(c => !!c.game),
       tap(async ctx => {
         // NOTE: even if they haven't enrolled, they have a ctx.player object. 

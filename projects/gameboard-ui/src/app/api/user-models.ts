@@ -3,6 +3,7 @@
 
 import { SimpleEntity } from "./models";
 import { Sponsor } from "./sponsor-models";
+import { UserRolePermissionKey } from "./user-role-permissions.models";
 
 export interface ApiUser {
   id: string;
@@ -11,19 +12,12 @@ export interface ApiUser {
   approvedName: string;
   hasDefaultSponsor: boolean;
   sponsor: Sponsor;
-  role: UserRole;
   createdOn: Date;
   lastLoginDate?: Date;
   loginCount: number;
-  isAdmin: boolean;
-  isDirector: boolean;
-  isRegistrar: boolean;
-  isDesigner: boolean;
-  isTester: boolean;
-  isObserver: boolean;
-  isSupport: boolean;
   pendingName: string;
-  roleTag: string;
+  role: UserRoleKey;
+  rolePermissions: UserRolePermissionKey[]
 }
 
 export interface NewUser {
@@ -36,7 +30,7 @@ export interface ChangedUser {
   approvedName?: string;
   nameStatus?: string;
   sponsorId?: string;
-  role?: UserRole;
+  role?: UserRoleKey;
 }
 
 export interface SelfChangedUser {
@@ -51,6 +45,8 @@ export interface TeamMember {
   role: PlayerRole;
 }
 
+export type UserRoleKey = "member" | "tester" | "support" | "director" | "admin";
+
 export interface UserSettings {
   playAudioOnBrowserNotification: boolean;
 }
@@ -64,7 +60,7 @@ export interface UserSummary {
   approvedName: string;
 }
 
-export enum UserRole {
+export enum UserRoleLegacy {
   member = 'member',
   observer = 'observer',
   support = 'support',

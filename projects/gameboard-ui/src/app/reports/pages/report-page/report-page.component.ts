@@ -1,10 +1,10 @@
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, firstValueFrom } from 'rxjs';
 import { ReportKey, ReportMetaData, ReportViewModel } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
 import { ActiveReportService } from '@/reports/services/active-report.service';
 import { RouterService } from '@/services/router.service';
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-report-page',

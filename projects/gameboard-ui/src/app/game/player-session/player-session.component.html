@@ -30,7 +30,8 @@
             </div>
             <div class="spacer"></div>
 
-            <app-confirm-button *ngIf="ctx.game.allowReset && !isResetting" class="mx-2"
+            <app-confirm-button
+              *ngIf="(ctx.game.allowReset || (canIgnoreSessionResetSettings$ | async)) && !isResetting" class="mx-2"
               btnClass="btn btn-sm pop-warning" (confirm)="handleReset(ctx.player)">
               <fa-icon [icon]="fa.trash"></fa-icon>
               <span>Reset Session</span>

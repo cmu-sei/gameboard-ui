@@ -10,17 +10,21 @@ import { UserService as ApiUserService } from '../api/user.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { ConfigService } from './config.service';
 import { LogService } from '@/services/log.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 
 @Injectable({ providedIn: 'root' })
+
 export class UserService implements OnDestroy {
-  private _userSub?: Subscription;
+  private _userSub: Subscription;
+  hasPermission$ = new BehaviorSubject<boolean>(false);
   user$ = new BehaviorSubject<ApiUser | null>(null);
-  init$ = new BehaviorSubject<boolean>(false);
   refresh$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private auth: AuthService,
     private log: LogService,
+    private permissionsService: UserRolePermissionsService,
     api: ApiUserService,
     config: ConfigService,
     router: Router
@@ -38,12 +42,10 @@ export class UserService implements OnDestroy {
       switchMap(profile => api.tryCreate({ id: profile.sub })),
       catchError(err => of(null)),
       filter(result => !!result),
-      tap(result => this.init$.next(true)),
     ).subscribe(result => this.user$.next(result!.user));
 
     auth.tokenState$.pipe(
       filter(t => t === AuthTokenState.invalid),
-      tap(() => this.init$.next(true)),
     ).subscribe(() => this.user$.next(null));
 
     auth.tokenState$.pipe(
@@ -57,14 +59,20 @@ export class UserService implements OnDestroy {
     });
 
     // log the login event for the current user (we track date of last login and total login count)
-
-    this._userSub = this.user$.pipe(
-      // when the user's id changes
-      distinctUntilChanged((prev, current) => (prev?.id || null) === (current?.id || null)),
-      // and when the user is truthy
-      filter(u => !!u),
-      // record a login event
+    this._userSub = this.auth.tokenState$.pipe(
+      distinctUntilChanged(),
+      filter(t => t === AuthTokenState.valid && !!auth.oidcUser?.profile)
     ).subscribe(async u => await firstValueFrom(api.updateLoginEvents()));
+  }
+
+  can(permission: UserRolePermissionKey) {
+    return this.permissionsService.can(this.user$.value, permission);
+  }
+
+  can$(permission: UserRolePermissionKey) {
+    return this.user$.pipe(
+      map(u => this.permissionsService.can(u, permission))
+    );
   }
 
   ngOnDestroy(): void {
@@ -73,15 +81,6 @@ export class UserService implements OnDestroy {
 
   logout(): void {
     this.auth.logout();
-  }
-
-  // an app initializer to register the user and retrieve the user's profile.
-  register(): Promise<void> {
-    return new Promise<void>(resolve => {
-      this.init$.pipe(
-        filter(v => v)
-      ).subscribe(() => resolve());
-    });
   }
 
   refresh(): void {

@@ -4,7 +4,7 @@ import { ReportResultsWithOverallStats, ReportViewUpdate } from '../../../report
 import { firstValueFrom } from 'rxjs';
 import { SupportReportService } from '@/reports/components/reports/support-report/support-report.service';
 import { DoughnutChartConfig } from '@/core/components/doughnut-chart/doughnut-chart.component';
-import { groupBy } from 'projects/gameboard-ui/src/tools';
+import { groupBy } from '@/../tools/tools';
 import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { SupportService } from '@/api/support.service';
 import { FontAwesomeService } from '@/services/font-awesome.service';

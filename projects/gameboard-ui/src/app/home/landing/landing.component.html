@@ -21,7 +21,7 @@
       <h2>Featured Games</h2>
     </div>
     <ng-container *ngFor="let game of featured">
-      <ng-container *ngTemplateOutlet="gameWrapper;context: {game: game}"></ng-container>
+      <ng-container *ngTemplateOutlet="gameWrapper; context: { game: game }"></ng-container>
     </ng-container>
   </ng-container>
 </div>

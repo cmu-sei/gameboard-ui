@@ -68,12 +68,6 @@ import { SystemNotificationsModule } from './system-notifications/system-notific
       multi: true
     },
     {
-      provide: APP_INITIALIZER,
-      useFactory: register,
-      deps: [CurrentUserService],
-      multi: true
-    },
-    {
       provide: SignalRService,
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
       deps: [ConfigService, LogService, UserService],
@@ -106,8 +100,4 @@ export function loadSettings(
   config: ConfigService,
 ): (() => Observable<any>) {
   return (): Observable<any> => config.load();
-}
-
-export function register(user: CurrentUserService): (() => Promise<void>) {
-  return (): Promise<void> => user.register();
 }

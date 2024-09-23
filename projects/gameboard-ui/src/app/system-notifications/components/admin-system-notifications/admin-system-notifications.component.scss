@@ -1,17 +1,13 @@
-
 .notification-content {
-    color: #bababa;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 25vw;
+  color: #bababa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 30rem;
 }
 
-td, th {
-    margin: 4px 0;
-    border-bottom: solid 1px #dedede;
-}
-
-tbody td {
-    padding: 4px;
+td,
+th {
+  padding: 4px 0;
+  border-bottom: solid 1px #dedede;
 }

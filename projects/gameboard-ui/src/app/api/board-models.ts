@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { FeedbackTemplate } from "./feedback-models";
+import { GameEngineMode } from "./game-models";
 import { PlayerMode, PlayerRole, TimeWindow } from "./player-models";
 
 export interface Challenge {
@@ -89,7 +90,7 @@ export interface BoardGame {
   track: string;
   season: string;
   division: string;
-  mode: string;
+  mode: GameEngineMode;
   sponsor: string;
   feedbackTemplate: FeedbackTemplate;
   background: string;
@@ -106,6 +107,7 @@ export interface BoardGame {
   cardText1: string;
   cardText2: string;
   cardText3: string;
+  maxTeamSize: number;
 }
 
 export interface BoardSpec {

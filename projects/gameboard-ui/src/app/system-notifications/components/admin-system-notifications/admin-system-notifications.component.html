@@ -21,14 +21,16 @@
         <col> <!--notification text-->
         <col> <!--type-->
         <col> <!--dates-->
+        <col> <!--dismissible-->
         <col> <!--views-->
         <col> <!--edit-->
 
         <thead>
             <tr>
                 <th scope="col">Notification</th>
-                <th scope="col">Type</th>
-                <th scope="col">Visible Dates</th>
+                <th scope="col" class="text-center">Type</th>
+                <th scope="col" class="text-center">Visible Dates</th>
+                <th scope="col" class="text-center">Dismissible?</th>
                 <th scope="col">Views</th>
                 <th scope="col"></th>
             </tr>
@@ -41,7 +43,7 @@
                     <p class="notification-content m-0">{{ notification.markdownContent }}</p>
                 </td>
 
-                <td>
+                <td class="text-center">
                     <span class="badge text-capitalize"
                         [class.badge-info]="notification.notificationType == 'generalInfo'"
                         [class.badge-warning]="notification.notificationType == 'warning'"
@@ -50,13 +52,15 @@
                     </span>
                 </td>
 
-                <td>
+                <td class="text-center">
                     <span *ngIf="notification.startsOn || notification.endsOn; else noValue">
                         {{ notification.startsOn ? (notification.startsOn | shortdate ) : "?" }}
                         -
                         {{ notification.endsOn ? (notification.endsOn | shortdate ) : "?" }}
                     </span>
                 </td>
+
+                <td class="text-center">{{ notification.isDismissible ? "Yes" : "No" }} </td>
 
                 <td>
                     <div><strong>{{notification.calloutViewCount}}</strong> callout {{ "view" |

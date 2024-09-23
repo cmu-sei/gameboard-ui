@@ -35,6 +35,7 @@ import { UntagPipe } from './pipes/untag.pipe';
 import { UntilPipe } from './pipes/until-date.pipe';
 
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { GameInfoBubblesComponent } from "../standalone/components/game-info-bubbles/game-info-bubbles.component";
 
 const components = [
   ClipspanComponent,
@@ -71,7 +72,8 @@ const components = [
     ProgressbarModule,
     TooltipModule,
     RouterModule,
-    CoreModule
+    CoreModule,
+    GameInfoBubblesComponent
   ],
 })
 export class UtilityModule { }

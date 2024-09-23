@@ -12,7 +12,7 @@ import { practiceModeEnabledGuard } from './prac/practice-mode-enabled.guard';
 const routes: Routes = [
   {
     path: 'admin',
-    canLoad: [AuthGuard, AdminGuard], canActivate: [AuthGuard, AdminGuard], canActivateChild: [AuthGuard, AdminGuard],
+    canActivate: [AuthGuard, AdminGuard], canActivateChild: [AuthGuard, AdminGuard],
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
   {
@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'practice',
-    canLoad: [practiceModeEnabledGuard], canActivate: [practiceModeEnabledGuard], canActivateChild: [practiceModeEnabledGuard],
+    canActivate: [practiceModeEnabledGuard], canActivateChild: [practiceModeEnabledGuard],
     loadChildren: () => import('./prac/prac.module').then(m => m.PracModule),
     title: "Practice"
   },
@@ -33,12 +33,12 @@ const routes: Routes = [
   },
   {
     path: 'support',
-    canLoad: [AuthGuard], canActivate: [AuthGuard], canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard], canActivateChild: [AuthGuard],
     loadChildren: () => import('./support/support.module').then(m => m.SupportModule)
   },
   {
     path: 'reports',
-    canLoad: [AuthGuard], canActivate: [AuthGuard], canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard], canActivateChild: [AuthGuard],
     loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
   },
   {

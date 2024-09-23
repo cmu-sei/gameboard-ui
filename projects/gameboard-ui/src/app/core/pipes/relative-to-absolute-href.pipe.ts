@@ -1,6 +1,6 @@
-import { buildUrl } from '@/tools/functions';
-import { ConfigService } from '@/utility/config.service';
 import { Pipe, PipeTransform } from '@angular/core';
+import { ConfigService } from '@/utility/config.service';
+import { buildUrl } from '@/../tools/functions';
 
 @Pipe({ name: 'relativeToAbsoluteHref' })
 export class RelativeToAbsoluteHrefPipe implements PipeTransform {

@@ -1,0 +1,95 @@
+<h2 class="my-4">Permissions</h2>
+
+<ng-container *ngIf="appPermissionsOverview; else loading">
+    <div class="my-3">Your role is <strong class="text-info">{{ appPermissionsOverview.yourRole | titlecase }}</strong>.
+    </div>
+
+    <table class="table gameboard-table">
+        <colgroup>
+            <col style="width: 40%">
+            <col>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+            <tr class="header-row sticky-header">
+                <th>Permission</th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'admin'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['admin'].description"
+                        class="text-dashed-underline">
+                        Admin
+                    </app-whats-this>
+                </th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole == 'director'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['director'].description"
+                        class="text-dashed-underline">
+                        Director
+                    </app-whats-this>
+                </th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole == 'support'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['support'].description"
+                        class="text-dashed-underline">
+                        Support
+                    </app-whats-this>
+                </th>
+                <th class="centered-col" [class.your-role]="appPermissionsOverview.yourRole == 'tester'">
+                    <app-whats-this [whatItIs]="appPermissionsOverview.roles['tester'].description"
+                        class="text-dashed-underline">
+                        Tester
+                    </app-whats-this>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let category of appPermissionsOverview.categories">
+                <tr class="category-header">
+                    <td colspan="7" class="category-header">
+                        <h3>{{category.name}}</h3>
+                    </td>
+                </tr>
+                <tr *ngFor="let permission of category.permissions">
+                    <td>
+                        <h4 class="fs-11">{{permission.name}}</h4>
+                        <p class="text-muted m-0 p-0">{{permission.description}}</p>
+                    </td>
+                    <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'admin'">
+                        <ng-container
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['admin'].permissions } }">
+                        </ng-container>
+                    </td>
+                    <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'director'">
+                        <ng-container
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['director'].permissions } }">
+                        </ng-container>
+                    </td>
+                    <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'support'">
+                        <ng-container
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['support'].permissions } }">
+                        </ng-container>
+                    </td>
+                    <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'tester'">
+                        <ng-container
+                            *ngTemplateOutlet="hasPermission; context: { $implicit: { permissionKey: permission.key, rolePermissions: appPermissionsOverview.roles['tester'].permissions } }">
+                        </ng-container>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading permissions...</app-spinner>
+</ng-template>
+
+<ng-template #hasPermission let-context>
+    <span *ngIf="context.permissionKey | arrayContains:context.rolePermissions; else noPermission"
+        class="has-permission fw-bold">
+        Yes
+    </span>
+</ng-template>
+
+<ng-template #noPermission>
+    <span class="no-permission">No</span>
+</ng-template>
