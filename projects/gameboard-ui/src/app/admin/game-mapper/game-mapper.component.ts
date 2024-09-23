@@ -1,9 +1,10 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
-import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ExternalSpec, NewSpec, Spec } from '../../api/spec-models';
@@ -13,15 +14,14 @@ import { fa } from '@/services/font-awesome.service';
 import { ChallengeSpecScoringConfig, GameScoringConfig } from '@/services/scoring/scoring.models';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { ToastService } from '@/utility/services/toast.service';
-import { ActivatedRoute } from '@angular/router';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
   selector: 'app-game-mapper',
   templateUrl: './game-mapper.component.html',
   styleUrls: ['./game-mapper.component.scss']
 })
-export class GameMapperComponent implements OnInit, AfterViewInit {
-  @Input() game!: Game;
+export class GameMapperComponent {
   @Output() specsUpdated = new EventEmitter<Spec[]>();
   @ViewChild('mapbox') mapboxRef!: ElementRef;
 
@@ -29,22 +29,22 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   specConfigMap: { [specId: string]: ChallengeSpecScoringConfig } = {};
 
   gameBonusesConfig$: Observable<GameScoringConfig>;
-  refresh$ = new Subject<string>();
+  refresh$ = new Subject<string | null | undefined>();
   updating$ = new Subject<Spec>();
   deleting$ = new Subject<Spec>();
   recentExternals$ = new Subject<void>();
   updated$: Observable<Spec>;
   created$: Observable<Spec>;
   deleted$: Observable<any>;
-  list$: Observable<Spec[]>;
   recentExternalSpecList$: Observable<ExternalSpec[]>;
-  list: Spec[] = [];
 
   show = false;
   viewing = 'edit';
   addedCount = 0;
 
+  protected game?: Game;
   protected hasZeroPointSpecs = false;
+  protected specs: Spec[] = [];
   protected syncErrors: any[] = [];
 
   constructor(
@@ -53,19 +53,13 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     private config: ConfigService,
     private route: ActivatedRoute,
     private toastService: ToastService,
+    private unsub: UnsubscriberService,
     scoringService: ScoringService
   ) {
-    this.list$ = this.refresh$.pipe(
-      debounceTime(500),
-      switchMap(id => gameSvc.retrieveSpecs(id)),
-      tap(r => this.list = r),
-      tap(r => this.checkForZeroPointActiveSpecs(r)),
-      tap(r => this.specsUpdated.emit(r))
-    );
-
     this.gameBonusesConfig$ = this.refresh$.pipe(
       debounceTime(500),
-      switchMap(id => scoringService.getGameScoringConfig(id)),
+      filter(gId => !!gId),
+      switchMap(id => scoringService.getGameScoringConfig(id!)),
       tap(config => {
         this.specConfigMap = {};
 
@@ -78,6 +72,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
       })
     );
 
+    this.unsub.add(this.refresh$.pipe(distinctUntilChanged()).subscribe(async gameId => await this.loadGameData(gameId)));
+
     // Grabs external specs
     this.recentExternalSpecList$ = this.recentExternals$.pipe(
       debounceTime(500),
@@ -87,7 +83,7 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
         extSpecArr.forEach(
           extSpec => {
             // Find the one in the local list that matches this one
-            var item = this.list.find(i => i.externalId === extSpec.externalId);
+            var item = this.specs.find(i => i.externalId === extSpec.externalId);
 
             // Compare the name and description of each; if they aren't equal, update the challenge in the GB database
             if (item) {
@@ -103,16 +99,16 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     this.recentExternalSpecList$.subscribe();
 
     this.created$ = api.selected$.pipe(
-      filter(s => !this.list.find(i => i.externalId === s.externalId)),
+      filter(s => !this.specs.find(i => i.externalId === s.externalId)),
+      filter(s => !!this.game),
       map(s => {
         // compute semi-random coordinates for the new spec so it doesn't sit on top of other
         // added specs
         const randomX = Math.random() * 0.5 + 0.25;
         const randomY = Math.random() * 0.5 + 0.25;
-        return { ...s, gameId: this.game.id, points: 1, x: randomX, y: randomY, r: .015 } as NewSpec;
+        return { ...s, gameId: this.game!.id, points: 1, x: randomX, y: randomY, r: .015 } as NewSpec;
       }),
       switchMap(s => api.create(s)),
-      tap(r => this.list.push(r)),
       tap(r => this.addedCount += 1),
       tap(s => this.refresh()),
     );
@@ -121,35 +117,21 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
       debounceTime(500),
       filter(s => s.points === 0 || s.points > 0),
       switchMap(s => api.update(s)),
-      tap(s => this.refresh()),
+      tap(s => this.refresh())
     );
 
     this.deleted$ = this.deleting$.pipe(
+      filter(s => !!this.game?.id),
       switchMap(s => api.delete(s.id)),
-      tap(() => this.refresh$.next(this.game.id)),
+      tap(() => this.refresh()),
     );
-  }
 
-  async ngOnInit(): Promise<void> {
-    if (!this.game?.id) {
-      const gameId = this.route.snapshot.paramMap.get("gameId") || this.route.snapshot.data.gameId;
-
-      if (!gameId)
-        throw new Error("Component requires gameId either as an input or from the route.");
-
-      this.game = await firstValueFrom(this.gameSvc.retrieve(gameId));
-    }
-  }
-
-  ngAfterViewInit(): void {
-    this.refresh();
+    this.unsub.add(this.route.data.subscribe(d => this.refresh$.next(d.gameId)));
   }
 
   refresh(): void {
-    if (this.game?.id) {
-      this.refresh$.next(this.game.id);
-      this.recentExternals$.next();
-    }
+    this.refresh$.next(this.route.snapshot.data.gameId);
+    this.recentExternals$.next();
   }
 
   view(v: string): void {
@@ -159,22 +141,20 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  upload(files: File[]): void {
-    this.gameSvc.uploadImage(this.game.id, 'map', files[0]).subscribe(
-      r => {
-        this.game.background = r.filename;
-        this.game.mapUrl = `${this.config.imagehost}/${r.filename}`;
-      }
-    );
+  async upload(files: File[]) {
+    if (!this.game)
+      return;
+
+    const result = await firstValueFrom(this.gameSvc.uploadImage(this.game.id, "map", files[0]));
+    this.updateGameMapImage(result.filename);
   }
 
-  clearImage(): void {
-    this.gameSvc.deleteImage(this.game.id, 'map').subscribe(
-      r => {
-        this.game.background = r.filename;
-        this.game.mapUrl = `${this.config.basehref}assets/map.png`;
-      }
-    );
+  async clearImage() {
+    if (!this.game)
+      return;
+
+    const result = await firstValueFrom(this.gameSvc.deleteImage(this.game.id, "map"));
+    this.updateGameMapImage(result.filename);
   }
 
   handleBonusesChanged() {
@@ -183,6 +163,8 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
 
   sync(): void {
     this.syncErrors = [];
+    if (!this.game)
+      return;
 
     try {
       this.api.sync(this.game.id).subscribe(() => this.refresh());
@@ -198,12 +180,46 @@ export class GameMapperComponent implements OnInit, AfterViewInit {
   }
 
   protected handleSpecUpdated(spec: Spec) {
-    this.list = [...this.list.filter(s => s.id !== spec.id), spec];
-    this.checkForZeroPointActiveSpecs(this.list);
-    this.specsUpdated.emit(this.list);
+    this.specs = [...this.specs.filter(s => s.id !== spec.id), spec];
+    this.checkForZeroPointActiveSpecs(this.specs);
+    this.specsUpdated.emit(this.specs);
   }
 
   private checkForZeroPointActiveSpecs(specs: Spec[]) {
     this.hasZeroPointSpecs = specs.some(s => s.points <= 0);
+  }
+
+  private async loadGameData(gameId: string | null | undefined) {
+    if (!gameId) {
+      this.game = undefined;
+      this.specs = [];
+      return;
+    }
+
+    if (this.game?.id == gameId) {
+      await this.updateSpecs(gameId);
+      return;
+    }
+
+    this.game = await firstValueFrom(this.gameSvc.retrieve(gameId));
+    await this.updateSpecs(gameId);
+  }
+
+  private async updateSpecs(gameId?: string) {
+    if (!gameId) {
+      this.specs = [];
+      return;
+    }
+
+    this.specs = await firstValueFrom(this.gameSvc.retrieveSpecs(gameId));
+    this.checkForZeroPointActiveSpecs(this.specs);
+  }
+
+  private updateGameMapImage(imagePath: string) {
+    if (!this.game)
+      return;
+
+    this.game.background = imagePath;
+    this.game.mapUrl = `${this.config.basehref}assets/map.png`;
   }
 }
