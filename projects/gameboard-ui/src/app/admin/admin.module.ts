@@ -190,13 +190,13 @@ import { GameIdResolver } from './resolvers/game-id.resolver';
               { path: "settings", component: PracticeSettingsComponent },
             ]
           },
-          { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Admin | Sponsors" },
-          { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
-          { path: 'registrar/players', component: PlayerNamesComponent, title: "Admin | Players" },
-          { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
+          { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Sponsors | Admin" },
+          { path: 'registrar/users', component: UserRegistrarComponent, title: "Users | Admin" },
+          { path: 'registrar/players', component: PlayerNamesComponent, title: "Players | Admin" },
+          { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Observe | Admin" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
-          { path: 'overview', component: AdminOverviewComponent, title: "Admin | Overview" },
-          { path: "permissions", component: AdminRolesComponent, title: "Admin | Permissions" },
+          { path: 'overview', component: AdminOverviewComponent, title: "Live | Admin " },
+          { path: "permissions", component: AdminRolesComponent, title: "Permissions | Admin" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },
@@ -204,8 +204,8 @@ import { GameIdResolver } from './resolvers/game-id.resolver';
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: "notifications", component: AdminSystemNotificationsComponent, title: "System Notifications | Admin" },
-          { path: "support/settings", component: SupportSettingsComponent, title: "Admin | Support" },
-          { path: 'support', component: ChallengeBrowserComponent, title: "Admin | Challenges" }
+          { path: "support/settings", component: SupportSettingsComponent, title: "Support | Admin" },
+          { path: 'support', component: ChallengeBrowserComponent, title: "Challenges | Admin" }
         ]
       },
     ]),
