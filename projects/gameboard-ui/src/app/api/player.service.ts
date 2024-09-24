@@ -7,7 +7,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { GameSessionService } from '@/services/game-session.service';
 import { ConfigService } from '../utility/config.service';
-import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, Standing, Team, TeamAdvancement, TeamChallenge, TeamInvitation, TeamSummary, TimeWindow } from './player-models';
+import { ChangedPlayer, NewPlayer, Player, PlayerCertificate, PlayerEnlistment, Standing, Team, TeamChallenge, TeamInvitation, TimeWindow } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {

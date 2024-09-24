@@ -2,9 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { CommonModule } from '@angular/common';
-import { inject, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
@@ -155,7 +154,6 @@ import { GameIdResolver } from './resolvers/game-id.resolver';
   ],
   imports: [
     CommonModule,
-    FormsModule,
     EventHorizonModule,
     RouterModule.forChild([
       {
@@ -194,20 +192,20 @@ import { GameIdResolver } from './resolvers/game-id.resolver';
           },
           { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Admin | Sponsors" },
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Admin | Users" },
-          { path: 'registrar/players', component: PlayerNamesComponent },
+          { path: 'registrar/players', component: PlayerNamesComponent, title: "Admin | Players" },
           { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Admin | Observe" },
           { path: 'observer/teams/:id', component: TeamObserverComponent },
           { path: 'overview', component: AdminOverviewComponent, title: "Admin | Overview" },
-          { path: "permissions", component: AdminRolesComponent },
+          { path: "permissions", component: AdminRolesComponent, title: "Admin | Permissions" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },
           { path: 'report/feedback', component: FeedbackReportComponent },
           { path: 'report/support', component: SupportReportLegacyComponent },
           { path: 'report/participation', component: ParticipationReportComponent },
-          { path: "notifications", component: AdminSystemNotificationsComponent },
+          { path: "notifications", component: AdminSystemNotificationsComponent, title: "System Notifications | Admin" },
           { path: "support/settings", component: SupportSettingsComponent, title: "Admin | Support" },
-          { path: 'support', component: ChallengeBrowserComponent }
+          { path: 'support', component: ChallengeBrowserComponent, title: "Admin | Challenges" }
         ]
       },
     ]),
