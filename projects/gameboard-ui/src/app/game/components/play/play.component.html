@@ -1,6 +1,5 @@
 <div class="container">
     <app-error-div [errors]="errors"></app-error-div>
-    <button type="button" class="btn btn-info" (click)="toggleMiniPlayer()">Toggle Mini-Player</button>
     <ng-container *ngIf="playerContext && challengeSpec">
         <div class="d-flex">
             <div class="challenge-doc-container flex-grow-1">
@@ -12,6 +11,8 @@
                 <ng-container *ngIf="isUndeploying">
                     <app-spinner>Stopping challenge resources...</app-spinner>
                 </ng-container>
+
+                <button type="button" class="btn btn-info" (click)="toggleMiniPlayer()">Toggle Mini-Player</button>
 
                 <ng-container *ngIf="!isDeploying && !isUndeploying && challenge && !isMiniPlayerSelected;">
                     <p class="challenge-document-text">

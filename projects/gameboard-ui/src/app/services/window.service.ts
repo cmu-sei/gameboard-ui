@@ -1,26 +1,22 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, fromEvent } from 'rxjs';
-import { UnsubscriberService } from './unsubscriber.service';
+import { BehaviorSubject, fromEvent, Subscription } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class WindowService implements OnDestroy {
+  private _windowResizeSub?: Subscription;
   private _resizeBehaviorSubject$ = new BehaviorSubject<number>(this.document.defaultView?.innerWidth || 0);
   public resize$ = this._resizeBehaviorSubject$.asObservable();
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private unsub: UnsubscriberService) {
-    unsub.add(fromEvent(this.get(), 'resize').subscribe(ev => {
-      console.log("ev is", ev);
+    @Inject(DOCUMENT) private document: Document) {
+    this._windowResizeSub = fromEvent(this.get(), 'resize').subscribe(ev => {
       this._resizeBehaviorSubject$.next(this.get().innerWidth);
-    }));
+    });
   }
 
   ngOnDestroy(): void {
-    this.unsub.unsubscribeAll();
+    this._windowResizeSub?.unsubscribe();
   }
 
   get(): Window {
