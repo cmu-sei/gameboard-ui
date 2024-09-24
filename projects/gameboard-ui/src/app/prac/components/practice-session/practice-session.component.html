@@ -16,23 +16,21 @@
     <ng-container *ngIf="(authed$ | async); else unauthed">
       <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
 
-      <div class="play-container container">
-        <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
-          <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
-            btnClass="btn btn-lg btn-info px-4 mb-4" (confirm)="play(spec.gameId)" class="d-block">
-            <span>Start Practice Session</span>
-          </app-confirm-button>
+      <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
+        <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
+          btnClass="btn btn-lg btn-info px-4 mb-4" (confirm)="play(spec.gameId)" class="d-block">
+          <span>Start Practice Session</span>
+        </app-confirm-button>
 
-          <button *ngIf="isPlayingOtherChallenge" type="button" class="btn btn-lg btn-warning"
-            (click)="handleStartNewChallengeClick(spec)">
-            Stop your current challenge and play this one instead
-          </button>
-        </div>
-
-        <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
-          [playerContext]="playerContext" [autoPlay]="true"
-          (deployStatusChanged)="handleDeployStatusChanged($event)"></app-play>
+        <button *ngIf="isPlayingOtherChallenge" type="button" class="btn btn-lg btn-warning"
+          (click)="handleStartNewChallengeClick(spec)">
+          Stop your current challenge and play this one instead
+        </button>
       </div>
+
+      <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
+        [playerContext]="playerContext" [autoPlay]="true"
+        (deployStatusChanged)="handleDeployStatusChanged($event)"></app-play>
     </ng-container>
   </div>
 </div>
