@@ -34,7 +34,6 @@ export class AdminSystemNotificationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.appTitleService.set("System Notifications | Admin");
     this._forceLoad$.next(true);
   }
 

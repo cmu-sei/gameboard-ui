@@ -41,9 +41,11 @@
     <div>
       <div class="player-info">
         <span class="mx-2">{{player.approvedName}}</span>
-        <span class="text-muted">{{player.pendingName}}</span><br />
+        <span class="text-muted" *ngIf="player.name && player.name !== player.approvedName">{{player.name}}</span><br />
         <small class="text-muted">
-          <span>{{player.gameName}}</span> &mdash;
+          <a [routerLink]="'/admin/game/' + player.gameId">
+            <span>{{player.gameName}}</span> &mdash;
+          </a>
           <span>user: </span>&nbsp;
           <app-clipspan class="mr-2">{{ player.userId | slice:0:8 }}</app-clipspan>
           <span>player: </span>&nbsp;
@@ -55,21 +57,26 @@
         </small>
       </div>
     </div>
-    <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1"
-      (click)="approveName(player)">
-      <fa-icon [icon]="faCheck"></fa-icon>
-      <span>Approve</span>
-    </button>
-    <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1"
-      (click)="resetName(player)">
-      <fa-icon [icon]="faUndo"></fa-icon>
-      <span>Reset</span>
-    </button>
-    <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(player)">
-      <fa-icon [icon]="faTimes"></fa-icon>
-      <span>Disapprove</span>
-    </button>
+
+    <ng-container *ngIf="player.name && player.name !== player.approvedName">
+      <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1"
+        (click)="approveName(player)">
+        <fa-icon [icon]="faCheck"></fa-icon>
+        <span>Approve</span>
+      </button>
+      <button *ngIf="player.name && player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1"
+        (click)="resetName(player)">
+        <fa-icon [icon]="faUndo"></fa-icon>
+        <span>Reset</span>
+      </button>
+      <button *ngIf="player.name!==player.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(player)">
+        <fa-icon [icon]="faTimes"></fa-icon>
+        <span>Disapprove</span>
+      </button>
+    </ng-container>
+
     <div class="spacer"></div>
+
     <div *ngIf="viewed === player" class="col-12">
       <div class="form-group">
         <label class="mb-0" for="name-input">Approved Name</label>

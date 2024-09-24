@@ -7,6 +7,7 @@ import { BehaviorSubject, combineLatest, firstValueFrom, Observable, timer } fro
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Player, PlayerSearch } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
+import { AdminService } from '@/api/admin.service';
 
 @Component({
   selector: 'app-player-names',
@@ -37,7 +38,9 @@ export class PlayerNamesComponent {
   faTimes = faTimes;
   faUndo = faUndo;
 
-  constructor(private api: PlayerService) {
+  constructor(
+    private adminService: AdminService,
+    private api: PlayerService) {
 
     this.players$ = combineLatest([
       this.refresh$,
@@ -74,11 +77,11 @@ export class PlayerNamesComponent {
     }));
   }
 
-  approveName(model: Player): void {
+  async approveName(model: Player) {
     model.approvedName = model.name;
     model.nameStatus = "";
     model.pendingName = "";
-    this.update(model);
+    await this.adminService.approvePlayerName(model.id, { name: model.name });
   }
 
   resetName(model: Player): void {
