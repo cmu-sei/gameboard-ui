@@ -22,14 +22,14 @@ $blue: #375a7f !default;
 $indigo: #6610f2 !default;
 $purple: #6f42c1 !default;
 $pink: #e83e8c !default;
-$red: #A41E25 !default;
+$red: #a41e25 !default;
 $orange: #fd7e14 !default;
-$yellow: #F39C12 !default;
+$yellow: #f39c12 !default;
 $green: #257423 !default;
 $alt-green: #2e8540 !default;
 $light-green: #41ad57 !default;
 $teal: #20c997 !default;
-$cyan: #3498DB !default;
+$cyan: #3498db !default;
 
 $primary: #181866 !default;
 $secondary: $gray-800 !default;
@@ -51,7 +51,9 @@ $body-color: $gray-100 !default;
 $link-color: $success !default;
 
 // Fonts
-$font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+$font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI",
+  Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
 $font-size-base: 0.9375rem !default;
 
@@ -87,22 +89,24 @@ $nav-link-padding-x: 2rem !default;
 $nav-link-disabled-color: $gray-500 !default;
 
 $nav-tabs-border-color: $gray-700 !default;
-$nav-tabs-link-hover-border-color: $nav-tabs-border-color $nav-tabs-border-color transparent !default;
+$nav-tabs-link-hover-border-color: $nav-tabs-border-color $nav-tabs-border-color
+  transparent !default;
 $nav-tabs-link-active-color: $white !default;
-$nav-tabs-link-active-border-color: $nav-tabs-border-color $nav-tabs-border-color transparent !default;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color
+  $nav-tabs-border-color transparent !default;
 
 // Navbar
 
 $navbar-padding-y: 1rem !default;
 
-$navbar-dark-color: rgba($white, .6) !default;
+$navbar-dark-color: rgba($white, 0.6) !default;
 $navbar-dark-hover-color: $white !default;
 
 $navbar-light-color: $white !default;
 $navbar-light-hover-color: $success !default;
 $navbar-light-active-color: $white !default;
-$navbar-light-disabled-color: rgba($white, .3) !default;
-$navbar-light-toggler-border-color: rgba($white, .1) !default;
+$navbar-light-disabled-color: rgba($white, 0.3) !default;
+$navbar-light-toggler-border-color: rgba($white, 0.1) !default;
 
 // Pagination
 
@@ -162,3 +166,6 @@ $pre-color: inherit !default;
 
 // z-index
 $z-index-relative: 5;
+
+// sizes
+$max-reading-size: 1140px;

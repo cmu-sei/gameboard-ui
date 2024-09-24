@@ -47,6 +47,10 @@ export class ChallengesService {
     );
   }
 
+  public retrieve(id: string): Observable<Challenge> {
+    return this.http.get<Challenge>(this.apiUrl.build(`}/challenge/${id}`));
+  }
+
   public startPlaying(challenge: NewChallenge): Observable<LocalActiveChallenge> {
     const specId = challenge.specId;
     return this.http.post<Challenge>(this.apiUrl.build("challenge"), challenge).pipe(

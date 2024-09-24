@@ -527,6 +527,12 @@ th[align="left"] {
   white-space: nowrap;
 }
 
+.sticky-under-menu {
+  position: sticky;
+  top: 60px;
+  z-index: 999;
+}
+
 .ticket-status-badge {
   font-size: 0.8rem;
   line-height: 0.85rem;

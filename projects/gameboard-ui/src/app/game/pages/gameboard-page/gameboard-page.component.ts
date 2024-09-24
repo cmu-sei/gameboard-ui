@@ -20,6 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '@/api/models';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { ChallengesService } from '@/api/challenges.service';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -56,6 +57,7 @@ export class GameboardPageComponent {
     usersvc: UserService,
     private browserService: BrowserService,
     private api: BoardService,
+    private challengeService: ChallengesService,
     private config: ConfigService,
     private hub: NotificationService,
     private unsub: UnsubscriberService
@@ -131,7 +133,7 @@ export class GameboardPageComponent {
         switchMap(s => !!s.instance && !!s.instance.state
           ? of(s)
           : (!!s.instance
-            ? api.retrieve(s.instance.id)
+            ? challengeService.retrieve(s.instance.id)
             : api.preview({ playerId: this.ctx.id, specId: s.id } as NewChallenge)
           ).pipe(
             catchError(err => {

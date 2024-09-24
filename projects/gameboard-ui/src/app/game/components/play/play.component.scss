@@ -1,0 +1,10 @@
+@import "../../../../scss/variables";
+
+.mini-player-container {
+  background-color: $gray-900;
+  border: solid 1px $info;
+  font-size: 0.95rem;
+  margin-left: 8px;
+  padding: 8px;
+  width: 300px;
+}

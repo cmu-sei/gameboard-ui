@@ -16,6 +16,7 @@ import { PlayerContext } from '@/game/components/play/play.component';
 import { RouterService } from '@/services/router.service';
 import { PracticeChallengeSolvedModalComponent } from '../practice-challenge-solved-modal/practice-challenge-solved-modal.component';
 import { TeamService } from '@/api/team.service';
+import { WindowService } from '@/services/window.service';
 
 @Component({
   selector: 'app-practice-session',
@@ -23,6 +24,7 @@ import { TeamService } from '@/api/team.service';
   providers: [UnsubscriberService]
 })
 export class PracticeSessionComponent {
+  protected windowWidth$ = this.windowService.resize$;
   spec$: Observable<SpecSummary>;
   authed$: Observable<boolean>;
   activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
@@ -30,6 +32,7 @@ export class PracticeSessionComponent {
   protected errors: any = [];
   protected fa = fa;
   protected playerContext: PlayerContext | null = null;
+  protected isMiniPlayerEnabled = false;
   protected isPlayingOtherChallenge = false;
   protected isStartingSession = false;
   protected isDeploying = false;
@@ -44,7 +47,8 @@ export class PracticeSessionComponent {
     private route: ActivatedRoute,
     private routerService: RouterService,
     private teamService: TeamService,
-    private unsub: UnsubscriberService
+    private unsub: UnsubscriberService,
+    private windowService: WindowService,
   ) {
     this.authed$ = localUser.user$.pipe(map(u => !!u));
 

@@ -37,10 +37,6 @@ export class BoardService {
     );
   }
 
-  public retrieve(id: string): Observable<Challenge> {
-    return this.http.get<Challenge>(`${this.url}/challenge/${id}`);
-  }
-
   public preview(model: NewChallenge): Observable<Challenge> {
     return this.http.post<Challenge>(`${this.url}/challenge/preview`, model);
   }
