@@ -21,6 +21,9 @@ import { WindowService } from '@/services/window.service';
 @Component({
   selector: 'app-practice-session',
   templateUrl: './practice-session.component.html',
+  styles: [
+    ".container.miniplayer-available { max-width: 1440px }"
+  ],
   providers: [UnsubscriberService]
 })
 export class PracticeSessionComponent {

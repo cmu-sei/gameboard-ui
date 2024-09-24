@@ -1,7 +1,7 @@
 <div class="container">
     <app-error-div [errors]="errors"></app-error-div>
     <ng-container *ngIf="playerContext && challengeSpec">
-        <div class="d-flex">
+        <div class="d-flex align-items-start">
             <div class="challenge-doc-container flex-grow-1">
                 <ng-container *ngIf="isDeploying">
                     <app-challenge-deploy-countdown *ngIf="isDeploying && challengeSpec"
@@ -19,7 +19,7 @@
                         <markdown [data]="challenge.challengeDeployment.markdown"></markdown>
                     </p>
 
-                    <ng-container *ngIf="!isMiniPlayerSelected; else miniPlayer">
+                    <ng-container *ngIf="!isMiniPlayerSelected">
                         <app-challenge-solution-guide
                             [challengeId]="challenge.challengeDeployment.challengeId"></app-challenge-solution-guide>
 

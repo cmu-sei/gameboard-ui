@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [class.miniplayer-available]="((windowWidth$ | async) || 0) > 1400">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
