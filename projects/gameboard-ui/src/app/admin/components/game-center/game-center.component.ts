@@ -36,8 +36,6 @@ export class GameCenterComponent {
         await this.load(gameId);
     }));
 
-    unsub.add(this.activatedRoute.url.subscribe(urlStuff => { console.log("some stuff", urlStuff) }));
-
     unsub.add(interval(30000).subscribe(async () => {
       if (this.game && this.game?.isLive)
         this.gameCenterCtx = await this.adminService.getGameCenterContext(this.game.id);

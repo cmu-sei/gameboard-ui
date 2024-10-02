@@ -69,7 +69,7 @@ export class PlayComponent {
       ).subscribe(),
 
       windowService.resize$.subscribe(width => {
-        this.isMiniPlayerAvailable = width >= 1440;
+        this.isMiniPlayerAvailable = width >= 1140;
         this.isMiniPlayerSelected = this.localStorage.get(StorageKey.UsePlayPane) === "true";
         this.showMiniPlayerPrompt = this.localStorage.get(StorageKey.UsePlayPane) === null;
 
