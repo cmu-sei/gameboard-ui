@@ -55,22 +55,6 @@ export interface UpdateUserSettingsRequest {
   playAudioOnBrowserNotification?: boolean;
 }
 
-export interface UserSummary {
-  id: string;
-  approvedName: string;
-}
-
-export enum UserRoleLegacy {
-  member = 'member',
-  observer = 'observer',
-  support = 'support',
-  tester = 'tester',
-  designer = 'designer',
-  registrar = 'registrar',
-  director = 'director',
-  admin = 'admin'
-}
-
 export enum PlayerRole {
   member = 'member',
   manager = 'manager'
@@ -91,6 +75,7 @@ export interface Announcement {
 export interface TryCreateUsersRequest {
   allowSubsetCreation: boolean;
   enrollInGameId?: string;
+  role?: UserRoleKey;
   sponsorId?: string;
   unsetDefaultSponsorFlag?: boolean;
   userIds: string[];

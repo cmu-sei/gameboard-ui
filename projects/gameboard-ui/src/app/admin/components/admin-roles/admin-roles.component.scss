@@ -37,8 +37,13 @@
 }
 
 .sticky-header {
-  top: 0px;
+  top: 60px;
   left: 0px;
   position: sticky;
   z-index: 999;
+  background-color: darken($foreground, 80%);
+
+  th {
+    border-bottom: 1px solid #fff !important;
+  }
 }

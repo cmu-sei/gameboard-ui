@@ -5,6 +5,7 @@ export enum StorageKey {
   ExternalGameUrl = "gameServerUrl",
   GameCenterTeamsFilterSettings = "gameCenterTeamsFilterSettings",
   Gameboard = "gameboard",
+  UsePlayPane = "usePlayPane"
 }
 
 @Injectable({ providedIn: 'root' })

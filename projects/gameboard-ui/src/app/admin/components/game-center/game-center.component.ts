@@ -1,14 +1,13 @@
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '@/api/admin.service';
 import { Game } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { fa } from '@/services/font-awesome.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Component } from '@angular/core';
 import { firstValueFrom, interval } from 'rxjs';
 import { GameCenterContext, GameCenterTab } from './game-center.models';
 import { AppTitleService } from '@/services/app-title.service';
-import { RouterService } from '@/services/router.service';
-import { ActivatedRoute } from '@angular/router';
 import { UserService } from '@/utility/user.service';
 
 @Component({
@@ -30,13 +29,14 @@ export class GameCenterComponent {
     private adminService: AdminService,
     private appTitle: AppTitleService,
     private gameService: GameService,
-    private localUserService: UserService,
-    private routerService: RouterService) {
+    private localUserService: UserService) {
     unsub.add(this.activatedRoute.paramMap.subscribe(async paramMap => {
       const gameId = paramMap.get("gameId") || this.gameCenterCtx?.id;
       if (gameId && gameId != this.gameCenterCtx?.id)
         await this.load(gameId);
     }));
+
+    unsub.add(this.activatedRoute.url.subscribe(urlStuff => { console.log("some stuff", urlStuff) }));
 
     unsub.add(interval(30000).subscribe(async () => {
       if (this.game && this.game?.isLive)

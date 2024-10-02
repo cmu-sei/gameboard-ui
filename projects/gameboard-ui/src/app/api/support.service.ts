@@ -8,11 +8,11 @@ import { catchError, first, last, map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeOverview } from './board-models';
 import { PlayerService } from './player.service';
-import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSettings, SupportSettingsAutoTag, SupportSettingsAutoTagViewModel, Ticket, TicketActivity, TicketSummary, UpsertSupportSettingsAutoTagRequest } from './support-models';
-import { UserSummary } from './user-models';
-import { Search } from './models';
+import { AttachmentFile, ChangedTicket, NewTicket, NewTicketComment, SupportSettings, SupportSettingsAutoTagViewModel, Ticket, TicketActivity, TicketSummary, UpsertSupportSettingsAutoTagRequest } from './support-models';
+import { Search, SimpleEntity } from './models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { cloneNonNullAndDefinedProperties } from '@/../tools/object-tools.lib';
+import { Team } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class SupportService {
@@ -98,22 +98,6 @@ export class SupportService {
     return firstValueFrom(this.http.post(`${this.url}/support/settings/autotag`, autoTag));
   }
 
-  public listAttachments(id: string): Observable<AttachmentFile[]> {
-    return this.http.get<AttachmentFile[]>(`${this.url}/ticket/${id}/attachments`);
-  }
-
-  public listSupport(search: any): Observable<UserSummary[]> {
-    return this.http.get<UserSummary[]>(`${this.url}/users/support`, { params: search });
-  }
-
-  public listLabels(search: Search | null = null): Observable<string[]> {
-    return this.http.get<string[]>(`${this.url}/ticket/labels`, { params: search as any });
-  }
-
-  public listUserChallenges(search: any): Observable<ChallengeOverview[]> {
-    return this.http.get<ChallengeOverview[]>(`${this.url}/userchallenges`, { params: search });
-  }
-
   // TODO: use this to make ajax request instead of requesting directly from img/iframe [src]
   // which doesn't include token for static file auth
   public getFile(fileUrl: string): Observable<Blob> {
@@ -122,6 +106,22 @@ export class SupportService {
 
   public getSupportCode(challengeId: string, tag: string) {
     return `${challengeId.slice(0, 8)} ${tag}`;
+  }
+
+  public listAttachments(id: string): Observable<AttachmentFile[]> {
+    return this.http.get<AttachmentFile[]>(`${this.url}/ticket/${id}/attachments`);
+  }
+
+  public listLabels(search: Search | null = null): Observable<string[]> {
+    return this.http.get<string[]>(`${this.url}/ticket/labels`, { params: search as any });
+  }
+
+  public listSupport(search: any): Observable<SimpleEntity[]> {
+    return this.http.get<SimpleEntity[]>(`${this.url}/users/support`, { params: search });
+  }
+
+  public listUserChallenges(search: any): Observable<ChallengeOverview[]> {
+    return this.http.get<ChallengeOverview[]>(`${this.url}/userchallenges`, { params: search });
   }
 
   public seen(key: number): void {
@@ -142,61 +142,61 @@ export class SupportService {
     return this.http.put<SupportSettings>(this.apiUrl.build("support/settings"), settings);
   }
 
-  getTicketMarkdown = (ticket: Ticket): Observable<string> =>
-    this.playerService.getTeam(ticket.teamId).pipe(
-      catchError(err => {
-        return of(null);
-      }),
-      first(),
-      map(t => {
-        const isTeam = !!t;
-        const uriBase = this.config.absoluteUrl;
+  async getTicketMarkdown(ticket: Ticket): Promise<string> {
+    let team: Team | null = null;
 
-        // resolve last ticket activity
-        const lastTicketActivity = ticket.activity.length > 0 ? ticket.activity[0] : null;
-        let activitySection = `_none yet_`;
+    if (ticket.teamId) {
+      team = await firstValueFrom(this.playerService.getTeam(ticket.teamId));
+    }
 
-        if (lastTicketActivity) {
-          const parsedDate = new Date(Date.parse(lastTicketActivity.timestamp));
-          const attachmentsContent = this.getAttachmentsMarkdown(uriBase, lastTicketActivity.attachmentFiles);
+    const isTeam = !!team;
+    const uriBase = this.config.absoluteUrl;
 
-          activitySection = `${lastTicketActivity.message || "_(no comment)_"}
+    // resolve last ticket activity
+    const lastTicketActivity = ticket.activity.length > 0 ? ticket.activity[0] : null;
+    let activitySection = `_none yet_`;
 
-          -- ${lastTicketActivity.user.approvedName} (${parsedDate.toDateString()} @ ${parsedDate.toLocaleTimeString()})
+    if (lastTicketActivity) {
+      const parsedDate = new Date(Date.parse(lastTicketActivity.timestamp));
+      const attachmentsContent = this.getAttachmentsMarkdown(uriBase, lastTicketActivity.attachmentFiles);
+
+      activitySection = `${lastTicketActivity.message || "_(no comment)_"}
+
+          -- ${lastTicketActivity.user.name} (${parsedDate.toDateString()} @ ${parsedDate.toLocaleTimeString()})
 
           ${attachmentsContent ? `**Attachments:** ${attachmentsContent}` : ""}`;
-        }
+    }
 
-        // attachments?
-        let attachmentSection = "";
-        if (ticket.attachmentFiles?.length) {
-          attachmentSection = `**Attachments:** ${this.getAttachmentsMarkdown(uriBase, ticket.attachmentFiles)}`;
-        }
+    // attachments?
+    let attachmentSection = "";
+    if (ticket.attachmentFiles?.length) {
+      attachmentSection = `**Attachments:** ${this.getAttachmentsMarkdown(uriBase, ticket.attachmentFiles)}`;
+    }
 
-        // associated game/challenge?
-        let gameDescription = "";
-        let challengeDescription = "";
-        let supportCodeContent = "";
+    // associated game/challenge?
+    let gameDescription = "";
+    let challengeDescription = "";
+    let supportCodeContent = "";
 
-        if (ticket.challenge) {
-          const adminChallengeLink = `${uriBase}admin/support?search=${ticket.challengeId}`;
-          gameDescription = ` / _Game:_ [${ticket.challenge?.gameName}](${uriBase}game/${ticket.challenge?.gameId})`;
-          challengeDescription = ` / _Challenge:_ [${ticket.challenge?.name}](adminChallengeLink)`;
+    if (ticket.challenge) {
+      const adminChallengeLink = `${uriBase}admin/support?search=${ticket.challengeId}`;
+      gameDescription = ` / _Game:_ [${ticket.challenge?.gameName}](${uriBase}game/${ticket.challenge?.gameId})`;
+      challengeDescription = ` / _Challenge:_ [${ticket.challenge?.name}](adminChallengeLink)`;
 
-          if (ticket.challenge.tag) {
-            const supportCode = this.getSupportCode(ticket.challenge.id, ticket.challenge.tag);
-            supportCodeContent = `**Support Code:** [${supportCode}](${adminChallengeLink})`;
-          }
-        }
+      if (ticket.challenge.tag) {
+        const supportCode = this.getSupportCode(ticket.challenge.id, ticket.challenge.tag);
+        supportCodeContent = `**Support Code:** [${supportCode}](${adminChallengeLink})`;
+      }
+    }
 
-        // templatize and return
-        return `
+    // templatize and return
+    return `
           ## Gameboard Ticket: ${ticket.fullKey}
           ### ${ticket.summary}
 
-          **Created for:** _${isTeam ? "Player" : "Team"}:_ ${ticket.player?.approvedName || ticket.requester?.approvedName}${gameDescription}${challengeDescription}
+          **Created for:** _${isTeam ? "Player" : "Team"}:_ ${ticket.player?.approvedName || ticket.requester?.name}${gameDescription}${challengeDescription}
           **Status:** ${ticket.status}
-          **Assigned to:** ${ticket.assignee?.approvedName || "_unassigned_"}
+          **Assigned to:** ${ticket.assignee?.name || "_Unassigned_"}
           ${supportCodeContent}
           ${attachmentSection}
 
@@ -209,11 +209,10 @@ export class SupportService {
           ***
           View this ticket on [${this.config.appName}](${uriBase}support/tickets/${ticket.key})
         `.trim()
-          .split("\n")
-          .map(line => line.trim())
-          .join("\n");
-      })
-    );
+      .split("\n")
+      .map(line => line.trim())
+      .join("\n");
+  }
 
   private getAttachmentsMarkdown(uriBase: string, attachments: AttachmentFile[]): string {
     if (!attachments?.length) {

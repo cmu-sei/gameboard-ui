@@ -16,7 +16,7 @@ import { slug } from '@/../tools/functions';
 export class ChallengeSpecEditorComponent implements OnChanges {
   @Input() spec?: Spec;
   @Input() scoringConfig?: ChallengeSpecScoringConfig;
-  @Output() specDelete = new EventEmitter<Spec>();
+  @Output() specDeleteRequested = new EventEmitter<string>();
   @Output() specUpdate = new EventEmitter<Spec>();
 
   protected fa = fa;
@@ -47,7 +47,7 @@ export class ChallengeSpecEditorComponent implements OnChanges {
     this.requestUpdateSpec$.next(spec);
   }
 
-  protected handleSpecDeleted(spec: Spec) {
-    this.specDelete.emit(spec);
+  protected handleSpecDeleteRequested(spec: Spec) {
+    this.specDeleteRequested.emit(spec.id);
   }
 }

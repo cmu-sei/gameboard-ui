@@ -60,9 +60,9 @@
         <div class="card">
           <div class="card-header d-flex align-items-center justify-content-between py-2">
             <div class="flex-grow-1">
-              <span class="mr-1 font-weight-bold">{{ctx.ticket.requester?.approvedName}}</span>
+              <span class="mr-1 font-weight-bold">{{ctx.ticket.requester?.name}}</span>
               <span *ngIf="!ctx.ticket.selfCreated" class="mr-1 font-weight-bold">(by
-                {{ctx.ticket.creator?.approvedName}})</span>
+                {{ctx.ticket.creator?.name}})</span>
               <span [tooltip]="ctx.ticket.created | shorttime: false : true" containerClass="light-tooltip"
                 container="body" [adaptivePosition]="true" placement="top">
                 {{ctx.ticket.created | ago}}
@@ -154,7 +154,7 @@
             <div class="card my-3 mx-3" *ngIf="activity.type == 0"> <!-- Comment -->
               <div class="card-header py-2">
                 <div class="d-flex align-items-center">
-                  <div class="font-weight-bold mr-1">{{ activity.user.approvedName }} ·</div>
+                  <div class="font-weight-bold mr-1">{{ activity.user.name }} ·</div>
 
                   <ng-container *ngIf="activity.user.isSupportPersonnel">
                     <span class="badge badge-success mr-2">{{appName}} Support</span>
@@ -210,7 +210,7 @@
             <div class="my-3 px-3 border-0 text-center" *ngIf="activity.type == 2"> <!-- Assignee Change -->
               <span class="text-center py-2 px-3 d-flex rounded" style="background: black">
                 <span *ngIf="!!activity.assigneeId">Assigned to&nbsp;<span
-                    class="font-weight-bold">{{activity.assignee.approvedName}}</span>
+                    class="font-weight-bold">{{activity.assignee.name}}</span>
                   <div style="display: inline-block" [tooltip]="activity.timestamp | shorttime: true : true"
                     containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
                     &nbsp;{{activity.timestamp | ago}}
@@ -240,8 +240,8 @@
                 <label class="font-weight-bold" for="assignee-input">Assigned to <fa-icon
                     *ngIf="!changedTicket.assigneeId" class="text-warning ml-1"
                     [icon]="faExclamationCircle"></fa-icon></label><br />
-                <app-inplace-editor [editData]="assignees"
-                  [currentText]="changedTicket.assignee?.approvedName ?? 'None'" (startEditFunc)="startEditAssignee()"
+                <app-inplace-editor [editData]="assignees" [currentText]="changedTicket.assignee?.name ?? 'None'"
+                  (startEditFunc)="startEditAssignee()"
                   (selectOptionFunc)="selectAssignee($event)"></app-inplace-editor>
                 <a *ngIf="!!currentUser && !changedTicket.assigneeId" class="btn btn-link px-2 pt-0 text-info"
                   (click)="selectAssignToMe()">Assign to me</a>
@@ -320,8 +320,7 @@
                     *ngIf="!changedTicket.requesterId" class="text-danger ml-1"
                     [icon]="faExclamationCircle"></fa-icon></label><br />
                 <app-inplace-editor [editData]="requesters" [noEdit]="!ctx.ticket.staffCreated || !!ctx.ticket.playerId"
-                  [currentText]="changedTicket.requester?.approvedName ?? 'None'"
-                  (startEditFunc)="startEditRequesters()"
+                  [currentText]="changedTicket.requester?.name ?? 'None'" (startEditFunc)="startEditRequesters()"
                   (selectOptionFunc)="selectRequester($event)"></app-inplace-editor>
                 <p class="mb-0  pt-0 mb-1 px-2 align-items-center small">User Id: {{changedTicket.requesterId |
                   slice:0:16}}</p>
@@ -330,7 +329,7 @@
               <div *ngIf="ctx.ticket.staffCreated" class="form-group p-0 m-0 mb-4">
                 <label class="font-weight-bold" for="assignee-input">Created by</label><br />
                 <p style="vertical-align:middle;" class="mb-0 pt-0 mb-1 px-2 align-items-center">
-                  {{ctx.ticket.creator?.approvedName || 'None'}}</p>
+                  {{ctx.ticket.creator?.name || 'None'}}</p>
               </div>
             </div>
           </div>

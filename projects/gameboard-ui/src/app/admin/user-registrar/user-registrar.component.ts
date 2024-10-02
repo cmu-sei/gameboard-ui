@@ -5,11 +5,9 @@ import { Component } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, interval, merge, Observable } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
-import { ApiUser, TryCreateUsersResponse, UserRoleKey, UserRoleLegacy } from '../../api/user-models';
+import { ApiUser, TryCreateUsersResponse, UserRoleKey } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { fa } from '@/services/font-awesome.service';
-import { SortService } from '@/services/sort.service';
-import { SortDirection } from '@/core/models/sort-direction';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { CreateUsersModalComponent } from '../components/create-users-modal/create-users-modal.component';
 import { ToastService } from '@/utility/services/toast.service';
@@ -41,7 +39,6 @@ export class UserRegistrarComponent {
     private api: UserService,
     private modalService: ModalConfirmService,
     private permissionsService: UserRolePermissionsService,
-    private sortService: SortService,
     private toastService: ToastService
   ) {
     this.roles$ = this.permissionsService.listRoles();
@@ -51,8 +48,7 @@ export class UserRegistrarComponent {
       interval(60000)
     ).pipe(
       debounceTime(500),
-      switchMap(() => this.api.list(this.search)),
-      map(r => this.sortResults(r, this.search.sort as UserRegistrarSort, this.search.sortDirection || "asc")),
+      switchMap(() => this.api.list({ ...this.search })),
       tap(r => this.source = r),
       tap(() => this.review()),
     );
@@ -127,31 +123,27 @@ export class UserRegistrarComponent {
     });
   }
 
-  private sortResults(results: ApiUser[], sort: UserRegistrarSort, direction: SortDirection) {
-    switch (sort) {
-      case "lastLogin":
-        return this.sortService.sort<ApiUser, number>({
-          array: results,
-          transform: user => (user.lastLoginDate || new Date(0)).valueOf(),
-          direction: direction
-        });
-      case "createdOn":
-        return this.sortService.sort<ApiUser, number>({
-          array: results,
-          transform: user => user.createdOn.valueOf(),
-          direction: direction
-        });
-      default:
-        return this.sortService.sort({
-          array: results,
-          transform: user => user.approvedName || user.name || "",
-          direction: direction
-        });
-    }
+  // private sortResults(results: ApiUser[], sort: UserRegistrarSort, direction: SortDirection) {
+  //   switch (sort) {
+  //     case "lastLogin":
+  //       return this.sortService.sort<ApiUser, number>({
+  //         array: results,
+  //         transform: user => (user.lastLoginDate || new Date(0)).valueOf(),
+  //         direction: direction
+  //       });
+  //     case "createdOn":
+  //       return this.sortService.sort<ApiUser, number>({
+  //         array: results,
+  //         transform: user => user.createdOn.valueOf(),
+  //         direction: direction
+  //       });
+  //     default:
+  //       return this.sortService.sort({
+  //         array: results,
+  //         transform: user => user.approvedName || user.name || "",
+  //         direction: direction
+  //       });
+  //   }
 
-  }
-
-  trackById(index: number, model: ApiUser): string {
-    return model.id;
-  }
+  // }
 }

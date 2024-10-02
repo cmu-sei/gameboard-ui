@@ -3,7 +3,7 @@ import { catchError, firstValueFrom, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
-import { LocalActiveChallenge } from '@/api/challenges.models';
+import { ChallengeSolutionGuide, LocalActiveChallenge } from '@/api/challenges.models';
 import { BoardPlayer, BoardSpec } from '@/api/board-models';
 import { BoardService } from '@/api/board.service';
 import { PlayerMode, TimeWindow } from '@/api/player-models';
@@ -11,6 +11,7 @@ import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { SpecSummary } from '@/api/spec-models';
 import { WindowService } from '@/services/window.service';
+import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
 
 type LegacyContext = {
   boardPlayer: BoardPlayer | null,
@@ -44,6 +45,8 @@ export class PlayComponent {
   protected isMiniPlayerAvailable = false;
   protected isMiniPlayerSelected = false;
   protected isUndeploying = false;
+  protected showMiniPlayerPrompt = false;
+  protected solutionGuide: ChallengeSolutionGuide | null = null;
   protected vmUrls: { [id: string]: string } = {};
   protected windowWidth$: Observable<number>;
 
@@ -53,6 +56,7 @@ export class PlayComponent {
     private activeChallengesRepo: ActiveChallengesRepo,
     private boardService: BoardService,
     private challengesService: ChallengesService,
+    private localStorage: LocalStorageService,
     private routerService: RouterService,
     private unsub: UnsubscriberService,
     windowService: WindowService) {
@@ -66,6 +70,8 @@ export class PlayComponent {
 
       windowService.resize$.subscribe(width => {
         this.isMiniPlayerAvailable = width >= 1440;
+        this.isMiniPlayerSelected = this.localStorage.get(StorageKey.UsePlayPane) === "true";
+        this.showMiniPlayerPrompt = this.localStorage.get(StorageKey.UsePlayPane) === null;
 
         if (!this.isMiniPlayerAvailable && this.isMiniPlayerSelected)
           this.toggleMiniPlayer();
@@ -114,10 +120,15 @@ export class PlayComponent {
   }
 
   protected toggleMiniPlayer() {
-    if (this.isMiniPlayerAvailable)
+    this.showMiniPlayerPrompt = false;
+    if (this.isMiniPlayerAvailable) {
       this.isMiniPlayerSelected = !this.isMiniPlayerSelected;
+      this.localStorage.add(StorageKey.UsePlayPane, this.isMiniPlayerSelected);
+
+    }
     else {
       this.isMiniPlayerSelected = false;
+      this.localStorage.add(StorageKey.UsePlayPane, false);
     }
   }
 
@@ -136,6 +147,7 @@ export class PlayComponent {
 
   private async deployChallenge(args: { challengeSpecId: string, playerId: string, userId: string }) {
     this.errors = [];
+    this.solutionGuide = null;
     this.deployStatusChanged.emit(true);
     this.isDeploying = true;
 
@@ -154,10 +166,13 @@ export class PlayComponent {
     this.isDeploying = false;
     this.deployStatusChanged.emit(false);
 
-    // if we succeeded in booting, let listeners know
     if (this.challenge) {
+      // if we succeeded in booting, let listeners know
       this._autobootedForPlayerId = args.playerId;
       this.challengeStarted.emit();
+
+      // also look up the solution guide if there is one
+      this.solutionGuide = await firstValueFrom(this.challengesService.getSolutionGuide(this.challenge.id));
     }
   }
 

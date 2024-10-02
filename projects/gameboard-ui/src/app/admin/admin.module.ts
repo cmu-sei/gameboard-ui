@@ -83,6 +83,7 @@ import { UserReportComponent } from './user-report/user-report.component';
 import { GameInfoBubblesComponent } from "../standalone/components/game-info-bubbles/game-info-bubbles.component";
 import { ScoreboardComponent } from '@/scoreboard/components/scoreboard/scoreboard.component';
 import { GameIdResolver } from './resolvers/game-id.resolver';
+import { GameCenterSelectedTabResolver } from './resolvers/game-center-selected-tab-resolver';
 
 @NgModule({
   declarations: [
@@ -164,6 +165,7 @@ import { GameIdResolver } from './resolvers/game-id.resolver';
             path: "game/:gameId",
             component: GameCenterComponent,
             title: "Game Center",
+            resolve: { selectedTab: GameCenterSelectedTabResolver },
             children: [
               { path: "settings", component: GameCenterSettingsComponent, resolve: { gameId: GameIdResolver } },
               { path: "challenges", component: GameMapperComponent, resolve: { gameId: GameIdResolver } },

@@ -1,7 +1,7 @@
 <app-modal-content title="Create Users" (confirm)="confirm()" [confirmDisabled]="!userIds.length"
     *ngIf="!isWorking; else loading">
     <div class="mb-4">
-        Enter space-delimited user GUIDs (globally unique identifiers) in the textbox below to create a new
+        Enter space or line-delimited user GUIDs (globally unique identifiers) in the textbox below to create a new
         {{appName}} user account for each. You can use the settings below to control some initial settings for
         the created users.
     </div>
@@ -31,6 +31,13 @@
                 <input type="checkbox" class="form-check-input" name="unset-default-sponsor-flag"
                     [(ngModel)]="unsetDefaultSponsorFlag">
                 <label for="unset-default-sponsor-flag">Don't force users to select their sponsor before playing</label>
+            </div>
+
+            <div class="my-3">
+                <label for="createWithRole">Create users with role</label>
+                <select class="form-control" name="createWithRole" [(ngModel)]="createWithRole">
+                    <option *ngFor="let role of roles" [ngValue]="role">{{ role | titlecase }}</option>
+                </select>
             </div>
 
             <div class="my-3">

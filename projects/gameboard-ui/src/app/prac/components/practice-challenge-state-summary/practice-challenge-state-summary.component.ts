@@ -53,23 +53,6 @@ export class PracticeChallengeStateSummaryComponent {
         this.isChangingSessionEnd = false;
       })
     );
-
-    unsub.add(
-      notificationService.teamEvents.subscribe(teamEvent => {
-        this.logService.logInfo("From practice challenge summary, a team event", teamEvent);
-
-        if (teamEvent.action == HubEventAction.sessionExtended) {
-          this.logService.logInfo("Got a session extend event and will update the active practice challenge", this.userActivePracticeChallenge);
-
-          if (this.userActivePracticeChallenge?.session) {
-            const newSessionEnd = DateTime.fromISO(teamEvent.model.sessionEnd);
-            this.userActivePracticeChallenge.session.end = newSessionEnd;
-            this.updatePracticeChallenge(this.userActivePracticeChallenge);
-            this.showExtensionToast(newSessionEnd, true);
-          }
-        }
-      })
-    );
   }
 
   private async updatePracticeChallenge(challenge: LocalActiveChallenge | null) {
@@ -91,7 +74,7 @@ export class PracticeChallengeStateSummaryComponent {
     );
 
     this.msRemaining$ = this._timer$.pipe(
-      map(tick => this.userActivePracticeChallenge?.session.end ? this.userActivePracticeChallenge.session.end.diffNow().toMillis() : 0),
+      map(() => this.userActivePracticeChallenge?.session.end ? this.userActivePracticeChallenge.session.end.diffNow().toMillis() : 0),
       tap(msRemaining => this.extendTooltip = this.getExtendTooltip(msRemaining))
     );
   }
@@ -99,7 +82,6 @@ export class PracticeChallengeStateSummaryComponent {
   async extendSession(practiceChallenge: LocalActiveChallenge): Promise<void> {
     this.isChangingSessionEnd = true;
     const teamId = practiceChallenge.teamId;
-    this.userActivePracticeChallenge = undefined;
     await firstValueFrom(this.teamService.extendSession({
       teamId,
       sessionEnd: new Date()
@@ -115,7 +97,7 @@ export class PracticeChallengeStateSummaryComponent {
     }
 
     this.isChangingSessionEnd = true;
-    await firstValueFrom(this.teamService.endSession({ teamId: this.userActivePracticeChallenge!.teamId }));
+    await this.teamService.endSession({ teamId: this.userActivePracticeChallenge!.teamId });
     this.isChangingSessionEnd = false;
   }
 
@@ -129,6 +111,6 @@ export class PracticeChallengeStateSummaryComponent {
 
   private showExtensionToast(sessionEnd: DateTime, isAutomatic = false) {
     const timeExpression = Math.floor(sessionEnd.diffNow().shiftTo('minutes').minutes);
-    this.toastService.showMessage(`Your practice session has been ${isAutomatic ? "automatically " : ""}extended (now ends in ${timeExpression} minutes).`);
+    this.toastService.showMessage(`Your practice session has been ${isAutomatic ? "automatically " : ""}**extended** (now ends in **${timeExpression}** minutes).`);
   }
 }

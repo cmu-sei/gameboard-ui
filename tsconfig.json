@@ -1,33 +1,33 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "paths": {
-      "@/*": [
-        "./projects/gameboard-ui/src/app/*"
-      ]
-    },
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "target": "ES2022",
-    "module": "es2020",
     "lib": [
       "es2018",
       "dom",
       "DOM.Iterable"
     ],
+    "module": "es2020",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "outDir": "./dist/out-tsc",
+    "paths": {
+      "@/*": [
+        "./projects/gameboard-ui/src/app/*"
+      ]
+    },
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2022",
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

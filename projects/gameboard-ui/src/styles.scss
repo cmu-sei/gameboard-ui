@@ -265,6 +265,12 @@ table.gameboard-table {
 
 .li-style-type-circle {
   list-style-type: disc;
+  margin-left: 0.5rem;
+
+  li {
+    list-style-type: disc;
+    margin-left: 0.5rem;
+  }
 }
 
 .form-group {

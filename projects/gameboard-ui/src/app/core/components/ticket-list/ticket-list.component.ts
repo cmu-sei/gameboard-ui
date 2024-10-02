@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, timer, combineLatest, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, timer, combineLatest, Subscription, firstValueFrom } from 'rxjs';
 import { debounceTime, switchMap, map, tap, first } from 'rxjs/operators';
 import { fa } from '@/services/font-awesome.service';
 import { ReportService } from '@/api/report.service';
@@ -189,12 +189,9 @@ export class TicketListComponent implements OnDestroy {
   }
 
   async copyMarkdown(ticket: TicketSummary) {
-    this.api.retrieve(ticket.key).pipe(
-      first(),
-      switchMap(ticket => this.api.getTicketMarkdown(ticket)),
-    ).subscribe(async md => {
-      await this.clipboard.copy(md);
-      this.toastService.show({ text: "Copied ticket markdown", faIcon: fa.clipboard });
-    });
+    const ticketData = await firstValueFrom(this.api.retrieve(ticket.key));
+    const md = await this.api.getTicketMarkdown(ticketData);
+    await this.clipboard.copy(md);
+    this.toastService.show({ text: `Copied markdown for ticket **${ticket.fullKey}**`, faIcon: fa.clipboard });
   }
 }

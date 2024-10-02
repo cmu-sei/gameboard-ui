@@ -120,13 +120,13 @@ export class DashboardComponent implements OnInit {
   }
 
   yaml(game: Game): void {
-    this.clipboard.copyToClipboard(
+    this.clipboard.copy(
       YAML.stringify(game as NewGame, this.replacer)
     );
   }
 
   json(game: Game): void {
-    this.clipboard.copyToClipboard(JSON.stringify(game, this.replacer, 2));
+    this.clipboard.copy(JSON.stringify(game, this.replacer, 2));
   }
 
   // don't stringify parsed feedbackTemplate object, just string property

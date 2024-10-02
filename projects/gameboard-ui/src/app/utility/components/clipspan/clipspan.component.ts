@@ -26,7 +26,7 @@ export class ClipspanComponent {
   }
 
   copy(): void {
-    this.svc.copyToClipboard(this.span.nativeElement.innerText);
+    this.svc.copy(this.span.nativeElement.innerText);
     this.clipped = true;
     const s: Subscription = timer(4000).pipe(
       tap(() => this.clipped = false),

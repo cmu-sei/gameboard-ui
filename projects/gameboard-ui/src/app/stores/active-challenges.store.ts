@@ -1,15 +1,14 @@
-import { LocalActiveChallenge } from "@/api/challenges.models";
-import { createStore, withProps } from "@ngneat/elf";
-import { SimpleEntity } from "@/api/models";
-import { Observable, Subject, Subscription, combineLatest, firstValueFrom, interval, map, merge, of, startWith, switchMap, tap } from "rxjs";
 import { Injectable, OnDestroy } from "@angular/core";
-import { UserService as LocalUserService } from "@/utility/user.service";
-import { ChallengesService } from "@/api/challenges.service";
-import { UnsubscriberService } from "@/services/unsubscriber.service";
-import { PlayerService } from "@/api/player.service";
+import { createStore, withProps } from "@ngneat/elf";
 import { DateTime } from "luxon";
+import { Observable, Subject, Subscription, combineLatest, firstValueFrom, interval, map, merge, of, startWith, switchMap } from "rxjs";
+import { LocalActiveChallenge } from "@/api/challenges.models";
+import { SimpleEntity } from "@/api/models";
+import { ChallengesService } from "@/api/challenges.service";
+import { PlayerService } from "@/api/player.service";
 import { Challenge } from "@/api/board-models";
 import { TeamService } from "@/api/team.service";
+import { UserService as LocalUserService } from "@/utility/user.service";
 
 interface ActiveChallengesProps {
     user: SimpleEntity;
@@ -28,8 +27,6 @@ export const activeChallengesStore = createStore(
     withProps<ActiveChallengesProps>(DEFAULT_STATE),
 );
 
-export type ActiveChallengesPredicate = (challenge: LocalActiveChallenge) => challenge is LocalActiveChallenge;
-
 @Injectable({ providedIn: 'root' })
 export class ActiveChallengesRepo implements OnDestroy {
     private _subs: Subscription[] = [];
@@ -38,9 +35,6 @@ export class ActiveChallengesRepo implements OnDestroy {
             startWith(activeChallengesStore.state),
             switchMap(store => of(this.resolveActivePracticeChallenge(store)))
         );
-
-    private readonly _practiceChallengeAttemptsExhausted$ = new Subject<LocalActiveChallenge>();
-    public readonly practiceChallengeAttemptsExhausted$ = this._practiceChallengeAttemptsExhausted$.asObservable();
 
     private readonly _practiceChallengeCompleted$ = new Subject<LocalActiveChallenge>();
     public readonly practiceChallengeCompleted$ = this._practiceChallengeCompleted$.asObservable();
@@ -58,18 +52,20 @@ export class ActiveChallengesRepo implements OnDestroy {
             combineLatest([
                 of(challengesService),
                 localUser.user$,
-                merge(
+                merge([
                     challengesService.challengeGraded$,
                     challengesService.challengeDeployStateChanged$,
                     playerService.playerSessionReset$,
                     teamService.playerSessionChanged$,
                     teamService.teamSessionsChanged$
-                )
+                ])
             ]).pipe(
                 map(([challengesService]) => ({ challengesService })),
             ).subscribe(ctx => this._initState(ctx.challengesService, localUser.user$.value?.id || null)),
             interval(1000).subscribe(() => this.checkActiveChallengesForEnd()),
-            challengesService.challengeGraded$.subscribe(challenge => this.handleChallengeGraded(challenge))
+            challengesService.challengeGraded$.subscribe(challenge => this.handleChallengeGraded(challenge)),
+            teamService.teamSessionEndedManually$.subscribe(tId => this.handleTeamSessionEndedManually(tId))
+
         );
 
         this._initState(challengesService, localUser.user$.value?.id || null);
@@ -77,7 +73,7 @@ export class ActiveChallengesRepo implements OnDestroy {
 
     ngOnDestroy(): void {
         for (let sub of this._subs) {
-            sub.unsubscribe();
+            sub?.unsubscribe();
         }
     }
 
@@ -90,7 +86,7 @@ export class ActiveChallengesRepo implements OnDestroy {
 
         // for now, we'll only emit practice challenge ends
         for (const challenge of challenges) {
-            if (DateTime.now() > challenge.session.end!) {
+            if (challenge.session.end && DateTime.now() > challenge.session.end!) {
                 this._practiceChallengeExpired$.next(challenge.challengeDeployment.challengeId);
                 activeChallengesStore.update(state => ({
                     ...state,
@@ -114,24 +110,43 @@ export class ActiveChallengesRepo implements OnDestroy {
                 // did they complete?
                 this._practiceChallengeCompleted$.next(activePracticeChallenge);
                 removeChallengeFromState = true;
-
-            } else if (challenge.state.challenge.attempts >= challenge.state.challenge.maxAttempts) {
-                // did they exhaust their guesses?
-                this._practiceChallengeAttemptsExhausted$.next(activePracticeChallenge);
-                removeChallengeFromState = true;
             }
 
             if (removeChallengeFromState) {
+                this.removeFromActive(activePracticeChallenge);
                 activeChallengesStore.update(state => {
-                    const completedChallengeIndex = state.practice.findIndex(c => c.spec.id === activePracticeChallenge.spec.id);
-
                     return {
                         ...state,
-                        practice: state.practice.slice(completedChallengeIndex, 1)
+                        practice: [...state.practice.filter(c => c.spec.id !== activePracticeChallenge.spec.id)]
                     };
                 });
             }
         }
+    }
+
+    private handleTeamSessionEndedManually(teamId: string) {
+        this.removeFromActiveWithPredicate(c => c.teamId == teamId);
+    }
+
+    private getAllChallenges() {
+        return [
+            ...activeChallengesStore.state.competition,
+            ...activeChallengesStore.state.practice
+        ];
+    }
+
+    private removeFromActive(endedChallenge: Challenge | LocalActiveChallenge) {
+        this.removeFromActiveWithPredicate(c => c.id === endedChallenge.id);
+    }
+
+    private removeFromActiveWithPredicate(predicate: (c: LocalActiveChallenge) => boolean) {
+        activeChallengesStore.update(state => {
+            return {
+                ...state,
+                competition: [...state.competition.filter(c => !predicate(c))],
+                practice: [...state.practice.filter(c => !predicate(c))]
+            };
+        });
     }
 
     private async _initState(challengesService: ChallengesService, localUserId: string | null) {
@@ -142,7 +157,7 @@ export class ActiveChallengesRepo implements OnDestroy {
 
         // the challenges come in with an API-level time-window (with epoch times for session)
         // we have to map them to localized time windows
-        const userActiveChallenges = await firstValueFrom(challengesService.getActiveChallenges(localUserId!));
+        const userActiveChallenges = await firstValueFrom(challengesService.getActiveChallenges(localUserId));
 
         // update the store
         activeChallengesStore.update(state => ({

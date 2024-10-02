@@ -10,6 +10,7 @@ export interface ChallengeSolutionGuide {
 }
 
 export interface ActiveChallenge {
+    id: string;
     spec: {
         id: string;
         name: string;
@@ -31,7 +32,7 @@ export interface ActiveChallenge {
         score: number;
         maxPossibleScore: number;
         attempts: number;
-        maxAttempts: number;
+        maxAttempts?: number;
     }
 }
 

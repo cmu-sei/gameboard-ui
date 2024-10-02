@@ -79,10 +79,6 @@ export class PracticeSessionComponent {
       this.handleActiveChallengeCompleted(challenge);
     }));
 
-    this.unsub.add(this.activeChallengesRepo.practiceChallengeAttemptsExhausted$.subscribe(challenge => {
-      this.handleActiveChallengeAttemptsExhausted(challenge);
-    }));
-
     this.unsub.add(
       this.activeChallengesRepo.activePracticeChallenge$
         .pipe(
@@ -145,18 +141,25 @@ export class PracticeSessionComponent {
       bodyContent: `If you continue, you'll end your session for practice challenge **${currentPracticeChallenge.spec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-        await firstValueFrom(this.teamService.endSession({ teamId: currentPracticeChallenge.teamId }));
+        await this.teamService.endSession({ teamId: currentPracticeChallenge.teamId });
         this.play(spec.gameId);
       }
     });
   }
 
-  private handleActiveChallengeAttemptsExhausted(challenge: LocalActiveChallenge) {
-    this.handleChallengeFailed(challenge, "attempts");
-  }
-
   private handleActiveChallengeExpired(challenge: LocalActiveChallenge) {
-    this.handleChallengeFailed(challenge, "timeUp");
+    this.modalService.openConfirm({
+      title: "Time's up",
+      bodyContent: `Your session for challenge **${challenge.spec.name}** has ended because you're out of time. You can either start over and try again or head back to the Practice Area to find another challenge to try.`,
+      renderBodyAsMarkdown: true,
+      cancelButtonText: "Back to the Practice Area",
+      confirmButtonText: "Try again",
+      onCancel: () => this.routerService.toPracticeArea(),
+      onConfirm: async () => {
+        await this.routerService.toPracticeChallenge(challenge.spec);
+        await this.play(challenge.game.id);
+      },
+    });
   }
 
   private handleActiveChallengeCompleted(challenge: LocalActiveChallenge) {
@@ -166,26 +169,6 @@ export class PracticeSessionComponent {
         context: {
           challenge
         }
-      },
-    });
-  }
-
-  private handleChallengeFailed(challenge: LocalActiveChallenge, reason: "attempts" | "timeUp") {
-    const title = reason === "attempts" ? "Out of attempts!" : "Time's up";
-    const reasonDescription = reason === "attempts" ?
-      "you've used your alloted submissions for the challenge" :
-      "you ran out of time";
-
-    this.modalService.openConfirm({
-      title,
-      bodyContent: `Your session for challenge **${challenge.spec.name}** has ended because ${reasonDescription}. You can either start over and try again or head back to the Practice Area to find another challenge to try.`,
-      renderBodyAsMarkdown: true,
-      cancelButtonText: "Back to the Practice Area",
-      confirmButtonText: "Try again",
-      onCancel: () => this.routerService.toPracticeArea(),
-      onConfirm: async () => {
-        await this.routerService.toPracticeChallenge(challenge.spec);
-        await this.play(challenge.game.id);
       },
     });
   }
