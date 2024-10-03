@@ -1,9 +1,7 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<ng-container *ngIf="created$ | async"></ng-container>
 <ng-container *ngIf="updated$ | async"></ng-container>
-<ng-container *ngIf="deleted$ | async"></ng-container>
 <ng-container *ngIf="gameBonusesConfig$ | async"></ng-container>
 
 <div class="row" *ngIf="game">
@@ -17,7 +15,6 @@
       <button class="mb-1 btn btn-secondary" (click)="view('edit')">
         <fa-icon [icon]="fa.edit"></fa-icon>
         <span>Edit</span>
-        <span *ngIf="!!addedCount" class="ml-2 px-2 badge badge-info">{{addedCount}}</span>
       </button>
       <button class="mb-1 btn btn-secondary" (click)="view('map')">
         <fa-icon [icon]="fa.mapMarker"></fa-icon>
@@ -27,10 +24,13 @@
   </div>
 
   <div class="col-10">
-
-    <!-- edit game specs -->
     <div [hidden]="viewing!=='edit'">
       <h4>Challenge Specs</h4>
+
+      <button *ngIf="!isSynchronizing; else syncing" class="mt-2 mb-4 btn btn-sm btn-info" (click)="sync()">
+        <fa-icon [icon]="fa.sync"></fa-icon>
+        <span>Sync with Source</span>
+      </button>
 
       <alert *ngIf="hasZeroPointSpecs" type="warning" class="my-2">
         At least one of this game's enabled challenge specs has a point value of <strong>zero</strong>. This makes it
@@ -38,17 +38,13 @@
         recommend assigning a non-zero point value to each challenge.
       </alert>
 
-      <button class="mt-2 mb-4 btn btn-sm btn-info" (click)="sync()">
-        <fa-icon [icon]="fa.sync"></fa-icon>
-        <span>Sync with Source</span>
-      </button>
-
       <app-error-div [errors]="syncErrors"></app-error-div>
 
       <ul class="spec-list mt-4">
         <li *ngFor="let spec of specs">
           <app-challenge-spec-editor class="d-block mb-3" [spec]="spec" [scoringConfig]="specConfigMap[spec.id]"
-            (specDelete)="this.deleting$.next(spec)" (specUpdate)="handleSpecUpdated(spec)"></app-challenge-spec-editor>
+            (specDeleteRequested)="handleSpecDeleteRequested($event)"
+            (specUpdate)="handleSpecUpdated(spec)"></app-challenge-spec-editor>
         </li>
       </ul>
 
@@ -74,9 +70,13 @@
     </div>
 
     <!-- search external specs -->
-    <app-spec-browser [hidden]="viewing!=='search'"></app-spec-browser>
+    <app-spec-browser [hidden]="viewing!=='search'" (selected)="handleSpecSelect($event)"></app-spec-browser>
 
     <!-- edit spec map locations -->
     <app-game-map-editor *ngIf="viewing === 'map'" [gameId]="game.id"></app-game-map-editor>
   </div>
 </div>
+
+<ng-template #syncing>
+  <app-spinner>Synchronizing challenges with the game engine...</app-spinner>
+</ng-template>

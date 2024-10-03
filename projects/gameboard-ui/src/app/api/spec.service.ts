@@ -3,14 +3,13 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, firstValueFrom, of } from 'rxjs';
+import { Observable, firstValueFrom, of } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeSpecBonusViewModel, ChangedSpec, ExternalSpec, GameChallengeSpecs, GetChallengeSpecQuestionPerformanceResult, NewSpec, Spec } from './spec-models';
 
 @Injectable({ providedIn: 'root' })
 export class SpecService {
   url = '';
-  selected$ = new Subject<ExternalSpec>();
 
   constructor(
     config: ConfigService,

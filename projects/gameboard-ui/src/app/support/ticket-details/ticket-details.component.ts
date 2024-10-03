@@ -293,7 +293,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     if (!this.assignees.loaded) {
       this.api.listSupport({}).subscribe(
         (a) => {
-          this.assignees.allOptions = a.map(u => ({ name: u.approvedName, secondary: u.id.slice(0, 8), data: u }));
+          this.assignees.allOptions = a.map(u => ({ name: u.name, secondary: u.id.slice(0, 8), data: u }));
           this.assignees.allOptions.push({ name: "None", secondary: "", data: {} });
           this.assignees.filteredOptions = this.assignees.allOptions;
           this.assignees.loaded = true;
@@ -386,7 +386,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     if (!!this.currentUser) {
       this.changedTicket!.assignee = {
         id: this.currentUser.id,
-        approvedName: this.currentUser.approvedName,
+        name: this.currentUser.approvedName,
         isSupportPersonnel: true
       };
       this.changedTicket!.assigneeId = this.currentUser.id;
@@ -502,12 +502,11 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   }
 
   public async copyToMarkdown(ticket: Ticket) {
-    this.api.getTicketMarkdown(ticket).pipe(first()).subscribe(async md => {
-      await this.clipboard.copy(md);
-      this.toastsService.show({
-        faIcon: fa.clipboard,
-        text: "Ticket markdown copied"
-      });
+    const ticketMarkdown = await this.api.getTicketMarkdown(ticket);
+    await this.clipboard.copy(ticketMarkdown);
+    this.toastsService.show({
+      faIcon: fa.clipboard,
+      text: `Markdown for ticket **${ticket.fullKey}** copied`
     });
   }
 }

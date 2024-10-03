@@ -18,7 +18,7 @@
       <div *ngIf="canManage" class="mb-3">
         <label class="mb-0" for="form-requester">Requested By</label>
         <app-inplace-editor [editData]="requesters"
-          [currentText]="(!!ticket.requester ? ticket.requester.approvedName + ' ('+(ticket.requesterId | slice:0:8)+')' : 'Me')"
+          [currentText]="(!!ticket.requester ? ticket.requester.name + ' ('+(ticket.requesterId | slice:0:8)+')' : 'Me')"
           (startEditFunc)="startEditRequesters()" (selectOptionFunc)="selectRequester($event)"></app-inplace-editor>
         <p class="mb-0 pt-0 align-items-center small">Select the user this request is coming from</p>
       </div>

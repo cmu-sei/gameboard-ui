@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [class.miniplayer-available]="((windowWidth$ | async) || 0) > 1400">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
@@ -17,7 +17,6 @@
       <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
 
       <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
-
         <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
           btnClass="btn btn-lg btn-info px-4 mb-4" (confirm)="play(spec.gameId)" class="d-block">
           <span>Start Practice Session</span>
@@ -46,7 +45,7 @@
   <li class="breadcrumb-item">...</li>
 </ng-template>
 
-<ng-template #starting let-challenge="challenge">
+<ng-template #starting>
   <div class="text-center">
     <app-spinner>Starting your practice session...</app-spinner>
   </div>

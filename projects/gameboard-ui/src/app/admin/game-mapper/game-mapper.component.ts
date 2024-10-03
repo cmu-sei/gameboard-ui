@@ -5,16 +5,17 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
+import { fa } from '@/services/font-awesome.service';
+import { ScoringService } from '@/services/scoring/scoring.service';
 import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ExternalSpec, NewSpec, Spec } from '../../api/spec-models';
 import { SpecService } from '../../api/spec.service';
 import { ConfigService } from '../../utility/config.service';
-import { fa } from '@/services/font-awesome.service';
 import { ChallengeSpecScoringConfig, GameScoringConfig } from '@/services/scoring/scoring.models';
-import { ScoringService } from '@/services/scoring/scoring.service';
-import { ToastService } from '@/utility/services/toast.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { ToastService } from '@/utility/services/toast.service';
+import { slug } from 'projects/gameboard-ui/src/tools/functions';
 
 @Component({
   selector: 'app-game-mapper',
@@ -34,16 +35,13 @@ export class GameMapperComponent {
   deleting$ = new Subject<Spec>();
   recentExternals$ = new Subject<void>();
   updated$: Observable<Spec>;
-  created$: Observable<Spec>;
-  deleted$: Observable<any>;
   recentExternalSpecList$: Observable<ExternalSpec[]>;
 
-  show = false;
   viewing = 'edit';
-  addedCount = 0;
 
   protected game?: Game;
   protected hasZeroPointSpecs = false;
+  protected isSynchronizing = false;
   protected specs: Spec[] = [];
   protected syncErrors: any[] = [];
 
@@ -98,32 +96,11 @@ export class GameMapperComponent {
     );
     this.recentExternalSpecList$.subscribe();
 
-    this.created$ = api.selected$.pipe(
-      filter(s => !this.specs.find(i => i.externalId === s.externalId)),
-      filter(s => !!this.game),
-      map(s => {
-        // compute semi-random coordinates for the new spec so it doesn't sit on top of other
-        // added specs
-        const randomX = Math.random() * 0.5 + 0.25;
-        const randomY = Math.random() * 0.5 + 0.25;
-        return { ...s, gameId: this.game!.id, points: 1, x: randomX, y: randomY, r: .015 } as NewSpec;
-      }),
-      switchMap(s => api.create(s)),
-      tap(r => this.addedCount += 1),
-      tap(s => this.refresh()),
-    );
-
     this.updated$ = this.updating$.pipe(
       debounceTime(500),
       filter(s => s.points === 0 || s.points > 0),
       switchMap(s => api.update(s)),
       tap(s => this.refresh())
-    );
-
-    this.deleted$ = this.deleting$.pipe(
-      filter(s => !!this.game?.id),
-      switchMap(s => api.delete(s.id)),
-      tap(() => this.refresh()),
     );
 
     this.unsub.add(this.route.data.subscribe(d => this.refresh$.next(d.gameId)));
@@ -136,9 +113,6 @@ export class GameMapperComponent {
 
   view(v: string): void {
     this.viewing = v;
-    if (v === 'edit') {
-      this.addedCount = 0;
-    }
   }
 
   async upload(files: File[]) {
@@ -161,22 +135,56 @@ export class GameMapperComponent {
     this.refresh();
   }
 
-  sync(): void {
+  async sync(): Promise<void> {
     this.syncErrors = [];
+
+    this.isSynchronizing = true;
     if (!this.game)
       return;
 
     try {
-      this.api.sync(this.game.id).subscribe(() => this.refresh());
-      this.toastService.showMessage("Synchronized specs with the game engine.");
+      await firstValueFrom(this.api.sync(this.game.id));
+      this.toastService.showMessage("**Synchronized** specs with the game engine.");
+      this.refresh();
     }
     catch (err: any) {
       this.syncErrors.push(err);
     }
+
+    this.isSynchronizing = false;
   }
 
-  trackById(index: number, g: Spec): string {
-    return g.id;
+  protected async handleSpecSelect(spec: ExternalSpec) {
+    if (this.specs.find(s => s.externalId == spec.externalId)) {
+      this.toastService.showMessage(`An instance of **${spec.name}** has already been added to this game.`);
+      return;
+    }
+
+    if (!spec?.externalId)
+      return;
+
+    const newSpec: NewSpec = {
+      averageDeploySeconds: 10,
+      ...spec,
+      disabled: false,
+      gameId: this.game!.id,
+      isHidden: false,
+      points: 1,
+      c: "",
+      x: Math.random() * 0.5 + 0.25,
+      y: Math.random() * 0.5 + 0.25,
+      r: 0.015,
+      tag: slug(spec.name),
+    };
+
+    await firstValueFrom(this.api.create(newSpec));
+    await this.reloadSpecs();
+    this.toastService.showMessage(`Added challenge ${newSpec.name} to the game.`);
+  }
+
+  protected async handleSpecDeleteRequested(specId: string) {
+    await firstValueFrom(this.api.delete(specId));
+    await this.reloadSpecs();
   }
 
   protected handleSpecUpdated(spec: Spec) {
@@ -197,21 +205,19 @@ export class GameMapperComponent {
     }
 
     if (this.game?.id == gameId) {
-      await this.updateSpecs(gameId);
+      await this.reloadSpecs();
       return;
     }
 
     this.game = await firstValueFrom(this.gameSvc.retrieve(gameId));
-    await this.updateSpecs(gameId);
+    await this.reloadSpecs();
   }
 
-  private async updateSpecs(gameId?: string) {
-    if (!gameId) {
-      this.specs = [];
+  private async reloadSpecs() {
+    if (!this.game?.id)
       return;
-    }
 
-    this.specs = await firstValueFrom(this.gameSvc.retrieveSpecs(gameId));
+    this.specs = await firstValueFrom(this.gameSvc.retrieveSpecs(this.game.id));
     this.checkForZeroPointActiveSpecs(this.specs);
   }
 

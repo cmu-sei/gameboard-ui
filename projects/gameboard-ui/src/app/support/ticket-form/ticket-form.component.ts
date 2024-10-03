@@ -10,9 +10,9 @@ import { EditData, SuggestionOption } from '../../utility/components/inplace-edi
 import { UserService as LocalUserService } from '../../utility/user.service';
 import { RouterService } from '@/services/router.service';
 import { ActivatedRoute } from '@angular/router';
-import { BoardService } from '@/api/board.service';
 import { LogService } from '@/services/log.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { ChallengesService } from '@/api/challenges.service';
 
 @Component({
   selector: 'app-ticket-form',
@@ -49,7 +49,7 @@ export class TicketFormComponent implements OnDestroy {
     private permissionsService: UserRolePermissionsService,
     private routerService: RouterService,
     private userApi: UserService,
-    boardApi: BoardService,
+    challengeService: ChallengesService,
     route: ActivatedRoute,
     localUserService: LocalUserService
   ) {
@@ -57,7 +57,7 @@ export class TicketFormComponent implements OnDestroy {
 
     this.routeSub = route.queryParams.pipe(
       filter(p => !!p.cid),
-      switchMap(p => boardApi.retrieve(p.cid)),
+      switchMap(p => challengeService.retrieve(p.cid)),
       tap(c => {
         this.ticket.challengeId = c.id;
         this.ticket.challenge = c;

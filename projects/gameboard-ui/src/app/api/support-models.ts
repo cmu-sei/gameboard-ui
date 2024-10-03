@@ -2,8 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Challenge, ChallengeOverview, ChallengeSummary } from "./board-models";
+import { SimpleEntity } from "./models";
 import { PlayerOverview } from "./player-models";
-import { UserSummary } from "./user-models";
 
 export interface SupportSettings {
   autoTags: SupportSettingsAutoTag[];
@@ -96,11 +96,10 @@ export interface TicketSummary {
   lastUpdated: Date;
   lastSeen: Date;
 
-  requester?: UserSummary;
-  assignee?: UserSummary;
-  creator?: UserSummary;
+  assignee?: SimpleEntity;
   challenge?: ChallengeSummary;
-
+  creator?: SimpleEntity;
+  requester?: SimpleEntity;
 }
 
 export interface SelfNewTicket {
@@ -121,7 +120,7 @@ export interface NewTicket {
   label: string;
   uploads: File[];
 
-  requester?: UserSummary; // for form display only
+  requester?: SimpleEntity; // for form display only
 }
 
 export interface SelfChangedTicket {
@@ -224,6 +223,6 @@ export interface TicketNotification {
 
 export interface TicketUser {
   id: string;
-  approvedName: string;
+  name: string;
   isSupportPersonnel: boolean;
 }

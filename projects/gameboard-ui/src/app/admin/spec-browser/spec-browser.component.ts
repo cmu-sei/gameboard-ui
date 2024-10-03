@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
@@ -14,10 +14,12 @@ import { SpecService } from '../../api/spec.service';
   templateUrl: './spec-browser.component.html',
   styleUrls: ['./spec-browser.component.scss']
 })
-export class SpecBrowserComponent implements OnInit {
+export class SpecBrowserComponent {
+  @Output() selected = new EventEmitter<ExternalSpec>();
+
   refresh$ = new BehaviorSubject<boolean>(true);
   list$: Observable<ExternalSpec[]>;
-  search: Search = {term: '', filter: ['play']};
+  search: Search = { term: '', filter: ['play'] };
   faSearch = faSearch;
 
   constructor(
@@ -29,15 +31,12 @@ export class SpecBrowserComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-  }
-
   typing(e: Event): void {
     this.refresh$.next(true);
   }
 
   select(spec: ExternalSpec): void {
-    this.api.selected$.next(spec);
+    this.selected.emit(spec);
   }
 
   trackById(index: number, g: ExternalSpec): string {

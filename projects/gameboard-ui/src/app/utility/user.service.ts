@@ -14,7 +14,6 @@ import { UserRolePermissionsService } from '@/api/user-role-permissions.service'
 import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 
 @Injectable({ providedIn: 'root' })
-
 export class UserService implements OnDestroy {
   private _userSub: Subscription;
   hasPermission$ = new BehaviorSubject<boolean>(false);

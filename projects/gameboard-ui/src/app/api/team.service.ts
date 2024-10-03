@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, firstValueFrom, map, tap } from "rxjs";
+import { Observable, Subject, firstValueFrom, from, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
 import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
@@ -17,6 +17,9 @@ export class TeamService {
 
     private _teamSessionsChanged$ = new Subject<string[]>();
     public teamSessionsChanged$ = this._teamSessionsChanged$.asObservable();
+
+    private _teamSessionEndedManually$ = new Subject<string>();
+    public teamSessionEndedManually$ = this._teamSessionEndedManually$.asObservable();
 
     private _teamSessionReset$ = new Subject<string>();
     public teamSessionReset$ = this._teamSessionReset$.asObservable();
@@ -72,14 +75,15 @@ export class TeamService {
         );
     }
 
-    public endSession(request: SessionEndRequest) {
+    public async endSession(request: SessionEndRequest) {
         // endSession and extendSession invoke the same endpoint, with
         // "end" having no sessionEnd value
-        return this.updateSession(request);
+        await this.updateSession(request);
+        this._teamSessionEndedManually$.next(request.teamId);
     }
 
     public extendSession(model: SessionExtendRequest): Observable<void> {
-        return this.updateSession(model);
+        return from(this.updateSession(model));
     }
 
     public resetSession(request: { teamId: string, resetType?: TeamSessionResetType }): Observable<void> {
@@ -92,11 +96,12 @@ export class TeamService {
         return firstValueFrom(this.http.post<any>(this.apiUrl.build("/team/session"), request));
     }
 
-    private updateSession(request: SessionExtendRequest | SessionEndRequest): Observable<void> {
-        return this.http.put<any>(this.apiUrl.build("/team/session"), request).pipe(
-            tap(_ => this._teamSessionsChanged$.next([request.teamId])),
-            tap(_ => this._playerSessionChanged$.next(request.teamId)),
+    private async updateSession(request: SessionExtendRequest | SessionEndRequest): Promise<void> {
+        await firstValueFrom(
+            this.http.put<any>(this.apiUrl.build("/team/session"), request).pipe(
+                tap(_ => this._teamSessionsChanged$.next([request.teamId])),
+                tap(_ => this._playerSessionChanged$.next(request.teamId)),
+            )
         );
     }
-
 }

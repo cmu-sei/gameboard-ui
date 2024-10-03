@@ -1,5 +1,4 @@
-import { inject } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 export const GameIdResolver = (route: ActivatedRouteSnapshot) => {
     if (!route.parent?.params.gameId) {

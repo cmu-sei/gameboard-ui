@@ -16,13 +16,18 @@ import { PlayerContext } from '@/game/components/play/play.component';
 import { RouterService } from '@/services/router.service';
 import { PracticeChallengeSolvedModalComponent } from '../practice-challenge-solved-modal/practice-challenge-solved-modal.component';
 import { TeamService } from '@/api/team.service';
+import { WindowService } from '@/services/window.service';
 
 @Component({
   selector: 'app-practice-session',
   templateUrl: './practice-session.component.html',
+  styles: [
+    ".container.miniplayer-available { max-width: 1440px }"
+  ],
   providers: [UnsubscriberService]
 })
 export class PracticeSessionComponent {
+  protected windowWidth$ = this.windowService.resize$;
   spec$: Observable<SpecSummary>;
   authed$: Observable<boolean>;
   activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
@@ -30,6 +35,7 @@ export class PracticeSessionComponent {
   protected errors: any = [];
   protected fa = fa;
   protected playerContext: PlayerContext | null = null;
+  protected isMiniPlayerEnabled = false;
   protected isPlayingOtherChallenge = false;
   protected isStartingSession = false;
   protected isDeploying = false;
@@ -44,7 +50,8 @@ export class PracticeSessionComponent {
     private route: ActivatedRoute,
     private routerService: RouterService,
     private teamService: TeamService,
-    private unsub: UnsubscriberService
+    private unsub: UnsubscriberService,
+    private windowService: WindowService,
   ) {
     this.authed$ = localUser.user$.pipe(map(u => !!u));
 
@@ -70,10 +77,6 @@ export class PracticeSessionComponent {
 
     this.unsub.add(this.activeChallengesRepo.practiceChallengeCompleted$.subscribe(challenge => {
       this.handleActiveChallengeCompleted(challenge);
-    }));
-
-    this.unsub.add(this.activeChallengesRepo.practiceChallengeAttemptsExhausted$.subscribe(challenge => {
-      this.handleActiveChallengeAttemptsExhausted(challenge);
     }));
 
     this.unsub.add(
@@ -138,18 +141,25 @@ export class PracticeSessionComponent {
       bodyContent: `If you continue, you'll end your session for practice challenge **${currentPracticeChallenge.spec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-        await firstValueFrom(this.teamService.endSession({ teamId: currentPracticeChallenge.teamId }));
+        await this.teamService.endSession({ teamId: currentPracticeChallenge.teamId });
         this.play(spec.gameId);
       }
     });
   }
 
-  private handleActiveChallengeAttemptsExhausted(challenge: LocalActiveChallenge) {
-    this.handleChallengeFailed(challenge, "attempts");
-  }
-
   private handleActiveChallengeExpired(challenge: LocalActiveChallenge) {
-    this.handleChallengeFailed(challenge, "timeUp");
+    this.modalService.openConfirm({
+      title: "Time's up",
+      bodyContent: `Your session for challenge **${challenge.spec.name}** has ended because you're out of time. You can either start over and try again or head back to the Practice Area to find another challenge to try.`,
+      renderBodyAsMarkdown: true,
+      cancelButtonText: "Back to the Practice Area",
+      confirmButtonText: "Try again",
+      onCancel: () => this.routerService.toPracticeArea(),
+      onConfirm: async () => {
+        await this.routerService.toPracticeChallenge(challenge.spec);
+        await this.play(challenge.game.id);
+      },
+    });
   }
 
   private handleActiveChallengeCompleted(challenge: LocalActiveChallenge) {
@@ -159,26 +169,6 @@ export class PracticeSessionComponent {
         context: {
           challenge
         }
-      },
-    });
-  }
-
-  private handleChallengeFailed(challenge: LocalActiveChallenge, reason: "attempts" | "timeUp") {
-    const title = reason === "attempts" ? "Out of attempts!" : "Time's up";
-    const reasonDescription = reason === "attempts" ?
-      "you've used your alloted submissions for the challenge" :
-      "you ran out of time";
-
-    this.modalService.openConfirm({
-      title,
-      bodyContent: `Your session for challenge **${challenge.spec.name}** has ended because ${reasonDescription}. You can either start over and try again or head back to the Practice Area to find another challenge to try.`,
-      renderBodyAsMarkdown: true,
-      cancelButtonText: "Back to the Practice Area",
-      confirmButtonText: "Try again",
-      onCancel: () => this.routerService.toPracticeArea(),
-      onConfirm: async () => {
-        await this.routerService.toPracticeChallenge(challenge.spec);
-        await this.play(challenge.game.id);
       },
     });
   }

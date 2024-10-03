@@ -136,7 +136,7 @@
             </ng-container>
           </div>
           <div class="text-muted">
-            <span class="font-weight-bold-">{{ticket.requester?.approvedName}}</span>
+            <span class="font-weight-bold-">{{ticket.requester?.name}}</span>
             <span *ngIf="ticket.challenge" class="text-info cursor-pointer"
               [appCopyOnClick]="ticket.challenge | toSupportCode" tooltip="Copy this support code">
               &nbsp;&middot;&nbsp;
@@ -154,7 +154,7 @@
         </div>
         <div>
           <ng-container *ngIf="ctx.canManage">
-            <span *ngIf="!!ticket.assignee" class="mb-1">{{ticket.assignee.approvedName}}</span>
+            <span *ngIf="!!ticket.assignee" class="mb-1">{{ticket.assignee.name}}</span>
             <span *ngIf="!ticket.assignee" class="text-muted">Unassigned</span>
           </ng-container>
         </div>

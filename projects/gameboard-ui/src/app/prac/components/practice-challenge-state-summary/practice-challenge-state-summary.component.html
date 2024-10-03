@@ -1,6 +1,5 @@
 <ng-container *ngIf="userActivePracticeChallenge === undefined; else resolved">
-    <app-spinner></app-spinner>
-    {{ isChangingSessionEnd ? "Updating your session..." : "Finding your challenge..." }}
+    <app-spinner>{{ isChangingSessionEnd ? "Updating your session..." : "Finding your challenge..." }}</app-spinner>
 </ng-container>
 
 <ng-template #resolved>

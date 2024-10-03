@@ -1,15 +1,17 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { catchError, firstValueFrom, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
-import { catchError, firstValueFrom, of, tap } from 'rxjs';
-import { LocalActiveChallenge } from '@/api/challenges.models';
+import { ChallengeSolutionGuide, LocalActiveChallenge } from '@/api/challenges.models';
 import { BoardPlayer, BoardSpec } from '@/api/board-models';
 import { BoardService } from '@/api/board.service';
 import { PlayerMode, TimeWindow } from '@/api/player-models';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { SpecSummary } from '@/api/spec-models';
+import { WindowService } from '@/services/window.service';
+import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
 
 type LegacyContext = {
   boardPlayer: BoardPlayer | null,
@@ -40,8 +42,13 @@ export class PlayComponent {
   protected fa = fa;
   protected legacyContext: LegacyContext = { boardPlayer: null, boardSpec: null, session: null };
   protected isDeploying = false;
+  protected isMiniPlayerAvailable = false;
+  protected isMiniPlayerSelected = false;
   protected isUndeploying = false;
+  protected showMiniPlayerPrompt = false;
+  protected solutionGuide: ChallengeSolutionGuide | null = null;
   protected vmUrls: { [id: string]: string } = {};
+  protected windowWidth$: Observable<number>;
 
   private _autobootedForPlayerId?: string;
 
@@ -49,14 +56,26 @@ export class PlayComponent {
     private activeChallengesRepo: ActiveChallengesRepo,
     private boardService: BoardService,
     private challengesService: ChallengesService,
+    private localStorage: LocalStorageService,
     private routerService: RouterService,
-    private unsub: UnsubscriberService) {
+    private unsub: UnsubscriberService,
+    windowService: WindowService) {
+    this.windowWidth$ = windowService.resize$;
     this.unsub.add(
       this.activeChallengesRepo.activePracticeChallenge$.pipe(
         tap(challenge => this.challenge = challenge),
         tap(async challenge => this.legacyContext = await this._buildLegacyContext(challenge)),
         tap(challenge => this.vmUrls = this.buildVmLinks(challenge)),
-      ).subscribe()
+      ).subscribe(),
+
+      windowService.resize$.subscribe(width => {
+        this.isMiniPlayerAvailable = width >= 1140;
+        this.isMiniPlayerSelected = this.localStorage.get(StorageKey.UsePlayPane) === "true";
+        this.showMiniPlayerPrompt = this.localStorage.get(StorageKey.UsePlayPane) === null;
+
+        if (!this.isMiniPlayerAvailable && this.isMiniPlayerSelected)
+          this.toggleMiniPlayer();
+      })
     );
   }
 
@@ -100,13 +119,26 @@ export class PlayComponent {
     this.isUndeploying = false;
   }
 
+  protected toggleMiniPlayer() {
+    this.showMiniPlayerPrompt = false;
+    if (this.isMiniPlayerAvailable) {
+      this.isMiniPlayerSelected = !this.isMiniPlayerSelected;
+      this.localStorage.add(StorageKey.UsePlayPane, this.isMiniPlayerSelected);
+
+    }
+    else {
+      this.isMiniPlayerSelected = false;
+      this.localStorage.add(StorageKey.UsePlayPane, false);
+    }
+  }
+
   private buildVmLinks(challenge: LocalActiveChallenge | null) {
     const vmUrls: { [id: string]: string } = {};
 
     if (!challenge)
       return vmUrls;
 
-    for (let vm of challenge.challengeDeployment.vms) {
+    for (const vm of challenge.challengeDeployment.vms) {
       vmUrls[vm.id] = this.routerService.buildVmConsoleUrl(vm, challenge.playerMode == PlayerMode.practice);
     }
 
@@ -115,6 +147,7 @@ export class PlayComponent {
 
   private async deployChallenge(args: { challengeSpecId: string, playerId: string, userId: string }) {
     this.errors = [];
+    this.solutionGuide = null;
     this.deployStatusChanged.emit(true);
     this.isDeploying = true;
 
@@ -133,10 +166,13 @@ export class PlayComponent {
     this.isDeploying = false;
     this.deployStatusChanged.emit(false);
 
-    // if we succeeded in booting, let listeners know
     if (this.challenge) {
+      // if we succeeded in booting, let listeners know
       this._autobootedForPlayerId = args.playerId;
       this.challengeStarted.emit();
+
+      // also look up the solution guide if there is one
+      this.solutionGuide = await firstValueFrom(this.challengesService.getSolutionGuide(this.challenge.id));
     }
   }
 
