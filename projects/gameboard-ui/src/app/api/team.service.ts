@@ -82,8 +82,9 @@ export class TeamService {
         this._teamSessionEndedManually$.next(request.teamId);
     }
 
-    public extendSession(model: SessionExtendRequest): Observable<void> {
-        return from(this.updateSession(model));
+    public async extendSession(model: SessionExtendRequest): Promise<void> {
+        await this.updateSession(model);
+        this._teamSessionExtended$.next([model.teamId]);
     }
 
     public resetSession(request: { teamId: string, resetType?: TeamSessionResetType }): Observable<void> {
@@ -97,11 +98,8 @@ export class TeamService {
     }
 
     private async updateSession(request: SessionExtendRequest | SessionEndRequest): Promise<void> {
-        await firstValueFrom(
-            this.http.put<any>(this.apiUrl.build("/team/session"), request).pipe(
-                tap(_ => this._teamSessionsChanged$.next([request.teamId])),
-                tap(_ => this._playerSessionChanged$.next(request.teamId)),
-            )
-        );
+        await firstValueFrom(this.http.put<any>(this.apiUrl.build("/team/session"), request));
+        this._playerSessionChanged$.next(request.teamId);
+        this._teamSessionsChanged$.next([request.teamId]);
     }
 }
