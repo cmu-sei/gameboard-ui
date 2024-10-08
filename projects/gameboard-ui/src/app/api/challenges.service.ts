@@ -10,7 +10,7 @@ import { PlayerMode } from './player-models';
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesService {
-  private _challengeDeployStateChanged$ = new Subject<string>();
+  private _challengeDeployStateChanged$ = new Subject<Challenge>();
   public readonly challengeDeployStateChanged$ = this._challengeDeployStateChanged$.asObservable();
 
   private _challengeGraded$ = new Subject<Challenge>();
@@ -67,13 +67,13 @@ export class ChallengesService {
 
   public deploy(challenge: { id: string }): Observable<Challenge> {
     return this.http.put<Challenge>(this.apiUrl.build("challenge/start"), challenge).pipe(tap(challenge => {
-      this._challengeDeployStateChanged$.next(challenge.id);
+      this._challengeDeployStateChanged$.next(challenge);
     }));
   }
 
   public undeploy(challenge: { id: string }): Observable<Challenge> {
     return this.http.put<Challenge>(this.apiUrl.build("challenge/stop"), challenge).pipe(tap(challenge => {
-      this._challengeDeployStateChanged$.next(challenge.id);
+      this._challengeDeployStateChanged$.next(challenge);
     }));
   }
 

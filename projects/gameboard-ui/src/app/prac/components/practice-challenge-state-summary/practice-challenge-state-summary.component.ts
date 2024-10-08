@@ -66,7 +66,7 @@ export class PracticeChallengeStateSummaryComponent {
 
     // update timers to accurately reflect the active challenge
     this.msElapsed$ = this._timer$.pipe(
-      map(tick =>
+      map(() =>
         this.userActivePracticeChallenge?.session.start ?
           DateTime.now().diff(this.userActivePracticeChallenge.session.start).toMillis() :
           undefined
@@ -82,10 +82,10 @@ export class PracticeChallengeStateSummaryComponent {
   async extendSession(practiceChallenge: LocalActiveChallenge): Promise<void> {
     this.isChangingSessionEnd = true;
     const teamId = practiceChallenge.teamId;
-    await firstValueFrom(this.teamService.extendSession({
+    await this.teamService.extendSession({
       teamId,
       sessionEnd: new Date()
-    }));
+    });
 
     this.isChangingSessionEnd = false;
     this.showExtensionToast(DateTime.now().plus({ minutes: 60 }));

@@ -89,7 +89,7 @@
             </ng-container>
         </div>
 
-        <div *ngIf="isMiniPlayerAvailable && isMiniPlayerSelected && challenge?.challengeDeployment"
+        <div *ngIf="isMiniPlayerAvailable && isMiniPlayerSelected && !isDeploying && !isUndeploying && challenge?.challengeDeployment"
             class="mini-player-container">
             <ng-container *ngTemplateOutlet="miniPlayer"></ng-container>
         </div>
@@ -100,13 +100,13 @@
     <ng-container *ngIf="challenge && !isDeploying && !isUndeploying">
         <h5><ng-container *ngTemplateOutlet="challengeConsolesText"></ng-container></h5>
 
-        <div class="vms-container my-4">
+        <div *ngIf="challenge?.challengeDeployment?.vms?.length" class="vms-container my-4">
             <ul class="d-flex flex-wrap">
                 <li *ngFor="let vm of challenge.challengeDeployment.vms">
                     <a class="btn btn-sm btn-dark mr-2 d-block" [href]="vmUrls[vm.id] | safeurl" target="_blank"
                         role="button">
                         <fa-icon [icon]="fa.computer"></fa-icon>
-                        <span>{{vm.name}}</span>
+                        <span> {{vm.name}}</span>
                     </a>
                 </li>
             </ul>

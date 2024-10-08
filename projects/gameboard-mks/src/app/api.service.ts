@@ -5,9 +5,9 @@ import { PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interval, Observable, of } from 'rxjs';
-import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { ConsoleActionResponse, ConsoleActor, ConsoleRequest, ConsoleSummary, KeyValuePair, VmAnswer, VmOperation, VmOptions } from './api.models';
+import { ConsoleActionResponse, ConsoleActor, ConsoleRequest, ConsoleSummary, KeyValuePair, VmAnswer, VmOptions } from './api.models';
 import { UserActivityListenerEventType } from './components/user-activity-listener/user-activity-listener.component';
 
 @Injectable({ providedIn: 'root' })
