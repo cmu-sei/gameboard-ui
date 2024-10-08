@@ -18,6 +18,7 @@ import { ClipboardService } from '../../clipboard.service';
 import { HubService } from '../../hub.service';
 import { UserActivityListenerEventType } from '../user-activity-listener/user-activity-listener.component';
 import { ConfigService } from '@/utility/config.service';
+import { LogService } from '@/services/log.service';
 
 @Component({
   selector: 'app-console',
@@ -63,6 +64,7 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     private config: ConfigService,
     private injector: Injector,
     private api: ApiService,
+    private logService: LogService,
     private titleSvc: Title,
     private clipSvc: ClipboardService,
     private renderer: Renderer2
@@ -134,6 +136,7 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     }
 
     this.state = state;
+    this.logService.logInfo("State to", state);
     this.shadowState(state);
     this.isConnected = state === 'connected';
 
@@ -181,6 +184,8 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
       (info: ConsoleSummary) => this.create(info),
       (err) => {
         const msg = err?.error?.message || err?.message || err;
+        this.logService.logError(`Console reload error: ${msg || "[no error resolved]"}`);
+
         this.changeState(
           msg.match(/forbidden/i) ? 'forbidden' : 'failed'
         );
@@ -336,12 +341,6 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     if (!this.request.observer) {
       this.api.focus(this.request).subscribe();
     }
-  }
-
-  @HostListener('window:blur', ['$event'])
-  onBlur(): void {
-    // don't set actor map on blur
-    // this.api.blur(this.request);
   }
 
   @HostListener('document:mouseup', ['$event'])

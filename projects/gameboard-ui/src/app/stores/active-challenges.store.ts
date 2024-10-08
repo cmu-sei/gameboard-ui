@@ -75,6 +75,15 @@ export class ActiveChallengesRepo implements OnDestroy {
         return this.resolveActivePracticeChallenge(activeChallengesStore.value);
     }
 
+    private buildChallengeDeployment(challenge: Challenge) {
+        return {
+            challengeId: challenge.id,
+            isDeployed: challenge.hasDeployedGamespace,
+            markdown: challenge.state.markdown || "",
+            vms: challenge.state.vms,
+        };
+    }
+
     private checkActiveChallengesForEnd() {
         const challenges = [...activeChallengesStore.state.practice];
 
@@ -90,28 +99,29 @@ export class ActiveChallengesRepo implements OnDestroy {
         }
     }
 
-    private handleChallengeDeployStateChanged(challengeDeployStateChange: { id: string, isDeployed: boolean }) {
+    private handleChallengeDeployStateChanged(challengeDeployStateChange: Challenge) {
         activeChallengesStore.update(state => {
             const competitive = [...state.competition];
             const practice = [...state.practice];
 
             for (const challenge of competitive) {
                 if (challenge.id == challengeDeployStateChange.id) {
-                    challenge.challengeDeployment.isDeployed = challengeDeployStateChange.isDeployed;
+                    challenge.challengeDeployment = this.buildChallengeDeployment(challengeDeployStateChange);
                 }
             }
 
             for (const challenge of practice) {
                 if (challenge.id === challengeDeployStateChange.id) {
-                    challenge.challengeDeployment.isDeployed = challengeDeployStateChange.isDeployed;
+                    challenge.challengeDeployment = this.buildChallengeDeployment(challengeDeployStateChange);
                 }
             }
 
             return {
                 ...state,
-                competition: state.competition
-            }
-        })
+                competition: [...competitive],
+                practice: [...practice]
+            };
+        });
     }
 
     private handleChallengeGraded(challenge: Challenge) {
@@ -121,7 +131,12 @@ export class ActiveChallengesRepo implements OnDestroy {
         if (activePracticeChallenge?.challengeDeployment.challengeId === challenge.id) {
             // no matter what, update the activeChallenge thing in state with the deploy state of the 
             // challenge's gamespace
-            activePracticeChallenge.challengeDeployment.isDeployed = challenge.state.isActive;
+            activePracticeChallenge.challengeDeployment = {
+                challengeId: challenge.id,
+                isDeployed: challenge.hasDeployedGamespace,
+                markdown: challenge.state.markdown || "",
+                vms: challenge.state.vms,
+            };
             let removeChallengeFromState = false;
 
             if (challenge.score >= challenge.points) {
