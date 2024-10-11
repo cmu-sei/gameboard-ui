@@ -260,16 +260,17 @@ export class GameCenterTeamsComponent implements OnInit {
   }
 
   protected async load(gameId?: string) {
-    if (!gameId) {
-      return;
-    }
-
-    if (!this.game || this.game.id != gameId) {
+    if (gameId && this.game?.id !== gameId) {
       this.game = await firstValueFrom(this.gameService.retrieve(gameId));
     }
 
+    if (!gameId && !this.game?.id)
+      return;
+
+    gameId = this.game?.id;
+
     this.isLoading = true;
-    this.results = await this.adminService.getGameCenterTeams(gameId, this.filterSettings);
+    this.results = await this.adminService.getGameCenterTeams(gameId!, this.filterSettings);
     this.isLoading = false;
     this.updateFilterConfig();
   }

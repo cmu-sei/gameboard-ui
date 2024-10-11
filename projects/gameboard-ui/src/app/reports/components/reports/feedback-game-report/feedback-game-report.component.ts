@@ -93,7 +93,7 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
     return {
       metaData: {
         key: ReportKey.FeedbackReport,
-        title: "Feedback (Games) Report",
+        title: "Feedback Report",
         description: "",
         isExportable: true,
         runAt: this.nowService?.nowToDateTime() || DateTime.now()
@@ -117,13 +117,13 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
 
   makeSearchParams() {
     let params: any = {};
-    params.type = "game";
     params.challengeSpecId = this._currentParams?.challengeSpecId;
     params.gameId = this._currentParams?.gameId;
     params.submitStatus = "submitted";
     params.sort = "newest";
     params.skip = this.skip;
     params.take = this._tablePageSize;
+    params.type = this._currentParams?.challengeSpecId ? "challenge" : "game";
     return params;
   }
 }

@@ -63,7 +63,7 @@
         </select>
 
         <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
-            <option [ngValue]="undefined" (change)="load()">[Any status]</option>
+            <option [ngValue]="undefined">[Any status]</option>
             <option value="complete">Finished</option>
             <option value="playing">Playing now</option>
             <option value="notStarted">Not Started</option>
