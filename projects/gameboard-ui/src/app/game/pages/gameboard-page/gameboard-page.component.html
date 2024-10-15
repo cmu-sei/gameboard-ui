@@ -11,8 +11,7 @@
     </span>
     <div class="spacer"></div>
     <div>
-      <app-gameboard-performance-summary [ctx]="performanceSummaryViewModel"
-        (onRefreshRequest)="handleRefreshRequest($event)"></app-gameboard-performance-summary>
+      <app-gameboard-performance-summary [playerId]="ctx.id"></app-gameboard-performance-summary>
     </div>
   </div>
 

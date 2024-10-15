@@ -82,6 +82,8 @@ export interface EnrollmentReportStatSummary {
         sponsor: ReportSponsor,
         distinctPlayerCount: number;
     }
+    teamsWithNoSessionCount: number;
+    teamsWithNoStartedChallengeCount: number;
 }
 
 export interface EnrollmentReportLineChartGroup {

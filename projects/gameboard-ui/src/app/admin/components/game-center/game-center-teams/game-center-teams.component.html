@@ -20,7 +20,7 @@
         </button>
 
         <button type="button" class="btn btn-info" tooltip="Deploy game resources"
-            (click)="handleDeployGameResources()">
+            [disabled]="!results?.teams?.items?.length" (click)="handleConfirmDeployGameResources()">
             <fa-icon [icon]="fa.computer"></fa-icon>
         </button>
 

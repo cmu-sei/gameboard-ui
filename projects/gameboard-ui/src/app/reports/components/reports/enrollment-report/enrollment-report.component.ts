@@ -129,7 +129,9 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           { label: "Games", value: stats.distinctGameCount },
           { label: "Players", value: stats.distinctPlayerCount },
           { label: "Teams", value: stats.distinctTeamCount },
-          { label: "Sponsors", value: stats.distinctSponsorCount }
+          { label: "Sponsors", value: stats.distinctSponsorCount },
+          { label: "Teams With Unstarted Sessions", value: stats.teamsWithNoSessionCount },
+          { label: "Teams With No Started Challenges", value: stats.teamsWithNoStartedChallengeCount }
         ]
           .filter(e => !!e)
           .map(e => e! as ReportSummaryStat);
