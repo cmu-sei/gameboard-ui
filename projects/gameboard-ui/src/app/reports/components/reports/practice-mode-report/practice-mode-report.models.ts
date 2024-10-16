@@ -70,6 +70,7 @@ export interface PracticeModeReportByChallengeRecord extends PracticeModeReportR
     maxPossibleScore: number;
     avgScore: number;
     description: string;
+    tags: string[];
     text: string;
     sponsorsPlayed: ReportSponsor[];
     overallPerformance: PracticeModeReportByChallengePerformance;

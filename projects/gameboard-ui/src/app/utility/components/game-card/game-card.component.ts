@@ -12,14 +12,12 @@ import { fa } from '@/services/font-awesome.service';
   styleUrls: ['./game-card.component.scss']
 })
 export class GameCardComponent {
-  @Input() game!: Game | BoardGame;
+  @Input() game?: Game | BoardGame;
   @Output() selected = new EventEmitter<Game | BoardGame>();
 
   protected fa = fa;
 
   select(): void {
-    this.selected.next(
-      this.game
-    );
+    this.selected.emit(this.game);
   }
 }

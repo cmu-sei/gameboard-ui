@@ -8,7 +8,8 @@
 
         <select name="challengeSpec" [(ngModel)]="ngModel.challengeSpecId" class="form-control ml-1"
             (change)="handleNgModelChange()">
-            <option *ngIf="!requireChallengeSpecSelection" [ngValue]="null" selected>[any challenge]</option>
+            <option *ngIf="!requireChallengeSpecSelection" [ngValue]="null" selected>{{ challengeSpecPlaceholderText }}
+            </option>
             <option *ngFor="let spec of challengeSpecs$ | async" [ngValue]="spec.id">{{spec.name}}</option>
         </select>
     </div>

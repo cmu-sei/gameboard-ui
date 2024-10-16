@@ -30,7 +30,8 @@ export interface GameInfoBubbleProperties {
     TooltipModule
   ],
   styles: [
-    "li { margin-right: 1rem; padding: 0; text-align: center }",
+    "fa-icon { vertical-align: middle; }",
+    "li { margin-right: 1rem; padding: 0; text-align: center; vertical-align: middle; }",
     "img { object-fit: contain }",
     ".team-icon path { stroke: #00ffff; fill: #00ffff } "
   ],

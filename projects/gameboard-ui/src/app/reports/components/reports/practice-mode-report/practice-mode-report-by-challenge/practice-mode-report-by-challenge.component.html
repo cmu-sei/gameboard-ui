@@ -48,8 +48,15 @@
             <tr class="data-row" *ngFor="let record of results.records">
                 <!--CHALLENGE-->
                 <td>
-                    <app-challenge-or-game-field [challengeName]="record.name"
-                        [game]="record.game"></app-challenge-or-game-field>
+                    {{ record.name }}
+
+                    <ul class="m-0" *ngIf="record.tags.length">
+                        <li *ngFor="let tag of record.tags">
+                            <app-colored-text-chip [text]="tag"></app-colored-text-chip>
+                        </li>
+                    </ul>
+
+                    <app-challenge-or-game-field [game]="record.game"></app-challenge-or-game-field>
                 </td>
 
                 <!--ENGAGEMENT-->
