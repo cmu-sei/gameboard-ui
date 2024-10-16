@@ -50,7 +50,7 @@
                 <td>
                     {{ record.name }}
 
-                    <ul class="m-0" *ngIf="record.tags.length">
+                    <ul class="m-0 d-flex" *ngIf="record.tags.length">
                         <li *ngFor="let tag of record.tags">
                             <app-colored-text-chip [text]="tag"></app-colored-text-chip>
                         </li>
