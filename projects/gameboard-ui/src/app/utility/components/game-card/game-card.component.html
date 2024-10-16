@@ -1,7 +1,8 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<div class="card bg-dark comp-card h-100 mx-auto cursor-pointer" (click)="select()">
+<div class="card bg-dark comp-card h-100 w-100 mx-auto cursor-pointer" (click)="select()" *ngIf="game"
+  [style.background-image]="'url(' + ((game.logo | relativeImage ) || 'assets/card.png') + ')'">
   <div class="game-front position-absolute" style="top: 15px; left: 2px;">
     <h2>
       <span class="badge badge-indigo cool-badge m-1 lb-font upper">
@@ -9,8 +10,7 @@
       </span>
     </h2>
   </div>
-  <app-game-card-image [game]="game"></app-game-card-image>
-  <div class="d-flex flex-column p-0 position-absolute h-100 w-100">
+  <div class="d-flex flex-column p-0 h-100">
     <div class="game-tag-bg px-1 my-auto">
       <h1 class="text-white text-center">
         {{ game.cardText2 }}

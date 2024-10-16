@@ -1,6 +1,6 @@
 <ng-container *ngIf="gameCenterCtx as ctx; else loading">
     <div class="hero-thing mt-4 mb-5 d-flex flex-wrap align-content-center">
-        <app-game-card-image class="d-block" [game]="ctx"></app-game-card-image>
+        <app-game-card-image [game]="ctx"></app-game-card-image>
         <div class="game-info-container d-flex flex-column ml-3">
             <h1 class="fs-20 m-0">{{ ctx.name }}</h1>
 

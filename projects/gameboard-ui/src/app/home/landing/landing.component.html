@@ -15,7 +15,7 @@
 </div>
 
 <!-- Featured -->
-<div class="row mt-1" *ngIf="featured$ | async as featured; else loadingFeatured">
+<div class="row my-4" *ngIf="featured$ | async as featured; else loadingFeatured">
   <ng-container *ngIf="!!featured.length">
     <div class="col-12 mx-0 px-0 mb-2">
       <h2>Featured Games</h2>
@@ -27,7 +27,7 @@
 </div>
 
 <!-- Ongoing (games with no end date) -->
-<div class="row mt-1" *ngIf="ongoing$ | async as ongoing; else loadingOngoing">
+<div class="row my-4" *ngIf="ongoing$ | async as ongoing; else loadingOngoing">
   <ng-container *ngIf="!!ongoing.length">
     <div class="col-12 mx-0 px-0 mb-2">
       <h2>Ongoing Games</h2>
@@ -39,7 +39,7 @@
 </div>
 
 <!-- Live -->
-<div class="row mt-1" *ngIf="present$ | async as present; else loading">
+<div class="row my-4" *ngIf="present$ | async as present; else loading">
   <ng-container *ngIf="!!present.length">
     <div class="col-12 mx-0 px-0 mb-2">
       <h2>Live!</h2>
