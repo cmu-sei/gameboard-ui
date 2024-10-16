@@ -1,11 +1,13 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of, timer } from 'rxjs';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { calculateCountdown, TimeWindow } from '../../../api/player-models';
 import { fa } from '@/services/font-awesome.service';
 import { HubState, NotificationService } from '../../../services/notification.service';
+import { ChallengesService } from '@/api/challenges.service';
+import { BoardService } from '@/api/board.service';
 
-export interface GameboardPerformanceSummaryViewModel {
+interface GameboardPerformanceSummaryViewModel {
   player: {
     id: string;
     teamId: string;
@@ -25,28 +27,55 @@ export interface GameboardPerformanceSummaryViewModel {
   styleUrls: ['./gameboard-performance-summary.component.scss']
 })
 export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
-  @Input() ctx?: GameboardPerformanceSummaryViewModel;
-  @Output() onRefreshRequest = new EventEmitter<string>();
+  @Input() playerId?: string;
 
   countdown$?: Observable<number | undefined>;
+  protected ctx?: GameboardPerformanceSummaryViewModel;
   isCountdownOver = false;
   hubState$: BehaviorSubject<HubState>;
   protected fa = fa;
 
   constructor(
-    hubService: NotificationService) {
+    challengesService: ChallengesService,
+    hubService: NotificationService,
+    private boardService: BoardService) {
+    challengesService.challengeGraded$.subscribe(async c => {
+      if (this.ctx && c.teamId === this.ctx.player.teamId) {
+        await this.load();
+      }
+    });
     this.hubState$ = hubService.state$;
   }
 
   ngOnInit(): void {
-    this.updateCountdown();
+    this.load();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.updateCountdown();
+    this.load();
   }
 
-  private updateCountdown() {
+  private async load() {
+    if (!this.playerId)
+      return;
+
+    const boardInfo = await firstValueFrom(this.boardService.load(this.playerId));
+    this.ctx = {
+      player: {
+        id: this.playerId,
+        session: boardInfo.session,
+        teamId: boardInfo.teamId,
+        scoring: {
+          partialCount: boardInfo.partialCount,
+          correctCount: boardInfo.correctCount,
+          rank: boardInfo.rank,
+          score: boardInfo.score,
+
+        }
+      }
+    };
+
+    // update the countdown
     this.countdown$ = combineLatest([
       timer(0, 1000),
       of(this.ctx)

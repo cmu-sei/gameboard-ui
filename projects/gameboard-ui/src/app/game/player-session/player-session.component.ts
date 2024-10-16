@@ -10,7 +10,6 @@ import { PlayerService } from '../../api/player.service';
 import { UserService } from '@/api/user.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
 import { fa } from '@/services/font-awesome.service';
-import { GameboardPerformanceSummaryViewModel } from '../../core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { TeamService } from '@/api/team.service';
@@ -36,12 +35,10 @@ export class PlayerSessionComponent implements OnDestroy {
   // sets up the modal if it's a team game that needs confirmation
   protected modalConfig?: ModalConfirmConfig;
   protected isDoubleChecking = false;
-  protected performanceSummaryViewModel$ = new BehaviorSubject<GameboardPerformanceSummaryViewModel | undefined>(undefined);
 
   protected canAdminStart = false;
   protected canIgnoreSessionResetSettings$ = this.localUserService.can$("Play_IgnoreSessionResetSettings");
   protected hasTimeRemaining = false;
-  protected performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
   protected timeRemainingMs$?: Observable<number>;
 
   constructor(
@@ -55,25 +52,6 @@ export class PlayerSessionComponent implements OnDestroy {
   async ngOnInit() {
     this.ctxSub = this.ctx$.pipe(
       tap(ctx => {
-        let vm: GameboardPerformanceSummaryViewModel | undefined = undefined;
-
-        if (ctx) {
-          vm = {
-            player: {
-              id: ctx.player.id,
-              teamId: ctx.player.teamId,
-              session: ctx.player.session,
-              scoring: {
-                rank: ctx.player.rank,
-                score: ctx.player.score,
-                correctCount: ctx.player.correctCount,
-                partialCount: ctx.player.partialCount
-              }
-            }
-          };
-        }
-
-        this.performanceSummaryViewModel$.next(vm);
         this.player$.next(ctx?.player);
       }),
       tap(ctx => {

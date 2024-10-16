@@ -71,7 +71,7 @@ export class EventHorizonRenderingService {
     return `<div class="eh-group">${groupData.content}</div>`;
   }
 
-  public toModalHtmlContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): string {
+  public toModalHtmlContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, includeClipboardPrompt?: boolean): string {
     if (!timelineEvent)
       return "";
 
@@ -80,32 +80,37 @@ export class EventHorizonRenderingService {
 
     switch (timelineEvent.type) {
       case "challengeStarted":
-        detail = this.toChallengeStartedModalContent(timelineEvent, challengeSpec);
+        detail = this.toChallengeStartedMarkdown(timelineEvent, challengeSpec);
         break;
       case "solveComplete":
-        detail = this.toSolveCompleteModalContent(timelineEvent as EventHorizonSolveCompleteEvent, challengeSpec);
+        detail = this.toSolveCompleteMarkdown(timelineEvent as EventHorizonSolveCompleteEvent, challengeSpec);
         break;
       case "submissionScored":
-        detail = this.toSubmissionScoredModalContent(timelineEvent as EventHorizonSubmissionScoredEvent, challengeSpec);
+        detail = this.toSubmissionScoredMarkdown(timelineEvent as EventHorizonSubmissionScoredEvent, challengeSpec);
         break;
     }
 
+    let retVal = header;
+
     if (detail) {
-      return `${header}\n\n${detail}\n\n_Click to copy this event to your clipboard as markdown_`;
+      retVal = `${retVal}\n\n${detail}`;
+
+      if (includeClipboardPrompt)
+        retVal = `${retVal}\n\n_Click to copy this event to your clipboard as markdown_`;
     }
 
-    return "";
+    return retVal;
   }
 
   private getTooltipHeader(timelineEvent: EventHorizonGenericEvent) {
     return `#### ${this.toFriendlyName(timelineEvent.type)}\n##### ${timelineEvent.timestamp.toLocaleString(DateTime.DATETIME_MED)}`;
   }
 
-  private toChallengeStartedModalContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec) {
+  private toChallengeStartedMarkdown(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec) {
     return `${challengeSpec.name} began.`;
   }
 
-  private toSubmissionScoredModalContent(timelineEvent: EventHorizonSubmissionScoredEvent, challengeSpec: EventHorizonChallengeSpec) {
+  private toSubmissionScoredMarkdown(timelineEvent: EventHorizonSubmissionScoredEvent, challengeSpec: EventHorizonChallengeSpec) {
     let attemptSummary = `${timelineEvent.eventData.attemptNumber}`;
     if (challengeSpec.maxAttempts)
       attemptSummary = `${attemptSummary}/${challengeSpec.maxAttempts}`;
@@ -119,7 +124,7 @@ export class EventHorizonRenderingService {
 `.trim();
   }
 
-  private toSolveCompleteModalContent(timelineEvent: EventHorizonSolveCompleteEvent, challengeSpec: EventHorizonChallengeSpec) {
+  private toSolveCompleteMarkdown(timelineEvent: EventHorizonSolveCompleteEvent, challengeSpec: EventHorizonChallengeSpec) {
     let attemptSummary = `${timelineEvent.eventData.attemptsUsed}`;
     if (challengeSpec.maxAttempts)
       attemptSummary = `${attemptSummary}/${challengeSpec.maxAttempts}`;
@@ -138,7 +143,7 @@ export class EventHorizonRenderingService {
       content: eventName,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
       isClickable,
-      title: this.markdownHelpers.toHtml(this.toModalHtmlContent(timelineEvent, challengeSpec)),
+      title: this.markdownHelpers.toHtml(this.toModalHtmlContent(timelineEvent, challengeSpec, true)),
       eventData: null
     };
   }

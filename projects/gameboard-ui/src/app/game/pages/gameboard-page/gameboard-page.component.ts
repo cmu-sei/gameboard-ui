@@ -14,7 +14,6 @@ import { ApiUser } from '@/api/user-models';
 import { ConfigService } from '@/utility/config.service';
 import { NotificationService } from '@/services/notification.service';
 import { UserService } from '@/utility/user.service';
-import { GameboardPerformanceSummaryViewModel } from '@/core/components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { BrowserService } from '@/services/browser.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '@/api/models';
@@ -47,17 +46,16 @@ export class GameboardPageComponent {
   variant = 0;
   user$: Observable<ApiUser | null>;
   cid = '';
-  performanceSummaryViewModel?: GameboardPerformanceSummaryViewModel;
 
   @ViewChild("startChallengeConfirmButton") protected startChallengeConfirmButton?: ConfirmButtonComponent;
 
   constructor(
+    challengeService: ChallengesService,
     route: ActivatedRoute,
     title: Title,
     usersvc: UserService,
     private browserService: BrowserService,
     private api: BoardService,
-    private challengeService: ChallengesService,
     private config: ConfigService,
     private hub: NotificationService,
     private unsub: UnsubscriberService
@@ -81,20 +79,6 @@ export class GameboardPageComponent {
         tap(b => {
           this.ctx = b;
           title.setTitle(`${b.game.name} | ${this.config.appName}`);
-
-          this.performanceSummaryViewModel = {
-            player: {
-              id: b.id,
-              teamId: b.teamId,
-              session: b.session,
-              scoring: {
-                rank: b.rank,
-                score: b.score,
-                partialCount: b.partialCount,
-                correctCount: b.correctCount
-              }
-            }
-          };
         }),
         tap(b => this.startHub(b)),
         tap(() => this.reselect())

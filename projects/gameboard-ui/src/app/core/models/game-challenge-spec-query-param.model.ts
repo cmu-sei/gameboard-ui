@@ -57,7 +57,8 @@ export class GameChallengeSpecQueryModel {
         const params: Params = cloneNonNullAndDefinedProperties(model);
 
         this.routerService.updateQueryParams({
-            parameters: params
+            parameters: params,
+            resetParams: [this.challengeSpecIdParamName, this.gameIdParamName]
         });
     }
 }

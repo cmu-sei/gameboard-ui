@@ -9,7 +9,7 @@ import { ToastService } from '@/utility/services/toast.service';
 import { AdminEnrollTeamModalComponent } from '../../admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { ManageManualChallengeBonusesModalComponent } from '../../manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { SimpleEntity } from '@/api/models';
-import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCenterTeamsResults, GameCenterTeamsSort } from '../game-center.models';
+import { GameCenterTeamsAdvancementFilter, GameCenterTeamSessionStatus, GameCenterTeamsResults, GameCenterTeamsResultsTeam, GameCenterTeamsSort } from '../game-center.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { unique } from '@/../tools/tools';
 import { ScoreboardTeamDetailModalComponent } from '@/scoreboard/components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
@@ -90,49 +90,61 @@ export class GameCenterTeamsComponent implements OnInit {
     await this.load(this.game?.id);
   }
 
-  protected async handleDeployGameResources() {
-    if (!this.results || !this.gameId)
-      return;
-
-    const teamIds = this.selectedTeamIds.length ? this.selectedTeamIds : this.results.teams.items.map(t => t.id);
-    const invalidTeamNames: string[] = [];
-    const validTeamIds: string[] = [];
-
+  protected async handleConfirmDeployGameResources() {
+    const teams = this.resolveSelectedTeams();
     const nowish = this.nowService.nowToMsEpoch();
-    for (const team of this.results.teams.items) {
-      if (this.selectedTeamIds.length && this.selectedTeamIds.indexOf(team.id) < 0)
-        continue;
 
-      if (team.session.end && team.session.end < nowish)
-        invalidTeamNames.push(team.name);
-      else
-        validTeamIds.push(team.id);
-    }
-
-    if (!validTeamIds.length) {
+    if (!teams.length) {
       this.modalService.openConfirm({
-        bodyContent: "All selected teams have finished their sessions, so no resources can be deployed for them.",
-        hideCancel: true,
-        title: "All teams finished",
-        subtitle: this.game?.name
+        title: "No eligible teams",
+        bodyContent: "There are no teams eligible for deployment."
       });
 
       return;
     }
 
-    let appendInvalidTeamsClause = "";
-    if (invalidTeamNames.length) {
-      appendInvalidTeamsClause = `\n\nSessions for some teams have ended, so their resources won't be deployed:\n\n${invalidTeamNames.map(tId => `- ${tId}\n`)}`;
+    const eligibleTeams: GameCenterTeamsResultsTeam[] = [];
+    const ineligibleTeams: GameCenterTeamsResultsTeam[] = [];
+
+    for (const team of teams) {
+      if (team.session.end && team.session.end < nowish) {
+        ineligibleTeams.push(team);
+      }
+      else {
+        eligibleTeams.push(team);
+      }
     }
 
-    this.modalService.openConfirm({
-      bodyContent: `Are you sure you want to deploy resources for ${validTeamIds.length} teams?${appendInvalidTeamsClause}`,
-      onConfirm: async () => {
-        if (!validTeamIds.length)
-          return;
+    if (ineligibleTeams.length) {
+      this.modalService.openConfirm({
+        title: "Ineligible teams",
+        subtitle: this.game?.name,
+        bodyContent: "Some teams are ineligible to have resources deployed because they've already finished their sessions. Unselect them to proceed.\n\n" + ineligibleTeams
+          .map(t => ` - ${t.name || "_(no name)_"}`)
+          .join('\n\n'),
+        renderBodyAsMarkdown: true
+      });
 
-        await this.gameService.deployResources(this.gameId!, validTeamIds);
-        this.toastService.showMessage(`Deploying resources for **${validTeamIds.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`);
+      return;
+    }
+
+    await this.handleDeployGameResources();
+  }
+
+  private async handleDeployGameResources() {
+    const teams = this.resolveSelectedTeams();
+
+    // let appendInvalidTeamsClause = "";
+    // if (invalidTeamNames.length) {
+    //   appendInvalidTeamsClause = `\n\nSessions for some teams have ended, so their resources won't be deployed:\n\n${invalidTeamNames.map(tId => `- ${tId}\n`)}`;
+    // }
+
+    this.modalService.openConfirm({
+      // bodyContent: `Are you sure you want to deploy resources for ${validTeamIds.length} teams?${appendInvalidTeamsClause}`,
+      bodyContent: `Are you sure you want to deploy resources for ${teams.length} teams?`,
+      onConfirm: async () => {
+        await this.gameService.deployResources(this.gameId!, teams.map(t => t.id));
+        this.toastService.showMessage(`Deploying resources for **${teams.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`);
         this.selectedTeamIds = [];
       },
       renderBodyAsMarkdown: true,
@@ -260,18 +272,28 @@ export class GameCenterTeamsComponent implements OnInit {
   }
 
   protected async load(gameId?: string) {
-    if (!gameId) {
-      return;
-    }
-
-    if (!this.game || this.game.id != gameId) {
+    if (gameId && this.game?.id !== gameId) {
       this.game = await firstValueFrom(this.gameService.retrieve(gameId));
     }
 
+    if (!gameId && !this.game?.id)
+      return;
+
+    gameId = this.game?.id;
+    this.gameId = gameId;
+
     this.isLoading = true;
-    this.results = await this.adminService.getGameCenterTeams(gameId, this.filterSettings);
+    this.results = await this.adminService.getGameCenterTeams(gameId!, this.filterSettings);
     this.isLoading = false;
     this.updateFilterConfig();
+  }
+
+  private resolveSelectedTeams() {
+    if (!this.results)
+      return [];
+
+    const hasSelection = this.selectedTeamIds.length;
+    return this.results.teams.items.filter(t => !hasSelection || this.selectedTeamIds.indexOf(t.id) >= 0);
   }
 
   private updateFilterConfig() {

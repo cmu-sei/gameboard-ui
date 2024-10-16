@@ -45,8 +45,8 @@
           [isSyncStartGame]="ctx.game.requireSynchronizedStart"></app-player-presence>
       </ng-container>
 
-      <app-gameboard-performance-summary *ngIf="performanceSummaryViewModel"
-        [ctx]="performanceSummaryViewModel"></app-gameboard-performance-summary>
+      <app-gameboard-performance-summary *ngIf="ctx.player?.id"
+        [playerId]="ctx.player.id"></app-gameboard-performance-summary>
 
       <div class="d-flex my-4 align-items-center justify-content-center">
         <a type="button" class="btn btn-secondary" target="_blank" [href]="'game/scores/' + ctx.game.id">

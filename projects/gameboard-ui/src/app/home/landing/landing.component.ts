@@ -48,7 +48,7 @@ export class LandingComponent {
     ),
       this.past$ = this.refresh$.pipe(
         debounceTime(400),
-        switchMap(() => api.listGrouped({ filter: ['past', "competitive"], isOngoing: false, term: this.searchText })),
+        switchMap(() => api.listGrouped({ filter: ['past', "competitive"], term: this.searchText })),
         tap(g => { if (g.length > 0) { this.showSearchBar = true; } }),
       );
     this.present$ = this.refresh$.pipe(

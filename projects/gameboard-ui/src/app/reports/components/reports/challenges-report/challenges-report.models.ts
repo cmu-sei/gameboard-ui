@@ -6,6 +6,7 @@ export interface ChallengesReportFlatParameters {
     games?: string;
     seasons?: string;
     series?: string;
+    tags?: string;
     tracks?: string;
     pageNumber?: number;
     pageSize?: number;

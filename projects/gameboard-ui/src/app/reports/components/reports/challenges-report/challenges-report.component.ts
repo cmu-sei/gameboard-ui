@@ -27,6 +27,7 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     selectedParameters: {}
   };
 
+  protected challengeTags$ = this.reportsService.getChallengeTags();
   protected games$ = this.reportsService.getGames();
   protected seasons$ = this.reportsService.getSeasons();
   protected series$ = this.reportsService.getSeries();
@@ -40,6 +41,8 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     serializer: (value: SimpleEntity) => value.id,
     deserializer: (value: string, options?: SimpleEntity[]) => options!.find(g => g.id === value) || null
   });
+
+  protected challengeTagsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({ paramName: "tags" })
 
   protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "seasons"

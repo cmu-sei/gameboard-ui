@@ -122,7 +122,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
     }
 
 
-    // if the teamID changed, managed the team hub
+    // if the teamID changed, manage the team hub
     if (changes?.spec?.previousValue?.instance?.teamId !== this.spec?.instance?.teamId) {
       // (manage the team hub subscription separately to avoid orphaning subscriptions when the teamid changes)
       this._teamHubEventsSubscription?.unsubscribe();

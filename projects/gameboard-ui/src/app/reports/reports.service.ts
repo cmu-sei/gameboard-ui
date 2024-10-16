@@ -28,6 +28,10 @@ export class ReportsService {
     return this.http.get<SimpleEntity[]>(this.apiUrlService.build(`/reports/parameter/challenge-specs/${gameId || ''}`));
   }
 
+  getChallengeTags(): Observable<string[]> {
+    return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/challenge-tags"));
+  }
+
   getGames(): Observable<SimpleEntity[]> {
     return this.http.get<SimpleEntity[]>(this.apiUrlService.build("/reports/parameter/games"));
   }

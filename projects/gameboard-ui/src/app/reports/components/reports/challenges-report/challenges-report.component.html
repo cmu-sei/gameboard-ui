@@ -9,6 +9,10 @@
         <app-multi-select label="Games" name="games" [options]="games$ | async" [(ngModel)]="gamesQueryModel"
             [itemTemplate]="multiSelectGame" [getSearchText]="displayGameName"
             [value]="getGameValue"></app-multi-select>
+        <app-multi-select label="Tags" name="tags" [options]="challengeTags$ | async"
+            [(ngModel)]="challengeTagsQueryModel" [itemTemplate]="multiSelectTag">
+
+        </app-multi-select>
         <app-parameter-date-range ngDefaultControl name="startDateRange" [(ngModel)]="startDateRangeModel"
             label="Include Challenge Stats from"></app-parameter-date-range>
     </app-report-parameters-container>
@@ -83,6 +87,13 @@
                         (click)="handleSpecClick(record.challengeSpec)">
                         <td class="report-field">
                             {{record.challengeSpec.name}}
+
+                            <ul *ngIf="record.tags.length" class="d-flex align-items-center mb-1">
+                                <li *ngFor="let tag of record.tags">
+                                    <app-colored-text-chip size="small" [text]="tag"></app-colored-text-chip>
+                                </li>
+                            </ul>
+
                             <app-challenge-or-game-field [game]="record.game"
                                 mainLabelClass="text-muted font-weight-bold"></app-challenge-or-game-field>
                         </td>
@@ -130,6 +141,10 @@
 
 <ng-template #multiSelectGame let-context>
     <span class="game-name">{{ context.name }}</span>
+</ng-template>
+
+<ng-template #multiSelectTag let-context>
+    <app-colored-text-chip [isClickable]="false" [text]="context"></app-colored-text-chip>
 </ng-template>
 
 <ng-template #noRecords>
