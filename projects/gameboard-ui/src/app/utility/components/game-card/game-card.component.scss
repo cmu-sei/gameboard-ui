@@ -9,7 +9,8 @@
 }
 
 .card {
-  background-size: cover;
+  aspect-ratio: 1/1.44;
+  background: #303030 center center/contain no-repeat;
   box-shadow: rgb(0 0 0 / 15%) 3px 3px 0;
   width: 100%;
   margin: 0;

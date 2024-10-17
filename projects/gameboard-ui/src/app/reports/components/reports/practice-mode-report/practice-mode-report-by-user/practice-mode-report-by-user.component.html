@@ -41,8 +41,13 @@
                             [player]="{ userId: record.user.id, name: record.user.name, sponsor: record.user.sponsor }"></app-player-field>
                     </td>
                     <td>
-                        <app-challenge-or-game-field [challengeName]="record.challenge.name"
-                            [game]="record.challenge.game"></app-challenge-or-game-field>
+                        {{ record.challenge.name }}
+                        <ul class="d-flex m-0">
+                            <li *ngFor="let tag of record.challenge.tags">
+                                <app-colored-text-chip [text]="tag"></app-colored-text-chip>
+                            </li>
+                        </ul>
+                        <app-challenge-or-game-field [game]="record.challenge.game"></app-challenge-or-game-field>
                     </td>
 
                     <!--ATTEMPTS-->

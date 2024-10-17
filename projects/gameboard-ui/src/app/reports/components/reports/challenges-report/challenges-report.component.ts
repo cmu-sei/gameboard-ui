@@ -42,7 +42,7 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     deserializer: (value: string, options?: SimpleEntity[]) => options!.find(g => g.id === value) || null
   });
 
-  protected challengeTagsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({ paramName: "tags" })
+  protected challengeTagsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({ paramName: "tags" });
 
   protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
     paramName: "seasons"
