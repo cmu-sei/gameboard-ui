@@ -18,6 +18,7 @@ export interface ReportGameChallengeSpec {
 })
 export class ParameterGameChallengespecComponent
   extends CustomInputComponent<GameChallengeSpecQueryModel> {
+  @Input() challengeSpecPlaceholderText = "[any challenge]";
   @Input() requireGameSelection = false;
   @Input() requireChallengeSpecSelection = false;
 

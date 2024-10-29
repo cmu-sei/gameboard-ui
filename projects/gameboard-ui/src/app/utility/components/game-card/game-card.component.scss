@@ -1,5 +1,7 @@
-.game-art {
-  max-height: 15rem;
+:host {
+  display: block;
+  width: 252px;
+  height: 360px;
 }
 
 .game-header {
@@ -7,9 +9,10 @@
 }
 
 .card {
+  aspect-ratio: 1/1.44;
+  background: #303030 center center/contain no-repeat;
   box-shadow: rgb(0 0 0 / 15%) 3px 3px 0;
-  max-width: 240px;
-  max-height: 360px;
+  width: 100%;
   margin: 0;
   border-radius: 0;
   border: 0;

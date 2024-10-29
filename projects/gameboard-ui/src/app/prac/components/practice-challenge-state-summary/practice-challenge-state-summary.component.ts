@@ -1,22 +1,13 @@
 import { Component } from '@angular/core';
 import { DateTime } from 'luxon';
-import { combineLatest, map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { UserActiveChallenge } from '@/api/challenges.models';
 import { fa } from '@/services/font-awesome.service';
-import { LogService } from '@/services/log.service';
-import { UserService as LocalUserService } from '@/utility/user.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-<<<<<<< Updated upstream
-import { Component } from '@angular/core';
-import { DateTime } from 'luxon';
-import { Observable, combineLatest, firstValueFrom, map, tap, timer } from 'rxjs';
-=======
->>>>>>> Stashed changes
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { slug } from '@/../tools/functions';
 import { TeamService } from '@/api/team.service';
 import { ToastService } from '@/utility/services/toast.service';
-import { HubEventAction, NotificationService } from '@/services/notification.service';
 
 @Component({
   selector: 'app-practice-challenge-state-summary',
@@ -35,29 +26,9 @@ export class PracticeChallengeStateSummaryComponent {
 
   constructor(
     activeChallengesRepo: ActiveChallengesRepo,
-    localUserService: LocalUserService,
-    private logService: LogService,
-    private notificationService: NotificationService,
     private teamService: TeamService,
-    private toastService: ToastService,
-    // have to keep "unsub" around so it gets ngDestroyed. 
-    // this is an argument for an inherited base class, i think
-    private unsub: UnsubscriberService) {
+    private toastService: ToastService) {
     this.activeChallenge$ = activeChallengesRepo.activePracticeChallenge$;
-    // unsub.add(
-    //   combineLatest([
-    //     localUserService.user$,
-    //     activeChallengesRepo.activePracticeChallenge$
-    //   ]).pipe(
-    //     map(([localUser, practiceChallenge]) => ({
-    //       localUser,
-    //       practiceChallenge
-    //     })),
-    //   ).subscribe(ctx => {
-    //     this.updatePracticeChallenge(ctx.practiceChallenge);
-    //     this.isChangingSessionEnd = false;
-    //   })
-    // );
   }
 
   async extendSession(practiceChallenge: UserActiveChallenge): Promise<void> {

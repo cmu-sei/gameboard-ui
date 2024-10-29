@@ -1,2 +1,2 @@
-<img [src]="(game?.logo | relativeImage) || 'assets/card.png'" [class.img-fluid]="!width" [style.width]="width"
-    [alt]="game?.name || '' + ' logo'">
+<div [style.background-image]="'url(' + ((game?.logo | relativeImage ) || 'assets/card.png') + ')'"
+    class="game-card-container h-100"></div>

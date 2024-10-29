@@ -48,6 +48,7 @@ export interface PracticeModeReportByUserRecord extends PracticeModeReportRecord
         name: string;
         game: ReportGame;
         maxPossibleScore: number;
+        tags: string[]
     };
     attempts: {
         player: SimpleEntity;
@@ -70,6 +71,7 @@ export interface PracticeModeReportByChallengeRecord extends PracticeModeReportR
     maxPossibleScore: number;
     avgScore: number;
     description: string;
+    tags: string[];
     text: string;
     sponsorsPlayed: ReportSponsor[];
     overallPerformance: PracticeModeReportByChallengePerformance;
