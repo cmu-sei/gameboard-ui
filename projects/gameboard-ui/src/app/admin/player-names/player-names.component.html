@@ -47,7 +47,8 @@
             <span>{{player.gameName}}</span> &mdash;
           </a>
           <span>user: </span>&nbsp;
-          <app-clipspan class="mr-2">{{ player.userId | slice:0:8 }}</app-clipspan>
+          <span class="mr-2 cursor-pointer text-info" appCopyOnClick>{{ player.userId | slice:0:8 }}</span>
+          <app-clipspan class="mr-2"></app-clipspan>
           <span>player: </span>&nbsp;
           <app-clipspan class="mr-2">{{player.id | slice:0:8}}</app-clipspan>
           <span>team: </span>&nbsp;

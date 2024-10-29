@@ -14,6 +14,8 @@ export class ConfirmButtonComponent {
   @Input() cancelButtonClass = 'btn btn-outline-secondary';
   @Input() componentContainerClass = '';
   @Input() disabled = false;
+  @Input() isSubmit = false;
+
   @Output() confirm = new EventEmitter<boolean>();
   @Output() cancel = new EventEmitter<boolean>();
 

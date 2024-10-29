@@ -19,7 +19,6 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 })
 export class PracticeChallengeListComponent {
   list$: Observable<SpecSummary[]>;
-  search$ = new BehaviorSubject<Search>({});
   appname = '';
   faSearch = faSearch;
 
@@ -94,9 +93,7 @@ export class PracticeChallengeListComponent {
 
   paged(s: number): void {
     this.routerService.updateQueryParams({
-      parameters: {
-        skip: s, navigate: true
-      }
+      parameters: { skip: s, navigate: true }
     });
   }
 }

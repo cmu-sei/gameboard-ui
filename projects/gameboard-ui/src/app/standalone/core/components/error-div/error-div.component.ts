@@ -1,10 +1,21 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MarkdownModule } from 'ngx-markdown';
+import { CamelspacePipe } from '../../pipes/camelspace.pipe';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 @Component({
   selector: 'app-error-div',
+  standalone: true,
+  imports: [
+    CommonModule,
+    AlertModule,
+    MarkdownModule,
+    CamelspacePipe
+  ],
   template: `
     <alert class="d-block m-2" *ngFor="let e of errors" type="danger" [dismissible]="true" (onClosed)="closed(e)">
       {{e.error?.message || e.message || e | camelspace}}

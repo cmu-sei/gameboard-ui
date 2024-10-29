@@ -11,7 +11,6 @@ import { UtilityModule } from '../utility/utility.module';
 
 import { AuthGuard } from '../utility/auth.guard';
 import { CertificateComponent } from './certificate/certificate.component';
-import { ChallengeDeployCountdownComponent } from './components/challenge-deploy-countdown/challenge-deploy-countdown.component';
 import { ContinueToGameboardButtonComponent } from './components/continue-to-gameboard-button/continue-to-gameboard-button.component';
 import { ExternalGameLinkBannerComponent } from './components/external-game-link-banner/external-game-link-banner.component';
 import { ExternalGameLoadingPageComponent } from './pages/external-game-loading-page/external-game-loading-page.component';
@@ -25,7 +24,6 @@ import { GamePageComponent } from './pages/game-page/game-page.component';
 import { GamespaceQuizComponent } from './gamespace-quiz/gamespace-quiz.component';
 import { HubStateToPlayerStatusPipe } from './pipes/hub-state-to-player-status.pipe';
 import { IndexToSubmittedAnswersPipe } from './pipes/index-to-submitted-answers.pipe';
-import { PlayComponent } from './components/play/play.component';
 import { PlayerEnrollComponent } from './player-enroll/player-enroll.component';
 import { PlayerPresenceComponent } from './player-presence/player-presence.component';
 import { PlayerSessionComponent } from './player-session/player-session.component';
@@ -36,10 +34,14 @@ import { TeamChallengeScoresToChallengeResultTypeCountPipe } from './pipes/team-
 import { UserIsPlayingGuard } from '@/guards/user-is-playing.guard';
 import { ScoreboardModule } from '@/scoreboard/scoreboard.module';
 import { HasPendingNamePipe } from './pipes/has-pending-name.pipe';
+import { ChallengeQuestionsComponent } from "../standalone/games/components/challenge-questions/challenge-questions.component";
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { VmLinkComponent } from '@/standalone/games/components/vm-link/vm-link.component';
+import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
-  ChallengeDeployCountdownComponent,
   ContinueToGameboardButtonComponent,
   ExternalGameLoadingPageComponent,
   ExternalGameLinkBannerComponent,
@@ -52,7 +54,6 @@ const MODULE_DECLARATIONS = [
   HubStateToPlayerStatusPipe,
   IndexToSubmittedAnswersPipe,
   LateStartBannerComponent,
-  PlayComponent,
   PlayerEnrollComponent,
   PlayerPresenceComponent,
   PlayerSessionComponent,
@@ -78,11 +79,13 @@ const MODULE_DECLARATIONS = [
     ]),
     CoreModule,
     UtilityModule,
-    ScoreboardModule
-  ],
-  exports: [
-    ChallengeDeployCountdownComponent,
-    PlayComponent,
+    ScoreboardModule,
+
+    // standalones
+    ChallengeQuestionsComponent,
+    ErrorDivComponent,
+    SafeUrlPipe,
+    SpinnerComponent,
   ]
 })
 export class GameModule { }

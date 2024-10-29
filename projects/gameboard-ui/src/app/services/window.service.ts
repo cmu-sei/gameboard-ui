@@ -23,8 +23,8 @@ export class WindowService implements OnDestroy {
     return this.document.defaultView!;
   }
 
-  open() {
-    this.document.defaultView?.open(undefined, "_blank");
+  open(url: string) {
+    this.document.defaultView?.open(url, "_blank");
   }
 
   print() {

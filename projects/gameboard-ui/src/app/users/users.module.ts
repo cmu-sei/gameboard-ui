@@ -16,6 +16,7 @@ import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -66,6 +67,9 @@ const DECLARED_COMPONENTS = [
         ]
       },
     ]),
+
+    // imported standalones
+    SpinnerComponent
   ]
 })
 export class UsersModule { }

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { PracticeModeSettings, SearchPracticeChallengesResult } from '@/prac/practice.models';
+import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesResult } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { GameCardContext } from '@/api/game-models';
 
@@ -22,6 +22,10 @@ export class PracticeService {
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {
     await this.updateIsEnabled();
+  }
+
+  async getSession(): Promise<PracticeSession | null> {
+    return firstValueFrom(this.http.get<PracticeSession>(this.apiUrl.build("practice/session")).pipe(map(s => s || null)));
   }
 
   getSettings(): Observable<PracticeModeSettings> {

@@ -1,15 +1,14 @@
-<ng-container *ngIf="userActivePracticeChallenge === undefined; else resolved">
+<ng-container *ngIf="activeChallenge$ === undefined; else resolved">
     <app-spinner>{{ isChangingSessionEnd ? "Updating your session..." : "Finding your challenge..." }}</app-spinner>
 </ng-container>
 
 <ng-template #resolved>
-    <ng-container *ngIf="userActivePracticeChallenge">
+    <ng-container *ngIf="activeChallenge$ | async as activeChallenge">
         <div class="text-info card-text mb-2">
-            <a
-                [routerLink]="['/practice', userActivePracticeChallenge.spec.id, slug(userActivePracticeChallenge.spec.name)]">
+            <a [routerLink]="['/practice', activeChallenge.spec.id, slug(activeChallenge.spec.name)]">
                 <alert type="info">
                     <strong class="text-upper">Your active practice challenge</strong>
-                    <div class="fs-13 font-weight-light">{{ userActivePracticeChallenge.spec.name }}</div>
+                    <div class="fs-13 font-weight-light">{{ activeChallenge.spec.name }}</div>
                 </alert>
             </a>
         </div>
@@ -17,10 +16,8 @@
         <table class="table mt-2 text-center">
             <col>
             <col>
-            <col>
 
             <thead>
-                <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </thead>
@@ -28,30 +25,26 @@
             <tbody>
                 <tr>
                     <td>Score</td>
-                    <td>Cumulative Time</td>
                     <td>Time Remaining</td>
                 </tr>
                 <tr>
-                    <td>{{userActivePracticeChallenge.scoreAndAttemptsState.score}}</td>
-                    <td>
-                        {{ (msElapsed$ | async) || 0 | clock }}
-                    </td>
+                    <td>{{activeChallenge.scoreAndAttemptsState.score}}</td>
                     <td class="text-info fw-bold">
-                        {{ (msRemaining$ | async) || undefined | countdown }}
+                        {{ activeChallenge.endsAt | epochMsToTimeRemainingString | async }}
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <ng-container *ngIf="!isChangingSessionEnd">
+        <ng-container *ngIf="!isChangingSessionEnd && activeChallenge">
             <div class="text-center">
                 <app-confirm-button btnClass="btn btn-info btn-sm" [tooltip]="extendTooltip"
-                    [disabled]="((msRemaining$ | async) || 0) > msInAnHour"
-                    (confirm)="extendSession(userActivePracticeChallenge)">
+                    [disabled]="((activeChallenge.endsAt | epochMsToMsRemaining | async) || 0) > msPerHour"
+                    (confirm)="extendSession(activeChallenge)">
                     Extend Session
                 </app-confirm-button>
                 <span class="mr-2"></span>
-                <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="endSession(userActivePracticeChallenge)">
+                <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="endSession(activeChallenge)">
                     End Session
                 </app-confirm-button>
             </div>

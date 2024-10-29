@@ -52,6 +52,8 @@ import { SiteUsageReportChallengesListComponent } from './components/reports/sit
 import { SortHeaderComponent } from './components/sort-header/sort-header.component';
 import { SpecQuestionPerformanceModalComponent } from './components/spec-question-performance-modal/spec-question-performance-modal.component';
 import { FeedbackGameReportComponent } from './components/reports/feedback-game-report/feedback-game-report.component';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 
 @NgModule({
   declarations: [
@@ -124,6 +126,10 @@ import { FeedbackGameReportComponent } from './components/reports/feedback-game-
     ]),
     FontAwesomeModule,
     CoreModule,
+
+    // standalones,
+    ErrorDivComponent,
+    SpinnerComponent
   ],
   providers: [UnsubscriberService]
 })

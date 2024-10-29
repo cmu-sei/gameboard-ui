@@ -4,6 +4,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { Player } from '../../../api/player-models';
 import { PlayerService } from '../../../api/player.service';
 import { UserService } from '../../../utility/user.service';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-profile-history',

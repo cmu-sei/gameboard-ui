@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, firstValueFrom, interval, map } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription, firstValueFrom, interval } from 'rxjs';
 import { ScoringService } from '@/services/scoring/scoring.service';
 import { ScoreboardData, ScoreboardDataTeam } from '@/services/scoring/scoring.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ScoreboardTeamDetailModalComponent } from '../scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-scoreboard',

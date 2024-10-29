@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { ModalConfirmComponent } from '@/core/components/modal/modal-confirm.component';
@@ -31,6 +31,10 @@ export class ModalConfirmService implements OnDestroy {
 
   openComponent<TComponent>(config: ModalConfig<TComponent>) {
     this.bsModalRef = this.openWithDefaultStyles(config);
+  }
+
+  openTemplate<T>(templateRef: TemplateRef<T>) {
+    this.bsModalService.show(templateRef, { class: "modal-dialog-centered" });
   }
 
   hide(isCancelEvent = false): void {

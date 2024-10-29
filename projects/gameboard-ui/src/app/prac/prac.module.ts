@@ -14,6 +14,11 @@ import { PracticeSessionComponent } from './components/practice-session/practice
 import { PracticeChallengeStateSummaryComponent } from './components/practice-challenge-state-summary/practice-challenge-state-summary.component';
 import { PracticeChallengeSolvedModalComponent } from './components/practice-challenge-solved-modal/practice-challenge-solved-modal.component';
 import { SuggestedSearchesComponent } from './components/suggested-searches/suggested-searches.component';
+import { PlayComponent } from '@/standalone/games/components/play/play.component';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { EpochMsToTimeRemainingStringPipe } from '@/standalone/core/pipes/epoch-ms-to-time-remaining.pipe';
+import { EpochMsToMsRemainingPipe } from '@/standalone/core/pipes/epoch-ms-to-ms-remaining.pipe';
 
 @NgModule({
   declarations: [
@@ -40,6 +45,13 @@ import { SuggestedSearchesComponent } from './components/suggested-searches/sugg
       }
     ]),
     GameModule,
+
+    // standalones
+    EpochMsToMsRemainingPipe,
+    EpochMsToTimeRemainingStringPipe,
+    ErrorDivComponent,
+    PlayComponent,
+    SpinnerComponent
   ]
 })
 export class PracModule { }

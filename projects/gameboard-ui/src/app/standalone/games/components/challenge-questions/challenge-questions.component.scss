@@ -1,0 +1,15 @@
+@import "../../../../../scss/variables";
+
+.q-label {
+  border-right: solid 2px $info;
+  font-size: 2.8rem;
+  line-height: 2.6rem;
+}
+
+.form-group label {
+  font-size: 1.1rem !important;
+}
+
+.challenge-status-container {
+  border-top: dashed 1px #aaa;
+}

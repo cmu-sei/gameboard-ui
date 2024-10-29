@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { ReportKey } from '@/reports/reports-models';
-import { BrowserService } from './browser.service';
 import { ObjectService } from './object.service';
 import { VmState } from '@/api/board-models';
 import { PlayerMode } from '@/api/player-models';
@@ -10,6 +9,7 @@ import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/../tools/functions";
 import { GameCenterTab } from '@/admin/components/game-center/game-center.models';
+import { SimpleEntity } from '@/api/models';
 
 export interface QueryParamsUpdate {
   parameters?: Params,
@@ -21,7 +21,6 @@ export class RouterService implements OnDestroy {
   private _navEndSub?: Subscription;
 
   constructor(
-    private browser: BrowserService,
     private config: ConfigService,
     private localUser: LocalUser,
     public route: ActivatedRoute,
@@ -124,16 +123,12 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.parseUrl(`/support/tickets/${highlightTicketKey}`));
   }
 
-  public buildVmConsoleUrl(vm: VmState, isPractice = false) {
-    if (!vm || !vm.isolationId) {
-      throw new Error(`Can't launch a VM console without an isolationId.`);
+  public buildVmConsoleUrl(challengeId: string, vm: SimpleEntity, isPractice = false) {
+    if (!vm || !challengeId) {
+      throw new Error(`Can't launch a VM console without a challengeId.`);
     }
 
-    return `${this.config.mkshost}?f=1&s=${vm.isolationId}&v=${vm.name || 'Console'}${isPractice ? "&l=true" : ""}`;
-  }
-
-  public toVmConsole(vm: VmState) {
-    this.browser.showTab(this.buildVmConsoleUrl(vm));
+    return `${this.config.mkshost}?f=1&s=${challengeId}&v=${vm.name || 'Console'}${isPractice ? "&l=true" : ""}`;
   }
 
   public deleteQueryParams(): Promise<boolean> {

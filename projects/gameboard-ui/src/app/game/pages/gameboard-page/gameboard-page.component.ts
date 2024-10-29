@@ -14,12 +14,13 @@ import { ApiUser } from '@/api/user-models';
 import { ConfigService } from '@/utility/config.service';
 import { NotificationService } from '@/services/notification.service';
 import { UserService } from '@/utility/user.service';
-import { BrowserService } from '@/services/browser.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '@/api/models';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ChallengesService } from '@/api/challenges.service';
+import { WindowService } from '@/services/window.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-gameboard-page',
@@ -54,11 +55,12 @@ export class GameboardPageComponent {
     route: ActivatedRoute,
     title: Title,
     usersvc: UserService,
-    private browserService: BrowserService,
     private api: BoardService,
     private config: ConfigService,
     private hub: NotificationService,
-    private unsub: UnsubscriberService
+    private routerService: RouterService,
+    private unsub: UnsubscriberService,
+    private windowService: WindowService
   ) {
 
     this.user$ = usersvc.user$;
@@ -244,7 +246,7 @@ export class GameboardPageComponent {
     }
 
     if (isUrl) {
-      this.browserService.showTab(vm.id);
+      this.windowService.open(this.routerService.buildVmConsoleUrl(vm.isolationId, vm));
     } else {
       this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`);
     }

@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, firstValueFrom, from, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
-import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType } from "./teams.models";
+import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools/tools";
 import { GamePlayState } from "./game-models";
@@ -12,10 +12,10 @@ export class TeamService {
     private _playerSessionChanged$ = new Subject<string>();
     public playerSessionChanged$ = this._playerSessionChanged$.asObservable();
 
-    private _teamSessionExtended$ = new Subject<string[]>();
+    private _teamSessionExtended$ = new Subject<TeamSessionUpdate[]>();
     public teamSessionExtended$ = this._teamSessionExtended$.asObservable();
 
-    private _teamSessionsChanged$ = new Subject<string[]>();
+    private _teamSessionsChanged$ = new Subject<TeamSessionUpdate[]>();
     public teamSessionsChanged$ = this._teamSessionsChanged$.asObservable();
 
     private _teamSessionEndedManually$ = new Subject<string>();
@@ -35,8 +35,8 @@ export class TeamService {
 
     adminExtendSession(request: { teamIds: string[], extensionDurationInMinutes: number }) {
         return this.http.put<AdminExtendTeamSessionResponse>(this.apiUrl.build("admin/team/session"), request).pipe(
-            tap(teamSessions => this._teamSessionsChanged$.next(teamSessions.teams.map(t => t.id))),
-            tap(teamSessions => this._teamSessionExtended$.next(teamSessions.teams.map(t => t.id)))
+            tap(teamSessions => this._teamSessionsChanged$.next(teamSessions.teams.map(t => ({ id: t.id, sessionEndsAt: t.sessionEnd.toMillis() })))),
+            tap(teamSessions => this._teamSessionExtended$.next(teamSessions.teams.map(t => ({ id: t.id, sessionEndsAt: t.sessionEnd.toMillis() }))))
         );
     }
 
@@ -82,9 +82,12 @@ export class TeamService {
         this._teamSessionEndedManually$.next(request.teamId);
     }
 
-    public async extendSession(model: SessionExtendRequest): Promise<void> {
+    public async extendSession(model: SessionExtendRequest): Promise<TeamSessionUpdate> {
+        const result = await this.updateSession(model);
         await this.updateSession(model);
-        this._teamSessionExtended$.next([model.teamId]);
+        this._teamSessionExtended$.next([result]);
+
+        return result;
     }
 
     public resetSession(request: { teamId: string, resetType?: TeamSessionResetType }): Observable<void> {
@@ -97,9 +100,11 @@ export class TeamService {
         return firstValueFrom(this.http.post<any>(this.apiUrl.build("/team/session"), request));
     }
 
-    private async updateSession(request: SessionExtendRequest | SessionEndRequest): Promise<void> {
-        await firstValueFrom(this.http.put<any>(this.apiUrl.build("/team/session"), request));
+    private async updateSession(request: SessionExtendRequest | SessionEndRequest): Promise<TeamSessionUpdate> {
+        const result = await firstValueFrom(this.http.put<TeamSessionUpdate>(this.apiUrl.build("/team/session"), request));
         this._playerSessionChanged$.next(request.teamId);
-        this._teamSessionsChanged$.next([request.teamId]);
+        this._teamSessionsChanged$.next([result]);
+
+        return result;
     }
 }

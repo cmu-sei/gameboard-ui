@@ -103,7 +103,7 @@ export class ChallengeBrowserComponent {
     this.isLoadingSubmissions = true;
 
     try {
-      const submissions = await firstValueFrom(this.challengesService.getSubmissions(c.id));
+      const submissions = await firstValueFrom(this.challengesService.getSubmissionsLegacy(c.id));
       this.selectedAudit = submissions.submittedAnswers.map(s => {
         return { submittedOn: s.submittedOn, answers: s.answers.map(a => a || "(no response)") };
       });

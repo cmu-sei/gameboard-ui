@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'toSupportCode' })
+@Pipe({ name: 'toSupportCode', standalone: true })
 export class ToSupportCodePipe implements PipeTransform {
 
   transform(value: { id: string, tag?: string }): string {

@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ChallengeSubmissionViewModel } from '@/api/challenges.models';
+import { ChallengeSubmissionViewModelLegacy } from '@/api/challenges.models';
 import { unique } from '@/../tools/tools';
 
 // takes the index of a challenge question (e.g. 1 = the second question of the challenge), returns a string which concatenates
 // all unique answers submitted for the question
 @Pipe({ name: 'indexToSubmittedAnswers' })
 export class IndexToSubmittedAnswersPipe implements PipeTransform {
-  transform(questionIndex: number, submissions: ChallengeSubmissionViewModel[], hideLastResponse = false): string {
+  transform(questionIndex: number, submissions: ChallengeSubmissionViewModelLegacy[], hideLastResponse = false): string {
     if (questionIndex < 0 || !submissions || !submissions.length)
       throw new Error("Can't use IndexToSubmittedAnswer pipe without an index and submitted answers.");
 

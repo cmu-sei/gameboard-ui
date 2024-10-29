@@ -1,10 +1,13 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-spinner',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="spinner-component">
       <ng-container *ngIf="textPosition === 'top'">
@@ -22,7 +25,7 @@ import { Component, Input } from '@angular/core';
           <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.9s"
             repeatCount="indefinite" />
         </rect>
-        <rect x="8" y="10" width="4" height="10" [attr.fill]="color" [attr.stroke]="color"opacity="0.2">
+        <rect x="8" y="10" width="4" height="10" [attr.fill]="color" [attr.stroke]="color" opacity="0.2">
           <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.9s"
             repeatCount="indefinite" />
           <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.9s"
@@ -30,7 +33,7 @@ import { Component, Input } from '@angular/core';
           <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.9s"
             repeatCount="indefinite" />
         </rect>
-        <rect x="16" y="10" width="4" height="10" [attr.fill]="color" [attr.stroke]="color"opacity="0.2">
+        <rect x="16" y="10" width="4" height="10" [attr.fill]="color" [attr.stroke]="color" opacity="0.2">
           <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.9s"
             repeatCount="indefinite" />
           <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.9s"
@@ -55,6 +58,6 @@ import { Component, Input } from '@angular/core';
   ],
 })
 export class SpinnerComponent {
-  @Input() color?: string;
+  @Input() color?: string = "#3498db";
   @Input() textPosition: "top" | "bottom" = "top";
 }

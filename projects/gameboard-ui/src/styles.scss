@@ -86,6 +86,10 @@ select option {
   }
 }
 
+input:disabled {
+  background-color: #ccc !important;
+}
+
 app-root {
   display: block;
   min-height: 100vh;
@@ -462,7 +466,7 @@ th[align="left"] {
 .text-dashed-underline {
   text-decoration: underline !important;
   text-decoration-style: dotted !important;
-  text-decoration-color: #fff !important;
+  // text-decoration-color: #fff !important;
   text-decoration-thickness: 2px !important;
 }
 

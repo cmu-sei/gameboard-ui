@@ -2,9 +2,9 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a [routerLink]="['/practice']" class="text-success">
+        <a [routerLink]="['/practice']" class="text-info">
           <fa-icon [icon]="fa.arrowLeft"></fa-icon>
-          Back to the Practice Area
+          Back to the <strong>Practice Area</strong>
         </a>
       </li>
     </ol>
@@ -12,13 +12,14 @@
 
   <app-error-div [errors]="errors"></app-error-div>
 
-  <div *ngIf="spec$ | async as spec; else loading">
-    <ng-container *ngIf="(authed$ | async); else unauthed">
+  <ng-container *ngIf="authed$ | async; else unauthed">
+    <div *ngIf="spec$ | async as spec; else loading">
       <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
 
-      <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
-        <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
-          btnClass="btn btn-lg btn-info px-4 mb-4" (confirm)="play(spec.gameId)" class="d-block">
+      <div *ngIf="!isStartingSession; else starting;"
+        class="challenge-management-buttons d-flex justify-content-center">
+        <app-confirm-button *ngIf="!practiceSession" btnClass="btn btn-lg btn-info px-4 mb-4"
+          (confirm)="play({ id: spec.id, game: { id: spec.gameId}} )" class="d-block">
           <span>Start Practice Session</span>
         </app-confirm-button>
 
@@ -28,16 +29,15 @@
         </button>
       </div>
 
-      <app-play *ngIf="!isPlayingOtherChallenge && (spec$ | async)" [challengeSpec]="spec$ | async"
-        [playerContext]="playerContext" [autoPlay]="true"
-        (deployStatusChanged)="handleDeployStatusChanged($event)"></app-play>
-    </ng-container>
-  </div>
+      <app-play *ngIf="!isPlayingOtherChallenge && practiceSession && (spec$ | async) as spec" [challengeSpec]="spec"
+        [autoPlay]="true" [playerId]="practiceSession.playerId"></app-play>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #loading>
   <div class="text-center">
-    <app-spinner>Loading the challenge...</app-spinner>
+    <app-spinner>Loading your challenge...</app-spinner>
   </div>
 </ng-template>
 

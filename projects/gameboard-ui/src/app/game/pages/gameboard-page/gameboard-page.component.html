@@ -126,7 +126,10 @@
               </div>
               <div>
                 Support Code:
-                <app-clipspan class="text-info m-2 p-2">{{spec.instance?.id | slice:0:8}} {{spec.tag}}</app-clipspan>
+                <span class="text-info m-2 p-2 cursor-pointer" tooltip="Click to copy your challenge support code"
+                  appCopyOnClick>
+                  {{ spec.instance?.id | slice:0:8 }} {{ spec.tag }}
+                </span>
               </div>
             </div>
 

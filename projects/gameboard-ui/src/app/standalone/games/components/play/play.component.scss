@@ -1,4 +1,4 @@
-@import "../../../../scss/variables";
+@import "../../../../../scss/variables";
 
 .mini-player-container {
   background-color: $gray-900;
@@ -10,7 +10,8 @@
   padding: 1rem;
   position: sticky;
   top: 50px;
-  min-width: 380px;
+  min-width: 420px;
+  width: 420px;
 
   h5 {
     color: $foreground;

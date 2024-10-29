@@ -20,3 +20,7 @@ export interface AdminExtendTeamSessionResponse {
 }
 
 export type TeamSessionResetType = "unenrollAndArchiveChallenges" | "archiveChallenges" | "preserveChallenges";
+export interface TeamSessionUpdate {
+    id: string;
+    sessionEndsAt: number;
+}

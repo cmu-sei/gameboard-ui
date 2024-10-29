@@ -1,24 +1,25 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { createStore, withProps } from "@ngneat/elf";
 import { DateTime } from "luxon";
-import { Observable, Subject, Subscription, firstValueFrom, interval, merge, of, startWith, switchMap } from "rxjs";
-import { LocalActiveChallenge } from "@/api/challenges.models";
+import { Observable, Subject, Subscription, interval, of, startWith, switchMap } from "rxjs";
+import { UserActiveChallenge } from "@/api/challenges.models";
 import { SimpleEntity } from "@/api/models";
 import { ChallengesService } from "@/api/challenges.service";
 import { Challenge } from "@/api/board-models";
 import { TeamService } from "@/api/team.service";
+import { NowService } from "@/services/now.service";
+import { PlayerMode } from "@/api/player-models";
+import { TeamSessionUpdate } from "@/api/teams.models";
 import { UserService as LocalUserService } from "@/utility/user.service";
 
 interface ActiveChallengesProps {
     user: SimpleEntity;
-    practice: LocalActiveChallenge[];
-    competition: LocalActiveChallenge[];
+    challenges: UserActiveChallenge[];
 }
 
 const DEFAULT_STATE: ActiveChallengesProps = {
     user: { id: "", name: "" },
-    competition: [],
-    practice: []
+    challenges: [],
 };
 
 export const activeChallengesStore = createStore(
@@ -29,37 +30,37 @@ export const activeChallengesStore = createStore(
 @Injectable({ providedIn: 'root' })
 export class ActiveChallengesRepo implements OnDestroy {
     private _subs: Subscription[] = [];
-    public readonly activePracticeChallenge$: Observable<LocalActiveChallenge | null> = activeChallengesStore
+    public readonly activePracticeChallenge$: Observable<UserActiveChallenge | null> = activeChallengesStore
         .pipe(
             startWith(activeChallengesStore.state),
             switchMap(store => of(this.resolveActivePracticeChallenge(store)))
         );
 
-    private readonly _practiceChallengeCompleted$ = new Subject<LocalActiveChallenge>();
-    public readonly practiceChallengeCompleted$ = this._practiceChallengeCompleted$.asObservable();
+    private readonly _challengeCompleted$ = new Subject<UserActiveChallenge>();
+    public readonly challengeCompleted$ = this._challengeCompleted$.asObservable();
 
-    private readonly _practiceChallengeExpired$ = new Subject<string>();
-    public readonly practiceChallengeExpired$ = this._practiceChallengeExpired$.asObservable();
+    private readonly _challengeExpired$ = new Subject<UserActiveChallenge>();
+    public readonly challengeExpired$ = this._challengeExpired$.asObservable();
+
+    private readonly _challengeReset$ = new Subject<UserActiveChallenge>();
+    public readonly challengeReset$ = this._challengeReset$.asObservable();
 
     constructor(
         challengesService: ChallengesService,
         localUser: LocalUserService,
-        teamService: TeamService) {
+        teamService: TeamService,
+        private nowService: NowService) {
+        this._subs.push(localUser.user$.subscribe(async u => {
+            await this._initState(challengesService, u?.id || null);
+        }));
 
         this._subs.push(
-            merge([
-                of(challengesService),
-                localUser.user$,
-                merge([
-                    challengesService.challengeGraded$,
-                    challengesService.challengeDeployStateChanged$
-                ])
-            ]).subscribe(() => this._initState(challengesService, localUser.user$.value?.id || null)),
             interval(1000).subscribe(() => this.checkActiveChallengesForEnd()),
+            challengesService.challengeStarted$.subscribe(challenge => this.handleChallengeStarted(challenge)),
             challengesService.challengeGraded$.subscribe(challenge => this.handleChallengeGraded(challenge)),
             challengesService.challengeDeployStateChanged$.subscribe(challenge => this.handleChallengeDeployStateChanged(challenge)),
             teamService.teamSessionEndedManually$.subscribe(tId => this.handleTeamSessionEndedManually(tId)),
-            teamService.teamSessionsChanged$.subscribe(tId => this._initState(challengesService, localUser.user$.value?.id || null))
+            teamService.teamSessionsChanged$.subscribe(updates => this.handleTeamSessionsChanged(updates))
         );
 
         this._initState(challengesService, localUser.user$.value?.id || null);
@@ -71,108 +72,129 @@ export class ActiveChallengesRepo implements OnDestroy {
         }
     }
 
-    getActivePracticeChallenge(): LocalActiveChallenge | null {
+    getActivePracticeChallenge(): UserActiveChallenge | null {
         return this.resolveActivePracticeChallenge(activeChallengesStore.value);
     }
 
-    private buildChallengeDeployment(challenge: Challenge) {
-        return {
-            challengeId: challenge.id,
-            isDeployed: challenge.hasDeployedGamespace,
-            markdown: challenge.state.markdown || "",
-            vms: challenge.state.vms,
-        };
-    }
-
     private checkActiveChallengesForEnd() {
-        const challenges = [...activeChallengesStore.state.practice];
+        const challenges = [...activeChallengesStore.state.challenges];
 
-        // for now, we'll only emit practice challenge ends
+        const nowish = this.nowService.nowToMsEpoch();
         for (const challenge of challenges) {
-            if (challenge.session.end && DateTime.now() > challenge.session.end!) {
-                this._practiceChallengeExpired$.next(challenge.challengeDeployment.challengeId);
-                activeChallengesStore.update(state => ({
-                    ...state,
-                    practice: []
-                }));
+            if (challenge.endsAt && challenge.endsAt < nowish) {
+                this._challengeExpired$.next(challenge);
+                this.removeFromActive(challenge.id);
             }
         }
     }
 
     private handleChallengeDeployStateChanged(challengeDeployStateChange: Challenge) {
-        activeChallengesStore.update(state => {
-            const competitive = [...state.competition];
-            const practice = [...state.practice];
-
-            for (const challenge of competitive) {
-                if (challenge.id == challengeDeployStateChange.id) {
-                    challenge.challengeDeployment = this.buildChallengeDeployment(challengeDeployStateChange);
-                }
-            }
-
-            for (const challenge of practice) {
-                if (challenge.id === challengeDeployStateChange.id) {
-                    challenge.challengeDeployment = this.buildChallengeDeployment(challengeDeployStateChange);
-                }
-            }
-
-            return {
-                ...state,
-                competition: [...competitive],
-                practice: [...practice]
+        this.updateChallenge(challengeDeployStateChange.id, c => {
+            c.isDeployed = challengeDeployStateChange.hasDeployedGamespace;
+            c.markdown = challengeDeployStateChange.state.markdown;
+            c.scoreAndAttemptsState = {
+                attempts: challengeDeployStateChange.state.challenge.attempts,
+                maxAttempts: challengeDeployStateChange.state.challenge.maxAttempts,
+                maxPossibleScore: challengeDeployStateChange.state.challenge.maxPoints,
+                score: challengeDeployStateChange.score,
             };
+            c.vms = challengeDeployStateChange.state.vms;
+
+            return c;
         });
     }
 
-    private handleChallengeGraded(challenge: Challenge) {
+    private handleChallengeGraded(gradedChallenge: Challenge) {
         // check if the graded challenge is the active practice challenge, and if it is, evaluate it for completeness
         // and grading attempts, and notify appropriate subjects
-        const activePracticeChallenge = this.resolveActivePracticeChallenge(activeChallengesStore.state);
-        if (activePracticeChallenge?.challengeDeployment.challengeId === challenge.id) {
-            // no matter what, update the activeChallenge thing in state with the deploy state of the 
-            // challenge's gamespace
-            activePracticeChallenge.challengeDeployment = {
-                challengeId: challenge.id,
-                isDeployed: challenge.hasDeployedGamespace,
-                markdown: challenge.state.markdown || "",
-                vms: challenge.state.vms,
+        // no matter what, update the activeChallenge thing in state with the deploy state of the
+        // challenge's gamespace
+        const updatedChallenge = this.updateChallenge(gradedChallenge.id, c => {
+            c.isDeployed = gradedChallenge.hasDeployedGamespace;
+            c.markdown = gradedChallenge.state.markdown;
+            c.scoreAndAttemptsState = {
+                attempts: gradedChallenge.state.challenge.attempts,
+                maxAttempts: gradedChallenge.state.challenge.maxAttempts,
+                maxPossibleScore: gradedChallenge.state.challenge.maxPoints,
+                score: gradedChallenge.score,
             };
-            let removeChallengeFromState = false;
+            c.vms = gradedChallenge.state.vms;
 
-            if (challenge.score >= challenge.points) {
-                // did they complete?
-                this._practiceChallengeCompleted$.next(activePracticeChallenge);
-                removeChallengeFromState = true;
-            }
+            return c;
+        });
 
-            if (removeChallengeFromState) {
-                this.removeFromActive(activePracticeChallenge);
-                activeChallengesStore.update(state => {
-                    return {
-                        ...state,
-                        practice: [...state.practice.filter(c => c.spec.id !== activePracticeChallenge.spec.id)]
-                    };
-                });
-            }
+        if (gradedChallenge.score >= gradedChallenge.points) {
+            this._challengeCompleted$.next(updatedChallenge);
+            this.removeFromActive(gradedChallenge.id);
         }
     }
 
-    private handleTeamSessionEndedManually(teamId: string) {
-        this.removeFromActiveWithPredicate(c => c.teamId == teamId);
-    }
+    private handleChallengeStarted(challenge: Challenge) {
+        this.removeFromActive(challenge.id);
 
-    private removeFromActive(endedChallenge: Challenge | LocalActiveChallenge) {
-        this.removeFromActiveWithPredicate(c => c.id === endedChallenge.id);
-    }
-
-    private removeFromActiveWithPredicate(predicate: (c: LocalActiveChallenge) => boolean) {
         activeChallengesStore.update(state => {
             return {
                 ...state,
-                competition: [...state.competition.filter(c => !predicate(c))],
-                practice: [...state.practice.filter(c => !predicate(c))]
+                challenges: [...state.challenges, this.toActiveChallenge(challenge)]
             };
         });
+    }
+
+    private async handleTeamSessionsChanged(teamSessionUpdates: TeamSessionUpdate[]) {
+        activeChallengesStore.update(state => {
+            const updatedChallenges: UserActiveChallenge[] = [];
+
+            for (let update of teamSessionUpdates) {
+                for (let challenge of state.challenges) {
+                    if (challenge.team.id === update.id) {
+                        challenge.endsAt = update.sessionEndsAt;
+                    }
+                    updatedChallenges.push(challenge);
+                }
+            }
+
+            return {
+                ...state,
+                challenges: updatedChallenges
+            };
+        });
+    }
+
+    private handleTeamSessionEndedManually(teamId: string) {
+        const teamChallenges = activeChallengesStore.state.challenges.filter(c => c.team.id === teamId);
+        this.removeFromActiveWithPredicate(c => c.team.id == teamId);
+        for (let challenge of teamChallenges) {
+            this._challengeReset$.next(challenge);
+        }
+    }
+
+    private removeFromActive(challengeId: string) {
+        this.removeFromActiveWithPredicate(c => c.id === challengeId);
+    }
+
+    private removeFromActiveWithPredicate(predicate: (c: UserActiveChallenge) => boolean) {
+        activeChallengesStore.update(state => {
+            return {
+                ...state,
+                challenges: [...state.challenges.filter(c => !predicate(c))]
+            };
+        });
+    }
+
+    private updateChallenge(challengeId: string, update: (c: UserActiveChallenge) => UserActiveChallenge): UserActiveChallenge {
+        activeChallengesStore.update(state => {
+            const challenge = state.challenges.find(c => c.id === challengeId);
+
+            if (!challenge)
+                return state;
+
+            return {
+                ...state,
+                challenges: [...state.challenges.filter(c => c.id === challengeId), update(challenge)]
+            };
+        });
+
+        return activeChallengesStore.state.challenges.find(c => c.id === challengeId)!;
     }
 
     private async _initState(challengesService: ChallengesService, localUserId: string | null) {
@@ -181,17 +203,37 @@ export class ActiveChallengesRepo implements OnDestroy {
             return;
         }
 
-        // the challenges come in with an API-level time-window (with epoch times for session)
-        // we have to map them to localized time windows
-        const userActiveChallenges = await firstValueFrom(challengesService.getActiveChallenges(localUserId));
+        const response = await challengesService.getActiveChallenges(localUserId);
 
         // update the store
         activeChallengesStore.update(state => ({
-            ...userActiveChallenges
+            challenges: response.challenges,
+            user: response.user
         }));
     }
 
     private resolveActivePracticeChallenge(storeState: ActiveChallengesProps) {
-        return storeState.practice.length ? storeState.practice[0] : null;
+        return storeState.challenges.find(c => c.mode === PlayerMode.practice) || null;
+    }
+
+    private toActiveChallenge(challenge: Challenge): UserActiveChallenge {
+        return {
+            id: challenge.id,
+            name: challenge.name,
+            endsAt: DateTime.fromJSDate(new Date(challenge.endTime)).toMillis(),
+            mode: PlayerMode.practice,
+            game: { id: "", name: "" },
+            spec: { id: challenge.specId, name: challenge.name },
+            team: { id: challenge.teamId, name: "" },
+            isDeployed: challenge.hasDeployedGamespace,
+            markdown: challenge.state.markdown,
+            vms: challenge.state.vms,
+            scoreAndAttemptsState: {
+                attempts: challenge.state.challenge.attempts,
+                maxAttempts: challenge.state.challenge.maxAttempts,
+                score: challenge.state.challenge.score,
+                maxPossibleScore: challenge.state.challenge.maxPoints
+            }
+        };
     }
 }

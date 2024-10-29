@@ -10,7 +10,7 @@ import { Observable, Subject, Subscription, catchError, delay, filter, firstValu
 import { ChallengesService } from '@/api/challenges.service';
 import { NotificationService } from '@/services/notification.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { ChallengeSubmissionAnswers, ChallengeSubmissionViewModel, GetChallengeSubmissionsResponse } from '@/api/challenges.models';
+import { ChallengeSubmissionAnswers, ChallengeSubmissionViewModelLegacy, GetChallengeSubmissionsResponseLegacy } from '@/api/challenges.models';
 import { ToastService } from '@/utility/services/toast.service';
 
 interface PendingSubmissionsUpdate {
@@ -33,7 +33,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
 
   protected errors: any[] = [];
   protected fa = fa;
-  protected pastSubmissions: ChallengeSubmissionViewModel[] = [];
+  protected pastSubmissions: ChallengeSubmissionViewModelLegacy[] = [];
   protected pending = false;
   protected pendingAnswers: ChallengeSubmissionAnswers = {
     questionSetIndex: 0,
@@ -101,7 +101,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
           this.resetPendingAnswers();
           this.handleChallengeUpdated(challenge);
         }),
-        switchMap(challenge => this.challengesService.getSubmissions(challenge.id)),
+        switchMap(challenge => this.challengesService.getSubmissionsLegacy(challenge.id)),
         tap(submissions => this.handleSubmissionsRetrieved(submissions))
       ).subscribe()
     );
@@ -117,7 +117,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
       // the default state is a blank set of answers, but we might update these later from a previous submission
       this.resetPendingAnswers();
 
-      const pastSubmissions = await firstValueFrom(this.challengesService.getSubmissions(currentChallengeId));
+      const pastSubmissions = await firstValueFrom(this.challengesService.getSubmissionsLegacy(currentChallengeId));
       this.handleSubmissionsRetrieved(pastSubmissions);
     }
 
@@ -164,13 +164,13 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
     this.spec.instance = challenge;
     this.api.setColor(this.spec);
 
-    const submissions = await firstValueFrom(this.challengesService.getSubmissions(challenge.id));
+    const submissions = await firstValueFrom(this.challengesService.getSubmissionsLegacy(challenge.id));
     this.handleSubmissionsRetrieved(submissions);
 
     this.graded.emit(true);
   }
 
-  private handleSubmissionsRetrieved(submissions: GetChallengeSubmissionsResponse) {
+  private handleSubmissionsRetrieved(submissions: GetChallengeSubmissionsResponseLegacy) {
     // if somehow we don't have an instance, this doesn't matter
     if (!this.spec.instance)
       return;
