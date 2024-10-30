@@ -3,22 +3,6 @@
         <ng-container
             *ngTemplateOutlet="progress.variant.totalSectionCount == 1 ? singleSection : multiSection; context: { $implicit: sectionTabs }">
         </ng-container>
-
-        <div class="challenge-status-container pt-4 mt-4 d-flex align-items-baseline">
-            <div>
-                <span class="fw-bold text-muted">Remaining: </span>
-                {{ endsAt$ | async | epochMsToTimeRemainingString | async }}
-
-                <span *ngIf="progress.maxAttempts > 0">
-                    <em>({{progress.maxAttempts - progress.attempts}} attempts)</em>
-                </span>
-            </div>
-            <div class="flex-grow-1"></div>
-            <div>
-                <span class="fw-bold text-muted">Score: </span>
-                {{ progress.score || 0 }} / {{ progress.maxPoints }}
-            </div>
-        </div>
     </ng-container>
 </div>
 
@@ -31,17 +15,50 @@
 </ng-template>
 
 <ng-template #multiSection let-context>
+    <alert type="info" *ngIf="progress?.nextSectionPreReqThisSection || progress?.nextSectionPreReqTotal"
+        [dismissible]="true">
+        This challenge has multiple sections. To unlock the next one, you'll need to
+
+        <ng-container *ngIf="progress?.nextSectionPreReqThisSection && progress?.nextSectionPreReqTotal">
+            <ul>
+                <li *ngIf="progress!.nextSectionPreReqThisSection">
+                    Score at least <strong>{{ progress!.nextSectionPreReqThisSection }}</strong> points on the
+                    current section.
+                </li>
+                <li *ngIf="progress!.nextSectionPreReqTotal">
+                    Score at least <strong>{{ progress!.nextSectionPreReqTotal }}</strong> points total.
+                    <span><em>(You currently have {{ progress!.score }} points.)</em></span>
+                </li>
+            </ul>
+        </ng-container>
+
+        <span *ngIf="progress!.nextSectionPreReqThisSection">
+            score at least <strong>{{ progress?.nextSectionPreReqThisSection }}</strong> points on the
+            current section.
+        </span>
+
+        <span *ngIf="progress!.nextSectionPreReqTotal">
+            score at least <strong>{{ progress!.nextSectionPreReqTotal }}</strong> points total.
+            <span><em>(You currently have {{ progress!.score }} points.)</em></span>
+        </span>
+    </alert>
+
     <tabset *ngIf="progress">
-        <tab *ngFor="let sectionTab of context; index as i" [disabled]="!sectionTab.isAvailable"
-            (selectTab)="handleSectionSelect(i)" [active]="selectedSectionIndex === i">
+        <tab *ngFor="let sectionTab of context; index as i" (selectTab)="handleSectionSelect(i)"
+            [active]="selectedSectionIndex === i">
             <ng-template tabHeading>
-                <div class="section-number-title text-center">
+                <div class="section-number-title text-center" [class.text-muted]="!sectionTab.isAvailable">
                     {{ (size === "compact" ? "S" : "Section ") + sectionTab.friendlyIndex }}
                 </div>
-                <div *ngIf="size !== 'compact' && sectionTab.section?.name"
-                    class="section-name-title fs-08 text-muted text-center">
-                    {{ sectionTab.section.name }}
-                </div>
+
+                <ng-container *ngIf="size !== 'compact'">
+                    <div *ngIf="sectionTab.section?.name" class="section-name-title fs-08 text-info text-center">
+                        {{ sectionTab.section.name }}
+                    </div>
+                    <div *ngIf="!sectionTab.isAvailable" class="section-name-title fs-08 text-muted text-center">
+                        Unavailable
+                    </div>
+                </ng-container>
             </ng-template>
 
             <ng-container
@@ -52,6 +69,7 @@
 
 <ng-template #challengeSection let-context>
     <h3 *ngIf="size === 'compact'">{{ context.section.name || "Section " + context.index + 1 }}</h3>
+
     <alert type="success" *ngIf="context.isMultiSection && context.questionsRemaining === 0">
         <p>
             You've completed this section. Great job!
@@ -92,11 +110,11 @@
                     </div>
 
                     <div class="input-group mx-0 my-2">
-                        <div class="btn btn-success btn-disabled input-group-prepend" *ngIf="question.isCorrect">
-                            <fa-icon [icon]="fa.checkSquare"></fa-icon>
+                        <div class="input-group-prepend" *ngIf="question.isCorrect">
+                            <span class="input-group-text">✓</span>
                         </div>
 
-                        <input type="text" class="form-control m-0"
+                        <input type="text" class="form-control"
                             formControlName="s{{ context.index }}q{{ questionIndex }}" [readOnly]="question.isCorrect"
                             [placeholder]="question.example || 'Enter your answer here'">
                     </div>
@@ -104,7 +122,22 @@
             </li>
         </ul>
 
-        <div class="button-controls d-flex align-items-center justify-content-end">
+        <div class="button-controls d-flex align-items-center">
+            <div *ngIf="progress">
+                <div>
+                    <span class="fw-bold text-muted">Remaining: </span>
+                    {{ endsAt$ | async | epochMsToTimeRemainingString | async }}
+                    <span *ngIf="progress.maxAttempts > 0">
+                        <em>({{progress.maxAttempts - progress.attempts}} attempts)</em>
+                    </span>
+                </div>
+
+                <div>
+                    <span class="fw-bold text-muted">Score: </span>
+                    {{ progress.score || 0 }} / {{ progress.maxPoints }}
+                </div>
+            </div>
+            <div class="flex-grow-1"></div>
             <div *ngIf="hasSubmissionHistory" class="text-info cursor-pointer text-dashed-underline mr-4" role="button"
                 (click)="handleViewSubmissionHistory(context.id)">
                 {{ size === "compact" ? "Previous Submissions" : "See my previous submissions" }}

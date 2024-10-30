@@ -14,14 +14,13 @@ import { EpochMsToTimeRemainingStringPipe } from '@/standalone/core/pipes/epoch-
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ChallengeSubmissionHistoryComponent } from "../challenge-submission-history/challenge-submission-history.component";
 import { SimpleEntity } from '@/api/models';
-import { ActiveChallengesRepo, activeChallengesStore } from '@/stores/active-challenges.store';
+import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 
 interface SectionTabViewModel {
   index: number;
   friendlyIndex: number;
   questionsRemaining?: number;
   isAvailable: boolean;
-  isMultiSection: boolean;
   section?: ChallengeProgressViewSection;
   form?: FormGroup;
 }
@@ -50,7 +49,6 @@ export class ChallengeQuestionsComponent implements OnChanges {
   protected hasSubmissionHistory = false;
   protected isGrading = false;
   protected progress?: ChallengeProgressView;
-  protected sectionForm?: FormGroup;
   protected sectionTabs: SectionTabViewModel[] = [];
   protected selectedSectionIndex = 0;
   protected spec?: SimpleEntity;
@@ -145,7 +143,6 @@ export class ChallengeQuestionsComponent implements OnChanges {
           friendlyIndex: sectionIndex + 1,
           index: sectionIndex,
           isAvailable: false,
-          isMultiSection: this.progress!.variant.totalSectionCount > 1
         };
       }
 
