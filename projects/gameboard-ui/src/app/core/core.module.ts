@@ -125,6 +125,7 @@ import { AuthInterceptor } from '@/utility/auth.interceptor';
 import { ObserverConsoleComponent } from './components/observer-console/observer-console.component';
 import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
 import { GameMapImageUrlPipe } from './pipes/game-map-image-url.pipe';
+import { UserNavItemComponent } from '@/standalone/user/components/user-nav-item/user-nav-item.component';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -281,9 +282,10 @@ const RELAYED_MODULES = [
     IfHasPermissionDirective
   ],
   exports: [
+    CommonModule,
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
-    IfHasPermissionDirective
+    IfHasPermissionDirective,
   ]
 })
 export class CoreModule { }

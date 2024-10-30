@@ -1,6 +1,6 @@
 $primary: #181866;
 $primary-hover: #131398;
-$danger: #A41E25;
+$danger: #a41e25;
 $success: #41ad57;
 $light: #f8f9fa;
 $gray-200: #333;
@@ -11,7 +11,8 @@ $bg-tools: #444;
 body {
   background-color: $dark;
   color: $light;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 18px;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
@@ -75,9 +76,11 @@ button {
   border: none;
   cursor: default;
 }
+
 button:hover {
-  background-color: $primary-hover
+  background-color: $primary-hover;
 }
+
 .btn-lg {
   margin: 8px;
   padding: 32px;
@@ -96,7 +99,8 @@ button:hover {
   }
 }
 app-spinner {
-  svg path, svg rect {
+  svg path,
+  svg rect {
     fill: $primary;
   }
 }
@@ -109,12 +113,12 @@ app-spinner {
   color: $light;
 }
 textarea {
-    background-color: $gray-200;
-    color: $gray-800;
+  background-color: $gray-200;
+  color: $gray-800;
 }
 textarea:focus {
-    background-color: $gray-200;
-    color: $gray-800;
+  background-color: $gray-200;
+  color: $gray-800;
 }
 input.form-check-input {
   background-color: $gray-200;

@@ -49,12 +49,11 @@ export class UserService implements OnDestroy {
 
     auth.tokenState$.pipe(
       filter(t => t === AuthTokenState.expired),
-      tap(() => auth.redirectUrl = config.currentPath),
       switchMap(() => api.logout()),
       tap(() => this.log.logInfo("token expired"))
     ).subscribe(() => {
       this.user$.next(null);
-      router.navigate(['/login']);
+      router.navigate(['/login'], { queryParams: { redirectTo: config.currentPath } });
     });
 
     // log the login event for the current user (we track date of last login and total login count)

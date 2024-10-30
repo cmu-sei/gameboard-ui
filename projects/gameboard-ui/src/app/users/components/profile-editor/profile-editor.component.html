@@ -9,7 +9,6 @@
             Choose a <em>default</em> name for public display that is suitable for all audiences. This name will apply
             to <em>all new games</em>, but you can customize it during registration.
         </div>
-        <br>
 
         <ng-container *ngIf="currentUser.name && currentUser.name !== currentUser.approvedName">
             <ng-container *ngIf="currentUser.nameStatus == 'pending' && currentUser.name != disallowedName">

@@ -12,6 +12,7 @@ import { LocalStorageService, StorageKey } from '../services/local-storage.servi
 import { LogService } from '../services/log.service';
 import { VmState } from '@/api/board-models';
 import { BrowserService } from '@/services/browser.service';
+import { Environment, EnvironmentSettings } from '../../environments/environment-typed';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
@@ -19,10 +20,10 @@ export class ConfigService {
   private url = environment.settingsJson;
   private restorationComplete = false;
   basehref = '';
-  settings: Settings = environment.settings;
+  environment: Environment = environment;
   local: LocalAppSettings = {};
   absoluteUrl = '';
-  settings$ = new BehaviorSubject<Settings>(this.settings);
+  settings$ = new BehaviorSubject<EnvironmentSettings>(this.environment.settings);
   sidebar$ = new Subject<boolean>();
 
   get lastUrl(): string {
@@ -91,7 +92,7 @@ export class ConfigService {
   }
 
   get apphost(): string {
-    let path = this.settings.apphost || this.basehref;
+    let path = this.environment.settings.apphost || this.basehref;
     if (!path.endsWith('/')) {
       path += '/';
     }
@@ -99,11 +100,11 @@ export class ConfigService {
   }
 
   get appName(): string {
-    return this.settings.appname || "Gameboard";
+    return this.environment.settings.appname || "Gameboard";
   }
 
   get mkshost(): string {
-    let path = this.settings.mkshost || `${this.basehref}mks`;
+    let path = this.environment.settings.mkshost || `${this.basehref}mks`;
     if (!path.endsWith('/')) {
       path += '/';
     }
@@ -111,15 +112,15 @@ export class ConfigService {
   }
 
   get imagehost(): string {
-    return this.settings.imghost || `${this.basehref}img`;
+    return this.environment.settings.imghost || `${this.basehref}img`;
   }
 
   get tochost(): string {
-    return this.settings.tochost || `${this.basehref}docs`;
+    return this.environment.settings.tochost || `${this.basehref}docs`;
   }
 
   get supporthost(): string {
-    return this.settings.supporthost || `${this.basehref}supportfiles`;
+    return this.environment.settings.supporthost || `${this.basehref}supportfiles`;
   }
 
   get shortdate_formatter(): any {
@@ -138,24 +139,24 @@ export class ConfigService {
     return new Date(this.local.lastSeenSupport!);
   }
 
-  load(): Observable<Settings> {
+  load(): Observable<EnvironmentSettings> {
     if (!environment.settingsJson) {
-      return of({} as Settings);
+      return of({} as EnvironmentSettings);
     }
 
-    return this.http.get<Settings>(this.basehref + this.url)
+    return this.http.get<EnvironmentSettings>(this.basehref + this.url)
       .pipe(
         catchError((err: Error) => {
-          return of({} as Settings);
+          return of({} as EnvironmentSettings);
         }),
         tap(s => {
           if (!s || Object.keys(s).length == 0) {
             this.log.logError(`Unable to load settings file from url ${this.basehref + this.url}`);
           }
           if (s) {
-            this.settings = { ...this.settings, ...s };
-            this.settings.oidc = { ...this.settings.oidc, ...s.oidc };
-            this.settings$.next(this.settings);
+            this.environment.settings = { ...this.environment.settings, ...s };
+            this.environment.settings.oidc = { ...this.environment.settings.oidc, ...s.oidc };
+            this.settings$.next(this.environment.settings);
           }
         })
       );
@@ -207,23 +208,12 @@ export interface LocalAppSettings {
   ticketOrderDesc?: boolean;
 }
 
-export interface Settings {
-  appname?: string;
-  apphost?: string;
-  mkshost?: string;
-  imghost?: string;
-  tochost?: string;
-  supporthost?: string;
-  tocfile?: string;
-  custom_background?: string;
-  countdownStartSecondsAtMinute?: number;
-  oidc: AppUserManagerSettings;
-}
-
 export interface AppUserManagerSettings extends UserManagerSettings {
   authority: string;
+  autoLogin: boolean;
   client_id: string;
+  debug?: boolean;
+  logoutOnAppLogout: boolean;
   redirect_uri: string;
   useLocalStorage?: boolean;
-  debug?: boolean;
 }

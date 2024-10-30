@@ -16,8 +16,10 @@ export const environment: Environment = {
     custom_background: '',
     oidc: {
       authority: '',
+      autoLogin: false,
       client_id: '',
+      logoutOnAppLogout: true,
       redirect_uri: ''
-    }
+    },
   }
 };

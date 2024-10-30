@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
       <div class="modal-header">
           <div class="titles-container">
             <h4 class="modal-title pull-left">{{ team?.name }}</h4>
-            <h5 class="gray-text">Challenge Timeline: {{game?.name}}</h5>
+            <h5 class="text-muted">Challenge Timeline: {{game?.name}}</h5>
           </div>
           <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
               <span aria-hidden="true" class="visually-hidden">&times;</span>

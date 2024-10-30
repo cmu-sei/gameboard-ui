@@ -46,7 +46,7 @@ import { RegistrationTypeToIsOpenPipe } from './pipes/registration-type-to-is-op
     CoreModule,
     UtilityModule,
     FontAwesomeModule,
-    MarkdownModule
+    MarkdownModule,
   ]
 })
 export class HomeModule { }

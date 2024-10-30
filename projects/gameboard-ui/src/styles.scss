@@ -273,6 +273,11 @@ table.gameboard-table {
   }
 }
 
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: theme-color("success");
+}
+
 .form-group {
   padding: 1.5rem;
   margin-bottom: 0.5rem;
@@ -323,10 +328,6 @@ app-spinner svg.default-theme {
   path {
     fill: theme-color("success");
   }
-}
-
-.gray-text {
-  color: #888888;
 }
 
 .text-black {

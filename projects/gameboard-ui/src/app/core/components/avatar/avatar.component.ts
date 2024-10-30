@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
+import { PlacementForBs5 } from 'ngx-bootstrap/positioning';
 
 export type AvatarSize = 'tiny' | 'small' | 'medium' | 'large';
 
@@ -10,12 +11,13 @@ export type AvatarSize = 'tiny' | 'small' | 'medium' | 'large';
     <ng-template #tolTemplate>
       <ng-content [select]="avatarTooltip"></ng-content>
     </ng-template>
-    <div [class]="'avatar-container avatar-size ' + this.sizeClass" [style.background-image]="escapedImgUrl" [tooltip]="tolTemplate"></div>
+    <div [class]="'avatar-container avatar-size ' + this.sizeClass" [style.background-image]="escapedImgUrl" [tooltip]="tolTemplate" [placement]="tooltipPlacement"></div>
   `,
 })
 export class AvatarComponent implements OnChanges {
   @Input() imageUrl?: SafeUrl;
   @Input() size: AvatarSize = "medium";
+  @Input() tooltipPlacement = PlacementForBs5.top;
 
   @ViewChild("searchBox") searchBox?: ElementRef<Input>;
 

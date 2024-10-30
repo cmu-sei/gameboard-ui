@@ -3,7 +3,8 @@
 
 import { Component, } from '@angular/core';
 import { fa } from '@/services/font-awesome.service';
-import { AuthService, AuthTokenState } from '@/utility/auth.service';
+import { AuthService } from '@/utility/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,12 +17,13 @@ export class LoginComponent {
   working = false;
 
   constructor(
-    private auth: AuthService) {
+    private auth: AuthService,
+    private route: ActivatedRoute) {
     this.authority = auth.authority;
   }
 
-  login(): void {
+  async login(): Promise<void> {
     this.working = true;
-    this.auth.externalLogin(this.auth.redirectUrl);
+    await this.auth.login(this.route.snapshot.queryParamMap.get("redirectTo") || "/");
   }
 }

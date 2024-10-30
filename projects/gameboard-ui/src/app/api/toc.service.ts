@@ -21,16 +21,16 @@ export class TocService {
     private log: LogService
   ) {
     const tag = `?t=${new Date().valueOf()}`;
-    const tocUrl = `${config.tochost}/${config.settings.tocfile + ''}${tag}`;
+    const tocUrl = `${config.tochost}/${config.environment.settings.tocfile + ''}${tag}`;
     let url = config.tochost;
 
     // include toc folder
-    const i = config.settings.tocfile?.lastIndexOf('/') || 0;
+    const i = config.environment.settings.tocfile?.lastIndexOf('/') || 0;
     if (i > 0) {
-      url += `/${config.settings.tocfile?.substring(0, i)}`;
+      url += `/${config.environment.settings.tocfile?.substring(0, i)}`;
     }
 
-    if (!!config.settings.tocfile) {
+    if (!!config.environment.settings.tocfile) {
       this.toc$ = http.get<string[]>(tocUrl).pipe(
         catchError(err => {
           // don't report error here - ops will know what the 404 means

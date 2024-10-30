@@ -1,12 +1,12 @@
 import { Directive, Input, OnChanges, SimpleChanges, TemplateRef, ViewContainerRef } from '@angular/core';
-import { UserService } from '@/utility/user.service';
+import { UserService as LocalUserService } from '@/utility/user.service';
 import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 import { ApiUser } from '@/api/user-models';
 
 @Directive({
-  providers: [UnsubscriberService, UserService],
+  providers: [UnsubscriberService, LocalUserService],
   selector: '[appIfHasPermission]',
   standalone: true
 })
@@ -15,7 +15,7 @@ export class IfHasPermissionDirective implements OnChanges {
   @Input('[appIfHasPermission]') private requiredPermission?: UserRolePermissionKey;
 
   constructor(
-    private localUser: UserService,
+    private localUser: LocalUserService,
     private permissionsService: UserRolePermissionsService,
     private templateRef: TemplateRef<any>,
     private unsub: UnsubscriberService,
