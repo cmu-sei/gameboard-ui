@@ -12,8 +12,8 @@ import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { Observable } from 'rxjs';
-import { ApiModule } from './api/api.module';
 
+import { ApiModule } from './api/api.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './utility/config.service';

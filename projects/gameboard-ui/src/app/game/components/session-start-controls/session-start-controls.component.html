@@ -10,7 +10,7 @@
         </p>
     </alert>
 
-    <alert class="sync-start-message my-4" type="info" *ngIf="ctx.game.requireSynchronizedStart">
+    <alert class="sync-start-message my-4" type="success" *ngIf="ctx.game.requireSynchronizedStart">
         <h3><strong>Are you ready?</strong></h3>
 
         <p class="sync-start-message">
@@ -23,7 +23,7 @@
         <div *ngIf="isConnectedToGameHub; else loading"
             class="progress-bar-container mt-4 mb-2 d-flex align-items-center">
             <progressbar class="flex-grow-1" [animate]="true" [value]="playerReadyPct" [max]="100" [ariaValueMin]="0"
-                [ariaValueMax]="100" type="info">
+                [ariaValueMax]="100" type="success">
                 <strong>{{playerReadyPct}}%</strong>
             </progressbar>
 

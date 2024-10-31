@@ -471,6 +471,10 @@ th[align="left"] {
   text-transform: uppercase;
 }
 
+.height-100 {
+  height: 100%;
+}
+
 .width-5 {
   width: 5%;
 }
@@ -524,7 +528,7 @@ th[align="left"] {
 }
 
 .link-button {
-  color: theme-color("info");
+  color: theme-color("success");
   cursor: pointer;
 }
 

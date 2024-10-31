@@ -1,4 +1,4 @@
-<div class="report-card-component cursor-hand" *ngIf="report">
+<div class="report-card-component cursor-hand h-100" *ngIf="report">
     <a class="d-block" [routerLink]="reportUrl">
         <div class="title-container">
             <h1>{{report.name}}</h1>
@@ -13,7 +13,7 @@
 
             <ul class="d-flex align-items-center flex-wrap">
                 <li class="d-inline-block" *ngFor="let field of report.exampleFields">
-                    <span class="parameter-name badge badge-info">{{field}}</span>
+                    <span class="parameter-name badge badge-success">{{field}}</span>
                 </li>
             </ul>
         </div>
@@ -23,7 +23,7 @@
 
             <ul class="d-flex align-items-center flex-wrap">
                 <li class="d-inline-block" *ngFor="let param of report.exampleParameters">
-                    <span class="parameter-name badge badge-info">{{param}}</span>
+                    <span class="parameter-name badge badge-success">{{param}}</span>
                 </li>
             </ul>
         </div>

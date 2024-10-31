@@ -41,7 +41,8 @@
                     <fa-icon [icon]="faSearch"></fa-icon>
                 </span>
             </div>
-            <input type="search" placeholder="search" class="form-control border-0" [(ngModel)]="term"
+            <input type="search" placeholder="Search {{ count }} challenges" class="form-control border-0"
+                [(ngModel)]="term"
                 [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 

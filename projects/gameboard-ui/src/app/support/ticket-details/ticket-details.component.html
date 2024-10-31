@@ -51,7 +51,8 @@
         </span>
       </ng-container>
       <div class="copy-button-container ml-auto">
-        <button type="button" class="btn btn-info btn-sm" (click)="copyToMarkdown(ctx.ticket)">Copy to markdown</button>
+        <button type="button" class="btn btn-success btn-sm" (click)="copyToMarkdown(ctx.ticket)">Copy to
+          markdown</button>
       </div>
     </div>
 
@@ -72,7 +73,7 @@
               <button type="button" class="btn btn-small px-1 py-0" tooltip="Copy this ticket's text"
                 [appCopyOnClick]="ctx.ticket.description"
                 appCopyOnClickMessage="Copied this ticket's text to your clipboard.">
-                <fa-icon [icon]="fa.copy" size="sm" class="text-info"></fa-icon>
+                <fa-icon [icon]="fa.copy" size="sm" class="text-success"></fa-icon>
               </button>
             </div>
             <div>
@@ -139,7 +140,7 @@
                     <div>
                       <button *ngIf="newCommentFocus" class="btn text-info btn-link ml-1"
                         (click)="newCommentFocus = false">Cancel</button>
-                      <button class="btn btn-info py-1" [disabled]="!newCommentText && !newCommentAttachments.length"
+                      <button class="btn btn-success py-1" [disabled]="!newCommentText && !newCommentAttachments.length"
                         (click)="addComment()">Comment</button>
                     </div>
                   </div>
@@ -169,7 +170,7 @@
                   <button type="button" class="btn btn-small px-1 py-0" tooltip="Copy this comment"
                     [appCopyOnClick]="ctx.ticket.description"
                     appCopyOnClickMessage="Copied this comment's text to your clipboard.">
-                    <fa-icon [icon]="fa.copy" size="sm" class="text-info"></fa-icon>
+                    <fa-icon [icon]="fa.copy" size="sm" class="text-success"></fa-icon>
                   </button>
                 </div>
               </div>
@@ -243,7 +244,7 @@
                 <app-inplace-editor [editData]="assignees" [currentText]="changedTicket.assignee?.name ?? 'None'"
                   (startEditFunc)="startEditAssignee()"
                   (selectOptionFunc)="selectAssignee($event)"></app-inplace-editor>
-                <a *ngIf="!!currentUser && !changedTicket.assigneeId" class="btn btn-link px-2 pt-0 text-info"
+                <a *ngIf="!!currentUser && !changedTicket.assigneeId" class="btn btn-link px-2 pt-0 text-success"
                   (click)="selectAssignToMe()">Assign to me</a>
               </div>
 
@@ -251,9 +252,9 @@
                 <label class="font-weight-bold" for="__-input">Status</label><br />
                 <div id="___-input" class="btn-group" btnRadioGroup name="____" tabindex="0"
                   [(ngModel)]="changedTicket.status" (click)="changed$.next(changedTicket)">
-                  <label class="btn btn-outline-info btn-sm" btnRadio="Open">Open</label>
-                  <label class="btn btn-outline-info btn-sm" btnRadio="In Progress">In Progress</label>
-                  <label class="btn btn-outline-info btn-sm" btnRadio="Closed">Closed</label>
+                  <label class="btn btn-outline-success btn-sm" btnRadio="Open">Open</label>
+                  <label class="btn btn-outline-success btn-sm" btnRadio="In Progress">In Progress</label>
+                  <label class="btn btn-outline-success btn-sm" btnRadio="Closed">Closed</label>
                 </div>
               </div>
 
@@ -279,7 +280,7 @@
                   (selectOptionFunc)="selectChallenge($event)"></app-inplace-editor>
                 <p *ngIf="changedTicket.challenge" class="mb-0  pt-0 mb-1 px-2 align-items-center small">
                   Support Code:
-                  <span appCopyOnClick class="text-info cursor-pointer"
+                  <span appCopyOnClick class="text-success cursor-pointer"
                     tooltip="Click to copy this ticket's support code">
                     {{(changedTicket.challenge | toSupportCode)}}
                   </span>

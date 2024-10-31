@@ -27,8 +27,8 @@
             "tsConfig": "projects/gameboard-ui/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/gameboard-ui/src/favicon.ico",
-              "projects/gameboard-ui/src/assets"
+              "projects/gameboard-ui/src/assets",
+              "projects/gameboard-ui/src/assets/*"
             ],
             "styles": [
               "node_modules/toastify-js/src/toastify.css",

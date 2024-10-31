@@ -1,13 +1,13 @@
 <div *ngIf="ctx$ | async as ctx; else loading" class="container-xl" [class.expand]="ctx.canManage">
   <div class="d-flex align-items-baseline mb-2">
-    <h3 class="m-0 p-0 flex-grow-1">{{ctx.canManage ? 'Tickets' : 'My Tickets'}}</h3>
+    <h3 class="m-0 p-0 flex-grow-1">{{ ctx.canManage ? "" : "My " }}Tickets</h3>
 
     <div class="btn-group">
-      <button *ngIf="ctx.canManage" class="btn btn-info" (click)="downloadTicketDetailReport()"
+      <button *ngIf="ctx.canManage" class="btn btn-success" (click)="downloadTicketDetailReport()"
         tooltip="Export these tickets to CSV">
         <fa-icon [icon]="fa.fileCsv"></fa-icon>
       </button>
-      <a class="btn btn-info" *ngIf="!isReadOnly" [routerLink]="['../create']">
+      <a class="btn btn-success" *ngIf="!isReadOnly" [routerLink]="['../create']">
         <span>Create Ticket</span>
       </a>
     </div>
@@ -137,7 +137,7 @@
           </div>
           <div class="text-muted">
             <span class="font-weight-bold-">{{ticket.requester?.name}}</span>
-            <span *ngIf="ticket.challenge" class="text-info cursor-pointer"
+            <span *ngIf="ticket.challenge" class="text-success cursor-pointer"
               [appCopyOnClick]="ticket.challenge | toSupportCode" tooltip="Copy this support code">
               &nbsp;&middot;&nbsp;
               {{ ticket.challenge | toSupportCode }}

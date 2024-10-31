@@ -11,6 +11,8 @@ label {
 
 .dropzone-target {
   border: dashed 1px $foreground;
+  display: flex;
+  justify-content: center;
 }
 
 .section-header {
