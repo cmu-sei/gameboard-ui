@@ -9,7 +9,11 @@
         <ng-container *ngIf="!(localUser$ | async)">
             <alert type="warning">
                 You haven't logged in yet - you'll need to do so before you can play practice challenges.
-                <a [routerLink]="profileRouterLink">Log in</a> to start honing your skills!
+                <span role="button" class="fw-bold text-underline cursor-pointer" (click)="handleLogIn()">
+                    Log in
+                </span>
+
+                to start honing your skills!
             </alert>
         </ng-container>
         <ng-container *ngIf="(localUser$ | async) && !(hasSponsor$ | async)">
@@ -28,7 +32,7 @@
                 [searches]="suggestedSearches"></app-suggested-searches>
         </div>
 
-        <div class="input-group input-group-sm col-5 ml-auto mb-2 pr-0 mt-5">
+        <div class="input-group input-group-sm col-5 ml-auto mb-4 pr-0 mt-5">
             <app-share-button class="d-block mr-1" size="small" [disabled]="!term"
                 message="Copied a link to this search to your clipboard."
                 tooltip="Copy a link to this search"></app-share-button>

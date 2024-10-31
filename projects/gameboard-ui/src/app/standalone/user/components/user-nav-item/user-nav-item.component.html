@@ -1,0 +1,43 @@
+<div class="btn-group" dropdown *ngIf="localUser$ | async as localUser; else unauthed">
+    <button [routerLink]="profileLinks?.profile" type="button" class="btn btn-success">
+        <div class="d-flex align-items-center">
+            <app-avatar class="mr-2" size="tiny" [imageUrl]="localUser.sponsor | sponsorToLogoUri">
+                <div avatarTooltip>
+                    <div>{{ localUser.sponsor.name }}</div>
+                </div>
+            </app-avatar>
+            <div class="nav-link-text">
+                Hi,
+                <strong>{{localUser.approvedName}}</strong>!
+            </div>
+        </div>
+    </button>
+    <button id="button-split" type="button" dropdownToggle class="btn btn-success dropdown-toggle dropdown-toggle-split"
+        aria-controls="dropdown-split">
+        <span class="caret"></span>
+        <span class="sr-only visually-hidden">User Menu</span>
+    </button>
+    <ul id="dropdown-split" *dropdownMenu class="dropdown-menu width-100" role="menu" aria-labelledby="button-split">
+        <ng-container *ngIf="profileLinks">
+            <li role="menuitem">
+                <a [routerLink]="profileLinks.profile" class="dropdown-item">Name &amp; Sponsor</a>
+            </li>
+            <li role="menuitem">
+                <a [routerLink]="profileLinks.certificates" class="dropdown-item">Certificates</a>
+            </li>
+            <li role="menuitem">
+                <a [routerLink]="profileLinks.history" class="dropdown-item">History</a>
+            </li>
+        </ng-container>
+        <li class="divider dropdown-divider"></li>
+        <li role="menuitem">
+            <span class="dropdown-item cursor-pointer" (click)="handleLogOut()">Log out</span>
+        </li>
+    </ul>
+</div>
+
+<ng-template #unauthed>
+    <a class="nav-link-text cursor-pointer mr-2" (click)="handleLogIn()">
+        Log in
+    </a>
+</ng-template>

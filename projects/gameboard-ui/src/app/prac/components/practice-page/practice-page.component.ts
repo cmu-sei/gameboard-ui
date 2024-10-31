@@ -11,6 +11,6 @@ export class PracticePageComponent {
 
   constructor(
     configService: ConfigService) {
-    this.appName = configService.settings.appname || "Gameboard";
+    this.appName = configService.environment.settings.appname || "Gameboard";
   }
 }

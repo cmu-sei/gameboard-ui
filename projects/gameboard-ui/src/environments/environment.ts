@@ -15,14 +15,16 @@ export const environment: Environment = {
     custom_background: 'custom-bg-blue',
     isProduction: false,
     oidc: {
-      client_id: 'dev.gameboard.web',
       authority: 'http://localhost:8080/realms/foundry',
+      autoLogin: false,
+      autoLogout: false,
+      client_id: 'dev.gameboard.web',
       redirect_uri: 'http://localhost:4202/oidc',
       silent_redirect_uri: 'http://localhost:4202/assets/oidc-silent.html',
       response_type: 'code',
       scope: 'openid profile gameboard-api',
       loadUserInfo: true,
       useLocalStorage: true
-    }
+    },
   }
 };

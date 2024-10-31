@@ -10,6 +10,7 @@ import { UserService as LocalUserService } from "@/utility/user.service";
 import { slug } from '@/../tools/functions';
 import { ApiUser } from '@/api/user-models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { AuthService } from '@/utility/auth.service';
 
 @Component({
   selector: 'app-practice-challenge-list',
@@ -43,6 +44,7 @@ export class PracticeChallengeListComponent {
     localUser: LocalUserService,
     route: ActivatedRoute,
     private api: PracticeService,
+    private authService: AuthService,
     private routerService: RouterService,
     private unsub: UnsubscriberService
   ) {
@@ -98,5 +100,9 @@ export class PracticeChallengeListComponent {
         skip: s, navigate: true
       }
     });
+  }
+
+  protected async handleLogIn() {
+    await this.authService.login(this.routerService.getPracticeAreaUrl().toString());
   }
 }

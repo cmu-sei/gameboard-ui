@@ -6,8 +6,8 @@ export class CountdownColorPipe implements PipeTransform {
   startSecondsAtMinute: number = 5; // default to 5 minutes
 
   constructor(config?: ConfigService) {
-    if ((config?.settings.countdownStartSecondsAtMinute ?? 0) > 0) // lowest allowed setting is 1 min
-      this.startSecondsAtMinute = config?.settings.countdownStartSecondsAtMinute!;
+    if ((config?.environment.settings.countdownStartSecondsAtMinute ?? 0) > 0) // lowest allowed setting is 1 min
+      this.startSecondsAtMinute = config?.environment.settings.countdownStartSecondsAtMinute!;
   }
 
   transform(value: number | undefined, ...args: unknown[]): string {

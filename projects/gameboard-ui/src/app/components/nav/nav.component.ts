@@ -1,12 +1,13 @@
+import { Observable } from 'rxjs';
 import { TocFile, TocService } from '@/api/toc.service';
 import { ApiUser } from '@/api/user-models';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RouterService } from '@/services/router.service';
+import { Component, inject, OnInit } from '@angular/core';
 import { fa } from '@/services/font-awesome.service';
+import { AuthService } from '@/utility/auth.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-nav',
@@ -15,6 +16,9 @@ import { fa } from '@/services/font-awesome.service';
   providers: [UnsubscriberService]
 })
 export class AppNavComponent implements OnInit {
+  private authService = inject(AuthService);
+  private routerService = inject(RouterService);
+
   user$!: Observable<ApiUser | null>;
   toc$!: Observable<TocFile[]>;
   customBackground = "";
@@ -23,12 +27,11 @@ export class AppNavComponent implements OnInit {
   protected fa = fa;
   protected isCollapsed = false;
   protected isPracticeModeEnabled = false;
-  protected profileUrl?: string;
+  protected profileUrl = "";
 
   constructor(
     private localUser: LocalUser,
     private practiceService: PracticeService,
-    private routerService: RouterService,
     private toc: TocService,
     private unsub: UnsubscriberService
   ) { }
@@ -46,7 +49,11 @@ export class AppNavComponent implements OnInit {
     this.isPracticeModeEnabled = isEnabled;
   }
 
-  logout(): void {
-    this.localUser.logout();
+  protected async handleLogIn() {
+    await this.authService.login();
+  }
+
+  protected handleLogOut() {
+    this.authService.logout();
   }
 }

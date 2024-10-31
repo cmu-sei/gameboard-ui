@@ -34,6 +34,7 @@ import { GameboardSignalRHubsComponent } from './components/gameboard-signalr-hu
 import { SignalRService } from './services/signalR/signalr.service';
 import { LogService } from './services/log.service';
 import { SystemNotificationsModule } from './system-notifications/system-notifications.module';
+import { UserNavItemComponent } from './standalone/user/components/user-nav-item/user-nav-item.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,9 @@ import { SystemNotificationsModule } from './system-notifications/system-notific
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
+
+    // standalones
+    UserNavItemComponent
   ],
   providers: [
     {

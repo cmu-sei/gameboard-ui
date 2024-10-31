@@ -9,7 +9,7 @@ import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
       <div class="modal-header">
           <div class="titles-container">
             <h4 class="modal-title pull-left">{{ context.title }}</h4>
-            <h5 *ngIf="context.subtitle" class="gray-text">{{ context.subtitle }}</h5>
+            <h5 *ngIf="context.subtitle" class="text-muted">{{ context.subtitle }}</h5>
           </div>
           <button *ngIf="!context.hideCancel" type="button" class="btn-close close pull-right" aria-label="Close" (click)="cancel()">
               <span aria-hidden="true" class="visually-hidden">&times;</span>

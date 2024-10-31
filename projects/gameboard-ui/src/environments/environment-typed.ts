@@ -1,27 +1,22 @@
+import { AppUserManagerSettings } from "@/utility/config.service";
+
 export interface Environment {
     production: boolean;
     settingsJson?: string;
-    settings: {
-        appname: string,
-        apphost: string,
-        basehref?: string,
-        mkshost: string,
-        imghost: string,
-        tochost: string,
-        supporthost: string,
-        tocfile?: string,
-        countdownStartSecondsAtMinute: number,
-        custom_background?: string,
-        isProduction: boolean,
-        oidc: {
-            client_id: string,
-            authority: string,
-            redirect_uri: string,
-            silent_redirect_uri?: string,
-            response_type?: string,
-            scope?: string,
-            loadUserInfo?: boolean,
-            useLocalStorage?: boolean
-        }
-    }
+    settings: EnvironmentSettings;
+}
+
+export interface EnvironmentSettings {
+    appname: string;
+    apphost: string;
+    basehref?: string;
+    countdownStartSecondsAtMinute: number;
+    custom_background?: string;
+    imghost: string;
+    isProduction: boolean;
+    mkshost: string;
+    oidc: AppUserManagerSettings;
+    supporthost: string;
+    tochost: string;
+    tocfile?: string;
 }

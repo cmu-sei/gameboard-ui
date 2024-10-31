@@ -13,6 +13,6 @@ export class HomePageComponent {
   appname = '';
 
   constructor(config: ConfigService) {
-    this.appname = config.settings.appname || 'Gameboard';
+    this.appname = config.environment.settings.appname || 'Gameboard';
   }
 }

@@ -54,8 +54,6 @@ export class ProfileEditorComponent {
         }
       })
     );
-
-    this.userSvc.refresh();
   }
 
   async updateUserName(name: string): Promise<void> {

@@ -16,6 +16,6 @@ export class UserPageComponent {
   constructor(
     config: ConfigService,
     localUser: LocalUserService) {
-    this.appName = config.settings.appname || "Gameboard";
+    this.appName = config.environment.settings.appname || "Gameboard";
   }
 }

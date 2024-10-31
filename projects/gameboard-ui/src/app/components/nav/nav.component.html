@@ -22,7 +22,7 @@
             <ng-container *ngIf="(user$ | async)?.id">
                 <a *appIfHasPermission="'Admin_View'" class="btn btn-link text-success mx-1"
                     routerLinkActive="text-info" [routerLink]="['/admin']">Admin</a>
-                <a class="btn btn-link text-success mx-1" (click)="logout()">Log out</a>
+                <a class="btn btn-link text-success mx-1" (click)="handleLogOut()">Log out</a>
             </ng-container>
         </ng-container>
     </div>
@@ -71,7 +71,7 @@
                     </a>
                 </li>
                 <li *ngIf="user?.id">
-                    <a (click)="logout()">Log out</a>
+                    <a (click)="handleLogOut()">Log out</a>
                 </li>
             </ng-container>
         </ul>
@@ -79,5 +79,5 @@
 </nav>
 
 <ng-template #unauthed>
-    <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Log in</a>
+    <div role="button" class="btn btn-link text-success mx-1" (click)="handleLogIn()">Log in</div>
 </ng-template>

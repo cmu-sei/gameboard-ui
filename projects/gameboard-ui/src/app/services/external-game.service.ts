@@ -38,7 +38,7 @@ export class ExternalGameService {
     this.log.logInfo(`Retrieved external game data:`, externalTeamData);
 
     this.log.logInfo("Resolving OIDC storage keys...");
-    const oidcLink = `oidc.user:${this.config.settings.oidc.authority}:${this.config.settings.oidc.client_id}`;
+    const oidcLink = `oidc.user:${this.config.environment.settings.oidc.authority}:${this.config.environment.settings.oidc.client_id}`;
 
     this.log.logInfo("Committing external url and OIDC key to local storage", externalTeamData.externalUrl, oidcLink);
     this.storage.addArbitrary(teamNamespaceKeyName, JSON.stringify({
