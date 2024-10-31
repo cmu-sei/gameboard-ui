@@ -8,7 +8,7 @@
     <a class="btn btn-link" [routerLink]="['/', 'user', 'certificates']" routerLinkActive="active">Certificates</a>
     <a class="btn btn-link" [routerLink]="['/', 'user', 'profile', 'history']" routerLinkActive="active">History</a>
     <a class="btn btn-link" [routerLink]="['/', 'user', 'settings']" routerLinkActive="active"
-        *appIfHasPermission="'Admin_View'">Settings</a>
+        *ngIf="localUser$ | async | can:'Admin_View'">Settings</a>
 </div>
 
 <main class="container">

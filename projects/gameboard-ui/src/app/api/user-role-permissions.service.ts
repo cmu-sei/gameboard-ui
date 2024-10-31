@@ -11,7 +11,7 @@ export class UserRolePermissionsService {
     private apiUrl: ApiUrlService,
     private http: HttpClient) { }
 
-  public can(user: { rolePermissions: UserRolePermissionKey[] } | null, key: UserRolePermissionKey): boolean {
+  public can(user: { rolePermissions: UserRolePermissionKey[] } | null, key: UserRolePermissionKey) {
     if (!user?.rolePermissions?.length)
       return false;
 

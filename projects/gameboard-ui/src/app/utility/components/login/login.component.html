@@ -3,7 +3,7 @@
 
 <div class="text-center">
   <p><ng-content></ng-content></p>
-  <button [hidden]="working" class="btn btn-lg btn-success" (click)="login()" aria-label="identity provider">
+  <button [hidden]="working" class="btn btn-lg btn-info" (click)="login()" aria-label="identity provider">
     <fa-icon [icon]="fa.openId"></fa-icon>
     <span>Login </span>
     <span>&mdash; {{authority}}</span>

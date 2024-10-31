@@ -2,7 +2,7 @@
     <app-spinner *ngIf="isDownloading">Loading your certificate...</app-spinner>
 
     <div class="print-button-container" *ngIf="!isDownloading && isPublished">
-        <button type="button" class="btn btn-success print-button" (click)="handlePrintClick()">
+        <button type="button" class="btn btn-info print-button" (click)="handlePrintClick()">
             Print This Certificate
         </button>
     </div>

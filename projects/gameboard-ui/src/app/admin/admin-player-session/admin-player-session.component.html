@@ -42,7 +42,7 @@
         <input id="duration-input" class="form-control" type="number" placeholder="Extension length (in minutes)"
           [(ngModel)]="durationExtensionInMinutes">
         <div class="input-group-append">
-          <button class="btn" [class.btn-success]="(durationExtensionInMinutes || 0) >= 0"
+          <button class="btn" [class.btn-info]="(durationExtensionInMinutes || 0) >= 0"
             [class.btn-warning]="(durationExtensionInMinutes || 0) < 0" [disabled]="!durationExtensionInMinutes"
             [ariaDisabled]="!durationExtensionInMinutes" (click)="extendByDuration(team, durationExtensionInMinutes)">
             <span>{{ durationExtensionInMinutes && durationExtensionInMinutes < 0 ? "Shorten" : "Extend" }}</span>
