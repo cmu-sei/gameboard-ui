@@ -17,8 +17,8 @@ export const environment: Environment = {
     oidc: {
       authority: '',
       autoLogin: false,
+      autoLogout: true,
       client_id: '',
-      logoutOnAppLogout: true,
       redirect_uri: ''
     },
   }
