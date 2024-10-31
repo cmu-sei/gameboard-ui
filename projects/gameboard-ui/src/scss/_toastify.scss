@@ -3,7 +3,7 @@
 .gb-toast {
   background-color: $dark !important;
   background-image: none !important;
-  border: solid 2px $success;
+  border: solid 2px $info;
   border-radius: 6px;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -18,7 +18,7 @@
     justify-content: center;
 
     strong {
-      color: $success;
+      color: $info;
     }
   }
 
