@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CoreModule } from '@/core/core.module';
 import { RouterService } from '@/services/router.service';
@@ -17,6 +17,8 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
   styleUrls: ['./user-nav-item.component.scss']
 })
 export class UserNavItemComponent implements OnInit {
+  @Input() size: "standard" | "compact" = "standard";
+
   private authService = inject(AuthService);
   private localUser = inject(LocalUserService);
   private modalService = inject(ModalConfirmService);
