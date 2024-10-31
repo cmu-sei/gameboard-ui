@@ -27,15 +27,13 @@ export class UserNavItemComponent implements OnInit {
     certificates: string;
     history: string;
     profile: string;
-    settings: string;
   };
 
   async ngOnInit() {
     this.profileLinks = {
       certificates: this.routerService.getCertificateListUrl(),
       history: this.routerService.getPlayHistoryUrl(),
-      profile: this.routerService.getProfileUrl(),
-      settings: this.routerService.getUserSettingsUrl().toString()
+      profile: this.routerService.getProfileUrl()
     };
   }
 
