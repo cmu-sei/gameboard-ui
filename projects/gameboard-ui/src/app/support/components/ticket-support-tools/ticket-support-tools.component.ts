@@ -61,7 +61,7 @@ export interface TicketSupportToolsContext {
     </li>
   </ul>
   <ng-template #noGameContext>
-    <div class="gray-text">
+    <div class="text-muted">
       Attach this ticket to a game or challenge to use these tools.
     </div>
   </ng-template>

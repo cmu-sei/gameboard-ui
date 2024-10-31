@@ -280,8 +280,10 @@ const RELAYED_MODULES = [
     ToSupportCodePipe
   ],
   exports: [
+    CommonModule,
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
+    IfHasPermissionDirective,
   ]
 })
 export class CoreModule { }

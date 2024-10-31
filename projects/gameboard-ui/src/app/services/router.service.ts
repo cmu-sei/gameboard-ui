@@ -3,7 +3,6 @@ import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular
 import { Subscription, filter } from 'rxjs';
 import { ReportKey } from '@/reports/reports-models';
 import { ObjectService } from './object.service';
-import { VmState } from '@/api/board-models';
 import { PlayerMode } from '@/api/player-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
@@ -24,7 +23,7 @@ export class RouterService implements OnDestroy {
     private config: ConfigService,
     private localUser: LocalUser,
     public route: ActivatedRoute,
-    public router: Router,
+    private router: Router,
     private objectService: ObjectService) { }
 
   public getCurrentPathBase(): string {
@@ -59,6 +58,14 @@ export class RouterService implements OnDestroy {
     return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
+  public getCertificateListUrl() {
+    return "user/certificates";
+  }
+
+  public getLocation() {
+    return this.router.url;
+  }
+
   public getGameCenterUrl(gameId: string, tab?: GameCenterTab) {
     return this.router.parseUrl(`/admin/game/${gameId}` + (tab ? '/' + tab : ""));
   }
@@ -71,8 +78,18 @@ export class RouterService implements OnDestroy {
     return `admin/observer/teams/${gameId}?search=${teamId}`;
   }
 
-  public getPracticeAreaWithSearchUrl(searchTerm: string) {
-    return this.router.createUrlTree(["practice"], { queryParams: { term: searchTerm } });
+  public getPlayHistoryUrl() {
+    return "user/profile/history";
+  }
+
+  public getPracticeAreaUrl(searchTerm?: string) {
+    const params: Params = {};
+
+    if (searchTerm) {
+      params.term = searchTerm;
+    }
+
+    return this.router.createUrlTree(["practice"], { queryParams: params });
   }
 
   public getProfileUrl() {
@@ -96,7 +113,7 @@ export class RouterService implements OnDestroy {
   }
 
   public toPracticeAreaWithSearch(search: string) {
-    return this.router.navigateByUrl(this.getPracticeAreaWithSearchUrl(search));
+    return this.router.navigateByUrl(this.getPracticeAreaUrl(search));
   }
 
   public toPracticeCertificates() {

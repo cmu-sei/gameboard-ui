@@ -34,7 +34,7 @@ import { GameboardSignalRHubsComponent } from './components/gameboard-signalr-hu
 import { SignalRService } from './services/signalR/signalr.service';
 import { LogService } from './services/log.service';
 import { SystemNotificationsModule } from './system-notifications/system-notifications.module';
-import { IfHasPermissionDirective } from './standalone/directives/if-has-permission.directive';
+import { UserNavItemComponent } from './standalone/user/components/user-nav-item/user-nav-item.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +62,7 @@ import { IfHasPermissionDirective } from './standalone/directives/if-has-permiss
     ProgressbarModule.forRoot(),
 
     // standalones
-    IfHasPermissionDirective
+    UserNavItemComponent
   ],
   providers: [
     {

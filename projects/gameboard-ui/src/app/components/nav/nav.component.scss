@@ -1,3 +1,5 @@
+@import "../../../scss/variables";
+
 @media (max-width: 800px) {
   .nav-sm {
     display: flex;
@@ -5,7 +7,6 @@
     .badge {
       display: inline-block;
       font-size: 0.5rem !important;
-      // margin-right: 12px;
     }
 
     li {
@@ -30,6 +31,12 @@
       a {
         display: block;
         font-size: 1.5rem;
+
+        &.active {
+          color: $body-color !important;
+          font-weight: bolder;
+          text-decoration: underline;
+        }
       }
     }
 

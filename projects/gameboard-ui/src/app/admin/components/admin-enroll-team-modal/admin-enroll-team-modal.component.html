@@ -36,7 +36,7 @@
 
 <ng-template #noResults class="text-center">
     <div class="text-center my-3">
-        <em class="gray-text">Use the box above to search for the user(s) you want to enroll in this game.</em>
+        <em class="text-muted">Use the box above to search for the user(s) you want to enroll in this game.</em>
     </div>
 </ng-template>
 
@@ -46,7 +46,7 @@
             size="tiny"></app-avatar>
         <div class="user-info">
             <div>{{ user.name }}</div>
-            <em class="gray-text fs-08">{{ user.id | slice:0:8}}</em>
+            <em class="text-muted fs-08">{{ user.id | slice:0:8}}</em>
         </div>
     </div>
 </ng-template>

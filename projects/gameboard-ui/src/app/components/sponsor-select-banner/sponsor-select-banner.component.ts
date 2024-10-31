@@ -31,7 +31,7 @@ export class SponsorSelectBannerComponent {
     localUserService: LocalUserService,
     logService: LogService,
     routerService: RouterService) {
-    this.appName = config.settings.appname || this.appName;
+    this.appName = config.environment.settings.appname || this.appName;
     this.profileUrl = routerService.getProfileUrl();
 
     if (!this.profileUrl) {

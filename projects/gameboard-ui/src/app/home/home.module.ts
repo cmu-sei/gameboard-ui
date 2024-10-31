@@ -46,7 +46,7 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 
     // standalones
     ErrorDivComponent,
-    SpinnerComponent
+    SpinnerComponent,
   ]
 })
 export class HomeModule { }
