@@ -2,11 +2,11 @@
 
 .component-container {
   background-color: unset;
-  color: $success;
+  color: $info;
   text-decoration: dotted;
 
   &.active {
-    background-color: $success;
+    background-color: $info;
     color: $foreground;
   }
 }

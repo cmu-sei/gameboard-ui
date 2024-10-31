@@ -5,7 +5,7 @@
 
 <ng-container *ngIf="reportData; else loading">
     <h2>Players &amp; Sponsors</h2>
-    <div class="d-flex flex-wrap align-items-start justify-content-between">
+    <div class="d-flex flex-wrap align-items-top justify-content-between">
         <app-big-stat [value]="reportData.userCount" label="Active players" [isClickable]="true"
             (click)="showPlayersModal()"></app-big-stat>
         <app-big-stat [value]="reportData.sponsorCount" label="Sponsors represented" [isClickable]="true"
@@ -19,7 +19,7 @@
     </div>
 
     <h2 class="report-section">Challenges &amp; Engagement</h2>
-    <div class="d-flex flex-wrap align-items-start justify-content-between mt-4">
+    <div class="d-flex flex-wrap align-items-top justify-content-between mt-4">
         <app-big-stat
             [value]="((reportData.competitivePlayDurationHours + reportData.practicePlayDurationHours) | number:'1.0-2') || '--' "
             label="Hours of play"

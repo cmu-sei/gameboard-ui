@@ -6,7 +6,7 @@
 </alert>
 
 <div *ngIf="game" class="controls-container d-flex align-items-center mb-3">
-    <button class="d-block btn btn-success" (click)="handleSelectAll()" [disabled]="!results?.teams?.items?.length">
+    <button class="d-block btn btn-info" (click)="handleSelectAll()" [disabled]="!results?.teams?.items?.length">
         <fa-icon [icon]="fa.checkSquare"></fa-icon>
         Select All {{ (game.isTeamGame ? "Team" : "Player") | pluralizer }}
     </button>
@@ -14,35 +14,35 @@
     <app-confirm-button btnClass="btn btn-warning mr-2" (confirm)="handleRerankClick(game.id)"
         tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
     <div class="gb-button-group btn-group mr-2">
-        <button type="button" class="btn btn-success" disabled="disabled">
+        <button type="button" class="btn btn-info" disabled="disabled">
             {{ selectedTeamIds.length ? selectedTeamIds.length : "All" }}
             {{ game.isTeamGame ? "Team" : "Player" }}{{ selectedTeamIds.length === 1 ? "" : "s" }}
         </button>
 
-        <button type="button" class="btn btn-success" tooltip="Deploy game resources"
+        <button type="button" class="btn btn-info" tooltip="Deploy game resources"
             [disabled]="!results?.teams?.items?.length" (click)="handleConfirmDeployGameResources()">
             <fa-icon [icon]="fa.computer"></fa-icon>
         </button>
 
-        <button type="button" class="btn btn-success"
+        <button type="button" class="btn btn-info"
             tooltip="Extend Sessions {{ selectedTeamIds.length ? '' : ' (select teams to extend)'}}"
             (click)="handleExtendClick(selectedTeamIds )" [disabled]="!selectedTeamIds.length">
             <fa-icon [icon]="fa.clock"></fa-icon>
         </button>
 
-        <button type="button" class="btn btn-success" tooltip="Copy all players to CSV"
+        <button type="button" class="btn btn-info" tooltip="Copy all players to CSV"
             (click)="handleExportCsvData(selectedTeamIds)">
             <fa-icon [icon]="fa.fileCsv"></fa-icon>
         </button>
 
-        <button type="button" class="btn btn-success"
+        <button type="button" class="btn btn-info"
             tooltip="Copy all {{ game.isTeamGame ? 'teams' : 'players' }} to mail format"
             (click)="handleExportMailMetaData()">
             <fa-icon [icon]="fa.envelope"></fa-icon>
         </button>
     </div>
 
-    <button *appIfHasPermission="'Teams_Enroll'" type="button" class="btn btn-success"
+    <button *appIfHasPermission="'Teams_Enroll'" type="button" class="btn btn-info"
         (click)="handlePlayerAddClick(game)">
         <fa-icon [icon]="fa.plus"></fa-icon>
         Add {{ game.isTeamGame ? "Team" : "Player" }} </button>

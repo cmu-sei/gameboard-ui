@@ -42,7 +42,7 @@
         <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
             [placeholder]="certificateHtmlPlaceholder" [(ngModel)]="ctx.settings.certificateHtmlTemplate"
             rows="5"></textarea>
-        <button type="button" class="btn btn-link" (click)="handleShowCertificateTemplateHelp()">
+        <button type="button" class="btn btn-link text-info" (click)="handleShowCertificateTemplateHelp()">
             How do I create a certificate template?
         </button>
     </div>

@@ -16,20 +16,20 @@
         <div *ngIf="feedbackTemplate" class="flex-grow-1">
             <ng-container *ngIf="feedbackTemplate.game?.length || feedbackTemplate.challenge?.length">
                 <ng-container *ngIf="feedbackTemplate.game?.length">
-                    <strong class="text-success">{{feedbackTemplate.game.length}}</strong>
+                    <strong class="text-info">{{feedbackTemplate.game.length}}</strong>
                     game questions
                 </ng-container>
                 <span *ngIf="feedbackTemplate?.game?.length && feedbackTemplate?.challenge?.length"> // </span>
                 <ng-container *ngIf="feedbackTemplate.challenge?.length">
-                    <strong class="text-success">{{feedbackTemplate.challenge.length}}</strong>
+                    <strong class="text-info">{{feedbackTemplate.challenge.length}}</strong>
                     challenge questions
                 </ng-container>
             </ng-container>
         </div>
-        <div class="text-success cursor-pointer mr-2 text-right flex-grow-1" (click)="handleAboutFeedbackClick()">
+        <div class="text-info cursor-pointer mr-2 text-right flex-grow-1" (click)="handleAboutFeedbackClick()">
             About feedback templates
         </div>
-        <button type="button" class="btn btn-success ml-2 flex-basis-50" [disabled]="!sampleConfig"
+        <button type="button" class="btn btn-info ml-2 flex-basis-50" [disabled]="!sampleConfig"
             (click)="handlePasteSample()">
             Paste Example Configuration
         </button>

@@ -15,11 +15,10 @@
 }
 
 .stat-button {
-  box-sizing: border-box;
   cursor: pointer;
 
   .value span {
-    border-bottom: dotted 3px $success;
+    border-bottom: dotted 3px $info;
   }
 }
 

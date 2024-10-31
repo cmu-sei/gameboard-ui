@@ -9,7 +9,7 @@ export interface ParameterChangeRouterLinkConfig {
 @Component({
   selector: 'app-parameter-change-link',
   template: `
-    <a class="text-success" *ngIf="!isDisabled; else disabled" [routerLink]="'./'" [queryParams]="queryParams" [hidden]="isDisabled">
+    <a class="text-info" *ngIf="!isDisabled; else disabled" [routerLink]="'./'" [queryParams]="queryParams" [hidden]="isDisabled">
         <ng-container *ngTemplateOutlet="content"></ng-container>
     </a>
 

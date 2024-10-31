@@ -1,5 +1,5 @@
 <ng-container *ngIf="scoreboardData; else loading">
-    <alert *ngIf="isLive && !suppressLiveGameBanner" type="success" class="my-2">
+    <alert *ngIf="isLive && !suppressLiveGameBanner" type="info" class="my-2">
         This game is still being played. Check back after the round ends
         ({{ scoreboardData.game.isLiveUntil?.toJSDate() | friendlyDateAndTime }})
         to see who came out on top and view complete score breakdowns for

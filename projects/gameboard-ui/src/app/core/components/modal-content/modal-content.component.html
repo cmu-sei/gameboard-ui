@@ -26,8 +26,8 @@
             <button type="button" *ngIf="!hideCancel" class="btn link-button" (click)="handleClose()">
                 {{ cancelButtonText || "Cancel" }}
             </button>
-            <button type="button" class="btn" [class.btn-danger]="isDangerConfirm"
-                [class.btn-success]="!isDangerConfirm" [disabled]="confirmDisabled" (click)="handleConfirm()">
+            <button type="button" class="btn" [class.btn-danger]="isDangerConfirm" [class.btn-info]="!isDangerConfirm"
+                [disabled]="confirmDisabled" (click)="handleConfirm()">
                 {{ confirmButtonText || 'OK' }}
             </button>
         </div>

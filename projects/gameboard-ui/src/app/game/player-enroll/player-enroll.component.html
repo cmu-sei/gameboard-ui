@@ -43,7 +43,7 @@
 
           <!-- disclosure -->
           <div *ngIf="ctx.game.registrationMarkdown">
-            <alert type="success">By enrolling in {{ctx.game.name}}, you are accepting the following terms.</alert>
+            <alert type="info">By enrolling in {{ctx.game.name}}, you are accepting the following terms.</alert>
             <markdown [data]="ctx.game.registrationMarkdown"></markdown>
           </div>
 
@@ -53,7 +53,7 @@
               <div class="d-flex align-items-center justify-content-center mt-5"
                 *ngIf="ctxDelayed$ | async as delay; else loading">
                 <div class="text-center" *ngIf="!!ctx.user.name && hasSelectedSponsor">
-                  <app-confirm-button btnClass="btn btn-success btn-lg mr-4"
+                  <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
                     [disabled]="!isRegistrationOpen && !canStandardEnroll && !canAdminEnroll" [tooltip]="enrollTooltip"
                     (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
                     <fa-icon [icon]="faEdit"></fa-icon>
@@ -199,6 +199,6 @@
 <ng-template #invitationGenerated>
   <div class="invitation-generated-wrapper">
     <span class="text-muted">Your invitation code: </span>
-    <strong [appCopyOnClick]="code" class="invitation-code text-success fw-bold cursor-pointer">{{code}}</strong>
+    <strong [appCopyOnClick]="code" class="invitation-code text-info fw-bold cursor-pointer">{{code}}</strong>
   </div>
 </ng-template>

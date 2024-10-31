@@ -4,7 +4,7 @@
     <div class="reports-list-container mt-5" *ngIf="reports; else loading">
         <ul class="reports-list mt-2 d-flex flex-wrap align-items-stretch">
             <li *ngFor="let report of reports" class="d-block">
-                <app-report-card class="d-block h-100" [report]="report"></app-report-card>
+                <app-report-card class="d-block" [report]="report"></app-report-card>
             </li>
         </ul>
 
