@@ -18,7 +18,7 @@
 
       <div *ngIf="!isStartingSession" class="challenge-management-buttons d-flex justify-content-center">
         <app-confirm-button *ngIf="!isDeploying && !(activePracticeChallenge$ | async)"
-          btnClass="btn btn-lg btn-info px-4 mb-4" (confirm)="play(spec.gameId)" class="d-block">
+          btnClass="btn btn-lg btn-success px-4 mb-4" (confirm)="play(spec.gameId)" class="d-block">
           <span>Start Practice Session</span>
         </app-confirm-button>
 
