@@ -28,6 +28,9 @@
             <li role="menuitem">
                 <a [routerLink]="profileLinks.history" class="dropdown-item">History</a>
             </li>
+            <li role="menuitem" *appIfHasPermission="'Admin_View'">
+                <a [routerLink]="profileLinks.settings" class="dropdown-item">Settings</a>
+            </li>
         </ng-container>
         <li class="divider dropdown-divider"></li>
         <li role="menuitem">
