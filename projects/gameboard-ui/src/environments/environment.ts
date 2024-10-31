@@ -16,9 +16,9 @@ export const environment: Environment = {
     isProduction: false,
     oidc: {
       authority: 'http://localhost:8080/realms/foundry',
-      autoLogin: true,
+      autoLogin: false,
       client_id: 'dev.gameboard.web',
-      logoutOnAppLogout: true,
+      logoutOnAppLogout: false,
       redirect_uri: 'http://localhost:4202/oidc',
       silent_redirect_uri: 'http://localhost:4202/assets/oidc-silent.html',
       response_type: 'code',
