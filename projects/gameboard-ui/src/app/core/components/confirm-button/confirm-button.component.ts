@@ -10,7 +10,7 @@ import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./confirm-button.component.scss'],
 })
 export class ConfirmButtonComponent {
-  @Input() btnClass = 'btn btn-info btn-sm';
+  @Input() btnClass = 'btn btn-success btn-sm';
   @Input() cancelButtonClass = 'btn btn-outline-secondary';
   @Input() componentContainerClass = '';
   @Input() disabled = false;
