@@ -1,10 +1,10 @@
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { TocFile, TocService } from '@/api/toc.service';
 import { ApiUser } from '@/api/user-models';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { fa } from '@/services/font-awesome.service';
 
 @Component({

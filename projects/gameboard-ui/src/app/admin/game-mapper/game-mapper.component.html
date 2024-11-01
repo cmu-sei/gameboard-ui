@@ -27,7 +27,7 @@
     <div [hidden]="viewing!=='edit'">
       <h4>Challenge Specs</h4>
 
-      <button *ngIf="!isSynchronizing; else syncing" class="mt-2 mb-4 btn btn-sm btn-info" (click)="sync()">
+      <button *ngIf="!isSynchronizing; else syncing" class="mt-2 mb-4 btn btn-sm btn-success" (click)="sync()">
         <fa-icon [icon]="fa.sync"></fa-icon>
         <span>Sync with Source</span>
       </button>

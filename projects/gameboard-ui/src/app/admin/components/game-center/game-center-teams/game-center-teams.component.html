@@ -1,6 +1,6 @@
 <alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
     There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
-    who have pending name change requests. Click <span class="link-button"
+    who have pending name change requests. Click <span class="btn-link"
         (click)="handlePendingNamesClick(game.id)">here</span>
     to review them.
 </alert>

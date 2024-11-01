@@ -19,7 +19,7 @@
                         [avatarTooltip]="user.sponsor.name" (actionClick)="handleSelectedActionClick(user.id)"
                         actionTooltip="Remove this player">
                         <div class="fs-11">{{ user.name }}</div>
-                        <div class="fs-08 link-button info-text" [appCopyOnClick]="user.id" tooltip="Copy this user ID"
+                        <div class="fs-08 btn-link" [appCopyOnClick]="user.id" tooltip="Copy this user ID"
                             placement="bottom">
                             {{ user.id | slice:0:8 }}
                         </div>

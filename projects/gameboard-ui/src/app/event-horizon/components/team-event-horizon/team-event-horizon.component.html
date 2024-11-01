@@ -9,7 +9,7 @@
             data-toggle="buttons">
             <label *ngFor="let eventType of allEventTypes" class="btn"
                 [class.btn-outline-light]="eventType | arrayContains:selectedEventTypes:true"
-                [class.btn-info]="eventType | arrayContains:selectedEventTypes">
+                [class.btn-success]="eventType | arrayContains:selectedEventTypes">
                 <input type="checkbox" autocomplete="off" (click)="handleEventTypeToggled(eventType)"
                     [checked]="eventType | arrayContains:selectedEventTypes">
                 {{eventType | eventTypeToFriendlyName}}

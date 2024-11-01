@@ -95,7 +95,7 @@ export class AuthService {
 
   logout(): void {
     if (this.oidcUser && this._tokenState$.getValue() === AuthTokenState.valid) {
-      if (this.config.environment.settings.oidc.logoutOnAppLogout) {
+      if (this.config.environment.settings.oidc.autoLogout) {
         this.mgr.signoutRedirect()
           .then(() => { })
           .catch(err => {

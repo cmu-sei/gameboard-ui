@@ -63,7 +63,7 @@
                 <input id="duration-input" class="form-control" type="number"
                     placeholder="Extension duration (in minutes)" [(ngModel)]="durationExtensionInMinutes">
                 <div class="input-group-append">
-                    <button class="btn" [class.btn-info]="(durationExtensionInMinutes || 0) >= 0"
+                    <button class="btn" [class.btn-success]="(durationExtensionInMinutes || 0) >= 0"
                         [class.btn-warning]="(durationExtensionInMinutes || 0) < 0"
                         [disabled]="!durationExtensionInMinutes" [ariaDisabled]="!durationExtensionInMinutes"
                         (click)="extendByDuration(team, durationExtensionInMinutes)">
@@ -89,7 +89,7 @@
         <app-announce [teamId]="team.id" placeholderText="Your message (sends only to this player/team)"></app-announce>
 
         <div class="other-tools-buttons px-3">
-            <button class="btn btn-info btn-sm mr-2" (click)="toggleRawView(!showChallengeYaml)">
+            <button class="btn btn-success btn-sm mr-2" (click)="toggleRawView(!showChallengeYaml)">
                 <fa-icon [icon]="fa.infoCircle"></fa-icon>
                 <span>{{ (showChallengeYaml ? "Hide" : "View") }} Data</span>
             </button>
