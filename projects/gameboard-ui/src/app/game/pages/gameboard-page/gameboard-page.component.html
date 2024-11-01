@@ -118,7 +118,7 @@
               <div class="mb-1">
                 Need Challenge Support?
                 <span class="m-2 p-2">
-                  <a class="btn btn-info" target="_blank" [routerLink]="['/support/create']"
+                  <a class="btn btn-success" target="_blank" [routerLink]="['/support/create']"
                     [queryParams]="{cid: spec.instance?.id!}">
                     <span>Create Ticket</span>
                   </a>
@@ -126,7 +126,7 @@
               </div>
               <div>
                 Support Code:
-                <app-clipspan class="text-info m-2 p-2">{{spec.instance?.id | slice:0:8}} {{spec.tag}}</app-clipspan>
+                <app-clipspan class="text-success m-2 p-2">{{spec.instance?.id | slice:0:8}} {{spec.tag}}</app-clipspan>
               </div>
             </div>
 

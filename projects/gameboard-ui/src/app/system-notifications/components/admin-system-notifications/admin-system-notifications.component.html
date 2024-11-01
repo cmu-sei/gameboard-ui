@@ -9,7 +9,7 @@
 
     <div class="notification-controls-container my-5">
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-lg btn-info" (click)="handleCreateNotificationClick()">
+            <button type="button" class="btn btn-lg btn-success" (click)="handleCreateNotificationClick()">
                 &plus; Create Notification
             </button>
         </div>
@@ -70,7 +70,7 @@
                 </td>
 
                 <td>
-                    <button type="button" class="btn btn-sm btn-info mr-2"
+                    <button type="button" class="btn btn-sm btn-success mr-2"
                         (click)="handleEditNotificationClick(notification)">Edit</button>
                     <app-confirm-button btnClass="btn btn-sm btn-danger"
                         (confirm)="handleDelete(notification.id)">Delete</app-confirm-button>

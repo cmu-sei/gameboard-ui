@@ -51,7 +51,9 @@
         </span>
       </ng-container>
       <div class="copy-button-container ml-auto">
-        <button type="button" class="btn btn-info btn-sm" (click)="copyToMarkdown(ctx.ticket)">Copy to markdown</button>
+        <button type="button" class="btn btn-success btn-sm" (click)="copyToMarkdown(ctx.ticket)">
+          Copy to markdown
+        </button>
       </div>
     </div>
 
@@ -137,9 +139,9 @@
                   <div class="mt-2 d-flex justify-content-between">
                     <div></div>
                     <div>
-                      <button *ngIf="newCommentFocus" class="btn text-info btn-link ml-1"
+                      <button *ngIf="newCommentFocus" class="btn btn-link btn-link ml-1"
                         (click)="newCommentFocus = false">Cancel</button>
-                      <button class="btn btn-info py-1" [disabled]="!newCommentText && !newCommentAttachments.length"
+                      <button class="btn btn-success py-1" [disabled]="!newCommentText && !newCommentAttachments.length"
                         (click)="addComment()">Comment</button>
                     </div>
                   </div>

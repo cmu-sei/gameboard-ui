@@ -36,7 +36,7 @@
         <p class="flex-grow-1 m-0">
             <strong>Selected: </strong>
             {{ selectionSummary }}
-            <span class="over-threshold-note link-button" (click)="handleSelectedOverDisplayThresholdClicked()"
+            <span class="over-threshold-note btn-link" (click)="handleSelectedOverDisplayThresholdClicked()"
                 *ngIf="countSelectedOverDisplayThreshold > 0">
                 and {{countSelectedOverDisplayThreshold}} other
                 item{{ countSelectedOverDisplayThreshold != 1 ? "s": ""}}

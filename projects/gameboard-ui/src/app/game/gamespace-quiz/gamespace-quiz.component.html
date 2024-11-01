@@ -56,7 +56,7 @@
     </div>
 
     <div class="submit-container text-right my-2" *ngIf="state.challenge.questions?.length">
-      <app-confirm-button btnClass="btn btn-sm btn-info" (confirm)="submit()" [disabled]="!state.isActive">
+      <app-confirm-button btnClass="btn btn-sm btn-success" (confirm)="submit()" [disabled]="!state.isActive">
         <fa-icon [icon]="fa.cloudUploadAlt"></fa-icon>
         <span>Submit</span>
       </app-confirm-button>

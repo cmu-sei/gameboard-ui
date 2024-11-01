@@ -31,7 +31,7 @@
                         <app-certificate-publish-controls class="d-block mr-2"
                             [certificate]="toPublishedViewModel(certificate)"
                             (publishStatusChange)="loadCertificates()"></app-certificate-publish-controls>
-                        <a *ngIf="apiHost && localUserId" target="_blank" class="btn btn-info"
+                        <a *ngIf="apiHost && localUserId" target="_blank" class="btn btn-success"
                             [href]="'user/' + localUserId + '/certificates/practice/' + certificate.challenge.challengeSpecId | relativeToAbsoluteHref">
                             Open
                         </a>

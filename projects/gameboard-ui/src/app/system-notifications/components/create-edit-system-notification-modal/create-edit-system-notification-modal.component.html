@@ -52,8 +52,8 @@
         <div class="form-group">
             <label for="title" class="d-block">Type</label>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn" [class.btn-info]="context.model.notificationType == 'generalInfo'"
-                    [class.btn-info-outline]="context.model.notificationType != 'generalInfo'"
+                <label class="btn" [class.btn-success]="context.model.notificationType == 'generalInfo'"
+                    [class.btn-success-outline]="context.model.notificationType != 'generalInfo'"
                     [class.active]="context.model.notificationType == 'generalInfo'">
                     <input type="radio" name="options" id="generalInfo" autocomplete="off"
                         [checked]="context.model.notificationType == 'generalInfo'"
