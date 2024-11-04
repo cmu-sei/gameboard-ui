@@ -33,7 +33,7 @@
                     <h2><ng-container *ngTemplateOutlet="challengeConsolesText"></ng-container></h2>
                     <div class="vms-container my-4">
                         <ul class="d-flex flex-wrap">
-                            <li *ngFor="let vm of challenge.vms" class="mr-2 mb-2">
+                            <li *ngFor="let vm of challenge.vms" class="d-block">
                                 <app-vm-link [vm]="{ name: vm.name, url: vmUrls[vm.id] }"></app-vm-link>
                             </li>
                         </ul>
