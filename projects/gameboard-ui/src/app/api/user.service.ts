@@ -53,9 +53,9 @@ export class UserService {
     return firstValueFrom(this.http.post<TryCreateUsersResponse>(this.apiUrl.build("users"), req));
   }
 
-  public update(model: ChangedUser, disallowedName: string | null = null): Observable<ApiUser> {
+  public update(model: ChangedUser): Observable<ApiUser> {
     return this.http.put<any>(this.apiUrl.build("user"), model).pipe(
-      map(r => this.transform(r as ApiUser, disallowedName)),
+      map(r => this.transform(r as ApiUser)),
     );
   }
 
@@ -128,18 +128,11 @@ export class UserService {
     this.toNode(folder, path);
   }
 
-  private transform(user: ApiUser, disallowedName: string | null = null): ApiUser {
+  private transform(user: ApiUser): ApiUser {
     // If the user has no name status but they changed their name, it's pending approval
     if (!user.nameStatus && user.approvedName !== user.name) {
       user.nameStatus = 'pending';
     }
-    // Otherwise, if the user entered a name and an admin rejected it, but the new name entered is different, it's pending
-    else if (user.nameStatus != 'pending' && disallowedName && disallowedName !== user.name) {
-      user.nameStatus = 'pending';
-    }
-
-    user.pendingName = user.approvedName !== user.name
-      ? user.name + (!!user.nameStatus ? `...${user.nameStatus}` : '...pending') : '';
 
     return user;
   }

@@ -15,7 +15,6 @@ export interface ApiUser {
   createdOn: Date;
   lastLoginDate?: Date;
   loginCount: number;
-  pendingName: string;
   role: UserRoleKey;
   rolePermissions: UserRolePermissionKey[]
 }
