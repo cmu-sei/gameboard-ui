@@ -85,7 +85,7 @@
     </div>
     <div>
       <span class="mr-2 fs-11">{{user.approvedName || user.name}}</span>
-      <span class="text-muted">{{user.pendingName}}</span><br />
+      <span *ngIf="user.name !== user.approvedName" class="text-muted">{{user.name}}</span><br />
 
       <div class="d-flex align-items-center">
         <div class="fs-08 mr-3 badge badge-success" *ngIf="user.role != 'member'">{{ user.role | titlecase }}</div>
@@ -103,15 +103,18 @@
       </p>
     </div>
     <app-error-div [errors]="errors"></app-error-div>
-    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-success btn-sm mx-1"
-      (click)="approveName(user)">
-      <fa-icon [icon]="fa.check"></fa-icon>
-      <span>Approve</span>
-    </button>
-    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-success btn-sm mx-1" (click)="view(user)">
-      <fa-icon [icon]="fa.check"></fa-icon>
-      <span>Disapprove</span>
-    </button>
+    <ng-container *ngIf="user.name && user.name !== user.approvedName">
+      <button *ngIf="user.name && user.name!==user.approvedName" class="btn btn-outline-success btn-sm mx-1"
+        (click)="handleSetName(user.id, user.name, '')">
+        <fa-icon [icon]="fa.check"></fa-icon>
+        <span>Approve</span>
+      </button>
+      <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-success btn-sm mx-1"
+        (click)="handleSetName(user.id, user.approvedName, 'disapproved')">
+        <fa-icon [icon]="fa.check"></fa-icon>
+        <span>Disapprove</span>
+      </button>
+    </ng-container>
     <div class="spacer"></div>
     <div class="">
       <button class="btn btn-outline-success btn-sm mx-1" (click)="view(user)">
@@ -128,16 +131,16 @@
         <h5>Name</h5>
         <div class="form-group mb-0 pb-1">
           <label class="mb-0" for="name-input">Approved Name</label>
-          <input id="name-input" class="form-control" type="text" [(ngModel)]="user.approvedName"
-            (change)="update(user)">
+          <input id="name-input" class="form-control" type="text" [(ngModel)]="user.approvedName" #nameInput
+            (change)="handleSetName(user.id, nameInput.value, '')">
         </div>
         <div class="form-group mb-0 pb-1">
           <label class="mb-0" for="reason-input">Disapproved Reason</label>
-          <input id="reason-input" class="form-control" type="text" [(ngModel)]="user.nameStatus"
-            (change)="update(user)">
+          <input id="reason-input" class="form-control" type="text" [(ngModel)]="user.nameStatus" #disapprovedInput
+            (change)="handleSetName(user.id, user.approvedName, disapprovedInput.value || 'disapproved')">
           <small>
             <button *ngFor="let reason of reasons" class="btn btn-link btn-sm"
-              (click)="user.nameStatus = reason; update(user)">
+              (click)="handleSetName(user.id, user.approvedName, reason)">
               {{reason}}
             </button>
           </small>

@@ -103,10 +103,8 @@ export class UserRegistrarComponent {
     }
   }
 
-  approveName(model: ApiUser): void {
-    model.approvedName = model.name;
-    model.nameStatus = "";
-    model.pendingName = "";
+  async approveName(model: ApiUser): Promise<void> {
+    await this.api.requestNameChange(model.id, { requestedName: model.name, status: "" });
     this.update(model);
   }
 
@@ -123,27 +121,13 @@ export class UserRegistrarComponent {
     });
   }
 
-  // private sortResults(results: ApiUser[], sort: UserRegistrarSort, direction: SortDirection) {
-  //   switch (sort) {
-  //     case "lastLogin":
-  //       return this.sortService.sort<ApiUser, number>({
-  //         array: results,
-  //         transform: user => (user.lastLoginDate || new Date(0)).valueOf(),
-  //         direction: direction
-  //       });
-  //     case "createdOn":
-  //       return this.sortService.sort<ApiUser, number>({
-  //         array: results,
-  //         transform: user => user.createdOn.valueOf(),
-  //         direction: direction
-  //       });
-  //     default:
-  //       return this.sortService.sort({
-  //         array: results,
-  //         transform: user => user.approvedName || user.name || "",
-  //         direction: direction
-  //       });
-  //   }
-
-  // }
+  protected async handleSetName(userId: string, name: string, status: string) {
+    try {
+      await this.api.requestNameChange(userId, { requestedName: name, status });
+      this.toastService.showMessage(`This user's name has been changed **${name}**.`);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
+  }
 }
