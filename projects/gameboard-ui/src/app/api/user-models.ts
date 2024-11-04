@@ -72,6 +72,15 @@ export interface Announcement {
   message: string;
 }
 
+export interface RequestNameChangeRequest {
+  requestedName: string;
+}
+
+export interface RequestNameChangeResponse {
+  userId: string;
+  name: string;
+}
+
 export interface TryCreateUsersRequest {
   allowSubsetCreation: boolean;
   enrollInGameId?: string;

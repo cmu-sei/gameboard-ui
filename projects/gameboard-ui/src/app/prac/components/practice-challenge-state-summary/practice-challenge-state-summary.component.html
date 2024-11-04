@@ -6,7 +6,7 @@
     <ng-container *ngIf="activeChallenge$ | async as activeChallenge">
         <div class="text-info card-text mb-2">
             <a [routerLink]="['/practice', activeChallenge.spec.id, slug(activeChallenge.spec.name)]">
-                <alert type="info">
+                <alert type="success">
                     <strong class="text-upper">Your active practice challenge</strong>
                     <div class="fs-13 font-weight-light">{{ activeChallenge.spec.name }}</div>
                 </alert>
@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td>{{activeChallenge.scoreAndAttemptsState.score}}</td>
-                    <td class="text-info fw-bold">
+                    <td class="text-success fw-bold">
                         {{ activeChallenge.endsAt | epochMsToTimeRemainingString | async }}
                     </td>
                 </tr>
@@ -38,13 +38,13 @@
 
         <ng-container *ngIf="!isChangingSessionEnd && activeChallenge">
             <div class="text-center">
-                <app-confirm-button btnClass="btn btn-info btn-sm" [tooltip]="extendTooltip"
+                <app-confirm-button btnClass="btn btn-success btn-sm" [tooltip]="extendTooltip"
                     [disabled]="((activeChallenge.endsAt | epochMsToMsRemaining | async) || 0) > msPerHour"
                     (confirm)="extendSession(activeChallenge)">
                     Extend Session
                 </app-confirm-button>
                 <span class="mr-2"></span>
-                <app-confirm-button btnClass="btn btn-info btn-sm" (confirm)="endSession(activeChallenge)">
+                <app-confirm-button btnClass="btn btn-success btn-sm" (confirm)="endSession(activeChallenge)">
                     End Session
                 </app-confirm-button>
             </div>

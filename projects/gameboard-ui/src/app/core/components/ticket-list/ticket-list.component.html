@@ -137,9 +137,9 @@
           </div>
           <div class="text-muted">
             <span class="font-weight-bold-">{{ticket.requester?.name}}</span>
-            <span *ngIf="ticket.challenge" class="text-info cursor-pointer"
-              [appCopyOnClick]="ticket.challenge | toSupportCode" tooltip="Copy this support code">
-              &nbsp;&middot;&nbsp;
+            &nbsp;&middot;&nbsp;
+            <span *ngIf="ticket.challenge" class="btn-link" [appCopyOnClick]="ticket.challenge | toSupportCode"
+              tooltip="Copy this support code">
               {{ ticket.challenge | toSupportCode }}
             </span>
           </div>

@@ -58,6 +58,6 @@ import { Component, Input } from '@angular/core';
   ],
 })
 export class SpinnerComponent {
-  @Input() color?: string = "#3498db";
+  @Input() color?: string = "#41ad57";
   @Input() textPosition: "top" | "bottom" = "top";
 }

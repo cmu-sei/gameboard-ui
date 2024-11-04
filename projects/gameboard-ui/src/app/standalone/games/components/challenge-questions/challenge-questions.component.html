@@ -15,7 +15,7 @@
 </ng-template>
 
 <ng-template #multiSection let-context>
-    <alert type="info" *ngIf="progress?.nextSectionPreReqThisSection || progress?.nextSectionPreReqTotal"
+    <alert type="success" *ngIf="progress?.nextSectionPreReqThisSection || progress?.nextSectionPreReqTotal"
         [dismissible]="true">
         This challenge has multiple sections. To unlock the next one, you'll need to
 
@@ -52,7 +52,7 @@
                 </div>
 
                 <ng-container *ngIf="size !== 'compact'">
-                    <div *ngIf="sectionTab.section?.name" class="section-name-title fs-08 text-info text-center">
+                    <div *ngIf="sectionTab.section?.name" class="section-name-title fs-08 text-success text-center">
                         {{ sectionTab.section.name }}
                     </div>
                     <div *ngIf="!sectionTab.isAvailable" class="section-name-title fs-08 text-muted text-center">
@@ -93,7 +93,7 @@
             <li *ngFor="let question of context.section.questions; index as questionIndex" class="mb-5 d-block">
                 <div class="input-container form-group m-0 p-0">
                     <div class="d-flex align-items-center">
-                        <div class="text-info fs-20 q-label pr-2 mr-2">
+                        <div class="text-success fs-20 q-label pr-2 mr-2">
                             Q{{ questionIndex + 1 }}
                         </div>
 
@@ -138,8 +138,8 @@
                 </div>
             </div>
             <div class="flex-grow-1"></div>
-            <div *ngIf="hasSubmissionHistory" class="text-info cursor-pointer text-dashed-underline mr-4" role="button"
-                (click)="handleViewSubmissionHistory(context.id)">
+            <div *ngIf="hasSubmissionHistory" class="text-success cursor-pointer text-dashed-underline mr-4"
+                role="button" (click)="handleViewSubmissionHistory(context.id)">
                 {{ size === "compact" ? "Previous Submissions" : "See my previous submissions" }}
             </div>
             <app-confirm-button [isSubmit]="true" btnClass="btn btn-warning" [disabled]="!context.form.valid">

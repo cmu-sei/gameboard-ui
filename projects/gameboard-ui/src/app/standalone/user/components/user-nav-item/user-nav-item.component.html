@@ -12,7 +12,7 @@
             </div>
         </div>
     </button>
-    <button id="button-split" type="button" dropdownToggle class="btn btn-success dropdown-toggle dropdown-toggle-split"
+    <button type="button" dropdownToggle class="btn btn-success dropdown-toggle dropdown-toggle-split button-split"
         aria-controls="dropdown-split">
         <span class="caret"></span>
         <span class="sr-only visually-hidden">User Menu</span>
@@ -27,6 +27,9 @@
             </li>
             <li role="menuitem">
                 <a [routerLink]="profileLinks.history" class="dropdown-item">History</a>
+            </li>
+            <li *appIfHasPermission="'Admin_View'" role="menuitem">
+                <a [routerLink]="profileLinks.history" class="dropdown-item">Settings</a>
             </li>
         </ng-container>
         <li class="divider dropdown-divider"></li>

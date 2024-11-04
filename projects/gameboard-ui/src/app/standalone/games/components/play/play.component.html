@@ -61,14 +61,14 @@
 
                     <div class="d-flex align-items-baseline">
                         <div class="flex-grow-1">
-                            <button type="button" class="btn btn-info btn-sm"
+                            <button type="button" class="btn btn-success btn-sm"
                                 *ngIf="isMiniPlayerAvailable && !isMiniPlayerSelected" (click)="toggleMiniPlayer()">
                                 Use Sticky Challenge Panel
                             </button>
                         </div>
                         <div class="mr-4">
                             Support Code:
-                            <span class="text-info font-weight-bold cursor-pointer" appCopyOnClick
+                            <span class="text-success font-weight-bold cursor-pointer" appCopyOnClick
                                 tooltip="Click to copy your challenge support code">
                                 {{ { id: challenge.id } | toSupportCode }}
                             </span>
@@ -77,7 +77,7 @@
                         <div>
                             Having trouble?
 
-                            <a class="btn btn-info ml-2" target="_blank" [routerLink]="['/support/create']"
+                            <a class="btn btn-success ml-2" target="_blank" [routerLink]="['/support/create']"
                                 [queryParams]="{cid: challenge.id}">
                                 <span>Create Ticket</span>
                             </a>
@@ -166,7 +166,7 @@
 </ng-template>
 
 <ng-template #solutionGuideAlert>
-    <alert *ngIf="solutionGuide" type="info" class="my-4">
+    <alert *ngIf="solutionGuide" type="success" class="my-4">
         <h2 [class.fs-12]="isMiniPlayerSelected">Solution Guide</h2>
 
         <p>

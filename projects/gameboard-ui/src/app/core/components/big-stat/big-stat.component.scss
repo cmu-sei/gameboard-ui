@@ -10,15 +10,11 @@
   line-height: 4.2rem;
 }
 
-.stat-button .value {
-  line-height: unset;
-}
-
 .stat-button {
   cursor: pointer;
 
   .value span {
-    border-bottom: dotted 3px $info;
+    border-bottom: dotted 3px $success;
   }
 }
 

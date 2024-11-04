@@ -17,15 +17,16 @@
   <div class="filter-and-sort-container mt-3 d-flex align-items-center justify-content-center">
     <div class="btn-group d-block mr-2 button-toggle-group filter" role="group" aria-label="Filter group">
       <button type="button" class="btn btn-dark button-group-label" disabled>Filter:</button>
-      <button type="button" [class]="filter ==='elevated-role' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn'"
+      <button type="button"
+        [class]="filter ==='elevated-role' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn'"
         (click)="toggleFilter('elevated-role')">
         Has Elevated Role
       </button>
-      <button type="button" [class]="filter ==='pending' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn'"
+      <button type="button" [class]="filter ==='pending' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn'"
         (click)="toggleFilter('pending')">
         Has Pending Name
       </button>
-      <button type="button" [class]="filter ==='disallowed' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn'"
+      <button type="button" [class]="filter ==='disallowed' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn'"
         (click)="toggleFilter('disallowed')">
         Has Disallowed Name
       </button>
@@ -36,21 +37,21 @@
     <div class="btn-group d-block button-toggle-group sort" me-2 role="group" aria-label="Sort group">
       <button type="button" class="btn btn-dark button-group-label" disabled>Sort:</button>
       <button type="button"
-        [class]="search.sort ==='name' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn toggle-button'"
+        [class]="search.sort ==='name' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn toggle-button'"
         (click)="setSort('name')">
         <fa-icon [icon]="(search.sortDirection || 'asc') === 'asc' ? fa.caretUp : fa.caretDown"
           [hidden]="search.sort !== 'name'"></fa-icon>
         Name
       </button>
       <button type="button"
-        [class]="search.sort ==='lastLogin' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn toggle-button'"
+        [class]="search.sort ==='lastLogin' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn toggle-button'"
         (click)="setSort('lastLogin')">
         <fa-icon [icon]="(search.sortDirection || 'asc') === 'asc' ? fa.caretUp : fa.caretDown"
           [hidden]="search.sort !== 'lastLogin'"></fa-icon>
         Last Login
       </button>
       <button type="button"
-        [class]="search.sort ==='createdOn' | toggleClass: 'btn-info' : 'btn-outline-info': 'btn toggle-button'"
+        [class]="search.sort ==='createdOn' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn toggle-button'"
         (click)="setSort('createdOn')">
         <fa-icon [icon]="(search.sortDirection || 'asc') === 'asc' ? fa.caretUp : fa.caretDown"
           [hidden]="search.sort !== 'createdOn'"></fa-icon>
@@ -61,7 +62,7 @@
 </div>
 
 <div class="global-controls d-flex mt-3 align-items-center justify-content-end">
-  <button type="button" class="btn btn-info" (click)="handleAddUsersClick()">
+  <button type="button" class="btn btn-success" (click)="handleAddUsersClick()">
     <fa-icon [icon]="fa.plus" class="mr-2"></fa-icon>
     Add Users
   </button>
@@ -86,8 +87,8 @@
       <span class="text-muted">{{user.pendingName}}</span><br />
 
       <div class="d-flex align-items-center">
-        <div class="fs-08 mr-3 badge badge-info" *ngIf="user.role != 'member'">{{ user.role | titlecase }}</div>
-        <div class="text-info fs-08 cursor-pointer" appCopyOnClick>{{ user.id | slice:0:8 }}</div>
+        <div class="fs-08 mr-3 badge badge-success" *ngIf="user.role != 'member'">{{ user.role | titlecase }}</div>
+        <div class="btn-link fs-08" appCopyOnClick>{{ user.id | slice:0:8 }}</div>
       </div>
 
       <p *ngIf="user.lastLoginDate" class="text-muted fs-08 m-0">
@@ -101,17 +102,18 @@
       </p>
     </div>
     <app-error-div [errors]="errors"></app-error-div>
-    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="approveName(user)">
+    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-success btn-sm mx-1"
+      (click)="approveName(user)">
       <fa-icon [icon]="fa.check"></fa-icon>
       <span>Approve</span>
     </button>
-    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-info btn-sm mx-1" (click)="view(user)">
+    <button *ngIf="user.name!==user.approvedName" class="btn btn-outline-success btn-sm mx-1" (click)="view(user)">
       <fa-icon [icon]="fa.check"></fa-icon>
       <span>Disapprove</span>
     </button>
     <div class="spacer"></div>
     <div class="">
-      <button class="btn btn-outline-info btn-sm mx-1" (click)="view(user)">
+      <button class="btn btn-outline-success btn-sm mx-1" (click)="view(user)">
         <fa-icon [icon]="fa.list"></fa-icon>
         <span>View</span>
       </button>

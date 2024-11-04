@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
+import { Announcement, ApiUser, ChangedUser, NewUser, RequestNameChangeRequest, RequestNameChangeResponse, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
 import { LogService } from '@/services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
 
@@ -62,6 +62,10 @@ export class UserService {
 
   public logout(): Observable<any> {
     return this.http.post<any>(this.apiUrl.build("user/logout"), null);
+  }
+
+  public requestNameChange(userId: string, request: RequestNameChangeRequest): Promise<RequestNameChangeResponse> {
+    return firstValueFrom(this.http.put<RequestNameChangeResponse>(this.apiUrl.build(`user/${userId}/name`), request));
   }
 
   public ticket(): Observable<any> {
