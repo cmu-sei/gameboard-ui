@@ -2,7 +2,7 @@
   <nav class="d-block mb-4" aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a [routerLink]="['/practice']" class="text-info">
+        <a [routerLink]="['/practice']" class="text-success">
           <fa-icon [icon]="fa.arrowLeft"></fa-icon>
           Back to the <strong>Practice Area</strong>
         </a>
@@ -18,7 +18,7 @@
 
       <div *ngIf="!isStartingSession; else starting;"
         class="challenge-management-buttons d-flex justify-content-center">
-        <app-confirm-button *ngIf="!practiceSession" btnClass="btn btn-lg btn-info px-4 mb-4"
+        <app-confirm-button *ngIf="!practiceSession" btnClass="btn btn-lg btn-success px-4 mb-4"
           (confirm)="play({ id: spec.id, game: { id: spec.gameId}} )" class="d-block">
           <span>Start Practice Session</span>
         </app-confirm-button>
