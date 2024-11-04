@@ -15,9 +15,9 @@ import { Environment, EnvironmentSettings } from '../../environments/environment
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-
   private url = environment.settingsJson;
   private restorationComplete = false;
+
   basehref = '';
   environment: Environment = environment;
   local: LocalAppSettings = {};

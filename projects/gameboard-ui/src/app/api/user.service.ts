@@ -12,6 +12,9 @@ import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private _nameChanged$ = new Subject<RequestNameChangeResponse>();
+  public nameChanged$ = this._nameChanged$.asObservable();
+
   private _settingsUpdated$ = new Subject<UserSettings>();
   public settingsUpdated$ = this._settingsUpdated$.asObservable();
 
@@ -64,8 +67,10 @@ export class UserService {
     return this.http.post<any>(this.apiUrl.build("user/logout"), null);
   }
 
-  public requestNameChange(userId: string, request: RequestNameChangeRequest): Promise<RequestNameChangeResponse> {
-    return firstValueFrom(this.http.put<RequestNameChangeResponse>(this.apiUrl.build(`user/${userId}/name`), request));
+  public async requestNameChange(userId: string, request: RequestNameChangeRequest): Promise<RequestNameChangeResponse> {
+    const response = await firstValueFrom(this.http.put<RequestNameChangeResponse>(this.apiUrl.build(`user/${userId}/name`), request).pipe());
+    this._nameChanged$.next(response);
+    return response;
   }
 
   public ticket(): Observable<any> {

@@ -16,7 +16,7 @@
   </div>
   <div class="filter-and-sort-container mt-3 d-flex align-items-center justify-content-center">
     <div class="btn-group d-block mr-2 button-toggle-group filter" role="group" aria-label="Filter group">
-      <button type="button" class="btn btn-dark button-group-label" disabled>Filter:</button>
+      <button type="button" class="btn btn-dark button-group-label text-upper fw-bold" disabled>Filter:</button>
       <button type="button"
         [class]="filter ==='elevated-role' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn'"
         (click)="toggleFilter('elevated-role')">
@@ -35,7 +35,7 @@
     <div class="spacer"></div>
 
     <div class="btn-group d-block button-toggle-group sort" me-2 role="group" aria-label="Sort group">
-      <button type="button" class="btn btn-dark button-group-label" disabled>Sort:</button>
+      <button type="button" class="btn btn-dark button-group-label text-upper fw-bold" disabled>Sort:</button>
       <button type="button"
         [class]="search.sort ==='name' | toggleClass: 'btn-success' : 'btn-outline-success': 'btn toggle-button'"
         (click)="setSort('name')">
@@ -76,7 +76,8 @@
 
 <ng-container *ngIf="source$ | async as list; else loading">
   <small class="text-warning d-block mx-2 mb-2">count: {{list.length}}</small>
-  <div *ngFor="let user of list" class="d-flex p-3 flex-wrap align-items-center bg-secondary rounded">
+  <div *ngFor="let user of list" class="d-flex p-3 flex-wrap align-items-center bg-secondary rounded"
+    [class.selected]="viewed === user">
     <div class="user-avatar-container mr-2">
       <app-avatar [imageUrl]="user.sponsor | sponsorToLogoUri">
         {{ user.sponsor.name }}
@@ -144,7 +145,7 @@
       </div>
 
       <div *appIfHasPermission="'Users_EditRoles'" class="role-info mb-4">
-        <h5>Roles</h5>
+        <h5>Role</h5>
 
         <div>
           <select class="form-control" [(ngModel)]="user.role" (change)="update(user)">

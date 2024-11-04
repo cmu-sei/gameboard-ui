@@ -1,7 +1,10 @@
 <h2 class="my-4">Permissions</h2>
 
 <ng-container *ngIf="appPermissionsOverview; else loading">
-    <div class="my-3">Your role is <strong class="text-info">{{ appPermissionsOverview.yourRole | titlecase }}</strong>.
+    <div class="my-3">Your role is
+        <strong class="text-success">
+            {{ appPermissionsOverview.yourRole | titlecase }}
+        </strong>.
     </div>
 
     <table class="table gameboard-table">

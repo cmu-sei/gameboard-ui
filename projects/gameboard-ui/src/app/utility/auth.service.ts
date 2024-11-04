@@ -74,6 +74,11 @@ export class AuthService {
       .replace(/login$/, '')
       .replace(/forbidden$/, '');
 
+    // prevent redirect loops
+    if (redirectUrl && redirectUrl.indexOf("login") >= 0) {
+      redirectUrl = "/";
+    }
+
     this.expireToken();
     await this.mgr.signinRedirect({ state: { redirectTo: redirectUrl || currentUrl } });
   }

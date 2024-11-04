@@ -2,22 +2,23 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <div *ngIf="currentUser$ | async as currentUser; else loading" class="container">
-    <div class="w-75 d-inline-block">
-        <h2>Your display name</h2>
+    <h2>Your display name</h2>
 
+    <ng-container *ngIf="nameChangeEnabled; else noNameChanges">
         <div>
-            Choose a <em>default</em> name for public display that is suitable for all audiences. This name will apply
-            to <em>all new games</em>, but you can customize it during registration.
+            Choose a <em>default</em> name for public display that is suitable for all audiences. This name will
+            apply to <em>all new games</em>, but you can customize it during registration.
         </div>
 
         <ng-container *ngIf="currentUser.name && currentUser.name !== currentUser.approvedName">
             <ng-container *ngIf="currentUser.nameStatus == 'pending' && currentUser.name != disallowedName">
-                <div class="alert alert-info">
+                <div class="alert alert-warning my-3">
                     <h3>Name change pending</h3>
 
                     <p class="m-0">
                         Your request to change your display name to <strong>{{currentUser.name}}</strong> is pending
-                        approval from an administrator. Return later or select 'Refresh' to see if it's been approved.
+                        approval from an administrator. Return later or select 'Refresh' to see if it's been
+                        approved.
                     </p>
 
                     <p class="mt-3">
@@ -31,36 +32,39 @@
             </ng-container>
             <ng-container *ngIf="currentUser.nameStatus && currentUser.nameStatus != 'pending'">
                 <div class="alert alert-danger">
-                    Your name was rejected by an administrator for the following reason:<br>
-                    <strong>{{currentUser.nameStatus}}</strong><br>
-                    Please change it and try again.
+                    Your name was rejected by an administrator for the following reason:
+
+                    <p>
+                        <strong>{{currentUser.nameStatus}}:</strong>
+                        Please change it and try again.
+                    </p>
                 </div>
             </ng-container>
         </ng-container>
-    </div>
 
-    <div class="row">
-        <div class="form-group w-25 d-inline-block">
-            <label for="nameInput">Requested Display Name</label>
-            <input id="nameInput" class="form-control" [(ngModel)]="currentUser.name"
-                (input)="updateUserName(currentUser.name)" placeholder="display name" maxlength="64" required>
-        </div>
-        <ng-container>
+        <div class="row">
             <div class="form-group w-25 d-inline-block">
-                <label for="">Approved Display Name</label>
-                <span class="form-control bg-light text-dark">{{currentUser.approvedName}}</span>
+                <label for="nameInput">Requested Display Name</label>
+                <input id="nameInput" class="form-control" [(ngModel)]="currentUser.name" #nameInput
+                    (input)="changeNameInput$.next(nameInput.value)" placeholder="display name" maxlength="64" required>
             </div>
+            <ng-container>
+                <div class="form-group w-25 d-inline-block">
+                    <label for="">Approved Display Name</label>
+                    <span class="form-control bg-light text-dark">{{currentUser.approvedName}}</span>
+                </div>
 
-            <div class="form-group w-25 d-inline-block d-flex align-items-end">
-                <button class="btn btn-secondary" (click)="refresh()">
-                    <fa-icon [icon]="faSync"></fa-icon>
-                    <span>Refresh</span>
-                </button>
-            </div>
-        </ng-container>
-    </div>
+                <div class="form-group w-25 d-inline-block d-flex align-items-end">
+                    <button class="btn btn-secondary" (click)="handleRefresh()">
+                        <fa-icon [icon]="fa.sync"></fa-icon>
+                        <span>Refresh</span>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
 
-    <div class="mt-4">
+    <div class="mt-5">
         <h2>Your sponsoring organization</h2>
 
         <ng-container *ngIf="!currentUser.sponsor || currentUser.hasDefaultSponsor">
@@ -76,4 +80,18 @@
 
 <ng-template #loading>
     <app-spinner>Loading your profile...</app-spinner>
+</ng-template>
+
+<ng-template #noNameChanges>
+    <div class="mt-3">
+        {{ (currentUser$ | async)?.approvedName }}
+
+        <hr class="light">
+
+        <div class="text-muted">
+            <strong>NOTE:</strong> Your name on {{appName}} is managed by the system administrators. Contact them to
+            request
+            a change.
+        </div>
+    </div>
 </ng-template>

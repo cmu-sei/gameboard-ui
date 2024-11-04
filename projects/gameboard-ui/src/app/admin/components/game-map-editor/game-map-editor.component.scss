@@ -13,10 +13,10 @@ circle {
 .spec-circle {
   fill: $secondary;
   fill-opacity: 0.6;
-  stroke: $info;
+  stroke: $success;
   stroke-width: 0.25;
 
   &.active {
-    fill: $info;
+    fill: $success;
   }
 }

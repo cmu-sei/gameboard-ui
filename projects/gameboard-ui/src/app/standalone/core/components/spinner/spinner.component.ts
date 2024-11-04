@@ -53,7 +53,7 @@ import { Component, Input } from '@angular/core';
     </ng-template>
   `,
   styles: [
-    ".spinner-component { width: 100%; text-align: center; }",
+    ".spinner-component { width: 100%; text-align: center; margin: 0 auto; }",
     "h1 { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; }"
   ],
 })

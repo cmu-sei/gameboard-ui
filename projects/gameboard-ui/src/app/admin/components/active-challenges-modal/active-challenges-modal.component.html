@@ -37,7 +37,7 @@
                                 <h5 class="overflow-ellipsis">
                                     {{ challenge.team.name }}
                                 </h5>
-                                <button type="button" class="btn btn-link text-info" appCopyOnClick
+                                <button type="button" class="btn btn-link text-success" appCopyOnClick
                                     tooltip="Copy this support code" placement="bottom">
                                     {{ {id: challenge.id, tag: spec.tag } | toSupportCode }}
                                 </button>
@@ -48,8 +48,9 @@
                                     </div>
                                     <div class="end-time">
                                         <span class="fw-bold">Session End: </span>
-                                        <span>{{ challenge.team.session.end | datetimeToDate | friendlyDateAndTime
-                                            }}</span>
+                                        <span>
+                                            {{ challenge.team.session.end | datetimeToDate | friendlyDateAndTime }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
