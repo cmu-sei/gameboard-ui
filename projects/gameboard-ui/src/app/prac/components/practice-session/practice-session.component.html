@@ -14,8 +14,6 @@
 
   <ng-container *ngIf="authed$ | async; else unauthed">
     <div *ngIf="spec$ | async as spec; else loading">
-      <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
-
       <div *ngIf="!isStartingSession; else starting;"
         class="challenge-management-buttons d-flex justify-content-center">
         <app-confirm-button *ngIf="!practiceSession" btnClass="btn btn-lg btn-success px-4 mb-4"
@@ -28,6 +26,8 @@
           Stop your current challenge and play this one instead
         </button>
       </div>
+
+      <markdown *ngIf="showSpecMarkdown" [data]="spec.text" class="d-block mb-5"></markdown>
 
       <app-play *ngIf="!isPlayingOtherChallenge && practiceSession && (spec$ | async) as spec" [challengeSpec]="spec"
         [autoPlay]="true" [playerId]="practiceSession.playerId"></app-play>

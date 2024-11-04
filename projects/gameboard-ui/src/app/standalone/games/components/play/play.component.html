@@ -133,14 +133,13 @@
 
             <ul class="support-links li-style-type-circle">
                 <li>
-                    <a class="text-info" target="_blank" [routerLink]="['/support/create']"
-                        [queryParams]="{cid: challenge.id}">
+                    <a target="_blank" [routerLink]="['/support/create']" [queryParams]="{cid: challenge.id}">
                         <span>Open a ticket</span>
                     </a>
                 </li>
                 <li>
                     If you need it, your support code is
-                    <span class="text-info fw-bold cursor-pointer" appCopyOnClick>
+                    <span class="btn-link" appCopyOnClick>
                         {{ { id: challenge.id } | toSupportCode }}
                     </span>
                 </li>
