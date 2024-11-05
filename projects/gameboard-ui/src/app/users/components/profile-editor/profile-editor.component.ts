@@ -34,7 +34,6 @@ export class ProfileEditorComponent implements OnInit {
     private settings: SettingsService,
     private unsub: UnsubscriberService,
   ) {
-
     this.currentUser$ = this.localUser.user$;
     this.unsub.add(this.api.nameChanged$.subscribe(change => {
       this.localUser.refresh();

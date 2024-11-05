@@ -124,7 +124,6 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
-import { UserNavItemComponent } from '@/standalone/user/components/user-nav-item/user-nav-item.component';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,

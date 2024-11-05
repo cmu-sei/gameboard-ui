@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TocFile, TocService } from '@/api/toc.service';
 import { ApiUser } from '@/api/user-models';
@@ -6,6 +6,8 @@ import { UserService as LocalUser } from '@/utility/user.service';
 import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { fa } from '@/services/font-awesome.service';
+import { AuthService } from '@/utility/auth.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-nav',
@@ -14,6 +16,9 @@ import { fa } from '@/services/font-awesome.service';
   providers: [UnsubscriberService]
 })
 export class AppNavComponent implements OnInit {
+  private authService = inject(AuthService);
+  private routerService = inject(RouterService);
+
   user$!: Observable<ApiUser | null>;
   toc$!: Observable<TocFile[]>;
   customBackground = "";

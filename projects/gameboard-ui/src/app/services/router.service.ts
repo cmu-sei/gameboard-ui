@@ -2,13 +2,13 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { ReportKey } from '@/reports/reports-models';
-import { ObjectService } from './object.service';
 import { PlayerMode } from '@/api/player-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/../tools/functions";
 import { GameCenterTab } from '@/admin/components/game-center/game-center.models';
 import { SimpleEntity } from '@/api/models';
+import { WindowService } from './window.service';
 
 export interface QueryParamsUpdate {
   parameters?: Params,
@@ -24,7 +24,7 @@ export class RouterService implements OnDestroy {
     private localUser: LocalUser,
     public route: ActivatedRoute,
     private router: Router,
-    private objectService: ObjectService) { }
+    private windowService: WindowService) { }
 
   public getCurrentPathBase(): string {
     const urlTree = this.router.parseUrl(this.router.url);
