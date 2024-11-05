@@ -8,7 +8,7 @@ import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/../tools/functions";
 import { GameCenterTab } from '@/admin/components/game-center/game-center.models';
 import { SimpleEntity } from '@/api/models';
-import { WindowService } from './window.service';
+import { ObjectService } from './object.service';
 
 export interface QueryParamsUpdate {
   parameters?: Params,
@@ -22,9 +22,9 @@ export class RouterService implements OnDestroy {
   constructor(
     private config: ConfigService,
     private localUser: LocalUser,
+    private objectService: ObjectService,
     public route: ActivatedRoute,
-    private router: Router,
-    private windowService: WindowService) { }
+    private router: Router) { }
 
   public getCurrentPathBase(): string {
     const urlTree = this.router.parseUrl(this.router.url);
