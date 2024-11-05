@@ -8,14 +8,13 @@ import { RouterModule } from '@angular/router';
 import { OidcComponent } from './oidc/oidc.component';
 import { LandingComponent } from './landing/landing.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UtilityModule } from '../utility/utility.module';
 import { CoreModule } from '../core/core.module';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { MarkdownModule } from 'ngx-markdown';
-import { FormsModule } from '@angular/forms';
 import { TocPageComponent } from './toc-page/toc-page.component';
 import { RegistrationTypeToIsOpenPipe } from './pipes/registration-type-to-is-open.pipe';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -42,11 +41,12 @@ import { RegistrationTypeToIsOpenPipe } from './pipes/registration-type-to-is-op
       },
       { path: '**', redirectTo: '/home' }
     ]),
-    FormsModule,
     CoreModule,
     UtilityModule,
-    FontAwesomeModule,
-    MarkdownModule,
+
+    // standalones
+    ErrorDivComponent,
+    SpinnerComponent,
   ]
 })
 export class HomeModule { }

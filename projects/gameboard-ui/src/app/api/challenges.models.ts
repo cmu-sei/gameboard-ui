@@ -1,7 +1,6 @@
-import { ApiTimeWindow, LocalTimeWindow } from "@/core/models/api-time-window";
-import { PlayerMode } from "./player-models";
-import { VmState } from "./board-models";
+import { DateTime } from "luxon";
 import { SimpleEntity } from "./models";
+import { PlayerMode } from "./player-models";
 
 export interface ChallengeSolutionGuide {
     challengeSpecId: string;
@@ -9,39 +8,77 @@ export interface ChallengeSolutionGuide {
     url: string;
 }
 
-export interface ActiveChallenge {
-    id: string;
-    spec: {
-        id: string;
-        name: string;
-        tag: string;
-        averageDeploySeconds: number;
-    };
-    game: SimpleEntity;
-    player: SimpleEntity;
+export interface GetUserActiveChallengesResponse {
     user: SimpleEntity;
-    challengeDeployment: {
-        challengeId: string,
-        isDeployed: boolean;
-        markdown: string;
-        vms: VmState[]
-    };
-    teamId: string;
-    playerMode: PlayerMode;
+    challenges: UserActiveChallenge[];
+}
+
+export interface UserActiveChallenge {
+    id: string;
+    name: string;
+    spec: SimpleEntity;
+    endsAt?: number;
+    mode: PlayerMode;
+    game: SimpleEntity;
+    team: SimpleEntity;
+    isDeployed: boolean;
+    markdown?: string;
     scoreAndAttemptsState: {
-        score: number;
-        maxPossibleScore: number;
         attempts: number;
         maxAttempts?: number;
+        score: number;
+        maxPossibleScore: number;
+    };
+    vms: UserActiveChallengeVm[];
+}
+
+export interface UserActiveChallengeVm {
+    id: string;
+    name: string;
+}
+
+export interface ChallengeProgressResponse {
+    progress: ChallengeProgressView;
+    spec: SimpleEntity;
+    team: SimpleEntity;
+}
+
+export interface ChallengeProgressView {
+    id: string;
+    attempts: number;
+    expiresAtTimestamp: number;
+    lastScoreTime?: DateTime;
+    maxAttempts: number;
+    maxPoints: number;
+    nextSectionPreReqThisSection?: number;
+    nextSectionPreReqTotal?: number;
+    score: number;
+    text: string;
+    variant: {
+        text: string;
+        totalSectionCount: number;
+        sections: ChallengeProgressViewSection[];
     }
 }
 
-export interface ApiActiveChallenge extends ActiveChallenge {
-    session: ApiTimeWindow;
-}
-
-export interface LocalActiveChallenge extends ActiveChallenge {
-    session: LocalTimeWindow;
+export interface ChallengeProgressViewSection {
+    name?: string;
+    preReqPrevSection: number;
+    preReqTotal: number;
+    score: number;
+    scoreMax: number;
+    text?: string;
+    totalWeight: number;
+    questions: {
+        answer: string;
+        example?: string;
+        hint?: string;
+        isCorrect: boolean;
+        isGraded: boolean;
+        scoreCurrent: number;
+        scoreMax: number;
+        weight: number;
+    }[]
 }
 
 export interface ChallengeSubmissionAnswers {
@@ -49,27 +86,26 @@ export interface ChallengeSubmissionAnswers {
     answers: string[];
 }
 
-export interface ChallengeSubmissionViewModel {
+export interface ChallengeSubmissionViewModelLegacy {
     sectionIndex: number;
     answers: string[];
     submittedOn: Date;
 }
 
-export interface GetChallengeSubmissionsResponse {
+export interface ChallengeSubmissionHistory {
+    challengeId: string;
+    teamId: string;
+    sectionSubmissions: {
+        [sectionIndex: number]: {
+            answers: string[];
+            submittedAt: number;
+        }[]
+    }
+}
+
+export interface GetChallengeSubmissionsResponseLegacy {
     challengeId: string;
     teamId: string;
     pendingAnswers: ChallengeSubmissionAnswers | null;
-    submittedAnswers: ChallengeSubmissionViewModel[];
-}
-
-export interface UserApiActiveChallenges {
-    user: SimpleEntity;
-    competition: ApiActiveChallenge[];
-    practice: ApiActiveChallenge[];
-}
-
-export interface UserActiveChallenges {
-    user: SimpleEntity;
-    competition: LocalActiveChallenge[];
-    practice: LocalActiveChallenge[];
+    submittedAnswers: ChallengeSubmissionViewModelLegacy[];
 }

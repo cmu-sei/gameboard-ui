@@ -67,7 +67,7 @@
                         <input type="datetime" placeholder="Leave blank for permanent access" [minDate]="minDate"
                             [(ngModel)]="newApiKey.expiresOn" class="form-control" bsDatepicker>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-info" (click)="newApiKey.expiresOn = undefined">
+                            <button type="button" class="btn btn-success" (click)="newApiKey.expiresOn = undefined">
                                 <fa-icon [icon]="clearIcon"></fa-icon>
                             </button>
                         </div>

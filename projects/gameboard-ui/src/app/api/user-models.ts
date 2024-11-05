@@ -15,7 +15,6 @@ export interface ApiUser {
   createdOn: Date;
   lastLoginDate?: Date;
   loginCount: number;
-  pendingName: string;
   role: UserRoleKey;
   rolePermissions: UserRolePermissionKey[]
 }
@@ -26,9 +25,6 @@ export interface NewUser {
 
 export interface ChangedUser {
   id: string;
-  name?: string;
-  approvedName?: string;
-  nameStatus?: string;
   sponsorId?: string;
   role?: UserRoleKey;
 }
@@ -70,6 +66,17 @@ export interface TreeNode {
 export interface Announcement {
   teamId?: string;
   message: string;
+}
+
+export interface RequestNameChangeRequest {
+  requestedName: string;
+  status?: string;
+}
+
+export interface RequestNameChangeResponse {
+  userId: string;
+  name: string;
+  status: string;
 }
 
 export interface TryCreateUsersRequest {

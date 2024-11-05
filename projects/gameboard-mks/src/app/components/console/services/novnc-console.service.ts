@@ -65,7 +65,6 @@ export class NoVNCConsoleService implements ConsoleService {
   copy(): void { }
 
   async paste(text: string): Promise<void> {
-    console.log(text);
     this.client.clipboardPasteFrom(text);
   }
 

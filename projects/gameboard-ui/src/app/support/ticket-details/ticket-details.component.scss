@@ -124,11 +124,11 @@ textarea {
   opacity: 20%;
 }
 
-.btn-info:disabled {
+.btn-success:disabled {
   background-color: rgb(108, 117, 125);
   border-color: rgb(108, 117, 125);
 }
 
 .copy-id-button {
-  color: $info;
+  color: $success;
 }

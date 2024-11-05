@@ -17,7 +17,7 @@
 }
 
 .has-permission {
-  color: $info;
+  color: $success;
 }
 
 .no-permission {
@@ -25,7 +25,7 @@
 }
 
 .your-role {
-  background-color: $info;
+  background-color: $success;
 
   .has-permission {
     color: $foreground;
@@ -37,7 +37,7 @@
 }
 
 .sticky-header {
-  top: 60px;
+  top: 50px;
   left: 0px;
   position: sticky;
   z-index: 999;

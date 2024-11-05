@@ -38,7 +38,7 @@
         </div>
         <div *ngIf="ctx.playerIsManager && !teamMember.isManager" class="controls mb-3"
           [tooltip]="'Promote ' + teamMember.approvedName + ' to team manager'">
-          <app-confirm-button btnClass="btn btn-info my-2" (confirm)="promoteToManager(ctx.player, teamMember.id)">
+          <app-confirm-button btnClass="btn btn-success my-2" (confirm)="promoteToManager(ctx.player, teamMember.id)">
             <fa-icon [icon]="promoteIcon"></fa-icon>
             <span>Promote</span>
           </app-confirm-button>

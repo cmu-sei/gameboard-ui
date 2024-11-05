@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 // ngx bootstrap
@@ -41,7 +41,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { AvatarChipComponent } from './components/avatar-chip/avatar-chip.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { BigStatComponent } from './components/big-stat/big-stat.component';
-import { CamelspacePipe } from './pipes/camelspace.pipe';
 import { CanPipe } from "./pipes/can.pipe";
 import { ChallengeResultColorPipe } from './pipes/challenge-result-color.pipe';
 import { ChallengeResultPrettyPipe } from './pipes/challenge-result-pretty.pipe';
@@ -63,7 +62,6 @@ import { DelimitedPipe } from './pipes/delimited.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { EpochMsToDateTimePipe as EpochMsToDateTimePipe } from './pipes/epoch-ms-to-datetime.pipe';
-import { ErrorDivComponent } from './components/error-div/error-div.component';
 import { FeedbackFormComponent } from './components/feedback-form/feedback-form.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
@@ -71,7 +69,6 @@ import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { GameCardImageComponent } from './components/game-card-image/game-card-image.component';
 import { GbProgressBarComponent } from './components/progress-bar/progress-bar.component';
-import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
@@ -99,7 +96,6 @@ import { ShareButtonComponent } from './components/share-button/share-button.com
 import { ShortDatePipe } from './pipes/short-date.pipe';
 import { SimpleEntitiesToTooltipPipe } from './pipes/simple-entities-to-tooltip.pipe';
 import { SortPipe } from './pipes/sort.pipe';
-import { SpinnerComponent } from './components/spinner/spinner.component';
 import { SponsoredEntitiesToSponsorsPipe } from './pipes/sponsored-entities-to-sponsors.pipe';
 import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
 import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
@@ -109,7 +105,6 @@ import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToColorPipe } from './pipes/text-to-color.pipe';
 import { TicketListComponent } from './components/ticket-list/ticket-list.component';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
-import { ToSupportCodePipe } from './pipes/to-support-code.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
 import { ToggleSwitchComponent } from './components/toggle-switch/toggle-switch.component';
 import { ToTemplateContextPipe } from './pipes/to-template-context.pipe';
@@ -125,7 +120,10 @@ import { AuthInterceptor } from '@/utility/auth.interceptor';
 import { ObserverConsoleComponent } from './components/observer-console/observer-console.component';
 import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
 import { GameMapImageUrlPipe } from './pipes/game-map-image-url.pipe';
-import { UserNavItemComponent } from '@/standalone/user/components/user-nav-item/user-nav-item.component';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
+import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -141,7 +139,6 @@ const PUBLIC_DECLARATIONS = [
   AvatarComponent,
   AvatarChipComponent,
   BigStatComponent,
-  CamelspacePipe,
   CanPipe,
   ChallengeResultColorPipe,
   ChallengeResultPrettyPipe,
@@ -160,7 +157,6 @@ const PUBLIC_DECLARATIONS = [
   DoughnutChartComponent,
   DropzoneComponent,
   EpochMsToDateTimePipe,
-  ErrorDivComponent,
   FeedbackFormComponent,
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
@@ -185,7 +181,6 @@ const PUBLIC_DECLARATIONS = [
   RefreshIframeOnReconnectDirective,
   RelativeUrlsPipe,
   RenderLinksInTextComponent,
-  SpinnerComponent,
   TicketListComponent,
   ToggleSwitchComponent,
   TrimPipe,
@@ -207,7 +202,6 @@ const PUBLIC_DECLARATIONS = [
   ShortDatePipe,
   SimpleEntitiesToTooltipPipe,
   SortPipe,
-  SpinnerComponent,
   SponsoredEntitiesToSponsorsPipe,
   SponsorToLogoUriPipe,
   SponsorsToLogoUrisPipe,
@@ -216,7 +210,6 @@ const PUBLIC_DECLARATIONS = [
   SumArrayPipe,
   TextToColorPipe,
   ToggleClassPipe,
-  ToSupportCodePipe,
   ToTemplateContextPipe,
   TicketLabelPickerComponent,
   TicketListComponent,
@@ -241,6 +234,7 @@ const RELAYED_MODULES = [
   ModalModule,
   NgChartsModule,
   PopoverModule,
+  ReactiveFormsModule,
   RouterModule,
   TabsModule,
   TooltipModule,
@@ -265,7 +259,6 @@ const RELAYED_MODULES = [
   ],
   imports: [
     CommonModule,
-    FormsModule,
     HttpClientModule,
     ProgressbarModule,
     TooltipModule,
@@ -279,7 +272,12 @@ const RELAYED_MODULES = [
     PopoverModule.forRoot(),
     TypeaheadModule.forRoot(),
     ...RELAYED_MODULES,
-    IfHasPermissionDirective
+
+    // standalones
+    ErrorDivComponent,
+    IfHasPermissionDirective,
+    SpinnerComponent,
+    ToSupportCodePipe
   ],
   exports: [
     CommonModule,

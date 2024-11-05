@@ -1,8 +1,15 @@
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, map, timer } from 'rxjs';
 
 @Component({
   selector: 'app-challenge-deploy-countdown',
+  standalone: true,
+  imports: [
+    CommonModule,
+    SpinnerComponent
+  ],
   template: `
     <app-spinner textPosition="bottom">
       <ng-container>

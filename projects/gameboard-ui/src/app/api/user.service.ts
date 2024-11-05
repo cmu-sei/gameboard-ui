@@ -6,12 +6,15 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { Announcement, ApiUser, ChangedUser, NewUser, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
+import { Announcement, ApiUser, ChangedUser, NewUser, RequestNameChangeRequest, RequestNameChangeResponse, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
 import { LogService } from '@/services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private _nameChanged$ = new Subject<RequestNameChangeResponse>();
+  public nameChanged$ = this._nameChanged$.asObservable();
+
   private _settingsUpdated$ = new Subject<UserSettings>();
   public settingsUpdated$ = this._settingsUpdated$.asObservable();
 
@@ -50,9 +53,9 @@ export class UserService {
     return firstValueFrom(this.http.post<TryCreateUsersResponse>(this.apiUrl.build("users"), req));
   }
 
-  public update(model: ChangedUser, disallowedName: string | null = null): Observable<ApiUser> {
+  public update(model: ChangedUser): Observable<ApiUser> {
     return this.http.put<any>(this.apiUrl.build("user"), model).pipe(
-      map(r => this.transform(r as ApiUser, disallowedName)),
+      map(r => this.transform(r as ApiUser)),
     );
   }
 
@@ -62,6 +65,12 @@ export class UserService {
 
   public logout(): Observable<any> {
     return this.http.post<any>(this.apiUrl.build("user/logout"), null);
+  }
+
+  public async requestNameChange(userId: string, request: RequestNameChangeRequest): Promise<RequestNameChangeResponse> {
+    const response = await firstValueFrom(this.http.put<RequestNameChangeResponse>(this.apiUrl.build(`user/${userId}/name`), request).pipe());
+    this._nameChanged$.next(response);
+    return response;
   }
 
   public ticket(): Observable<any> {
@@ -119,18 +128,11 @@ export class UserService {
     this.toNode(folder, path);
   }
 
-  private transform(user: ApiUser, disallowedName: string | null = null): ApiUser {
+  private transform(user: ApiUser): ApiUser {
     // If the user has no name status but they changed their name, it's pending approval
     if (!user.nameStatus && user.approvedName !== user.name) {
       user.nameStatus = 'pending';
     }
-    // Otherwise, if the user entered a name and an admin rejected it, but the new name entered is different, it's pending
-    else if (user.nameStatus != 'pending' && disallowedName && disallowedName !== user.name) {
-      user.nameStatus = 'pending';
-    }
-
-    user.pendingName = user.approvedName !== user.name
-      ? user.name + (!!user.nameStatus ? `...${user.nameStatus}` : '...pending') : '';
 
     return user;
   }

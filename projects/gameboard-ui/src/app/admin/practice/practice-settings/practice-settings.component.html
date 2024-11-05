@@ -21,7 +21,7 @@
 
         <p>
             These terms also "filter" the list of tags applied to the challenges.
-            <span class="link-button" role="button" (click)="handleShowSuggestedSearchesNote()">Click here</span>
+            <span class="btn-link" role="button" (click)="handleShowSuggestedSearchesNote()">Click here</span>
             for more information.
         </p>
 
@@ -42,7 +42,7 @@
         <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
             [placeholder]="certificateHtmlPlaceholder" [(ngModel)]="ctx.settings.certificateHtmlTemplate"
             rows="5"></textarea>
-        <button type="button" class="btn btn-link text-info" (click)="handleShowCertificateTemplateHelp()">
+        <button type="button" class="btn btn-link text-success" (click)="handleShowCertificateTemplateHelp()">
             How do I create a certificate template?
         </button>
     </div>
@@ -63,13 +63,13 @@
         <div class="concurrent-session-controls-container d-flex">
             <div class="form-group pl-0">
                 <label for="maxConcurrentUsers">Maximum Concurrent Users</label>
-                <input type="number" class="form-control" name="maxConcurrentUsers"
-                    placeholder="Leave blank for no maximum" min="0" (input)="handleSettingsChanged(ctx.settings)"
+                <input type="number" class="form-control" name="maxConcurrentUsers" placeholder="No maximum" min="0"
+                    (input)="handleSettingsChanged(ctx.settings)"
                     [(ngModel)]="ctx.settings.maxConcurrentPracticeSessions">
             </div>
 
             <div class="form-group">
-                <label for="defaultSessionLength">Default Session Length (in Minutes)</label>
+                <label for="defaultSessionLength">Default Session Length (minutes)</label>
                 <input type="number" class="form-control" name="defaultSessionLength" min="5" required
                     (change)="handleSettingsChanged(ctx.settings)"
                     [popover]="'The default session length is required and defaults to 60 minutes if unset.'"
@@ -78,10 +78,16 @@
             </div>
 
             <div class="form-group">
-                <label for="maxSessionLength">Maximum Session Length (in Minutes)</label>
-                <input type="number" class="form-control" name="maxSessionLength"
-                    placeholder="Leave blank for no maximum" min="5" (change)="handleSettingsChanged(ctx.settings)"
+                <label for="maxSessionLength">Maximum Session Length (minutes)</label>
+                <input type="number" class="form-control" name="maxSessionLength" placeholder="No maximum" min="5"
+                    (change)="handleSettingsChanged(ctx.settings)"
                     [(ngModel)]="ctx.settings.maxPracticeSessionLengthMinutes">
+            </div>
+
+            <div class="form-group">
+                <label for="attemptLimit">Attempt Limit</label>
+                <input type="number" class="form-control" min="1" placeholder="Infinite attempts"
+                    (change)="handleSettingsChanged(ctx.settings)" [(ngModel)]="ctx.settings.attemptLimit">
             </div>
         </div>
     </div>

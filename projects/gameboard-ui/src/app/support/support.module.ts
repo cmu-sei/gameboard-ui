@@ -20,6 +20,9 @@ import { EventHorizonModule } from '@/event-horizon/event-horizon.module';
 import { TicketLabelPickerModalComponent } from './components/ticket-label-picker-modal/ticket-label-picker-modal.component';
 import { TicketListPageComponent } from './components/ticket-list-page/ticket-list-page.component';
 import { RouterModule } from '@angular/router';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
 
 @NgModule({
   declarations: [
@@ -51,7 +54,12 @@ import { RouterModule } from '@angular/router';
     ButtonsModule,
     ModalModule,
     TooltipModule,
-    EventHorizonModule
+    EventHorizonModule,
+
+    // imported standalones
+    ErrorDivComponent,
+    SpinnerComponent,
+    ToSupportCodePipe
   ],
 })
 export class SupportModule { }

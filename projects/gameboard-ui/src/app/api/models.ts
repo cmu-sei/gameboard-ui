@@ -12,11 +12,6 @@ export interface DateTimeRange {
   end?: DateTime;
 }
 
-export interface EpochTimeRange {
-  start?: number;
-  end?: number;
-}
-
 export interface Search {
   term?: string;
   sort?: string;
@@ -69,6 +64,11 @@ export interface SimpleSponsor {
 export interface SimpleEntity {
   id: string;
   name: string;
+}
+
+export interface TimestampRange {
+  start?: number;
+  end?: number;
 }
 
 export interface ApiError {

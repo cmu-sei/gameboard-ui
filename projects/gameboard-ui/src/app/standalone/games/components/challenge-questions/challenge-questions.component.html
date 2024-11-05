@@ -1,0 +1,163 @@
+<div class="challenge-questions-component">
+    <ng-container *ngIf="progress && !isGrading; else loading">
+        <ng-container
+            *ngTemplateOutlet="progress.variant.totalSectionCount == 1 ? singleSection : multiSection; context: { $implicit: sectionTabs }">
+        </ng-container>
+    </ng-container>
+</div>
+
+<ng-template #loading>
+    <app-spinner>Loading your challenge...</app-spinner>
+</ng-template>
+
+<ng-template #singleSection let-context>
+    <ng-container *ngTemplateOutlet="challengeSection; context: { $implicit: context[0] }"></ng-container>
+</ng-template>
+
+<ng-template #multiSection let-context>
+    <alert type="success" *ngIf="progress?.nextSectionPreReqThisSection || progress?.nextSectionPreReqTotal"
+        [dismissible]="true">
+        This challenge has multiple sections. To unlock the next one, you'll need to
+
+        <ng-container *ngIf="progress?.nextSectionPreReqThisSection && progress?.nextSectionPreReqTotal">
+            <ul>
+                <li *ngIf="progress!.nextSectionPreReqThisSection">
+                    Score at least <strong>{{ progress!.nextSectionPreReqThisSection }}</strong> points on the
+                    current section.
+                </li>
+                <li *ngIf="progress!.nextSectionPreReqTotal">
+                    Score at least <strong>{{ progress!.nextSectionPreReqTotal }}</strong> points total.
+                    <span><em>(You currently have {{ progress!.score }} points.)</em></span>
+                </li>
+            </ul>
+        </ng-container>
+
+        <span *ngIf="progress!.nextSectionPreReqThisSection">
+            score at least <strong>{{ progress?.nextSectionPreReqThisSection }}</strong> points on the
+            current section.
+        </span>
+
+        <span *ngIf="progress!.nextSectionPreReqTotal">
+            score at least <strong>{{ progress!.nextSectionPreReqTotal }}</strong> points total.
+            <span><em>(You currently have {{ progress!.score }} points.)</em></span>
+        </span>
+    </alert>
+
+    <tabset *ngIf="progress">
+        <tab *ngFor="let sectionTab of context; index as i" (selectTab)="handleSectionSelect(i)"
+            [active]="selectedSectionIndex === i">
+            <ng-template tabHeading>
+                <div class="section-number-title text-center" [class.text-muted]="!sectionTab.isAvailable">
+                    {{ (size === "compact" ? "S" : "Section ") + sectionTab.friendlyIndex }}
+                </div>
+
+                <ng-container *ngIf="size !== 'compact'">
+                    <div *ngIf="sectionTab.section?.name" class="section-name-title fs-08 text-success text-center">
+                        {{ sectionTab.section.name }}
+                    </div>
+                    <div *ngIf="!sectionTab.isAvailable" class="section-name-title fs-08 text-muted text-center">
+                        Unavailable
+                    </div>
+                </ng-container>
+            </ng-template>
+
+            <ng-container
+                *ngTemplateOutlet="sectionTab.isAvailable ? challengeSection : challengeSectionHidden; context: { $implicit: sectionTab }"></ng-container>
+        </tab>
+    </tabset>
+</ng-template>
+
+<ng-template #challengeSection let-context>
+    <h3 *ngIf="size === 'compact'">{{ context.section.name || "Section " + context.index + 1 }}</h3>
+
+    <alert type="success" *ngIf="context.isMultiSection && context.questionsRemaining === 0">
+        <p>
+            You've completed this section. Great job!
+
+            <span *ngIf="context.index < progress!.variant.totalSectionCount - 2">
+                Onto the
+                <span class="font-weight-bold text-dashed-underline cursor-pointer"
+                    (click)="handleSectionSelect(context.index + 1)">
+                    next
+                </span>?
+            </span>
+        </p>
+    </alert>
+
+    <div *ngIf="context.section?.text">
+        <markdown [data]="context.section.text" class="mb-4"></markdown>
+    </div>
+
+    <form [formGroup]="context.form" (ngSubmit)="handleSubmit(context.form)" class="mt-4">
+        <ul *ngIf="context.section.questions.length">
+            <li *ngFor="let question of context.section.questions; index as questionIndex" class="mb-5 d-block">
+                <div class="input-container form-group m-0 p-0">
+                    <div class="d-flex align-items-center">
+                        <div class="text-success fs-20 q-label pr-2 mr-2">
+                            Q{{ questionIndex + 1 }}
+                        </div>
+
+                        <div class="question-content">
+                            <label class="fs-11 m-0 d-block font-weight-bold"
+                                for="s{{ context.index }}q{{ questionIndex }}">
+                                {{ question.text }}
+                            </label>
+
+                            <small class="font-weight-light text-muted">
+                                ({{ question.scoreMax }} points)
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="input-group mx-0 my-2">
+                        <div class="input-group-prepend" *ngIf="question.isCorrect">
+                            <span class="input-group-text">✓</span>
+                        </div>
+
+                        <input type="text" class="form-control"
+                            formControlName="s{{ context.index }}q{{ questionIndex }}" [readOnly]="question.isCorrect"
+                            [placeholder]="question.example || 'Enter your answer here'">
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="button-controls d-flex align-items-center">
+            <div *ngIf="progress">
+                <div>
+                    <span class="fw-bold text-muted">Remaining: </span>
+                    {{ endsAt$ | async | epochMsToTimeRemainingString | async }}
+                    <span *ngIf="progress.maxAttempts > 0">
+                        <em>({{progress.maxAttempts - progress.attempts}} attempts)</em>
+                    </span>
+                </div>
+
+                <div>
+                    <span class="fw-bold text-muted">Score: </span>
+                    {{ progress.score || 0 }} / {{ progress.maxPoints }}
+                </div>
+            </div>
+            <div class="flex-grow-1"></div>
+            <div *ngIf="hasSubmissionHistory" class="text-success cursor-pointer text-dashed-underline mr-4"
+                role="button" (click)="handleViewSubmissionHistory(context.id)">
+                {{ size === "compact" ? "Previous Submissions" : "See my previous submissions" }}
+            </div>
+            <app-confirm-button [isSubmit]="true" btnClass="btn btn-warning" [disabled]="!context.form.valid">
+                Submit My Answers
+            </app-confirm-button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #challengeSectionHidden>
+    <div class="text-center">
+        This section isn't available yet - check back when you've answered a few more questions!
+    </div>
+</ng-template>
+
+<ng-template #submissionHistoryModal>
+    <app-modal-content [title]="spec?.name || 'Challenge'" subtitle="Previous Submissions"
+        [subSubtitle]="team?.name || ''" [hideCancel]="true">
+        <app-challenge-submission-history [challengeId]="progress?.id"></app-challenge-submission-history>
+    </app-modal-content>
+</ng-template>

@@ -73,6 +73,7 @@ import { PlayerSponsorReportComponent } from './player-sponsor-report/player-spo
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
 import { PracticeComponent } from './practice/practice.component';
 import { PrereqsComponent } from './prereqs/prereqs.component';
+import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
 import { SpecBrowserComponent } from './spec-browser/spec-browser.component';
 import { SponsorBrowserComponent } from './sponsor-browser/sponsor-browser.component';
 import { SupportReportLegacyComponent } from './support-report-legacy/support-report-legacy.component';
@@ -80,10 +81,14 @@ import { TeamObserverComponent } from './team-observer/team-observer.component';
 import { UserApiKeysComponent } from './user-api-keys/user-api-keys.component';
 import { UserRegistrarComponent } from './user-registrar/user-registrar.component';
 import { UserReportComponent } from './user-report/user-report.component';
-import { GameInfoBubblesComponent } from "../standalone/components/game-info-bubbles/game-info-bubbles.component";
+import { GameInfoBubblesComponent } from "../standalone/games/components/game-info-bubbles/game-info-bubbles.component";
 import { ScoreboardComponent } from '@/scoreboard/components/scoreboard/scoreboard.component';
 import { GameIdResolver } from './resolvers/game-id.resolver';
 import { GameCenterSelectedTabResolver } from './resolvers/game-center-selected-tab-resolver';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
+import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 
 @NgModule({
   declarations: [
@@ -151,7 +156,7 @@ import { GameCenterSelectedTabResolver } from './resolvers/game-center-selected-
     TeamListCardComponent,
     GameCenterTeamDetailComponent,
     TeamCenterComponent,
-    GameMapEditorComponent,
+    GameMapEditorComponent
   ],
   imports: [
     CommonModule,
@@ -217,7 +222,15 @@ import { GameCenterSelectedTabResolver } from './resolvers/game-center-selected-
     ScoreboardModule,
     SponsorsModule,
     SystemNotificationsModule,
-    GameInfoBubblesComponent
+
+    // standalones
+    ErrorDivComponent,
+    GameInfoBubblesComponent,
+    IfHasPermissionDirective,
+    SafeUrlPipe,
+    SpinnerComponent,
+    ToSupportCodePipe,
   ]
 })
+
 export class AdminModule { }

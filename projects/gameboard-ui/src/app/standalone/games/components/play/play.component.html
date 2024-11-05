@@ -1,0 +1,176 @@
+<app-error-div [errors]="errors"></app-error-div>
+<ng-container *ngIf="challengeSpec">
+    <div class="d-flex align-items-start mb-4">
+        <div class="challenge-doc-container flex-grow-1">
+            <ng-container *ngIf="isDeploying">
+                <app-challenge-deploy-countdown *ngIf="isDeploying && challengeSpec"
+                    [deploySeconds]="challengeSpec.averageDeploySeconds"></app-challenge-deploy-countdown>
+            </ng-container>
+
+            <ng-container *ngIf="isUndeploying">
+                <app-spinner>Stopping challenge resources...</app-spinner>
+            </ng-container>
+
+            <ng-container *ngIf="!isDeploying && !isUndeploying && challenge">
+                <alert *ngIf="showMiniPlayerPrompt" type="info" class="my-3" [dismissible]="true">
+                    <h2>Check out the new challenge resources panel!</h2>
+
+                    <p>
+                        <span class="fw-bold cursor-pointer" (click)="toggleMiniPlayer()">Click here</span>
+                        to "sticky" the Challenge panel so it's always visible as you scroll down the page.
+                        (You can return the panel to the bottom of the page at any time by clicking the appropriate link
+                        in the panel.)
+                    </p>
+                </alert>
+
+                <p class="challenge-document-text mb-5">
+                    <markdown [data]="challenge.markdown"></markdown>
+                </p>
+
+                <ng-container *ngIf="!isMiniPlayerSelected">
+                    <ng-container *ngTemplateOutlet="solutionGuideAlert"></ng-container>
+
+                    <h2><ng-container *ngTemplateOutlet="challengeConsolesText"></ng-container></h2>
+                    <div class="vms-container my-4">
+                        <ul class="d-flex flex-wrap">
+                            <li *ngFor="let vm of challenge.vms" class="d-block">
+                                <app-vm-link [vm]="{ name: vm.name, url: vmUrls[vm.id] }"></app-vm-link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="vm-controls-container my-4">
+                        <app-confirm-button *ngIf="challenge.isDeployed" btnClass="btn btn-sm btn-outline-warning mr-2"
+                            (confirm)="undeployVms(challenge.id)">
+                            <fa-icon [icon]="fa.trash"></fa-icon>
+                            <span>Destroy</span>
+                        </app-confirm-button>
+                        <app-confirm-button *ngIf="!challenge.isDeployed" btnClass="btn btn-sm btn-outline-warning"
+                            (confirm)="deployVms(challenge.id)">
+                            <fa-icon [icon]="fa.bolt"></fa-icon>
+                            <span>Deploy</span>
+                        </app-confirm-button>
+                    </div>
+
+                    <div *ngIf="challenge.isDeployed" class="my-5">
+                        <h2 class="mb-4">Challenge Questions</h2>
+                        <app-challenge-questions [challengeId]="challenge.id"></app-challenge-questions>
+                    </div>
+
+                    <hr class="light">
+
+                    <div class="d-flex align-items-baseline">
+                        <div class="flex-grow-1">
+                            <button type="button" class="btn btn-success btn-sm"
+                                *ngIf="isMiniPlayerAvailable && !isMiniPlayerSelected" (click)="toggleMiniPlayer()">
+                                Use Sticky Challenge Panel
+                            </button>
+                        </div>
+                        <div class="mr-4">
+                            Support Code:
+                            <span class="text-success font-weight-bold cursor-pointer" appCopyOnClick
+                                tooltip="Click to copy your challenge support code">
+                                {{ { id: challenge.id } | toSupportCode }}
+                            </span>
+                        </div>
+
+                        <div>
+                            Having trouble?
+
+                            <a class="btn btn-success ml-2" target="_blank" [routerLink]="['/support/create']"
+                                [queryParams]="{cid: challenge.id}">
+                                <span>Create Ticket</span>
+                            </a>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+
+        <div *ngIf="isMiniPlayerAvailable && isMiniPlayerSelected && !isDeploying && !isUndeploying && challenge?.isDeployed"
+            class="mini-player-container">
+            <ng-container *ngTemplateOutlet="miniPlayer"></ng-container>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #miniPlayer>
+    <ng-container *ngIf="challenge && !isDeploying && !isUndeploying">
+        <ng-container *ngTemplateOutlet="solutionGuideAlert"></ng-container>
+
+        <h5><ng-container *ngTemplateOutlet="challengeConsolesText"></ng-container></h5>
+
+        <div *ngIf="challenge?.vms?.length" class="vms-container my-4">
+            <ul class="d-flex flex-wrap">
+                <li *ngFor="let vm of challenge.vms">
+                    <app-vm-link [vm]="{ name: vm.name, url: vmUrls[vm.id] }"></app-vm-link>
+                </li>
+            </ul>
+        </div>
+
+        <div class="vm-controls-container my-4">
+            <app-confirm-button *ngIf="challenge.isDeployed" btnClass="btn btn-sm btn-outline-warning mr-2"
+                (confirm)="undeployVms(challenge.id)">
+                <fa-icon [icon]="fa.trash"></fa-icon>
+                <span>Destroy</span>
+            </app-confirm-button>
+            <app-confirm-button *ngIf="!challenge.isDeployed" btnClass="btn btn-sm btn-outline-warning"
+                (confirm)="deployVms(challenge.id)">
+                <fa-icon [icon]="fa.bolt"></fa-icon>
+                <span>Deploy</span>
+            </app-confirm-button>
+        </div>
+
+        <div *ngIf="challenge.id" class="my-3">
+            <h5>Questions</h5>
+            <app-challenge-questions [challengeId]="challenge.id" size="compact"></app-challenge-questions>
+        </div>
+
+        <hr class="light">
+
+        <div class="support-container mt-4">
+            <h5>Need help?</h5>
+
+            <ul class="support-links li-style-type-circle">
+                <li>
+                    <a target="_blank" [routerLink]="['/support/create']" [queryParams]="{cid: challenge.id}">
+                        <span>Open a ticket</span>
+                    </a>
+                </li>
+                <li>
+                    If you need it, your support code is
+                    <span class="btn-link" appCopyOnClick>
+                        {{ { id: challenge.id } | toSupportCode }}
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <hr class="light">
+
+        <div class="text-muted">
+            Click
+            <span class="cursor-pointer text-info" role="button" (click)="toggleMiniPlayer()">here</span>
+            to deactivate the sticky Challenge panel
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #miniPlayerLoading>
+    <app-spinner>Loading your challenge...</app-spinner>
+</ng-template>
+
+<ng-template #challengeConsolesText>
+    Challenge {{ "Console" | pluralizer:vmUrls }}
+</ng-template>
+
+<ng-template #solutionGuideAlert>
+    <alert *ngIf="solutionGuide" type="success" class="my-4">
+        <h2 [class.fs-12]="isMiniPlayerSelected">Solution Guide</h2>
+
+        <p>
+            Having trouble? We've created a step-by-step solution guide for this challenge. If you get
+            stuck, you can find it <a class="fw-bold" [href]="solutionGuide.url" target="_blank">here</a>.
+        </p>
+    </alert>
+</ng-template>

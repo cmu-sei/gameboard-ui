@@ -6,6 +6,7 @@ import { ChallengeBonusesToTooltip } from './pipes/challenge-bonuses-to-tooltip'
 import { ScoreboardComponent } from './components/scoreboard/scoreboard.component';
 import { ScoreboardTeamDetailModalComponent } from './components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 import { ScoreToTooltipPipe } from './pipes/score-to-tooltip.pipe';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
 const PUBLIC_DECLARATIONS = [
   ScoreboardComponent,
@@ -20,7 +21,8 @@ const PUBLIC_DECLARATIONS = [
   ],
   imports: [
     CommonModule,
-    CoreModule
+    CoreModule,
+    SpinnerComponent
   ],
   exports: PUBLIC_DECLARATIONS
 })

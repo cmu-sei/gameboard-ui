@@ -1,0 +1,36 @@
+<ng-container *ngIf="submissionHistory; else loading">
+    <table class="table gameboard-table">
+        <col>
+        <col>
+        <col>
+
+        <thead>
+            <tr>
+                <th class="text-center">Section</th>
+                <th>Submissions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let entry of submissionHistory.sectionSubmissions | keyvalue">
+                <td class="text-center">{{ +entry.key + 1 }}</td>
+                <td>
+                    <ul>
+                        <li *ngFor="let submission of entry.value" class="mb-3">
+                            <div class="fw-bold text-muted">
+                                {{ submission.submittedAt | epochMsToDateTime | friendlyDateAndTime }}
+                            </div>
+                            <ol>
+                                <li *ngFor="let answer of submission.answers">{{ answer }}</li>
+                            </ol>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading submissions...</app-spinner>
+</ng-template>

@@ -169,10 +169,11 @@ export class GameMapperComponent {
       disabled: false,
       gameId: this.game!.id,
       isHidden: false,
-      points: 1,
+      points: 100,
       c: "",
-      x: Math.random() * 0.5 + 0.25,
-      y: Math.random() * 0.5 + 0.25,
+      // if x and y are zero, the API will create semi-random coordinates to they don't stack up
+      x: 0,
+      y: 0,
       r: 0.015,
       tag: slug(spec.name),
     };
@@ -188,7 +189,6 @@ export class GameMapperComponent {
   }
 
   protected handleSpecUpdated(spec: Spec) {
-    this.specs = [...this.specs.filter(s => s.id !== spec.id), spec];
     this.checkForZeroPointActiveSpecs(this.specs);
     this.specsUpdated.emit(this.specs);
   }

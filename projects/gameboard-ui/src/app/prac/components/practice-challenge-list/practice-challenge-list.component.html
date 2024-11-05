@@ -41,7 +41,8 @@
                     <fa-icon [icon]="faSearch"></fa-icon>
                 </span>
             </div>
-            <input type="search" placeholder="search" class="form-control border-0" [(ngModel)]="term"
+            <input type="search" placeholder="Search {{ count }} practice challenges..." class="form-control border-0"
+                [(ngModel)]="term"
                 [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 
@@ -79,12 +80,14 @@
                             </ul>
                         </div>
                     </td>
-                    <td>
-                        <div class="d-flex align-items-center">
+                    <td class="align-middle">
+                        <a class="ml-2 d-flex align-items-center" [routerLink]="['/practice']"
+                            [queryParams]="{ term: c.gameName }">
                             <app-game-card-image
                                 [game]="{ id: c.gameId, name: c.gameName, logo: c.gameLogo }"></app-game-card-image>
-                            <div class="ml-2">{{c.gameName}}</div>
-                        </div>
+
+                            <div class="ml-2">{{ c.gameName }}</div>
+                        </a>
                     </td>
                 </tr>
             </tbody>

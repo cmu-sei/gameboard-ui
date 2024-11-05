@@ -8,7 +8,7 @@
   </button>
 
   <ng-container *ngIf="confirming">
-    <button [class]="btnClass + ' confirming-button'" (click)="continue(true)">
+    <button *ngIf="!isSubmit; else submitInput" [class]="btnClass + ' confirming-button'" (click)="continue(true)">
       <fa-icon [icon]="faCheck"></fa-icon>
       <span>Confirm</span>
     </button>
@@ -18,3 +18,7 @@
     </button>
   </ng-container>
 </div>
+
+<ng-template #submitInput>
+  <input type="submit" [class]="btnClass + ' confirming-button'" value="Confirm">
+</ng-template>

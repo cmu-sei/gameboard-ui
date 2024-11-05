@@ -17,9 +17,9 @@
         </p>
 
         <div class="feedback-container my-4">
-            <app-feedback-form *ngIf="feedbackFormContext" [boardPlayer]="feedbackFormContext.boardPlayer"
+            <!-- <app-feedback-form *ngIf="feedbackFormContext" [boardPlayer]="feedbackFormContext.boardPlayer"
                 title="Practice Challenge Feedback" [spec]="feedbackFormContext.boardSpec"
-                [hideIfFeedbackProvidedPreviously]="true" type="challenge"></app-feedback-form>
+                [hideIfFeedbackProvidedPreviously]="true" type="challenge"></app-feedback-form> -->
         </div>
 
         <p>
@@ -37,6 +37,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" (click)="handleModalClose()">Nice!</button>
+        <button type="button" class="btn btn-success" (click)="handleModalClose()">Nice!</button>
     </div>
 </div>

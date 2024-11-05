@@ -5,6 +5,7 @@ import { RouterService } from '@/services/router.service';
 import { AuthService } from '@/utility/auth.service';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 
 @Component({
   selector: 'app-user-nav-item',
@@ -12,6 +13,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
   imports: [
     CoreModule,
     RouterModule,
+    IfHasPermissionDirective
   ],
   templateUrl: './user-nav-item.component.html',
   styleUrls: ['./user-nav-item.component.scss']

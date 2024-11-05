@@ -1,5 +1,0 @@
-<div class="stack" (mouseenter)="enter()" (mouseleave)="leave()" [tooltip]="tooltip">
-  <img *ngFor="let src of images$ | async; let i = index"
-    [src]="src" class="stack-{{i}}" [class.stacked]="i>0" [class.unstacked]="unstacked" [attr.width]="width"
-  >
-</div>

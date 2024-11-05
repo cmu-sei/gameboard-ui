@@ -53,6 +53,7 @@ body {
 
 ol,
 ul {
+  margin-bottom: 0;
   padding-inline-start: 0;
 }
 
@@ -84,6 +85,10 @@ select option {
   .group-child {
     padding-left: 12px;
   }
+}
+
+input:disabled {
+  background-color: #ccc !important;
 }
 
 app-root {
@@ -129,6 +134,10 @@ app-root {
   font-size: 1.2rem;
 }
 
+.fs-125 {
+  font-size: 1.25rem;
+}
+
 .fs-13 {
   font-size: 1.3rem;
 }
@@ -143,10 +152,6 @@ app-root {
 
 .colorblind-danger {
   color: lighten($danger, 20%);
-}
-
-.auto-h {
-  height: auto;
 }
 
 fa-icon + span {
@@ -463,12 +468,20 @@ th[align="left"] {
 .text-dashed-underline {
   text-decoration: underline !important;
   text-decoration-style: dotted !important;
-  text-decoration-color: #fff !important;
+  // text-decoration-color: #fff !important;
   text-decoration-thickness: 2px !important;
 }
 
 .text-upper {
   text-transform: uppercase;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.h-100 {
+  height: 100%;
 }
 
 .width-5 {
@@ -523,8 +536,8 @@ th[align="left"] {
   width: 100%;
 }
 
-.link-button {
-  color: theme-color("info");
+.btn-link {
+  color: theme-color("success");
   cursor: pointer;
 }
 

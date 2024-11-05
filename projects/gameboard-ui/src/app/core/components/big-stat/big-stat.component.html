@@ -1,8 +1,8 @@
 <div class="big-stat-component" [class.stat-button]="isClickable">
-    <div class="value text-info text-center p-0">
+    <div class="value text-success text-center p-0">
         <span>{{ value === undefined || value === null ? "--" : value }}</span>
     </div>
-    <div class="label text-center">{{ label }}</div>
+    <div *ngIf="label" class="label text-center mt-3">{{ label }}</div>
     <div class="addl-info text-center text-muted p-0 m-0" *ngIf="subLabel">
         {{subLabel}}
     </div>

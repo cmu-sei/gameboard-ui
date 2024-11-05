@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, combineLatest, firstValueFrom } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
-import { NewPlayer } from '@/api/player-models';
+import { Observable, combineLatest, firstValueFrom } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { NewPlayer, PlayerMode } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
 import { SpecSummary } from '@/api/spec-models';
 import { UserService as LocalUserService } from '@/utility/user.service';
@@ -10,13 +10,13 @@ import { fa } from "@/services/font-awesome.service";
 import { PracticeService } from '@/services/practice.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { LocalActiveChallenge } from '@/api/challenges.models';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
-import { PlayerContext } from '@/game/components/play/play.component';
 import { RouterService } from '@/services/router.service';
 import { PracticeChallengeSolvedModalComponent } from '../practice-challenge-solved-modal/practice-challenge-solved-modal.component';
 import { TeamService } from '@/api/team.service';
 import { WindowService } from '@/services/window.service';
+import { UserActiveChallenge } from '@/api/challenges.models';
+import { PracticeSession } from '@/prac/practice.models';
 
 @Component({
   selector: 'app-practice-session',
@@ -26,28 +26,26 @@ import { WindowService } from '@/services/window.service';
   ],
   providers: [UnsubscriberService]
 })
-export class PracticeSessionComponent {
+export class PracticeSessionComponent implements OnInit {
   protected windowWidth$ = this.windowService.resize$;
   spec$: Observable<SpecSummary>;
   authed$: Observable<boolean>;
-  activePracticeChallenge$ = new BehaviorSubject<LocalActiveChallenge | null>(null);
 
   protected errors: any = [];
   protected fa = fa;
-  protected playerContext: PlayerContext | null = null;
   protected isMiniPlayerEnabled = false;
   protected isPlayingOtherChallenge = false;
   protected isStartingSession = false;
-  protected isDeploying = false;
+  protected practiceSession: PracticeSession | null = null;
   protected showSpecMarkdown = true;
 
   constructor(
-    practiceService: PracticeService,
+    route: ActivatedRoute,
     private activeChallengesRepo: ActiveChallengesRepo,
     private modalService: ModalConfirmService,
     private localUser: LocalUserService,
     private playerService: PlayerService,
-    private route: ActivatedRoute,
+    private practiceService: PracticeService,
     private routerService: RouterService,
     private teamService: TeamService,
     private unsub: UnsubscriberService,
@@ -63,49 +61,30 @@ export class PracticeSessionComponent {
       map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
     );
 
-    // if we're actively playing the challenge on _this page_, we don't need to see
-    // the spec markdown, because the Play component will display a more extensive
-    // doc that may be transformed for the given challenge.
-    this.unsub.add(combineLatest([
-      this.spec$,
-      this.activePracticeChallenge$
-    ]).pipe(
-      map(([spec, activeChallenge]) => ({ spec, activeChallenge }))
-    ).subscribe(ctx => {
-      this.showSpecMarkdown = ctx.spec?.id !== ctx.activeChallenge?.spec?.id;
-    }));
-
-    this.unsub.add(this.activeChallengesRepo.practiceChallengeCompleted$.subscribe(challenge => {
-      this.handleActiveChallengeCompleted(challenge);
-    }));
+    this.unsub.add(this.activeChallengesRepo.challengeCompleted$.subscribe(c => this.handleActiveChallengeCompleted(c)));
+    this.unsub.add(this.activeChallengesRepo.challengeExpired$.subscribe(c => this.handleActiveChallengeExpired(c)));
+    this.unsub.add(this.teamService.teamSessionEndedManually$.subscribe(tId => this.handleTeamSessionEnded(tId)));
 
     this.unsub.add(
-      this.activeChallengesRepo.activePracticeChallenge$
-        .pipe(
-          tap(c => {
-            if (c)
-              this.playerContext = {
-                playerId: c.player.id,
-                userId: c.user.id
-              };
-          }),
-        ).subscribe(activeChallenge => {
-          const previousChallenge = this.activePracticeChallenge$.value;
-          this.activePracticeChallenge$.next(activeChallenge);
+      combineLatest([this.activeChallengesRepo.activePracticeChallenge$, this.spec$]).pipe(map(thing => ({ activeChallenge: thing[0], currentSpec: thing[1] }))).subscribe(ctx => {
+        this.isPlayingOtherChallenge = !!(ctx.activeChallenge && ctx.activeChallenge.spec.id !== ctx.currentSpec.id);
 
-          // expire the previous challenge if it's over
-          if (previousChallenge?.session.isAfter()) {
-            this.handleActiveChallengeExpired(previousChallenge);
-          }
-
-          this.isPlayingOtherChallenge = (!!this.activePracticeChallenge$.value && this.activePracticeChallenge$.value?.spec.id !== this.route.snapshot.paramMap.get("specId"));
-        })
+        // if we're actively playing the challenge on _this page_, we don't need to see
+        // the spec markdown, because the Play component will display a more extensive
+        // doc that may be transformed for the given challenge.
+        this.showSpecMarkdown = !ctx.activeChallenge || ctx.activeChallenge.spec.id !== ctx.currentSpec.id;
+      })
     );
   }
 
-  // the play command is based off of the same infra that handles playing competitive games.
-  // longterm we should be using specId as the parameter for starting a practice sesh.
-  async play(gameId: string): Promise<void> {
+  async ngOnInit(): Promise<void> {
+    this.practiceSession = await this.practiceService.getSession();
+  }
+
+  async play(spec: { id: string, game: { id: string } }): Promise<void> {
+    if (this.practiceSession && this.practiceSession.gameId == spec.game.id)
+      return;
+
     const userId = this.localUser.user$.value?.id;
     this.errors = [];
 
@@ -116,8 +95,8 @@ export class PracticeSessionComponent {
     this.isStartingSession = true;
 
     try {
-      const player = await firstValueFrom(this.playerService.create({ userId: userId, gameId } as NewPlayer));
-      this.playerContext = { playerId: player.id, userId: player.userId };
+      await firstValueFrom(this.playerService.create({ userId: userId, gameId: spec.game.id } as NewPlayer));
+      this.practiceSession = await this.practiceService.getSession();
     }
     catch (err) {
       this.errors.push(err);
@@ -126,12 +105,8 @@ export class PracticeSessionComponent {
     this.isStartingSession = false;
   }
 
-  protected handleDeployStatusChanged(isDeploying: boolean) {
-    this.isDeploying = isDeploying;
-  }
-
   protected handleStartNewChallengeClick(spec: SpecSummary) {
-    const currentPracticeChallenge = this.activePracticeChallenge$.value;
+    const currentPracticeChallenge = this.activeChallengesRepo.getActivePracticeChallenge();
     if (!currentPracticeChallenge) {
       throw new Error("Can't end previous challenge and start a new one - no previous challenge detected.");
     }
@@ -141,28 +116,36 @@ export class PracticeSessionComponent {
       bodyContent: `If you continue, you'll end your session for practice challenge **${currentPracticeChallenge.spec.name}** and start a new one for this challenge (**${spec.name}**). Are you sure that's what you want to do?`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-        await this.teamService.endSession({ teamId: currentPracticeChallenge.teamId });
-        this.play(spec.gameId);
+        await this.teamService.endSession({ teamId: currentPracticeChallenge.team.id });
+        this.play({ id: spec.id, game: { id: spec.gameId } });
       }
     });
   }
 
-  private handleActiveChallengeExpired(challenge: LocalActiveChallenge) {
+  private handleActiveChallengeExpired(challenge: UserActiveChallenge) {
+    this.practiceSession = null;
+
     this.modalService.openConfirm({
       title: "Time's up",
-      bodyContent: `Your session for challenge **${challenge.spec.name}** has ended because you're out of time. You can either start over and try again or head back to the Practice Area to find another challenge to try.`,
+      subtitle: "Practice Session",
+      bodyContent: `Your session for challenge **${challenge.name}** has ended because you're out of time. You can either start over and try again or head back to the Practice Area to find another challenge to try.`,
       renderBodyAsMarkdown: true,
       cancelButtonText: "Back to the Practice Area",
       confirmButtonText: "Try again",
       onCancel: () => this.routerService.toPracticeArea(),
       onConfirm: async () => {
         await this.routerService.toPracticeChallenge(challenge.spec);
-        await this.play(challenge.game.id);
+        await this.play({ id: challenge.spec.id, game: challenge.game });
       },
     });
   }
 
-  private handleActiveChallengeCompleted(challenge: LocalActiveChallenge) {
+  private handleActiveChallengeCompleted(challenge: UserActiveChallenge) {
+    if (challenge.mode !== PlayerMode.practice)
+      return;
+
+    this.practiceSession = null;
+
     this.modalService.openComponent({
       content: PracticeChallengeSolvedModalComponent,
       context: {
@@ -171,5 +154,9 @@ export class PracticeSessionComponent {
         }
       },
     });
+  }
+
+  private handleTeamSessionEnded(teamId: string) {
+    this.practiceSession = null;
   }
 }

@@ -11,14 +11,13 @@ import { Location, PlatformLocation } from '@angular/common';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { LogService } from '../services/log.service';
 import { VmState } from '@/api/board-models';
-import { BrowserService } from '@/services/browser.service';
 import { Environment, EnvironmentSettings } from '../../environments/environment-typed';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-
   private url = environment.settingsJson;
   private restorationComplete = false;
+
   basehref = '';
   environment: Environment = environment;
   local: LocalAppSettings = {};
@@ -76,7 +75,6 @@ export class ConfigService {
   );
 
   constructor(
-    private browser: BrowserService,
     private http: HttpClient,
     private location: Location,
     private log: LogService,
@@ -167,7 +165,7 @@ export class ConfigService {
   }
 
   openConsole(qs: string): void {
-    this.browser.showTab(this.mkshost + qs);
+    window.open(this.mkshost + qs, "_blank");
   }
 
   updateLocal(model: LocalAppSettings): void {
