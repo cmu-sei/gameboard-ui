@@ -12,13 +12,9 @@ import { RouterService } from '@/services/router.service';
 export class CertificatesComponent implements OnInit {
   protected fa = fa;
   protected showTabs = false;
-  protected profileUrl: string;
 
   constructor(
-    private practiceService: PracticeService,
-    routerService: RouterService) {
-    this.profileUrl = routerService.getProfileUrl();
-  }
+    private practiceService: PracticeService) { }
 
   async ngOnInit() {
     // the page defaults to competitive certificates through navigation. If

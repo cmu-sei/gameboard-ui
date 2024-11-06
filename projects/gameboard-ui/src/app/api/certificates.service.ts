@@ -13,8 +13,12 @@ export class CertificatesService {
     private domSanitizer: DomSanitizer,
     private http: HttpClient) { }
 
-  getCertificateImage(mode: PlayerMode, userId: string, challengeSpecId: string) {
-    return this.http.get(this.apiUrl.build(`user/${userId}/certificates/${this.coerceCompetitionModeString(mode)}/${challengeSpecId}`), { responseType: "arraybuffer" }).pipe(
+  getCertificateImage(mode: PlayerMode, userId: string, challengeSpecId: string, requestedName?: string) {
+    const queryArgs = requestedName ? `?requestedNameOverride=${requestedName}` : "";
+
+    return this.http.get(this.apiUrl.build(`user/${userId}/certificates/${this.coerceCompetitionModeString(mode)}/${challengeSpecId}${queryArgs}`), {
+      responseType: "arraybuffer"
+    }).pipe(
       map(response => new Blob([response])),
       map(blob => window.URL.createObjectURL(blob)),
       map(url => this.domSanitizer.bypassSecurityTrustUrl(url))

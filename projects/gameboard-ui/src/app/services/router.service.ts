@@ -108,6 +108,10 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(`/board/${playerId}/${challengeId}`);
   }
 
+  public toCertificatePrintableWithName(request: { userId: string, mode: PlayerMode, awardedForEntityId: string, name: string }) {
+    return this.router.navigateByUrl(`/user/${request.userId}/certificates/${request.mode}/${request.awardedForEntityId}?=requestedNameOverride=${request.name}`);
+  }
+
   public toPracticeArea() {
     return this.router.navigateByUrl("/practice");
   }

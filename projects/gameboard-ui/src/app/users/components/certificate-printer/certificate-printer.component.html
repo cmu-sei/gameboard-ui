@@ -5,11 +5,15 @@
         <button type="button" class="btn btn-success print-button" (click)="handlePrintClick()">
             Print This Certificate
         </button>
+
+        <button type="button" class="btn btn-warning ml-2 print-button" (click)="handleProvideNameClick()">
+            Provide Another Name
+        </button>
     </div>
 
     <div class="gameboard-print" *ngIf="isPublished; else notPublished">
         <img class="certificate-img" [src]="imageUrl" [alt]="isPublished ? title : ''" (load)="handleLoad()"
-            (error)="handleError($event)" />
+            *ngIf="imageUrl" (error)="handleError($event)" />
     </div>
 
     <ng-template #notPublished>
@@ -18,3 +22,23 @@
         </div>
     </ng-template>
 </div>
+
+<ng-template #provideNameModal>
+    <app-modal-content title="Provide a different name" subtitle="Certificate"
+        (confirm)="requestedNameOverrideFormTemplate.submit()" [confirmDisabled]="requestNameOverrideForm.invalid">
+        <p>
+            If you'd like to regenerate your certificate with a different name (for example, your real name rather than
+            your {{ appName }} username), enter it here, and we'll try again!
+        </p>
+
+        <form (ngSubmit)="handleNameProvided()" [formGroup]="requestNameOverrideForm"
+            #requestedNameOverrideFormTemplate>
+            <div class="form-group px-0">
+                <label for="provided-name-input">Name</label>
+                <input class="form-control" name="requestedNameOverride" type="text" minlength="2" required appAutofocus
+                    placeholder="The name you want to appear on your certificate"
+                    formControlName="requestedNameOverride">
+            </div>
+        </form>
+    </app-modal-content>
+</ng-template>
