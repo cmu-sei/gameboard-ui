@@ -110,15 +110,16 @@
                         </div>
                     </div>
 
-                    <div class="input-group mx-0 my-2">
+                    <div class="input-group mx-0 mb-1 mt-2">
                         <div class="input-group-prepend" *ngIf="question.isCorrect">
                             <span class="input-group-text">✓</span>
                         </div>
 
                         <input type="text" class="form-control"
                             formControlName="s{{ context.index }}q{{ questionIndex }}" [readOnly]="question.isCorrect"
-                            [placeholder]="question.example || 'Enter your answer here'">
+                            placeholder="Enter your answer for question {{ questionIndex + 1 }} here">
                     </div>
+                    <div class="text-muted fs-08" *ngIf="question.example">e.g. {{question.example}}</div>
                 </div>
             </li>
         </ul>
