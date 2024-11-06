@@ -57,9 +57,8 @@
                         <app-challenge-questions [challengeId]="challenge.id"></app-challenge-questions>
                     </div>
 
-                    <hr class="light">
-
-                    <div class="d-flex align-items-center sticky-bottom sticky-controls-container p-2 bg-success">
+                    <div
+                        class="d-flex align-items-center sticky-bottom sticky-controls-container p-2 bg-success rounded-top">
                         <div class="flex-grow-1">
                             <button type="button" class="btn btn-link text-body"
                                 *ngIf="isMiniPlayerAvailable && !isMiniPlayerSelected" (click)="toggleMiniPlayer()">
