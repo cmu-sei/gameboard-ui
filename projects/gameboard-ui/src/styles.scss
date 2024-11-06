@@ -65,6 +65,10 @@ li {
 }
 
 /* ... but for markdown we just go with the classics  */
+markdown ol {
+  margin-bottom: 1rem;
+}
+
 markdown ul li {
   list-style-type: disc;
   padding: unset;

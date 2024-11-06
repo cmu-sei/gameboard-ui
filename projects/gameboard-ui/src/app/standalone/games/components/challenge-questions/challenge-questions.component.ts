@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom, map } from 'rxjs';
-import { ChallengeProgressView, ChallengeProgressViewSection, UserActiveChallenge } from '@/api/challenges.models';
+import { ChallengeProgressView, ChallengeProgressViewSection } from '@/api/challenges.models';
 import { ChallengesService } from '@/api/challenges.service';
 import { CoreModule } from '@/core/core.module';
 import { fa } from '@/services/font-awesome.service';

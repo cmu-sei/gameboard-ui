@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '@/api/admin.service';
 import { Game } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
@@ -29,11 +29,17 @@ export class GameCenterComponent {
     private adminService: AdminService,
     private appTitle: AppTitleService,
     private gameService: GameService,
-    private localUserService: UserService) {
+    private localUserService: UserService,
+    private router: Router) {
+
     unsub.add(this.activatedRoute.paramMap.subscribe(async paramMap => {
       const gameId = paramMap.get("gameId") || this.gameCenterCtx?.id;
       if (gameId && gameId != this.gameCenterCtx?.id)
         await this.load(gameId);
+
+      if (this.activatedRoute.firstChild?.routeConfig?.path) {
+        this.selectedTab = (this.activatedRoute.firstChild.routeConfig.path || "teams") as GameCenterTab;
+      }
     }));
 
     unsub.add(interval(30000).subscribe(async () => {
