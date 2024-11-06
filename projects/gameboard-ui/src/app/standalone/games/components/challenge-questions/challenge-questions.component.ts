@@ -31,10 +31,10 @@ interface SectionTabViewModel {
   imports: [
     CommonModule,
     CoreModule,
+    ChallengeSubmissionHistoryComponent,
     EpochMsToTimeRemainingStringPipe,
-    SpinnerComponent,
     HoldConfirmButtonComponent,
-    ChallengeSubmissionHistoryComponent
+    SpinnerComponent,
   ],
   providers: [ActiveChallengesRepo, ModalConfirmService],
   templateUrl: "./challenge-questions.component.html",
@@ -160,7 +160,8 @@ export class ChallengeQuestionsComponent implements OnChanges {
     });
 
     // select the "last" tab with unanswered questions
-    this.handleSectionSelect(this.progress.variant.sections.length - 1);
+    const selectIndex = this.progress.variant.sections.findIndex(s => s.score < s.scoreMax) || this.progress.variant.sections.length - 1;
+    this.handleSectionSelect(selectIndex);
 
     // find out if any submissions have been made (decides the availability of the "submission history" modal)
     this.hasSubmissionHistory = this.progress.attempts > 0;
