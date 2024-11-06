@@ -65,20 +65,23 @@ li {
 }
 
 /* ... but for markdown we just go with the classics  */
-markdown ol ul {
-  margin-bottom: 1rem;
-}
+markdown {
+  ol,
+  ul {
+    margin-bottom: 1rem;
+  }
 
-markdown ul li {
-  list-style-type: disc;
-  padding: unset;
-  margin-left: 1rem;
-}
+  ol li {
+    list-style-type: decimal;
+    padding: unset;
+    margin-left: 1rem;
+  }
 
-markdown ol li {
-  list-style-type: decimal;
-  padding: unset;
-  margin-left: 1rem;
+  ul li {
+    list-style-type: disc;
+    padding: unset;
+    margin-left: 1rem;
+  }
 }
 
 select option {
