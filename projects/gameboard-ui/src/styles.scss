@@ -157,6 +157,12 @@ app-root {
   font-size: 2em;
 }
 
+.sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  z-index: 1020;
+}
+
 .colorblind-danger {
   color: lighten($danger, 20%);
 }
