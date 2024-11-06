@@ -22,8 +22,8 @@
         <ng-container *ngIf="progress?.nextSectionPreReqThisSection && progress?.nextSectionPreReqTotal">
             <ul>
                 <li *ngIf="progress!.nextSectionPreReqThisSection">
-                    score at least <strong>{{ progress?.nextSectionPreReqThisSection }}</strong> points on section
-                    {{ progress!.variant.sections.length }}.
+                    score at least <strong>{{ progress?.nextSectionPreReqThisSection }}</strong> points on
+                    section {{ progress!.variant.sections.length }}.
                 </li>
                 <li *ngIf="progress!.nextSectionPreReqTotal">
                     Score at least <strong>{{ progress!.nextSectionPreReqTotal }}</strong> points total.
@@ -33,7 +33,7 @@
         </ng-container>
 
         <span *ngIf="progress!.nextSectionPreReqThisSection">
-            score at least <strong>{{ progress?.nextSectionPreReqThisSection }}</strong> points on section
+            score at least <strong>{{ progress?.nextSectionPreReqThisSection }}</strong> points on Section
             {{ progress!.variant.sections.length }}.
         </span>
 
@@ -68,7 +68,8 @@
 </ng-template>
 
 <ng-template #challengeSection let-context>
-    <h3 *ngIf="size === 'compact' && context.section.name">{{ context.section.name || "Section " + context.index + 1 }}
+    <h3 *ngIf="size === 'compact' && context.section.name">{{ context.section.name || "Section " +
+        context.index + 1 }}
     </h3>
 
     <alert type="success" *ngIf="context.isMultiSection && context.questionsRemaining === 0">

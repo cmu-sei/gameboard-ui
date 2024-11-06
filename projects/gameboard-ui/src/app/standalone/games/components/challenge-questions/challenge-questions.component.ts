@@ -8,7 +8,7 @@ import { fa } from '@/services/font-awesome.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { HoldConfirmButtonComponent } from "@/standalone/core/components/hold-confirm-button/hold-confirm-button.component";
 import { ToastService } from '@/utility/services/toast.service';
-import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { ChallengeQuestionsFormService } from '@/services/challenge-questions-form.service';
 import { EpochMsToTimeRemainingStringPipe } from '@/standalone/core/pipes/epoch-ms-to-time-remaining.pipe';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
