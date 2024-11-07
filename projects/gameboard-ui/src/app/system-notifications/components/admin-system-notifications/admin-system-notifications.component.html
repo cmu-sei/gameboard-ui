@@ -45,7 +45,7 @@
 
                 <td class="text-center">
                     <span class="badge text-capitalize"
-                        [class.badge-info]="notification.notificationType == 'generalInfo'"
+                        [class.badge-success]="notification.notificationType == 'generalInfo'"
                         [class.badge-warning]="notification.notificationType == 'warning'"
                         [class.badge-danger]="notification.notificationType == 'emergency'">
                         {{notification.notificationType | systemNotificationTypeToText}}

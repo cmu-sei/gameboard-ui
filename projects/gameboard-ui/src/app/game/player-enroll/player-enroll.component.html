@@ -5,7 +5,7 @@
   <div class="card" *ngIf="ctx">
     <div class="card-body">
 
-      <div class="text-info card-text mb-2" *ngIf="isRegistrationOpen">
+      <div class="text-success card-text mb-2" *ngIf="isRegistrationOpen">
         <span *ngIf="ctx.game.registration.isBefore">Enrollment opens in </span>
         <span *ngIf="ctx.game.registration.isDuring">Enrollment closes in </span>
         <span *ngIf="ctx.game.registration.isAfter">Enrollment is closed </span>
@@ -53,7 +53,7 @@
               <div class="d-flex align-items-center justify-content-center mt-5"
                 *ngIf="ctxDelayed$ | async as delay; else loading">
                 <div class="text-center" *ngIf="!!ctx.user.name && hasSelectedSponsor">
-                  <app-confirm-button btnClass="btn btn-primary btn-lg mr-4"
+                  <app-confirm-button btnClass="btn btn-success btn-lg mr-4"
                     [disabled]="!isRegistrationOpen && !canStandardEnroll && !canAdminEnroll" [tooltip]="enrollTooltip"
                     (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
                     <fa-icon [icon]="faEdit"></fa-icon>
@@ -77,7 +77,7 @@
         <div *ngIf="isManager$ | async" class="form-group mb-0">
           <ng-container *ngIf="ctx.player | hasPendingName">
             <ng-container *ngIf="!ctx.player.nameStatus">
-              <div class="alert alert-info">
+              <div class="alert alert-warning">
                 Your name is pending approval from an administrator. Return later or select "Update" to see if it's
                 been approved.
               </div>
@@ -96,7 +96,7 @@
             <input id="name-input" type="text" class="form-control" [(ngModel)]="ctx.player.name" maxlength="64"
               autocomplete="off" placeholder="display name">
             <div class="input-group-append">
-              <button id="name-update-button" class="btn btn-info" (click)="update(ctx.player)"
+              <button id="name-update-button" class="btn btn-success" (click)="update(ctx.player)"
                 [disabled]="!ctx.player.name">
                 <span>Update</span>
               </button>
@@ -121,11 +121,11 @@
                 <input type="text" disabled id="token-input" class="form-control" [(ngModel)]="code" maxlength="64"
                   placeholder="Generate a code ->">
                 <div class="input-group-append gb-button-group">
-                  <button class="btn btn-info" (click)="invite(ctx.player)">
+                  <button class="btn btn-success" (click)="invite(ctx.player)">
                     <fa-icon [icon]="fa.arrowsSpin"></fa-icon>
                   </button>
 
-                  <button *ngIf="code" class="btn btn-info button-group-button" [appCopyOnClick]="code"
+                  <button *ngIf="code" class="btn btn-success button-group-button" [appCopyOnClick]="code"
                     appCopyOnClickMessage="Copied your invitation code to your clipboard.">
                     <fa-icon [icon]="fa.copy"></fa-icon>
                   </button>
@@ -147,7 +147,7 @@
                 <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64"
                   placeholder="Enter your invitation code here to join a team">
                 <div class="input-group-append">
-                  <button class="btn btn-info" [disabled]="!token" (click)="redeem(ctx.player)">
+                  <button class="btn btn-success" [disabled]="!token" (click)="redeem(ctx.player)">
                     <fa-icon [icon]="faPaste"></fa-icon>
                     <span>Join</span>
                   </button>
@@ -199,6 +199,6 @@
 <ng-template #invitationGenerated>
   <div class="invitation-generated-wrapper">
     <span class="text-muted">Your invitation code: </span>
-    <strong [appCopyOnClick]="code" class="invitation-code text-info fw-bold cursor-pointer">{{code}}</strong>
+    <strong [appCopyOnClick]="code" class="invitation-code text-success fw-bold cursor-pointer">{{code}}</strong>
   </div>
 </ng-template>

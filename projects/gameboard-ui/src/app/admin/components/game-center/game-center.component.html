@@ -25,10 +25,10 @@
                 <div *ngIf="!ctx.isPractice && (ctx.isLive || ctx.isRegistrationActive)"
                     class="d-flex align-content-center mt-2">
                     <div *ngIf="!ctx.isPublished" class="badge badge-warning mr-2 text-upper p-1">Unpublished</div>
-                    <div *ngIf="ctx.isRegistrationActive" class="badge badge-info text-upper mr-2 p-1">
+                    <div *ngIf="ctx.isRegistrationActive" class="badge badge-success text-upper mr-2 p-1">
                         Registration Available
                     </div>
-                    <div *ngIf="ctx.isLive" class="badge badge-info text-upper p-1">Live</div>
+                    <div *ngIf="ctx.isLive" class="badge badge-success text-upper p-1">Live</div>
                 </div>
             </div>
         </div>

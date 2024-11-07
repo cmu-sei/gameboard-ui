@@ -52,7 +52,7 @@
                     <input type="number" class="form-control" [(ngModel)]="variant">
                   </div>
                 </ng-container>
-                <app-confirm-button btnClass="btn btn-primary" (confirm)="launch(spec)" #startChallengeConfirmButton>
+                <app-confirm-button btnClass="btn btn-success" (confirm)="launch(spec)" #startChallengeConfirmButton>
                   <span>Start Challenge</span>
                 </app-confirm-button>
                 <div *ngIf="!ctx.isPractice">
@@ -114,21 +114,24 @@
             <app-gamespace-quiz [challengeId]="spec.instance!.state.id" [spec]="spec!" [session]="ctx.session"
               (graded)="graded()"></app-gamespace-quiz>
 
-            <div *ngIf="spec.instance?.id" class="text-right m-4">
-              <div class="mb-1">
-                Need Challenge Support?
-                <span class="m-2 p-2">
-                  <a class="btn btn-success" target="_blank" [routerLink]="['/support/create']"
-                    [queryParams]="{cid: spec.instance?.id!}">
-                    <span>Create Ticket</span>
-                  </a>
-                </span>
-              </div>
-              <div>
+            <div *ngIf="spec.instance?.id" class="d-flex align-items-baseline my-4">
+              <div class="flex-grow-1">
                 Support Code:
                 <span class="text-success m-2 p-2 cursor-pointer" tooltip="Click to copy your challenge support code"
                   appCopyOnClick>
                   {{ spec.instance?.id | slice:0:8 }} {{ spec.tag }}
+                </span>
+              </div>
+
+              <div class="mb-1">
+                <span class="mr-2">
+                  Need Challenge Support?
+                </span>
+                <span class="my-2 py-2">
+                  <a class="btn btn-success" target="_blank" [routerLink]="['/support/create']"
+                    [queryParams]="{cid: spec.instance?.id!}">
+                    <span>Create Ticket</span>
+                  </a>
                 </span>
               </div>
             </div>

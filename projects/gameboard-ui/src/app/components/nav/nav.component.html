@@ -8,24 +8,24 @@
         </ng-container>
         <a *ngIf="isPracticeModeEnabled" class="btn btn-link text-success mx-1" routerLinkActive="active"
             [routerLink]="['practice']">Practice</a>
-        <ng-container *ngIf="user$ | async as user;">
+        <ng-container *ngIf="user$ | async as user; else unauthed">
             <a class="btn btn-link text-success mx-1" routerLinkActive="active" [routerLink]="['support']">
                 <span>Support</span>
                 <app-support-pill></app-support-pill>
             </a>
+
+            <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Profile</a>
+
             <div *appIfHasPermission="'Reports_View'" class="d-flex align-items-center">
                 <a class="btn btn-link text-success-mx-1" routerLinkActive="active" [routerLink]="['reports']">
                     Reports
                 </a>
             </div>
 
-            <ng-container *ngIf="(user$ | async)?.id">
-                <a *appIfHasPermission="'Admin_View'" class="btn btn-link text-success mx-1" routerLinkActive="active"
-                    [routerLink]="['/admin']">Admin</a>
-            </ng-container>
+            <a *appIfHasPermission="'Admin_View'" class="btn btn-link text-success mx-1" routerLinkActive="active"
+                [routerLink]="['/admin']">Admin</a>
+            <a class="btn btn-link text-success mx-1" (click)="handleLogOut()">Log out</a>
         </ng-container>
-
-        <app-user-nav-item></app-user-nav-item>
     </div>
 </nav>
 
@@ -50,18 +50,20 @@
             <li *ngIf="isPracticeModeEnabled">
                 <a routerLinkActive="active" [routerLink]="['practice']">Practice</a>
             </li>
-            <ng-container *ngIf="user$ | async as user">
+            <ng-container *ngIf="user$ | async as user; else unauthed">
                 <li>
                     <a routerLinkActive="active" [routerLink]="['support']">
                         <span>Support</span>
                         <app-support-pill></app-support-pill>
                     </a>
                 </li>
+                <li>
+                    <a routerLinkActive="active" [routerLink]="profileUrl">Profile</a>
+                </li>
                 <li *appIfHasPermission="'Reports_View'">
                     <a routerLinkActive="active" [routerLink]="['/reports']">
                         Reports
                     </a>
-                    <span class="badge badge-info">[BETA]</span>
                 </li>
                 <li *appIfHasPermission="'Admin_View'">
                     <a routerLinkActive="active" [routerLink]="['/admin']">
@@ -69,9 +71,13 @@
                     </a>
                 </li>
                 <li>
-                    <app-user-nav-item></app-user-nav-item>
+                    <a class="text-success" (click)=" handleLogOut()">Log out</a>
                 </li>
             </ng-container>
         </ul>
     </div>
 </nav>
+
+<ng-template #unauthed>
+    <div role="button" class="btn btn-link text-success mx-1" (click)="handleLogIn()">Log in</div>
+</ng-template>

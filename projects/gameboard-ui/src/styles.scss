@@ -65,16 +65,23 @@ li {
 }
 
 /* ... but for markdown we just go with the classics  */
-markdown ul li {
-  list-style-type: disc;
-  padding: unset;
-  margin-left: 1rem;
-}
+markdown {
+  ol,
+  ul {
+    margin-bottom: 1rem;
+  }
 
-markdown ol li {
-  list-style-type: decimal;
-  padding: unset;
-  margin-left: 1rem;
+  ol li {
+    list-style-type: decimal;
+    padding: unset;
+    margin-left: 1rem;
+  }
+
+  ul li {
+    list-style-type: disc;
+    padding: unset;
+    margin-left: 1rem;
+  }
 }
 
 select option {
@@ -148,6 +155,12 @@ app-root {
 
 .fs-20 {
   font-size: 2em;
+}
+
+.sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  z-index: 1020;
 }
 
 .colorblind-danger {

@@ -34,7 +34,7 @@ export class ModalConfirmService implements OnDestroy {
   }
 
   openTemplate<T>(templateRef: TemplateRef<T>) {
-    this.bsModalService.show(templateRef, { class: "modal-dialog-centered" });
+    this.bsModalRef = this.bsModalService.show(templateRef, { class: "modal-dialog-centered" });
   }
 
   hide(isCancelEvent = false): void {

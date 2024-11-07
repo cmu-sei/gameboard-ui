@@ -30,7 +30,7 @@
                     <div class="d-flex align-items-center">
                         <h4 class="card-title flex-grow w-100">
                             {{team.name}}
-                            <span *ngIf="team.isReady" class="ml-2 mb-2 badge badge-info">Ready</span>
+                            <span *ngIf="team.isReady" class="ml-2 mb-2 badge badge-success">Ready</span>
                         </h4>
                         <app-deployment-admin-team-context-menu class="d-block" [team]="team" [isReady]="team.isReady"
                             (teamReadyStateToggled)="handleTeamReadyStateChanged(team.id)"></app-deployment-admin-team-context-menu>

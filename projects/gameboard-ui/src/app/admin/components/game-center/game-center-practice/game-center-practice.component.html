@@ -32,7 +32,7 @@
                     </div>
                     <div secondaryDetail *ngIf="user.activeChallenge">
                         Playing "{{ user.activeChallenge.name }}" now
-                        <div class="badge badge-info">
+                        <div class="badge badge-success">
                             <app-countdown [countdownTo]="user.activeChallengeEndTimestamp"></app-countdown>
                             remaining
                         </div>
