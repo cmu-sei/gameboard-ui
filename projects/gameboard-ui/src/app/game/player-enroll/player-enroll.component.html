@@ -121,11 +121,11 @@
                 <input type="text" disabled id="token-input" class="form-control" [(ngModel)]="code" maxlength="64"
                   placeholder="Generate a code ->">
                 <div class="input-group-append gb-button-group">
-                  <button class="btn btn-info" (click)="invite(ctx.player)">
+                  <button class="btn btn-success" (click)="invite(ctx.player)">
                     <fa-icon [icon]="fa.arrowsSpin"></fa-icon>
                   </button>
 
-                  <button *ngIf="code" class="btn btn-info button-group-button" [appCopyOnClick]="code"
+                  <button *ngIf="code" class="btn btn-success button-group-button" [appCopyOnClick]="code"
                     appCopyOnClickMessage="Copied your invitation code to your clipboard.">
                     <fa-icon [icon]="fa.copy"></fa-icon>
                   </button>
@@ -147,7 +147,7 @@
                 <input type="text" id="token-input" class="form-control" [(ngModel)]="token" maxlength="64"
                   placeholder="Enter your invitation code here to join a team">
                 <div class="input-group-append">
-                  <button class="btn btn-info" [disabled]="!token" (click)="redeem(ctx.player)">
+                  <button class="btn btn-success" [disabled]="!token" (click)="redeem(ctx.player)">
                     <fa-icon [icon]="faPaste"></fa-icon>
                     <span>Join</span>
                   </button>

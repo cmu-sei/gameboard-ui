@@ -147,7 +147,8 @@
       </div>
       <div class="col-3 align-self-center d-flex flex-column justify-content-between">
         <div>
-          <span class="badge mr-2" style="font-size: 90%" [class.badge-info]="ticket.status == 'Open' || !ticket.status"
+          <span class="badge mr-2" style="font-size: 90%"
+            [class.badge-success]="ticket.status == 'Open' || !ticket.status"
             [class.badge-success]="ticket.status == 'In Progress'" [class.badge-dark]="ticket.status == 'Closed'">
             {{ticket.status}}
           </span>&nbsp;
