@@ -1,6 +1,6 @@
+import { Duration } from "luxon";
 import { SimpleEntity } from "@/api/models";
 import { PlayerMode } from "@/api/player-models";
-import { Duration } from "luxon";
 
 export interface PracticeModeCertificate {
     challenge: {
@@ -30,4 +30,8 @@ export interface PublishedCertificateViewModel {
     awardedForEntity: SimpleEntity;
     ownerUser: SimpleEntity;
     mode: PlayerMode;
+}
+
+export interface UserAppSettings {
+    useStickyChallengePanel: boolean;
 }

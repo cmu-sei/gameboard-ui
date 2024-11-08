@@ -38,7 +38,8 @@
                         </div>
                     </div>
                     <div contextMenu>
-                        <button type="button" class="btn btn-info" (click)="handleUserDetailClick(user)">More</button>
+                        <button type="button" class="btn btn-success"
+                            (click)="handleUserDetailClick(user)">More</button>
                     </div>
                 </app-team-list-card>
             </li>
@@ -51,6 +52,7 @@
 </ng-template>
 
 <ng-template #noUsers>
-    <div class="text-center mt-4 text-muted">No one has attempted challenges from this game in the Practice Area yet.
+    <div class="text-center mt-4 text-muted">
+        No one has attempted challenges from this game in the Practice Area yet.
     </div>
 </ng-template>

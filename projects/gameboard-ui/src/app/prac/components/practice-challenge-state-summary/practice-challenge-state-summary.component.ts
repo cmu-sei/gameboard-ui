@@ -8,6 +8,7 @@ import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { slug } from '@/../tools/functions';
 import { TeamService } from '@/api/team.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { UserSettingsService } from '@/services/user-settings.service';
 
 @Component({
   selector: 'app-practice-challenge-state-summary',
@@ -23,11 +24,13 @@ export class PracticeChallengeStateSummaryComponent {
   protected isChangingSessionEnd = false;
   protected fa = fa;
   protected slug = slug;
+  protected userSettings$ = this.userSettings.updated$;
 
   constructor(
     activeChallengesRepo: ActiveChallengesRepo,
     private teamService: TeamService,
-    private toastService: ToastService) {
+    private toastService: ToastService,
+    private userSettings: UserSettingsService) {
     this.activeChallenge$ = activeChallengesRepo.activePracticeChallenge$;
   }
 
@@ -48,12 +51,8 @@ export class PracticeChallengeStateSummaryComponent {
     this.isChangingSessionEnd = false;
   }
 
-  private getExtendTooltip(msRemaining: number) {
-    if (msRemaining < this.msPerHour) {
-      return "If you want more time to practice, you can extend your session. Sessions extend to a maximum remaining time of 60 minutes.";
-    }
-
-    return "You can't extend your practice session because you have more than 60 minutes remaining.";
+  protected handleToggleStickyPanel(enable: boolean) {
+    this.userSettings.updated$.next({ useStickyChallengePanel: enable });
   }
 
   private showExtensionToast(sessionEnd: DateTime, isAutomatic = false) {

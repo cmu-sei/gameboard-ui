@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { debounceTime, firstValueFrom, map, Subject, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { debounceTime, firstValueFrom, map, Subject } from 'rxjs';
 import { AdminService } from '@/api/admin.service';
 import { fa } from '@/services/font-awesome.service';
 import { Game } from '@/api/game-models';
@@ -19,7 +20,6 @@ import { LocalStorageService, StorageKey } from '@/services/local-storage.servic
 import { NowService } from '@/services/now.service';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { TeamService } from '@/api/team.service';
-import { ActivatedRoute } from '@angular/router';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
@@ -61,9 +61,13 @@ export class GameCenterTeamsComponent implements OnInit {
 
     this.unsub.add(
       this.route.data.subscribe(async d => await this.load(d.gameId)),
-      this.searchInput$.pipe(
-        debounceTime(300)
-      ).subscribe(async event => {
+      this.route.queryParams.subscribe(async qp => {
+        if (qp.search) {
+          this.filterSettings.searchTerm = qp.search.toString().trim();
+          await this.load(this.game?.id);
+        }
+      }),
+      this.searchInput$.pipe(debounceTime(300)).subscribe(async event => {
         this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
         await this.load(this.game?.id);
       }),

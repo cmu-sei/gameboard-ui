@@ -120,7 +120,12 @@
                             formControlName="s{{ context.index }}q{{ questionIndex }}" [readOnly]="question.isCorrect"
                             placeholder="Enter your answer for question {{ questionIndex + 1 }} here">
                     </div>
-                    <div class="text-muted fs-08" *ngIf="question.example">e.g. {{question.example}}</div>
+                    <div class="text-muted fs-08" *ngIf="question.example">
+                        <strong>
+                            Example:
+                        </strong>
+                        {{question.example}}
+                    </div>
                 </div>
             </li>
         </ul>

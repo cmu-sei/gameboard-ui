@@ -37,6 +37,8 @@ export class WindowService implements OnDestroy {
   }
 
   scrollToBottom() {
-    this.document.defaultView?.scrollTo(0, this.document.body.scrollHeight);
+    setTimeout(() => {
+      this.document.defaultView?.scrollTo(0, this.document.body.scrollHeight);
+    }, 500);
   }
 }

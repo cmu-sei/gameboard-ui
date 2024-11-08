@@ -36,7 +36,7 @@
             </tbody>
         </table>
 
-        <ng-container *ngIf="!isChangingSessionEnd && activeChallenge">
+        <ng-container *ngIf="!isChangingSessionEnd">
             <div class="text-center">
                 <app-confirm-button btnClass="btn btn-success btn-sm" [tooltip]="extendTooltip"
                     [disabled]="((activeChallenge.endsAt | epochMsToMsRemaining | async) || 0) > msPerHour"
@@ -47,6 +47,12 @@
                 <app-confirm-button btnClass="btn btn-success btn-sm" (confirm)="endSession(activeChallenge)">
                     End Session
                 </app-confirm-button>
+            </div>
+
+            <div class="text-center btn-link text-muted my-2"
+                (click)="handleToggleStickyPanel(!userSettings$.value.useStickyChallengePanel)">
+                {{ (userSettings$ | async)?.useStickyChallengePanel ? "Turn off" : "Turn on" }} the Sticky Challenge
+                Panel
             </div>
         </ng-container>
     </ng-container>

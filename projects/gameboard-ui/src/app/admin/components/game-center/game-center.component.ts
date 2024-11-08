@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '@/api/admin.service';
 import { Game } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
@@ -29,8 +29,7 @@ export class GameCenterComponent {
     private adminService: AdminService,
     private appTitle: AppTitleService,
     private gameService: GameService,
-    private localUserService: UserService,
-    private router: Router) {
+    private localUserService: UserService) {
 
     unsub.add(this.activatedRoute.paramMap.subscribe(async paramMap => {
       const gameId = paramMap.get("gameId") || this.gameCenterCtx?.id;

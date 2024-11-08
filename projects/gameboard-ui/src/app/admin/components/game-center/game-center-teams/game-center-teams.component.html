@@ -1,7 +1,7 @@
 <alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
     There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
-    who have pending name change requests. Click <span class="btn-link"
-        (click)="handlePendingNamesClick(game.id)">here</span>
+    who have pending name change requests. Click
+    <span class="btn-link" (click)="handlePendingNamesClick(game.id)">here</span>
     to review them.
 </alert>
 
@@ -114,7 +114,7 @@
                 <div secondaryDetail>
                     <ng-container *ngIf="team.session.start && team.session.end | epochMsToDateTime | datetimeIsFuture">
                         <div>Playing now</div>
-                        <strong class="text-info d-block"
+                        <strong class="text-success d-block"
                             [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
                             team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async
                             }}</strong>
@@ -125,7 +125,7 @@
                         <div class="text-muted">Not playing yet</div>
 
                         <span *ngIf="!team.session.start">
-                            (Registered <strong class="text-success"
+                            (Registered <strong class="text-info"
                                 [tooltip]="(team.registeredOn | epochMsToDateTime | friendlyDateAndTime) || ''">{{
                                 team.registeredOn | epochMsToDateTime |
                                 shortdate }}</strong>)

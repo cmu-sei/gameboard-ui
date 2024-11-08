@@ -70,7 +70,7 @@ export interface EnrollmentReportByGameSponsor {
     id: string;
     name: string;
     logoFileName: string;
-    playerCount: string;
+    playerCount: number;
 }
 
 export interface EnrollmentReportStatSummary {
