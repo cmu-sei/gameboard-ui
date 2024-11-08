@@ -75,17 +75,18 @@
                                     <fa-icon [icon]="fa.barsStaggered" size="lg"></fa-icon>
                                 </a>
 
-                                <a [href]="'admin/registrar/' + spec.game.id + '?term=' + challenge.team.id | relativeToAbsoluteHref"
-                                    target="_blank" class="btn btn-success mr-2"
+                                <a [routerLink]="['admin', 'game', spec.game.id, 'teams']"
+                                    [queryParams]="{ search: challenge.team.id }" target="_blank"
+                                    class="btn btn-success mr-2"
                                     [tooltip]="'View this ' + (spec.game.isTeamGame ? 'team' : 'player') + '\'s session'"
                                     placement="bottom">
                                     <fa-icon [icon]="spec.game.isTeamGame ? fa.peopleGroup : fa.person"
                                         size="lg"></fa-icon>
                                 </a>
 
-                                <a [href]="'admin/observer/challenges/' + spec.game.id + '?search=' + challenge.id | relativeToAbsoluteHref"
-                                    target="_blank" class="btn btn-success mr-2" tooltip="Observe this challenge"
-                                    placement="bottom">
+                                <a [routerLink]="['admin', 'game', spec.game.id, 'observe']"
+                                    [queryParams]=" { challengeId: challenge.id }" target="_blank"
+                                    class="btn btn-success mr-2" tooltip="Observe this challenge" placement="bottom">
                                     <fa-icon [icon]="fa.eye" size="lg"></fa-icon>
                                 </a>
 

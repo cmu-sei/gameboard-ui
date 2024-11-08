@@ -20,6 +20,7 @@ import { ChallengeDeployCountdownComponent } from '@/game/components/challenge-d
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 import { VmLinkComponent } from "../vm-link/vm-link.component";
 import { UserService } from '@/utility/user.service';
+import { UserSettingsService } from '@/services/user-settings.service';
 
 @Component({
   selector: 'app-play',
@@ -59,13 +60,14 @@ export class PlayComponent implements OnChanges {
   protected windowWidth$: Observable<number>;
 
   constructor(
-    windowService: WindowService,
     private activeChallengesRepo: ActiveChallengesRepo,
     private challengesService: ChallengesService,
     private localStorage: LocalStorageService,
     private localUser: UserService,
     private routerService: RouterService,
-    private unsub: UnsubscriberService) {
+    private unsub: UnsubscriberService,
+    private userAppSettings: UserSettingsService,
+    private windowService: WindowService) {
     this.windowWidth$ = windowService.resize$;
     this.unsub.add(
       windowService.resize$.subscribe(width => {
@@ -74,8 +76,10 @@ export class PlayComponent implements OnChanges {
         this.showMiniPlayerPrompt = this.localStorage.get(StorageKey.UsePlayPane) === null;
 
         if (!this.isMiniPlayerAvailable && this.isMiniPlayerSelected)
-          this.toggleMiniPlayer();
-      })
+          this.setIsStickyPanelEnabled(this.isMiniPlayerSelected, false);
+      }),
+
+      userAppSettings.updated$.subscribe(settings => this.setIsStickyPanelEnabled(settings.useStickyChallengePanel, false))
     );
   }
 
@@ -106,16 +110,25 @@ export class PlayComponent implements OnChanges {
     this.isUndeploying = false;
   }
 
-  protected toggleMiniPlayer() {
+  protected setIsStickyPanelEnabled(isEnabled: boolean, notify = true) {
     this.showMiniPlayerPrompt = false;
+
     if (this.isMiniPlayerAvailable) {
-      this.isMiniPlayerSelected = !this.isMiniPlayerSelected;
+      this.isMiniPlayerSelected = isEnabled;
       this.localStorage.add(StorageKey.UsePlayPane, this.isMiniPlayerSelected);
 
     }
     else {
       this.isMiniPlayerSelected = false;
       this.localStorage.add(StorageKey.UsePlayPane, false);
+    }
+
+    if (notify) {
+      this.userAppSettings.updated$.next({ useStickyChallengePanel: this.isMiniPlayerSelected });
+    }
+
+    if (!this.isMiniPlayerSelected) {
+      this.windowService.scrollToBottom();
     }
   }
 

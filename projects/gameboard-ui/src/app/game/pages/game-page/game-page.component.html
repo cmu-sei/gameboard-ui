@@ -9,7 +9,7 @@
     </span>
     <div class="spacer"></div>
     <div class="d-flex flex-column align-items-center">
-      <a [routerLink]="['../scores', ctx.game.id]" class="p-4">
+      <a [routerLink]="['/game', ctx.game.id, 'scoreboard']" class="p-4">
         <span>
           <fa-icon [icon]="fa.listOl"></fa-icon>
           <span>Scoreboard</span>
@@ -87,7 +87,7 @@
       <div class="col-12 page-width scoreboard">
         <h2 id="scoreboard" class="text-center my-4">
           <span>Scoreboard</span>&nbsp;&nbsp;
-          <a [routerLink]="['../', 'scores', ctx.game.id]">
+          <a [routerLink]="['/game', ctx.game.id, 'scoreboard']">
             <small>
               <fa-icon [icon]="fa.externalLinkAlt"></fa-icon>
             </small>

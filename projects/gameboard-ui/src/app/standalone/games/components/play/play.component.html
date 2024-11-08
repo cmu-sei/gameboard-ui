@@ -16,7 +16,8 @@
                     <h2>Check out the new challenge resources panel!</h2>
 
                     <p>
-                        <span class="fw-bold cursor-pointer" (click)="toggleMiniPlayer()">Click here</span>
+                        <span class="fw-bold cursor-pointer"
+                            (click)="setIsStickyPanelEnabled(!this.isMiniPlayerSelected)">Click here</span>
                         to "sticky" the Challenge panel so it's always visible as you scroll down the page.
                         (You can return the panel to the bottom of the page at any time by clicking the appropriate link
                         in the panel.)
@@ -30,7 +31,7 @@
                 <ng-container *ngIf="!isMiniPlayerSelected">
                     <ng-container *ngTemplateOutlet="solutionGuideAlert"></ng-container>
 
-                    <h2><ng-container *ngTemplateOutlet="challengeConsolesText"></ng-container></h2>
+                    <h2>Challenge Consoles</h2>
                     <div class="vms-container my-4">
                         <ul class="d-flex flex-wrap">
                             <li *ngFor="let vm of challenge.vms" class="d-block">
@@ -57,17 +58,17 @@
                         <app-challenge-questions [challengeId]="challenge.id"></app-challenge-questions>
                     </div>
 
-                    <div
-                        class="d-flex align-items-center sticky-bottom sticky-controls-container p-2 bg-success rounded-top">
+                    <div class="d-flex align-items-baseline sticky-controls-container p-2 bg-body rounded-top">
                         <div class="flex-grow-1">
-                            <button type="button" class="btn btn-link text-body"
-                                *ngIf="isMiniPlayerAvailable && !isMiniPlayerSelected" (click)="toggleMiniPlayer()">
+                            <button type="button" class="btn btn-sm btn-success"
+                                *ngIf="isMiniPlayerAvailable && !isMiniPlayerSelected"
+                                (click)="setIsStickyPanelEnabled(!this.isMiniPlayerSelected)">
                                 Use Sticky Challenge Panel
                             </button>
                         </div>
                         <div class="mr-4">
                             Support Code:
-                            <span class="btn btn-link text-body font-weight-bold" appCopyOnClick
+                            <span class="btn btn-link font-weight-bold" appCopyOnClick
                                 tooltip="Click to copy your challenge support code">
                                 {{ { id: challenge.id } | toSupportCode }}
                             </span>
@@ -76,8 +77,8 @@
                         <div>
                             Having trouble?
 
-                            <a class="btn btn-link text-body fw-bold" target="_blank" [routerLink]="['/support/create']"
-                                [queryParams]="{cid: challenge.id}">
+                            <a class="btn btn-sm btn-warning fw-bold ml-2" target="_blank"
+                                [routerLink]="['/support/create']" [queryParams]="{cid: challenge.id}">
                                 <span>Create Ticket</span>
                             </a>
                         </div>
@@ -97,7 +98,7 @@
     <ng-container *ngIf="challenge && !isDeploying && !isUndeploying">
         <ng-container *ngTemplateOutlet="solutionGuideAlert"></ng-container>
 
-        <h5><ng-container *ngTemplateOutlet="challengeConsolesText"></ng-container></h5>
+        <h5>Challenge Consoles</h5>
 
         <div *ngIf="challenge?.vms?.length" class="vms-container my-4">
             <ul class="d-flex flex-wrap">
@@ -148,7 +149,8 @@
         <hr class="light">
 
         <div class="text-muted">
-            Click <span class="btn-link" role="button" (click)="toggleMiniPlayer()">here</span>
+            Click <span class="btn-link" role="button"
+                (click)="setIsStickyPanelEnabled(!this.isMiniPlayerSelected)">here</span>
             to deactivate the sticky Challenge panel
         </div>
     </ng-container>
@@ -156,10 +158,6 @@
 
 <ng-template #miniPlayerLoading>
     <app-spinner>Loading your challenge...</app-spinner>
-</ng-template>
-
-<ng-template #challengeConsolesText>
-    Challenge {{ "Console" | pluralizer:vmUrls }}
 </ng-template>
 
 <ng-template #solutionGuideAlert>

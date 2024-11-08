@@ -1,0 +1,15 @@
+<div class="container">
+    <ng-container *ngIf="game">
+        <h1 class="mt-4">Scoreboard</h1>
+        <h2 class="text-success fw-bold text-upper fs-12">
+            <a [routerLink]="['/game', game.id]">{{ game.name }}</a>
+        </h2>
+
+        <app-scoreboard class="d-block mt-5" [gameId]="game.id"></app-scoreboard>
+    </ng-container>
+
+</div>
+
+<ng-template #loading>
+    <app-spinner>Loading the score...</app-spinner>
+</ng-template>

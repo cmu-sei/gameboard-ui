@@ -7,6 +7,7 @@ import { ScoreboardComponent } from './components/scoreboard/scoreboard.componen
 import { ScoreboardTeamDetailModalComponent } from './components/scoreboard-team-detail-modal/scoreboard-team-detail-modal.component';
 import { ScoreToTooltipPipe } from './pipes/score-to-tooltip.pipe';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ScoreboardPageComponent } from './components/scoreboard-page/scoreboard-page.component';
 
 const PUBLIC_DECLARATIONS = [
   ScoreboardComponent,
@@ -17,7 +18,8 @@ const PUBLIC_DECLARATIONS = [
 @NgModule({
   declarations: [
     ...PUBLIC_DECLARATIONS,
-    ChallengeBonusesToTooltip
+    ChallengeBonusesToTooltip,
+    ScoreboardPageComponent
   ],
   imports: [
     CommonModule,

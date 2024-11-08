@@ -37,8 +37,8 @@ import { HasPendingNamePipe } from './pipes/has-pending-name.pipe';
 import { ChallengeQuestionsComponent } from "../standalone/games/components/challenge-questions/challenge-questions.component";
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
-import { VmLinkComponent } from '@/standalone/games/components/vm-link/vm-link.component';
 import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
+import { ScoreboardPageComponent } from '@/scoreboard/components/scoreboard-page/scoreboard-page.component';
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -75,6 +75,7 @@ const MODULE_DECLARATIONS = [
       { path: 'board/:playerId', canActivate: [AuthGuard, GameIsStarted, UserIsPlayingGuard], component: GameboardPageComponent },
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
       { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalGameGuard], component: ExternalGamePageComponent },
+      { path: ":gameId/scoreboard", component: ScoreboardPageComponent },
       { path: ':id', component: GamePageComponent, children: [] }
     ]),
     CoreModule,
