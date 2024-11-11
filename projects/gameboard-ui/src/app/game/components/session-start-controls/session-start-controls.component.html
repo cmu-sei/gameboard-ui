@@ -50,7 +50,7 @@
             </ng-container>
         </ng-container>
 
-        <app-confirm-button btnClass="btn btn-lg btn-info" *ngIf="!ctx.game.requireSynchronizedStart"
+        <app-confirm-button btnClass="btn btn-lg btn-success" *ngIf="!ctx.game.requireSynchronizedStart"
             (confirm)="handleDoubleCheckRequest(true)" (cancel)="handleDoubleCheckRequest(false)">
             <fa-icon [icon]="fa.bolt"></fa-icon>
             <span>Start Session</span>

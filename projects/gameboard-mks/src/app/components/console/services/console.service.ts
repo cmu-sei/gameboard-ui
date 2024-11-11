@@ -1,7 +1,6 @@
 // Copyright 2021 Carnegie Mellon University.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root.
 
-
 export interface ConsoleService {
   connect(url: string, stateCallback: (state: string) => void, options: any): void;
   disconnect(): void;

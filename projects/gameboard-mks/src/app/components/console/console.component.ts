@@ -32,13 +32,14 @@ import { LogService } from '@/services/log.service';
 })
 export class ConsoleComponent implements AfterViewInit, OnDestroy {
   @Input() index = 0;
-  @Input() viewOnly = false;
   @Input() request!: ConsoleRequest;
   @ViewChild('consoleCanvas') consoleCanvas!: ElementRef;
   @ViewChild('audienceDiv') audienceDiv!: ElementRef;
   canvasId = '';
   vmId = '';
   console!: ConsoleService;
+
+  protected isReadOnly = false;
 
   state = 'loading';
   shadowstate = 'loading';
@@ -93,19 +94,7 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
     this.canvasId = el.id + this.index;
     el.id += this.index;
 
-    let teamNameBit = "";
-    if (this.request.teamName)
-      teamNameBit = `${this.request.teamName} on`
-
-    let onConsoleBit = "console";
-    if (this.request?.name)
-      onConsoleBit = this.request.name;
-
-    let challengeNameBit = "";
-    if (this.request.challengeName)
-      challengeNameBit = ` :: ${this.request.challengeName}`;
-
-    this.titleSvc.setTitle(teamNameBit + onConsoleBit + challengeNameBit);
+    this.titleSvc.setTitle(this.buildTitle());
 
     if (!!this.request.observer) {
       this.showCog = false;
@@ -121,6 +110,8 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
       e.preventDefault();
       this.audiencePos = e;
     };
+
+    this.isReadOnly = (this.request.observer || "false").toString() === "1";
   }
 
   ngOnDestroy(): void {
@@ -219,7 +210,7 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
 
     this.console.connect(info.url, (state: string) => this.changeState(state), {
       canvasId: this.canvasId,
-      viewOnly: this.viewOnly,
+      viewOnly: this.isReadOnly,
       changeResolution: !!this.request.fullbleed,
       ticket: info.ticket,
     });
@@ -372,5 +363,21 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
 
       this.audiencePos = e;
     }
+  }
+
+  private buildTitle() {
+    let teamNameBit = "";
+    if (this.request.teamName)
+      teamNameBit = `${this.request.teamName} on`
+
+    let onConsoleBit = "console";
+    if (this.request?.name)
+      onConsoleBit = this.request.name;
+
+    let challengeNameBit = "";
+    if (this.request.challengeName)
+      challengeNameBit = ` :: ${this.request.challengeName}`;
+
+    return `${teamNameBit}${onConsoleBit}${challengeNameBit}`
   }
 }
