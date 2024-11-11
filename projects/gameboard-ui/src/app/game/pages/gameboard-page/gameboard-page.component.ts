@@ -116,6 +116,7 @@ export class GameboardPageComponent {
     this.unsub.add(
       this.selecting$.pipe(
         // If s.instance does not exist, fetch; otherwise, preview
+        tap(() => this.deploying = false),
         switchMap(s => !!s.instance && !!s.instance.state
           ? of(s)
           : (!!s.instance
@@ -143,7 +144,7 @@ export class GameboardPageComponent {
     }
   }
 
-  syncOne = (c: Challenge): BoardSpec => {
+  syncOne(c: Challenge): BoardSpec {
     this.deploying = false;
 
     if (!c) {
@@ -164,7 +165,7 @@ export class GameboardPageComponent {
     }
 
     return s || {} as BoardSpec;
-  };
+  }
 
   select(spec: BoardSpec): void {
     if (!spec.disabled && !spec.locked && (!this.selected?.id || this.selected.id !== spec.id)) {
@@ -241,7 +242,7 @@ export class GameboardPageComponent {
     try {
       new URL(vm.id);
       isUrl = true;
-    } catch (_) {
+    } catch {
       isUrl = false;
     }
 

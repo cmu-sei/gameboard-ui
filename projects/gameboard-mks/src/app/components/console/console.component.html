@@ -13,10 +13,10 @@
   (userAction)="handleUserActivity($event)"></app-user-activity-listener>
 
 <div class="console-wrapper">
-  <div #consoleCanvas id="console-canvas-" [class.canvas]="!viewOnly" [class.embedded]="viewOnly"
+  <div #consoleCanvas id="console-canvas-" [class.canvas]="!isReadOnly" [class.embedded]="isReadOnly"
     [class.mock-console-connected]="isMock && state==='connected'">
 
-    <button *ngIf="isConnected && showCog && !viewOnly" class="btn overlay overlay-tl cog"
+    <button *ngIf="isConnected && showCog && !isReadOnly" class="btn overlay overlay-tl cog"
       (click)="showUtilities()">&#x2699;</button>
 
     <div #audienceDiv class="audience overlay overlay-tr">

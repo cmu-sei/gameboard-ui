@@ -17,52 +17,50 @@ export class WmksConsoleService implements ConsoleService {
   };
   stateChanged!: (state: string) => void;
 
-  constructor() { }
-
-  connect(url: string, stateCallback: (state: string) => void, options: any = {} ): void {
+  connect(url: string, stateCallback: (state: string) => void, options: any = {}): void {
 
     if (stateCallback) { this.stateChanged = stateCallback; }
-    this.options = {...this.options, ...options};
+    this.options = { ...this.options, ...options };
 
     if (this.wmks) {
       this.wmks.destroy();
       this.wmks = null;
     }
 
-    let wmks = WMKS.createWMKS(options.canvasId, this.options)
-    .register(WMKS.CONST.Events.CONNECTION_STATE_CHANGE, (event: any, data: any) => {
+    let wmks = WMKS
+      .createWMKS(options.canvasId, this.options)
+      .register(WMKS.CONST.Events.CONNECTION_STATE_CHANGE, (event: any, data: any) => {
+        switch (data.state) {
+          case WMKS.CONST.ConnectionState.CONNECTED:
+            stateCallback('connected');
+            break;
 
-      switch (data.state) {
-        case WMKS.CONST.ConnectionState.CONNECTED:
-        stateCallback('connected');
-        break;
-
-        case WMKS.CONST.ConnectionState.DISCONNECTED:
-        stateCallback('disconnected');
-        wmks.destroy();
-        wmks = null;
-        break;
-      }
-    })
-    .register(WMKS.CONST.Events.REMOTE_SCREEN_SIZE_CHANGE, (e: any, data: any) => {
-      // console.log('wmks remote_screen_size_change: ' + data.width + 'x' + data.height);
-      // TODO: if embedded, pass along dimension to canvas wrapper element
-    })
-    .register(WMKS.CONST.Events.HEARTBEAT, (e: any, data: any) => {
+          case WMKS.CONST.ConnectionState.DISCONNECTED:
+            stateCallback('disconnected');
+            wmks.destroy();
+            wmks = null;
+            break;
+        }
+      })
+      .register(WMKS.CONST.Events.REMOTE_SCREEN_SIZE_CHANGE, (e: any, data: any) => {
+        // console.log('wmks remote_screen_size_change: ' + data.width + 'x' + data.height);
+        // TODO: if embedded, pass along dimension to canvas wrapper element
+      })
+      .register(WMKS.CONST.Events.HEARTBEAT, (e: any, data: any) => {
         // debug('wmks heartbeat: ' + data);
         // console.log('wmks heartbeat: ' + data);
-    })
-    .register(WMKS.CONST.Events.COPY, (e: any, data: any) => {
+      })
+      .register(WMKS.CONST.Events.COPY, (e: any, data: any) => {
         // console.log('wmks copy: ' + data);
         stateCallback('clip:' + data);
-    })
-    .register(WMKS.CONST.Events.ERROR, (e: any, data: any) => {
+      })
+      .register(WMKS.CONST.Events.ERROR, (e: any, data: any) => {
         // debug('wmks error: ' + data.errorType);
 
-    })
-    .register(WMKS.CONST.Events.FULL_SCREEN_CHANGE, (e: any, data: any) => {
+      })
+      .register(WMKS.CONST.Events.FULL_SCREEN_CHANGE, (e: any, data: any) => {
         // debug('wmks full_screen_change: ' + data.isFullScreen);
-    });
+      });
 
     this.wmks = wmks;
 
@@ -77,7 +75,7 @@ export class WmksConsoleService implements ConsoleService {
     if (this.wmks) {
       this.wmks.disconnect();
       this.stateChanged('disconnected');
-      if (this.options.hideDisconnectedScreen ) {
+      if (this.options.hideDisconnectedScreen) {
         this.dispose();
       }
     }
