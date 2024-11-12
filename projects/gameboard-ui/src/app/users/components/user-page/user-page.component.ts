@@ -11,11 +11,12 @@ import { ApiUser } from '@/api/user-models';
 })
 export class UserPageComponent {
   protected appName: string;
-  protected localUser$?: Observable<ApiUser>;
+  protected localUser$?: Observable<ApiUser | null>;
 
   constructor(
     config: ConfigService,
     localUser: LocalUserService) {
     this.appName = config.environment.settings.appname || "Gameboard";
+    this.localUser$ = localUser.user$;
   }
 }
