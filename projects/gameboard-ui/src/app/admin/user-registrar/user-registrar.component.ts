@@ -22,6 +22,7 @@ type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 })
 export class UserRegistrarComponent {
   protected roles$: Observable<UserRoleKey[]>;
+  protected isLoading = false;
   refresh$ = new BehaviorSubject<boolean>(true);
   source$: Observable<ApiUser[]>;
   source: ApiUser[] = [];
@@ -48,8 +49,12 @@ export class UserRegistrarComponent {
       interval(60000)
     ).pipe(
       debounceTime(500),
+      tap(() => this.isLoading = true),
       switchMap(() => this.api.list({ ...this.search })),
-      tap(r => this.source = r),
+      tap(r => {
+        this.source = r;
+        this.isLoading = false;
+      }),
       tap(() => this.review()),
     );
   }
