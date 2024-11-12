@@ -89,6 +89,7 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
+import { FeedbackTemplatePickerComponent } from "../feedback/components/feedback-template-picker/feedback-template-picker.component";
 
 @NgModule({
   declarations: [
@@ -222,7 +223,6 @@ import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permiss
     ScoreboardModule,
     SponsorsModule,
     SystemNotificationsModule,
-
     // standalones
     ErrorDivComponent,
     GameInfoBubblesComponent,
@@ -230,6 +230,7 @@ import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permiss
     SafeUrlPipe,
     SpinnerComponent,
     ToSupportCodePipe,
+    FeedbackTemplatePickerComponent
   ]
 })
 

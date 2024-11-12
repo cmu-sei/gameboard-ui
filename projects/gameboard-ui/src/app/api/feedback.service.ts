@@ -3,12 +3,13 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmission, FeedbackTemplate, QuestionType } from './feedback-models';
 import { YamlService } from '@/services/yaml.service';
 import { hasProperty } from '@/../tools/functions';
 import { unique } from '@/../tools/tools';
+import { FeedbackTemplateView, GetFeedbackTemplatesResponse } from '@/feedback/feedback.models';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
@@ -20,6 +21,113 @@ export class FeedbackService {
     private yamlService: YamlService
   ) {
     this.url = config.apphost + 'api';
+  }
+
+  private dummyTemplate = {
+    id: "c1c81543-a7f8-4146-b647-2ad5f80cd821",
+    content: `
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - Cyber Defense Incident Responder
+    - Cyber Defense Forensics Analyst
+    - Network Operations Specialist
+    - Cyber Defense Analyst
+    - Exploitation Analyst
+    - Cyber Operator
+    - Research and Development Specialist
+    - Vulnerability Assessment Analyst
+    - Data Analyst
+    - Threat/Warning Analyst
+    - Other
+  display: dropdown
+  id: q1
+  prompt: Which NICE Work Role best aligns with your position?
+  shortName: nice
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - High School Diploma/GED
+    - Associate Degree
+    - Bachelor's Degree
+    - Master's Degree
+    - PhD
+    - Other
+  specify:
+    key: Other
+    prompt: ""
+  id: q2
+  prompt: Please Indicate your highest level of education.
+  shortName: education
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - 1-5
+    - 5-10
+    - 15+
+    - None (N/A)
+  id: q3
+  prompt: How many years of cybersecurity experience do you have?
+  shortName: experience
+- type: selectMany
+  required: true
+  min: 1
+  max: 0
+  options:
+    - Promotional messages about the President’s Cup (emails, social media,
+      presentation, etc.)
+    - Word-of-Mouth (a supervisor, colleague or friend encouraged me to
+      register)
+    - Returning participant (enjoyed the event and wanted to participate in it
+      again)
+    - Professional development (a chance to grow my cybersecurity skills)
+    - Other
+  specify:
+    key: Other
+    prompt: ""
+  id: q4
+  prompt: What made you decide to participate?
+  shortName: decide
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - Yes
+    - No
+    - Unsure
+  id: q5
+  prompt: Will you participate again next year if your schedule permits?
+  shortName: again
+- type: text
+  required: false
+  min: 1
+  max: 0
+  id: q6
+  prompt: How can we improve the next President’s Cup? Please provide any other
+    feedback you would like to share.
+  shortName: improve
+    `.trim(),
+    createdBy: { id: "5a6bfb3f-a2e3-4629-9014-acc4d3f22935", name: "Ben" },
+    name: "My Cool Template",
+    responseCount: 12
+  };
+
+  public async deleteTemplate(template: FeedbackTemplateView) {
+    return await firstValueFrom(this.http.delete(`${this.url}/feedback/template/${template.id}`));
+  }
+
+  public getTemplates(): Promise<GetFeedbackTemplatesResponse> {
+    return firstValueFrom(of({
+      challengeTemplates: [],
+      gameTemplates: [this.dummyTemplate]
+    }));
   }
 
   public getRequiredProperties(): string[] {

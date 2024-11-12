@@ -1,0 +1,63 @@
+<div class="feedback-template-picker-component">
+    <div class="form-group">
+        <label for="gameFeedbackTemplateId" class="form-label">Game-Level Template</label>
+
+        <div class="input-group">
+            <select id="gameFeedbackTemplateId" class="form-control" [(ngModel)]="gameFeedbackTemplate">
+                <option [ngValue]="undefined">[no game-level feedback template]</option>
+                <option *ngFor="let template of gameTemplates" [ngValue]="template">
+                    {{ template.name }}
+                    ({{ template.responseCount ? template.responseCount + " responses" : "no responses yet" }})
+                </option>
+            </select>
+
+            <div *ngIf="gameFeedbackTemplate" class="input-group-append gb-button-group">
+                <button type="button" class="btn btn-success btn-sm">
+                    <fa-icon [icon]="fa.eye"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-success btn-sm">
+                    <fa-icon [icon]="fa.edit"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="handleDelete(gameFeedbackTemplate)">
+                    <fa-icon [icon]="fa.trash"></fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="challengeFeedbackTemplateId" class="form-label">Challenge-Level Template</label>
+        <select id="challengeFeedbackTemplateId" class="form-control" [(ngModel)]="challengeSpecFeedbackTemplate">
+            <option [ngValue]="undefined">[no challenge-level feedback template]</option>
+            <option *ngFor="let template of challengeTemplates" [ngValue]="template">
+                {{ template.name }}
+                ({{ template.responseCount ? template.responseCount + " responses" : "no responses yet" }})
+            </option>
+        </select>
+
+        <div class="input-group">
+            <div *ngIf="challengeSpecFeedbackTemplate" class="input-group-append gb-button-group">
+                <button type="button" class="btn btn-success btn-sm">
+                    <fa-icon [icon]="fa.eye"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-success btn-sm">
+                    <fa-icon [icon]="fa.edit"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm"
+                    (click)="handleDelete(challengeSpecFeedbackTemplate)">
+                    <fa-icon [icon]="fa.trash"></fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #previewTemplate>
+
+</ng-template>
+
+<ng-template #editTemplate>
+    <app-modal-content title="Edit Feedback Template" [subtitle]="editingTemplate?.name">
+
+    </app-modal-content>
+</ng-template>
