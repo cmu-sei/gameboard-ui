@@ -2,23 +2,24 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { firstValueFrom, Observable, of } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmission, FeedbackTemplate, QuestionType } from './feedback-models';
 import { YamlService } from '@/services/yaml.service';
 import { hasProperty } from '@/../tools/functions';
 import { unique } from '@/../tools/tools';
-import { FeedbackTemplateView, GetFeedbackTemplatesResponse } from '@/feedback/feedback.models';
+import { CreateFeedbackTemplate, FeedbackTemplateView, ListFeedbackTemplatesResponse } from '@/feedback/feedback.models';
+import { AbstractControl, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
-  url = '';
+  private url = '';
+  private yamlService = inject(YamlService);
 
   constructor(
     config: ConfigService,
-    private http: HttpClient,
-    private yamlService: YamlService
+    private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
   }
@@ -115,18 +116,22 @@ export class FeedbackService {
   shortName: improve
     `.trim(),
     createdBy: { id: "5a6bfb3f-a2e3-4629-9014-acc4d3f22935", name: "Ben" },
+    helpText: "Tell us how you really feel.",
     name: "My Cool Template",
     responseCount: 12
   };
+
+  public async createTemplate(template: CreateFeedbackTemplate) {
+    return await firstValueFrom(this.http.post<FeedbackTemplateView>(`${this.url}/feedback/template`, template));
+  }
 
   public async deleteTemplate(template: FeedbackTemplateView) {
     return await firstValueFrom(this.http.delete(`${this.url}/feedback/template/${template.id}`));
   }
 
-  public getTemplates(): Promise<GetFeedbackTemplatesResponse> {
+  public getTemplates(): Promise<ListFeedbackTemplatesResponse> {
     return firstValueFrom(of({
-      challengeTemplates: [],
-      gameTemplates: [this.dummyTemplate]
+      templates: [this.dummyTemplate]
     }));
   }
 
@@ -134,8 +139,72 @@ export class FeedbackService {
     return ["id", "prompt", "type"];
   }
 
+  public getTemplateQuestionsValidator(): ValidatorFn {
+    return (formControl: AbstractControl<any, any>) => {
+      const set = this.yamlService.parse<FeedbackQuestion[]>(formControl.value);
+
+      if (!formControl.value)
+        return null;
+
+      if (!Array.isArray(set)) {
+        return {
+          questionValidation: {
+            valid: false,
+            errors: ["Your questions are in an invalid format. Try clicking the link below to learn more about the expected question format."]
+          }
+        };
+      }
+
+      if (!set?.length) {
+        return {
+          questionValidation: {
+            valid: false,
+            errors: ["Questions are a key part of the feedback process! Why not enter some now?"]
+          }
+        };
+      }
+
+      const retVal: string[] = [];
+      const requiredProperties: (keyof FeedbackQuestion)[] = ["id", "prompt", "type"];
+      const uniqueIds = unique(set.map(q => q?.id));
+
+      if (uniqueIds.length !== set.length) {
+        retVal.push(`Ensure the **id** property of all questions are unique.`);
+      }
+
+      for (let i = 0; i < set.length; i++) {
+        const displayIndex = i + 1;
+        // the user-friendly 1-indexed question
+        // ensure the question has a legal id
+        if (!set[i]?.id) {
+          retVal.push(`Question ${displayIndex} can't have a blank or missing ID.`);
+        }
+
+        for (const p of requiredProperties) {
+          if (!hasProperty(set[i], p))
+            retVal.push(`Question ${displayIndex} is missing required property **${p}**.`);
+        }
+      }
+
+      if (retVal.length) {
+        return {
+          questionValidation: {
+            valid: false,
+            errors: retVal
+          }
+        };
+      }
+
+      return null;
+    };
+  }
+
   public async getSampleYaml(): Promise<string | null> {
     return await this.yamlService.loadSample("feedback-config");
+  }
+
+  public async getTemplateSampleYaml(): Promise<string | null> {
+    return await this.yamlService.loadSample("feedback-template-content");
   }
 
   public list(search: any): Observable<FeedbackReportDetails[]> {

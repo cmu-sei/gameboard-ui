@@ -5,48 +5,61 @@
         <div class="input-group">
             <select id="gameFeedbackTemplateId" class="form-control" [(ngModel)]="gameFeedbackTemplate">
                 <option [ngValue]="undefined">[no game-level feedback template]</option>
-                <option *ngFor="let template of gameTemplates" [ngValue]="template">
+                <option *ngFor="let template of templates" [ngValue]="template">
                     {{ template.name }}
                     ({{ template.responseCount ? template.responseCount + " responses" : "no responses yet" }})
                 </option>
             </select>
 
-            <div *ngIf="gameFeedbackTemplate" class="input-group-append gb-button-group">
-                <button type="button" class="btn btn-success btn-sm">
-                    <fa-icon [icon]="fa.eye"></fa-icon>
+            <div class="input-group-append gb-button-group">
+                <button type="button" class="btn btn-success btn-sm" (click)="handleCreate()">
+                    <fa-icon [icon]="fa.plus"></fa-icon>
                 </button>
-                <button type="button" class="btn btn-success btn-sm">
-                    <fa-icon [icon]="fa.edit"></fa-icon>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm" (click)="handleDelete(gameFeedbackTemplate)">
-                    <fa-icon [icon]="fa.trash"></fa-icon>
-                </button>
+
+                <ng-container *ngIf="gameFeedbackTemplate">
+                    <button type="button" class="btn btn-success btn-sm">
+                        <fa-icon [icon]="fa.eye"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm">
+                        <fa-icon [icon]="fa.edit"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="handleDelete(gameFeedbackTemplate)">
+                        <fa-icon [icon]="fa.trash"></fa-icon>
+                    </button>
+                </ng-container>
             </div>
         </div>
     </div>
 
     <div class="form-group">
         <label for="challengeFeedbackTemplateId" class="form-label">Challenge-Level Template</label>
-        <select id="challengeFeedbackTemplateId" class="form-control" [(ngModel)]="challengeSpecFeedbackTemplate">
-            <option [ngValue]="undefined">[no challenge-level feedback template]</option>
-            <option *ngFor="let template of challengeTemplates" [ngValue]="template">
-                {{ template.name }}
-                ({{ template.responseCount ? template.responseCount + " responses" : "no responses yet" }})
-            </option>
-        </select>
 
         <div class="input-group">
-            <div *ngIf="challengeSpecFeedbackTemplate" class="input-group-append gb-button-group">
-                <button type="button" class="btn btn-success btn-sm">
-                    <fa-icon [icon]="fa.eye"></fa-icon>
+            <select id="challengeFeedbackTemplateId" class="form-control" [(ngModel)]="challengeSpecFeedbackTemplate">
+                <option [ngValue]="undefined">[no challenge-level feedback template]</option>
+                <option *ngFor="let template of templates" [ngValue]="template">
+                    {{ template.name }}
+                    ({{ template.responseCount ? template.responseCount + " responses" : "no responses yet" }})
+                </option>
+            </select>
+
+            <div class="input-group-append gb-button-group">
+                <button type="button" class="btn btn-success btn-sm" (click)="handleCreate()">
+                    <fa-icon [icon]="fa.plus"></fa-icon>
                 </button>
-                <button type="button" class="btn btn-success btn-sm">
-                    <fa-icon [icon]="fa.edit"></fa-icon>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm"
-                    (click)="handleDelete(challengeSpecFeedbackTemplate)">
-                    <fa-icon [icon]="fa.trash"></fa-icon>
-                </button>
+
+                <ng-container *ngIf="challengeSpecFeedbackTemplate">
+                    <button type="button" class="btn btn-success btn-sm">
+                        <fa-icon [icon]="fa.eye"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm">
+                        <fa-icon [icon]="fa.edit"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm"
+                        (click)="handleDelete(challengeSpecFeedbackTemplate)">
+                        <fa-icon [icon]="fa.trash"></fa-icon>
+                    </button>
+                </ng-container>
             </div>
         </div>
     </div>
@@ -56,8 +69,105 @@
 
 </ng-template>
 
+<ng-template #createTemplate>
+    <app-modal-content title="Create Feedback Template" [confirmDisabled]="!!!createEditTemplateForm.valid">
+        <ng-container *ngTemplateOutlet="createEditTemplate"></ng-container>
+
+        <div footer>
+            <a href="https://cmu-sei.github.io/foundry-docs/gameboard/admin-feedback-form/#configuration-yaml"
+                target="_blank">
+                About feedback templates
+            </a>
+        </div>
+    </app-modal-content>
+</ng-template>
+
 <ng-template #editTemplate>
     <app-modal-content title="Edit Feedback Template" [subtitle]="editingTemplate?.name">
 
     </app-modal-content>
+
+    <div footer>
+        <a href="https://cmu-sei.github.io/foundry-docs/gameboard/admin-feedback-form/#configuration-yaml"
+            target="_blank">
+            About feedback templates
+        </a>
+    </div>
+</ng-template>
+
+<ng-template #createEditTemplate>
+    <form [formGroup]="createEditTemplateForm" (ngSubmit)="handleCreateEditSubmit(createEditTemplateForm.value)">
+        <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="name" required
+                placeholder="Enter a name for your feedback template (like &quot;Hackathon Feedback&quot;)">
+        </div>
+
+        <div class="form-group">
+            <label for="helpText" class="form-label">Help Text</label>
+            <input type="text" class="form-control" formControlName="helpText"
+                placeholder="Shown at the top of the form (optional)">
+        </div>
+
+        <div class="form-group">
+            <label for="content" class="form-label">Template</label>
+            <textarea type="text" class="form-control font-fixed-width" formControlName="content" required rows="10"
+                placeholder="Enter a feedback template here. You can also click the button below to paste an example feedback configuration or use the other controls to copy an existing template.">
+            </textarea>
+        </div>
+    </form>
+
+    <ng-container
+        *ngIf="(createEditTemplateForm.controls['name'].touched && !createEditTemplateForm.controls['name'].valid) || createEditTemplateForm.controls['content'].touched && !createEditTemplateForm.controls['content'].valid">
+        <alert type="warning" class="my-2">
+            <h5>Oops. A thing or two to sort out here...</h5>
+            <ul class="my-2 ml-2 li-style-type-circle">
+                <li
+                    *ngIf="createEditTemplateForm.controls['name'].dirty && createEditTemplateForm.controls['name'].hasError('required')">
+                    Your template needs a name so you can find it later. How about "Hacktacular Survey"?
+                </li>
+                <li
+                    *ngIf="createEditTemplateForm.controls['content'].dirty && createEditTemplateForm.controls['content'].hasError('required')">
+                    Questions are critical to the feedback process. Why not enter a few above?
+                </li>
+                <li
+                    *ngIf="createEditTemplateForm.controls['content'].dirty && createEditTemplateForm.controls['content'].hasError('questionValidation')">
+                    Whuh-oh. It looks like your question schema isn't quite right:
+
+                    <ul>
+                        <li class="ml-2"
+                            *ngFor="let error of createEditTemplateForm.controls['content'].getError('questionValidation').errors">
+                            - {{ error }}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </alert>
+    </ng-container>
+
+    <div class="d-flex align-items-center">
+        <button type="button" class="btn btn-sm btn-success d-block mr-2" [disabled]="!sampleConfig"
+            (click)="handlePasteSample()">
+            Paste Example Configuration
+        </button>
+
+        <div class="d-flex align-items-center flex-grow-1 mr-2">
+            <label class="copy-from-label d-block text-muted mr-2 mb-0">Copy from: </label>
+
+            <div class="input-group">
+                <select class="form-control custom-select custom-select-sm" #copyTemplateContentSelect>
+                    <option value="">[Choose a template to copy from]</option>
+                    <option *ngFor="let template of templates" [value]="template.id">{{ template.name }}</option>
+                </select>
+
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-sm btn-warning"
+                        (click)="handleCopyFromTemplate(copyTemplateContentSelect.value)"
+                        [disabled]="!copyTemplateContentSelect.value">
+                        <fa-icon [icon]="fa.copy"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </ng-template>

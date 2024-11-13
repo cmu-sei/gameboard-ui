@@ -51,7 +51,6 @@ export class FeedbackEditorComponent implements OnInit {
   }
 
   protected handleAboutFeedbackClick() {
-
     this.modalService.openConfirm({
       bodyContent: `You can use this box to configure questions that will automatically be presented to players upon conclusion of a challenge or game. Enter valid YAML to set these up.
 
