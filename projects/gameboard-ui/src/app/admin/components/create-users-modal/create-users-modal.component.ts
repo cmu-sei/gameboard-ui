@@ -44,7 +44,7 @@ export class CreateUsersModalComponent {
     private usersService: UserService,
     private userRolePermissions: UserRolePermissionsService) {
     this.appName = config.appName;
-    this.placeholder = "// one ID per line, e.g.:\n\n3496da07-d19e-440d-a246-e35f7b7bfcac\n9a53d8cd-ef88-44c0-96b2-fc8766b518dd\n\n//and so on";
+    this.placeholder = "// one ID per line, e.g.:\n\n3496da07-d19e-440d-a246-e35f7b7bfcac\n9a53d8cd-ef88-44c0-96b2-fc8766b518dd\n// and so on";
   }
 
   async ngOnInit() {

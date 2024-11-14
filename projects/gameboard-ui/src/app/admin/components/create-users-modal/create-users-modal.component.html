@@ -66,7 +66,7 @@
 
     <div footer>
         <div *ngIf="(userIds.length - invalidIds.length) > 0">
-            <strong class="text-info">{{userIds.length}}</strong>
+            <strong class="text-success">{{userIds.length}}</strong>
             {{ "user" | pluralizer:userIds.length - invalidIds.length }} will be created.
         </div>
     </div>

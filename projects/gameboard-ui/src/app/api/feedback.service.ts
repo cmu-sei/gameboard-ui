@@ -2,32 +2,209 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmission, FeedbackTemplate, QuestionType } from './feedback-models';
 import { YamlService } from '@/services/yaml.service';
 import { hasProperty } from '@/../tools/functions';
 import { unique } from '@/../tools/tools';
+import { CreateFeedbackTemplate, FeedbackTemplateView, ListFeedbackTemplatesResponse } from '@/feedback/feedback.models';
+import { AbstractControl, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
-  url = '';
+  private url = '';
+  private yamlService = inject(YamlService);
 
   constructor(
     config: ConfigService,
-    private http: HttpClient,
-    private yamlService: YamlService
+    private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
+  }
+
+  private dummyTemplate = {
+    id: "c1c81543-a7f8-4146-b647-2ad5f80cd821",
+    content: `
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - Cyber Defense Incident Responder
+    - Cyber Defense Forensics Analyst
+    - Network Operations Specialist
+    - Cyber Defense Analyst
+    - Exploitation Analyst
+    - Cyber Operator
+    - Research and Development Specialist
+    - Vulnerability Assessment Analyst
+    - Data Analyst
+    - Threat/Warning Analyst
+    - Other
+  display: dropdown
+  id: q1
+  prompt: Which NICE Work Role best aligns with your position?
+  shortName: nice
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - High School Diploma/GED
+    - Associate Degree
+    - Bachelor's Degree
+    - Master's Degree
+    - PhD
+    - Other
+  specify:
+    key: Other
+    prompt: ""
+  id: q2
+  prompt: Please Indicate your highest level of education.
+  shortName: education
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - 1-5
+    - 5-10
+    - 15+
+    - None (N/A)
+  id: q3
+  prompt: How many years of cybersecurity experience do you have?
+  shortName: experience
+- type: selectMany
+  required: true
+  min: 1
+  max: 0
+  options:
+    - Promotional messages about the President’s Cup (emails, social media,
+      presentation, etc.)
+    - Word-of-Mouth (a supervisor, colleague or friend encouraged me to
+      register)
+    - Returning participant (enjoyed the event and wanted to participate in it
+      again)
+    - Professional development (a chance to grow my cybersecurity skills)
+    - Other
+  specify:
+    key: Other
+    prompt: ""
+  id: q4
+  prompt: What made you decide to participate?
+  shortName: decide
+- type: selectOne
+  required: true
+  min: 1
+  max: 0
+  options:
+    - Yes
+    - No
+    - Unsure
+  id: q5
+  prompt: Will you participate again next year if your schedule permits?
+  shortName: again
+- type: text
+  required: false
+  min: 1
+  max: 0
+  id: q6
+  prompt: How can we improve the next President’s Cup? Please provide any other
+    feedback you would like to share.
+  shortName: improve
+    `.trim(),
+    createdBy: { id: "5a6bfb3f-a2e3-4629-9014-acc4d3f22935", name: "Ben" },
+    helpText: "Tell us how you really feel.",
+    name: "My Cool Template",
+    responseCount: 12
+  };
+
+  public async createTemplate(template: CreateFeedbackTemplate) {
+    return await firstValueFrom(this.http.post<FeedbackTemplateView>(`${this.url}/feedback/template`, template));
+  }
+
+  public async deleteTemplate(template: FeedbackTemplateView) {
+    return await firstValueFrom(this.http.delete(`${this.url}/feedback/template/${template.id}`));
+  }
+
+  public getTemplates(): Promise<ListFeedbackTemplatesResponse> {
+    return firstValueFrom(of({
+      templates: [this.dummyTemplate]
+    }));
   }
 
   public getRequiredProperties(): string[] {
     return ["id", "prompt", "type"];
   }
 
+  public getTemplateQuestionsValidator(): ValidatorFn {
+    return (formControl: AbstractControl<any, any>) => {
+      const set = this.yamlService.parse<FeedbackQuestion[]>(formControl.value);
+
+      if (!formControl.value)
+        return null;
+
+      if (!Array.isArray(set)) {
+        return {
+          questionValidation: {
+            valid: false,
+            errors: ["Your questions are in an invalid format. Try clicking the link below to learn more about the expected question format."]
+          }
+        };
+      }
+
+      if (!set?.length) {
+        return {
+          questionValidation: {
+            valid: false,
+            errors: ["Questions are a key part of the feedback process! Why not enter some now?"]
+          }
+        };
+      }
+
+      const retVal: string[] = [];
+      const requiredProperties: (keyof FeedbackQuestion)[] = ["id", "prompt", "type"];
+      const uniqueIds = unique(set.map(q => q?.id));
+
+      if (uniqueIds.length !== set.length) {
+        retVal.push(`Ensure the **id** property of all questions are unique.`);
+      }
+
+      for (let i = 0; i < set.length; i++) {
+        const displayIndex = i + 1;
+        // the user-friendly 1-indexed question
+        // ensure the question has a legal id
+        if (!set[i]?.id) {
+          retVal.push(`Question ${displayIndex} can't have a blank or missing ID.`);
+        }
+
+        for (const p of requiredProperties) {
+          if (!hasProperty(set[i], p))
+            retVal.push(`Question ${displayIndex} is missing required property **${p}**.`);
+        }
+      }
+
+      if (retVal.length) {
+        return {
+          questionValidation: {
+            valid: false,
+            errors: retVal
+          }
+        };
+      }
+
+      return null;
+    };
+  }
+
   public async getSampleYaml(): Promise<string | null> {
     return await this.yamlService.loadSample("feedback-config");
+  }
+
+  public async getTemplateSampleYaml(): Promise<string | null> {
+    return await this.yamlService.loadSample("feedback-template-content");
   }
 
   public list(search: any): Observable<FeedbackReportDetails[]> {

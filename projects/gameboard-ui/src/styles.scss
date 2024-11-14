@@ -281,14 +281,9 @@ table.gameboard-table {
   margin: 0;
 }
 
-.li-style-type-circle {
+.li-style-type-circle > li {
   list-style-type: disc;
   margin-left: 0.5rem;
-
-  li {
-    list-style-type: disc;
-    margin-left: 0.5rem;
-  }
 }
 
 .dropdown-item:hover,

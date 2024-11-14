@@ -1,3 +1,5 @@
+import { FormGroup, ValidationErrors } from "@angular/forms";
+
 export function buildUrl(...urlBits: string[]): string | null {
     if (!urlBits?.length)
         return null;

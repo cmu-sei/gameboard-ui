@@ -33,7 +33,6 @@ interface SectionTabViewModel {
     CoreModule,
     ChallengeSubmissionHistoryComponent,
     EpochMsToTimeRemainingStringPipe,
-    HoldConfirmButtonComponent,
     SpinnerComponent,
   ],
   providers: [ActiveChallengesRepo, ModalConfirmService],
