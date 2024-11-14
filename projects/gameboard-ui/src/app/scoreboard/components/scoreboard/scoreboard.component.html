@@ -2,8 +2,7 @@
     <alert *ngIf="isLive && !suppressLiveGameBanner" type="success" class="my-2">
         This game is still being played. Check back after the round ends
         ({{ scoreboardData.game.isLiveUntil?.toJSDate() | friendlyDateAndTime }})
-        to see who came out on top and view complete score breakdowns for
-        everyone with points on the board!
+        to see who came out on top and view complete score breakdowns!
     </alert>
     <table *ngIf="scoreboardData.teams.length; else noScore" class="table table-striped gameboard-table w-100"
         [class.advanced-players-highlight]="hasAdvancedPlayers" [class.table-hover]="canViewAllScores">

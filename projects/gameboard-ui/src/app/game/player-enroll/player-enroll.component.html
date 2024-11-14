@@ -16,12 +16,12 @@
 
       <!-- not yet enrolled -->
       <ng-container *ngIf="!(isEnrolled$ | async)">
-        <div *ngIf="!ctx.user.name || !hasSelectedSponsor">
+        <div *ngIf="!ctx.user.approvedName || !hasSelectedSponsor">
           Ready to play? Before you do, you'll need to visit your
           <a [routerLink]="['/user/profile']">profile</a> to...
 
           <ul class="profile-validation">
-            <li *ngIf="!ctx.user.name">Make sure you've entered your name</li>
+            <li *ngIf="!ctx.user.approvedName">Make sure you've entered your name</li>
             <li *ngIf="!hasSelectedSponsor">Select your sponsor</li>
           </ul>
         </div>

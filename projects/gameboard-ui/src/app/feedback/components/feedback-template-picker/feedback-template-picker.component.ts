@@ -35,7 +35,7 @@ export class FeedbackTemplatePickerComponent implements OnInit {
   @Input() gameFeedbackTemplate?: FeedbackTemplateView;
   @Output() gameFeedbackTemplateChange = new EventEmitter<FeedbackTemplateView | undefined>();
 
-  @ViewChild("createTemplate") createTemplate?: TemplateRef<any>;
+  @ViewChild("createEditModalTemplate") createEditModalTemplate?: TemplateRef<any>;
 
   private feedbackService = inject(FeedbackService);
   private modalService = inject(ModalConfirmService);
@@ -72,10 +72,32 @@ export class FeedbackTemplatePickerComponent implements OnInit {
   }
 
   protected handleCreate() {
-    if (!this.createTemplate)
+    if (!this.createEditModalTemplate)
       throw new Error("Couldn't resolve create template.");
 
-    this.modalService.openTemplate(this.createTemplate);
+    this.createEditTemplateForm.setValue({
+      id: "",
+      name: "",
+      helpText: "",
+      content: ""
+    });
+
+    this.modalService.openTemplate(this.createEditModalTemplate);
+  }
+
+  protected handleEdit(template: FeedbackTemplateView) {
+    if (!this.createEditModalTemplate) {
+      throw new Error("Couldn't resolve edit template");
+    }
+
+    this.createEditTemplateForm.setValue({
+      id: template.id,
+      name: template.name,
+      helpText: template.helpText || "",
+      content: template.content
+    });
+
+    this.modalService.openTemplate(this.createEditModalTemplate);
   }
 
   protected async handleCreateEditSubmit(model: Partial<UpsertFeedbackTemplateForm>) {
@@ -103,7 +125,7 @@ export class FeedbackTemplatePickerComponent implements OnInit {
   }
 
   protected handlePasteSample() {
-    this.createEditTemplateForm.patchValue({ content: this.sampleConfig });
+    this.createEditTemplateForm.patchValue({ content: this.sampleConfig }, { emitEvent: true });
   }
 
   private async load() {
