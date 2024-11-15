@@ -1,6 +1,6 @@
 <alert type="danger" class="p-4" *ngIf="showWarning">
     <strong>NOTE: </strong> This game's availability period ends at {{gameEndDateDescription}}. If you start a session
-    now, you'll have {{actualSessionTimeDescription}} to complete the challenges. This is less than the full allotment
-    of time ({{normalSessionLengthDescription}}) for a session. If you continue, your session will end when the game
-    does.
+    now, you'll have about {{(gameEndDateTime || null) | untilDateTime}} to complete the challenges. This is less than
+    the full allotment of time ({{normalSessionLengthDescription}}) for a session. If you continue, your session will
+    end when the game does.
 </alert>
