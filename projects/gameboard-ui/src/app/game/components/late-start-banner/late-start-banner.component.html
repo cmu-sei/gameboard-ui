@@ -1,6 +1,14 @@
-<alert type="danger" class="p-4" *ngIf="showWarning">
-    <strong>NOTE: </strong> This game's availability period ends at {{gameEndDateDescription}}. If you start a session
-    now, you'll have about {{(gameEndDateTime || null) | untilDateTime}} to complete the challenges. This is less than
-    the full allotment of time ({{normalSessionLengthDescription}}) for a session. If you continue, your session will
-    end when the game does.
-</alert>
+<ng-container *ngIf="isLate">
+    <alert type="danger" class="p-4" *ngIf="!gameAllowsLateStart">
+        This game allows {{ normalSessionLengthDescription }} to play. Since there's less time remaining than that
+        until the game ends ({{ gameEndDateDescription }}), you're unable to start a session.
+    </alert>
+
+    <alert type="warning" class="p-4" *ngIf="gameAllowsLateStart">
+        <strong>NOTE: </strong> This game's availability period ends at
+        <strong>{{gameEndDateDescription}}</strong>. If you start a session now, you'll have about
+        <strong>{{(gameEndDateTime || null) | untilDateTime}}</strong> to complete the challenges. This is less than the
+        full allotment of time ({{normalSessionLengthDescription}}) for a session. If
+        you continue, your session will end when the game does.
+    </alert>
+</ng-container>
