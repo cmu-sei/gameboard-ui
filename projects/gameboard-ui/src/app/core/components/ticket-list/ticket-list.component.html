@@ -30,7 +30,8 @@
         </select>
       </div>
       <div class="ml-2">
-        <app-ticket-label-picker (selectionChanged)="handleLabelSelectionChanged($event)"></app-ticket-label-picker>
+        <app-ticket-label-picker *ngIf="ctx.canManage"
+          (selectionChanged)="handleLabelSelectionChanged($event)"></app-ticket-label-picker>
       </div>
     </div>
     <div class="input-group input-group-sm col-4">
