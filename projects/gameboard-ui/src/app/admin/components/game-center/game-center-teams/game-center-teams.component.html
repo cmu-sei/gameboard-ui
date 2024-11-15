@@ -11,7 +11,8 @@
         Select All {{ (game.isTeamGame ? "Team" : "Player") | pluralizer }}
     </button>
     <div class="flex-grow-1"></div>
-    <app-confirm-button btnClass="btn btn-warning mr-2" (confirm)="handleRerankClick(game.id)"
+    <app-confirm-button btnClass="btn btn-warning mr-2" *appIfHasPermission="'Scores_RegradeAndRerank'"
+        (confirm)="handleRerankClick(game.id)"
         tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
     <div class="gb-button-group btn-group mr-2">
         <button type="button" class="btn btn-success" disabled="disabled">
