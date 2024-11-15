@@ -23,7 +23,7 @@
     </div>
     <div class="d-flex flex-wrap align-items-baseline justify-content-center mb-2">
       <h4 class="p-0 mr-2">
-        <span class="badge" [class.badge-info]="ctx.ticket.status == 'Open' || !ctx.ticket.status"
+        <span class="badge fs-09" [class.badge-warning]="ctx.ticket.status == 'Open' || !ctx.ticket.status"
           [class.badge-success]="ctx.ticket.status == 'In Progress'"
           [class.badge-dark]="ctx.ticket.status == 'Closed'">{{ctx.ticket.status}}</span>
       </h4>
@@ -74,7 +74,7 @@
               <button type="button" class="btn btn-small px-1 py-0" tooltip="Copy this ticket's text"
                 [appCopyOnClick]="ctx.ticket.description"
                 appCopyOnClickMessage="Copied this ticket's text to your clipboard.">
-                <fa-icon [icon]="fa.copy" size="sm" class="text-info"></fa-icon>
+                <fa-icon [icon]="fa.copy" size="sm" class="text-success"></fa-icon>
               </button>
             </div>
             <div>
@@ -109,10 +109,10 @@
 
         <h4 class="mt-2 d-flex justify-content-between">
           <span>Activity</span>
-          <button class="btn btn-link text-info mr-2" (click)="refresh$.next(true)">
+          <div class="btn btn-link mr-2" (click)="refresh$.next(true)">
             <fa-icon [icon]="faSync"></fa-icon>
             <span>Refresh</span>
-          </button>
+          </div>
         </h4>
 
         <div class="mx-md-4 mx-0 mt-2">
@@ -127,7 +127,7 @@
                 <ng-container>
                   <div class="mt-2 d-flex justify-content-between">
                     <div>
-                      <button *ngIf="!newCommentFocus" class="btn text-info btn-link"
+                      <button *ngIf="!newCommentFocus" class="btn btn-link"
                         (click)="toggleAttachments = !toggleAttachments; newCommentFocus = true"><fa-icon
                           [icon]="faPaperclip"></fa-icon> Attach</button>
                     </div>
@@ -200,7 +200,7 @@
             <div class="my-3 px-3 border-0 text-center" *ngIf="activity.type == 1"> <!-- Status Change -->
               <span class="text-center py-2 px-3 d-flex rounded" style="background: black">
                 <div>Status Changed to&nbsp;<span class="badge badge-success" style="font-size: 100%"
-                    [class.badge-info]="activity.status == 'Open' || !activity.status"
+                    [class.badge-warning]="activity.status == 'Open' || !activity.status"
                     [class.badge-success]="activity.status == 'In Progress'"
                     [class.badge-dark]="activity.status == 'Closed'">{{activity.status}}</span></div>
                 <div style="display: inline-block" [tooltip]="activity.timestamp | shorttime: true : true"
@@ -253,9 +253,9 @@
                 <label class="font-weight-bold" for="__-input">Status</label><br />
                 <div id="___-input" class="btn-group" btnRadioGroup name="____" tabindex="0"
                   [(ngModel)]="changedTicket.status" (click)="changed$.next(changedTicket)">
-                  <label class="btn btn-outline-info btn-sm" btnRadio="Open">Open</label>
-                  <label class="btn btn-outline-info btn-sm" btnRadio="In Progress">In Progress</label>
-                  <label class="btn btn-outline-info btn-sm" btnRadio="Closed">Closed</label>
+                  <label class="btn btn-outline-success btn-sm" btnRadio="Open">Open</label>
+                  <label class="btn btn-outline-success btn-sm" btnRadio="In Progress">In Progress</label>
+                  <label class="btn btn-outline-success btn-sm" btnRadio="Closed">Closed</label>
                 </div>
               </div>
 
@@ -280,8 +280,8 @@
                   (startEditFunc)="startEditChallenge()"
                   (selectOptionFunc)="selectChallenge($event)"></app-inplace-editor>
                 <p *ngIf="changedTicket.challenge" class="mb-0  pt-0 mb-1 px-2 align-items-center small">
-                  Support Code:
-                  <span appCopyOnClick class="text-info cursor-pointer"
+                  <span class="text-muted">Support Code:</span>
+                  <span appCopyOnClick class="btn-link cursor-pointer"
                     tooltip="Click to copy this ticket's support code">
                     {{(changedTicket.challenge | toSupportCode)}}
                   </span>

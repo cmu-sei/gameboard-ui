@@ -19,7 +19,8 @@
             {{ game.isTeamGame ? "Team" : "Player" }}{{ selectedTeamIds.length === 1 ? "" : "s" }}
         </button>
 
-        <button type="button" class="btn btn-success" tooltip="Deploy game resources"
+        <button type="button" class="btn btn-success"
+            tooltip="Deploy game resources for {{ selectedTeamIds.length ? 'selected' : 'all' }}"
             [disabled]="!results?.teams?.items?.length" (click)="handleConfirmDeployGameResources()">
             <fa-icon [icon]="fa.computer"></fa-icon>
         </button>

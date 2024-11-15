@@ -13,6 +13,18 @@ export function buildUrl(...urlBits: string[]): string | null {
     return url.substring(0, url.length - 1);
 }
 
+export function eventTargetValueToString(input: string | Event): string | null {
+    if (!input) {
+        return null;
+    }
+
+    if (typeof input === "string" || input instanceof String) {
+        return input.toString();
+    }
+
+    return ((input as Event)?.target as HTMLInputElement)?.value || null;
+}
+
 export function hasProperty<T extends {}>(object: T, property: keyof T) {
     return object ? Object.keys(object).some(k => k === property) : false;
 }

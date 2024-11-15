@@ -147,8 +147,6 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Custom Functions for "ngFor"
-
   // TrackBy Function to only reload rows when needed
   // Helpful for inserting new player row asynchronously without reloading existing rows
   trackByTeamId(_index: number, challengeItem: KeyValue<string, ObserveTeam>) {
