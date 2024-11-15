@@ -98,7 +98,7 @@ export class TicketSupportToolsComponent implements OnInit {
       this.gameboardUrl = hasGame ? this.routerService.getGamePageUrl(this.context.game!.id).toString() : undefined;
 
       if (this.context?.player) {
-        this.playerAdminUrl = hasGame ? this.routerService.getAdminGamePlayerUrl(this.context.game!.id, this.context.player.id) : undefined;
+        this.playerAdminUrl = hasGame ? this.routerService.getAdminGamePlayerUrl(this.context.game!.id, this.context.team.id) : undefined;
       }
     }
 
@@ -113,7 +113,7 @@ export class TicketSupportToolsComponent implements OnInit {
     this.modalService.openComponent<EventHorizonModalComponent>({
       content: EventHorizonModalComponent,
       context: this.context,
-      modalClasses: ["modal-lg"],
+      modalClasses: ["modal-xl"],
       ignoreBackdropClick: true
     });
   }

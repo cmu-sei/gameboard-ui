@@ -18,7 +18,7 @@ import { Component } from '@angular/core';
         <app-team-event-horizon [teamId]="team?.id"></app-team-event-horizon>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-info" (click)="close()">OK</button>
+          <button type="button" class="btn btn-success" (click)="close()">OK</button>
       </div>
     </div>
 `,

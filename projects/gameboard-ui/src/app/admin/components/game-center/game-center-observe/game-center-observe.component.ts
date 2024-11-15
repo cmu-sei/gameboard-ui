@@ -14,5 +14,6 @@ export class GameCenterObserveComponent {
     route$: ActivatedRoute,
     private unsub: UnsubscriberService) {
     unsub.add(route$.data.subscribe(d => this.gameId = d.gameId));
+    unsub.add(route$.queryParams.subscribe(qp => this.observeBy = (qp.mode === "challenge") ? "challenge" : "team"));
   }
 }

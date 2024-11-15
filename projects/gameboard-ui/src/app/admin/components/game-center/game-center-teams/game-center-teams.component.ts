@@ -20,6 +20,7 @@ import { LocalStorageService, StorageKey } from '@/services/local-storage.servic
 import { NowService } from '@/services/now.service';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { TeamService } from '@/api/team.service';
+import { eventTargetValueToString } from 'projects/gameboard-ui/src/tools/functions';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
@@ -61,15 +62,16 @@ export class GameCenterTeamsComponent implements OnInit {
 
     this.unsub.add(
       this.route.data.subscribe(async d => await this.load(d.gameId)),
+      this.searchInput$.pipe(debounceTime(300)).subscribe(async event => {
+        const currentValue = eventTargetValueToString(event);
+
+        this.filterSettings.searchTerm = currentValue || "";
+        await this.load(this.game?.id);
+      }),
       this.route.queryParams.subscribe(async qp => {
         if (qp.search) {
-          this.filterSettings.searchTerm = qp.search.toString().trim();
-          await this.load(this.game?.id);
+          this.searchInput$.next(qp.search);
         }
-      }),
-      this.searchInput$.pipe(debounceTime(300)).subscribe(async event => {
-        this.filterSettings.searchTerm = (event.target as HTMLInputElement).value;
-        await this.load(this.game?.id);
       }),
       this.teamService.teamSessionExtended$.subscribe(async updates => {
         for (const update of updates) {
@@ -138,14 +140,9 @@ export class GameCenterTeamsComponent implements OnInit {
   private async handleDeployGameResources() {
     const teams = this.resolveSelectedTeams();
 
-    // let appendInvalidTeamsClause = "";
-    // if (invalidTeamNames.length) {
-    //   appendInvalidTeamsClause = `\n\nSessions for some teams have ended, so their resources won't be deployed:\n\n${invalidTeamNames.map(tId => `- ${tId}\n`)}`;
-    // }
-
     this.modalService.openConfirm({
       // bodyContent: `Are you sure you want to deploy resources for ${validTeamIds.length} teams?${appendInvalidTeamsClause}`,
-      bodyContent: `Are you sure you want to deploy resources for ${teams.length} teams?`,
+      bodyContent: `Are you sure you want to deploy resources for ${teams.length} team(s)?`,
       onConfirm: async () => {
         await this.gameService.deployResources(this.gameId!, teams.map(t => t.id));
         this.toastService.showMessage(`Deploying resources for **${teams.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`);
@@ -206,7 +203,11 @@ export class GameCenterTeamsComponent implements OnInit {
   }
 
   protected async handleRerankClick(gameId: string) {
+    this.toastService.showMessage("Pulling out the calculator...");
+    this.isLoading = true;
     await firstValueFrom(this.gameService.rerank(gameId));
+    this.isLoading = false;
+
     await this.load(this.game?.id);
     this.toastService.showMessage(`${this.game?.name} has been **reranked**!`);
   }

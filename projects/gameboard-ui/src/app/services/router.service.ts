@@ -44,8 +44,8 @@ export class RouterService implements OnDestroy {
     return this.buildAppUrlWithQueryParams({ queryParams: { search: challengeId } }, "admin", "support").toString();
   }
 
-  public getAdminGamePlayerUrl(gameId: string, playerId: string) {
-    return this.buildAppUrlWithQueryParams({ queryParams: { term: playerId } }, "admin", "registrar", gameId).toString();
+  public getAdminGamePlayerUrl(gameId: string, teamId: string) {
+    return this.buildAppUrlWithQueryParams({ queryParams: { search: teamId } }, "admin", "game", gameId, "teams").toString();
   }
 
   public getCertificatePrintableUrl(mode: PlayerMode, challengeSpecOrGameId: string) {
@@ -71,11 +71,11 @@ export class RouterService implements OnDestroy {
   }
 
   public getObserveChallengeUrl(gameId: string, challengeId: string) {
-    return `admin/observer/challenges/${gameId}?search=${challengeId}`;
+    return `admin/game/${gameId}/observe?mode=challenge&gid=${gameId}&search=${challengeId}`;
   }
 
   public getObserveTeamsUrl(gameId: string, teamId: string) {
-    return `admin/observer/teams/${gameId}?search=${teamId}`;
+    return `admin/game/${gameId}/observe?mode=team&gid=${gameId}&search=${teamId}`;
   }
 
   public getPlayHistoryUrl() {

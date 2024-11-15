@@ -20,13 +20,13 @@
             <ul class="container mx-0">
                 <li class="row">
                     <div class="col-3">
-                        <label class="mb-0">Current Name</label>
+                        <label class="mb-0 text-muted">Current Name</label>
                     </div>
                     <div class="col-4">
-                        <label class="mb-0">Requested Name</label>
+                        <label class="mb-0 text-muted">Requested Name</label>
                     </div>
                     <div class="col-3">
-                        <label class="mb-0" for="reason-input">Reason for Change</label>
+                        <label class="mb-0 text-muted" for="reason-input">Reason for Change</label>
                     </div>
                 </li>
                 <li *ngFor="let player of team.players" class="row mb-2">
@@ -67,8 +67,9 @@
                         [class.btn-warning]="(durationExtensionInMinutes || 0) < 0"
                         [disabled]="!durationExtensionInMinutes" [ariaDisabled]="!durationExtensionInMinutes"
                         (click)="extendByDuration(team, durationExtensionInMinutes)">
-                        <span>{{ durationExtensionInMinutes && durationExtensionInMinutes < 0 ? "Shorten" : "Extend"
-                                }}</span>
+                        <span>
+                            {{ durationExtensionInMinutes && durationExtensionInMinutes < 0 ? "Shorten" : "Extend" }}
+                                </span>
                     </button>
                 </div>
             </div>
@@ -83,7 +84,7 @@
         </div>
     </ng-container>
 
-    <div class="other-tools-container mb-2">
+    <div class="other-tools-container my-2">
         <h4 class="mb-2 px-3">Other tools</h4>
 
         <app-announce [teamId]="team.id" placeholderText="Your message (sends only to this player/team)"></app-announce>
