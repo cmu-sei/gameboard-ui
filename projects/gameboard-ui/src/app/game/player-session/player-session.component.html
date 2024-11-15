@@ -4,12 +4,13 @@
 <ng-container *ngIf="ctx$ | async as ctx; else loading">
   <div class="card mb-4">
     <div class="card-body">
-      <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)" class="text-info card-text d-flex mb-2">
+      <div *ngIf="!(ctx.game.session.isDuring && ctx.player.session?.isDuring)"
+        class="text-success card-text d-flex mb-2">
         <div>
           <span *ngIf="ctx.game.session.isBefore">Game window opens in </span>
           <span *ngIf="ctx.game.session.isAfter">Game window is closed </span>
         </div>
-        <div *ngIf="!ctx.game?.session?.isDuring" class="ml-2">
+        <div *ngIf="!ctx.game?.session?.isDuring" class="ml-2 font-bold">
           {{ctx.game.session.countdown | countdown}}
         </div>
       </div>
