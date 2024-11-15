@@ -108,11 +108,6 @@ export class UserRegistrarComponent {
     }
   }
 
-  async approveName(model: ApiUser): Promise<void> {
-    await this.api.requestNameChange(model.id, { requestedName: model.name, status: "" });
-    this.update(model);
-  }
-
 
   protected handleAddUsersClick() {
     this.modalService.openComponent({
@@ -129,6 +124,7 @@ export class UserRegistrarComponent {
   protected async handleSetName(userId: string, name: string, status: string) {
     try {
       await this.api.requestNameChange(userId, { requestedName: name, status });
+      this.refresh$.next(true);
       this.toastService.showMessage(`This user's name has been changed **${name}**.`);
     }
     catch (err) {

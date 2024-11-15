@@ -208,8 +208,8 @@ export interface LocalAppSettings {
 
 export interface AppUserManagerSettings extends UserManagerSettings {
   authority: string;
-  autoLogin: boolean;
-  autoLogout: boolean;
+  autoLogin?: boolean;
+  autoLogout?: boolean;
   client_id: string;
   debug?: boolean;
   redirect_uri: string;
