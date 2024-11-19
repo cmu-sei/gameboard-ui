@@ -245,7 +245,7 @@
                 <app-inplace-editor [editData]="assignees" [currentText]="changedTicket.assignee?.name ?? 'None'"
                   (startEditFunc)="startEditAssignee()"
                   (selectOptionFunc)="selectAssignee($event)"></app-inplace-editor>
-                <a *ngIf="!!currentUser && !changedTicket.assigneeId" class="btn btn-link px-2 pt-0 text-info"
+                <a *ngIf="!!currentUser && !changedTicket.assigneeId" class="btn btn-link px-2 pt-0"
                   (click)="selectAssignToMe()">Assign to me</a>
               </div>
 
