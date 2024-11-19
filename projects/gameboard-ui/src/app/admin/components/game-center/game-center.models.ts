@@ -46,6 +46,7 @@ export interface GameCenterContext {
 
     challengeCount: number;
     openTicketCount: number;
+    totalTicketCount: number;
     pointsAvailable: number;
 }
 
