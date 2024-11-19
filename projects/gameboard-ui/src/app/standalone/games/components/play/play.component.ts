@@ -21,6 +21,7 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
 import { VmLinkComponent } from "../vm-link/vm-link.component";
 import { UserService } from '@/utility/user.service';
 import { UserSettingsService } from '@/services/user-settings.service';
+import { PracticeChallengeView } from '@/prac/practice.models';
 
 @Component({
   selector: 'app-play',
@@ -42,7 +43,7 @@ import { UserSettingsService } from '@/services/user-settings.service';
 })
 export class PlayComponent implements OnChanges {
   @Input() autoPlay = false;
-  @Input() challengeSpec: SpecSummary | null = null;
+  @Input() challengeSpec: PracticeChallengeView | null = null;
   @Input() playerId?: string;
   @Output() challengeStarted = new EventEmitter<void>();
   @Output() deployStatusChanged = new EventEmitter<boolean>();

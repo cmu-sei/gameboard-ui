@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject, Observable, combineLatest, firstValueFrom, map, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { Search } from '@/api/models';
-import { SpecSummary } from '@/api/spec-models';
 import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 import { UserService as LocalUserService } from "@/utility/user.service";
@@ -11,6 +10,8 @@ import { slug } from '@/../tools/functions';
 import { ApiUser } from '@/api/user-models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { AuthService } from '@/utility/auth.service';
+import { PracticeChallengeView } from '@/prac/practice.models';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-practice-challenge-list',
@@ -19,12 +20,13 @@ import { AuthService } from '@/utility/auth.service';
   providers: [UnsubscriberService]
 })
 export class PracticeChallengeListComponent {
-  list$: Observable<SpecSummary[]>;
+  list$: Observable<PracticeChallengeView[]>;
   appname = '';
   faSearch = faSearch;
 
   protected canPlayChallenges = false;
   protected canPlayChallengesTooltip: string | null = null;
+  protected fa = fa;
   protected hasSponsor$: Observable<boolean>;
   protected introTextMarkdown = "";
   protected localUser$: Observable<ApiUser | null>;

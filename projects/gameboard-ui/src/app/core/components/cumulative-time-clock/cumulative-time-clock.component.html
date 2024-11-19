@@ -1,5 +1,6 @@
 <div class="cumulative-time-clock-component">
-    <span *ngIf="session else noSession" [class]="(time$ | async) || 0 | countdowncolor">{{(time$ | async) || 0 |
-        clock}}</span>
+    <span *ngIf="session else noSession" [class]="(time$ | async) || 0 | countdowncolor">
+        {{ ((time$ | async) || 0 | clock) || "--" }}
+    </span>
     <ng-template #noSession>--</ng-template>
 </div>

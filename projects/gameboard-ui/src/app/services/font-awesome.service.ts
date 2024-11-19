@@ -3,6 +3,7 @@ import { SafeHtml } from '@angular/platform-browser';
 import {
   IconDefinition,
   faArrowLeft,
+  faArrowsSpin,
   faArrowUp,
   faBars,
   faBarsStaggered,
@@ -70,7 +71,6 @@ import {
   faUser,
   faUsers,
   faXmark,
-  faArrowsSpin
 } from '@fortawesome/free-solid-svg-icons';
 import { faOpenid } from "@fortawesome/free-brands-svg-icons";
 

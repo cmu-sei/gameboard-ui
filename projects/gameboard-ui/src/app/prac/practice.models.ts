@@ -1,9 +1,8 @@
 import { GameCardContext } from "@/api/game-models";
-import { PagedArray, SimpleEntity, TimestampRange } from "@/api/models";
-import { SpecSummary } from "@/api/spec-models";
+import { PagedArray, TimestampRange } from "@/api/models";
 
 export interface SearchPracticeChallengesResult {
-    results: PagedArray<SpecSummary>;
+    results: PagedArray<PracticeChallengeView>;
 }
 
 export interface SearchGamesResult {
@@ -26,4 +25,21 @@ export interface PracticeSession {
     session: TimestampRange;
     teamId: string;
     userId: string;
+}
+
+export interface PracticeChallengeView {
+    id: string;
+    name: string;
+    description: string;
+    text: string;
+    averageDeploySeconds: number;
+    isHidden: boolean;
+    solutionGuideUrl: string;
+    tags: string[];
+    game: {
+        id: string;
+        name: string;
+        logo: string;
+        isHidden: string;
+    }
 }

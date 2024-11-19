@@ -40,6 +40,7 @@ export class GameCenterTeamsComponent implements OnInit {
 
   protected fa = fa;
   protected game?: Game;
+  protected hasFilters = false;
   protected isLoading = false;
   protected results?: GameCenterTeamsResults;
   protected selectedTeamIds: string[] = [];
@@ -89,10 +90,7 @@ export class GameCenterTeamsComponent implements OnInit {
   }
 
   protected async handleClearAllFilters() {
-    this.filterSettings.advancement = undefined;
-    this.filterSettings.searchTerm = "";
-    this.filterSettings.sort = "rank";
-    this.filterSettings.sessionStatus = undefined;
+    this.filterSettings = { sort: "rank" };
     await this.load(this.game?.id);
   }
 
@@ -303,5 +301,12 @@ export class GameCenterTeamsComponent implements OnInit {
 
   private updateFilterConfig() {
     this.localStorageClient.add(StorageKey.GameCenterTeamsFilterSettings, this.filterSettings);
+    this.hasFilters = this.filterSettings && (
+      !!this.filterSettings.advancement ||
+      !!this.filterSettings.hasPendingNames ||
+      !!this.filterSettings.searchTerm ||
+      !!this.filterSettings.sessionStatus ||
+      this.filterSettings?.sort !== 'rank'
+    );
   }
 }

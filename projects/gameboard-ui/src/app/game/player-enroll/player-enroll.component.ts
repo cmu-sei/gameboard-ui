@@ -163,6 +163,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     this.ctx.player = {
       ...this.ctx.player,
       name: p.name,
+      nameStatus: p.nameStatus,
       approvedName: p.approvedName
     };
   }

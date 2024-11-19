@@ -14,6 +14,7 @@ import { TeamService } from '@/api/team.service';
 import { GameCenterTeamsResultsTeam } from '../game-center.models';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { GameSessionService } from '@/services/game-session.service';
+import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -96,6 +97,16 @@ export class GameCenterTeamContextMenuComponent {
   protected async handleDeployResources(team: SimpleEntity) {
     await this.gameService.deployResources(this.game!.id, [team.id]);
     this.toastService.showMessage(`Resources are being deployed for **${team.name}**.`);
+  }
+
+  protected async handleExtend(team: SimpleEntity) {
+    this.modalService.openComponent({
+      content: ExtendTeamsModalComponent,
+      context: {
+        game: this.game,
+        teamIds: [team.id]
+      }
+    });
   }
 
   async handleManageBonuses(team: SimpleEntity) {

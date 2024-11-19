@@ -6,6 +6,7 @@ import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSession
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools/tools";
 import { GamePlayState } from "./game-models";
+import { ApiDateTimeService } from "@/services/api-date-time.service";
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
@@ -25,6 +26,7 @@ export class TeamService {
     public teamSessionReset$ = this._teamSessionReset$.asObservable();
 
     constructor(
+        private apiDateTimeService: ApiDateTimeService,
         private apiUrl: ApiUrlService,
         private http: HttpClient) { }
 
@@ -35,6 +37,13 @@ export class TeamService {
 
     adminExtendSession(request: { teamIds: string[], extensionDurationInMinutes: number }) {
         return this.http.put<AdminExtendTeamSessionResponse>(this.apiUrl.build("admin/team/session"), request).pipe(
+            map(r => {
+                for (const team of r.teams) {
+                    team.sessionEnd = this.apiDateTimeService.toDateTime(team.sessionEnd.toString()) || team.sessionEnd;
+                }
+
+                return r;
+            }),
             tap(teamSessions => this._teamSessionsChanged$.next(teamSessions.teams.map(t => ({ id: t.id, sessionEndsAt: t.sessionEnd.toMillis() })))),
             tap(teamSessions => this._teamSessionExtended$.next(teamSessions.teams.map(t => ({ id: t.id, sessionEndsAt: t.sessionEnd.toMillis() }))))
         );

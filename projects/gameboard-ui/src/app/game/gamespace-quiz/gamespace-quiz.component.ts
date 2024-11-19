@@ -246,42 +246,4 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
       }
     }
   }
-
-  // for a much healthier component (someday)
-  //   export interface GamespaceQuizContext {
-  //   answerSections: {
-  //     sectionIndex: number;
-  //     answers: { answer: string }[];
-  //   }[],
-  //   challenge: {
-  //     id: string;
-  //     specId: string;
-  //     teamId: string;
-  //     isDeployed: boolean
-  //   },
-  //   session: {
-  //     endDate: Date
-  //   }
-  // }
-
-  // private toContext(challenge: Challenge): GamespaceQuizContext {
-  //   return {
-  //     answerSections: [
-  //       {
-  //         sectionIndex: challenge.state.challenge?.sectionIndex || 0,
-  //         answers: challenge.state.challenge.questions.map(q => ({ answer: q.answer }))
-  //       }
-  //     ],
-  //     challenge: {
-  //       id: challenge.id,
-  //       isDeployed: challenge.state.isActive,
-  //       specId: challenge.specId,
-  //       teamId: challenge.teamId,
-  //     },
-  //     session: {
-  //       endDate: challenge.endTime.valueOf()e,
-
-  //     }
-  //   };
-  // }
 }

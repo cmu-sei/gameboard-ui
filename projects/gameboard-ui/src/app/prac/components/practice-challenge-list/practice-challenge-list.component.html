@@ -82,11 +82,15 @@
                     </td>
                     <td class="align-middle">
                         <a class="ml-2 d-flex align-items-center" [routerLink]="['/practice']"
-                            [queryParams]="{ term: c.gameId }">
-                            <app-game-card-image
-                                [game]="{ id: c.gameId, name: c.gameName, logo: c.gameLogo }"></app-game-card-image>
+                            [queryParams]="{ term: c.game.id }">
+                            <app-game-card-image [game]="c.game"></app-game-card-image>
 
-                            <div class="ml-2">{{ c.gameName }}</div>
+                            <div class="ml-2">
+                                {{ c.game.name }}
+
+                                <app-info-bubble *ngIf="c.game.isHidden" class="d-block mt-1" [icon]="fa.eyeSlash"
+                                    tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
+                            </div>
                         </a>
                     </td>
                 </tr>
@@ -116,6 +120,9 @@
         [tooltip]="canPlayChallengesTooltip || ''">
         {{challenge.name}}
     </p>
+
+    <app-info-bubble *ngIf="challenge.isHidden" class="d-block mt-1" [icon]="fa.eyeSlash"
+        tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
 </ng-template>
 
 <ng-template #noDescription>

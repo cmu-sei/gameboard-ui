@@ -1,7 +1,15 @@
+@import "../../../scss/variables";
+
 label {
+  font-size: 1rem !important;
   margin-bottom: 0;
 }
+
 .small-spinner {
   width: 32px;
   height: 32px;
+}
+
+.incorrect {
+  background-color: lighten($warning, 5%);
 }

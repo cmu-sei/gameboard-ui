@@ -54,7 +54,7 @@
                                     <ng-container
                                         *ngIf="sessionEndDateTime | addDuration: { minutes: extensionInMinutes } as newSessionEnd">
                                         <strong class="fw-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
-                                            [class.text-info]="!(newSessionEnd | dateTimeIsPast)">
+                                            [class.text-success]="!(newSessionEnd | dateTimeIsPast)">
                                             {{ newSessionEnd | datetimeToDate | friendlyDateAndTime }}
                                         </strong>)
                                     </ng-container>

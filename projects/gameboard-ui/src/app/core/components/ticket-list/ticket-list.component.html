@@ -1,6 +1,8 @@
 <div *ngIf="ctx$ | async as ctx; else loading" class="container-xl" [class.expand]="ctx.canManage">
   <div class="d-flex align-items-baseline mb-2">
-    <h3 class="m-0 p-0 flex-grow-1">{{ctx.canManage ? 'Tickets' : 'My Tickets'}}</h3>
+    <div class="flex-grow-1">
+      <h3 *ngIf="!gameId" class="m-0 p-0 flex-grow-1">{{ctx.canManage ? 'Tickets' : 'My Tickets'}}</h3>
+    </div>
 
     <div class="btn-group">
       <button *ngIf="ctx.canManage" class="btn btn-success" (click)="downloadTicketDetailReport()"

@@ -114,7 +114,7 @@
             <app-gamespace-quiz [challengeId]="spec.instance!.state.id" [spec]="spec!" [session]="ctx.session"
               (graded)="graded()"></app-gamespace-quiz>
 
-            <div *ngIf="spec.instance?.id" class="d-flex align-items-baseline my-4">
+            <div *ngIf="spec.instance?.id" class="d-flex align-items-baseline my-5">
               <div class="flex-grow-1">
                 Support Code:
                 <span class="text-success m-2 p-2 cursor-pointer" tooltip="Click to copy your challenge support code"
@@ -123,7 +123,7 @@
                 </span>
               </div>
 
-              <div class="mb-1">
+              <div>
                 <span class="mr-2">
                   Need Challenge Support?
                 </span>

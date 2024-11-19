@@ -10,7 +10,6 @@ import { PlayerService } from '../../api/player.service';
 import { NotificationService } from '../../services/notification.service';
 import { GameHubService } from '../../services/signalR/game-hub.service';
 import { SyncStartService } from '../../services/sync-start.service';
-import { HubConnectionState } from '@microsoft/signalr';
 import { LogService } from '../../services/log.service';
 import { SponsorService } from '@/api/sponsor.service';
 
@@ -55,11 +54,6 @@ export class PlayerPresenceComponent implements OnInit {
     ]).pipe(
       map(combo => ({ hubState: combo[0], actors: combo[1], player: combo[2], syncStartState: combo[3] })),
       map(context => {
-        if (!context.hubState || context.hubState.connectionState == HubConnectionState.Disconnected) {
-          this.log.logWarning("Can't render player presence component: SignalR hub is disconnected.");
-          return null;
-        }
-
         if (!context.player) {
           this.log.logWarning("Can't render player presence component: the context has no Player object.");
           return null;
@@ -107,18 +101,12 @@ export class PlayerPresenceComponent implements OnInit {
   }
 
   protected promoteToManager(localPlayer: Player, playerId: string) {
-    this.hub.state$.pipe(first()).subscribe(s => {
-      if (!s.id) {
-        throw new Error("Can't promote a manager while the hub is disconnected.");
-      }
+    if (!localPlayer) {
+      throw new Error("Can't resolve the current player to promote manager.");
+    }
 
-      if (!localPlayer) {
-        throw new Error("Can't resolve the current player to promote manager.");
-      }
-
-      this.playerApi.promoteToCaptain(s.id, playerId, { currentCaptainId: localPlayer.id }).pipe(first()).subscribe(_ => {
-        this.onManagerPromoted.emit(playerId);
-      });
+    this.playerApi.promoteToCaptain(localPlayer.teamId, playerId, { currentCaptainId: localPlayer.id }).pipe(first()).subscribe(_ => {
+      this.onManagerPromoted.emit(playerId);
     });
   }
 }

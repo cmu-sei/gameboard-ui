@@ -16,7 +16,7 @@ import { PracticeChallengeSolvedModalComponent } from '../practice-challenge-sol
 import { TeamService } from '@/api/team.service';
 import { WindowService } from '@/services/window.service';
 import { UserActiveChallenge } from '@/api/challenges.models';
-import { PracticeSession } from '@/prac/practice.models';
+import { PracticeChallengeView, PracticeSession } from '@/prac/practice.models';
 
 @Component({
   selector: 'app-practice-session',
@@ -28,7 +28,7 @@ import { PracticeSession } from '@/prac/practice.models';
 })
 export class PracticeSessionComponent implements OnInit {
   protected windowWidth$ = this.windowService.resize$;
-  spec$: Observable<SpecSummary>;
+  spec$: Observable<PracticeChallengeView>;
   authed$: Observable<boolean>;
 
   protected errors: any = [];
@@ -58,7 +58,7 @@ export class PracticeSessionComponent implements OnInit {
       map(p => p.specId),
       distinctUntilChanged(),
       switchMap(p => practiceService.searchChallenges({ term: p })),
-      map(r => !r.results.items.length ? ({ name: "Not Found" } as SpecSummary) : r.results.items[0]),
+      map(r => !r.results.items.length ? ({ name: "Not Found" } as PracticeChallengeView) : r.results.items[0]),
     );
 
     this.unsub.add(this.activeChallengesRepo.challengeCompleted$.subscribe(c => this.handleActiveChallengeCompleted(c)));
@@ -105,7 +105,7 @@ export class PracticeSessionComponent implements OnInit {
     this.isStartingSession = false;
   }
 
-  protected handleStartNewChallengeClick(spec: SpecSummary) {
+  protected handleStartNewChallengeClick(spec: PracticeChallengeView) {
     const currentPracticeChallenge = this.activeChallengesRepo.getActivePracticeChallenge();
     if (!currentPracticeChallenge) {
       throw new Error("Can't end previous challenge and start a new one - no previous challenge detected.");
@@ -117,7 +117,7 @@ export class PracticeSessionComponent implements OnInit {
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
         await this.teamService.endSession({ teamId: currentPracticeChallenge.team.id });
-        this.play({ id: spec.id, game: { id: spec.gameId } });
+        this.play({ id: spec.id, game: { id: spec.game.id } });
       }
     });
   }
