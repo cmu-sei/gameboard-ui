@@ -1,6 +1,7 @@
-import { ToastService } from '@/utility/services/toast.service';
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, Subscription, firstValueFrom, from, groupBy, map, mergeMap, tap, throttleTime } from 'rxjs';
+import { ToastService } from '@/utility/services/toast.service';
 import { LogService } from './log.service';
 import { WindowService } from './window.service';
 import { ConfigService } from '@/utility/config.service';
@@ -11,8 +12,7 @@ export type CanUseBrowserNotificationsResult = "denied" | "pending" | "unsupport
 export interface SendAppNotification {
   title: string,
   body: string,
-  allowRenotify?: boolean,
-  appUrl?: string,
+  appUrl?: string | UrlTree,
   tag?: string
 }
 
@@ -26,6 +26,7 @@ export class AppNotificationsService implements OnDestroy {
   constructor(
     private config: ConfigService,
     private log: LogService,
+    private router: Router,
     private toastService: ToastService,
     private userService: UserService,
     private windowService: WindowService) {
@@ -68,7 +69,10 @@ export class AppNotificationsService implements OnDestroy {
   private async onAppNotificationSend(sendNotification: SendAppNotification) {
     if (this._canShowBrowserNotifications$.value !== "allowed") {
       this.log.logWarning(`Can't send browser notification (${this._canShowBrowserNotifications$.value}) - falling back to toast.`);
-      this.toastService.showMessage(`${sendNotification.title}: ${sendNotification.body}`);
+      this.toastService.show({
+        text: `${sendNotification.title}: ${sendNotification.body}`,
+        onClick: sendNotification.appUrl ? () => this.router.navigateByUrl(sendNotification.appUrl!) : undefined,
+      });
       return;
     }
 
@@ -80,7 +84,6 @@ export class AppNotificationsService implements OnDestroy {
     const notification = new Notification(sendNotification.title, {
       body: sendNotification.body,
       tag: sendNotification.tag,
-      renotify: !!sendNotification.allowRenotify,
     });
 
     // play audio notification (we only do this with the OS-level notification, because otherwise it's hard to know why the sound happened if you're

@@ -14,7 +14,7 @@ export interface ToastOptions {
   // called when the toast is dismissed
   callback?: () => void;
   // called when the user clicks the toast
-  onClick?: () => void;
+  onClick?: () => Promise<boolean>;
   showCloseIcon?: boolean;
 }
 
@@ -65,6 +65,11 @@ export class ToastService {
     return {
       ...options,
       ...this.FIXED_OPTIONS,
+      onClick: () => {
+        if (options.onClick) {
+          options.onClick();
+        }
+      },
       close: options.showCloseIcon,
       text: textTemplate
     };

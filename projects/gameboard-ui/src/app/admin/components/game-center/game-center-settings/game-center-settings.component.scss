@@ -30,6 +30,10 @@ label {
   font-size: 87.5%;
 }
 
+.form-group small {
+  color: $muted;
+}
+
 .help-text {
   font-style: italic;
   font-size: 0.8em;
