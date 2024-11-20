@@ -49,7 +49,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `Ticket Closed: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: this.routerService.getTicketUrl(ev.data.ticket.key),
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-closed-${ev.data.ticket.id}`
     });
   }
@@ -60,7 +60,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `New Ticket: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: this.routerService.getTicketUrl(ev.data.ticket.key),
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-created-${ev.data.ticket.id}`
     });
   }
@@ -71,7 +71,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `Ticket updated by Support: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: this.routerService.getTicketUrl(ev.data.ticket.key),
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-updated-by-support-${ev.data.ticket.id}`
     });
   }
@@ -82,7 +82,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `Ticket updated by Player: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: this.routerService.getTicketUrl(ev.data.ticket.key),
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-updated-by-user-${ev.data.ticket.id}`
     });
   }

@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { catchError, first, last, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeOverview } from './board-models';
 import { PlayerService } from './player.service';
