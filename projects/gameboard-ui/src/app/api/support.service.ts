@@ -36,8 +36,8 @@ export class SupportService {
     );
   }
 
-  public retrieve(id: number): Observable<Ticket> {
-    return this.http.get<Ticket>(`${this.url}/ticket/${id}`).pipe(
+  public retrieve(id: number, args?: { sortActivityAscending?: boolean }): Observable<Ticket> {
+    return this.http.get<Ticket>(`${this.url}/ticket/${id}?sortDirection=${args?.sortActivityAscending === false ? 'desc' : 'asc'}`).pipe(
       tap(r => this.seen(r.key)),
       tap(ticket => {
         // fix up attachments properties

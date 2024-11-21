@@ -58,7 +58,7 @@
     </div>
 
     <div class="d-flex m-0 p-0">
-      <div class="flex-grow-1" style="min-width: 0">
+      <div class="flex-grow-1">
         <div class="card">
           <div class="card-header d-flex align-items-center justify-content-between py-2">
             <div class="flex-grow-1">
@@ -107,11 +107,20 @@
           </div>
         </div>
 
-        <h4 class="mt-2 d-flex justify-content-between">
-          <span>Activity</span>
-          <div class="btn btn-link mr-2" (click)="refresh$.next(true)">
-            <fa-icon [icon]="faSync"></fa-icon>
-            <span>Refresh</span>
+        <h4 class="mt-5 mb-3 d-flex align-items-center">
+          <div class="flex-grow-1">
+            Activity
+          </div>
+
+          <div class="activity-controls d-flex align-items-center fs-10">
+            <div class="btn-link mr-3" (click)="handleSortChange(!sortActivityAscending)">
+              Sort
+              <fa-icon [icon]="sortActivityAscending ? fa.arrowUp : fa.arrowDown"></fa-icon>
+            </div>
+
+            <div class="btn-link" (click)="refresh$.next(true)">
+              <fa-icon tooltip="Update the activity feed" [icon]="faSync"></fa-icon>
+            </div>
           </div>
         </h4>
 
