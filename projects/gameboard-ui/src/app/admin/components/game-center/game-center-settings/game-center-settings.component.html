@@ -148,6 +148,7 @@
             </div>
 
             <div class="col-12 mt-5">
+                <app-feedback-template-picker></app-feedback-template-picker>
                 <app-feedback-editor [feedbackTemplate]="game.feedbackTemplate"
                     (templateChange)="handleFeedbackTemplateChange($event || undefined)"></app-feedback-editor>
             </div>

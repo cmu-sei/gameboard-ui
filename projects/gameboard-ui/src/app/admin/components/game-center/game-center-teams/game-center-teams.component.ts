@@ -81,6 +81,11 @@ export class GameCenterTeamsComponent implements OnInit {
             return;
           }
         }
+      }),
+      this.teamService.teamRosterChanged$.subscribe(async teamId => {
+        if (this?.results?.teams?.items?.find(t => t.id === teamId)) {
+          await this.load(this.game?.id);
+        }
       })
     );
   }
@@ -132,24 +137,13 @@ export class GameCenterTeamsComponent implements OnInit {
       return;
     }
 
-    await this.handleDeployGameResources();
+
+    await this.handleDeployGameResources(eligibleTeams);
   }
 
-  private async handleDeployGameResources() {
-    const teams = this.resolveSelectedTeams();
-
-    this.modalService.openConfirm({
-      // bodyContent: `Are you sure you want to deploy resources for ${validTeamIds.length} teams?${appendInvalidTeamsClause}`,
-      bodyContent: `Are you sure you want to deploy resources for ${teams.length} team(s)?`,
-      onConfirm: async () => {
-        await this.gameService.deployResources(this.gameId!, teams.map(t => t.id));
-        this.toastService.showMessage(`Deploying resources for **${teams.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`);
-        this.selectedTeamIds = [];
-      },
-      renderBodyAsMarkdown: true,
-      subtitle: this.game?.name,
-      title: "Deploy game resources"
-    });
+  private async handleDeployGameResources(eligibleTeams: GameCenterTeamsResultsTeam[]) {
+    this.toastService.showMessage(`Deploying resources for ${eligibleTeams.length}...`);
+    await this.gameService.deployResources(this.gameId!, eligibleTeams.map(t => t.id));
   }
 
   protected async handleExportCsvData(selectedTeamIds: string[]) {

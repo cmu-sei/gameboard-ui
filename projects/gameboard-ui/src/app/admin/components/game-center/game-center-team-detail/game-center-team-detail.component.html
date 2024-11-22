@@ -15,7 +15,7 @@
     </div>
 
     <ng-container>
-        <h4 class="mt-4 px-3">Name Management</h4>
+        <h4 class="mt-4 px-3">Team Management</h4>
         <div class="name-management">
             <ul class="container mx-0">
                 <li class="row">
@@ -47,8 +47,13 @@
                         </select>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-warning" [disabled]="pendingNameInput.value.length < 2"
+                        <button type="button" class="btn btn-warning mr-2"
+                            [disabled]="pendingNameInput.value.length < 2"
                             (click)="approveName(player.id, { name: pendingNameInput.value, revisionReason: reasonSelect.value })">Approve</button>
+
+                        <button type="button" class="btn btn-danger"
+                            [disabled]="team.players.length == 1 || (player.id === team.captain.id)"
+                            (click)="handleRemovePlayerConfirm(player)">Remove</button>
                     </div>
                 </li>
             </ul>

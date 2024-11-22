@@ -3,7 +3,7 @@
         <div class="flex-grow-1"></div>
         <a class="btn btn-link text-success mx-1" routerLinkActive="active" [routerLink]="['/home']">Home</a>
         <ng-container *ngIf="(toc$ | async)?.length">
-            <a *ngFor="let t of toc$ | async" class="btn btn-link text-success mx-1" routerLinkActive="text-info"
+            <a *ngFor="let t of toc$ | async" class="btn btn-link text-success mx-1" routerLinkActive="active"
                 [routerLink]="['doc', t.link]">{{t.display}}</a>
         </ng-container>
         <a *ngIf="isPracticeModeEnabled" class="btn btn-link text-success mx-1" routerLinkActive="active"
@@ -14,7 +14,7 @@
                 <app-support-pill></app-support-pill>
             </a>
 
-            <a class="btn btn-link text-success mx-1" routerLinkActive="text-info" [routerLink]="profileUrl">Profile</a>
+            <a class="btn btn-link text-success mx-1" routerLinkActive="active" [routerLink]="profileUrl">Profile</a>
 
             <div *appIfHasPermission="'Reports_View'" class="d-flex align-items-center">
                 <a class="btn btn-link text-success-mx-1" routerLinkActive="active" [routerLink]="['reports']">

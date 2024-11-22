@@ -1,6 +1,5 @@
 <div>
   <div *ngIf="ctx$ | async as ctx" class="container-xl" [class.expand]="ctx.canManage">
-
     <a class="btn btn-link ml-0 pl-0" routerLink="../">
       <fa-icon [icon]="faArrowLeft"></fa-icon>
       <span>Back</span>
@@ -180,7 +179,7 @@
                   <button type="button" class="btn btn-small px-1 py-0" tooltip="Copy this comment"
                     [appCopyOnClick]="ctx.ticket.description"
                     appCopyOnClickMessage="Copied this comment's text to your clipboard.">
-                    <fa-icon [icon]="fa.copy" size="sm" class="text-info"></fa-icon>
+                    <fa-icon [icon]="fa.copy" size="sm" class="text-success"></fa-icon>
                   </button>
                 </div>
               </div>

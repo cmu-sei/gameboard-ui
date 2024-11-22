@@ -148,7 +148,7 @@
 
                 <div contextMenu>
                     <app-game-center-team-context-menu *ngIf="game" [team]="team"
-                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart, isTeamGame: game.isTeamGame }"
+                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart, maxTeamSize: game.maxTeamSize }"
                         (teamUpdated)="load()"></app-game-center-team-context-menu>
                 </div>
             </app-team-list-card>

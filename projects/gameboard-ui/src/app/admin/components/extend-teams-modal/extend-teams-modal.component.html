@@ -25,8 +25,8 @@
 
             <alert type="warning" *ngIf="extensionInMinutes < 0">
                 If you use a negative value for the extension length, you'll <em>decrease</em> the amount of time
-                available to the {{ game?.isTeamGame ? "teams" : "players" }} shown here. Ensure the session times below
-                are what you expect.
+                available to the {{ (game?.maxTeamSize || 1) > 1 ? "teams" : "players" }} shown here. Ensure the session
+                times below are what you expect.
             </alert>
 
             <ng-container *ngIf="extensionInMinutes">

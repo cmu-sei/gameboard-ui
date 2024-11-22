@@ -13,8 +13,8 @@ import { Team } from '@/api/player-models';
 export class ExtendTeamsModalComponent implements OnInit {
   game?: {
     id: string;
+    maxTeamSize: number;
     name: string;
-    isTeamGame: boolean;
   };
   extensionInMinutes = 30;
   onExtend?: () => Promise<void> | Observable<void>;

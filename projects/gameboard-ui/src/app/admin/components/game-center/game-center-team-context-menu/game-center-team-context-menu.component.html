@@ -14,7 +14,7 @@
         <li role="menuitem">
             <button class="dropdown-item btn" (click)="copy(team.id, 'team ID')">Copy Team ID</button>
         </li>
-        <li role="menuitem" *ngIf="!game.isTeamGame || team.players.length == 1; else teamCopyUserIds">
+        <li role="menuitem" *ngIf="team.players.length == 1; else teamCopyUserIds">
             <button class="dropdown-item btn" (click)="copy(team.captain.userId, 'user ID')">
                 Copy User ID ({{team.players.length}})
             </button>
@@ -31,7 +31,13 @@
 
         <ng-container *ngIf="!hasStartedSession">
             <li class="divider dropdown-divider"></li>
-            <li role="menuitem" *ngIf="!hasStartedSession">
+            <li role="menuitem" *ngIf="game.maxTeamSize > 1">
+                <button class="dropdown-item btn btn-warning" (click)="handleAddPlayerClick(team)"
+                    [disabled]="team.players.length >= game.maxTeamSize">
+                    <strong>Add</strong> User to Team
+                </button>
+            </li>
+            <li role="menuitem">
                 <button class="dropdown-item btn btn-warning" (click)="handleDeployResources(team)">
                     <strong>Deploy</strong> Game Resources
                 </button>
@@ -95,8 +101,20 @@
 </ng-template>
 
 <ng-template #unenroll>
-    <li role="menuitem">
-        <button type="button" class="dropdown-item btn btn-danger"
-            (click)="handleResetRequest(team!, 'unenrollAndArchiveChallenges')">Unenroll</button>
+    <li role="menuitem" *ngIf="team">
+        <button type="button" class="dropdown-item btn btn-danger" (click)="handleUnenrollClick(team)">Unenroll</button>
     </li>
+</ng-template>
+
+<ng-template #addPlayerModal>
+    <app-modal-content *ngIf="game && team" title="Add User" [subtitle]="game.name"
+        subSubtitle="Team &quot;{{ team.name }}&quot;">
+        <alert type="warning" class="my-4">
+            <strong>NOTE: </strong> This feature is currently only available for users who haven't yet registered for
+            the game. If you want to add a player to this team and can't find them here, ensure they're not registered
+            (or unenroll them if they are) and then come back to try again.
+        </alert>
+        <app-user-picker [eligibleForGameId]="game.id" [excludeUserIds]="team.players | arrayProperty:'id'"
+            (select)="handleAddUserConfirm(team, $event)"></app-user-picker>
+    </app-modal-content>
 </ng-template>

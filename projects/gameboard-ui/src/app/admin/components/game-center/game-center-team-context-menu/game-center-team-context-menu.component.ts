@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { TeamSessionResetType } from '@/api/teams.models';
 import { SimpleEntity } from '@/api/models';
@@ -15,6 +15,7 @@ import { GameCenterTeamsResultsTeam } from '../game-center.models';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { GameSessionService } from '@/services/game-session.service';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
+import { ApiUser } from '@/api/user-models';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -27,12 +28,13 @@ export interface TeamSessionResetRequest {
   styleUrls: ['./game-center-team-context-menu.component.scss']
 })
 export class GameCenterTeamContextMenuComponent {
-  @Input() game?: { id: string; name: string; isSyncStart: boolean; isTeamGame: boolean };
+  @Input() game?: { id: string; name: string; isSyncStart: boolean; maxTeamSize: number };
   @Input() team?: GameCenterTeamsResultsTeam;
   @Output() teamUpdated = new EventEmitter<SimpleEntity>();
 
   protected fa = fa;
   protected hasStartedSession = false;
+  @ViewChild("addPlayerModal") addPlayerModalTemplate?: TemplateRef<any>;
 
   constructor(
     private clipboard: ClipboardService,
@@ -59,14 +61,14 @@ export class GameCenterTeamContextMenuComponent {
 
     // this is all really window-dressing around the "reset" operation, which we describe as an unenroll if the team's session hasn't started
     const isUnenroll = request.resetType === "unenrollAndArchiveChallenges" && this.gameSessionService.canUnerollSessionWithEpochMs(this.team.session);
-    let confirmMessage = `Are you sure you want to unenroll ${this.game.isTeamGame ? " team" : ""} **${this.team.name}** from the game?`;
+    let confirmMessage = `Are you sure you want to unenroll ${this.game.maxTeamSize > 1 ? " team" : ""} **${this.team.name}** from the game?`;
     let confirmTitle = `Unenroll ${this.team.name}?`;
     let confirmToast = `**${this.team.name}** has been unenrolled.`;
 
     if (!isUnenroll) {
-      confirmMessage = `Are you sure you want to reset the session for ${this.game.isTeamGame ? " team" : ""} **${this.team.name}**?`;
+      confirmMessage = `Are you sure you want to reset the session for ${this.game.maxTeamSize > 1 ? " team" : ""} **${this.team.name}**?`;
       confirmTitle = `Reset ${this.team.name}'s session?`;
-      confirmToast = `${this.game.isTeamGame ? "Team " : ""}**${this.team.name}**'s session has been reset.`;
+      confirmToast = `${this.game.maxTeamSize > 1 ? "Team " : ""}**${this.team.name}**'s session has been reset.`;
 
       // accommodate various "types" of reset that can happen (e.g. keep challenges, don't keep challenges, destroy the universe and the unenroll)
       if (request.resetType === "preserveChallenges")
@@ -92,6 +94,21 @@ export class GameCenterTeamContextMenuComponent {
   protected async copy(text: string, description: string) {
     await this.clipboard.copy(text);
     this.toastService.showMessage(`Copied ${description} **${text}** to your clipboard.`);
+  }
+
+  protected async handleAddPlayerClick(team: GameCenterTeamsResultsTeam) {
+    if (!this.addPlayerModalTemplate) {
+      throw new Error("Couldn't load the template.");
+    }
+
+    this.modalService.openTemplate(this.addPlayerModalTemplate);
+  }
+
+  protected async handleAddUserConfirm(team: GameCenterTeamsResultsTeam, user: ApiUser) {
+    this.modalService.hide();
+    const addedPlayer = await this.teamService.addToTeam({ teamId: team.id, userId: user.id });
+    this.teamUpdated.emit(this.team);
+    this.toastService.showMessage(`User **${addedPlayer.user.name}** has joined team **${team.name}**!`);
   }
 
   protected async handleDeployResources(team: SimpleEntity) {
@@ -122,6 +139,16 @@ export class GameCenterTeamContextMenuComponent {
   protected async handleResetRequest(team: SimpleEntity, type: TeamSessionResetType) {
     await firstValueFrom(this.teamService.resetSession({ teamId: team.id, resetType: type }));
     this.teamUpdated.emit(team);
+  }
+
+  protected handleUnenrollClick(team: SimpleEntity) {
+    this.modalService.openConfirm({
+      bodyContent: `Are you sure you want to unenroll **${team.name}**?`,
+      renderBodyAsMarkdown: true,
+      subtitle: team.name,
+      title: "Unenroll " + ((this.game?.maxTeamSize || 0) > 1 ? "Team" : "Player"),
+      onConfirm: async () => this.handleResetRequest(team, 'unenrollAndArchiveChallenges')
+    });
   }
 
   async handleUpdateReady(team: SimpleEntity, isReady: boolean) {

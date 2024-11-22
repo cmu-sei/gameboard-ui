@@ -1,0 +1,19 @@
+<div class="input-group">
+    <input [(ngModel)]="searchTerm" appAutofocus [typeahead]="typeaheadSearch$" [typeaheadAsync]="true"
+        typeaheadOptionField="name" class="form-control" (typeaheadOnSelect)="handleTypeaheadSelect($event)"
+        [typeaheadItemTemplate]="searchResultsTemplate" placeholder="Search by name or user ID">
+    <div class="input-group-append">
+        <span class="input-group-text"><fa-icon [icon]="fa.search"></fa-icon></span>
+    </div>
+</div>
+
+<ng-template #searchResultsTemplate let-user="item">
+    <div class="d-flex align-items-center">
+        <app-avatar class="mr-3" [imageUrl]="user.sponsor | sponsorToLogoUri" [tooltip]="user.sponsor.name"
+            size="tiny"></app-avatar>
+        <div class="user-info">
+            <div>{{ user.approvedName }}</div>
+            <em class="text-muted fs-08">{{ user.id | slice:0:8}}</em>
+        </div>
+    </div>
+</ng-template>

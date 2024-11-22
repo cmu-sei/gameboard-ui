@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, firstValueFrom, from, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
-import { AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
+import { AddToTeamResponse, AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, RemoveFromTeamResponse, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools/tools";
 import { GamePlayState } from "./game-models";
@@ -12,6 +12,9 @@ import { ApiDateTimeService } from "@/services/api-date-time.service";
 export class TeamService {
     private _playerSessionChanged$ = new Subject<string>();
     public playerSessionChanged$ = this._playerSessionChanged$.asObservable();
+
+    private _teamRosterChanged$ = new Subject<string>();
+    public teamRosterChanged$ = this._teamRosterChanged$.asObservable();
 
     private _teamSessionExtended$ = new Subject<TeamSessionUpdate[]>();
     public teamSessionExtended$ = this._teamSessionExtended$.asObservable();
@@ -30,9 +33,12 @@ export class TeamService {
         private apiUrl: ApiUrlService,
         private http: HttpClient) { }
 
-    adminEnroll(request: AdminEnrollTeamRequest): Observable<AdminEnrollTeamResponse> {
+    async adminEnroll(request: AdminEnrollTeamRequest): Promise<AdminEnrollTeamResponse> {
         request.userIds = unique(request.userIds);
-        return this.http.post<AdminEnrollTeamResponse>(this.apiUrl.build("admin/team"), request);
+
+        const result = await firstValueFrom(this.http.post<AdminEnrollTeamResponse>(this.apiUrl.build("admin/team"), request));
+        this._teamRosterChanged$.next(result.id);
+        return result;
     }
 
     adminExtendSession(request: { teamIds: string[], extensionDurationInMinutes: number }) {
@@ -47,6 +53,12 @@ export class TeamService {
             tap(teamSessions => this._teamSessionsChanged$.next(teamSessions.teams.map(t => ({ id: t.id, sessionEndsAt: t.sessionEnd.toMillis() })))),
             tap(teamSessions => this._teamSessionExtended$.next(teamSessions.teams.map(t => ({ id: t.id, sessionEndsAt: t.sessionEnd.toMillis() }))))
         );
+    }
+
+    async addToTeam(request: { teamId: string; userId: string }): Promise<AddToTeamResponse> {
+        const result = await firstValueFrom(this.http.put<AddToTeamResponse>(this.apiUrl.build(`team/${request.teamId}/players`), request));
+        this._teamRosterChanged$.next(request.teamId);
+        return result;
     }
 
     unenroll(request: { teamId: string, resetType?: TeamSessionResetType }) {
@@ -65,6 +77,12 @@ export class TeamService {
 
     public getGamePlayState(teamId: string): Observable<GamePlayState> {
         return this.http.get<GamePlayState>(this.apiUrl.build(`team/${teamId}/play-state`));
+    }
+
+    public async removePlayer(playerId: string, teamId: string): Promise<RemoveFromTeamResponse> {
+        const result = await firstValueFrom(this.http.delete<RemoveFromTeamResponse>(this.apiUrl.build(`team/${teamId}/players/${playerId}`)));
+        this._teamRosterChanged$.next(result.teamId);
+        return result;
     }
 
     public search(teamIds: string[]) {
