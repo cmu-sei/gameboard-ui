@@ -10,8 +10,6 @@ import { UserService as ApiUserService } from '../api/user.service';
 import { AuthService, AuthTokenState } from './auth.service';
 import { ConfigService } from './config.service';
 import { LogService } from '@/services/log.service';
-import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
-import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService implements OnDestroy {
@@ -23,12 +21,10 @@ export class UserService implements OnDestroy {
   constructor(
     private auth: AuthService,
     private log: LogService,
-    private permissionsService: UserRolePermissionsService,
     api: ApiUserService,
     config: ConfigService,
     router: Router
   ) {
-
     // when token updated, or every half hour grab a fresh mks cookie if token still good
     combineLatest([
       timer(1000, 1800000),
@@ -39,7 +35,10 @@ export class UserService implements OnDestroy {
       filter(t => t === AuthTokenState.valid && !!auth.oidcUser?.profile),
       map(tokenState => auth.oidcUser?.profile as unknown as UserOidcProfile),
       switchMap(profile => api.tryCreate({ id: profile.sub })),
-      catchError(err => of(null)),
+      catchError(err => {
+        this.log.logError("Auth error", err);
+        return of(null);
+      }),
       filter(result => !!result),
     ).subscribe(result => this.user$.next(result!.user));
 
@@ -58,19 +57,10 @@ export class UserService implements OnDestroy {
 
     // log the login event for the current user (we track date of last login and total login count)
     this._userSub = this.auth.tokenState$.pipe(
+      map(t => t === AuthTokenState.valid),
       distinctUntilChanged(),
-      filter(t => t === AuthTokenState.valid && !!auth.oidcUser?.profile)
+      filter(t => t && !!auth.oidcUser?.profile)
     ).subscribe(async u => await firstValueFrom(api.updateLoginEvents()));
-  }
-
-  can(permission: UserRolePermissionKey) {
-    return this.permissionsService.can(this.user$.value, permission);
-  }
-
-  can$(permission: UserRolePermissionKey) {
-    return this.user$.pipe(
-      map(u => this.permissionsService.can(u, permission))
-    );
   }
 
   ngOnDestroy(): void {

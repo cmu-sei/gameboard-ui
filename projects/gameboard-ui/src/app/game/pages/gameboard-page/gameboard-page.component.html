@@ -64,7 +64,10 @@
                 <app-spinner></app-spinner>
                 <ng-container *ngIf="etd$ | async as etd">
                   <div *ngIf="etd > 0">
-                    Estimated time remaining: {{etd}}s
+                    <span class="text-muted">
+                      Estimated time remaining:
+                    </span>
+                    <strong>{{etd}}</strong>s
                   </div>
                 </ng-container>
               </div>

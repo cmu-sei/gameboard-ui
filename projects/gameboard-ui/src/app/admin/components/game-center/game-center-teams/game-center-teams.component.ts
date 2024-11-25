@@ -38,6 +38,7 @@ interface GameCenterTeamsFilterSettings {
 export class GameCenterTeamsComponent implements OnInit {
   @Input() gameId?: string;
 
+  protected errors: string[] = [];
   protected fa = fa;
   protected game?: Game;
   protected hasFilters = false;
@@ -139,6 +140,10 @@ export class GameCenterTeamsComponent implements OnInit {
 
 
     await this.handleDeployGameResources(eligibleTeams);
+  }
+
+  protected handleContextMenuError(errs: string[]) {
+    this.errors.push(...errs);
   }
 
   private async handleDeployGameResources(eligibleTeams: GameCenterTeamsResultsTeam[]) {

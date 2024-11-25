@@ -21,6 +21,7 @@ import { LogService } from '../../services/log.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { ConfigService } from '@/utility/config.service';
 import { TicketSupportToolsContext } from '../components/ticket-support-tools/ticket-support-tools.component';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -99,13 +100,14 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     private api: SupportService,
     private clipboard: ClipboardService,
     private logService: LogService,
+    private permissionsService: UserRolePermissionsService,
     private playerApi: PlayerService,
     private userApi: UserService,
     private sanitizer: DomSanitizer,
     private http: HttpClient,
     private toastsService: ToastService,
   ) {
-    const canManage$ = local.can$("Support_ManageTickets");
+    const canManage$ = permissionsService.can$("Support_ManageTickets");
     this.currentUser = local.user$.value;
 
     const ticket$ = combineLatest([

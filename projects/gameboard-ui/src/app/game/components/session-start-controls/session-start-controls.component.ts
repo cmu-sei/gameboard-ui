@@ -72,9 +72,12 @@ export class SessionStartControlsComponent implements OnInit {
 
   protected async handleStartRequest(player: Player) {
     this.isStartingSession = true;
-    this.onRequestStart.emit(player);
-    await firstValueFrom(this.onRequestStart.asObservable());
-    this.isStartingSession = false;
+    try {
+      this.onRequestStart.emit(player);
+    }
+    finally {
+      this.isStartingSession = false;
+    }
   }
 
   protected async handleReadyUpdated(player: Player) {

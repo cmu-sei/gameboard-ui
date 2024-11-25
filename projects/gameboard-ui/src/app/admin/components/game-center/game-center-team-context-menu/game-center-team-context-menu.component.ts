@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { TeamSessionResetType } from '@/api/teams.models';
-import { SimpleEntity } from '@/api/models';
+import { ApiError, SimpleEntity } from '@/api/models';
 import { fa } from '@/services/font-awesome.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
@@ -30,6 +30,7 @@ export interface TeamSessionResetRequest {
 export class GameCenterTeamContextMenuComponent {
   @Input() game?: { id: string; name: string; isSyncStart: boolean; maxTeamSize: number };
   @Input() team?: GameCenterTeamsResultsTeam;
+  @Output() error = new EventEmitter<string[]>();
   @Output() teamUpdated = new EventEmitter<SimpleEntity>();
 
   protected fa = fa;
@@ -141,6 +142,22 @@ export class GameCenterTeamContextMenuComponent {
     this.teamUpdated.emit(team);
   }
 
+  async handleStartSession(team: SimpleEntity) {
+    try {
+      await firstValueFrom(this.playerService.startPlayerId(this.team!.captain.id));
+      this.teamUpdated.emit(team);
+      this.toastService.showMessage(`Session started for **${team.name}**`);
+    }
+    catch (err: any) {
+      if ("message" in err) {
+        this.error.emit([(err as ApiError).message]);
+      }
+      else {
+        this.error.emit([JSON.stringify(err)]);
+      }
+    }
+  }
+
   protected handleUnenrollClick(team: SimpleEntity) {
     this.modalService.openConfirm({
       bodyContent: `Are you sure you want to unenroll **${team.name}**?`,
@@ -160,12 +177,6 @@ export class GameCenterTeamContextMenuComponent {
         `**${team.name}** has been readied.` :
         `**${team.name}**'s is no longer ready.`
     );
-  }
-
-  async handleStartSession(team: SimpleEntity) {
-    await firstValueFrom(this.playerService.startPlayerId(this.team!.captain.id));
-    this.teamUpdated.emit(team);
-    this.toastService.showMessage(`Session started for **${team.name}**`);
   }
 
   async handleView(team: GameCenterTeamsResultsTeam) {

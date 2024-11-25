@@ -3,7 +3,7 @@
 
 import { Component } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, interval, merge, Observable } from 'rxjs';
-import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
 import { ApiUser, TryCreateUsersResponse, UserRoleKey } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
@@ -125,7 +125,7 @@ export class UserRegistrarComponent {
     try {
       await this.api.requestNameChange(userId, { requestedName: name, status });
       this.refresh$.next(true);
-      this.toastService.showMessage(`This user's name has been changed **${name}**.`);
+      this.toastService.showMessage(`This user's name has been changed **${name}**.${status ? " _(Status: **" + status + "**)_" : ""}`);
     }
     catch (err) {
       this.errors.push(err);

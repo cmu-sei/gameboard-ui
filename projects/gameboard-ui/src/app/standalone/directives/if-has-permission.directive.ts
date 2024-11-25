@@ -6,7 +6,7 @@ import { UserRolePermissionsService } from '@/api/user-role-permissions.service'
 import { ApiUser } from '@/api/user-models';
 
 @Directive({
-  providers: [UnsubscriberService, LocalUserService],
+  providers: [UnsubscriberService],
   selector: '[appIfHasPermission]',
   standalone: true
 })
@@ -39,7 +39,7 @@ export class IfHasPermissionDirective implements OnChanges {
   }
 
   private evaluate(user: ApiUser | null | undefined) {
-    const hasPermission = this.requiredPermission && user && this.permissionsService.can(user, this.requiredPermission);
+    const hasPermission = this.requiredPermission && user && this.permissionsService.canUser(user, this.requiredPermission);
 
     if (hasPermission && !this.hasView) {
       this.viewContainer.createEmbeddedView(this.templateRef);

@@ -26,27 +26,15 @@ export class UserService {
   ) { }
 
   public list(filter: any): Observable<ApiUser[]> {
-    return this.http.get<ApiUser[]>(this.apiUrl.build("users"), { params: filter }).pipe(
-      map(r => {
-        r.forEach(u => this.transform(u));
-        return r;
-      })
-    );
+    return this.http.get<ApiUser[]>(this.apiUrl.build("users"), { params: filter });
   }
 
   public retrieve(id: string): Observable<ApiUser> {
-    return this.http.get<ApiUser>(this.apiUrl.build(`user/${id}`)).pipe(
-      map(r => this.transform(r))
-    );
+    return this.http.get<ApiUser>(this.apiUrl.build(`user/${id}`));
   }
 
   public tryCreate(model: NewUser): Observable<TryCreateUserResult> {
-    return this.http.post<TryCreateUserResult>(this.apiUrl.build("user"), model).pipe(
-      map(r => {
-        r.user = this.transform(r.user);
-        return r;
-      })
-    );
+    return this.http.post<TryCreateUserResult>(this.apiUrl.build("user"), model);
   }
 
   public tryCreateMany(req: TryCreateUsersRequest) {
@@ -54,9 +42,7 @@ export class UserService {
   }
 
   public update(model: ChangedUser): Observable<ApiUser> {
-    return this.http.put<any>(this.apiUrl.build("user"), model).pipe(
-      map(r => this.transform(r as ApiUser)),
-    );
+    return this.http.put<any>(this.apiUrl.build("user"), model).pipe();
   }
 
   public delete(id: string): Observable<any> {
@@ -126,14 +112,5 @@ export class UserService {
     }
 
     this.toNode(folder, path);
-  }
-
-  private transform(user: ApiUser): ApiUser {
-    // If the user has no name status but they changed their name, it's pending approval
-    if (!user.nameStatus && user.approvedName !== user.name) {
-      user.nameStatus = 'pending';
-    }
-
-    return user;
   }
 }

@@ -7,6 +7,6 @@ export class CanPipe implements PipeTransform {
   constructor(private permissionsService: UserRolePermissionsService) { }
 
   transform(user: { rolePermissions: UserRolePermissionKey[] } | null, permission: UserRolePermissionKey): boolean {
-    return this.permissionsService.can(user, permission);
+    return this.permissionsService.canUser(user, permission);
   }
 }

@@ -26,7 +26,7 @@
           </ul>
         </div>
 
-        <ng-container *ngIf="!!ctx.user.name && hasSelectedSponsor && (canAdminEnroll || canStandardEnroll)">
+        <ng-container *ngIf="!!ctx.user.approvedName && hasSelectedSponsor && (canAdminEnroll || canStandardEnroll)">
           <!-- team -->
           <div *ngIf="ctx.game.allowTeam">
             <p>
@@ -52,7 +52,7 @@
             <ng-container *ngIf="!isEnrolling; else enrolling">
               <div class="d-flex align-items-center justify-content-center mt-5"
                 *ngIf="ctxDelayed$ | async as delay; else loading">
-                <div class="text-center" *ngIf="!!ctx.user.name && hasSelectedSponsor">
+                <div class="text-center">
                   <app-confirm-button btnClass="btn btn-success btn-lg mr-4"
                     [disabled]="!isRegistrationOpen && !canStandardEnroll && !canAdminEnroll" [tooltip]="enrollTooltip"
                     (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">

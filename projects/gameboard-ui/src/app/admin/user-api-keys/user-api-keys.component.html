@@ -3,7 +3,7 @@
 
     <div *ngIf="(apiKeys$ | async) as apiKeys; else loading">
         <p *ngIf="!apiKeys.length">
-            <em>This user doesn't have any API keys. You can add one using the form below.</em>
+            <em class="text-muted">This user doesn't have any API keys. You can add one using the form below.</em>
         </p>
 
         <alert type="success" *ngIf="visibleKey">
