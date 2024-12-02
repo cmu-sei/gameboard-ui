@@ -17,16 +17,16 @@
 
       <div class="card-title lead">
         <ng-container *ngIf="!ctx.player.session?.isBefore">
-          <div class="d-flex text-info card-text">
+          <div class="d-flex card-text">
             <div>
-              <span *ngIf="ctx.player.session?.isAfter">Session ended </span>
-              <span *ngIf="ctx.player.session?.isDuring && (timeRemainingMs$ | async)">
+              <span class="text-danger" *ngIf="ctx.player.session?.isAfter">Session ended </span>
+              <span class="text-muted" *ngIf="ctx.player.session?.isDuring && (timeRemainingMs$ | async)">
                 Time Remaining:
               </span>
             </div>
 
             <div *ngIf="ctx.player.session?.isDuring && hasTimeRemaining"
-              [class]="'ml-2 ' + (((timeRemainingMs$ | async) || 0) | countdowncolor)">
+              [class]="'ml-2 fw-bold ' + (((timeRemainingMs$ | async) || 0) | countdowncolor)">
               {{ ((timeRemainingMs$ | async) || 0) | countdown }}
             </div>
             <div class="spacer"></div>

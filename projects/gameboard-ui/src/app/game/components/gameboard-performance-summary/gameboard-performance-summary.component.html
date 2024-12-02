@@ -1,7 +1,9 @@
 <div class="gameboard-performance-summary-component" *ngIf="ctx$ | async as ctx; else loading">
-    <div class="text-info card-text mb-2">
-        <span *ngIf="ctx.player.session?.isAfter || ((countdown$ | async) || 0 ) <= 0">Game Over </span>
-        <span *ngIf="ctx.player.session?.isDuring">Time Remaining: </span>
+    <div class="card-text mb-2">
+        <span *ngIf="ctx.player.session?.isAfter || ((countdown$ | async) || 0 ) <= 0" class="text-danger">
+            Game Over
+        </span>
+        <span *ngIf="ctx.player.session?.isDuring" class="text-success">Time Remaining: </span>
         <span class="font-weight-bold" [class]="(countdown$ | async) || 0 | countdowncolor">
             {{ (countdown$ | async) || 0 | countdown }}
         </span>
@@ -49,7 +51,7 @@
     </ng-container>
 
     <div *ngIf="ctx.player.session?.isAfter && ctx.game.isPracticeMode" class="text-center">
-        <a class="btn btn-info btn-sm" [routerLink]="['/prac']">
+        <a class="btn btn-success btn-sm" [routerLink]="['/prac']">
             More Practice
         </a>
     </div>
