@@ -246,7 +246,7 @@ export class GamePageComponent implements OnDestroy {
   }
 
   private showModal(resettingPlayerName?: string): void {
-    const resetInitiator = resettingPlayerName ? `your teammate "${resettingPlayerName}"` : "an administrator";
+    const resetInitiator = resettingPlayerName ? `your teammate **${resettingPlayerName}**` : "an **administrator**";
 
     this.modalService.openConfirm({
       title: "Session reset",

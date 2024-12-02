@@ -138,7 +138,6 @@ export class GameCenterTeamsComponent implements OnInit {
       return;
     }
 
-
     await this.handleDeployGameResources(eligibleTeams);
   }
 
