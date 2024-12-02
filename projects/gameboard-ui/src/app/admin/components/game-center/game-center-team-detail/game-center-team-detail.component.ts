@@ -8,6 +8,8 @@ import { fa } from '@/services/font-awesome.service';
 import { GameCenterTeamsResultsTeam } from '../game-center.models';
 import { AdminService } from '@/api/admin.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { TeamService } from '@/api/team.service';
+import { SimpleEntity } from '@/api/models';
 
 @Component({
   selector: 'app-game-center-team-detail',
@@ -17,8 +19,8 @@ import { ToastService } from '@/utility/services/toast.service';
 export class GameCenterTeamDetailComponent implements OnInit {
   game!: {
     id: string;
+    maxTeamSize: number;
     name: string;
-    isTeamGame: boolean;
   };
 
   team!: GameCenterTeamsResultsTeam;
@@ -45,6 +47,7 @@ export class GameCenterTeamDetailComponent implements OnInit {
     private adminService: AdminService,
     private modalService: ModalConfirmService,
     private playerService: PlayerService,
+    private teamService: TeamService,
     private toastService: ToastService) { }
 
   public ngOnInit() {
@@ -78,8 +81,8 @@ export class GameCenterTeamDetailComponent implements OnInit {
         extensionInMinutes: 30,
         game: {
           id: gameId,
+          maxTeamSize: this.game.maxTeamSize,
           name: this.game.name,
-          isTeamGame: this.game.isTeamGame
         },
         teamIds: [this.team.id]
       },
@@ -117,5 +120,19 @@ export class GameCenterTeamDetailComponent implements OnInit {
       this.team.name = args.name;
 
     this.toastService.showMessage(`This player's name has been changed to **${args.name}**.${args.revisionReason ? ` (reason: **${args.revisionReason}**)` : ""}`);
+  }
+
+  protected async handleRemovePlayerConfirm(player: SimpleEntity) {
+    this.modalService.openConfirm({
+      bodyContent: `Are you sure you want to remove **${player.name}** from team **${this.team.name}**?`,
+      title: "Remove Player From Team",
+      subtitle: player.name,
+      renderBodyAsMarkdown: true,
+      onConfirm: async () => {
+        const removedPlayer = await this.teamService.removePlayer(player.id, this.team.id);
+        this.team.players = this.team.players.filter(p => p.id !== player.id);
+        this.toastService.showMessage(`Player **${removedPlayer.player.name}** was removed from the team. _(They're still registered for **${removedPlayer.game.name}**.)_`);
+      }
+    });
   }
 }

@@ -38,8 +38,10 @@ interface GameCenterTeamsFilterSettings {
 export class GameCenterTeamsComponent implements OnInit {
   @Input() gameId?: string;
 
+  protected errors: string[] = [];
   protected fa = fa;
   protected game?: Game;
+  protected hasFilters = false;
   protected isLoading = false;
   protected results?: GameCenterTeamsResults;
   protected selectedTeamIds: string[] = [];
@@ -80,6 +82,11 @@ export class GameCenterTeamsComponent implements OnInit {
             return;
           }
         }
+      }),
+      this.teamService.teamRosterChanged$.subscribe(async teamId => {
+        if (this?.results?.teams?.items?.find(t => t.id === teamId)) {
+          await this.load(this.game?.id);
+        }
       })
     );
   }
@@ -89,10 +96,7 @@ export class GameCenterTeamsComponent implements OnInit {
   }
 
   protected async handleClearAllFilters() {
-    this.filterSettings.advancement = undefined;
-    this.filterSettings.searchTerm = "";
-    this.filterSettings.sort = "rank";
-    this.filterSettings.sessionStatus = undefined;
+    this.filterSettings = { sort: "rank" };
     await this.load(this.game?.id);
   }
 
@@ -134,24 +138,16 @@ export class GameCenterTeamsComponent implements OnInit {
       return;
     }
 
-    await this.handleDeployGameResources();
+    await this.handleDeployGameResources(eligibleTeams);
   }
 
-  private async handleDeployGameResources() {
-    const teams = this.resolveSelectedTeams();
+  protected handleContextMenuError(errs: string[]) {
+    this.errors.push(...errs);
+  }
 
-    this.modalService.openConfirm({
-      // bodyContent: `Are you sure you want to deploy resources for ${validTeamIds.length} teams?${appendInvalidTeamsClause}`,
-      bodyContent: `Are you sure you want to deploy resources for ${teams.length} team(s)?`,
-      onConfirm: async () => {
-        await this.gameService.deployResources(this.gameId!, teams.map(t => t.id));
-        this.toastService.showMessage(`Deploying resources for **${teams.length} ${this.game?.isTeamGame ? "team" : "player"}(s)**.`);
-        this.selectedTeamIds = [];
-      },
-      renderBodyAsMarkdown: true,
-      subtitle: this.game?.name,
-      title: "Deploy game resources"
-    });
+  private async handleDeployGameResources(eligibleTeams: GameCenterTeamsResultsTeam[]) {
+    this.toastService.showMessage(`Deploying resources for ${eligibleTeams.length}...`);
+    await this.gameService.deployResources(this.gameId!, eligibleTeams.map(t => t.id));
   }
 
   protected async handleExportCsvData(selectedTeamIds: string[]) {
@@ -303,5 +299,12 @@ export class GameCenterTeamsComponent implements OnInit {
 
   private updateFilterConfig() {
     this.localStorageClient.add(StorageKey.GameCenterTeamsFilterSettings, this.filterSettings);
+    this.hasFilters = this.filterSettings && (
+      !!this.filterSettings.advancement ||
+      !!this.filterSettings.hasPendingNames ||
+      !!this.filterSettings.searchTerm ||
+      !!this.filterSettings.sessionStatus ||
+      this.filterSettings?.sort !== 'rank'
+    );
   }
 }

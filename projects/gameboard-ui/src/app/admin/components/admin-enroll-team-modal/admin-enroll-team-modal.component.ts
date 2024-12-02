@@ -34,7 +34,7 @@ export class AdminEnrollTeamModalComponent implements OnInit {
   protected searchTerm = "";
   protected selectedUsers: ApiUser[] = [];
   protected typeaheadSearch$ = new Observable((observer: Observer<string | undefined>) => observer.next(this.searchTerm)).pipe(
-    filter(s => s?.length >= 3),
+    filter(s => s?.length >= 2),
     switchMap(search => this.userService.list({
       eligibleForGameId: this.game!.id,
       excludeIds: [...this.selectedUsers.map(u => u.id)],
@@ -68,7 +68,7 @@ export class AdminEnrollTeamModalComponent implements OnInit {
 
     try {
       const userIds = this.selectedUsers.map(u => u.id);
-      const result = await firstValueFrom(this.teamService.adminEnroll({ userIds, gameId: this.game.id }));
+      const result = await this.teamService.adminEnroll({ userIds, gameId: this.game.id });
 
       if (this.onConfirm)
         await this.onConfirm(result);

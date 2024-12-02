@@ -23,6 +23,7 @@ import { RouterService } from '@/services/router.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { GameHubEventWith, GameHubResourcesDeployStatus } from '@/services/signalR/game-hub.models';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 interface GameEnrollmentContext {
   game: Game;
@@ -55,7 +56,6 @@ export class GamePageComponent implements OnDestroy {
 
   constructor(
     apiGame: GameService,
-    router: Router,
     route: ActivatedRoute,
     apiBoards: BoardService,
     apiPlayer: PlayerService,
@@ -65,12 +65,13 @@ export class GamePageComponent implements OnDestroy {
     private logService: LogService,
     private gameHubService: GameHubService,
     private modalService: ModalConfirmService,
+    private permissionsService: UserRolePermissionsService,
     private routerService: RouterService,
     private titleService: AppTitleService,
     private windowService: WindowService
   ) {
     const user$ = localUser.user$.pipe(map(u => !!u ? u : {} as ApiUser));
-    this.canAdminEnroll$ = localUser.can$('Play_IgnoreExecutionWindow');
+    this.canAdminEnroll$ = this.permissionsService.can$('Play_IgnoreExecutionWindow');
 
     const game$ = route.params.pipe(
       filter(p => !!p.id),
@@ -245,7 +246,7 @@ export class GamePageComponent implements OnDestroy {
   }
 
   private showModal(resettingPlayerName?: string): void {
-    const resetInitiator = resettingPlayerName ? `your teammate "${resettingPlayerName}"` : "an administrator";
+    const resetInitiator = resettingPlayerName ? `your teammate **${resettingPlayerName}**` : "an **administrator**";
 
     this.modalService.openConfirm({
       title: "Session reset",

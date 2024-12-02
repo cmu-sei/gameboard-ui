@@ -19,7 +19,7 @@
       <div *ngIf="!isStartingSession; else starting;"
         class="challenge-management-buttons d-flex justify-content-center">
         <app-confirm-button *ngIf="!practiceSession" btnClass="btn btn-lg btn-success px-4 mb-4"
-          (confirm)="play({ id: spec.id, game: { id: spec.gameId}} )" class="d-block">
+          (confirm)="play({ id: spec.id, game: { id: spec.game.id }} )" class="d-block">
           <span>Start Practice Session</span>
         </app-confirm-button>
 

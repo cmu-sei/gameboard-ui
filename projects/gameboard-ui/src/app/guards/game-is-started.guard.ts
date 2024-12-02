@@ -2,6 +2,7 @@ import { GamePlayState } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { PlayerService } from '@/api/player.service';
 import { TeamService } from '@/api/team.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 import { LogService } from '@/services/log.service';
 import { UserService } from '@/utility/user.service';
 import { Injectable } from '@angular/core';
@@ -13,6 +14,7 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
   constructor(
     private localUserService: UserService,
     private log: LogService,
+    private permissionsService: UserRolePermissionsService,
     private playerService: PlayerService,
     private teamService: TeamService
   ) { }
@@ -31,7 +33,7 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
     // if the user is admin/tester, they can ignore start phase restrictions
     const localUser = this.localUserService.user$.getValue();
 
-    if (await firstValueFrom(this.localUserService.can$("Play_IgnoreExecutionWindow"))) {
+    if (await firstValueFrom(this.permissionsService.can$("Play_IgnoreExecutionWindow"))) {
       return true;
     }
 

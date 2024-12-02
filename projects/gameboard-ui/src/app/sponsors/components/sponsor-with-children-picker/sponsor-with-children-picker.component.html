@@ -4,14 +4,16 @@
         <img [src]="parentSponsor | sponsorToLogoUri" [alt]="parentSponsor.name">
     </div>
 
-    <!--first, a "dummy" card that means you're selecting the parent agency but none of the children (e.g. DOD but not Army)-->
-    <ng-container *ngIf="parentSponsor">
-        <ng-container *ngTemplateOutlet="sponsorCard; context: { $implicit: parentSponsor }"></ng-container>
-    </ng-container>
+    <div class="child-cards-container d-flex flex-wrap align-items-stretch">
+        <!--first, a "dummy" card that means you're selecting the parent agency but none of the children (e.g. DOD but not Army)-->
+        <ng-container *ngIf="parentSponsor">
+            <ng-container *ngTemplateOutlet="sponsorCard; context: { $implicit: parentSponsor }"></ng-container>
+        </ng-container>
 
-    <ng-container *ngFor="let s of childSponsors" class="card">
-        <ng-container *ngTemplateOutlet="sponsorCard; context: { $implicit: s }"></ng-container>
-    </ng-container>
+        <ng-container *ngFor="let s of childSponsors">
+            <ng-container *ngTemplateOutlet="sponsorCard; context: { $implicit: s }"></ng-container>
+        </ng-container>
+    </div>
 </ng-container>
 
 <ng-template #noParentHeader>
@@ -19,7 +21,7 @@
 </ng-template>
 
 <ng-template #sponsorCard let-sponsor>
-    <div class="card" *ngIf="localUser$ | async as localUser" [class.active]="localUser.sponsor.id === sponsor.id"
+    <div class="card h-100" *ngIf="localUser$ | async as localUser" [class.active]="localUser.sponsor.id === sponsor.id"
         (click)="updateUserSponsor(localUser, sponsor)">
         <div class="card-body p-1">
             <div class="card-title">{{sponsor.name || sponsor.id}}</div>

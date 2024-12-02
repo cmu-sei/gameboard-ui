@@ -4,7 +4,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { catchError, first, last, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeOverview } from './board-models';
 import { PlayerService } from './player.service';
@@ -36,8 +36,8 @@ export class SupportService {
     );
   }
 
-  public retrieve(id: number): Observable<Ticket> {
-    return this.http.get<Ticket>(`${this.url}/ticket/${id}`).pipe(
+  public retrieve(id: number, args?: { sortActivityAscending?: boolean }): Observable<Ticket> {
+    return this.http.get<Ticket>(`${this.url}/ticket/${id}?sortDirection=${args?.sortActivityAscending === false ? 'desc' : 'asc'}`).pipe(
       tap(r => this.seen(r.key)),
       tap(ticket => {
         // fix up attachments properties

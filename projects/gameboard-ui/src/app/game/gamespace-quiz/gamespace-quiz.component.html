@@ -8,8 +8,16 @@
 
     <div *ngFor="let q of state.challenge.questions; let i = index" class="form-group p-4 mt-4"
       [class.pop-info]="!q.isGraded" [class.pop-success]="q.isGraded && q.isCorrect"
-      [class.pop-warning]="q.isGraded && !q.isCorrect">
-      <label>{{i+1}}. ({{q.weight}}) {{q.text}}</label>
+      [class.incorrect]="q.isGraded && !q.isCorrect">
+      <label class="d-flex">
+        <div class="flex-grow-1">
+          {{i+1}}.
+          <strong>{{q.text}}</strong>
+        </div>
+        <div>
+          <em>({{q.weight}} points)</em>
+        </div>
+      </label>
 
       <!--This is shown if the user hasn't correctly answered the question-->
       <div *ngIf="!q.isCorrect">
@@ -37,11 +45,15 @@
 
     <div class="d-flex align-items-center">
       <ng-container *ngIf="session && session.isDuring && state.isActive">
-        <ng-container *ngIf="!this.pending && state.challenge.questions?.length">
-          <label *ngIf="state.challenge.maxAttempts && state.challenge.maxAttempts > 0" class="pop-warning px-1 mx-2">
-            {{state.challenge.attempts + 1}} of {{state.challenge.maxAttempts}}
-          </label>
-        </ng-container>
+        <div *ngIf="!this.pending && state.challenge.questions?.length && state.challenge.maxAttempts > 0" class="p-1">
+          <strong [class.text-warning]="state.challenge.maxAttempts - state.challenge.attempts == 1">
+            {{ state.challenge.maxAttempts - state.challenge.attempts }}
+          </strong>
+          {{ "attempt" | pluralizer:(state.challenge.maxAttempts - state.challenge.attempts) }}
+          remaining
+
+          <span *ngIf="this.session.endDate" class="text-muted"> // </span>
+        </div>
 
         <div *ngIf="!!this.pending" class="small-spinner">
           <app-spinner></app-spinner>
@@ -52,11 +64,19 @@
         </span>
       </ng-container>
       <div class="spacer"></div>
-      <div>Score: {{state.challenge.score}} of {{state.challenge.maxPoints}}</div>
+      <div><strong>Score: </strong> {{state.challenge.score}} of {{state.challenge.maxPoints}}</div>
     </div>
 
-    <div class="submit-container text-right my-2" *ngIf="state.challenge.questions?.length">
-      <app-confirm-button btnClass="btn btn-sm btn-success" (confirm)="submit()" [disabled]="!state.isActive">
+    <div class="d-flex my-2" *ngIf="state.challenge.questions?.length">
+      <div class="flex-grow-1">
+        <span *ngIf="state.challenge.maxAttempts && state.challenge.attempts + 1 === state.challenge.maxAttempts"
+          class="fw-bold text-warning">
+          This is last your attempt.
+        </span>
+      </div>
+      <app-confirm-button
+        btnClass="btn {{ state.challenge.maxAttempts > 0 && (state.challenge.maxAttempts - state.challenge.attempts < 2 ? 'btn-warning' : 'btn-success') }}"
+        (confirm)="submit()" [disabled]="!state.isActive">
         <fa-icon [icon]="fa.cloudUploadAlt"></fa-icon>
         <span>Submit</span>
       </app-confirm-button>

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { TeamSessionResetType } from '@/api/teams.models';
-import { SimpleEntity } from '@/api/models';
+import { ApiError, SimpleEntity } from '@/api/models';
 import { fa } from '@/services/font-awesome.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
@@ -14,6 +14,8 @@ import { TeamService } from '@/api/team.service';
 import { GameCenterTeamsResultsTeam } from '../game-center.models';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { GameSessionService } from '@/services/game-session.service';
+import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
+import { ApiUser } from '@/api/user-models';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -26,12 +28,14 @@ export interface TeamSessionResetRequest {
   styleUrls: ['./game-center-team-context-menu.component.scss']
 })
 export class GameCenterTeamContextMenuComponent {
-  @Input() game?: { id: string; name: string; isSyncStart: boolean; isTeamGame: boolean };
+  @Input() game?: { id: string; name: string; isSyncStart: boolean; maxTeamSize: number };
   @Input() team?: GameCenterTeamsResultsTeam;
+  @Output() error = new EventEmitter<string[]>();
   @Output() teamUpdated = new EventEmitter<SimpleEntity>();
 
   protected fa = fa;
   protected hasStartedSession = false;
+  @ViewChild("addPlayerModal") addPlayerModalTemplate?: TemplateRef<any>;
 
   constructor(
     private clipboard: ClipboardService,
@@ -58,14 +62,14 @@ export class GameCenterTeamContextMenuComponent {
 
     // this is all really window-dressing around the "reset" operation, which we describe as an unenroll if the team's session hasn't started
     const isUnenroll = request.resetType === "unenrollAndArchiveChallenges" && this.gameSessionService.canUnerollSessionWithEpochMs(this.team.session);
-    let confirmMessage = `Are you sure you want to unenroll ${this.game.isTeamGame ? " team" : ""} **${this.team.name}** from the game?`;
+    let confirmMessage = `Are you sure you want to unenroll ${this.game.maxTeamSize > 1 ? " team" : ""} **${this.team.name}** from the game?`;
     let confirmTitle = `Unenroll ${this.team.name}?`;
     let confirmToast = `**${this.team.name}** has been unenrolled.`;
 
     if (!isUnenroll) {
-      confirmMessage = `Are you sure you want to reset the session for ${this.game.isTeamGame ? " team" : ""} **${this.team.name}**?`;
+      confirmMessage = `Are you sure you want to reset the session for ${this.game.maxTeamSize > 1 ? " team" : ""} **${this.team.name}**?`;
       confirmTitle = `Reset ${this.team.name}'s session?`;
-      confirmToast = `${this.game.isTeamGame ? "Team " : ""}**${this.team.name}**'s session has been reset.`;
+      confirmToast = `${this.game.maxTeamSize > 1 ? "Team " : ""}**${this.team.name}**'s session has been reset.`;
 
       // accommodate various "types" of reset that can happen (e.g. keep challenges, don't keep challenges, destroy the universe and the unenroll)
       if (request.resetType === "preserveChallenges")
@@ -93,9 +97,34 @@ export class GameCenterTeamContextMenuComponent {
     this.toastService.showMessage(`Copied ${description} **${text}** to your clipboard.`);
   }
 
+  protected async handleAddPlayerClick(team: GameCenterTeamsResultsTeam) {
+    if (!this.addPlayerModalTemplate) {
+      throw new Error("Couldn't load the template.");
+    }
+
+    this.modalService.openTemplate(this.addPlayerModalTemplate);
+  }
+
+  protected async handleAddUserConfirm(team: GameCenterTeamsResultsTeam, user: ApiUser) {
+    this.modalService.hide();
+    const addedPlayer = await this.teamService.addToTeam({ teamId: team.id, userId: user.id });
+    this.teamUpdated.emit(this.team);
+    this.toastService.showMessage(`User **${addedPlayer.user.name}** has joined team **${team.name}**!`);
+  }
+
   protected async handleDeployResources(team: SimpleEntity) {
     await this.gameService.deployResources(this.game!.id, [team.id]);
     this.toastService.showMessage(`Resources are being deployed for **${team.name}**.`);
+  }
+
+  protected async handleExtend(team: SimpleEntity) {
+    this.modalService.openComponent({
+      content: ExtendTeamsModalComponent,
+      context: {
+        game: this.game,
+        teamIds: [team.id]
+      }
+    });
   }
 
   async handleManageBonuses(team: SimpleEntity) {
@@ -113,6 +142,32 @@ export class GameCenterTeamContextMenuComponent {
     this.teamUpdated.emit(team);
   }
 
+  async handleStartSession(team: SimpleEntity) {
+    try {
+      await firstValueFrom(this.playerService.startPlayerId(this.team!.captain.id));
+      this.teamUpdated.emit(team);
+      this.toastService.showMessage(`Session started for **${team.name}**`);
+    }
+    catch (err: any) {
+      if ("message" in err) {
+        this.error.emit([(err as ApiError).message]);
+      }
+      else {
+        this.error.emit([JSON.stringify(err)]);
+      }
+    }
+  }
+
+  protected handleUnenrollClick(team: SimpleEntity) {
+    this.modalService.openConfirm({
+      bodyContent: `Are you sure you want to unenroll **${team.name}**?`,
+      renderBodyAsMarkdown: true,
+      subtitle: team.name,
+      title: "Unenroll " + ((this.game?.maxTeamSize || 0) > 1 ? "Team" : "Player"),
+      onConfirm: async () => this.handleResetRequest(team, 'unenrollAndArchiveChallenges')
+    });
+  }
+
   async handleUpdateReady(team: SimpleEntity, isReady: boolean) {
     await firstValueFrom(this.syncStartService.updateTeamReadyState(team.id, { isReady }));
     this.teamUpdated.emit(team);
@@ -122,12 +177,6 @@ export class GameCenterTeamContextMenuComponent {
         `**${team.name}** has been readied.` :
         `**${team.name}**'s is no longer ready.`
     );
-  }
-
-  async handleStartSession(team: SimpleEntity) {
-    await firstValueFrom(this.playerService.startPlayerId(this.team!.captain.id));
-    this.teamUpdated.emit(team);
-    this.toastService.showMessage(`Session started for **${team.name}**`);
   }
 
   async handleView(team: GameCenterTeamsResultsTeam) {

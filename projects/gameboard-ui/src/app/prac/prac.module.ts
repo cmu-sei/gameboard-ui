@@ -19,6 +19,7 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { EpochMsToTimeRemainingStringPipe } from '@/standalone/core/pipes/epoch-ms-to-time-remaining.pipe';
 import { EpochMsToMsRemainingPipe } from '@/standalone/core/pipes/epoch-ms-to-ms-remaining.pipe';
+import { InfoBubbleComponent } from '@/standalone/core/components/info-bubble/info-bubble.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { EpochMsToMsRemainingPipe } from '@/standalone/core/pipes/epoch-ms-to-ms
     EpochMsToMsRemainingPipe,
     EpochMsToTimeRemainingStringPipe,
     ErrorDivComponent,
+    InfoBubbleComponent,
     PlayComponent,
     SpinnerComponent
   ]

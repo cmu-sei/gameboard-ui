@@ -15,6 +15,7 @@ import { fa } from '@/services/font-awesome.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { GameRegistrationType } from '@/api/game-models';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-player-enroll',
@@ -63,6 +64,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     private clipboard: ClipboardService,
     private hubService: NotificationService,
     private localUserService: LocalUserService,
+    private permissionsService: UserRolePermissionsService,
     private toastService: ToastService
   ) {
     this.ctx$ = timer(0, 1000).pipe(
@@ -85,7 +87,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
       tap(ctx => {
         const localUser = this.localUserService.user$.value;
         const hasPlayerSession = (!!ctx.player.id && !!ctx.player.session && !ctx.player.session.isBefore);
-        this.canAdminEnroll = !!this.localUserService.can('Play_IgnoreExecutionWindow') && !hasPlayerSession;
+        this.canAdminEnroll = !!this.permissionsService.can('Play_IgnoreExecutionWindow') && !hasPlayerSession;
 
         this.canStandardEnroll = !!localUser && !hasPlayerSession &&
           ctx.game.registrationType != "none" &&
@@ -163,6 +165,7 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
     this.ctx.player = {
       ...this.ctx.player,
       name: p.name,
+      nameStatus: p.nameStatus,
       approvedName: p.approvedName
     };
   }

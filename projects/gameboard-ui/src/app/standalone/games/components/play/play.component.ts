@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { firstValueFrom, Observable, tap } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
@@ -7,10 +8,8 @@ import { ChallengeSolutionGuide, UserActiveChallenge } from '@/api/challenges.mo
 import { PlayerMode } from '@/api/player-models';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { SpecSummary } from '@/api/spec-models';
 import { WindowService } from '@/services/window.service';
 import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
-import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { CoreModule } from '@/core/core.module';
 import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
@@ -21,6 +20,9 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
 import { VmLinkComponent } from "../vm-link/vm-link.component";
 import { UserService } from '@/utility/user.service';
 import { UserSettingsService } from '@/services/user-settings.service';
+import { PracticeChallengeView } from '@/prac/practice.models';
+
+export type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
 
 @Component({
   selector: 'app-play',
@@ -42,22 +44,22 @@ import { UserSettingsService } from '@/services/user-settings.service';
 })
 export class PlayComponent implements OnChanges {
   @Input() autoPlay = false;
-  @Input() challengeSpec: SpecSummary | null = null;
+  @Input() challengeSpec: PracticeChallengeView | null = null;
   @Input() playerId?: string;
   @Output() challengeStarted = new EventEmitter<void>();
-  @Output() deployStatusChanged = new EventEmitter<boolean>();
+  @Output() deployStateChange = new EventEmitter<PlayChallengeDeployState>();
 
   protected challenge: UserActiveChallenge | null = null;
+  protected deployState$ = new BehaviorSubject<PlayChallengeDeployState>("undeployed");
   protected errors: any[] = [];
   protected fa = fa;
-  protected isDeploying = false;
-  protected isMiniPlayerAvailable = false;
-  protected isMiniPlayerSelected = false;
-  protected isUndeploying = false;
-  protected showMiniPlayerPrompt = false;
+  protected isStickyChallengePanelAvailable = false;
+  protected isStickyChallengePanelSelected = false;
+  protected showStickyChallengePanelPrompt = false;
   protected solutionGuide: ChallengeSolutionGuide | null = null;
   protected vmUrls: { [id: string]: string } = {};
   protected windowWidth$: Observable<number>;
+
 
   constructor(
     private activeChallengesRepo: ActiveChallengesRepo,
@@ -71,15 +73,20 @@ export class PlayComponent implements OnChanges {
     this.windowWidth$ = windowService.resize$;
     this.unsub.add(
       windowService.resize$.subscribe(width => {
-        this.isMiniPlayerAvailable = width >= 1140;
-        this.isMiniPlayerSelected = this.localStorage.get(StorageKey.UsePlayPane) === "true";
-        this.showMiniPlayerPrompt = this.localStorage.get(StorageKey.UsePlayPane) === null;
+        this.isStickyChallengePanelAvailable = width >= 1140;
+        this.isStickyChallengePanelSelected = this.localStorage.get(StorageKey.UseStickyChallengePanel) === "true";
+        this.showStickyChallengePanelPrompt = this.localStorage.get(StorageKey.UseStickyChallengePanel) === null;
 
-        if (!this.isMiniPlayerAvailable && this.isMiniPlayerSelected)
-          this.setIsStickyPanelEnabled(this.isMiniPlayerSelected, false);
+        if (!this.isStickyChallengePanelAvailable && this.isStickyChallengePanelSelected)
+          this.setIsStickyPanelEnabled(this.isStickyChallengePanelSelected, false);
       }),
 
-      userAppSettings.updated$.subscribe(settings => this.setIsStickyPanelEnabled(settings.useStickyChallengePanel, false))
+      userAppSettings.updated$.subscribe(settings => this.setIsStickyPanelEnabled(settings.useStickyChallengePanel, false)),
+      this.deployState$.subscribe(state => {
+        this.deployStateChange.emit(state);
+        this.challenge = this.activeChallengesRepo.getActivePracticeChallenge();
+        this.vmUrls = this.buildVmLinks(this.challenge);
+      })
     );
   }
 
@@ -88,7 +95,7 @@ export class PlayComponent implements OnChanges {
       return;
 
     if (this.autoPlay && this.playerId && this.challengeSpec && this.challengeSpec.id !== changes.challengeSpec?.currentValue) {
-      await this.deployChallenge({ challengeSpecId: changes.challengeSpec.currentValue.id, playerId: this.playerId });
+      await this.startChallenge({ challengeSpecId: changes.challengeSpec.currentValue.id, playerId: this.playerId });
     }
   }
 
@@ -97,37 +104,35 @@ export class PlayComponent implements OnChanges {
       throw new Error("Can't deploy from the Play component without a challenge.");
     }
 
-    this.isDeploying = true;
-    this.deployStatusChanged.emit(true);
+    this.deployState$.next("deploying");
     await firstValueFrom(this.challengesService.deploy({ id: challengeId }));
-    this.isDeploying = false;
-    this.deployStatusChanged.emit(false);
+    this.deployState$.next("deployed");
   }
 
   protected async undeployVms(challengeId: string) {
-    this.isUndeploying = true;
+    this.deployState$.next("undeploying");
     await firstValueFrom(this.challengesService.undeploy({ id: challengeId }));
-    this.isUndeploying = false;
+    this.deployState$.next("undeployed");
   }
 
   protected setIsStickyPanelEnabled(isEnabled: boolean, notify = true) {
-    this.showMiniPlayerPrompt = false;
+    this.showStickyChallengePanelPrompt = false;
 
-    if (this.isMiniPlayerAvailable) {
-      this.isMiniPlayerSelected = isEnabled;
-      this.localStorage.add(StorageKey.UsePlayPane, this.isMiniPlayerSelected);
+    if (this.isStickyChallengePanelAvailable) {
+      this.isStickyChallengePanelSelected = isEnabled;
+      this.localStorage.add(StorageKey.UseStickyChallengePanel, this.isStickyChallengePanelSelected);
 
     }
     else {
-      this.isMiniPlayerSelected = false;
-      this.localStorage.add(StorageKey.UsePlayPane, false);
+      this.isStickyChallengePanelSelected = false;
+      this.localStorage.add(StorageKey.UseStickyChallengePanel, false);
     }
 
     if (notify) {
-      this.userAppSettings.updated$.next({ useStickyChallengePanel: this.isMiniPlayerSelected });
+      this.userAppSettings.updated$.next({ useStickyChallengePanel: this.isStickyChallengePanelSelected });
     }
 
-    if (!this.isMiniPlayerSelected) {
+    if (!this.isStickyChallengePanelSelected) {
       this.windowService.scrollToBottom();
     }
   }
@@ -145,16 +150,14 @@ export class PlayComponent implements OnChanges {
     return vmUrls;
   }
 
-  private async deployChallenge(args: { challengeSpecId: string, playerId: string }) {
+  private async startChallenge(args: { challengeSpecId: string, playerId: string }) {
     if (!this.localUser.user$.value) {
       throw new Error("Can't deploy for an unauthed user.");
     }
 
     this.errors = [];
     this.solutionGuide = null;
-
-    this.deployStatusChanged.emit(true);
-    this.isDeploying = true;
+    this.deployState$.next("deploying");
 
     try {
       const startedChallenge = await firstValueFrom(this.challengesService.startPlaying({
@@ -163,17 +166,14 @@ export class PlayComponent implements OnChanges {
         userId: this.localUser.user$.value.id
       }));
 
-      this.challenge = this.activeChallengesRepo.getActivePracticeChallenge();
-      this.vmUrls = this.buildVmLinks(this.challenge);
+      this.deployState$.next(startedChallenge.hasDeployedGamespace ? "deployed" : "undeployed");
 
       // also look up the solution guide if there is one
       this.solutionGuide = await firstValueFrom(this.challengesService.getSolutionGuide(startedChallenge.id));
     }
     catch (err: any) {
       this.errors.push(err);
+      this.deployState$.next("undeployed");
     }
-
-    this.isDeploying = false;
-    this.deployStatusChanged.emit(false);
   }
 }

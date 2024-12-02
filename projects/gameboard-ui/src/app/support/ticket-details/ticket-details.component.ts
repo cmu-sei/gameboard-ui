@@ -21,6 +21,7 @@ import { LogService } from '../../services/log.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { ConfigService } from '@/utility/config.service';
 import { TicketSupportToolsContext } from '../components/ticket-support-tools/ticket-support-tools.component';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -78,6 +79,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
   faExclamationCircle = faExclamationCircle;
   faSync = faSync;
 
+  protected sortActivityAscending = true;
   protected supportToolsContext?: TicketSupportToolsContext;
 
   selectedAttachmentList?: AttachmentFile[];
@@ -98,13 +100,14 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
     private api: SupportService,
     private clipboard: ClipboardService,
     private logService: LogService,
+    private permissionsService: UserRolePermissionsService,
     private playerApi: PlayerService,
     private userApi: UserService,
     private sanitizer: DomSanitizer,
     private http: HttpClient,
     private toastsService: ToastService,
   ) {
-    const canManage$ = local.can$("Support_ManageTickets");
+    const canManage$ = permissionsService.can$("Support_ManageTickets");
     this.currentUser = local.user$.value;
 
     const ticket$ = combineLatest([
@@ -114,7 +117,7 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
       map(([p, r]) => p),
       filter(p => !!p.id && (!this.editingContent || this.savingContent)), // don't refresh data if editing and not saving yet
       tap(p => this.key = p.id),
-      switchMap(p => api.retrieve(p.id)),
+      switchMap(p => api.retrieve(p.id, { sortActivityAscending: this.sortActivityAscending })),
       tap(t => {
         this.editingContent = false;
         this.savingContent = false;
@@ -127,7 +130,6 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
         // initialization for the "support tools" component
         const hasGame = t.player?.gameId && t.player?.gameName;
         const hasPlayer = !!t.player;
-        const hasTeam = t.teamId && t.teamName;
 
         this.supportToolsContext = {
           challenge: t.challenge ? { id: t.challengeId, name: t.challenge?.name } : undefined,
@@ -499,6 +501,11 @@ export class TicketDetailsComponent implements AfterViewInit, OnDestroy {
         });
       }
     );
+  }
+
+  protected handleSortChange(sortAscending: boolean) {
+    this.sortActivityAscending = sortAscending;
+    this.refresh$.next(true);
   }
 
   public async copyToMarkdown(ticket: Ticket) {

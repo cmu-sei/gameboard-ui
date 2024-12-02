@@ -7,6 +7,7 @@ import { ConfigService } from '@/utility/config.service';
 import { UserService } from '@/api/user.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Observable } from 'rxjs';
+import { RouterService } from '../router.service';
 
 @Injectable({ providedIn: 'root' })
 export class SupportHubService {
@@ -17,6 +18,7 @@ export class SupportHubService {
     configService: ConfigService,
     userService: UserService,
     private appNotificationsService: AppNotificationsService,
+    private routerService: RouterService,
     private logService: LogService
   ) {
     this._signalRService = new SignalRService(configService, logService, userService);
@@ -47,7 +49,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `Ticket Closed: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: `support/tickets/${ev.data.ticket.id}`,
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-closed-${ev.data.ticket.id}`
     });
   }
@@ -58,7 +60,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `New Ticket: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: `support/tickets/${ev.data.ticket.id}`,
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-created-${ev.data.ticket.id}`
     });
   }
@@ -69,7 +71,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `Ticket updated by Support: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: `support/tickets/${ev.data.ticket.id}`,
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-updated-by-support-${ev.data.ticket.id}`
     });
   }
@@ -80,7 +82,7 @@ export class SupportHubService {
     this.appNotificationsService.send({
       title: `Ticket updated by Player: ${ev.data.ticket.key}`,
       body: ev.data.ticket.summary,
-      appUrl: `support/tickets/${ev.data.ticket.id}`,
+      appUrl: this.routerService.getTicketUrl(ev.data.ticket.id),
       tag: `support-updated-by-user-${ev.data.ticket.id}`
     });
   }

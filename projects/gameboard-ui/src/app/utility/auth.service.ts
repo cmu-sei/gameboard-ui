@@ -100,7 +100,9 @@ export class AuthService {
 
   logout(): void {
     if (this.oidcUser && this._tokenState$.getValue() === AuthTokenState.valid) {
-      if (this.config.environment.settings.oidc.autoLogout) {
+      // by default, we do a complete logout. the only condition under which we log out
+      // of the app but not the IDP is this setting is specified and is set to false
+      if (this.config.environment.settings.oidc.autoLogout !== false) {
         this.mgr.signoutRedirect()
           .then(() => { })
           .catch(err => {

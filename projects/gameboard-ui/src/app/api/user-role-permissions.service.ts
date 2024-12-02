@@ -3,19 +3,37 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { UserRolePermissionKey, UserRolePermissionsOverviewResponse } from './user-role-permissions.models';
 import { ApiUrlService } from '@/services/api-url.service';
+import { UserService as LocalUser } from '@/utility/user.service';
 import { UserRoleKey } from './user-models';
 
 @Injectable({ providedIn: 'root' })
 export class UserRolePermissionsService {
   constructor(
     private apiUrl: ApiUrlService,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private localUser: LocalUser) { }
 
-  public can(user: { rolePermissions: UserRolePermissionKey[] } | null, key: UserRolePermissionKey) {
-    if (!user?.rolePermissions?.length)
+  public can(permission: UserRolePermissionKey) {
+    if (!this.localUser.user$?.value?.rolePermissions) {
       return false;
+    }
 
-    return user.rolePermissions.map(p => p.toLowerCase()).indexOf(key.toLowerCase()) >= 0;
+    return this.canUser(this.localUser.user$.value, permission);
+  }
+
+  can$(permission: UserRolePermissionKey) {
+    return this.localUser.user$.pipe(
+      map(u => this.canUser(u, permission))
+    );
+  }
+
+  public canUser(user: { rolePermissions: UserRolePermissionKey[] } | null, key: UserRolePermissionKey) {
+    if (!user?.rolePermissions?.length) {
+      return false;
+    }
+
+    const ownedPermissions = user.rolePermissions.map(p => p.toLowerCase());
+    return ownedPermissions.indexOf(key.toLowerCase()) >= 0;
   }
 
   public getRolePermissionsOverview(): Promise<UserRolePermissionsOverviewResponse> {

@@ -8,8 +8,8 @@
       <div class="text-success card-text mb-2" *ngIf="isRegistrationOpen">
         <span *ngIf="ctx.game.registration.isBefore">Enrollment opens in </span>
         <span *ngIf="ctx.game.registration.isDuring">Enrollment closes in </span>
-        <span *ngIf="ctx.game.registration.isAfter">Enrollment is closed </span>
-        <span>{{ctx.game.registration.countdown | countdown}}</span>
+        <span *ngIf="ctx.game.registration.isAfter">Enrollment is closed.</span>
+        <strong>{{ctx.game.registration.countdown | countdown}}</strong>
       </div>
 
       <app-error-div [errors]="errors"></app-error-div>
@@ -26,7 +26,7 @@
           </ul>
         </div>
 
-        <ng-container *ngIf="!!ctx.user.name && hasSelectedSponsor && (canAdminEnroll || canStandardEnroll)">
+        <ng-container *ngIf="!!ctx.user.approvedName && hasSelectedSponsor && (canAdminEnroll || canStandardEnroll)">
           <!-- team -->
           <div *ngIf="ctx.game.allowTeam">
             <p>
@@ -52,7 +52,7 @@
             <ng-container *ngIf="!isEnrolling; else enrolling">
               <div class="d-flex align-items-center justify-content-center mt-5"
                 *ngIf="ctxDelayed$ | async as delay; else loading">
-                <div class="text-center" *ngIf="!!ctx.user.name && hasSelectedSponsor">
+                <div class="text-center">
                   <app-confirm-button btnClass="btn btn-success btn-lg mr-4"
                     [disabled]="!isRegistrationOpen && !canStandardEnroll && !canAdminEnroll" [tooltip]="enrollTooltip"
                     (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
@@ -102,7 +102,7 @@
               </button>
             </div>
           </div>
-          <small>
+          <small class="text-muted">
             Your name will be visible on the public scoreboard. It's also subject to approval - until an administrator
             has approved it, a randomly-generated name will be displayed instead.
           </small>
@@ -119,9 +119,9 @@
 
               <div class="input-group my-3">
                 <input type="text" disabled id="token-input" class="form-control" [(ngModel)]="code" maxlength="64"
-                  placeholder="Generate a code ->">
+                  placeholder="Generate a code →">
                 <div class="input-group-append gb-button-group">
-                  <button class="btn btn-success" (click)="invite(ctx.player)">
+                  <button class="btn btn-success" (click)="invite(ctx.player)" tooltip="Generate an invitation code">
                     <fa-icon [icon]="fa.arrowsSpin"></fa-icon>
                   </button>
 

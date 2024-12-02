@@ -7,12 +7,11 @@ import { map, tap } from 'rxjs/operators';
 import { GameContext } from '@/api/game-models';
 import { Player } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
-import { UserService } from '@/api/user.service';
-import { UserService as LocalUserService } from "@/utility/user.service";
 import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { TeamService } from '@/api/team.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-player-session',
@@ -37,16 +36,15 @@ export class PlayerSessionComponent implements OnDestroy {
   protected isDoubleChecking = false;
 
   protected canAdminStart = false;
-  protected canIgnoreSessionResetSettings$ = this.localUserService.can$("Play_IgnoreSessionResetSettings");
+  protected canIgnoreSessionResetSettings$ = this.permissionsService.can$("Play_IgnoreSessionResetSettings");
   protected hasTimeRemaining = false;
   protected timeRemainingMs$?: Observable<number>;
 
   constructor(
     private api: PlayerService,
     private modalService: ModalConfirmService,
-    private localUserService: LocalUserService,
+    private permissionsService: UserRolePermissionsService,
     private teamService: TeamService,
-    private userService: UserService,
   ) { }
 
   async ngOnInit() {
@@ -71,7 +69,7 @@ export class PlayerSessionComponent implements OnDestroy {
         }
       }),
       tap(ctx => {
-        this.canAdminStart = this.localUserService.can('Play_IgnoreExecutionWindow');
+        this.canAdminStart = this.permissionsService.can('Play_IgnoreExecutionWindow');
       }),
       // set up countdown
       tap(ctx => {

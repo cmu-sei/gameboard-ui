@@ -3,8 +3,8 @@ import { DateTime } from 'luxon';
 
 @Injectable({ providedIn: 'root' })
 export class ApiDateTimeService {
-  toDateTime(input?: string): DateTime | null {
-    if (!input || input === "undefine") return null;
+  toDateTime(input?: string | Date): DateTime | null {
+    if (!input || input === "undefined") return null;
 
     // as of now, the API returns date objects as string (blargh)
     const parsedDateTime = DateTime.fromJSDate(new Date(input));

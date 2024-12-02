@@ -25,7 +25,7 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
 
   private async _canActivate(route: ActivatedRouteSnapshot) {
     const gameId = route.paramMap.get('gameId') || '';
-    const playerId = route.paramMap.get('playerId' || '');
+    const playerId = route.paramMap.get('playerId') || '';
     this.log.logInfo("Resolving UserIsPlayingGuard", gameId, playerId);
 
     // need either a game or a player to decide

@@ -1,4 +1,10 @@
-<alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0">
+<alert type="danger" *ngIf="errors.length" [dismissible]="true">
+    <ul>
+        <li *ngFor="let error of errors">{{ errors }}</li>
+    </ul>
+</alert>
+
+<alert type="warning" *ngIf="game && (results?.namesPendingApproval || 0) > 0 && !!!filterSettings.hasPendingNames">
     There are {{results?.namesPendingApproval}} {{ "player" | pluralizer:results?.namesPendingApproval}} in this game
     who have pending name change requests. Click
     <span class="btn-link" (click)="handlePendingNamesClick(game.id)">here</span>
@@ -11,7 +17,8 @@
         Select All {{ (game.isTeamGame ? "Team" : "Player") | pluralizer }}
     </button>
     <div class="flex-grow-1"></div>
-    <app-confirm-button btnClass="btn btn-warning mr-2" (confirm)="handleRerankClick(game.id)"
+    <app-confirm-button btnClass="btn btn-warning mr-2" *appIfHasPermission="'Scores_RegradeAndRerank'"
+        (confirm)="handleRerankClick(game.id)"
         tooltip="Force a manual recalculation of the scores for this game">Rerank</app-confirm-button>
     <div class="gb-button-group btn-group mr-2">
         <button type="button" class="btn btn-success" disabled="disabled">
@@ -49,7 +56,7 @@
         Add {{ game.isTeamGame ? "Team" : "Player" }} </button>
 </div>
 
-<div class="mb-4">
+<div class="filters-container mb-4">
     <div class="mb-2">
         <input type="text" class="form-control" minlength="2"
             placeholder="Search {{ game?.isTeamGame ? 'teams' : 'players' }}" [(ngModel)]="filterSettings.searchTerm"
@@ -81,11 +88,12 @@
             <option value="name">Sort by name</option>
             <option value="timeRemaining">Sort by time remaining</option>
         </select>
+    </div>
 
-        <ng-container
-            *ngIf="filterSettings.sort != 'rank' || filterSettings.sessionStatus || filterSettings.advancement || filterSettings.searchTerm">
-            <button type="button" class="btn btn-warning ml-2" (click)="handleClearAllFilters()">Clear</button>
-        </ng-container>
+    <div *ngIf="hasFilters" class="mt-2 cursor-pointer">
+        <alert type="warning" role="alert" *ngIf="hasFilters" (click)="handleClearAllFilters()">
+            Your filters may be hiding some {{ this.game?.isTeamGame ? "teams" : "players" }}. Click here to clear them.
+        </alert>
     </div>
 </div>
 
@@ -145,8 +153,9 @@
                 </div>
 
                 <div contextMenu>
-                    <app-game-center-team-context-menu *ngIf="game" [team]="team"
-                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart, isTeamGame: game.isTeamGame }"
+                    <app-game-center-team-context-menu *ngIf="game" (error)="handleContextMenuError($event)"
+                        [team]="team"
+                        [game]="{ id: game.id, name: game.name, isSyncStart: game.requireSynchronizedStart, maxTeamSize: game.maxTeamSize }"
                         (teamUpdated)="load()"></app-game-center-team-context-menu>
                 </div>
             </app-team-list-card>

@@ -80,7 +80,7 @@
             </li>
             <li>
                 <ng-container
-                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'tickets', routerLink: 'tickets', label: 'Tickets' + (ctx.openTicketCount ? ' (' + ctx.openTicketCount + ')' : '') } }"></ng-container>
+                    *ngTemplateOutlet="tabItem; context: { $implicit: { tabKey: 'tickets', routerLink: 'tickets', label: 'Tickets' + (ctx.totalTicketCount ? ' (' + ctx.totalTicketCount + ')' : '') } }"></ng-container>
             </li>
         </ul>
 

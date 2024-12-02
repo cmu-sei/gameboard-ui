@@ -6,7 +6,6 @@ import { ChallengesService } from '@/api/challenges.service';
 import { CoreModule } from '@/core/core.module';
 import { fa } from '@/services/font-awesome.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
-import { HoldConfirmButtonComponent } from "@/standalone/core/components/hold-confirm-button/hold-confirm-button.component";
 import { ToastService } from '@/utility/services/toast.service';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { ChallengeQuestionsFormService } from '@/services/challenge-questions-form.service';
@@ -158,9 +157,9 @@ export class ChallengeQuestionsComponent implements OnChanges {
       };
     });
 
-    // select the "last" tab with unanswered questions
-    const selectIndex = this.progress.variant.sections.findIndex(s => s.score < s.scoreMax) || this.progress.variant.sections.length - 1;
-    this.handleSectionSelect(selectIndex);
+    // select the first section tab with unanswered questions
+    const unmaxedSectionIndex = this.progress.variant.sections.findIndex(s => s.score < s.scoreMax);
+    this.handleSectionSelect(unmaxedSectionIndex === -1 ? this.progress.variant.sections.length - 1 : unmaxedSectionIndex);
 
     // find out if any submissions have been made (decides the availability of the "submission history" modal)
     this.hasSubmissionHistory = this.progress.attempts > 0;

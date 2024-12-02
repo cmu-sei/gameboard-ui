@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     layoutService: LayoutService,
     private title: Title,
     @Inject(DOCUMENT) private document: Document) {
-    this.autoLogin = { enabled: this.config.environment.settings.oidc.autoLogin, tried: false };
+    this.autoLogin = { enabled: this.config.environment.settings.oidc.autoLogin === true, tried: false };
     this.stickyMenu$ = layoutService.stickyMenu$;
   }
 

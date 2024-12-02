@@ -1,16 +1,16 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, timer, combineLatest, Subscription, firstValueFrom } from 'rxjs';
-import { debounceTime, switchMap, map, tap, first } from 'rxjs/operators';
+import { debounceTime, switchMap, map, tap } from 'rxjs/operators';
 import { fa } from '@/services/font-awesome.service';
 import { ReportService } from '@/api/report.service';
 import { TicketNotification, TicketSummary } from '@/api/support-models';
 import { SupportService } from '@/api/support.service';
 import { ConfigService } from '@/utility/config.service';
 import { NotificationService } from '@/services/notification.service';
-import { UserService as LocalUserService } from '@/utility/user.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-ticket-list',
@@ -44,7 +44,7 @@ export class TicketListComponent implements OnDestroy {
   protected selectedLabels: string[] = [];
 
   constructor(
-    local: LocalUserService,
+    permissionsService: UserRolePermissionsService,
     private api: SupportService,
     private clipboard: ClipboardService,
     private config: ConfigService,
@@ -61,7 +61,7 @@ export class TicketListComponent implements OnDestroy {
     this.hideTitle = !!this.gameId;
     this.isDescending = config.local.ticketOrderDesc || true;
 
-    const canManage$ = local.can$('Support_ManageTickets');
+    const canManage$ = permissionsService.can$('Support_ManageTickets');
 
     const ticket$ = combineLatest([
       this.refresh$,

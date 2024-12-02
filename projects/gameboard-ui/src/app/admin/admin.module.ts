@@ -49,10 +49,8 @@ import { GameMapEditorComponent } from './components/game-map-editor/game-map-ed
 import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
 import { ManageManualChallengeBonusesModalComponent } from './components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { ManageManualChallengeBonusesComponent } from './components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
-import { PlayerSessionComponent } from './admin-player-session/admin-player-session.component';
 import { SiteOverviewStatsComponent } from './components/site-overview-stats/site-overview-stats.component';
 import { SupportSettingsComponent } from './components/support-settings/support-settings.component';
-import { TeamAdminContextMenuComponent } from './components/team-admin-context-menu/team-admin-context-menu.component';
 import { TeamCenterComponent } from './components/team-center/team-center.component';
 import { TeamListCardComponent } from './components/team-list-card/team-list-card.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -90,6 +88,7 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { FeedbackTemplatePickerComponent } from "../feedback/components/feedback-template-picker/feedback-template-picker.component";
+import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.component';
 
 @NgModule({
   declarations: [
@@ -127,7 +126,6 @@ import { FeedbackTemplatePickerComponent } from "../feedback/components/feedback
     GameBonusesConfigComponent,
     ParticipationReportComponent,
     PlayerNamesComponent,
-    PlayerSessionComponent,
     PlayerSponsorReportComponent,
     PracticeComponent,
     PracticeSettingsComponent,
@@ -136,7 +134,6 @@ import { FeedbackTemplatePickerComponent } from "../feedback/components/feedback
     SponsorBrowserComponent,
     SupportAutoTagAdminComponent,
     SupportReportLegacyComponent,
-    TeamAdminContextMenuComponent,
     TeamObserverComponent,
     UserApiKeysComponent,
     UserRegistrarComponent,
@@ -230,7 +227,8 @@ import { FeedbackTemplatePickerComponent } from "../feedback/components/feedback
     SafeUrlPipe,
     SpinnerComponent,
     ToSupportCodePipe,
-    FeedbackTemplatePickerComponent
+    FeedbackTemplatePickerComponent,
+    UserPickerComponent,
   ]
 })
 

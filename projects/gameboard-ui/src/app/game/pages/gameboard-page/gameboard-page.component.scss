@@ -1,3 +1,5 @@
+@import "../../../../scss/variables";
+
 .jumbotron {
   img {
     max-height: 150px;
@@ -37,15 +39,15 @@
 }
 
 .countdown-green {
-  color: rgb(0, 191, 0);
+  color: $success;
 }
 
 .countdown-yellow {
-  color: rgb(236, 236, 130);
+  color: $warning;
 }
 
 .countdown-red {
-  color: rgb(255, 53, 53);
+  color: $danger;
 }
 
 // Uses a 16 : 10 ratio, but can be changed here
