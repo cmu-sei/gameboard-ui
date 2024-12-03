@@ -167,6 +167,18 @@ app-root {
   color: lighten($danger, 20%);
 }
 
+.countdown-green {
+  color: $success !important;
+}
+
+.countdown-yellow {
+  color: $warning !important;
+}
+
+.countdown-red {
+  color: $danger !important;
+}
+
 fa-icon + span {
   margin-left: 4px;
 }

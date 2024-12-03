@@ -1,6 +1,7 @@
+import { DateTime } from "luxon";
 import { ChallengeResult } from "@/api/board-models";
-import { PagingArgs, SimpleEntity } from "@/api/models";
-import { ReportDateRange, ReportGame, ReportSponsor } from "@/reports/reports-models";
+import { SimpleEntity } from "@/api/models";
+import { ReportGame, ReportSponsor } from "@/reports/reports-models";
 
 export type EnrollmentReportTab = "summary" | "trend" | "game";
 
@@ -84,6 +85,13 @@ export interface EnrollmentReportStatSummary {
     }
     teamsWithNoSessionCount: number;
     teamsWithNoStartedChallengeCount: number;
+}
+
+export interface EnrollmentReportLineChartResponse {
+    playerGroups: { [dateString: string]: EnrollmentReportLineChartGroup };
+    periodType: string;
+    periodStart: DateTime;
+    periodEnd: DateTime;
 }
 
 export interface EnrollmentReportLineChartGroup {

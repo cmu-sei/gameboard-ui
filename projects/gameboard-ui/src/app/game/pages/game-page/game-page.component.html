@@ -83,8 +83,8 @@
       </div>
     </div>
 
-    <div class="row align-items-center justify-content-center">
-      <div class="col-12 page-width scoreboard">
+    <div class="row justify-content-center">
+      <div class="col-6 scoreboard">
         <h2 id="scoreboard" class="text-center my-4">
           <span>Scoreboard</span>&nbsp;&nbsp;
           <a [routerLink]="['/game', ctx.game.id, 'scoreboard']">
@@ -95,8 +95,7 @@
         </h2>
         <app-scoreboard [gameId]="ctx.game.id"></app-scoreboard>
       </div>
-      <div class="col-xl-5 pr-5 my-4"
-        *ngIf="ctx.game.feedbackTemplate?.game?.length && (!ctx.player.session?.isBefore)">
+      <div class="col-6 pr-5 my-4" *ngIf="ctx.game.feedbackTemplate?.game?.length && (!ctx.player.session?.isBefore)">
         <app-feedback-form *ngIf="ctx.player.session" [title]="ctx.game.name + ' Feedback'" [type]="'game'"
           [boardPlayer]="boardPlayer">
         </app-feedback-form>

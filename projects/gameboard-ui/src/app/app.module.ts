@@ -100,8 +100,6 @@ import { UserNavItemComponent } from './standalone/user/components/user-nav-item
 })
 export class AppModule { }
 
-export function loadSettings(
-  config: ConfigService,
-): (() => Observable<any>) {
+export function loadSettings(config: ConfigService): (() => Observable<any>) {
   return (): Observable<any> => config.load();
 }

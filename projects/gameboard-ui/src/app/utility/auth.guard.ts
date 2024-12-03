@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   private validateAuth(url: string): Observable<boolean | UrlTree> {
     return this.auth.tokenState$.pipe(
       map(t => t === AuthTokenState.valid),
-      map(v => v ? v : this.router.parseUrl(`/login?redirectTo=${url}`))
+      map(v => v ? v : this.router.parseUrl(`/login?redirectTo=${url}`)),
     );
   }
 }

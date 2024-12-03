@@ -1,5 +1,5 @@
-import { LogService } from '@/services/log.service';
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { LogService } from '@/services/log.service';
 import { Chart, ChartConfiguration, ChartConfigurationCustomTypesPerDataset } from 'chart.js';
 
 export type LineChartConfig = ChartConfiguration<"line", number[], string> | ChartConfigurationCustomTypesPerDataset<"line", number[], string>;
