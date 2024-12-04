@@ -1,7 +1,7 @@
 <app-modal-content *ngIf="context; else loading" title="Question Performance"
     [subtitle]="context.challengeSpec.name + ' (' + context.game.name + ')'" [hideCancel]="true">
 
-    <table class="gameboard-table">
+    <table *ngIf="context.questions?.length; else noPerformance" class="gameboard-table">
         <col>
         <col>
         <col>
@@ -43,4 +43,10 @@
 
 <ng-template #loading>
     <app-spinner>Loading question performance...</app-spinner>
+</ng-template>
+
+<ng-template #noPerformance>
+    <div class="text-center text-muted my-3">
+        No one has attempted this challenge yet.
+    </div>
 </ng-template>

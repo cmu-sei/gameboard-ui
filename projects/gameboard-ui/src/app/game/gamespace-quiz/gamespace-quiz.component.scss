@@ -12,4 +12,5 @@ label {
 
 .incorrect {
   background-color: lighten($warning, 5%);
+  color: $body-bg;
 }
