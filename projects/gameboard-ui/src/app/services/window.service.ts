@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { UrlTree } from '@angular/router';
 import { BehaviorSubject, fromEvent, Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -23,8 +24,8 @@ export class WindowService implements OnDestroy {
     return this.document.defaultView!;
   }
 
-  open(url: string) {
-    this.document.defaultView?.open(url, "_blank");
+  open(url: string | UrlTree) {
+    this.document.defaultView?.open(url.toString(), "_blank");
   }
 
   print() {

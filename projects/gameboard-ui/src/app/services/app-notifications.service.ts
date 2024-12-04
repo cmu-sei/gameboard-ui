@@ -71,7 +71,12 @@ export class AppNotificationsService implements OnDestroy {
       this.log.logWarning(`Can't send browser notification (${this._canShowBrowserNotifications$.value}) - falling back to toast.`);
       this.toastService.show({
         text: `${sendNotification.title}: ${sendNotification.body}`,
-        onClick: sendNotification.appUrl ? () => this.router.navigateByUrl(sendNotification.appUrl!) : undefined,
+        onClick: sendNotification.appUrl ? () => new Promise<boolean>(resolve => {
+          this.windowService.open(sendNotification.appUrl!);
+          return true;
+        }) :
+          undefined,
+        showCloseIcon: true
       });
       return;
     }
