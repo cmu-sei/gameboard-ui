@@ -1,6 +1,6 @@
 import { PlayerService } from '@/api/player.service';
 import { LogService } from '@/services/log.service';
-import { UserService } from '@/utility/user.service';
+import { AuthService } from '@/utility/auth.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
@@ -8,9 +8,9 @@ import { Observable, firstValueFrom } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
   constructor(
+    private auth: AuthService,
     private log: LogService,
-    private playerService: PlayerService,
-    private localUserService: UserService
+    private playerService: PlayerService
   ) { }
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -34,7 +34,7 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
     }
 
     // need to know if the current user is the specified player
-    const localUserId = this.localUserService.user$.value?.id;
+    const localUserId = this.auth.oidcUser?.profile?.sub;
     if (!localUserId) {
       return false;
     }
@@ -59,7 +59,7 @@ export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
     }
 
     const result = await firstValueFrom(this.playerService.list({ gid: resolvedGameId, uid: localUserId }));
-    this.log.logInfo("Result from UserIsPlayingGuard", result.length > 0);
+    this.log.logInfo("Guard: Result from UserIsPlayingGuard", result.length > 0);
     return result.length > 0;
   }
 }

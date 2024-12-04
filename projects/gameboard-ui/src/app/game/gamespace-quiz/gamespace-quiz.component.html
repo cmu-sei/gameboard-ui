@@ -3,7 +3,6 @@
 
 <ng-container *ngIf="spec.instance?.state as state">
   <ng-container *ngIf="!!state.challenge && pendingAnswers">
-
     <markdown [data]="state.challenge.sectionText"></markdown>
 
     <div *ngFor="let q of state.challenge.questions; let i = index" class="form-group p-4 mt-4"

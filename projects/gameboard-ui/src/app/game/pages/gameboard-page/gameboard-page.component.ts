@@ -7,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, merge, Observable, of, Subject, timer } from 'rxjs';
 import { catchError, debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 import { faArrowLeft, faBolt, faExclamationTriangle, faTrash, faTv } from '@fortawesome/free-solid-svg-icons';
-
 import { BoardPlayer, BoardSpec, Challenge, NewChallenge, VmState } from '@/api/board-models';
 import { BoardService } from '@/api/board.service';
 import { ApiUser } from '@/api/user-models';
@@ -52,12 +51,12 @@ export class GameboardPageComponent {
 
   constructor(
     challengeService: ChallengesService,
-    route: ActivatedRoute,
     title: Title,
     usersvc: UserService,
     private api: BoardService,
     private config: ConfigService,
     private hub: NotificationService,
+    protected route: ActivatedRoute,
     private routerService: RouterService,
     private unsub: UnsubscriberService,
     private windowService: WindowService

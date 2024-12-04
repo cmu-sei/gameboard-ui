@@ -37,22 +37,3 @@
   max-width: 300px;
   max-height: 300px;
 }
-
-.countdown-green {
-  color: $success;
-}
-
-.countdown-yellow {
-  color: $warning;
-}
-
-.countdown-red {
-  color: $danger;
-}
-
-// Uses a 16 : 10 ratio, but can be changed here
-iframe {
-  // aspect-ratio: 16 / 10;
-  margin: auto;
-  display: block;
-}

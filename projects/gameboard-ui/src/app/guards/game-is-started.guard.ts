@@ -1,10 +1,8 @@
 import { GamePlayState } from '@/api/game-models';
-import { GameService } from '@/api/game.service';
 import { PlayerService } from '@/api/player.service';
 import { TeamService } from '@/api/team.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 import { LogService } from '@/services/log.service';
-import { UserService } from '@/utility/user.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom, map } from 'rxjs';
@@ -12,7 +10,6 @@ import { Observable, firstValueFrom, map } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class GameIsStarted implements CanActivate, CanActivateChild {
   constructor(
-    private localUserService: UserService,
     private log: LogService,
     private permissionsService: UserRolePermissionsService,
     private playerService: PlayerService,
@@ -31,14 +28,11 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
 
   private async _canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
     // if the user is admin/tester, they can ignore start phase restrictions
-    const localUser = this.localUserService.user$.getValue();
-
     if (await firstValueFrom(this.permissionsService.can$("Play_IgnoreExecutionWindow"))) {
       return true;
     }
 
     const playerId = route.paramMap.get("playerId") || '';
-    const gameId = route.paramMap.get("gameId") || '';
 
     // can't make a decision without a playerId (because we need their team and game)
     if (!playerId) {
@@ -46,13 +40,11 @@ export class GameIsStarted implements CanActivate, CanActivateChild {
       return false;
     }
 
-    let resolvedGameId = gameId;
     const player = await firstValueFrom(this.playerService.retrieve(playerId));
-    if (!resolvedGameId) {
-      resolvedGameId = player.gameId;
-    }
-    this.log.logInfo("Resolved gameId, teamId for GameIsStartedGuard", gameId, player.teamId);
+    this.log.logInfo("Resolved teamId for GameIsStartedGuard", player.teamId || "<no team id>");
 
-    return await firstValueFrom(this.teamService.getGamePlayState(player.teamId).pipe(map(phase => phase == GamePlayState.Started)));
+    const playState = await firstValueFrom(this.teamService.getGamePlayState(player.teamId));
+    this.log.logInfo("Guard: GameIsStartedGuard", playState, playState == GamePlayState.Started);
+    return playState == GamePlayState.Started;
   }
 }

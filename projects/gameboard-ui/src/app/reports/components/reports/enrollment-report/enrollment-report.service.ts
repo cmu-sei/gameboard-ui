@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters, EnrollmentReportLineChartGroup, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
+import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters, EnrollmentReportLineChartGroup, EnrollmentReportLineChartResponse, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
 import { Observable, firstValueFrom, map, } from 'rxjs';
 import { ReportResults } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
@@ -47,12 +47,12 @@ export class EnrollmentReportService {
 
     return await firstValueFrom(this
       .http
-      .get<{ [dateString: string]: EnrollmentReportLineChartGroup }>(this.apiUrl.build("reports/enrollment/trend", trendParams))
+      .get<EnrollmentReportLineChartResponse>(this.apiUrl.build("reports/enrollment/trend", trendParams))
       .pipe(
         map(results => {
           const mapped = new Map<DateTime, EnrollmentReportLineChartGroup>();
 
-          for (const entry of Object.entries(results)) {
+          for (const entry of Object.entries(results.playerGroups)) {
             mapped.set(DateTime.fromISO(entry[0]), entry[1]);
           }
 
