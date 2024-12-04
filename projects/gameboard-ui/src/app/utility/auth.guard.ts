@@ -1,14 +1,17 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateChild } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AuthService, AuthTokenState } from './auth.service';
+import { LogService } from '@/services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate, CanActivateChild {
+  private _log = inject(LogService);
+
   constructor(
     private auth: AuthService,
     private router: Router
@@ -28,8 +31,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   private validateAuth(url: string): Observable<boolean | UrlTree> {
     return this.auth.tokenState$.pipe(
-      map(t => t === AuthTokenState.valid),
-      map(v => v ? v : this.router.parseUrl(`/login?redirectTo=${url}`)),
+      map(authTokenState => authTokenState === AuthTokenState.valid ? true : this.router.parseUrl(`/login?redirectTo=${url}`)),
+      tap(result => this._log.logInfo("Guard: results from auth guard", result))
     );
   }
 }
