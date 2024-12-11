@@ -29,7 +29,6 @@
                         </label>
                         <label>Visible</label>
                     </div>
-                    <small></small>
                 </div>
 
                 <div class="form-group pb-0 pt-1">
@@ -148,9 +147,16 @@
             </div>
 
             <div class="col-12 mt-5">
-                <!-- <app-feedback-template-picker></app-feedback-template-picker> -->
-                <app-feedback-editor [feedbackTemplate]="game.feedbackTemplate"
-                    (templateChange)="handleFeedbackTemplateChange($event || undefined)"></app-feedback-editor>
+                <app-feedback-template-picker labelText="Game Feedback Template"
+                    [(templateId)]="game.feedbackTemplateId"
+                    (select)="handleGameFeedbackTemplateChanged($event)"></app-feedback-template-picker>
+
+                <app-feedback-template-picker labelText="Challenges Feedback Template"
+                    [(templateId)]="game.challengesFeedbackTemplateId"
+                    (select)="handleChallengesFeedbackTemplateChanged($event)"></app-feedback-template-picker>
+
+                <app-feedback-editor *ngIf="game.feedbackConfig" [feedbackTemplate]="game.feedbackTemplate"
+                    (templateChange)="handleFeedbackTemplateChangeOld($event || undefined)"></app-feedback-editor>
             </div>
 
             <div class="col-12 mt-5">
@@ -276,7 +282,6 @@
         </div>
 
         <div *ngIf="selectedSubTab === 'registration'" class="row mb-4">
-
             <!-- right (image) -->
             <div class="col-lg-6 col-sm-12">
                 <h4>Execution</h4>

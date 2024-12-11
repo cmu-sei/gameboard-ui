@@ -1,5 +1,5 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FeedbackTemplateView } from '@/feedback/feedback.models';
@@ -8,6 +8,8 @@ import { CoreModule } from "../../../core/core.module";
 import { FeedbackService } from '@/api/feedback.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { FeedbackSubmissionFormComponent } from "../feedback-submission-form/feedback-submission-form.component";
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 interface UpsertFeedbackTemplateForm {
   id: string | null | undefined;
@@ -24,39 +26,44 @@ interface UpsertFeedbackTemplateForm {
     ReactiveFormsModule,
     FontAwesomeModule,
     CoreModule,
+    FeedbackSubmissionFormComponent
   ],
   templateUrl: './feedback-template-picker.component.html',
   styleUrls: ['./feedback-template-picker.component.scss']
 })
 export class FeedbackTemplatePickerComponent implements OnInit {
-  @Input() challengeSpecFeedbackTemplate?: FeedbackTemplateView;
-  @Output() challengeSpecFeedbackTemplateIdChange = new EventEmitter<string | undefined>();
-
-  @Input() gameFeedbackTemplate?: FeedbackTemplateView;
-  @Output() gameFeedbackTemplateChange = new EventEmitter<FeedbackTemplateView | undefined>();
+  @Input() labelText?: string;
+  @Input() templateId?: string;
+  @Output() templateIdChange = new EventEmitter<string | undefined>();
+  @Output() select = new EventEmitter<FeedbackTemplateView>();
 
   @ViewChild("createEditModalTemplate") createEditModalTemplate?: TemplateRef<any>;
+  @ViewChild("previewTemplate") previewModalTemplate?: TemplateRef<any>;
 
   private feedbackService = inject(FeedbackService);
   private modalService = inject(ModalConfirmService);
   private toastsService = inject(ToastService);
+  private unsub = inject(UnsubscriberService);
 
-  protected challengeTemplateId?: string;
   protected createEditTemplateForm = new FormGroup({
     id: new FormControl(""),
     helpText: new FormControl(""),
     name: new FormControl("", Validators.required),
     content: new FormControl("", [Validators.required, this.feedbackService.getTemplateQuestionsValidator()])
   });
-  protected gameTemplateId?: string;
+
+  protected selectedTemplate?: FeedbackTemplateView;
   protected templates: FeedbackTemplateView[] = [];
-  protected editingTemplate?: FeedbackTemplateView;
   protected fa = fa;
   protected sampleConfig?: string;
 
   async ngOnInit(): Promise<void> {
     this.sampleConfig = await this.feedbackService.getTemplateSampleYaml() || "";
     await this.load();
+
+    this.unsub.add(
+      this.feedbackService.deleted$.subscribe(async () => await this.load())
+    );
   }
 
   protected handleCopyFromTemplate(templateId: string) {
@@ -115,10 +122,14 @@ export class FeedbackTemplatePickerComponent implements OnInit {
   }
 
   protected handleDelete(template: FeedbackTemplateView) {
+    const responsesWarning = template.responseCount == 0 ? "" : `\n\n**NOTE:** This template has **${template.responseCount}** responses recorded. If you delete it, you'll also delete these responses.`;
+
     this.modalService.openConfirm({
-      bodyContent: `Are you sure you want to delete this feedback template? This can't be undone.`,
+      bodyContent: "Are you sure you want to delete this feedback template? This can't be undone." + responsesWarning,
       onConfirm: async () => {
+        await this.feedbackService.deleteTemplate(template);
       },
+      renderBodyAsMarkdown: true,
       subtitle: template.name,
       title: "Delete Feedback Template?"
     });
@@ -128,8 +139,28 @@ export class FeedbackTemplatePickerComponent implements OnInit {
     this.createEditTemplateForm.patchValue({ content: this.sampleConfig }, { emitEvent: true });
   }
 
+  protected handlePreview() {
+    if (!this.previewModalTemplate) {
+      throw new Error("Couldn't resolve preview template.");
+    }
+
+    this.modalService.openTemplate(this.previewModalTemplate);
+  }
+
+  protected handleTemplateSelect() {
+    this.templateIdChange.emit(this.selectedTemplate?.id);
+    this.select.emit(this.selectedTemplate);
+  }
+
   private async load() {
-    const templatesResponse = await this.feedbackService.getTemplates();
-    this.templates = templatesResponse.templates;
+    this.templates = await this.feedbackService.getTemplates();
+
+    if (this.templates.length && this.templateId) {
+      this.selectedTemplate = this.templates.find(t => t.id === this.templateId);
+    }
+    else {
+      this.selectedTemplate = undefined;
+      this.templateId = undefined;
+    }
   }
 }

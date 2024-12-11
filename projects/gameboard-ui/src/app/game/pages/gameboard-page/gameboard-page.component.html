@@ -139,10 +139,9 @@
             </div>
           </div>
 
-          <div *ngIf="spec.instance!.state.challenge && ctx.game.feedbackTemplate?.challenge?.length">
-            <app-feedback-form [boardPlayer]="ctx" title="Challenge Feedback" [spec]="spec"
-              [type]="'challenge'"></app-feedback-form>
-          </div>
+          <app-feedback-submission-form *ngIf="ctx.game.challengesFeedbackTemplateId && spec.instance!.state.challenge"
+            [feedbackEntity]="{ id: spec.id, entityType: 'challengeSpec' }"
+            [templateId]="ctx.game.challengesFeedbackTemplateId"></app-feedback-submission-form>
         </ng-container>
       </div>
     </div>

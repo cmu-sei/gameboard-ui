@@ -3,25 +3,34 @@
 
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { firstValueFrom, Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of, Subject } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmission, FeedbackTemplate, QuestionType } from './feedback-models';
+import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmissionOldAndGross, FeedbackTemplate, QuestionType } from './feedback-models';
 import { YamlService } from '@/services/yaml.service';
 import { hasProperty } from '@/../tools/functions';
 import { unique } from '@/../tools/tools';
-import { CreateFeedbackTemplate, FeedbackTemplateView, ListFeedbackTemplatesResponse } from '@/feedback/feedback.models';
-import { AbstractControl, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { CreateFeedbackTemplate, FeedbackQuestionsConfig, FeedbackSubmissionUpsert, FeedbackSubmissionView, FeedbackTemplateView, GetFeedbackSubmissionRequest, ListFeedbackTemplatesResponse } from '@/feedback/feedback.models';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
   private url = '';
   private yamlService = inject(YamlService);
 
+  private _deleted$ = new Subject<string>();
+  public deleted$ = this._deleted$.asObservable();
+
   constructor(
     config: ConfigService,
+    private apiUrl: ApiUrlService,
     private http: HttpClient
   ) {
     this.url = config.apphost + 'api';
+  }
+
+  public buildQuestionsFromTemplateContent(content: string): FeedbackQuestionsConfig {
+    return this.yamlService.parse<FeedbackQuestionsConfig>(content);
   }
 
   public async createTemplate(template: CreateFeedbackTemplate) {
@@ -29,25 +38,27 @@ export class FeedbackService {
   }
 
   public async deleteTemplate(template: FeedbackTemplateView) {
-    return await firstValueFrom(this.http.delete(`${this.url}/feedback/template/${template.id}`));
+    await firstValueFrom(this.http.delete(`${this.url}/feedback/template/${template.id}`));
+    this._deleted$.next(template.id);
   }
 
-  public async getTemplates(): Promise<ListFeedbackTemplatesResponse> {
-    return await firstValueFrom(this.http.get<ListFeedbackTemplatesResponse>(`${this.url}/feedback/template`));
+  public async getTemplate(templateId: string): Promise<FeedbackTemplateView> {
+    return await firstValueFrom(this.http.get<FeedbackTemplateView>(`${this.url}/feedback/template/${templateId}`));
   }
 
-  public getRequiredProperties(): string[] {
-    return ["id", "prompt", "type"];
+  public async getTemplates(): Promise<FeedbackTemplateView[]> {
+    const response = await firstValueFrom(this.http.get<ListFeedbackTemplatesResponse>(`${this.url}/feedback/template`));
+    return response.templates;
   }
 
   public getTemplateQuestionsValidator(): ValidatorFn {
     return (formControl: AbstractControl<any, any>) => {
-      const set = this.yamlService.parse<FeedbackQuestion[]>(formControl.value);
+      const set = this.buildQuestionsFromTemplateContent(formControl.value);
 
       if (!formControl.value)
         return null;
 
-      if (!Array.isArray(set)) {
+      if (!Array.isArray(set.questions)) {
         return {
           questionValidation: {
             valid: false,
@@ -56,7 +67,7 @@ export class FeedbackService {
         };
       }
 
-      if (!set?.length) {
+      if (!set?.questions?.length) {
         return {
           questionValidation: {
             valid: false,
@@ -67,22 +78,22 @@ export class FeedbackService {
 
       const retVal: string[] = [];
       const requiredProperties: (keyof FeedbackQuestion)[] = ["id", "prompt", "type"];
-      const uniqueIds = unique(set.map(q => q?.id));
+      const uniqueIds = unique(set.questions.map(q => q?.id));
 
-      if (uniqueIds.length !== set.length) {
+      if (uniqueIds.length !== set.questions.length) {
         retVal.push(`Ensure the **id** property of all questions are unique.`);
       }
 
-      for (let i = 0; i < set.length; i++) {
+      for (let i = 0; i < set.questions.length; i++) {
         const displayIndex = i + 1;
         // the user-friendly 1-indexed question
         // ensure the question has a legal id
-        if (!set[i]?.id) {
+        if (!set.questions[i]?.id) {
           retVal.push(`Question ${displayIndex} can't have a blank or missing ID.`);
         }
 
         for (const p of requiredProperties) {
-          if (!hasProperty(set[i], p))
+          if (!hasProperty(set.questions[i], p))
             retVal.push(`Question ${displayIndex} is missing required property **${p}**.`);
         }
       }
@@ -104,6 +115,10 @@ export class FeedbackService {
     return await this.yamlService.loadSample("feedback-config");
   }
 
+  public async getSubmission(request: GetFeedbackSubmissionRequest): Promise<FeedbackSubmissionView | null> {
+    return await firstValueFrom(this.http.get<FeedbackSubmissionView | null>(this.apiUrl.build("feedback/submission", request)));
+  }
+
   public async getTemplateSampleYaml(): Promise<string | null> {
     return await this.yamlService.loadSample("feedback-template-content");
   }
@@ -116,7 +131,11 @@ export class FeedbackService {
     return this.http.get<Feedback>(`${this.url}/feedback`, { params: search });
   }
 
-  public submit(model: FeedbackSubmission): Observable<Feedback> {
+  public save(submission: FeedbackSubmissionUpsert): Promise<FeedbackSubmissionView> {
+    return firstValueFrom(this.http.post<FeedbackSubmissionView>(`${this.url}/feedback`, submission));
+  }
+
+  public submit(model: FeedbackSubmissionOldAndGross): Observable<Feedback> {
     return this.http.put<Feedback>(`${this.url}/feedback/submit`, model);
   }
 

@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-game-card-image',
   styles: [
     ":host { aspect-ratio: 1/1.44; display: block; }",
-    ".game-card-container { aspect-ratio: 1/1.44; background: #303030 center center/contain no-repeat; }"
+    ".game-card-container { aspect-ratio: 1/1.44; background: #303030 center center/contain no-repeat; background-position: contain }"
   ],
   templateUrl: './game-card-image.component.html'
 })

@@ -54,6 +54,11 @@ import { SpecQuestionPerformanceModalComponent } from './components/spec-questio
 import { FeedbackGameReportComponent } from './components/reports/feedback-game-report/feedback-game-report.component';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { FeedbackReportComponent } from './components/reports/feedback-report/feedback-report.component';
+import { QueryParamModelDirective } from '@/core/directives/query-param-model.directive';
+import { IsNumberPipe } from '@/core/pipes/is-number.pipe';
+import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
+import { PlayerFeedbackResponsesModalComponent } from './components/reports/feedback-report/player-feedback-responses-modal/player-feedback-responses-modal.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +110,8 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
     SiteUsageReportChallengesListComponent,
     SortHeaderComponent,
     SpecQuestionPerformanceModalComponent,
+    FeedbackReportComponent,
+    PlayerFeedbackResponsesModalComponent,
   ],
   imports: [
     CommonModule,
@@ -116,7 +123,8 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
         children: [
           { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
           { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
-          { path: 'feedback', component: FeedbackGameReportComponent, title: "Feedback Report" },
+          { path: "feedback", component: FeedbackReportComponent, title: "Feedback Report" },
+          { path: 'feedback-legacy', component: FeedbackGameReportComponent, title: "Feedback Report (Legacy)" },
           { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
           { path: 'players', component: PlayersReportComponent, title: "Players Report" },
           { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report" },
@@ -126,10 +134,12 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
     ]),
     FontAwesomeModule,
     CoreModule,
-
-    // standalones,
+    // standalones
     ErrorDivComponent,
-    SpinnerComponent
+    FeedbackSubmissionFormComponent,
+    IsNumberPipe,
+    SpinnerComponent,
+    FeedbackSubmissionFormComponent
   ],
   providers: [UnsubscriberService]
 })

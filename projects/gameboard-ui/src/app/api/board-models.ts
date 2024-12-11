@@ -92,6 +92,8 @@ export interface BoardGame {
   division: string;
   mode: GameEngineMode;
   sponsor: string;
+  challengesFeedbackTemplateId?: string;
+  feedbackTemplateId?: string;
   feedbackTemplate: FeedbackTemplate;
   background: string;
   logo: string;

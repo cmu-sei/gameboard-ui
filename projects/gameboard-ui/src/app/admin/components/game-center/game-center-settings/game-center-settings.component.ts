@@ -11,6 +11,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { YamlService } from '@/services/yaml.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
+import { FeedbackTemplateView } from '@/feedback/feedback.models';
 
 export type SelectedSubTab = "settings" | "modes" | "registration";
 
@@ -88,7 +89,25 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     }
   }
 
-  protected async handleFeedbackTemplateChange(template?: FeedbackTemplate) {
+  protected async handleChallengesFeedbackTemplateChanged(template?: FeedbackTemplateView) {
+    if (!this.game) {
+      throw new Error("Game is required");
+    }
+
+    this.game.challengesFeedbackTemplateId = template?.id;
+    await firstValueFrom(this.gameService.update(this.game));
+  }
+
+  protected async handleGameFeedbackTemplateChanged(template?: FeedbackTemplateView) {
+    if (!this.game) {
+      throw new Error("Game is required");
+    }
+
+    this.game.feedbackTemplateId = template?.id;
+    await firstValueFrom(this.gameService.update(this.game));
+  }
+
+  protected async handleFeedbackTemplateChangeOld(template?: FeedbackTemplate) {
     if (!this.game)
       throw new Error("Game is required");
 
@@ -105,8 +124,9 @@ export class GameCenterSettingsComponent implements AfterViewInit {
   }
 
   protected async handleModeChange(event: Event) {
-    if (!this.game)
+    if (!this.game) {
       throw new Error("Game is required.");
+    }
 
     const gameMode = ((event?.target as any).value as GameEngineMode);
     this.game.mode = gameMode;

@@ -9,6 +9,7 @@ import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { BoardGame } from '../../api/board-models';
 import { Game, GameGroup } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-landing',
@@ -35,6 +36,7 @@ export class LandingComponent {
 
   constructor(
     private router: Router,
+    private routerService: RouterService,
     api: GameService
   ) {
     this.featured$ = this.refresh$.pipe(
@@ -64,7 +66,11 @@ export class LandingComponent {
   }
 
   selected(game: Game | BoardGame): void {
-    this.router.navigate(['/game', game.id]);
+    if (game.isPracticeMode) {
+      this.routerService.toPracticeAreaWithSearch(game.id);
+    } else {
+      this.router.navigate(['/game', game.id]);
+    }
   }
 
   on(g: Game): void {

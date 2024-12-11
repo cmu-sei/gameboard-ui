@@ -22,7 +22,12 @@ export class FilesService {
 
   public async downloadFileFrom(url: string, name: string, extension: string, type: string, addTimestamp = true) {
     const finalName = `${name}${addTimestamp ? this.buildTimestamp() : ''}.${extension}`;
-    const response = await firstValueFrom(this.http.get(url, { responseType: 'arraybuffer' }));
+    const response = await firstValueFrom(this.http.get(url, {
+      headers: {
+        "Content-Type": "text/csv"
+      },
+      responseType: 'arraybuffer'
+    }));
     this.downloadFile(response, finalName, type);
   }
 

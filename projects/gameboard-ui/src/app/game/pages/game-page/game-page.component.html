@@ -95,11 +95,14 @@
         </h2>
         <app-scoreboard [gameId]="ctx.game.id"></app-scoreboard>
       </div>
-      <div class="col-6 pr-5 my-4" *ngIf="ctx.game.feedbackTemplate?.game?.length && (!ctx.player.session?.isBefore)">
-        <app-feedback-form *ngIf="ctx.player.session" [title]="ctx.game.name + ' Feedback'" [type]="'game'"
-          [boardPlayer]="boardPlayer">
-        </app-feedback-form>
-      </div>
+      <ng-container *ngIf="ctx.game.feedbackTemplateId && !ctx.player.session?.isBefore">
+        <div class="col-6 my-4">
+          <h2>Feedback</h2>
+          <app-feedback-submission-form [templateId]="ctx.game.feedbackTemplateId"
+            [feedbackEntity]="{ id: ctx.game.id, entityType: 'game' }">
+          </app-feedback-submission-form>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-container>

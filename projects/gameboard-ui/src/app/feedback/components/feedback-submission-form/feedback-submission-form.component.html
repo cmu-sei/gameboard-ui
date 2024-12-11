@@ -1,0 +1,148 @@
+<div class="feedback-submission-form-component">
+    <form #form="ngForm" [ngFormOptions]="{updateOn: 'change'}" class="pop-light p-4 mt-4">
+        <app-error-div [errors]="errors"></app-error-div>
+
+        <div *ngIf="template?.helpText" class="mb-3 bg-light p-2 rounded d-flex justify-content-left">
+            <fa-icon [icon]="fa.exclamationCircle" class="pr-1"></fa-icon>
+            <small><span class="font-weight-bold align-middle">{{template?.helpText}}</span></small>
+        </div>
+
+        <ng-container *ngIf="!submission.whenFinalized; else finalized">
+            <div *ngFor="let q of submission.responses; let i = index" class="mb-4">
+                <label for="{{q.id}}">
+                    <div class="d-flex">
+                        <div class="mr-1">{{i+1}}<span *ngIf="q.required" class="required">*</span>.</div>
+                        <div [innerHTML]="q.prompt | markdown"></div>
+                    </div>
+                </label>
+
+                <!-- Text -->
+                <ng-container *ngIf="q.type == 'text'">
+                    <textarea rows="1" type="text" class="form-control" id={{q.id}} name={{q.id}} [(ngModel)]="q.answer"
+                        [disabled]="feedbackForm.submitted! || isPreview" maxlength={{characterLimit}}
+                        style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; resize: none"></textarea>
+                    <small class="d-flex justify-content-end"
+                        [class]="q.answer?.length == characterLimit ? 'text-warning' : 'text-muted'">
+                        {{characterLimit - (q.answer?.length ?? 0)}}
+                    </small>
+                </ng-container>
+
+                <!-- Likert -->
+                <div *ngIf="q.type == 'likert'">
+                    <small class="pr-2 text-dark">{{q.minLabel}}</small>
+                    <div id={{q.id}} class="btn-group" btnRadioGroup name={{q.id}} tabindex="0" [(ngModel)]="q.answer"
+                        [disabled]="feedbackForm.submitted! || isPreview">
+                        <label *ngFor="let i of options(q.min ?? 1, q.max ?? 1)" class="btn btn-outline-dark btn-sm m-0"
+                            btnRadio="{{i}}">{{i}}
+                        </label>
+                    </div>
+                    <small class="pl-2 text-dark">{{q.maxLabel}}</small>
+                </div>
+
+                <!-- Select one -->
+                <ng-container *ngIf="q.type == 'selectOne'">
+                    <!-- Dropdown -->
+                    <div *ngIf="q.display == 'dropdown'" id={{q.id}}>
+                        <select id="dropdown-{{q.id}}" class="btn btn-secondary" [(ngModel)]="q.answer" [name]="q.id"
+                            [disabled]=" isPreview">
+                            <option ngDefaultControl [value]="''" class="dropdown-item" selected>---</option>
+                            <option *ngFor="let option of q.options" class="dropdown-item px-3"
+                                [disabled]="feedbackForm.submitted!" ngDefaultControl [value]="option"
+                                [selected]="q.answer == option">{{option}}</option>
+                        </select>
+                    </div>
+
+                    <!-- Radio buttons -->
+                    <div *ngIf="q.display != 'dropdown'" id={{q.id}}>
+                        <ng-container *ngFor="let option of q.options">
+                            <div class="form-check">
+                                <label class="form-check-label" for="{{option}}">
+                                    <input class="form-check-input" type="radio"
+                                        (change)="modifyMultipleAnswer(q, option, $event, true)"
+                                        [checked]="q.answer && q.answer!.indexOf(option) > -1"
+                                        [disabled]="feedbackForm.submitted! || isPreview" id="check-{{q.id}}-{{option}}"
+                                        [name]="q.id" [value]="option">
+
+                                    {{option}}{{q.specify && q.specify.key ==
+                                    option ? ": " +
+                                    (q.specify.prompt ? q.specify.prompt : "") : "" }}
+                                </label>
+                                <textarea *ngIf="q.specify && q.specify.key == option" rows="1" type="text"
+                                    [disabled]="feedbackForm.submitted! || isPreview"
+                                    style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; resize: none"
+                                    (change)="modifySpecifiedAnswer(q, option, $event)"
+                                    id="input-{{q.id}}-{{option}}"></textarea>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+
+                <!-- Select all that apply -->
+                <ng-container *ngIf="q.type == 'selectMany'">
+                    <div id={{q.id}}>
+                        <ng-container *ngFor="let option of q.options">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                    (change)="modifyMultipleAnswer(q, option, $event)"
+                                    [checked]="q.answer && q.answer!.indexOf(option) > -1"
+                                    [disabled]="feedbackForm.submitted!" id="check-{{q.id}}-{{option}}" [name]="option"
+                                    [value]="option">
+                                <label class="form-check-label" for="{{option}}">{{option}}{{q.specify && q.specify.key
+                                    ==
+                                    option ? ": " +
+                                    (q.specify.prompt ? q.specify.prompt : "") : "" }}</label>
+                                <br>
+                                <textarea *ngIf="q.specify && q.specify.key == option" rows="1" type="text"
+                                    [disabled]="feedbackForm.submitted!"
+                                    style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; resize: none"
+                                    (change)="modifySpecifiedAnswer(q, option, $event)"
+                                    id="input-{{q.id}}-{{option}}"></textarea>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+
+            <ng-container *ngIf="!isPreview">
+                <app-confirm-button *ngIf="feedbackForm" btnClass="btn btn-sm btn-secondary" (confirm)="submit()"
+                    [disabled]="feedbackForm.submitted! || !submission.responses.length">
+                    <span>{{feedbackForm.submitted ? "Submitted" : "Submit"}}</span>
+                </app-confirm-button>
+                <div class="mt-3 d-flex justify-content-between">
+                    <small class="">Responses cannot be changed after submission.</small>
+                    <small *ngIf="!isLoading; else loading">{{ status }}</small>
+                </div>
+            </ng-container>
+        </ng-container>
+    </form>
+</div>
+
+<ng-template #finalized>
+    <alert type="success" *ngIf="!isAdminView">
+        Thanks for submitting your feedback! We saved it on
+        <strong>{{ submission.whenFinalized | friendlyDateAndTime }}</strong>.
+    </alert>
+
+    <div class="finalized-answers">
+        <ol>
+            <li class="my-3" *ngFor="let response of submission.responses; index as i">
+                <div class="d-flex fw-bold">
+                    <div class="flex-grow-1" class="mr-1">{{i+1}}.</div>
+                    <div class="answer-markdown" [innerHTML]="response.prompt | markdown"></div>
+                </div>
+
+                <div *ngIf="response.answer; else noResponse" class="finalized-answer">
+                    {{ response.answer }}
+                </div>
+            </li>
+        </ol>
+    </div>
+</ng-template>
+
+<ng-template #loading>
+    <app-spinner color="#555">Saving...</app-spinner>
+</ng-template>
+
+<ng-template #noResponse>
+    <em>(no response)</em>
+</ng-template>

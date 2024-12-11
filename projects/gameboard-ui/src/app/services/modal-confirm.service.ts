@@ -37,6 +37,10 @@ export class ModalConfirmService implements OnDestroy {
     this.bsModalRef = this.bsModalService.show(templateRef, { class: "modal-dialog-centered modal-xl" });
   }
 
+  openTemplateWithContext<TTemplate>(templateRef: TemplateRef<TTemplate>, context: any) {
+    this.bsModalRef = this.bsModalService.show(templateRef, { class: "modal-dialog-centered modal-xl", initialState: context });
+  }
+
   hide(isCancelEvent = false): void {
     if (!isCancelEvent) {
       this.hiddenSub?.unsubscribe();

@@ -93,7 +93,7 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
     return {
       metaData: {
         key: ReportKey.FeedbackReport,
-        title: "Feedback Report",
+        title: "Feedback Report (Legacy)",
         description: "",
         isExportable: true,
         runAt: this.nowService?.nowToDateTime() || DateTime.now()

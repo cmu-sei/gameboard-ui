@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { BoardPlayer } from '@/api/board-models';
-import { BoardService } from '@/api/board.service';
 import { UserActiveChallenge } from '@/api/challenges.models';
 import { PlayerMode } from '@/api/player-models';
-import { MiniBoardSpec } from '@/core/components/feedback-form/feedback-form.component';
 import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
@@ -12,11 +9,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 
 export interface PracticeChallengeSolvedModalContext {
   challenge: UserActiveChallenge;
-}
-
-interface LegacyFeedbackFormContext {
-  boardPlayer?: BoardPlayer;
-  boardSpec?: MiniBoardSpec;
 }
 
 @Component({
@@ -29,10 +21,8 @@ export class PracticeChallengeSolvedModalComponent implements OnInit {
   context?: PracticeChallengeSolvedModalContext;
   protected certificateUrl?: string;
   protected isCertificateConfigured = false;
-  // protected feedbackFormContext?: LegacyFeedbackFormContext = undefined;
 
   constructor(
-    private boardService: BoardService,
     private practiceService: PracticeService,
     private routerService: RouterService,
     private unsub: UnsubscriberService,
