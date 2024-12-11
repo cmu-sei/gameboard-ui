@@ -84,7 +84,7 @@
                                         <td class="text-center">
                                             <span
                                                 [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated"
-                                                [class.text-info]="(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated">
+                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.challengeCreated">
                                                 {{((spec.id |
                                                 externalSpecIdToChallenge:team.challenges)!.challengeCreated ? "Yes" :
                                                 "No")}}
@@ -93,7 +93,7 @@
                                         <td class="text-center">
                                             <span
                                                 [class.not-deployed]="!(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed"
-                                                [class.text-info]="(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed">
+                                                [class.text-success]="(spec.id | externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed">
                                                 {{((spec.id |
                                                 externalSpecIdToChallenge:team.challenges)!.gamespaceDeployed
                                                 ? "Yes" : "No")}}
@@ -115,7 +115,7 @@
                         <div class="card-section" *ngIf="team.externalGameHostUrl">
                             <h5>Game Host URL</h5>
 
-                            <div class="cursor-pointer text-info"
+                            <div class="cursor-pointer text-success"
                                 tooltip="Copy this team's external host URL to your clipboard"
                                 [appCopyOnClick]="team.externalGameHostUrl"
                                 appCopyOnClickMessage="Copied this team's external host URL to your clipboard.">
