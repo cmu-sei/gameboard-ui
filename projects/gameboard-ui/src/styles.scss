@@ -216,7 +216,6 @@ table.gameboard-table {
     th {
       border-bottom: solid 1px $foreground;
       border-top: solid 1px $foreground;
-      // padding: 0.5rem;
       vertical-align: middle;
     }
 
@@ -259,7 +258,7 @@ table.gameboard-table {
     }
 
     th {
-      padding-left: 6px;
+      text-align: center;
     }
   }
 
@@ -488,7 +487,6 @@ th[align="left"] {
 .text-dashed-underline {
   text-decoration: underline !important;
   text-decoration-style: dotted !important;
-  // text-decoration-color: #fff !important;
   text-decoration-thickness: 2px !important;
 }
 

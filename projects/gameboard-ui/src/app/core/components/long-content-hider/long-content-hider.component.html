@@ -6,7 +6,7 @@
 
     <div class="button-container" *ngIf="isExpandEnabled" [class.expanded]="isExpanded">
         <div class="pretty-line"></div>
-        <button type="button" class="btn btn-outline-info" (click)="toggleExpanded()">
+        <button type="button" class="btn btn-outline-success" (click)="toggleExpanded()">
             See {{ isExpanded ? "less" : "more" }}
             <span class="arrow-symbol">{{ isExpanded ? "« " : "»"}}</span>
         </button>

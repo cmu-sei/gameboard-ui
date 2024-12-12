@@ -62,7 +62,6 @@ import { DelimitedPipe } from './pipes/delimited.pipe';
 import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { EpochMsToDateTimePipe as EpochMsToDateTimePipe } from './pipes/epoch-ms-to-datetime.pipe';
-import { FeedbackFormComponent } from './components/feedback-form/feedback-form.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
@@ -157,7 +156,6 @@ const PUBLIC_DECLARATIONS = [
   DoughnutChartComponent,
   DropzoneComponent,
   EpochMsToDateTimePipe,
-  FeedbackFormComponent,
   FriendlyDateAndTimePipe,
   GameboardPerformanceSummaryComponent,
   GameCardImageComponent,

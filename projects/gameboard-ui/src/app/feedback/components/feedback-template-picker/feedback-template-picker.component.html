@@ -1,13 +1,15 @@
 <div class="feedback-template-picker-component">
     <div class="form-group">
-        <label for="gameFeedbackTemplateId" class="form-label">Game-Level Template</label>
+        <label for="feedbackTemplate" class="form-label">{{ labelText || "Feedback Template" }}</label>
 
         <div class="input-group">
-            <select id="gameFeedbackTemplateId" class="form-control" [(ngModel)]="gameFeedbackTemplate">
-                <option [ngValue]="undefined">[no game-level feedback template]</option>
+            <select id="feedbackTemplate" class="form-control" [(ngModel)]="selectedTemplate"
+                (change)="handleTemplateSelect()">
+                <option [ngValue]="undefined">[no feedback template]</option>
                 <option *ngFor="let template of templates" [ngValue]="template">
                     {{ template.name }}
-                    ({{ template.responseCount ? template.responseCount + " responses" : "no responses yet" }})
+                    ({{ template.responseCount ? template.responseCount + (" response" | pluralizer:
+                    template.responseCount) : "no responses yet" }})
                 </option>
             </select>
 
@@ -16,48 +18,15 @@
                     <fa-icon [icon]="fa.plus"></fa-icon>
                 </button>
 
-                <ng-container *ngIf="gameFeedbackTemplate">
-                    <button type="button" class="btn btn-success btn-sm">
+                <ng-container *ngIf="selectedTemplate">
+                    <button type="button" class="btn btn-success btn-sm" (click)="handlePreview()"
+                        tooltip="Preview this feedback template">
                         <fa-icon [icon]="fa.eye"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-success btn-sm" (click)="handleEdit(gameFeedbackTemplate)">
+                    <button type="button" class="btn btn-success btn-sm" (click)="handleEdit(selectedTemplate)">
                         <fa-icon [icon]="fa.edit"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="handleDelete(gameFeedbackTemplate)">
-                        <fa-icon [icon]="fa.trash"></fa-icon>
-                    </button>
-                </ng-container>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="challengeFeedbackTemplateId" class="form-label">Challenge-Level Template</label>
-
-        <div class="input-group">
-            <select id="challengeFeedbackTemplateId" class="form-control" [(ngModel)]="challengeSpecFeedbackTemplate">
-                <option [ngValue]="undefined">[no challenge-level feedback template]</option>
-                <option *ngFor="let template of templates" [ngValue]="template">
-                    {{ template.name }}
-                    ({{ template.responseCount ? template.responseCount + " responses" : "no responses yet" }})
-                </option>
-            </select>
-
-            <div class="input-group-append gb-button-group">
-                <button type="button" class="btn btn-success btn-sm" (click)="handleCreate()">
-                    <fa-icon [icon]="fa.plus"></fa-icon>
-                </button>
-
-                <ng-container *ngIf="challengeSpecFeedbackTemplate">
-                    <button type="button" class="btn btn-success btn-sm">
-                        <fa-icon [icon]="fa.eye"></fa-icon>
-                    </button>
-                    <button type="button" class="btn btn-success btn-sm"
-                        (click)="handleEdit(challengeSpecFeedbackTemplate)">
-                        <fa-icon [icon]="fa.edit"></fa-icon>
-                    </button>
-                    <button type="button" class="btn btn-danger btn-sm"
-                        (click)="handleDelete(challengeSpecFeedbackTemplate)">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="handleDelete(selectedTemplate)">
                         <fa-icon [icon]="fa.trash"></fa-icon>
                     </button>
                 </ng-container>
@@ -67,7 +36,12 @@
 </div>
 
 <ng-template #previewTemplate>
-
+    <ng-container *ngIf="selectedTemplate">
+        <app-modal-content [title]="selectedTemplate.name" subtitle="Preview Feedback Template" [hideCancel]="true">
+            <app-feedback-submission-form [templateId]="selectedTemplate.id"
+                [isPreview]="true"></app-feedback-submission-form>
+        </app-modal-content>
+    </ng-container>
 </ng-template>
 
 <ng-template #createEditModalTemplate>
@@ -152,7 +126,7 @@
         </div>
 
         <div footer>
-            <a href="https://cmu-sei.github.io/foundry-docs/gameboard/admin-feedback-form/#configuration-yaml"
+            <a href="https://cmu-sei.github.io/crucible/gameboard/admin-feedback-form/#configuration-yaml"
                 target="_blank">
                 About feedback templates
             </a>

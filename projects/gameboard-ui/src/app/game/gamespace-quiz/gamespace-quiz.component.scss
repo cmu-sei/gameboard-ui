@@ -14,3 +14,7 @@ label {
   background-color: lighten($warning, 5%);
   color: $body-bg;
 }
+
+.no-wrap {
+  white-space: nowrap;
+}

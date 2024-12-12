@@ -75,7 +75,7 @@
         </td>
         <td>
             <div class="challenge-count" *ngIf="teamScore.score.solveCountComplete">
-                <span class="fw-bold text-info">{{ teamScore.score.solveCountComplete }}</span>
+                <span class="fw-bold text-success">{{ teamScore.score.solveCountComplete }}</span>
                 <span class="challenge-count-desc"> complete</span>
             </div>
 
@@ -100,7 +100,7 @@
         </td>
         <td class="text-center" [tooltip]="teamScore.userCanAccessScoreDetail && teamScore.score | scoreToTooltip">
             <span class="score text-center"
-                [class.text-info]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
+                [class.text-success]="teamScore.score.scoreOverall != teamScore.score.scoreChallenge">
                 {{ teamScore.score.scoreOverall }}
             </span>
         </td>

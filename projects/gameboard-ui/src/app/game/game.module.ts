@@ -39,6 +39,7 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
 import { ScoreboardPageComponent } from '@/scoreboard/components/scoreboard-page/scoreboard-page.component';
+import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -81,12 +82,13 @@ const MODULE_DECLARATIONS = [
     CoreModule,
     UtilityModule,
     ScoreboardModule,
-
     // standalones
     ChallengeQuestionsComponent,
     ErrorDivComponent,
+    FeedbackSubmissionFormComponent,
     SafeUrlPipe,
     SpinnerComponent,
+    FeedbackSubmissionFormComponent
   ]
 })
 export class GameModule { }

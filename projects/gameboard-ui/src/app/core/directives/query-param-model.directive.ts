@@ -43,7 +43,6 @@ export class QueryParamModelDirective<T> implements OnChanges {
   private _toQueryStringParamNames: { [propertyName: string]: string } = {};
 
   constructor(
-    private hostComponent: CustomInputComponent<T>,
     private elementRef: ElementRef,
     private routerService: RouterService,
     private unsub: UnsubscriberService) { }

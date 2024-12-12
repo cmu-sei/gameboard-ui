@@ -24,6 +24,8 @@ export interface GameDetail {
   certificateTemplate: string;
   externalHostId?: string;
   feedbackTemplate?: FeedbackTemplate;
+  challengesFeedbackTemplateId?: string;
+  feedbackTemplateId?: string;
   registrationMarkdown: string;
   registrationOpen: Date;
   registrationClose: Date;

@@ -30,7 +30,7 @@ export interface FeedbackReportDetails {
   challengeTag?: string;
 }
 
-export interface FeedbackSubmission {
+export interface FeedbackSubmissionOldAndGross {
   challengeId?: string;
   challengeSpecId?: string;
   gameId: string;
