@@ -1,4 +1,4 @@
-<app-modal-content *ngIf="record" title="Feedback" [subtitle]="record.user.name">
+<app-modal-content *ngIf="record" title="Feedback" [subtitle]="record.user.name" [hideCancel]="true">
     <app-feedback-submission-form [templateId]="templateId" [isAdminView]="true"
         [feedbackEntity]="record.entity"></app-feedback-submission-form>
 </app-modal-content>

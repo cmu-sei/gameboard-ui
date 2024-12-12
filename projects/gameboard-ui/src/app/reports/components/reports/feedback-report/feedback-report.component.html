@@ -107,11 +107,3 @@
 </ng-template>
 <ng-template #noValue>--</ng-template>
 <ng-template #loading><app-spinner>Loading player feedback...</app-spinner></ng-template>
-
-<ng-template #playerResponsesModal let-context>
-    {{ context | json }}
-    <!-- <app-modal-content title="Feedback" [subtitle]="context.user.name">
-        <app-feedback-submission-form [templateId]="ctx.parameters.templateId"
-            [feedbackEntity]="context.entity"></app-feedback-submission-form>
-    </app-modal-content> -->
-</ng-template>

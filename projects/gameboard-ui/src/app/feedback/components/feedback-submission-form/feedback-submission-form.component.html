@@ -7,7 +7,7 @@
             <small><span class="font-weight-bold align-middle">{{template?.helpText}}</span></small>
         </div>
 
-        <ng-container *ngIf="!submission.whenFinalized; else finalized">
+        <ng-container *ngIf="!submission.whenFinalized && !isAdminView; else finalized">
             <div *ngFor="let q of submission.responses; let i = index" class="mb-4">
                 <label for="{{q.id}}">
                     <div class="d-flex">
