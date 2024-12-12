@@ -99,6 +99,7 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
 
     this.ctx.parameters = parameters;
     if (this.templates.length && !this.ctx.parameters.templateId) {
+      this.routerService.updateQueryParams({ parameters: { templateId: this.templates[0].id } });
       this.ctx.parameters.templateId = this.templates[0].id;
     }
 

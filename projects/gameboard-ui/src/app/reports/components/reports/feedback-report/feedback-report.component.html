@@ -3,7 +3,7 @@
         <div>
             <label class="report-component-label">Feedback Template</label>
             <select class="form-control" [appQueryParamModel]=" { name: 'templateId' }">
-                <option *ngFor="let template of templates; index as i" [value]="template.id" selected="i == 0">
+                <option *ngFor="let template of templates; index as i" [value]="template.id">
                     {{ template.name }}
                     {{ template.responseCount > 0 ? " (" + template.responseCount + " " + ("response" |
                     pluralizer:template.responseCount) + ")" : "" }}
