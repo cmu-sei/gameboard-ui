@@ -1,4 +1,12 @@
 <app-modal-content *ngIf="record" title="Feedback" [subtitle]="record.user.name" [hideCancel]="true">
-    <app-feedback-submission-form [templateId]="templateId" [isAdminView]="true"
-        [feedbackEntity]="record.entity"></app-feedback-submission-form>
+    <ol>
+        <li *ngFor="let response of record.responses; index as i" class="my-4">
+            <strong>{{ i + 1 }}. {{ response.prompt }}</strong>
+            <div class="my-2" *ngIf="response.answer">{{ response.answer }}</div>
+        </li>
+    </ol>
 </app-modal-content>
+
+<ng-template #noResponse>
+    <em>(no response)</em>
+</ng-template>

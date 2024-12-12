@@ -7,7 +7,7 @@
             <small><span class="font-weight-bold align-middle">{{template?.helpText}}</span></small>
         </div>
 
-        <ng-container *ngIf="!submission.whenFinalized && !isAdminView; else finalized">
+        <ng-container *ngIf="!submission.whenFinalized; else finalized">
             <div *ngFor="let q of submission.responses; let i = index" class="mb-4">
                 <label for="{{q.id}}">
                     <div class="d-flex">
@@ -118,7 +118,7 @@
 </div>
 
 <ng-template #finalized>
-    <alert type="success" *ngIf="!isAdminView">
+    <alert type="success">
         Thanks for submitting your feedback! We saved it on
         <strong>{{ submission.whenFinalized | friendlyDateAndTime }}</strong>.
     </alert>

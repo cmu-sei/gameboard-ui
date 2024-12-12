@@ -77,6 +77,7 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
   };
 
   protected handleRecordClick(record: FeedbackReportRecord) {
+    console.log("opening record", record);
     this.modalService.openComponent({
       content: PlayerFeedbackResponsesModalComponent,
       context: {

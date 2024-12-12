@@ -174,7 +174,6 @@ export class GameService {
     try {
       if (game.feedbackConfig) {
         game.feedbackTemplate = this.yamlService.parse<FeedbackTemplate>(game.feedbackConfig);
-        console.log("loaded game template", game.feedbackTemplate);
       }
     }
     catch {

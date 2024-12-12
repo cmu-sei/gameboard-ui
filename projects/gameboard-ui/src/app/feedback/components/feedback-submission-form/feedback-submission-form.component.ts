@@ -31,7 +31,6 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() feedbackEntity?: FeedbackSubmissionAttachedEntity;
   @Input() templateId?: string;
-  @Input() isAdminView = false;
   @Input() isPreview = false;
   @ViewChild(NgForm) form!: FormGroup;
 
@@ -74,10 +73,6 @@ export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, O
   }
 
   async submit(isAutoSave = false) {
-    if (this.isAdminView) {
-      return;
-    }
-
     if (!this.feedbackEntity) {
       throw new Error("Feedback entity is required");
     }

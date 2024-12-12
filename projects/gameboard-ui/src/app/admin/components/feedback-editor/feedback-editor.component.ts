@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, debounceTime, tap } from 'rxjs';
 import { FeedbackTemplate } from '@/api/feedback-models';
-import { YamlService } from '@/services/yaml.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { isObject } from '@/../tools/functions';
-import { YAMLParseError } from 'yaml';
-import { FeedbackService } from '@/api/feedback.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
@@ -25,10 +21,8 @@ export class FeedbackEditorComponent implements OnInit {
   private templateChangeSubject$ = new BehaviorSubject<FeedbackTemplate | null>(null);
 
   public constructor(
-    private feedbackService: FeedbackService,
     private modalService: ModalConfirmService,
-    private unsub: UnsubscriberService,
-    private yamlService: YamlService) {
+    private unsub: UnsubscriberService) {
     this.unsub.add(
       this.templateChangeSubject$
         .pipe(
