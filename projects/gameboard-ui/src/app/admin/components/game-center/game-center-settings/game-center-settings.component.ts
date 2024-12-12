@@ -107,22 +107,6 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     await firstValueFrom(this.gameService.update(this.game));
   }
 
-  protected async handleFeedbackTemplateChangeOld(template?: FeedbackTemplate) {
-    if (!this.game)
-      throw new Error("Game is required");
-
-    if (template) {
-      this.game.feedbackConfig = this.yamlService.render(template);
-      this.game.feedbackTemplate = template;
-    }
-    else {
-      this.game.feedbackConfig = "";
-      this.game.feedbackTemplate = undefined;
-    }
-
-    await firstValueFrom(this.gameService.update(this.game));
-  }
-
   protected async handleModeChange(event: Event) {
     if (!this.game) {
       throw new Error("Game is required.");

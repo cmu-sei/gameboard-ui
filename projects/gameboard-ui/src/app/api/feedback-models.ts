@@ -107,3 +107,10 @@ export interface FeedbackTemplate {
   createdByUser: SimpleEntity;
   name: string;
 }
+
+export interface UpdateFeedbackTemplateRequest {
+  id: string;
+  content: string;
+  name: string;
+  helpText?: string;
+}

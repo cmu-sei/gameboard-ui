@@ -95,6 +95,7 @@ export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, O
         feedbackTemplateId: this.templateId,
         isFinalized: !isAutoSave,
         responses: this.submission.responses,
+        userId: this.localUser.user$.value!.id
       });
 
       this.bindSubmission(updatedSubmission);

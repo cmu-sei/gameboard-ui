@@ -31,6 +31,7 @@ export interface FeedbackSubmissionUpsert {
     isFinalized: boolean;
     responses: FeedbackQuestion[];
     feedbackTemplateId: string;
+    userId?: string;
 }
 
 export interface FeedbackSubmissionView {
