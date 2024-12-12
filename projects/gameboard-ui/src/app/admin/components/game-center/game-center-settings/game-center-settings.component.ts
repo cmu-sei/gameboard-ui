@@ -46,8 +46,7 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     private practiceService: PracticeService,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private unsub: UnsubscriberService,
-    private yamlService: YamlService) {
+    private unsub: UnsubscriberService) {
     this.unsub.add(this.route.data.subscribe(d => this.handleGameChange(d.gameId)));
   }
 

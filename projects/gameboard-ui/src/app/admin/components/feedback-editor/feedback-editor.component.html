@@ -2,26 +2,12 @@
     <label class="d-block" for="feedbackConfig-input">Feedback Questions</label>
     <div class="my-2 p-1 badge badge-warning">DEPRECATED</div>
     <textarea rows="11" type="text" class="form-control font-fixed-width" id="feedbackConfig-input"
-        name="feedbackConfig" [(ngModel)]="boundYaml" (input)="updateYaml(boundYaml)" [placeholder]="sampleConfig"
-        [readOnly]="true" [disabled]="true"></textarea>
+        name="feedbackConfig" [(ngModel)]="boundYaml" [placeholder]="sampleConfig" [readOnly]="true"
+        [disabled]="true"></textarea>
 
     <div class="d-flex align-items-center mt-3">
-        <div *ngIf="feedbackTemplate" class="flex-grow-1">
-            <ng-container *ngIf="feedbackTemplate.game?.length || feedbackTemplate.challenge?.length">
-                <ng-container *ngIf="feedbackTemplate.game?.length">
-                    <strong class="text-success">{{feedbackTemplate.game.length}}</strong>
-                    game questions
-                </ng-container>
-                <span *ngIf="feedbackTemplate?.game?.length && feedbackTemplate?.challenge?.length"> // </span>
-                <ng-container *ngIf="feedbackTemplate.challenge?.length">
-                    <strong class="text-success">{{feedbackTemplate.challenge.length}}</strong>
-                    challenge questions
-                </ng-container>
-            </ng-container>
-        </div>
-
-        <button *ngIf="feedbackTemplate" type="button" class="btn btn-success ml-2 flex-basis-50"
-            [disabled]="!sampleConfig" [appCopyOnClick]="feedbackTemplate.content">
+        <button *ngIf="feedbackConfig" type="button" class="btn btn-success ml-2 flex-basis-50"
+            [appCopyOnClick]="boundYaml">
             Copy Deprecated Template to Clipboard
         </button>
     </div>

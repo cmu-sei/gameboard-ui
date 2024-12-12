@@ -15,7 +15,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
   providers: [UnsubscriberService]
 })
 export class FeedbackEditorComponent implements OnInit {
-  @Input() feedbackTemplate?: FeedbackTemplate;
+  @Input() feedbackConfig = "";
   @Output() templateChange = new EventEmitter<FeedbackTemplate | null>();
 
   protected boundYaml = "";
@@ -40,14 +40,7 @@ export class FeedbackEditorComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sampleConfig = await this.feedbackService.getSampleYaml() || "";
-
-    if (!this.feedbackTemplate) {
-      this.updateYaml("");
-      return;
-    }
-
-    this.updateYaml(this.yamlService.render(this.feedbackTemplate || ""));
+    this.boundYaml = this.feedbackConfig;
   }
 
   protected handleAboutFeedbackClick() {
@@ -71,96 +64,5 @@ Depending on the value of **type**, additional configuration may be required. Fo
       modalClasses: ["modal-xl"],
       title: "About feedback templates"
     });
-  }
-
-  protected handlePasteSample(): void {
-    if (this.sampleConfig && this.boundYaml) {
-      this.modalService.openConfirm({
-        title: "Paste a sample feedback configuration",
-        bodyContent: `Are you sure you want to replace your current feedback configuration (**${this.feedbackTemplate?.game?.length || 0}** game questions and **${this.feedbackTemplate?.challenge?.length}** challenge questions)?`,
-        renderBodyAsMarkdown: true,
-        onConfirm: () => this.updateYaml(this.sampleConfig || "")
-      });
-
-      return;
-    }
-
-    if (this.sampleConfig) {
-      this.updateYaml(this.sampleConfig);
-    }
-  }
-
-  protected updateYaml(yamlConfig: string) {
-    // if blank, delete the configuration
-    if (!yamlConfig) {
-      this.update(undefined);
-      return;
-    }
-
-    // otherwise, only send updates when the config is valid
-    this.boundYaml = yamlConfig;
-    const feedbackTemplate = this.validateInput(yamlConfig);
-
-    if (feedbackTemplate && !this.validationMessages.length) {
-      try {
-        this.update(feedbackTemplate);
-      }
-      catch (err: any) {
-        this.validationMessages.push(err);
-      }
-    }
-  }
-
-  private update(template?: FeedbackTemplate) {
-    this.feedbackTemplate = template;
-    this.templateChangeSubject$.next(template || null);
-  }
-
-  private validateInput(input: string): FeedbackTemplate | undefined {
-    this.validationMessages = [];
-
-    let parsed: FeedbackTemplate | undefined = undefined;
-    const invalidYaml = "This isn't a valid YAML document. Try pasting the example configuration to get started.";
-
-    if (!input)
-      return parsed;
-
-    try {
-      parsed = this.yamlService.parse<FeedbackTemplate>(input);
-
-      if (!isObject(parsed)) {
-        this.validationMessages.push(invalidYaml);
-        return undefined;
-      }
-    }
-    catch (err) {
-      if (err instanceof YAMLParseError) {
-        this.validationMessages.push(invalidYaml);
-        return undefined;
-      }
-    }
-
-    if (parsed) {
-      this.validationMessages = this.validationMessages.concat(this.feedbackService.validateConfig(parsed));
-
-      // don't bother converting IDs if we're not going to pass validation
-      if (!this.validationMessages.length) {
-        // workaround for a funky thing: if the value supplied for a question's "Id" property can be evaluated
-        // as an integer, then the yaml library parses it as an integer, even if the typescript type is different
-        // (e.g. string). This just forces all IDs to be strings, which is the correct type.
-        if (parsed?.game)
-          for (const gameQuestion of parsed.game) {
-            gameQuestion.id = gameQuestion?.id?.toString() || gameQuestion.id;
-          }
-
-        if (parsed?.challenge) {
-          for (const challengeQuestion of parsed.challenge) {
-            challengeQuestion.id = challengeQuestion?.id?.toString() || challengeQuestion.id;
-          }
-        }
-      }
-    }
-
-    return parsed;
   }
 }

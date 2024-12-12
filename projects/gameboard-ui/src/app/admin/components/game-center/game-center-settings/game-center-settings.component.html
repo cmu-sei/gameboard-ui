@@ -156,7 +156,7 @@
                     (select)="handleChallengesFeedbackTemplateChanged($event)"></app-feedback-template-picker>
 
                 <app-feedback-editor *ngIf="game.feedbackConfig"
-                    [feedbackTemplate]="game.feedbackTemplate"></app-feedback-editor>
+                    [feedbackConfig]="game.feedbackConfig"></app-feedback-editor>
             </div>
 
             <div class="col-12 mt-5">
