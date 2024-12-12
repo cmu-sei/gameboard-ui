@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, NgForm } from '@angular/forms';
 import { DateTime } from 'luxon';
@@ -28,7 +28,7 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
   templateUrl: './feedback-submission-form.component.html',
   styleUrls: ['./feedback-submission-form.component.scss']
 })
-export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, OnDestroy {
+export class FeedbackSubmissionFormComponent implements OnInit, OnDestroy {
   @Input() feedbackEntity?: FeedbackSubmissionAttachedEntity;
   @Input() templateId?: string;
   @Input() isPreview = false;
@@ -63,9 +63,6 @@ export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, O
   async ngOnInit() {
     await this.load();
     this.autosaveInit();
-  }
-
-  ngAfterViewInit(): void {
   }
 
   ngOnDestroy(): void {
