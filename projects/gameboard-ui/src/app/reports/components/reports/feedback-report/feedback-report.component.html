@@ -81,9 +81,9 @@
                             <p class="subtle-info">{{ record.whenCreated | friendlyTime }}</p>
                         </td>
                         <td *ngFor="let response of record.responses"
-                            class="report-field feedback-question-column cursor-pointer"
+                            class="report-field feedback-question-column cursor-pointer overflow-ellipsis"
                             [class.numerical]="response.answer | isNumber" (click)="handleRecordClick(record)">
-                            {{ response.answer }}
+                            {{ response.answer || "--" }}
                         </td>
                     </tr>
                 </tbody>
