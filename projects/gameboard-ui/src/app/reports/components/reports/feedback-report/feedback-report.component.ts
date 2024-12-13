@@ -77,15 +77,14 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
   };
 
   protected handleRecordClick(record: FeedbackReportRecord) {
-    if (this.playerResponsesModalTemplate) {
-      this.modalService.openComponent({
-        content: PlayerFeedbackResponsesModalComponent,
-        context: {
-          record,
-          templateId: this.ctx.parameters.templateId
-        }
-      });
-    }
+    this.modalService.openComponent({
+      content: PlayerFeedbackResponsesModalComponent,
+      context: {
+        record,
+        templateId: this.ctx.parameters.templateId
+      },
+      modalClasses: ["modal-xl"]
+    });
   }
 
   protected async updateView(parameters: FeedbackReportParameters): Promise<ReportViewUpdate> {

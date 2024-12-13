@@ -11,6 +11,8 @@ import { ChallengeGate } from './board-models';
 import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
+import { YamlService } from '@/services/yaml.service';
+import { FeedbackTemplate } from './feedback-models';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -23,7 +25,8 @@ export class GameService {
 
   constructor(
     private http: HttpClient,
-    private config: ConfigService
+    private config: ConfigService,
+    private yamlService: YamlService
   ) {
     this.url = config.apphost + 'api';
   }
@@ -168,7 +171,14 @@ export class GameService {
 
     game.session = new TimeWindow(game.gameStart, game.gameEnd);
     game.registration = new TimeWindow(game.registrationOpen, game.registrationClose);
-
+    try {
+      if (game.feedbackConfig) {
+        game.feedbackTemplate = this.yamlService.parse<FeedbackTemplate>(game.feedbackConfig);
+      }
+    }
+    catch {
+      game.feedbackTemplate = undefined;
+    }
     return game;
   }
 

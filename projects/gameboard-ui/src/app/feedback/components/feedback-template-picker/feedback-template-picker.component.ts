@@ -116,9 +116,20 @@ export class FeedbackTemplatePickerComponent implements OnInit {
         helpText: model.helpText || undefined,
         name: model.name!
       });
+
+      this.toastsService.showMessage(`Your new feedback template **${model.name}** has been created. You can select it for this game or its challenges now.`);
+    } else {
+      await this.feedbackService.updateTemplate({
+        id: model.id!,
+        content: model.content!,
+        helpText: model.helpText || undefined,
+        name: model.name!
+      });
+
+      this.toastsService.showMessage(`Your feedback template **${model.name}** has been updated.`);
     }
 
-    this.toastsService.showMessage(`Your new feedback template **${model.name}** has been created. You can select it for this game or its challenges now.`);
+    await this.load();
   }
 
   protected handleDelete(template: FeedbackTemplateView) {

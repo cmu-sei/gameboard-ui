@@ -5,13 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom, Observable, of, Subject } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
-import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmissionOldAndGross, FeedbackTemplate, QuestionType } from './feedback-models';
+import { Feedback, FeedbackQuestion, FeedbackReportDetails, FeedbackSubmissionOldAndGross, FeedbackTemplate, QuestionType, UpdateFeedbackTemplateRequest } from './feedback-models';
 import { YamlService } from '@/services/yaml.service';
 import { hasProperty } from '@/../tools/functions';
 import { unique } from '@/../tools/tools';
 import { CreateFeedbackTemplate, FeedbackQuestionsConfig, FeedbackSubmissionUpsert, FeedbackSubmissionView, FeedbackTemplateView, GetFeedbackSubmissionRequest, ListFeedbackTemplatesResponse } from '@/feedback/feedback.models';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { ApiUrlService } from '@/services/api-url.service';
+import { LogService } from '@/services/log.service';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
@@ -24,13 +25,20 @@ export class FeedbackService {
   constructor(
     config: ConfigService,
     private apiUrl: ApiUrlService,
-    private http: HttpClient
+    private http: HttpClient,
+    private log: LogService
   ) {
     this.url = config.apphost + 'api';
   }
 
   public buildQuestionsFromTemplateContent(content: string): FeedbackQuestionsConfig {
-    return this.yamlService.parse<FeedbackQuestionsConfig>(content);
+    try {
+      return this.yamlService.parse<FeedbackQuestionsConfig>(content);
+    }
+    catch (err: any) {
+      this.log.logError(err);
+      return { questions: [] };
+    }
   }
 
   public async createTemplate(template: CreateFeedbackTemplate) {
@@ -137,6 +145,10 @@ export class FeedbackService {
 
   public submit(model: FeedbackSubmissionOldAndGross): Observable<Feedback> {
     return this.http.put<Feedback>(`${this.url}/feedback/submit`, model);
+  }
+
+  public updateTemplate(model: UpdateFeedbackTemplateRequest): Promise<FeedbackTemplateView> {
+    return firstValueFrom(this.http.put<FeedbackTemplateView>(`${this.url}/feedback/template/${model.id}`, model));
   }
 
   public validateConfig(config: FeedbackTemplate): string[] {

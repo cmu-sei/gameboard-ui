@@ -46,8 +46,7 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     private practiceService: PracticeService,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private unsub: UnsubscriberService,
-    private yamlService: YamlService) {
+    private unsub: UnsubscriberService) {
     this.unsub.add(this.route.data.subscribe(d => this.handleGameChange(d.gameId)));
   }
 
@@ -104,22 +103,6 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     }
 
     this.game.feedbackTemplateId = template?.id;
-    await firstValueFrom(this.gameService.update(this.game));
-  }
-
-  protected async handleFeedbackTemplateChangeOld(template?: FeedbackTemplate) {
-    if (!this.game)
-      throw new Error("Game is required");
-
-    if (template) {
-      this.game.feedbackConfig = this.yamlService.render(template);
-      this.game.feedbackTemplate = template;
-    }
-    else {
-      this.game.feedbackConfig = "";
-      this.game.feedbackTemplate = undefined;
-    }
-
     await firstValueFrom(this.gameService.update(this.game));
   }
 

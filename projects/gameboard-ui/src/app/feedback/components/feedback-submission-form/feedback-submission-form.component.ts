@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, NgForm } from '@angular/forms';
 import { DateTime } from 'luxon';
@@ -28,10 +28,9 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
   templateUrl: './feedback-submission-form.component.html',
   styleUrls: ['./feedback-submission-form.component.scss']
 })
-export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, OnDestroy {
+export class FeedbackSubmissionFormComponent implements OnInit, OnDestroy {
   @Input() feedbackEntity?: FeedbackSubmissionAttachedEntity;
   @Input() templateId?: string;
-  @Input() isAdminView = false;
   @Input() isPreview = false;
   @ViewChild(NgForm) form!: FormGroup;
 
@@ -66,18 +65,11 @@ export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, O
     this.autosaveInit();
   }
 
-  ngAfterViewInit(): void {
-  }
-
   ngOnDestroy(): void {
     this.autoUpdateSub?.unsubscribe();
   }
 
   async submit(isAutoSave = false) {
-    if (this.isAdminView) {
-      return;
-    }
-
     if (!this.feedbackEntity) {
       throw new Error("Feedback entity is required");
     }
@@ -95,6 +87,7 @@ export class FeedbackSubmissionFormComponent implements AfterViewInit, OnInit, O
         feedbackTemplateId: this.templateId,
         isFinalized: !isAutoSave,
         responses: this.submission.responses,
+        userId: this.localUser.user$.value!.id
       });
 
       this.bindSubmission(updatedSubmission);
