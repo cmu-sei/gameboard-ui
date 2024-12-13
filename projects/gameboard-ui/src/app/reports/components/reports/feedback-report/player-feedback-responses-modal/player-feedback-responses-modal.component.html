@@ -1,12 +1,17 @@
 <app-modal-content *ngIf="record" title="Feedback" [subtitle]="record.user.name" [hideCancel]="true">
+    <alert *ngIf="!record.whenFinalized" type="warning" class="my-4">
+        This player hasn't finalized their submission yet - it may change if they submit it later.
+    </alert>
     <ol>
         <li *ngFor="let response of record.responses; index as i" class="my-4">
             <strong>{{ i + 1 }}. {{ response.prompt }}</strong>
-            <div class="my-2" *ngIf="response.answer">{{ response.answer }}</div>
+            <div class="my-2" *ngIf="response.answer; else noResponse">{{ response.answer }}</div>
         </li>
     </ol>
 </app-modal-content>
 
 <ng-template #noResponse>
-    <em>(no response)</em>
+    <div>
+        <em>(no response)</em>
+    </div>
 </ng-template>

@@ -92,7 +92,7 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
 
     return {
       metaData: {
-        key: ReportKey.FeedbackReport,
+        key: ReportKey.FeedbackReportLegacy,
         title: "Feedback Report (Legacy)",
         description: "",
         isExportable: true,
