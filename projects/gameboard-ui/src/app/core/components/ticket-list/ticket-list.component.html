@@ -140,13 +140,11 @@
           </div>
           <div class="text-muted">
             <span class="font-weight-bold-">{{ticket.requester?.name}}</span>
-            <ng-container *ngIf="ticket.challenge">
-              &nbsp;&middot;&nbsp;
-              <span *ngIf="ticket.challenge" class="btn-link" [appCopyOnClick]="ticket.challenge | toSupportCode"
-                tooltip="Copy this support code">
-                {{ ticket.challenge | toSupportCode }}
-              </span>
-            </ng-container>
+            &nbsp;&middot;&nbsp;
+            <span *ngIf="ticket.challenge" class="btn-link" [appCopyOnClick]="ticket.challenge | toSupportCode"
+              tooltip="Copy this support code">
+              {{ ticket.challenge | toSupportCode }}
+            </span>
           </div>
         </div>
       </div>

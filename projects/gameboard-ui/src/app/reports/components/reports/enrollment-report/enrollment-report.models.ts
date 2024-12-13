@@ -88,10 +88,7 @@ export interface EnrollmentReportStatSummary {
 }
 
 export interface EnrollmentReportLineChartResponse {
-    games: SimpleEntity[];
     playerGroups: { [dateString: string]: EnrollmentReportLineChartGroup };
-    playerGroupsByGame: { [gameId: string]: { [dateString: string]: EnrollmentReportLineChartGroup } }
-    // public required IDictionary < string, Dictionary < DateTimeOffset, EnrollmentReportLineChartGroup >> PlayerGroupsByGame { get; set; }
     periodType: string;
     periodStart: DateTime;
     periodEnd: DateTime;
