@@ -1,3 +1,8 @@
 <div class="trend-line-container mt-4" *ngIf="chartConfig">
+    <div class="ml-3 my-3 d-flex">
+        <label class="form-label">
+            <input type="checkbox" class="d-inline form-check" [(ngModel)]="groupByGame"> Show breakdown by game
+        </label>
+    </div>
     <app-line-chart id="enrollmentTrend" [config]="chartConfig"></app-line-chart>
 </div>
