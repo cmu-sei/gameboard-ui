@@ -34,7 +34,6 @@ import { ExternalGameAdminTeamContextMenuComponent } from './components/external
 import { ExternalGameAdminComponent } from './components/external-game-admin/external-game-admin.component';
 import { ExternalGameHostPickerComponent } from './components/external-game-host-picker/external-game-host-picker.component';
 import { ExternalHostEditorComponent } from './components/external-host-editor/external-host-editor.component';
-import { FeedbackEditorComponent } from './components/feedback-editor/feedback-editor.component';
 import { GameBonusesConfigComponent } from './components/game-bonuses-config/game-bonuses-config.component';
 import { GameCenterObserveComponent } from './components/game-center/game-center-observe/game-center-observe.component';
 import { GameCenterPracticePlayerDetailComponent } from './components/game-center/game-center-practice-player-detail/game-center-practice-player-detail.component';
@@ -141,7 +140,6 @@ import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.
     SiteOverviewStatsComponent,
     AdminOverviewComponent,
     SupportSettingsComponent,
-    FeedbackEditorComponent,
     ExtendTeamsModalComponent,
     ActiveTeamsModalComponent,
     AdminEnrollTeamModalComponent,

@@ -2,7 +2,7 @@ import { Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormGroup, NgForm } from '@angular/forms';
 import { DateTime } from 'luxon';
-import { catchError, debounceTime, delay, filter, Observable, of, Subscription, tap } from 'rxjs';
+import { catchError, debounceTime, delay, filter, of, Subscription, tap } from 'rxjs';
 import { fa } from '@/services/font-awesome.service';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { FeedbackSubmissionAttachedEntity, FeedbackSubmissionView, FeedbackTemplateView } from '@/feedback/feedback.models';
@@ -12,6 +12,8 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
 import { CoreModule } from '@/core/core.module';
 import { FeedbackQuestion } from '@/api/feedback-models';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { MarkedOptions } from 'ngx-markdown';
+import { markedOptionsFactory } from '@/core/config/marked.config';
 
 @Component({
   selector: 'app-feedback-submission-form',
@@ -24,6 +26,9 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
     // components
     ErrorDivComponent,
     SpinnerComponent
+  ],
+  providers: [
+    { provide: MarkedOptions, useFactory: markedOptionsFactory }
   ],
   templateUrl: './feedback-submission-form.component.html',
   styleUrls: ['./feedback-submission-form.component.scss']

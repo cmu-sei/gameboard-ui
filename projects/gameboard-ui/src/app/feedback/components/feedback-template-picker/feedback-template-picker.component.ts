@@ -62,7 +62,8 @@ export class FeedbackTemplatePickerComponent implements OnInit {
     await this.load();
 
     this.unsub.add(
-      this.feedbackService.deleted$.subscribe(async () => await this.load())
+      this.feedbackService.templatesDeleted$.subscribe(async () => await this.load()),
+      this.feedbackService.templatesUpdated$.subscribe(async () => await this.load())
     );
   }
 

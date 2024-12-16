@@ -19,8 +19,11 @@ export class FeedbackService {
   private url = '';
   private yamlService = inject(YamlService);
 
-  private _deleted$ = new Subject<string>();
-  public deleted$ = this._deleted$.asObservable();
+  private _templatesDeleted$ = new Subject<string>();
+  public templatesDeleted$ = this._templatesDeleted$.asObservable();
+
+  private _templatesUpdated$ = new Subject<void>();
+  public templatesUpdated$ = this._templatesUpdated$.asObservable();
 
   constructor(
     config: ConfigService,
@@ -47,7 +50,7 @@ export class FeedbackService {
 
   public async deleteTemplate(template: FeedbackTemplateView) {
     await firstValueFrom(this.http.delete(`${this.url}/feedback/template/${template.id}`));
-    this._deleted$.next(template.id);
+    this._templatesDeleted$.next(template.id);
   }
 
   public async getTemplate(templateId: string): Promise<FeedbackTemplateView> {

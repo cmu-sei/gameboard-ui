@@ -24,9 +24,13 @@
   <app-external-game-link-banner *ngIf="ctx?.player?.teamId && ctx?.game?.id" [gameId]="ctx.game.id"
     [teamId]="ctx.player.teamId"></app-external-game-link-banner>
 
-  <app-late-start-banner *ngIf="ctx?.player && ctx?.game && !ctx?.player?.session?.isDuring"
+  <app-late-start-banner *ngIf="ctx?.player?.teamId && ctx?.game && !ctx?.player?.session?.isDuring"
     [sessionLengthMinutes]="ctx.game.sessionMinutes" [gameEnd]="ctx.game.gameEnd | apiDate"
     [gameAllowsLateStart]="ctx.game.allowLateStart"></app-late-start-banner>
+
+  <!--if the user is registered, and if they haven't started yet, enable the availability checker (depends on the game's settings) -->
+  <app-game-session-availability-warning *ngIf="ctx.player?.teamId && ctx.player?.session?.isBefore"
+    [game]="ctx.game"></app-game-session-availability-warning>
 
   <div class="container-fluid">
     <div class="p-4">
@@ -57,23 +61,25 @@
       <!-- if auth'd -->
       <ng-container *ngIf="!!ctx.user.id">
 
-        <!-- if enrolled -->
-        <ng-container *ngIf="!!ctx.player.id && ctx.player.session">
-          <div class="col panel">
-            <h2>Status</h2>
-            <app-player-session [ctx$]="ctx$!" (onSessionStart)="onSessionStarted($event)"
-              (onSessionReset)="onSessionReset($event)"></app-player-session>
-          </div>
-        </ng-container>
+        <ng-container *ngIf="!ctx.game.isPracticeMode; else practiceMode">
+          <!-- if enrolled -->
+          <ng-container *ngIf="!!ctx.player.id && ctx.player.session">
+            <div class="col panel">
+              <h2>Status</h2>
+              <app-player-session [ctx$]="ctx$!" (onSessionStart)="onSessionStarted($event)"
+                (onSessionReset)="onSessionReset($event)"></app-player-session>
+            </div>
+          </ng-container>
 
-        <!-- if session hasn't started -->
-        <ng-container
-          *ngIf="(!ctx.game.registration.isAfter || (canAdminEnroll$ | async)) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
-          <div class="col panel">
-            <h2>Enrollment</h2>
-            <app-player-enroll [ctx]="ctx" (onEnroll)="onEnroll($event)"
-              (onUnenroll)="onUnenroll($event)"></app-player-enroll>
-          </div>
+          <!-- if session hasn't started -->
+          <ng-container
+            *ngIf="(!ctx.game.registration.isAfter || (canAdminEnroll$ | async)) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
+            <div class="col panel">
+              <h2>Enrollment</h2>
+              <app-player-enroll [ctx]="ctx" (onEnroll)="onEnroll($event)"
+                (onUnenroll)="onUnenroll($event)"></app-player-enroll>
+            </div>
+          </ng-container>
         </ng-container>
       </ng-container>
 
@@ -113,4 +119,18 @@
   </div>
 
   <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #practiceMode>
+  <div class="col panel">
+    <h2>Practice Mode</h2>
+
+    <div class="card p-4">
+      <p class="text-muted">
+        This game is now in Practice mode. If you want to try your hand
+        at its challenges, head over to the
+        <a [href]="practiceUrl">Practice Area</a>.
+      </p>
+    </div>
+  </div>
 </ng-template>

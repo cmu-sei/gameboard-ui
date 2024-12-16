@@ -8,7 +8,7 @@ import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, GameGroup, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, Game, GameGroup, GameSessionAvailibilityResponse, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 import { YamlService } from '@/services/yaml.service';
@@ -81,6 +81,10 @@ export class GameService {
 
   public deployResources(gameId: string, teamIds: string[]) {
     return firstValueFrom(this.http.post(`${this.url}/game/${gameId}/resources`, { teamIds }));
+  }
+
+  public getSessionAvailability(gameId: string): Promise<GameSessionAvailibilityResponse> {
+    return firstValueFrom(this.http.get<GameSessionAvailibilityResponse>(`${this.url}/game/${gameId}/session-availability`));
   }
 
   public getSyncStartState(gameId: string): Observable<SyncStartGameState> {

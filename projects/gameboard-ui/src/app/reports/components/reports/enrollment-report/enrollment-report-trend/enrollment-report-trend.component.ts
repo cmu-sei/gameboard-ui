@@ -1,17 +1,19 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { EnrollmentReportFlatParameters } from '../enrollment-report.models';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { EnrollmentReportFlatParameters, EnrollmentReportLineChartViewModel } from '../enrollment-report.models';
 import { EnrollmentReportService } from '../enrollment-report.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-enrollment-report-trend',
   templateUrl: './enrollment-report-trend.component.html',
   styleUrls: ['./enrollment-report-trend.component.scss']
 })
-export class EnrollmentReportTrendComponent implements OnInit {
+export class EnrollmentReportTrendComponent {
   @Input() parameters: EnrollmentReportFlatParameters | null = null;
 
   protected chartConfig?: LineChartConfig;
+  protected groupByGame = false;
 
   constructor(private enrollmentReportService: EnrollmentReportService) { }
 
@@ -19,16 +21,32 @@ export class EnrollmentReportTrendComponent implements OnInit {
     if (!changes.parameters)
       return;
 
+    await this.loadChart();
+  }
+
+  protected async handleGroupByGameChange() {
+    await this.loadChart();
+  }
+
+  private async loadChart() {
     const lineChartResults = await this.enrollmentReportService.getTrendData(this.parameters);
+    if (this.groupByGame) {
+      this.buildLineChartByGameByDate(lineChartResults);
+    } else {
+      this.buildLineChartByDate(lineChartResults);
+    }
+  }
+
+  private buildLineChartByDate(viewModel: EnrollmentReportLineChartViewModel) {
     this.chartConfig = {
       type: 'line',
       data: {
-        labels: Array.from(lineChartResults.keys()).map(k => k as any),
+        labels: Array.from(viewModel.byDate.keys()).map(k => k as any),
         datasets: [
           {
             label: "Enrolled players",
-            data: Array.from(lineChartResults.values()).map(g => g.totalCount),
-            backgroundColor: 'blue',
+            data: Array.from(viewModel.byDate.values()),
+            backgroundColor: 'green',
           },
         ]
       },
@@ -59,7 +77,40 @@ export class EnrollmentReportTrendComponent implements OnInit {
     };
   }
 
-  async ngOnInit(): Promise<void> {
-
+  private buildLineChartByGameByDate(viewModel: EnrollmentReportLineChartViewModel) {
+    this.chartConfig = {
+      type: 'line',
+      data: {
+        labels: Array.from(viewModel.byDate.keys()).map(k => k as any),
+        datasets: Array.from(viewModel.byGameByDate.keys()).map(gameId => ({
+          label: viewModel.gameNames[gameId],
+          data: Array.from(viewModel.byGameByDate.get(gameId)!.values())
+        }))
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              displayFormats: {
+                day: "MM/dd/yy",
+              },
+              tooltipFormat: 'DD',
+              unit: "day"
+            },
+            title: {
+              display: true,
+              text: "Enrollment Date"
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Players Enrolled"
+            }
+          }
+        }
+      }
+    };
   }
 }

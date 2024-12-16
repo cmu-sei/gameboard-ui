@@ -40,6 +40,7 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
 import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
 import { ScoreboardPageComponent } from '@/scoreboard/components/scoreboard-page/scoreboard-page.component';
 import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
+import { GameSessionAvailabilityWarningComponent } from "./components/game-session-availability-warning/game-session-availability-warning.component";
 
 const MODULE_DECLARATIONS = [
   CertificateComponent,
@@ -88,7 +89,8 @@ const MODULE_DECLARATIONS = [
     FeedbackSubmissionFormComponent,
     SafeUrlPipe,
     SpinnerComponent,
-    FeedbackSubmissionFormComponent
+    FeedbackSubmissionFormComponent,
+    GameSessionAvailabilityWarningComponent
   ]
 })
 export class GameModule { }

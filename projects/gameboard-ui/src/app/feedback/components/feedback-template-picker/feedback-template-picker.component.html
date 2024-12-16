@@ -23,8 +23,14 @@
                         tooltip="Preview this feedback template">
                         <fa-icon [icon]="fa.eye"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-success btn-sm" (click)="handleEdit(selectedTemplate)">
+                    <button *ngIf="selectedTemplate.responseCount == 0" type="button" class="btn btn-success btn-sm"
+                        (click)="handleEdit(selectedTemplate)">
                         <fa-icon [icon]="fa.edit"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm" [appCopyOnClick]="selectedTemplate.content"
+                        tooltip="Copy this template's YAML configuration"
+                        appCopyOnClickMessage="Copied this template's YAML to your clipboard.">
+                        <fa-icon [icon]="fa.copy"></fa-icon>
                     </button>
                     <button type="button" class="btn btn-danger btn-sm" (click)="handleDelete(selectedTemplate)">
                         <fa-icon [icon]="fa.trash"></fa-icon>

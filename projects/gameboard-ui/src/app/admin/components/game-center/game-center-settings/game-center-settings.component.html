@@ -154,9 +154,6 @@
                 <app-feedback-template-picker labelText="Challenges Feedback Template"
                     [(templateId)]="game.challengesFeedbackTemplateId"
                     (select)="handleChallengesFeedbackTemplateChanged($event)"></app-feedback-template-picker>
-
-                <app-feedback-editor *ngIf="game.feedbackConfig"
-                    [feedbackConfig]="game.feedbackConfig"></app-feedback-editor>
             </div>
 
             <div class="col-12 mt-5">
@@ -303,7 +300,7 @@
 
                 </div>
 
-                <div *ngIf="game.gameStart > game.gameEnd" class="row form-group">
+                <div *ngIf="game.gameEnd && game.gameStart > game.gameEnd" class="row form-group">
                     <alert type="warning" class="col-12">The game's open date must be less than its close date.</alert>
                 </div>
 
@@ -320,6 +317,18 @@
                     <input type="number" class="form-control" id="sessionLimit-input" name="sessionLimit"
                         [(ngModel)]="game.sessionLimit">
                     <small>total concurrent sessions allowed for game</small>
+                </div>
+
+                <div class="form-group pb-0 pt-1">
+                    <label for="sessionAvailabilityWarningThreshold-input">Session Availability Warning
+                        Threshold</label>
+                    <input type="number" class="form-control" id="sessionLimit-input"
+                        name="sessionAvailabilityWarningThreshold"
+                        [(ngModel)]="game.sessionAvailabilityWarningThreshold">
+                    <small>
+                        If set, shows a warning when the number of currently-available sessions drops below this
+                        number
+                    </small>
                 </div>
 
                 <div class="form-group pb-0 pt-1">
