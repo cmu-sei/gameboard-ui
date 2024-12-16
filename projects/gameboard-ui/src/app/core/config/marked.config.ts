@@ -7,6 +7,10 @@ export function markedOptionsFactory(): MarkedOptions {
         return `<div class="text-center"><img class="img-fluid rounded" src=${href} alt="${text}" /></div>`;
     };
 
+    renderer.link = (href, title, text) => {
+        return `<a role="link" target="_blank" href="${href}" rel="nofollow noopener noreferrer">{{ ${text} }}</a>`;
+    };
+
     renderer.blockquote = (quote) => {
         return `<blockquote class="blockquote">${quote}</blockquote>`;
     };

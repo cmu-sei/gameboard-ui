@@ -88,18 +88,39 @@ export interface EnrollmentReportStatSummary {
 }
 
 export interface EnrollmentReportLineChartResponse {
-    playerGroups: { [dateString: string]: EnrollmentReportLineChartGroup };
+    byDate: { [dateString: string]: EnrollmentReportLineChartPlayerGame[] }
+    byGameByDate: {
+        [gameId: string]: {
+            [dateString: string]: EnrollmentReportLineChartPlayerGame[];
+        }
+    }
+    games: { [gameId: string]: string };
+    players: { [playerId: string]: EnrollmentReportLineChartPlayer }
     periodType: string;
     periodStart: DateTime;
     periodEnd: DateTime;
 }
 
-export interface EnrollmentReportLineChartGroup {
+export interface EnrollmentReportLineChartPlayer {
+    id: string;
+    name: string;
+    game: SimpleEntity;
+    enrollDate: Date;
+}
+
+export interface EnrollmentReportLineChartPlayerGame {
+    id: string;
+    gameId: string;
+}
+
+// these areclient side models that represents the data after it's been structured from the API
+export interface EnrollmentReportLineChartViewModel {
+    byDate: Map<DateTime, EnrollmentReportLineChartGroupViewModel>;
+    byGameByDate: Map<string, Map<DateTime, EnrollmentReportLineChartGroupViewModel>>;
+    gameNames: { [gameId: string]: string };
+}
+
+export interface EnrollmentReportLineChartGroupViewModel {
     totalCount: number;
-    players: {
-        id: string;
-        name: string;
-        game: SimpleEntity,
-        enrollDate: Date
-    }[];
+    players: EnrollmentReportLineChartPlayer[];
 }

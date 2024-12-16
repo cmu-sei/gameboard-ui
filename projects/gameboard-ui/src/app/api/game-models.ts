@@ -1,6 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { DateTime } from "luxon";
 import { FeedbackTemplate } from "./feedback-models";
 import { SimpleEntity } from "./models";
 import { Player, PlayerMode, TimeWindow } from "./player-models";
@@ -36,6 +37,7 @@ export interface GameDetail {
   maxTeamSize: number;
   sessionMinutes: number;
   sessionLimit: number;
+  sessionAvailabilityWarningThreshold?: number;
   gamespaceLimitPerSession: number;
   isPublished: boolean;
   requireSponsoredTeam: boolean;
@@ -168,6 +170,12 @@ export interface UpsertExternalGameHost {
   pingEndpoint?: string;
   teamExtendedEndpoint?: string;
 }
+
+export interface GameSessionAvailibilityResponse {
+  nextSessionEnd?: DateTime
+  sessionsAvailable: number
+}
+
 
 export interface GetExternalTeamDataResponse {
   teamId: string;

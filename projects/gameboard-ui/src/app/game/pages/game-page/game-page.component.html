@@ -24,9 +24,13 @@
   <app-external-game-link-banner *ngIf="ctx?.player?.teamId && ctx?.game?.id" [gameId]="ctx.game.id"
     [teamId]="ctx.player.teamId"></app-external-game-link-banner>
 
-  <app-late-start-banner *ngIf="ctx?.player && ctx?.game && !ctx?.player?.session?.isDuring"
+  <app-late-start-banner *ngIf="ctx?.player?.teamId && ctx?.game && !ctx?.player?.session?.isDuring"
     [sessionLengthMinutes]="ctx.game.sessionMinutes" [gameEnd]="ctx.game.gameEnd | apiDate"
     [gameAllowsLateStart]="ctx.game.allowLateStart"></app-late-start-banner>
+
+  <!--if the user is registered, and if they haven't started yet, enable the availability checker (depends on the game's settings) -->
+  <app-game-session-availability-warning *ngIf="ctx.player?.teamId && ctx.player?.session?.isBefore"
+    [game]="ctx.game"></app-game-session-availability-warning>
 
   <div class="container-fluid">
     <div class="p-4">

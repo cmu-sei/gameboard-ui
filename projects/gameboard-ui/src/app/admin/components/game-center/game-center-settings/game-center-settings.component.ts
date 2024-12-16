@@ -2,13 +2,11 @@ import { KeyValue } from '@angular/common';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { debounceTime, filter, firstValueFrom, switchMap, tap } from 'rxjs';
-import { FeedbackTemplate } from '@/api/feedback-models';
 import { ExternalGameHost, Game, GameEngineMode, GameRegistrationType } from '@/api/game-models';
 import { GameService } from '@/api/game.service';
 import { fa } from '@/services/font-awesome.service';
 import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { YamlService } from '@/services/yaml.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackTemplateView } from '@/feedback/feedback.models';
@@ -167,7 +165,7 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     if (game.minTeamSize > game.maxTeamSize)
       return false;
 
-    if (game.gameStart > game.gameEnd)
+    if (game.gameEnd && new Date(game.gameEnd).getFullYear() > 1 && game.gameStart > game.gameEnd)
       return false;
 
     if (game.registrationType == GameRegistrationType.open && game.registrationOpen > game.registrationClose)

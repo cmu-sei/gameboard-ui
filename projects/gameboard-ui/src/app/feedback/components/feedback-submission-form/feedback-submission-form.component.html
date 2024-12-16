@@ -63,7 +63,8 @@
                                         [disabled]="feedbackForm.submitted! || isPreview" id="check-{{q.id}}-{{option}}"
                                         [name]="q.id" [value]="option">
 
-                                    {{option}}{{q.specify && q.specify.key ==
+                                    <span [innerHTML]="option | markdown"></span>
+                                    {{q.specify && q.specify.key ==
                                     option ? ": " +
                                     (q.specify.prompt ? q.specify.prompt : "") : "" }}
                                 </label>
@@ -87,10 +88,10 @@
                                     [checked]="q.answer && q.answer!.indexOf(option) > -1"
                                     [disabled]="feedbackForm.submitted!" id="check-{{q.id}}-{{option}}" [name]="option"
                                     [value]="option">
-                                <label class="form-check-label" for="{{option}}">{{option}}{{q.specify && q.specify.key
-                                    ==
-                                    option ? ": " +
-                                    (q.specify.prompt ? q.specify.prompt : "") : "" }}</label>
+                                <label class="form-check-label" for="{{option}}">
+                                    <span [innerHTML]="option | markdown"></span>
+                                    {{q.specify && q.specify.key == option ? ": " + (q.specify.prompt ?
+                                    q.specify.prompt : "") : "" }}</label>
                                 <br>
                                 <textarea *ngIf="q.specify && q.specify.key == option" rows="1" type="text"
                                     [disabled]="feedbackForm.submitted!"
@@ -145,4 +146,8 @@
 
 <ng-template #noResponse>
     <em>(no response)</em>
+</ng-template>
+
+<ng-template #markdownOption let-content>
+    <span [innerHTML]="content | markdown"></span>
 </ng-template>

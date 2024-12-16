@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,6 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 // other 3rd party modules
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { NgChartsModule } from 'ng2-charts';
 // import luxon adapter for chartjs
 import 'chartjs-adapter-luxon';
@@ -120,9 +119,9 @@ import { ObserverConsoleComponent } from './components/observer-console/observer
 import { TicketLabelPickerComponent } from './components/ticket-label-picker/ticket-label-picker.component';
 import { GameMapImageUrlPipe } from './pipes/game-map-image-url.pipe';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
-import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
+import { MarkdownModule } from 'ngx-markdown';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -260,19 +259,11 @@ const RELAYED_MODULES = [
     HttpClientModule,
     ProgressbarModule,
     TooltipModule,
-    MarkdownModule.forRoot({
-      loader: HttpClient,
-      markedOptions: {
-        provide: MarkedOptions,
-        useFactory: markedOptionsFactory,
-      },
-    }),
     PopoverModule.forRoot(),
     TypeaheadModule.forRoot(),
     ...RELAYED_MODULES,
 
     // standalones
-    ErrorDivComponent,
     IfHasPermissionDirective,
     SpinnerComponent,
     ToSupportCodePipe
@@ -281,7 +272,7 @@ const RELAYED_MODULES = [
     CommonModule,
     ...RELAYED_MODULES,
     ...PUBLIC_DECLARATIONS,
-    IfHasPermissionDirective,
+    IfHasPermissionDirective
   ]
 })
 export class CoreModule { }

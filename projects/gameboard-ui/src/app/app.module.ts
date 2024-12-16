@@ -35,6 +35,8 @@ import { SignalRService } from './services/signalR/signalr.service';
 import { LogService } from './services/log.service';
 import { SystemNotificationsModule } from './system-notifications/system-notifications.module';
 import { UserNavItemComponent } from './standalone/user/components/user-nav-item/user-nav-item.component';
+import { markedOptionsFactory } from './core/config/marked.config';
+import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { UserNavItemComponent } from './standalone/user/components/user-nav-item
     SystemNotificationsModule,
     CoreModule,
     UtilityModule,
+    MarkdownModule.forRoot(),
     TooltipModule.forRoot(),
     TypeaheadModule.forRoot(),
     ButtonsModule.forRoot(),
@@ -75,6 +78,10 @@ import { UserNavItemComponent } from './standalone/user/components/user-nav-item
       provide: SignalRService,
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
       deps: [ConfigService, LogService, UserService],
+    },
+    {
+      provide: MarkedOptions,
+      useFactory: markedOptionsFactory
     },
     {
       provide: [NotificationService],

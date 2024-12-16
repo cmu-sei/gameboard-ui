@@ -3,7 +3,6 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MarkdownModule } from 'ngx-markdown';
 import { CamelspacePipe } from '../../pipes/camelspace.pipe';
 import { AlertModule } from 'ngx-bootstrap/alert';
 
@@ -13,7 +12,6 @@ import { AlertModule } from 'ngx-bootstrap/alert';
   imports: [
     CommonModule,
     AlertModule,
-    MarkdownModule,
     CamelspacePipe
   ],
   template: `

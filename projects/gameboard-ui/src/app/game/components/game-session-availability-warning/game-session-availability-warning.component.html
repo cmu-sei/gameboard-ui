@@ -1,0 +1,18 @@
+<alert type="danger" class="m-4"
+    *ngIf="!!availability && !!game && game.sessionAvailabilityWarningThreshold && availability.sessionsAvailable < game.sessionAvailabilityWarningThreshold">
+    This game limits the number of simultaneous players. Currently, there are
+    <strong>
+        {{ availability.sessionsAvailable == 0 ? "no" : availability.sessionsAvailable + ' ' + ('session' |
+        pluralizer:availability.sessionsAvailable)
+        }}
+        sessions
+    </strong>
+    available. This estimate is only updated periodically, so if you're unable to start a session, please try again in a
+    bit.
+    <ng-container *ngIf="availability.nextSessionEnd">
+        The next active session to end will do so at
+        <strong>
+            {{ availability.nextSessionEnd | friendlyDateAndTime }}
+        </strong>.
+    </ng-container>
+</alert>
