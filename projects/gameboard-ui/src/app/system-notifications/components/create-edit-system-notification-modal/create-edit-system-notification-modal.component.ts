@@ -40,6 +40,7 @@ export class CreateEditSystemNotificationModalComponent implements OnInit {
   }
 
   protected async handleSave(model: CreateEditSystemNotification) {
+    model.isDismissible = model.isDismissible || false;
     if (model.id)
       await firstValueFrom(this.systemNotificationsService.updateNotification(model));
     else
