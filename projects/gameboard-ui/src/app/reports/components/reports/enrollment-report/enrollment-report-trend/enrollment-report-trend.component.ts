@@ -45,7 +45,7 @@ export class EnrollmentReportTrendComponent {
         datasets: [
           {
             label: "Enrolled players",
-            data: Array.from(viewModel.byDate.values()).map(g => g.totalCount),
+            data: Array.from(viewModel.byDate.values()),
             backgroundColor: 'green',
           },
         ]
@@ -84,10 +84,7 @@ export class EnrollmentReportTrendComponent {
         labels: Array.from(viewModel.byDate.keys()).map(k => k as any),
         datasets: Array.from(viewModel.byGameByDate.keys()).map(gameId => ({
           label: viewModel.gameNames[gameId],
-          data: Array.from<DateTime>(viewModel.byGameByDate.get(gameId)!.keys()).map(date => {
-            const players = viewModel.byGameByDate.get(gameId)?.get(date);
-            return players?.totalCount || 0;
-          })
+          data: Array.from(viewModel.byGameByDate.get(gameId)!.values())
         }))
       },
       options: {

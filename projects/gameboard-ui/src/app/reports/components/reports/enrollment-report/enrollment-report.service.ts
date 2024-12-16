@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters, EnrollmentReportLineChartViewModel, EnrollmentReportLineChartResponse, EnrollmentReportRecord, EnrollmentReportStatSummary, EnrollmentReportLineChartGroupViewModel } from './enrollment-report.models';
+import { EnrollmentReportByGameRecord, EnrollmentReportFlatParameters, EnrollmentReportLineChartViewModel, EnrollmentReportLineChartResponse, EnrollmentReportRecord, EnrollmentReportStatSummary } from './enrollment-report.models';
 import { Observable, firstValueFrom, map, } from 'rxjs';
 import { ReportResults } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
@@ -50,24 +50,18 @@ export class EnrollmentReportService {
       .get<EnrollmentReportLineChartResponse>(this.apiUrl.build("reports/enrollment/trend", trendParams))
       .pipe(
         map(results => {
-          const byDate = new Map<DateTime, EnrollmentReportLineChartGroupViewModel>();
-          const byGameByDate = new Map<string, Map<DateTime, EnrollmentReportLineChartGroupViewModel>>();
+          const byDate = new Map<DateTime, number>();
+          const byGameByDate = new Map<string, Map<DateTime, number>>();
 
           for (const group of Object.entries(results.byDate)) {
-            byDate.set(DateTime.fromISO(group[0]), {
-              totalCount: group[1].length,
-              players: group[1].map(playerGame => results.players[playerGame.id])
-            });
+            byDate.set(DateTime.fromISO(group[0]), group[1]);
           }
 
           for (const gameGroup of Object.entries(results.byGameByDate)) {
-            const gameDateGroups = new Map<DateTime, EnrollmentReportLineChartGroupViewModel>();
+            const gameDateGroups = new Map<DateTime, number>();
 
             for (const dateGroup of Object.entries(gameGroup[1])) {
-              gameDateGroups.set(DateTime.fromISO(dateGroup[0]), {
-                totalCount: dateGroup[1].length,
-                players: dateGroup[1].map(playerGame => results.players[playerGame.id])
-              });
+              gameDateGroups.set(DateTime.fromISO(dateGroup[0]), dateGroup[1]);
             }
 
             byGameByDate.set(gameGroup[0], gameDateGroups);
