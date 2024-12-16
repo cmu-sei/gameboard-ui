@@ -8,7 +8,7 @@ export function markedOptionsFactory(): MarkedOptions {
     };
 
     renderer.link = (href, title, text) => {
-        return `<a role="link" target="_blank" href="${href}" rel="nofollow noopener noreferrer">{{ ${text} }}</a>`;
+        return `<a role="link" target="_blank" href="${href}" rel="nofollow noopener noreferrer">${text}</a>`;
     };
 
     renderer.blockquote = (quote) => {
