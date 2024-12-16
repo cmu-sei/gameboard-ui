@@ -47,6 +47,7 @@ export class GamePageComponent implements OnDestroy {
   protected fa = fa;
   protected isExternalGame = false;
   protected player$ = new BehaviorSubject<Player | null>(null);
+  protected practiceUrl = "";
 
   private hubEventsSubcription: Subscription;
   private localUserSubscription: Subscription;
@@ -79,6 +80,7 @@ export class GamePageComponent implements OnDestroy {
       tap(g => this.ctxIds.gameId = g.id),
       tap(g => this.isExternalGame = g.mode == "external"),
       tap(g => this.titleService.set(g.name)),
+      tap(g => this.practiceUrl = this.routerService.getPracticeAreaUrl(g.id).toString()),
     );
 
     this.localUserSubscription = combineLatest([

@@ -66,11 +66,7 @@ export class LandingComponent {
   }
 
   selected(game: Game | BoardGame): void {
-    if (game.isPracticeMode) {
-      this.routerService.toPracticeAreaWithSearch(game.id);
-    } else {
-      this.router.navigate(['/game', game.id]);
-    }
+    this.router.navigate(['/game', game.id]);
   }
 
   on(g: Game): void {

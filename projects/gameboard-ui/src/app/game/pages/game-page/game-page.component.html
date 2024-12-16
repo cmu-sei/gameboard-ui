@@ -61,23 +61,25 @@
       <!-- if auth'd -->
       <ng-container *ngIf="!!ctx.user.id">
 
-        <!-- if enrolled -->
-        <ng-container *ngIf="!!ctx.player.id && ctx.player.session">
-          <div class="col panel">
-            <h2>Status</h2>
-            <app-player-session [ctx$]="ctx$!" (onSessionStart)="onSessionStarted($event)"
-              (onSessionReset)="onSessionReset($event)"></app-player-session>
-          </div>
-        </ng-container>
+        <ng-container *ngIf="!ctx.game.isPracticeMode; else practiceMode">
+          <!-- if enrolled -->
+          <ng-container *ngIf="!!ctx.player.id && ctx.player.session">
+            <div class="col panel">
+              <h2>Status</h2>
+              <app-player-session [ctx$]="ctx$!" (onSessionStart)="onSessionStarted($event)"
+                (onSessionReset)="onSessionReset($event)"></app-player-session>
+            </div>
+          </ng-container>
 
-        <!-- if session hasn't started -->
-        <ng-container
-          *ngIf="(!ctx.game.registration.isAfter || (canAdminEnroll$ | async)) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
-          <div class="col panel">
-            <h2>Enrollment</h2>
-            <app-player-enroll [ctx]="ctx" (onEnroll)="onEnroll($event)"
-              (onUnenroll)="onUnenroll($event)"></app-player-enroll>
-          </div>
+          <!-- if session hasn't started -->
+          <ng-container
+            *ngIf="(!ctx.game.registration.isAfter || (canAdminEnroll$ | async)) && (!ctx.player.id || !ctx.player.session || ctx.player.session.isBefore)">
+            <div class="col panel">
+              <h2>Enrollment</h2>
+              <app-player-enroll [ctx]="ctx" (onEnroll)="onEnroll($event)"
+                (onUnenroll)="onUnenroll($event)"></app-player-enroll>
+            </div>
+          </ng-container>
         </ng-container>
       </ng-container>
 
@@ -117,4 +119,18 @@
   </div>
 
   <app-spinner></app-spinner>
+</ng-template>
+
+<ng-template #practiceMode>
+  <div class="col panel">
+    <h2>Practice Mode</h2>
+
+    <div class="card p-4">
+      <p class="text-muted">
+        This game is now in Practice mode. If you want to try your hand
+        at its challenges, head over to the
+        <a [href]="practiceUrl">Practice Area</a>.
+      </p>
+    </div>
+  </div>
 </ng-template>
