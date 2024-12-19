@@ -20,6 +20,7 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 import { EpochMsToTimeRemainingStringPipe } from '@/standalone/core/pipes/epoch-ms-to-time-remaining.pipe';
 import { EpochMsToMsRemainingPipe } from '@/standalone/core/pipes/epoch-ms-to-ms-remaining.pipe';
 import { InfoBubbleComponent } from '@/standalone/core/components/info-bubble/info-bubble.component';
+import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
 
 @NgModule({
   declarations: [
@@ -46,14 +47,14 @@ import { InfoBubbleComponent } from '@/standalone/core/components/info-bubble/in
       }
     ]),
     GameModule,
-
     // standalones
     EpochMsToMsRemainingPipe,
     EpochMsToTimeRemainingStringPipe,
     ErrorDivComponent,
     InfoBubbleComponent,
     PlayComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    FeedbackSubmissionFormComponent
   ]
 })
 export class PracModule { }

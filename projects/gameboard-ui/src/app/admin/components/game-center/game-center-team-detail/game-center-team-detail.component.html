@@ -15,48 +15,49 @@
     </div>
 
     <ng-container>
-        <h4 class="mt-4 px-3">Team Management</h4>
-        <div class="name-management">
-            <ul class="container mx-0">
-                <li class="row">
-                    <div class="col-3">
-                        <label class="mb-0 text-muted">Current Name</label>
-                    </div>
-                    <div class="col-4">
-                        <label class="mb-0 text-muted">Requested Name</label>
-                    </div>
-                    <div class="col-3">
-                        <label class="mb-0 text-muted" for="reason-input">Reason for Change</label>
-                    </div>
-                </li>
-                <li *ngFor="let player of team.players" class="row mb-2">
-                    <div class="col-3">
-                        <div class="fs-10 player-current-name">{{ player.name }}</div>
-                    </div>
-                    <div class="col-4">
-                        <input type="text" class="form-control" name="pending-name-input-{{player.id}}" type="text"
-                            [placeholder]="(player.pendingName ? 'Name this player (requested: ' + player.pendingName + ')' : 'No pending name change requests from this player')"
-                            minlength="2" [value]="player.pendingName" #pendingNameInput>
-                    </div>
-                    <div class="col-3">
-                        <select name="reason-select" class="form-control" #reasonSelect>
-                            <option [value]="''">[not disapproved]</option>
-                            <option *ngFor="let reason of reasons" [value]="reason">
-                                {{reason}}
-                            </option>
-                        </select>
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-warning mr-2"
-                            [disabled]="pendingNameInput.value.length < 2"
-                            (click)="approveName(player.id, { name: pendingNameInput.value, revisionReason: reasonSelect.value })">Approve</button>
+        <div class="mt-4 px-3">
+            <h4>Team Management</h4>
+            <table class="width-100">
+                <col class="width-20">
+                <col class="width-20">
+                <col class="width-20">
+                <col class="width-20">
+                <col class="width-20">
 
-                        <button type="button" class="btn btn-danger"
-                            [disabled]="team.players.length == 1 || (player.id === team.captain.id)"
-                            (click)="handleRemovePlayerConfirm(player)">Remove</button>
-                    </div>
-                </li>
-            </ul>
+                <thead>
+                    <th>Name</th>
+                    <th>Requested Name</th>
+                    <th>Override Name</th>
+                    <th>Status</th>
+                    <th></th>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let player of team.players">
+                        <td>{{ player.name }}</td>
+                        <td>{{ player.pendingName || "--" }}</td>
+                        <td>
+                            <input type="text" class="form-control" placeholder="Enter a name" #overrideName>
+                        </td>
+                        <td>
+                            <select name="reason-select" class="form-control" #reasonSelect>
+                                <option [value]="''">[approved]</option>
+                                <option *ngFor="let reason of reasons" [value]="reason">
+                                    {{reason}}
+                                </option>
+                            </select>
+                        </td>
+                        <td class="d-flex align-items-center justify-content-center">
+                            <button type="button" class="btn btn-warning mr-2"
+                                (click)="updateNameChangeRequest(player.id, overrideName.value, { requestedName: player.pendingName || '', approvedName: player.name || '', status: reasonSelect.value })">Update</button>
+
+                            <button type="button" class="btn btn-danger"
+                                [disabled]="team.players.length == 1 || (player.id === team.captain.id)"
+                                (click)="handleRemovePlayerConfirm(player)">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </ng-container>
 
@@ -81,9 +82,6 @@
         </div>
 
         <h4 class="px-3 mr-1">Timeline</h4>
-        <!-- <div class="d-flex align-items-baseline">
-            
-        </div> -->
         <div class="timeline-container px-3 mb-4">
             <app-team-event-horizon [teamId]="team.id"></app-team-event-horizon>
         </div>

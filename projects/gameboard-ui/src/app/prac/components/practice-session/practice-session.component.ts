@@ -153,6 +153,7 @@ export class PracticeSessionComponent implements OnInit {
           challenge
         }
       },
+      modalClasses: ["modal-xl"]
     });
   }
 

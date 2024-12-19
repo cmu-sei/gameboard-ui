@@ -10,6 +10,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackTemplateView } from '@/feedback/feedback.models';
+import { CertificateTemplateView } from '@/certificates/certificates.models';
 
 export type SelectedSubTab = "settings" | "modes" | "registration";
 
@@ -84,6 +85,24 @@ export class GameCenterSettingsComponent implements AfterViewInit {
       await firstValueFrom(this.gameService.update(this.game));
       this.toastService.showMessage(`Changed to host **${host.name}**`);
     }
+  }
+
+  protected async handleCertificateTemplateChanged(template?: CertificateTemplateView) {
+    if (!this.game) {
+      throw new Error("Game is required");
+    }
+
+    this.game.certificateTemplateId = template?.id;
+    await firstValueFrom(this.gameService.update(this.game));
+  }
+
+  protected async handlePracticeCertificateTemplateChanged(template?: CertificateTemplateView) {
+    if (!this.game) {
+      throw new Error("Game is required");
+    }
+
+    this.game.practiceCertificateTemplateId = template?.id;
+    await firstValueFrom(this.gameService.update(this.game));
   }
 
   protected async handleChallengesFeedbackTemplateChanged(template?: FeedbackTemplateView) {

@@ -179,6 +179,12 @@ app-root {
   color: $danger !important;
 }
 
+a.btn fa-icon {
+  display: block;
+  padding: 4px;
+  margin: 4px 2px 0 2px;
+}
+
 fa-icon + span {
   margin-left: 4px;
 }
@@ -202,6 +208,10 @@ th[align="center"] {
 
 .gb-button-group > button:not(:first-of-type) {
   border-left: solid 1px white;
+}
+
+.gb-button-group > a {
+  border-left: solid 1px #fff;
 }
 
 table.gameboard-table {
@@ -400,7 +410,7 @@ tabset a.nav-link.active {
 }
 
 .custom-bg-orange {
-  background-color: #431;
+  background-color: #ffac1c;
 }
 
 .custom-bg-yellow {

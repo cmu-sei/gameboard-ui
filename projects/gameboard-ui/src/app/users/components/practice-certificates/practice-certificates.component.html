@@ -17,12 +17,13 @@
         <tbody>
             <tr class="data-row cursor-pointer" *ngFor="let certificate of ctx.certificates">
                 <td>
-                    <span class="h5 p-0">
+                    <div class="h5 p-0 mb-0">
                         <a target="_blank"
                             [routerLink]="['/practice/', certificate.challenge.challengeSpecId, slug(certificate.challenge.name) ]">
                             {{ certificate.challenge.name }}
                         </a>
-                    </span>
+                    </div>
+                    <div class="text-muted m-0">{{ certificate.game.name }}</div>
                 </td>
                 <td>{{ certificate.score }}</td>
                 <td>{{ certificate.date | friendlyDateAndTime }}</td>

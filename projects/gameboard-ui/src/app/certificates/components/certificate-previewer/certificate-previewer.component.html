@@ -1,0 +1,20 @@
+<div class="certificate-template-previewer-component">
+    <ng-container *ngIf="!isDownloading; else loading">
+        <div class="gameboard-print">
+            <img class="certificate-img" [src]="imageUrl" alt="Certificate Preview Image" (load)="handleImageLoad()"
+                *ngIf="imageUrl" (error)="handleError($event)" />
+        </div>
+
+        <ng-template #notPublished>
+            <div class="is-not-published">
+                This certificate either doesn't exist or has not been published by its owner.
+            </div>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #loading>
+    <app-spinner>
+        Loading your preview...
+    </app-spinner>
+</ng-template>

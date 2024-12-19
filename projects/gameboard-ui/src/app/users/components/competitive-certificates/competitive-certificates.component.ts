@@ -1,49 +1,53 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
 import { faArrowLeft, faAward, faPrint, faMedal, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { Observable } from 'rxjs';
 import { competitiveCertificateToPublishedViewmodel } from '@/users/functions';
-import { PlayerCertificate } from '../../../api/player-models';
-import { PlayerService } from '../../../api/player.service';
+import { CompetitiveModeCertificate } from '@/certificates/certificates.models';
+import { CertificatesService } from '@/api/certificates.service';
+import { UserService as LocalUserService } from '@/utility/user.service';
+import { ConfigService } from '@/utility/config.service';
+import { ApiUser } from '@/api/user-models';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-certificate-list',
   templateUrl: './competitive-certificates.component.html',
   styleUrls: ['./competitive-certificates.component.scss']
 })
-export class CompetitiveCertificatesComponent {
+export class CompetitiveCertificatesComponent implements OnInit {
   faArrowLeft = faArrowLeft;
   faAward = faAward;
   faMedal = faMedal;
   faPrint = faPrint;
   faUser = faUser;
   faUsers = faUsers;
-  certs$?: Observable<PlayerCertificate[]>;
+
+  protected apiHost = "";
+  protected isLoading = false;
+  protected localUser$: Observable<ApiUser | null>;
   protected toPublishedViewModel = competitiveCertificateToPublishedViewmodel;
+  protected certificates: CompetitiveModeCertificate[] = [];
 
   constructor(
-    private apiPlayer: PlayerService,
-    private sanitizer: DomSanitizer
+    private certificatesService: CertificatesService,
+    private configService: ConfigService,
+    private localUser: LocalUserService
   ) {
-    this.loadCertificates();
+    this.localUser$ = localUser.user$;
   }
 
-  print(cert: PlayerCertificate): void {
-    let printWindow = window.open('', '', '');
-    // make sure background is always there and no margins to print to pdf as is
-    printWindow?.document?.write(`<style type="text/css">* {-webkit-print-color-adjust: exact !important; color-adjust: exact !important; }</style>`);
-    printWindow?.document?.write(`<style type="text/css">@media print { body { margin: 0mm!important;} @page{ margin: 0mm!important; }}</style>`);
-    printWindow?.document?.write(`<style type="text/css" media="print"> @page { size: landscape; } </style>`);
-    printWindow?.document.write(cert.html);
-    printWindow?.document.close();
-    printWindow?.focus();
-    // we're no longer automatically popping the print dialogue because we want them to assume responsibility for scaling/orienting the output
-    // (since we can't control it with CSS very well)
-    // printWindow?.addEventListener('load', printWindow?.print, true); // wait until all content loads before printing
+  async ngOnInit(): Promise<void> {
+    this.apiHost = this.configService.apphost;
+    this.localUser$ = this.localUser.user$;
+    await this.load();
   }
 
-  protected loadCertificates() {
-    this.certs$ = this.apiPlayer.getUserCertificates();
-  }
+  protected async load(): Promise<void> {
+    if (!this.localUser.user$.value?.id) {
+      return;
+    }
 
+    this.isLoading = true;
+    this.certificates = await this.certificatesService.getCompetitiveCertificates(this.localUser.user$.value.id);
+    this.isLoading = false;
+  }
 }

@@ -117,7 +117,8 @@
                 <div class="input-group">
                     <select class="form-control custom-select custom-select-sm" #copyTemplateContentSelect>
                         <option value="">[Choose a template to copy from]</option>
-                        <option *ngFor="let template of templates" [value]="template.id">{{ template.name }}</option>
+                        <option *ngFor="let template of templates" [value]="template.content">{{ template.name }}
+                        </option>
                     </select>
 
                     <div class="input-group-append">

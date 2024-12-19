@@ -1,0 +1,127 @@
+<div class="feedback-template-picker-component">
+    <div class="form-group">
+        <label *ngIf="!hideLabel" for="feedbackTemplate" class="form-label">
+            {{ labelText || "Certificate Template" }}
+        </label>
+
+        <div class="input-group">
+            <select id="feedbackTemplate" class="form-control" [(ngModel)]="selectedTemplate"
+                (change)="handleTemplateSelect()">
+                <option [ngValue]="undefined">{{ defaultOptionText }}</option>
+                <option *ngFor="let template of templates" [ngValue]="template">
+                    {{ template.name }}
+                </option>
+            </select>
+
+            <div class="input-group-append gb-button-group">
+                <button type="button" class="btn btn-success btn-sm" (click)="handleCreate()">
+                    <fa-icon [icon]="fa.plus"></fa-icon>
+                </button>
+
+                <ng-container *ngIf="selectedTemplate">
+                    <a class="btn btn-success btn-sm p-0"
+                        [routerLink]="['/admin', 'certificates', 'templates', selectedTemplateId, 'preview']"
+                        [queryParams]="{ templateId: this.selectedTemplate.id}" target="_blank"
+                        tooltip="Preview this certificate template">
+                        <fa-icon [icon]="fa.eye"></fa-icon>
+                    </a>
+                    <button type="button" class="btn btn-success btn-sm" (click)="handleEdit()"
+                        tooltip="Edit this template">
+                        <fa-icon [icon]="fa.edit"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm" [appCopyOnClick]="selectedTemplate.content"
+                        tooltip="Copy this template's HTML configuration"
+                        appCopyOnClickMessage="Copied this template's HTML to your clipboard.">
+                        <fa-icon [icon]="fa.copy"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="handleDelete()"
+                        tooltip="Delete this template">
+                        <fa-icon [icon]="fa.trash"></fa-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 
+<ng-template #previewTemplate>
+    <ng-container *ngIf="selectedTemplate">
+        <app-modal-content [title]="selectedTemplate.name" subtitle="Preview Certificate Template" [hideCancel]="true">
+
+        </app-modal-content>
+    </ng-container>
+</ng-template>
+-->
+
+<ng-template #createEditModal>
+    <app-modal-content title="{{ createEditForm.value.id ? 'Edit' : 'Create' }} Certificate Template"
+        [confirmDisabled]="!!!createEditForm.valid" [subtitle]="createEditForm.value.name || ''"
+        (confirm)="handleModalSubmit()">
+
+        <form [formGroup]="createEditForm">
+            <input type="hidden" formControlName="id" name="id">
+            <div class="form-group">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" formControlName="name" required appAutofocus
+                    placeholder="Enter a name for your certificate template (like &quot;Hackathon Winners&quot;)">
+            </div>
+
+            <div class="form-group">
+                <label for="content" class="form-label">Template</label>
+                <textarea type="text" class="form-control font-fixed-width" formControlName="content" required rows="10"
+                    placeholder="Enter a certificate template here. You can also click the button below to paste an example feedback configuration or use the other controls to copy an existing template.">
+                    </textarea>
+            </div>
+        </form>
+
+        <ng-container *ngIf="createEditForm.touched && !createEditForm.valid">
+            <alert type="warning" class="my-2">
+                <h5>Oops. A thing or two to sort out here...</h5>
+                <ul class="my-2 ml-2 li-style-type-circle">
+                    <li *ngIf="createEditForm.controls['name'].hasError('required')">
+                        Your certificate template needs a name so you can find it later. How about "Super Sweet
+                        Certificate Template of Awesome Accomplishment"?
+                    </li>
+                    <li *ngIf="createEditForm.controls['content'].hasError('required')">
+                        A template isn't complete without HTML. Enter some in the box above to style the certificate.
+                    </li>
+                </ul>
+            </alert>
+        </ng-container>
+
+        <div class="d-flex align-items-center">
+            <!-- <button type="button" class="btn btn-sm btn-success d-block mr-2" [disabled]="!sampleConfig"
+                (click)="handlePasteSample()">
+                Paste Example Configuration
+            </button> -->
+
+            <div class="mr-2">
+                <hr class="light">
+                <label class="copy-from-label d-block text-muted mr-2 mb-0">Copy from: </label>
+
+                <div class="input-group">
+                    <select class="form-control custom-select custom-select-sm" #copyTemplateContentSelect>
+                        <option value="">[Choose a template to copy from]</option>
+                        <option *ngFor="let template of templates" [value]="template.content">
+                            {{ template.name }}
+                        </option>
+                    </select>
+
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-warning"
+                            (click)="handleCopyFromTemplate(copyTemplateContentSelect.value)"
+                            [disabled]="!copyTemplateContentSelect.value">
+                            <fa-icon [icon]="fa.copy"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div footer>
+            <a href="https://cmu-sei.github.io/crucible/gameboard/completion-certificates/" target="_blank">
+                About certificate templates
+            </a>
+        </div>
+    </app-modal-content>
+</ng-template>

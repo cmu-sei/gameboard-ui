@@ -10,6 +10,7 @@ import { AdminService } from '@/api/admin.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { TeamService } from '@/api/team.service';
 import { SimpleEntity } from '@/api/models';
+import { UpdatePlayerNameChangeRequest } from '@/api/admin.models';
 
 @Component({
   selector: 'app-game-center-team-detail',
@@ -106,20 +107,29 @@ export class GameCenterTeamDetailComponent implements OnInit {
     this.showChallengeYaml = isExpanding;
   }
 
-  protected async approveName(playerId: string, args: { name: string, revisionReason: string }) {
-    const finalName = args.name.trim();
-    await this.adminService.approvePlayerName(playerId, args);
+  protected async updateNameChangeRequest(playerId: string, overrideName: string, args: UpdatePlayerNameChangeRequest) {
+    if (!args.status) {
+      args.approvedName = overrideName || args.requestedName;
+    }
 
+    // tell the API
+    await this.adminService.updatePlayerNameChangeRequest(playerId, args);
+
+    // rebind
     const player = this.team.players.find(p => p.id === playerId);
     if (player) {
-      player.pendingName = "";
-      player.name = args.name;
+      player.pendingName = player.pendingName == args.approvedName ? "" : player.pendingName;
+      player.name = args.approvedName;
     }
 
     if (this.team.captain.id === playerId)
-      this.team.name = args.name;
+      this.team.name = args.approvedName;
 
-    this.toastService.showMessage(`This player's name has been changed to **${args.name}**.${args.revisionReason ? ` (reason: **${args.revisionReason}**)` : ""}`);
+    this.toastService.showMessage(`This player's name has been changed to **${args.approvedName}**.${args.status ? ` (reason: **${args.status}**)` : ""}`);
+  }
+
+  protected handleAdminNameChangeRequest() {
+    this.modalService.openConfirm({ bodyContent: "Are you sure?" });
   }
 
   protected async handleRemovePlayerConfirm(player: SimpleEntity) {

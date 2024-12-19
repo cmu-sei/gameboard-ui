@@ -35,16 +35,13 @@
     <div class="greeting-container settings-section">
         <h2>Certificate Template</h2>
         <p>
-            Players are able to save certificates in PDF format for each practice challenge they fully complete. Use
-            this field to customize the appearance of these certificates.
+            Players are able to save certificates in PDF format for each practice challenge they fully complete. Choose
+            a template below to customize the appearance of these certificates.
         </p>
 
-        <textarea class="form-control" (input)="handleSettingsChanged(ctx.settings)"
-            [placeholder]="certificateHtmlPlaceholder" [(ngModel)]="ctx.settings.certificateHtmlTemplate"
-            rows="5"></textarea>
-        <button type="button" class="btn btn-link text-success" (click)="handleShowCertificateTemplateHelp()">
-            How do I create a certificate template?
-        </button>
+        <app-certificate-template-picker [selectedTemplateId]="ctx.settings.certificateTemplateId" [hideLabel]="true"
+            (selected)="handleCertificateTemplateSelect($event)"
+            defaultOptionText="[no global practice certificate template]"></app-certificate-template-picker>
     </div>
 
     <div class="concurrent-sessions-container settings-section">

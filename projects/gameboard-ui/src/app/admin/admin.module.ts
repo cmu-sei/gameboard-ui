@@ -88,6 +88,8 @@ import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe'
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { FeedbackTemplatePickerComponent } from "../feedback/components/feedback-template-picker/feedback-template-picker.component";
 import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.component';
+import { CertificateTemplatePickerComponent } from '@/certificates/components/certificate-template-picker/certificate-template-picker.component';
+import { CertificatePreviewerComponent } from '@/certificates/components/certificate-previewer/certificate-previewer.component';
 
 @NgModule({
   declarations: [
@@ -160,6 +162,7 @@ import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.
     RouterModule.forChild([
       {
         path: '', component: AdminPageComponent, title: "Admin", children: [
+          { path: "certificates/templates/:templateId/preview", component: CertificatePreviewerComponent, title: "Certificate Template Preview" },
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
           {
@@ -225,6 +228,8 @@ import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.
     SafeUrlPipe,
     SpinnerComponent,
     ToSupportCodePipe,
+    CertificatePreviewerComponent,
+    CertificateTemplatePickerComponent,
     FeedbackTemplatePickerComponent,
     UserPickerComponent,
   ]

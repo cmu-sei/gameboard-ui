@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, firstValueFrom, forkJoin, map } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { PracticeModeCertificate, PublishedCertificateViewModel } from '@/users/users.models';
 import { PlayerMode } from './player-models';
+import { CertificateTemplateView, CompetitiveModeCertificate, PracticeModeCertificate, PublishedCertificateViewModel, UpsertCertificateTemplate } from '@/certificates/certificates.models';
 
 @Injectable({ providedIn: 'root' })
 export class CertificatesService {
@@ -13,16 +13,32 @@ export class CertificatesService {
     private domSanitizer: DomSanitizer,
     private http: HttpClient) { }
 
-  getCertificateImage(mode: PlayerMode, userId: string, challengeSpecId: string, requestedName?: string) {
+  getCertificateImage(mode: PlayerMode, userId: string, awardedForEntityId: string, requestedName?: string) {
     const queryArgs = requestedName ? `?requestedNameOverride=${requestedName}` : "";
 
-    return this.http.get(this.apiUrl.build(`user/${userId}/certificates/${this.coerceCompetitionModeString(mode)}/${challengeSpecId}${queryArgs}`), {
+    return this.http.get(this.apiUrl.build(`user/${userId}/certificates/${this.coerceCompetitionModeString(mode)}/${awardedForEntityId}${queryArgs}`), {
       responseType: "arraybuffer"
     }).pipe(
       map(response => new Blob([response])),
       map(blob => window.URL.createObjectURL(blob)),
       map(url => this.domSanitizer.bypassSecurityTrustUrl(url))
     );
+  }
+
+  getCertificatePreviewImage(templateId: string) {
+    return firstValueFrom(
+      this.http.get(this.apiUrl.build(`certificates/templates/${templateId}/preview`), {
+        responseType: "arraybuffer"
+      }).pipe(
+        map(response => new Blob([response])),
+        map(blob => window.URL.createObjectURL(blob)),
+        map(url => this.domSanitizer.bypassSecurityTrustUrl(url))
+      )
+    );
+  }
+
+  getCompetitiveCertificates(userId: string): Promise<CompetitiveModeCertificate[]> {
+    return firstValueFrom(this.http.get<CompetitiveModeCertificate[]>(this.apiUrl.build(`user/${userId}/certificates/competitive`)));
   }
 
   getPracticeCertificates(userId: string): Observable<PracticeModeCertificate[]> {
@@ -42,6 +58,22 @@ export class CertificatesService {
       this
         .http
         .delete<PublishedCertificateViewModel>(this.apiUrl.build(`user/${ownerUserId}/certificates/${this.coerceCompetitionModeString(mode)}/${awardedForEntityId}`)));
+  }
+
+  public async templateDelete(id: string): Promise<void> {
+    await firstValueFrom(this.http.delete(this.apiUrl.build(`certificates/templates/${id}`)));
+  }
+
+  public templateList(): Promise<CertificateTemplateView[]> {
+    return firstValueFrom(this.http.get<CertificateTemplateView[]>(this.apiUrl.build("certificates/templates")));
+  }
+
+  public templateCreate(template: UpsertCertificateTemplate): Promise<CertificateTemplateView> {
+    return firstValueFrom(this.http.post<CertificateTemplateView>(this.apiUrl.build("certificates/templates"), template));
+  }
+
+  public templateUpdate(template: UpsertCertificateTemplate): Promise<CertificateTemplateView> {
+    return firstValueFrom(this.http.put<CertificateTemplateView>(this.apiUrl.build(`certificates/templates/${template.id}`), template));
   }
 
   private coerceCompetitionModeString(mode: PlayerMode) {

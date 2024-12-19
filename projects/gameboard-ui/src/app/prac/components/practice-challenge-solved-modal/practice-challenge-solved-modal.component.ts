@@ -6,6 +6,7 @@ import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { GameService } from '@/api/game.service';
 
 export interface PracticeChallengeSolvedModalContext {
   challenge: UserActiveChallenge;
@@ -20,9 +21,11 @@ export interface PracticeChallengeSolvedModalContext {
 export class PracticeChallengeSolvedModalComponent implements OnInit {
   context?: PracticeChallengeSolvedModalContext;
   protected certificateUrl?: string;
+  protected feedbackTemplateId?: string;
   protected isCertificateConfigured = false;
 
   constructor(
+    private gameService: GameService,
     private practiceService: PracticeService,
     private routerService: RouterService,
     private unsub: UnsubscriberService,
@@ -33,12 +36,13 @@ export class PracticeChallengeSolvedModalComponent implements OnInit {
       throw new Error("Can't resolve the context for the PracticeChallengeSolvedModalComponent.");
     }
 
-    const practiceSettings = await firstValueFrom(this.practiceService.getSettings());
-    this.isCertificateConfigured = !!practiceSettings.certificateHtmlTemplate;
-    this.certificateUrl = this.routerService.getCertificatePrintableUrl(PlayerMode.practice, this.context.challenge.spec.id);
+    // we need the game to check its challenges feedback template and its cert template
+    const game = await firstValueFrom(this.gameService.retrieve(this.context.challenge.game.id));
 
-    // load feedback form data
-    // this.feedbackFormContext = await this.loadFeedbackFormContext(this.context.challenge);
+    this.feedbackTemplateId = game.challengesFeedbackTemplateId;
+    const practiceSettings = await firstValueFrom(this.practiceService.getSettings());
+    this.isCertificateConfigured = !!game.practiceCertificateTemplateId || !!practiceSettings.certificateTemplateId;
+    this.certificateUrl = this.routerService.getCertificatePrintableUrl(PlayerMode.practice, this.context.challenge.spec.id);
 
     // wire up event handler for background-click dismiss
     if (this.modalRef.onHidden) {
@@ -52,22 +56,4 @@ export class PracticeChallengeSolvedModalComponent implements OnInit {
     this.modalRef.hide();
     this.routerService.toPracticeArea();
   }
-
-  // private async loadFeedbackFormContext(challenge: UserActiveChallenge): Promise<LegacyFeedbackFormContext | undefined> {
-  //   const player = await firstValueFrom(this.boardService.load(challenge.player.id));
-
-  //   if (!player.game.feedbackTemplate?.challenge?.length)
-  //     return undefined;
-
-  //   return {
-  //     boardPlayer: player,
-  //     boardSpec: {
-  //       id: challenge.spec.id,
-  //       instance: {
-  //         id: challenge.challengeDeployment.challengeId,
-  //         state: { isActive: challenge.challengeDeployment.isDeployed },
-  //       }
-  //     }
-  //   };
-  // }
 }

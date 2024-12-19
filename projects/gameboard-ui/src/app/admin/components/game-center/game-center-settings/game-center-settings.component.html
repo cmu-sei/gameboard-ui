@@ -147,6 +147,7 @@
             </div>
 
             <div class="col-12 mt-5">
+                <h4>Player Feedback</h4>
                 <app-feedback-template-picker labelText="Game Feedback Template"
                     [(templateId)]="game.feedbackTemplateId"
                     (select)="handleGameFeedbackTemplateChanged($event)"></app-feedback-template-picker>
@@ -157,46 +158,14 @@
             </div>
 
             <div class="col-12 mt-5">
-                <div class="form-group pb-0 pt-1">
-                    <label for="certificateTemplate-input">Certificate Template</label>
-                    <textarea rows="11" type="text" class="form-control" id="certificateTemplate-input"
-                        name="certificateTemplate" [(ngModel)]="game.certificateTemplate"></textarea>
-                    <small>design with HTML and inline/internal CSS; use a 11:8.5 aspect ratio</small>
-                    <button class="btn btn-sm btn-link-white" [(ngModel)]="showCertificateInfo"
-                        [ngModelOptions]="{standalone: true}" btnCheckbox>
-                        <fa-icon [icon]="fa.infoCircle"></fa-icon>
-                    </button>
-                    <div class="ml-4 px-2" *ngIf="showCertificateInfo">
-                        <p class="cert-info mb-2">
-                            Insert dynamic content by referring to a property with double-curly syntax
-                            <code>{{"\{\{game_name\}\}"}}</code>. For example,
-                            <code>&lt;h1&gt;{{"\{\{leaderboard_name\}\}"}}&lt;/h1&gt;</code>. <br>
-                            The following properties will get replaced when a player certificate renders:
-                        </p>
-                        <pre class="mb-1">
-      game_name &mdash; Name of this game
-      competition &mdash; Competition type of this game
-      season &mdash; Season of this game
-      round &mdash; Round of this game
-      track &mdash; Track of this game
-      user_name &mdash; Individual user's approved name
-      score &mdash; Total player score for this game
-      rank &mdash; Final leaderboard ranking of the player
-      leaderboard_name &mdash; Approved name for either team or individual
-      date &mdash; Date player's session ended for this game
-      player_count &mdash; Number of players who participated in this game
-      team_count &mdash; Number of teams who participated in this game</pre>
-                        <p class="cert-info mb-2">
-                            Tip: Create an outer div with fixed height and width and <code>position: relative</code>.
-                            Create inner
-                            divs with <code>position: absolute; text-align: center;</code> and set textbox width and X/Y
-                            position with
-                            <code>top: __px; left: __px; width: __px;</code>.
-                            To add a background image, use
-                            <code>background-size: 100% 100%; background-image: url('URL_HERE');</code>
-                        </p>
-                    </div>
-                </div>
+                <h4>Completion Certificates</h4>
+                <app-certificate-template-picker labelText="Competitive Certificate Template"
+                    [selectedTemplateId]="game.certificateTemplateId"
+                    (selected)="handleCertificateTemplateChanged($event)"></app-certificate-template-picker>
+                <app-certificate-template-picker labelText="Practice Certificate Template"
+                    defaultOptionText="[use global practice area template]"
+                    [selectedTemplateId]="game.practiceCertificateTemplateId"
+                    (selected)="handlePracticeCertificateTemplateChanged($event)"></app-certificate-template-picker>
             </div>
         </div>
 

@@ -78,10 +78,13 @@ export class PlayerNamesComponent {
   }
 
   async approveName(model: Player) {
+    const requested = model.name;
+    const approved = model.approvedName;
+
     model.approvedName = model.name;
     model.nameStatus = "";
     model.pendingName = "";
-    await this.adminService.approvePlayerName(model.id, { name: model.name });
+    await this.adminService.updatePlayerNameChangeRequest(model.id, { approvedName: approved, requestedName: requested, status: "" });
   }
 
   resetName(model: Player): void {
