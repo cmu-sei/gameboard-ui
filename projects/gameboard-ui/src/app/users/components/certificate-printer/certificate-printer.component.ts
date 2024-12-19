@@ -1,4 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
@@ -6,11 +7,10 @@ import { WindowService } from '@/services/window.service';
 import { CertificatesService } from '@/api/certificates.service';
 import { PlayerMode } from '@/api/player-models';
 import { LogService } from '@/services/log.service';
-import { ConfigService } from '@/utility/config.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { RouterService } from '@/services/router.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-certificate-printer',
@@ -95,7 +95,7 @@ export class CertificatePrinterComponent {
   private async downloadCertificate(providedName?: string) {
     this.isDownloading = true;
     this.imageUrl = undefined;
-    this.title = `${this.viewModel.mode} Certificate | `;
+    this.title = `${this.viewModel.mode} Certificate | ${this.configService.appName}`;
 
     if (!this.viewModel.userId || !this.viewModel.awardedForEntityId) {
       throw new Error(`Couldn't resolve user and entity for certificate (user ${this.viewModel.userId}, entity ${this.viewModel.awardedForEntityId}).`);

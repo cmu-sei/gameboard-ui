@@ -1,5 +1,5 @@
-import { PlayerCertificate, PlayerMode } from "@/api/player-models";
-import { PracticeModeCertificate, PublishedCertificateViewModel } from "./users.models";
+import { PlayerMode } from "@/api/player-models";
+import { CompetitiveModeCertificate, PracticeModeCertificate, PublishedCertificateViewModel } from "@/certificates/certificates.models";
 
 export function practiceCertificateToPublishedViewModel(certificate: PracticeModeCertificate): PublishedCertificateViewModel {
     return {
@@ -9,12 +9,10 @@ export function practiceCertificateToPublishedViewModel(certificate: PracticeMod
     };
 }
 
-export function competitiveCertificateToPublishedViewmodel(certificate: PlayerCertificate): PublishedCertificateViewModel {
+export function competitiveCertificateToPublishedViewmodel(certificate: CompetitiveModeCertificate): PublishedCertificateViewModel {
     return {
-        id: undefined,
-        publishedOn: certificate.publishedOn,
+        ...certificate,
         awardedForEntity: { id: certificate.game.id, name: certificate.game.name },
-        ownerUser: { id: certificate.player.userId, name: certificate.player.approvedName },
         mode: PlayerMode.competition
     };
 }

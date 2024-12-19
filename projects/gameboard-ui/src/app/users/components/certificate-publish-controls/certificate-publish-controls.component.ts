@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CertificatesService } from '@/api/certificates.service';
 import { UserService as LocalUser } from "@/utility/user.service";
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { PracticeModeCertificate, PublishedCertificateViewModel } from '@/users/users.models';
 import { ConfigService } from '@/utility/config.service';
+import { PublishedCertificateViewModel } from '@/certificates/certificates.models';
 
 @Component({
   selector: 'app-certificate-publish-controls',
