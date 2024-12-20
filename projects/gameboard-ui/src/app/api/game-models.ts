@@ -22,7 +22,9 @@ export interface GameDetail {
   gameEnd: Date;
   gameMarkdown: string;
   feedbackConfig: string;
-  certificateTemplate: string;
+  certificateTemplateId?: string;
+  practiceCertificateTemplateId?: string;
+  certificateTemplateLegacy: string;
   externalHostId?: string;
   feedbackTemplate?: FeedbackTemplate;
   challengesFeedbackTemplateId?: string;

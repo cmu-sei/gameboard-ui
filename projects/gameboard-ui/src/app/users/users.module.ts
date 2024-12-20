@@ -14,7 +14,6 @@ import { ProfileHistoryComponent } from './components/profile-history/profile-hi
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { SponsorsModule } from '@/sponsors/sponsors.module';
 import { SettingsComponent } from './components/settings/settings.component';
-import { UserService as LocalUserService } from '@/utility/user.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
@@ -59,7 +58,6 @@ const DECLARED_COMPONENTS = [
             component: SettingsComponent,
             canActivate: [() => {
               const permissionsService = inject(UserRolePermissionsService);
-              const localUser = inject(LocalUserService);
 
               return permissionsService.can("Admin_View");
             }]

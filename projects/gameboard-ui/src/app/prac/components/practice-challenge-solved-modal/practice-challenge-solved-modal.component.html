@@ -16,10 +16,12 @@
             </span>
         </p>
 
-        <div class="feedback-container my-4">
-            <!-- <app-feedback-form *ngIf="feedbackFormContext" [boardPlayer]="feedbackFormContext.boardPlayer"
-                title="Practice Challenge Feedback" [spec]="feedbackFormContext.boardSpec"
-                [hideIfFeedbackProvidedPreviously]="true" type="challenge"></app-feedback-form> -->
+        <div class="feedback-container my-4" *ngIf="feedbackTemplateId">
+            <app-feedback-submission-form
+                [feedbackEntity]="{ entityType: 'challengeSpec', id: context.challenge.spec.id}"
+                [templateId]="feedbackTemplateId">
+
+            </app-feedback-submission-form>
         </div>
 
         <p>

@@ -11,7 +11,7 @@ export interface SearchGamesResult {
 
 export interface PracticeModeSettings {
     attemptLimit?: number;
-    certificateHtmlTemplate: string;
+    certificateTemplateId?: string;
     defaultPracticeSessionLengthMinutes: number;
     introTextMarkdown: string;
     maxConcurrentPracticeSessions: number | null;

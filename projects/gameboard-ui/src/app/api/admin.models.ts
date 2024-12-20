@@ -31,11 +31,6 @@ export interface AppActiveChallengeGame {
     isTeamGame: boolean;
 }
 
-export interface ApprovePlayerNameRequest {
-    name: string;
-    revisionReason?: string;
-}
-
 export interface GetAppActiveChallengesResponse {
     specs: AppActiveChallengeSpec[];
 }
@@ -88,4 +83,10 @@ export interface SendAnnouncement {
     contentMarkdown: string;
     title?: string;
     teamId?: string;
+}
+
+export interface UpdatePlayerNameChangeRequest {
+    approvedName: string;
+    requestedName: string;
+    status: string;
 }

@@ -83,6 +83,8 @@ export interface EnrollmentReportStatSummary {
         sponsor: ReportSponsor,
         distinctPlayerCount: number;
     }
+    playersWithNoSessionCount: number;
+    playersWithNoStartedChallengeCount: number;
     teamsWithNoSessionCount: number;
     teamsWithNoStartedChallengeCount: number;
 }
@@ -100,18 +102,6 @@ export interface EnrollmentReportLineChartResponse {
     periodStart: DateTime;
     periodEnd: DateTime;
 }
-
-// export interface EnrollmentReportLineChartPlayer {
-//     id: string;
-//     name: string;
-//     game: SimpleEntity;
-//     enrollDate: Date;
-// }
-
-// export interface EnrollmentReportLineChartPlayerGame {
-//     id: string;
-//     gameId: string;
-// }
 
 // these are client side models that represents the data after it's been structured from the API
 export interface EnrollmentReportLineChartViewModel {
