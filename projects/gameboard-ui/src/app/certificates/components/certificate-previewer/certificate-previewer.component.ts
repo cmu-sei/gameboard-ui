@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CertificatesService } from '@/api/certificates.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
-import { WindowService } from '@/services/window.service';
 
 @Component({
   selector: 'app-certificate-previewer',
@@ -19,7 +18,7 @@ import { WindowService } from '@/services/window.service';
 })
 export class CertificatePreviewerComponent implements OnInit {
   protected errors: any[] = [];
-  protected isDownloading = false;
+  protected isDownloading = true;
   protected imageUrl?: SafeUrl;
   protected template?: SimpleEntity;
 
@@ -33,11 +32,18 @@ export class CertificatePreviewerComponent implements OnInit {
       this.errors.push("Template ID is required.");
     }
 
-    this.imageUrl = await this.certificatesService.getCertificatePreviewImage(templateId || "");
+    try {
+      this.imageUrl = await this.certificatesService.getCertificatePreviewImage(templateId || "");
+    }
+    catch (err) {
+      this.errors.push(err);
+      this.isDownloading = false;
+    }
   }
 
   protected handleError(ev: ErrorEvent) {
     this.errors.push(ev);
+    this.isDownloading = false;
   }
 
   protected handleImageLoad() {

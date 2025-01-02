@@ -1,5 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import "./scss/vis-timeline";
 @import "./scss/variables";
 @import "./scss/toastify";
@@ -103,15 +101,12 @@ app-root {
   min-height: 100vh;
 }
 
-.reader-slim {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 .reader {
   max-width: 800px;
   margin: 0 auto;
 }
+
+/* APP UTILITY CLASSES */
 
 .font-fixed-width {
   font-family: monospace;
@@ -155,6 +150,13 @@ app-root {
 
 .fs-20 {
   font-size: 2em;
+}
+
+@media print {
+  .print-hide {
+    display: none !important;
+    visibility: hidden !important;
+  }
 }
 
 .sticky-bottom {

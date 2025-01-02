@@ -44,6 +44,7 @@ export class SystemNotificationsComponent implements OnInit {
       bodyContent: notification.markdownContent,
       renderBodyAsMarkdown: true,
       hideCancel: true,
+      modalClasses: ["modal-xl"],
       onConfirm: async () => {
         await this.loadNotifications();
 

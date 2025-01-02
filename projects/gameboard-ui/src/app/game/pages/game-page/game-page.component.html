@@ -38,23 +38,11 @@
     </div>
 
     <!-- if auth'd, enrolled, opened a session, game ended, and certificate defined -->
-    <ng-container
-      *ngIf="!!ctx.user.id && !!ctx.player.id && !!ctx.player.sessionEnd && ctx.game.hasEnded && !!ctx.game.certificateTemplateLegacy">
-      <div class="row justify-content-center">
-        <div class="col panel">
-          <div tabindex="0" (click)="showCert = !showCert">
-            <div class="d-flex align-items-center">
-              <fa-icon class="d-inline" [icon]="showCert ? fa.caretDown : fa.caretRight" size="lg"></fa-icon>
-              <span>
-                <h2 class="d-inline">Certificate</h2>
-              </span>
-            </div>
-          </div>
-          <div [hidden]="!showCert">
-            <app-certificate [ctx]="ctx"></app-certificate>
-          </div>
-        </div>
-      </div>
+    <ng-container *ngIf="certificateUrl">
+      <alert type="success">
+        You've earned a certificate for your performance in this game. <a [routerLink]="certificateUrl">Click here</a>
+        to check it out!
+      </alert>
     </ng-container>
 
     <div class="row justify-content-start">
