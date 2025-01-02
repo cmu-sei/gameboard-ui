@@ -38,11 +38,11 @@ interface GameEnrollmentContext {
 })
 export class GamePageComponent implements OnDestroy {
   ctx$ = new Observable<GameContext | undefined>(undefined);
-  showCert = false;
   minDate = new Date(0);
 
   protected boardPlayer?: BoardPlayer;
   protected canAdminEnroll$: Observable<boolean>;
+  protected certificateUrl?: string;
   protected ctxIds: { userId?: string, gameId: string, playerId?: string } = { userId: '', gameId: '' };
   protected fa = fa;
   protected isExternalGame = false;
@@ -189,6 +189,14 @@ export class GamePageComponent implements OnDestroy {
 
         // join the team-up hub for this team/game
         await this.hub.init(ctx.player.teamId);
+
+        // check if they've earned a certificate
+        if (ctx.player.score && ctx.player.sessionEnd && ctx.game.hasEnded && ctx.game.certificateTemplateId) {
+          this.certificateUrl = this.routerService.getCertificatePrintableUrl(ctx.player.mode, ctx.game.id);
+        }
+        else {
+          this.certificateUrl = undefined;
+        }
 
         // if appropriate to the game execution period and modes,
         // join the hub that coordinates across everyone playing this game
