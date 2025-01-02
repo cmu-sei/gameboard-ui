@@ -18,7 +18,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
   styleUrls: ['./certificate-template-picker.component.scss']
 })
 export class CertificateTemplatePickerComponent implements OnInit, OnChanges {
-  @Input() defaultOptionText = "[no feedback template]";
+  @Input() defaultOptionText = "[no certificate template]";
   @Input() hideLabel = false;
   @Input() labelText = "";
   @Input() selectedTemplateId?: string;

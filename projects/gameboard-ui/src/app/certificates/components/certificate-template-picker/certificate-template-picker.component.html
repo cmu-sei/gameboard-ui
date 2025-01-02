@@ -43,15 +43,6 @@
         </div>
     </div>
 </div>
-<!-- 
-<ng-template #previewTemplate>
-    <ng-container *ngIf="selectedTemplate">
-        <app-modal-content [title]="selectedTemplate.name" subtitle="Preview Certificate Template" [hideCancel]="true">
-
-        </app-modal-content>
-    </ng-container>
-</ng-template>
--->
 
 <ng-template #createEditModal>
     <app-modal-content title="{{ createEditForm.value.id ? 'Edit' : 'Create' }} Certificate Template"
@@ -90,11 +81,6 @@
         </ng-container>
 
         <div class="d-flex align-items-center">
-            <!-- <button type="button" class="btn btn-sm btn-success d-block mr-2" [disabled]="!sampleConfig"
-                (click)="handlePasteSample()">
-                Paste Example Configuration
-            </button> -->
-
             <div class="mr-2">
                 <hr class="light">
                 <label class="copy-from-label d-block text-muted mr-2 mb-0">Copy from: </label>
