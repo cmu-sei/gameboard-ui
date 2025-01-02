@@ -1,4 +1,4 @@
-<div class="notificatons-container sticky-top">
+<div class="notificatons-container sticky-top" *ngIf="notifications.length">
     <alert *ngFor="let notification of notifications" [dismissible]="notification.isDismissible"
         [type]="notification.notificationType | notificationTypeToAlertType" (onClose)="handleClosed(notification)">
         <div class="container" (click)="handleClicked(notification)">

@@ -67,9 +67,7 @@ export class CertificatePrinterComponent {
   }
 
   protected handlePrintClick() {
-    setTimeout(() => {
-      this.windowService.print();
-    }, 500);
+    setTimeout(() => this.windowService.print(), 500);
   }
 
   protected handleProvideNameClick() {

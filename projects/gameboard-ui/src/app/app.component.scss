@@ -2,13 +2,6 @@
   min-height: 100vh;
 }
 
-@media print {
-  .app-bar-container,
-  .app-bar-container * {
-    display: none !important;
-  }
-}
-
 .sticky-content {
   top: 0px;
   left: 0px;
