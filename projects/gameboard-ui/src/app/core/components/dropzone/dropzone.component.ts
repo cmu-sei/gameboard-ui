@@ -22,6 +22,7 @@ export class DropzoneComponent {
   // Handle component events
   filesSelected(ev: any): void {
     this.dropped.emit(Array.from(ev.target.files));
+    ev.target.value = null;
   }
 
   // Handle drag/drop events

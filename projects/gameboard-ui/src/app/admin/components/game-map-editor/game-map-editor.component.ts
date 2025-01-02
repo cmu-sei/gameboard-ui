@@ -45,6 +45,8 @@ export class GameMapEditorComponent implements OnInit {
       throw new Error("GameId is required");
 
     this.specs = await firstValueFrom(this.gameService.retrieveSpecs(this.gameId));
+    const game = await firstValueFrom(this.gameService.retrieve(this.gameId));
+    this.mapImageUrl = game.mapUrl;
   }
 
   protected async mousemove(e: MouseEvent) {
