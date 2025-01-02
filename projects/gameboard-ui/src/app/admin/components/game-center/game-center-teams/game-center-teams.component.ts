@@ -21,6 +21,7 @@ import { NowService } from '@/services/now.service';
 import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-center-team-detail.component';
 import { TeamService } from '@/api/team.service';
 import { eventTargetValueToString } from 'projects/gameboard-ui/src/tools/functions';
+import { AdvanceTeamsModalComponent } from '../../advance-teams-modal/advance-teams-modal.component';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
@@ -98,6 +99,31 @@ export class GameCenterTeamsComponent implements OnInit {
   protected async handleClearAllFilters() {
     this.filterSettings = { sort: "rank" };
     await this.load(this.game?.id);
+  }
+
+  protected async handleConfirmAdvanceTeams() {
+    if (!this.game) {
+      return;
+    }
+
+    const teams = this.resolveSelectedTeams();
+    if (!teams.length) {
+      return;
+    }
+
+    this.modalService.openComponent({
+      content: AdvanceTeamsModalComponent,
+      context: {
+        game: this.game,
+        teams: teams,
+        onConfirm: async (targetGame: SimpleEntity) => {
+          await this.load(this.gameId);
+          this.toastService.showMessage(`**${teams.length}** teams were advanced to **${targetGame.name}**.`);
+          this.selectedTeamIds = [];
+        }
+      },
+      modalClasses: ["modal-xl"],
+    });
   }
 
   protected async handleConfirmDeployGameResources() {

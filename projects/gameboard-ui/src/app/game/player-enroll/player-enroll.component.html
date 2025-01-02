@@ -56,13 +56,13 @@
                   <app-confirm-button btnClass="btn btn-success btn-lg mr-4"
                     [disabled]="!isRegistrationOpen && !canStandardEnroll && !canAdminEnroll" [tooltip]="enrollTooltip"
                     (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-                    <fa-icon [icon]="faEdit"></fa-icon>
+                    <fa-icon [icon]="fa.edit"></fa-icon>
                     <span>Enroll</span>
                   </app-confirm-button>
 
                   <app-confirm-button *ngIf="canAdminEnroll" btnClass="btn btn-warning btn-lg"
                     (confirm)="handleEnroll(ctx.user.id, ctx.game.id)">
-                    <fa-icon [icon]="faEdit"></fa-icon>
+                    <fa-icon [icon]="fa.edit"></fa-icon>
                     <span>Admin Enroll</span>
                   </app-confirm-button>
                 </div>
@@ -148,7 +148,7 @@
                   placeholder="Enter your invitation code here to join a team">
                 <div class="input-group-append">
                   <button class="btn btn-success" [disabled]="!token" (click)="redeem(ctx.player)">
-                    <fa-icon [icon]="faPaste"></fa-icon>
+                    <fa-icon [icon]="fa.paste"></fa-icon>
                     <span>Join</span>
                   </button>
                 </div>
@@ -165,7 +165,7 @@
             <div class="tooltip-holder" [tooltip]="unenrollTooltip" container="body" placement="top">
               <app-confirm-button btnClass="btn btn-danger btn" (confirm)="handleUnenroll(ctx.player)"
                 [disabled]="!!unenrollTooltip">
-                <fa-icon [icon]="faTrash"></fa-icon>
+                <fa-icon [icon]="fa.trash"></fa-icon>
                 <span>Unenroll</span>
               </app-confirm-button>
             </div>

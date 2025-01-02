@@ -1,14 +1,14 @@
 <app-modal-content *ngIf="team" [title]="team.name" [subtitle]="game.name" [hideCancel]="true">
     <div *ngIf="team.advancement" class="advancement-container px-3">
         <h4 class="mt-4">Advancement</h4>
-        <div class="d-flex justify-content-between">
-            <div class="advancement-info">
-                <h6>Advanced from</h6>
+        <div class="d-flex">
+            <div class="advancement-info flex-grow-1">
+                <h6 class="text-muted">Advanced from</h6>
                 <div>{{team.advancement.fromGame.name}}</div>
             </div>
 
-            <div class="advancement-info">
-                <h6>Score</h6>
+            <div class="advancement-info flex-grow-1">
+                <h6 class="text-muted">Score</h6>
                 <div>{{team.advancement.score || 0}}</div>
             </div>
         </div>

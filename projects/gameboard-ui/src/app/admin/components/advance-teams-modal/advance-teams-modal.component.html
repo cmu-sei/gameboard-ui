@@ -1,0 +1,23 @@
+<app-modal-content *ngIf="game" title="Advance Teams" [subtitle]="game.name" (confirm)="handleConfirm()"
+    [confirmDisabled]="!selectedGame" confirmButtonText="Advance">
+    <p>
+        You've selected <strong>{{ teams.length }}</strong> teams for advancement. Choose a <strong>game</strong>
+        to which they'll advance, and specify whether you want their starting score to be migrated from the current
+        game.
+    </p>
+
+    <div class="my-2">
+        <label class="form-label">Select a game</label>
+        <select class="form-control" [(ngModel)]="selectedGame">
+            <option [ngValue]="undefined">[Choose a game]</option>
+            <option *ngFor="let game of targetGames" [ngValue]="game">{{ game.name }}</option>
+        </select>
+    </div>
+
+    <div class="my-2">
+        <label class="form-label">
+            <input type="checkbox" [(ngModel)]="includeScores">
+            Include scores during advancement?
+        </label>
+    </div>
+</app-modal-content>
