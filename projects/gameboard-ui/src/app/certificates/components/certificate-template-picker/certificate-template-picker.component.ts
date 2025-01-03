@@ -46,8 +46,11 @@ export class CertificateTemplatePickerComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    if (changes.selectedTemplateId?.currentValue && changes.selectedTemplateId.currentValue !== this.selectedTemplate?.id) {
+    if (changes.selectedTemplateId.isFirstChange()) {
       await this.load();
+    }
+
+    if (changes.selectedTemplateId?.currentValue && changes.selectedTemplateId.currentValue !== this.selectedTemplate?.id) {
       this.selectedTemplate = this.templates.find(t => t.id === changes.selectedTemplateId.currentValue);
     }
   }
