@@ -26,6 +26,12 @@ export interface AddToTeamResponse {
     user: SimpleEntity;
 }
 
+export interface AdvanceTeamsRequest {
+    gameId: string;
+    includeScores: boolean;
+    teamIds: string[];
+}
+
 export interface RemoveFromTeamResponse {
     game: SimpleEntity;
     player: SimpleEntity;

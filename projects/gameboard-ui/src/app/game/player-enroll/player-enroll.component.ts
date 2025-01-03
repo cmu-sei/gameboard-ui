@@ -2,8 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { faCopy, faEdit, faPaste, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { firstValueFrom, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, Subscription, timer } from 'rxjs';
 import { map, tap, delay, first } from 'rxjs/operators';
 import { GameContext } from '../../api/models';
 import { HubPlayer, NewPlayer, Player, PlayerEnlistment, PlayerRole, TimeWindow } from '../../api/player-models';
@@ -45,18 +44,13 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
   protected hasSelectedSponsor = false;
   protected managerRole = PlayerRole.manager;
   protected isEnrolled$: Observable<boolean>;
-  protected isManager$ = new Subject<boolean>();
+  protected isManager$ = new BehaviorSubject<boolean | null>(null);
   protected isRegistrationOpen = false;
   protected hasTeammates$: Observable<boolean> = of(false);
   protected unenrollTooltip?: string;
   private hubSub?: Subscription;
 
   fa = fa;
-  faUser = faUser;
-  faEdit = faEdit;
-  faCopy = faCopy;
-  faPaste = faPaste;
-  faTrash = faTrash;
 
   constructor(
     private api: PlayerService,
@@ -75,6 +69,10 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
         ctx.game.registration = new TimeWindow(ctx.game?.registrationOpen, ctx.game?.registrationClose);
         this.isRegistrationOpen = ctx.game.registrationType !== GameRegistrationType.none;
         this.enrollTooltip = this.isRegistrationOpen ? "" : "Registration is currently closed for this game.";
+
+        if (this.isManager$.value === null) {
+          this.isManager$.next(ctx.player?.isManager || true);
+        }
       }),
       tap((gc) => {
         if (gc.player.nameStatus && gc.player.nameStatus != 'pending') {
@@ -112,13 +110,13 @@ export class PlayerEnrollComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.manageUnenrollAvailability(this.hubService.actors$.getValue());
-    this.isManager$.next(this.ctx.player.isManager);
     this.hubSub = this.hubService.actors$.subscribe(a => {
       this.manageUnenrollAvailability(a);
 
       const manager = a.find(a => a.isManager);
-      if (manager)
-        this.isManager$.next(manager?.id == this.ctx.player.id);
+      if (this.ctx.player?.id && manager) {
+        this.isManager$.next(manager.id == this.ctx.player.id);
+      }
     });
   }
 

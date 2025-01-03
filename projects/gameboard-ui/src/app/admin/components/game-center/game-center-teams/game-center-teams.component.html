@@ -27,6 +27,12 @@
         </button>
 
         <button type="button" class="btn btn-success"
+            tooltip="Advance selected {{ game.isTeamGame ? 'teams' : 'players' }}" [disabled]="!selectedTeamIds.length"
+            (click)="handleConfirmAdvanceTeams()">
+            <fa-icon [icon]="fa.circleArrowUp"></fa-icon>
+        </button>
+
+        <button type="button" class="btn btn-success"
             tooltip="Deploy game resources for {{ selectedTeamIds.length ? 'selected' : 'all' }}"
             [disabled]="!results?.teams?.items?.length" (click)="handleConfirmDeployGameResources()">
             <fa-icon [icon]="fa.computer"></fa-icon>

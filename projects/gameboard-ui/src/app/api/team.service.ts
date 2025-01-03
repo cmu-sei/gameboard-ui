@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, firstValueFrom, from, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
-import { AddToTeamResponse, AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, RemoveFromTeamResponse, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
+import { AddToTeamResponse, AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, AdvanceTeamsRequest, RemoveFromTeamResponse, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools/tools";
 import { GamePlayState } from "./game-models";
@@ -59,6 +59,10 @@ export class TeamService {
         const result = await firstValueFrom(this.http.put<AddToTeamResponse>(this.apiUrl.build(`team/${request.teamId}/players`), request));
         this._teamRosterChanged$.next(request.teamId);
         return result;
+    }
+
+    public async advance(request: AdvanceTeamsRequest) {
+        return firstValueFrom(this.http.post(this.apiUrl.build("team/advance"), request));
     }
 
     unenroll(request: { teamId: string, resetType?: TeamSessionResetType }) {
