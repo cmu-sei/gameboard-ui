@@ -6,7 +6,7 @@
 
         <div class="input-group">
             <select id="feedbackTemplate" class="form-control" [ngModel]="selectedTemplate"
-                (ngModelChange)="handleTemplateSelect()">
+                (ngModelChange)="handleTemplateSelect($event)">
                 <option [ngValue]="undefined">{{ defaultOptionText }}</option>
                 <option *ngFor="let template of templates" [ngValue]="template">
                     {{ template.name }}

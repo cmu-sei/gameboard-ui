@@ -6,6 +6,7 @@ import { CertificateTemplateView } from '@/certificates/certificates.models';
 import { fa } from "@/services/font-awesome.service";
 import { CertificatesService } from '@/api/certificates.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-certificate-template-picker',
@@ -29,6 +30,7 @@ export class CertificateTemplatePickerComponent implements OnInit, OnChanges {
   private formBuilder = inject(FormBuilder);
   private initialLoad = false;
   private modalService = inject(ModalConfirmService);
+  private toastsService = inject(ToastService);
 
   protected fa = fa;
   protected createEditForm = this.formBuilder.group({
@@ -101,8 +103,10 @@ export class CertificateTemplatePickerComponent implements OnInit, OnChanges {
     };
     if (!this.createEditForm.value.id) {
       await this.certificatesService.templateCreate(request);
+      this.toastsService.showMessage(`Created certificate template **${request.name}**`);
     } else {
       await this.certificatesService.templateUpdate(request);
+      this.toastsService.showMessage(`Updated certificate template **${request.name}**`);
     }
 
     await this.load();
@@ -128,8 +132,9 @@ export class CertificateTemplatePickerComponent implements OnInit, OnChanges {
     await this.load();
   }
 
-  protected handleTemplateSelect() {
-    this.selected.emit(this.selectedTemplate);
+  protected handleTemplateSelect(template: CertificateTemplateView) {
+    this.selectedTemplate = template;
+    this.selected.emit(template);
   }
 
   private async load() {
