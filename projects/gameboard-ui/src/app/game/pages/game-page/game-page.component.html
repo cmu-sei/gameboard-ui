@@ -89,7 +89,7 @@
         </h2>
         <app-scoreboard [gameId]="ctx.game.id"></app-scoreboard>
       </div>
-      <ng-container *ngIf="ctx.game.feedbackTemplateId && !ctx.player.session?.isBefore">
+      <ng-container *ngIf="ctx.user?.id && ctx.game.feedbackTemplateId && !ctx.player.session?.isBefore">
         <div class="col-6 my-4">
           <h2>Feedback</h2>
           <app-feedback-submission-form [templateId]="ctx.game.feedbackTemplateId"
