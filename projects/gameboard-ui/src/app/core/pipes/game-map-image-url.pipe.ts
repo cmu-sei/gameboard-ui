@@ -11,6 +11,7 @@ export class GameMapImageUrlPipe implements PipeTransform {
     if (!value) {
       return `${this.config.basehref}assets/map.png`;
     }
+
     const isAbsolute = new URL(this.document.baseURI).origin !== new URL(value, this.document.baseURI).origin;
     return isAbsolute ? value : `${this.config.imagehost}/${value}`;
   }
