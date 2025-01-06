@@ -46,7 +46,7 @@ export class GameMapEditorComponent implements OnInit {
 
     this.specs = await firstValueFrom(this.gameService.retrieveSpecs(this.gameId));
     const game = await firstValueFrom(this.gameService.retrieve(this.gameId));
-    this.mapImageUrl = game.mapUrl;
+    this.mapImageUrl = game.background;
   }
 
   protected async mousemove(e: MouseEvent) {
