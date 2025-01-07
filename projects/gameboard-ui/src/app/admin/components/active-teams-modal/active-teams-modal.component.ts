@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { fa } from '@/services/font-awesome.service';
 import { AppActiveTeam } from '@/api/admin.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AdminService } from '@/api/admin.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-active-teams-modal',

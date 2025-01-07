@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
-import { debounceTime, switchMap, tap, filter, map } from 'rxjs/operators';
+import { debounceTime, switchMap, tap, filter } from 'rxjs/operators';
 import { ChallengeOverview } from '../../api/board-models';
 import { NewTicket } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';

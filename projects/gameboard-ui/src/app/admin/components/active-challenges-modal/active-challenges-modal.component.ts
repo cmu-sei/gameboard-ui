@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { fa } from "@/services/font-awesome.service";
 import { firstValueFrom } from 'rxjs';
+import { fa } from "@/services/font-awesome.service";
 import { PlayerMode } from '@/api/player-models';
 import { AppActiveChallengeSpec } from '@/api/admin.models';
 import { AdminService } from '@/api/admin.service';
