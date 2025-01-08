@@ -51,6 +51,10 @@ export class GameCenterPracticeComponent {
     this.filterSettings.searchTerm = value;
   }
 
+  protected async handleSessionReset(user: GameCenterPracticeContextUser) {
+    await this.load(this.ctx?.game?.id);
+  }
+
   protected async handleSessionStatusChange(status: GameCenterPracticeSessionStatus) {
     this.filterSettings.sessionStatus = status;
     await this.load(this.ctx?.game?.id);

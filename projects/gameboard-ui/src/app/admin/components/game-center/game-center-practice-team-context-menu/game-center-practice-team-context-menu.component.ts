@@ -22,6 +22,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 export class GameCenterPracticeTeamContextMenuComponent {
   @Input() user?: GameCenterPracticeContextUser;
   @Input() game?: SimpleEntity;
+  @Output() sessionReset = new EventEmitter<GameCenterPracticeContextUser>();
   @Output() teamDetailClick = new EventEmitter<GameCenterPracticeContextUser>();
 
   private practiceService = inject(PracticeService);
@@ -54,6 +55,7 @@ export class GameCenterPracticeTeamContextMenuComponent {
 
         if (this.user) {
           this.toastService.showMessage(`User **${this.user.name}**'s practice session has been reset.`);
+          this.sessionReset.emit(this.user);
         }
       }
     });
