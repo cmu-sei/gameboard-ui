@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, firstValueFrom, from, map, tap } from "rxjs";
+import { Observable, Subject, firstValueFrom, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
 import { AddToTeamResponse, AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, AdvanceTeamsRequest, RemoveFromTeamResponse, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
