@@ -1,0 +1,23 @@
+<ng-container *ngIf="user">
+    <div class="btn-group" dropdown>
+        <button [id]="'game-center-practice-team-context-menu-button-{{user.id}}' + user.id" dropdownToggle
+            type="button" class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic">
+            <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
+        </button>
+        <ul id="game-center-practice-team-context-menu-{{user.id}}" *dropdownMenu class="dropdown-menu" role="menu"
+            aria-labelledby="button-basic">
+            <li role="menuitem">
+                <button class="dropdown-item btn" (click)="teamDetailClick.next(user)">More</button>
+            </li>
+
+            <ng-container *ngIf="user.activeChallenge">
+                <li class="divider dropdown-divider"></li>
+
+                <li role="menuitem">
+                    <button class="dropdown-item btn btn-danger">Reset
+                        Session</button>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+</ng-container>
