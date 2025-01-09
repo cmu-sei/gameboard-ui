@@ -36,6 +36,7 @@ export class GameCenterTeamContextMenuComponent {
   protected fa = fa;
   protected hasStartedSession = false;
   @ViewChild("addPlayerModal") addPlayerModalTemplate?: TemplateRef<any>;
+  @ViewChild("copyIdsModal") copyIdsModalTemplate?: TemplateRef<any>;
 
   constructor(
     private clipboard: ClipboardService,
@@ -110,6 +111,14 @@ export class GameCenterTeamContextMenuComponent {
     const addedPlayer = await this.teamService.addToTeam({ teamId: team.id, userId: user.id });
     this.teamUpdated.emit(this.team);
     this.toastService.showMessage(`User **${addedPlayer.user.name}** has joined team **${team.name}**!`);
+  }
+
+  protected async handleCopyIds() {
+    if (!this.copyIdsModalTemplate) {
+      return;
+    }
+
+    this.modalService.openTemplate(this.copyIdsModalTemplate);
   }
 
   protected async handleDeployResources(team: SimpleEntity) {

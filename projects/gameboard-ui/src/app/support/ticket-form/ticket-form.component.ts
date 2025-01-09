@@ -79,7 +79,9 @@ export class TicketFormComponent implements OnDestroy {
   }
 
   async submit() {
+    this.errors = [];
     this.isSubmitting = true;
+
     try {
       const ticket = await firstValueFrom(this.api.upload(this.ticket));
       if (!!ticket.id) {
@@ -87,9 +89,12 @@ export class TicketFormComponent implements OnDestroy {
       }
     }
     catch (err: any) {
+      this.errors.push(err);
       this.log.logError("Error on ticket submit", err);
     }
-    this.isSubmitting = false;
+    finally {
+      this.isSubmitting = false;
+    }
   }
 
   attachments(files: File[]) {

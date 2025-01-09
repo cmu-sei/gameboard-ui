@@ -9,6 +9,9 @@
         </li>
         <li class="divider dropdown-divider"></li>
         <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleCopyIds()">View Team IDs</button>
+        </li>
+        <li role="menuitem">
             <button class="dropdown-item btn" (click)="copy(team.captain.id, 'player ID')">Copy Player ID</button>
         </li>
         <li role="menuitem">
@@ -116,5 +119,43 @@
         </alert>
         <app-user-picker [eligibleForGameId]="game.id" [excludeUserIds]="team.players | arrayProperty:'id'"
             (select)="handleAddUserConfirm(team, $event)"></app-user-picker>
+    </app-modal-content>
+</ng-template>
+
+<ng-template #copyIdsModal>
+    <app-modal-content *ngIf="team" title="Team IDs" [subtitle]="team.id" [subSubtitle]="team.name" [hideCancel]="true">
+        <table class="table gameboard-table">
+            <col>
+            <col>
+            <col>
+            <thead>
+                <th>Player</th>
+                <th>ID</th>
+                <th>User ID</th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let player of team.players">
+                    <td>
+                        {{ player.name }}
+                        <span class="text-muted" *ngIf="team.captain.id === player.id"> (captain)</span>
+                    </td>
+
+                    <td>
+                        <span class="text-success cursor-pointer" [appCopyOnClick]="player.id"
+                            appCopyOnClickMessage="Copied player **{{player.name}}**'s ID to your clipboard.">
+                            {{ player.id }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="text-success cursor-pointer" [appCopyOnClick]="player.userId"
+                            appCopyOnClickMessage="Copied player **{{player.name}}**'s User ID to your clipboard.">
+                            {{ player.userId }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </app-modal-content>
 </ng-template>

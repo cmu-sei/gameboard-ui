@@ -1,5 +1,5 @@
 <p *ngFor="let line of text | whitespace">
-    <span *ngFor="let token of line | linkRenderer">
+    <span class="text-break" *ngFor="let token of line | linkRenderer">
         <ng-container *ngIf="token.isUrl; else notEscaped">
             <a [href]="token.text" target="_blank" rel="noopener noreferrer" [innerHtml]="token.text"></a>
         </ng-container>
