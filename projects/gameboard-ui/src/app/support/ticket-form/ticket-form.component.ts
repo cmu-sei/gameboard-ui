@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { BehaviorSubject, Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
-import { debounceTime, switchMap, tap, filter, map } from 'rxjs/operators';
+import { debounceTime, switchMap, tap, filter } from 'rxjs/operators';
 import { ChallengeOverview } from '../../api/board-models';
 import { NewTicket } from '../../api/support-models';
 import { SupportService } from '../../api/support.service';
@@ -79,7 +79,9 @@ export class TicketFormComponent implements OnDestroy {
   }
 
   async submit() {
+    this.errors = [];
     this.isSubmitting = true;
+
     try {
       const ticket = await firstValueFrom(this.api.upload(this.ticket));
       if (!!ticket.id) {
@@ -87,9 +89,12 @@ export class TicketFormComponent implements OnDestroy {
       }
     }
     catch (err: any) {
+      this.errors.push(err);
       this.log.logError("Error on ticket submit", err);
     }
-    this.isSubmitting = false;
+    finally {
+      this.isSubmitting = false;
+    }
   }
 
   attachments(files: File[]) {

@@ -2,13 +2,14 @@
     <input type="text" minlength="2" placeholder="Search players" [(ngModel)]="filterSettings.searchTerm"
         (input)="searchInput$.next(searchInput.value)" class="form-control d-block flex-grow-1" #searchInput>
 
-    <select class="form-control ml-2" [(ngModel)]="filterSettings.sessionStatus" (change)="load()">
-        <option [ngValue]="undefined" (change)="load()">[Any status]</option>
+    <select class="form-control ml-2" [ngModel]="filterSettings.sessionStatus"
+        (ngModelChange)="handleSessionStatusChange($event)">
+        <option [ngValue]="undefined">[Any status]</option>
         <option value="playing">Playing</option>
         <option value="notPlaying">Not playing</option>
     </select>
 
-    <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
+    <select [ngModel]="filterSettings.sort" (ngModelChange)="handleSortChange($event)" class="form-control ml-2">
         <option value="attemptCount">Sort by attempt count</option>
         <option value="name">Sort by name</option>
     </select>
@@ -38,8 +39,9 @@
                         </div>
                     </div>
                     <div contextMenu>
-                        <button type="button" class="btn btn-success"
-                            (click)="handleUserDetailClick(user)">More</button>
+                        <app-game-center-practice-team-context-menu [user]="user" [game]="ctx?.game"
+                            (sessionReset)="handleSessionReset($event)"
+                            (teamDetailClick)="handleUserDetailClick($event)"></app-game-center-practice-team-context-menu>
                     </div>
                 </app-team-list-card>
             </li>

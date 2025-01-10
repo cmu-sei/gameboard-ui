@@ -35,7 +35,10 @@
                 <tbody>
                     <tr *ngFor="let player of team.players">
                         <td>{{ player.name }}</td>
-                        <td>{{ player.pendingName || "--" }}</td>
+                        <td>
+                            {{ !player.pendingName || (player.pendingName === player.name ) ? "--" : player.pendingName
+                            }}
+                        </td>
                         <td>
                             <input type="text" class="form-control" placeholder="Enter a name" #overrideName>
                         </td>

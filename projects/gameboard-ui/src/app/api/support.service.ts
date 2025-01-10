@@ -178,9 +178,10 @@ export class SupportService {
     let challengeDescription = "";
     let supportCodeContent = "";
 
+
     if (ticket.challenge) {
       const adminChallengeLink = `${uriBase}admin/support?search=${ticket.challengeId}`;
-      gameDescription = ` / _Game:_ [${ticket.challenge?.gameName}](${uriBase}game/${ticket.challenge?.gameId})`;
+      gameDescription = ` / _Game:_ [${ticket.challenge?.gameName || 'unknown game'}](${uriBase}game/${ticket.challenge?.gameId})`;
       challengeDescription = ` / _Challenge:_ [${ticket.challenge?.name}](adminChallengeLink)`;
 
       if (ticket.challenge.tag) {

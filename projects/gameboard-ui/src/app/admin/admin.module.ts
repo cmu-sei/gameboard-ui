@@ -90,6 +90,7 @@ import { FeedbackTemplatePickerComponent } from "../feedback/components/feedback
 import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.component';
 import { CertificateTemplatePickerComponent } from '@/certificates/components/certificate-template-picker/certificate-template-picker.component';
 import { CertificatePreviewerComponent } from '@/certificates/components/certificate-previewer/certificate-previewer.component';
+import { GameCenterPracticeTeamContextMenuComponent } from './components/game-center/game-center-practice-team-context-menu/game-center-practice-team-context-menu.component';
 
 @NgModule({
   declarations: [
@@ -223,6 +224,7 @@ import { CertificatePreviewerComponent } from '@/certificates/components/certifi
     SystemNotificationsModule,
     // standalones
     ErrorDivComponent,
+    GameCenterPracticeTeamContextMenuComponent,
     GameInfoBubblesComponent,
     IfHasPermissionDirective,
     SafeUrlPipe,

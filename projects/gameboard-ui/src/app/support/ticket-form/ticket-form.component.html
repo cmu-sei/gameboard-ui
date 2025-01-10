@@ -1,19 +1,16 @@
 <div class="container-xl">
-
   <a class="btn btn-link ml-0 pl-0" routerLink="../">
     <fa-icon [icon]="faArrowLeft"></fa-icon>
     <span>Back</span>
   </a>
 
-
   <div class="section-header">
     <h2 class="d-inline">New Ticket</h2>
   </div>
 
+  <app-error-div [errors]="errors"></app-error-div>
+
   <form #form="ngForm" class="pop-light p-4 mt-2">
-
-    <app-error-div [errors]="errors"></app-error-div>
-
     <ng-container *ngIf="canManage$ | async as canManage">
       <div *ngIf="canManage" class="mb-3">
         <label class="mb-0" for="form-requester">Requested By</label>

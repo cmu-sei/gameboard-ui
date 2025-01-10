@@ -1,13 +1,12 @@
-import { GameHubService } from '@/services/signalR/game-hub.service';
-import { SupportHubService } from '@/services/signalR/support-hub.service';
 import { Component } from '@angular/core';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Observable } from 'rxjs';
+import { GameHubService } from '@/services/signalR/game-hub.service';
+import { SupportHubService } from '@/services/signalR/support-hub.service';
 
 @Component({
   selector: 'app-admin-overview',
-  templateUrl: './admin-overview.component.html',
-  styleUrls: ['./admin-overview.component.scss']
+  templateUrl: './admin-overview.component.html'
 })
 export class AdminOverviewComponent {
   protected gameHubState$: Observable<HubConnectionState>;
