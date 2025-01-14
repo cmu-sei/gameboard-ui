@@ -10,7 +10,6 @@ import { CoreModule } from '../core/core.module';
 import { UtilityModule } from '../utility/utility.module';
 
 import { AuthGuard } from '../utility/auth.guard';
-import { CertificateComponent } from './certificate/certificate.component';
 import { ContinueToGameboardButtonComponent } from './components/continue-to-gameboard-button/continue-to-gameboard-button.component';
 import { ExternalGameLinkBannerComponent } from './components/external-game-link-banner/external-game-link-banner.component';
 import { ExternalGameLoadingPageComponent } from './pages/external-game-loading-page/external-game-loading-page.component';
@@ -43,7 +42,6 @@ import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback
 import { GameSessionAvailabilityWarningComponent } from "./components/game-session-availability-warning/game-session-availability-warning.component";
 
 const MODULE_DECLARATIONS = [
-  CertificateComponent,
   ContinueToGameboardButtonComponent,
   ExternalGameLoadingPageComponent,
   ExternalGameLinkBannerComponent,

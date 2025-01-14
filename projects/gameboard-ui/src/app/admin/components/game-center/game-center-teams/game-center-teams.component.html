@@ -98,6 +98,10 @@
 
     <div *ngIf="hasFilters" class="mt-2 cursor-pointer">
         <alert type="warning" role="alert" *ngIf="hasFilters" (click)="handleClearAllFilters()">
+            <strong>{{ results?.teams?.paging?.itemCount || 0 }}</strong>
+            {{this.game?.isTeamGame ? "team(s)" : "player(s)" }}
+            match your filter settings. Click here to clear your filters and see all enrolled
+            {{this.game?.isTeamGame ? "team(s)" : "player(s)" }}
             Your filters may be hiding some {{ this.game?.isTeamGame ? "teams" : "players" }}. Click here to clear them.
         </alert>
     </div>
