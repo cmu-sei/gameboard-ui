@@ -6,7 +6,6 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DateTime } from 'luxon';
 import { Timeline } from 'vis-timeline/esnext';
 
 @Component({
@@ -28,7 +27,6 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     private eventHorizonService: EventHorizonService,
     private eventHorizonRenderingService: EventHorizonRenderingService,
     private logService: LogService,
-    private modalService: ModalConfirmService,
     private toastService: ToastService) { }
 
   ngOnInit() {
@@ -58,10 +56,22 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     this.timeline = new Timeline(
       this.timelineContainer.nativeElement,
       visibleDataItems,
-      this.timelineViewModel.game.challengeSpecs.map(c => ({
-        id: c.id,
-        content: c.name
-      })),
+      this.timelineViewModel.game.challengeSpecs.map(c => {
+        const teamChallengeInstance = this.timelineViewModel?.team.challenges.find(i => i.specId == c.id);
+        return {
+          id: c.id,
+          options: {
+
+          },
+          title: c.name,
+          content: `
+          <h1>${c.name}</h1>
+          <h2>
+            ${teamChallengeInstance ? `${teamChallengeInstance.id.substring(0, 6)} &middot; ${teamChallengeInstance.score}/${c.maxPossibleScore} points` : "unlaunched"}
+          </h2>
+`
+        };
+      }),
       timelineViewOptions
     );
 
@@ -91,7 +101,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
       return;
 
     await this.clipboardService.copy(bodyContent);
-    this.toastService.showMessage(`Copied this **${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}** event to your clipboard.`);
+    this.toastService.showMessage(`Copied this ** ${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}** event to your clipboard.`);
   }
 
   protected async handleEventTypeToggled(eventType: EventHorizonEventType) {
