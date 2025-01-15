@@ -69,7 +69,7 @@
       </div>
 
       <div class="wrapper col-3 my-4" *ngFor="let g of games">
-        <app-game-card [game]="g" [routerLink]="['/admin', 'game', g.id]"></app-game-card>
+        <app-game-card [game]="g" [routerLink]="['/admin', 'game', g.id]" [isClickable]="true"></app-game-card>
 
         <div class="info-bubbles mt-2 d-flex align-items-center">
           <app-game-info-bubbles class="d-block mt-2" [game]="g" bubbleSize="xl">

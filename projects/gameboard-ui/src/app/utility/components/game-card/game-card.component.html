@@ -1,7 +1,7 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<div class="card bg-dark comp-card h-100 w-100 mx-auto cursor-pointer" (click)="select()" *ngIf="game"
+<div *ngIf="game" class="card bg-dark comp-card h-100 w-100 mx-auto" [class.clickable]="isClickable" (click)="select()"
   [style.background-image]="'url(' + ((game.logo | relativeImage ) || 'assets/card.png') + ')'">
   <div class="game-front position-absolute" style="top: 15px; left: 2px;">
     <h2>

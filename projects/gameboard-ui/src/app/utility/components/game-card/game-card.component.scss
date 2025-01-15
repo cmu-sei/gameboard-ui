@@ -14,9 +14,10 @@
   box-shadow: rgb(0 0 0 / 15%) 3px 3px 0;
   width: 100%;
   margin: 0;
-  border-radius: 0;
-  border: 0;
+}
 
+.clickable {
+  cursor: pointer;
   &:hover {
     animation: ease-in dim 0.3s forwards;
   }
