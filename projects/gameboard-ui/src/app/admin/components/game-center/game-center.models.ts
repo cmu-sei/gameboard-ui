@@ -82,6 +82,7 @@ export interface GameCenterPracticeContextUser {
     activeChallenge?: SimpleEntity;
     activeChallengeEndTimestamp?: number;
     uniqueChallengeSpecs: number;
+    activeTeamId?: string;
     challengeSpecs: GameCenterPracticeChallengeSpec[]
 }
 

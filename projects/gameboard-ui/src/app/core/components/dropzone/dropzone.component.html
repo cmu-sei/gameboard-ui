@@ -11,4 +11,5 @@
   <ng-content></ng-content>
 </div>
 
-<input [id]="inputId" type="file" #fileInput (change)="filesSelected($event)" [multiple]="allowMultiple">
+<input [id]="inputId" type="file" #fileInput (change)="filesSelected($event)" [multiple]="allowMultiple"
+  [accept]="acceptMimeTypes | stringArrayJoin">

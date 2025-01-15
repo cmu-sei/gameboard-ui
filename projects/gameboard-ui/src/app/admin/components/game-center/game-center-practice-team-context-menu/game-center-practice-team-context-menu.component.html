@@ -7,6 +7,11 @@
         <ul id="game-center-practice-team-context-menu-{{user.id}}" *dropdownMenu class="dropdown-menu" role="menu"
             aria-labelledby="button-basic">
             <li role="menuitem">
+                <a *ngIf="observeUrl" [href]="observeUrl" class="dropdown-item btn">
+                    Observe
+                </a>
+            </li>
+            <li role="menuitem">
                 <button class="dropdown-item btn" (click)="teamDetailClick.next(user)">More</button>
             </li>
 

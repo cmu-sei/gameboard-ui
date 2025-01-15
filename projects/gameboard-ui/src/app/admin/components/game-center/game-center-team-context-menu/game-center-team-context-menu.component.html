@@ -24,7 +24,7 @@
         </li>
         <li class="divider dropdown-divider"></li>
         <li role="menuitem">
-            <a class="dropdown-item btn" *ngIf="observeTeamUrl" [routerLink]="observeTeamUrl">Observe Team</a>
+            <a class="dropdown-item btn" *ngIf="observeTeamUrl" [href]="observeTeamUrl">Observe Team</a>
         </li>
         <li role="menuitem" *ngIf="hasStartedSession && !hasEndedSession">
             <button class="dropdown-item btn" (click)="handleExtend(team)">Extend Session</button>

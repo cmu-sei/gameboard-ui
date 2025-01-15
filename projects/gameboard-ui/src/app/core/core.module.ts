@@ -119,6 +119,7 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
 import { MarkdownModule } from 'ngx-markdown';
+import { StringArrayJoinPipe } from './pipes/string-array-join.pipe';
 
 const PUBLIC_DECLARATIONS = [
   AbsoluteValuePipe,
@@ -263,6 +264,7 @@ const RELAYED_MODULES = [
     // standalones
     IfHasPermissionDirective,
     SpinnerComponent,
+    StringArrayJoinPipe,
     ToSupportCodePipe
   ],
   exports: [
