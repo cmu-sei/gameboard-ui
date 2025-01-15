@@ -177,7 +177,7 @@
                     {{activity.timestamp | ago}}</div>
 
                   <button type="button" class="btn btn-small px-1 py-0" tooltip="Copy this comment"
-                    [appCopyOnClick]="ctx.ticket.description"
+                    [appCopyOnClick]="activity.message"
                     appCopyOnClickMessage="Copied this comment's text to your clipboard.">
                     <fa-icon [icon]="fa.copy" size="sm" class="text-success"></fa-icon>
                   </button>
