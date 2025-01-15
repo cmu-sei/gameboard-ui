@@ -37,6 +37,7 @@ export interface GameCenterContext {
         playerCountTotal: number;
         teamCountActive: number;
         teamCountCompetitive: number;
+        teamCountComplete: number;
         teamCountPractice: number;
         teamCountNotStarted: number;
         teamCountTotal: number;

@@ -92,6 +92,7 @@
         <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
             <option value="rank">Sort by rank</option>
             <option value="name">Sort by name</option>
+            <option value="timeSinceStart">Sort by start time</option>
             <option value="timeRemaining">Sort by time remaining</option>
         </select>
     </div>
@@ -100,9 +101,7 @@
         <alert type="warning" role="alert" *ngIf="hasFilters" (click)="handleClearAllFilters()">
             <strong>{{ results?.teams?.paging?.itemCount || 0 }}</strong>
             {{this.game?.isTeamGame ? "team(s)" : "player(s)" }}
-            match your filter settings. Click here to clear your filters and see all enrolled
-            {{this.game?.isTeamGame ? "team(s)" : "player(s)" }}
-            Your filters may be hiding some {{ this.game?.isTeamGame ? "teams" : "players" }}. Click here to clear them.
+            match your filter settings. Click here to clear your filters and see all enrolled competitors.
         </alert>
     </div>
 </div>
