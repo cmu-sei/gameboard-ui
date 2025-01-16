@@ -24,6 +24,9 @@
         </li>
         <li class="divider dropdown-divider"></li>
         <li role="menuitem">
+            <a class="dropdown-item btn" *ngIf="observeTeamUrl" [href]="observeTeamUrl">Observe Team</a>
+        </li>
+        <li role="menuitem" *ngIf="hasStartedSession && !hasEndedSession">
             <button class="dropdown-item btn" (click)="handleExtend(team)">Extend Session</button>
         </li>
         <li role="menuitem">
@@ -46,13 +49,13 @@
                 </button>
             </li>
 
-            <li role="menuitem" *ngIf="!game.isSyncStart">
+            <li role="menuitem" *ngIf="!game.isSyncStart && !hasStartedSession">
                 <button class="dropdown-item btn btn-warning" (click)="handleStartSession(team!.captain)">
                     <strong>Start</strong> {{ team!.name }}'s Session
                 </button>
             </li>
 
-            <li *ngIf="game.isSyncStart">
+            <li *ngIf="game.isSyncStart && !hasStartedSession">
                 <button class="dropdown-item btn btn-warning" [disabled]="hasStartedSession"
                     (click)="handleUpdateReady(team, !team.isReady)">
                     <strong>

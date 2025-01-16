@@ -51,25 +51,19 @@
 
         <p class="mt-2">OR</p>
 
-        <button class="btn btn-success flex-grow-1 w-100" (click)="handleImportYamlClick()">
-          <fa-icon [icon]="fa.barsStaggered"></fa-icon>
-          <span>Import From YAML</span>
-        </button>
-
-        <p class="mt-2">OR</p>
-
-        <app-dropzone class="d-flex flex-grow-1 w-100" (dropped)="dropped($event)">
+        <app-dropzone class="d-flex flex-grow-1 w-100" (dropped)="handlePackageUpload($event)"
+          [acceptMimeTypes]="['application/zip']">
           <div class="dropzone-target h-100 d-flex flex-column align-items-center justify-content-center">
             <div class="text-center">
-              Upload or drop a YAML file
-              <em class="d-block fs-09 text-muted">(must be an array of games)</em>
+              Upload or drop a package
+              <em class="d-block fs-09 text-muted">(export games from a Gameboard app to create a package)</em>
             </div>
           </div>
         </app-dropzone>
       </div>
 
       <div class="wrapper col-3 my-4" *ngFor="let g of games">
-        <app-game-card [game]="g" [routerLink]="['/admin', 'game', g.id]"></app-game-card>
+        <app-game-card [game]="g" [routerLink]="['/admin', 'game', g.id]" [isClickable]="true"></app-game-card>
 
         <div class="info-bubbles mt-2 d-flex align-items-center">
           <app-game-info-bubbles class="d-block mt-2" [game]="g" bubbleSize="xl">
@@ -83,13 +77,8 @@
               </button>
               <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
                 <li role="menuitem">
-                  <button class="dropdown-item btn" (click)="yaml(g)">
-                    Export to <strong>YAML</strong>
-                  </button>
-                </li>
-                <li role="menuitem">
-                  <button class="dropdown-item btn" (click)="json(g)">
-                    Export to <strong>JSON</strong>
+                  <button class="dropdown-item btn" (click)="handleExport([g.id])">
+                    Export Package
                   </button>
                 </li>
                 <li class="divider dropdown-divider"></li>
@@ -164,10 +153,11 @@
                 <td class="thin-col sticky-options sticky-cell">
                   <div dropdown class="btn-group" container="body" #dropdown="bs-dropdown" [autoClose]="true"
                     [insideClick]="true">
-                    <a class="btn btn-outline-info py-1 px-2" [routerLink]="['../designer', game.id]">
+                    <a class="btn btn-outline-success py-1 px-2" [routerLink]="['../designer', game.id]">
                       <fa-icon [icon]="faCog" size="sm"></fa-icon>
                     </a>
-                    <button dropdownToggle class="btn btn-outline-info py-1 px-2 dropdown-toggle dropdown-toggle-split"
+                    <button dropdownToggle
+                      class="btn btn-outline-success py-1 px-2 dropdown-toggle dropdown-toggle-split"
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     </button>
                     <div *dropdownMenu class="dropdown-menu">
@@ -180,10 +170,10 @@
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item px-3" (click)="clone(game)"><fa-icon class="mr-1"
                           [icon]="faClone"></fa-icon>Clone</a>
-                      <a class="dropdown-item px-3" (click)="yaml(game); dropdown.isOpen = false;"><fa-icon class="mr-1"
-                          [icon]="faCopy"></fa-icon>YAML</a>
-                      <a class="dropdown-item px-3" (click)="json(game); dropdown.isOpen = false;"><fa-icon class="mr-1"
-                          [icon]="faCopy"></fa-icon>JSON</a>
+                      <button class="dropdown-item px-3" (click)="handleExport([game.id]); dropdown.isOpen = false">
+                        <fa-icon class="mr-1" [icon]="fa.fileExport"></fa-icon>
+                        Export as a package
+                      </button>
                       <div class="dropdown-divider"></div>
                       <app-confirm-button btnClass="dropdown-item px-3" (confirm)="delete(game)">
                         <fa-icon [icon]="faTrash"></fa-icon>

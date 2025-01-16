@@ -45,6 +45,7 @@ export interface EventHorizonChallenge {
 
 export interface EventHorizonTeamChallenge {
     id: string;
+    score?: number;
     specId: string;
 }
 

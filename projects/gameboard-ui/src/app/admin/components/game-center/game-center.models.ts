@@ -37,6 +37,7 @@ export interface GameCenterContext {
         playerCountTotal: number;
         teamCountActive: number;
         teamCountCompetitive: number;
+        teamCountComplete: number;
         teamCountPractice: number;
         teamCountNotStarted: number;
         teamCountTotal: number;
@@ -81,6 +82,7 @@ export interface GameCenterPracticeContextUser {
     activeChallenge?: SimpleEntity;
     activeChallengeEndTimestamp?: number;
     uniqueChallengeSpecs: number;
+    activeTeamId?: string;
     challengeSpecs: GameCenterPracticeChallengeSpec[]
 }
 

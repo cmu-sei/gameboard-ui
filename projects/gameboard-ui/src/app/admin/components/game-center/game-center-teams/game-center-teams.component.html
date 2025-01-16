@@ -92,13 +92,16 @@
         <select [(ngModel)]="filterSettings.sort" (change)="load()" class="form-control ml-2">
             <option value="rank">Sort by rank</option>
             <option value="name">Sort by name</option>
+            <option value="timeSinceStart">Sort by start time</option>
             <option value="timeRemaining">Sort by time remaining</option>
         </select>
     </div>
 
     <div *ngIf="hasFilters" class="mt-2 cursor-pointer">
         <alert type="warning" role="alert" *ngIf="hasFilters" (click)="handleClearAllFilters()">
-            Your filters may be hiding some {{ this.game?.isTeamGame ? "teams" : "players" }}. Click here to clear them.
+            <strong>{{ results?.teams?.paging?.itemCount || 0 }}</strong>
+            {{this.game?.isTeamGame ? "team(s)" : "player(s)" }}
+            match your filter settings. Click here to clear your filters and see all enrolled competitors.
         </alert>
     </div>
 </div>
@@ -111,13 +114,13 @@
                 <div primaryDetail>
                     <div class="font-weight-bold" [class.cursor-pointer]="team.score.totalScore > 0"
                         (click)="team.score.totalScore > 0 && handleTeamScoreClick(team.id)">
-                        <span [class.text-dashed-underline]="team.score | scoreToTooltip">
+                        <div [class.text-dashed-underline]="team.score | scoreToTooltip">
                             {{ team.score.totalScore }} points
-                        </span>
+                        </div>
 
-                        <span *ngIf="team.session.timeCumulativeMs" class="text-muted">
-                            ({{ team.session.timeCumulativeMs | msToDuration }})
-                        </span>
+                        <div *ngIf="team.session.timeCumulativeMs" class="text-muted">
+                            {{ team.session.timeCumulativeMs | msToDuration }}
+                        </div>
                     </div>
 
                     <div *ngIf="team.score.totalScore > 0" class="text-muted">

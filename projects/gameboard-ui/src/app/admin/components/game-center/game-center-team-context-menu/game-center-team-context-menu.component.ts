@@ -16,6 +16,8 @@ import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-c
 import { GameSessionService } from '@/services/game-session.service';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 import { ApiUser } from '@/api/user-models';
+import { RouterService } from '@/services/router.service';
+import { NowService } from '@/services/now.service';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -35,6 +37,8 @@ export class GameCenterTeamContextMenuComponent {
 
   protected fa = fa;
   protected hasStartedSession = false;
+  protected hasEndedSession = false;
+  protected observeTeamUrl?: string;
   @ViewChild("addPlayerModal") addPlayerModalTemplate?: TemplateRef<any>;
   @ViewChild("copyIdsModal") copyIdsModalTemplate?: TemplateRef<any>;
 
@@ -43,7 +47,9 @@ export class GameCenterTeamContextMenuComponent {
     private gameService: GameService,
     private gameSessionService: GameSessionService,
     private modalService: ModalConfirmService,
+    private nowService: NowService,
     private playerService: PlayerService,
+    private routerService: RouterService,
     private syncStartService: SyncStartService,
     private teamService: TeamService,
     private toastService: ToastService) { }
@@ -55,6 +61,10 @@ export class GameCenterTeamContextMenuComponent {
       throw new Error("No team provided");
 
     this.hasStartedSession = !!this.team.session.start;
+    this.hasEndedSession = this.hasStartedSession && (this.team.session.timeRemainingMs || 0) <= 0;
+    if (this.hasStartedSession && !this.hasEndedSession) {
+      this.observeTeamUrl = this.routerService.getObserveTeamsUrl(this.game.id, this.team.id);
+    }
   }
 
   protected confirmReset(request: TeamSessionResetRequest) {

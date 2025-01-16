@@ -13,11 +13,14 @@ import { fa } from '@/services/font-awesome.service';
 })
 export class GameCardComponent {
   @Input() game?: Game | BoardGame;
+  @Input() isClickable = false;
   @Output() selected = new EventEmitter<Game | BoardGame>();
 
   protected fa = fa;
 
   select(): void {
-    this.selected.emit(this.game);
+    if (this.isClickable) {
+      this.selected.emit(this.game);
+    }
   }
 }

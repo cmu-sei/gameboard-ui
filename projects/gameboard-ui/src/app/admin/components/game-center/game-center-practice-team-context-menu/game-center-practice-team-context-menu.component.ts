@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { fa } from "@/services/font-awesome.service";
 import { GameCenterPracticeContextUser } from '../game-center.models';
@@ -8,6 +8,7 @@ import { PracticeService } from '@/services/practice.service';
 import { TeamService } from '@/api/team.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-game-center-practice-team-context-menu',
@@ -19,7 +20,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
   templateUrl: './game-center-practice-team-context-menu.component.html',
   styleUrls: ['./game-center-practice-team-context-menu.component.scss']
 })
-export class GameCenterPracticeTeamContextMenuComponent {
+export class GameCenterPracticeTeamContextMenuComponent implements OnInit {
   @Input() user?: GameCenterPracticeContextUser;
   @Input() game?: SimpleEntity;
   @Output() sessionReset = new EventEmitter<GameCenterPracticeContextUser>();
@@ -27,10 +28,18 @@ export class GameCenterPracticeTeamContextMenuComponent {
 
   private practiceService = inject(PracticeService);
   private modalService = inject(ModalConfirmService);
+  private routerService = inject(RouterService);
   private teamService = inject(TeamService);
   private toastService = inject(ToastService);
 
   protected fa = fa;
+  protected observeUrl?: string;
+
+  ngOnInit(): void {
+    if (this.game && this.user?.activeTeamId) {
+      this.observeUrl = this.routerService.getObserveTeamsUrl(this.game.id, this.user.activeTeamId);
+    }
+  }
 
   protected handleResetSessionClick() {
     if (!this.user?.activeChallenge) {
