@@ -1,5 +1,10 @@
 <div class="challenge-spec-editor-component" *ngIf="spec">
     <h2 class="m-0 p-0 fs-11">{{ spec.name }}</h2>
+    <h3 class="m-0 p-0 text-success fs-09 fw-bold cursor-pointer" [appCopyOnClick]="spec.id"
+        appCopyOnClickMessage="Copied **{{spec.name}}**'s ID to your clipboard"
+        class="text-success fs-09 fw-bold cursor-pointer">
+        {{ spec.id | slice:0:6 }}
+    </h3>
     <hr class="my-2" />
     <div class="spec-controls-container d-flex flex-wrap align-items-center">
         <div class="form-group">
