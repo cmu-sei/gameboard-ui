@@ -2,7 +2,6 @@ import { EventHorizonDataItem, EventHorizonEventType, TeamEventHorizonViewModel 
 import { EventHorizonService } from '@/api/event-horizon.service';
 import { EventHorizonRenderingService } from '@/services/event-horizon-rendering.service';
 import { LogService } from '@/services/log.service';
-import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -60,12 +59,9 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
         const teamChallengeInstance = this.timelineViewModel?.team.challenges.find(i => i.specId == c.id);
         return {
           id: c.id,
-          options: {
-
-          },
           title: c.name,
           content: `
-          <h1>${c.name}</h1>
+          <h1 class="clonk-on-me">${c.name}</h1>
           <h2>
             ${teamChallengeInstance ? `${teamChallengeInstance.id.substring(0, 6)} &middot; ${teamChallengeInstance.score}/${c.maxPossibleScore} points` : "unlaunched"}
           </h2>
@@ -95,13 +91,14 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
 
     const timelineEvent = this.eventHorizonService.getEventId(eventId, this.timelineViewModel);
     const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, timelineEvent.id);
-    const bodyContent = this.eventHorizonRenderingService.toModalHtmlContent(timelineEvent, spec);
+    const bodyContent = this.eventHorizonRenderingService.toModalMarkdown(timelineEvent, spec);
 
-    if (!bodyContent)
+    if (!bodyContent) {
       return;
+    }
 
     await this.clipboardService.copy(bodyContent);
-    this.toastService.showMessage(`Copied this ** ${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}** event to your clipboard.`);
+    this.toastService.showMessage(`Copied this **${this.eventHorizonRenderingService.toFriendlyName(timelineEvent.type)}** event to your clipboard.`);
   }
 
   protected async handleEventTypeToggled(eventType: EventHorizonEventType) {
@@ -133,7 +130,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
         visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, spec));
       }
     }
-
+    console.log("visible adata items", visibleDataItems);
     this.timeline?.setItems(visibleDataItems);
     return visibleDataItems;
   }

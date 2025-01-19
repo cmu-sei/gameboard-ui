@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, map, of } from 'rxjs';
-import { EventHorizonEventType, EventHorizonEvent, TeamEventHorizonViewModel, EventHorizonChallengeSpec, EventHorizonGamespaceOnOffEvent } from './event-horizon.models';
+import { EventHorizonEventType, EventHorizonEvent, TeamEventHorizonViewModel, EventHorizonChallengeSpec, EventHorizonGamespaceOnOffEvent, EventHorizonTicketOpenCloseEvent } from './event-horizon.models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ApiDateTimeService } from '@/services/api-date-time.service';
 import { LogService } from '@/services/log.service';
@@ -44,6 +44,13 @@ export class EventHorizonService {
             const offAtStamp = this.apiDateTimeService.toDateTime(asGamespaceEvent.eventData?.offAt as any);
             asGamespaceEvent.eventData.offAt = offAtStamp || undefined;
           }
+
+          // also true of tickety events
+          const asTicketEvent = event as EventHorizonTicketOpenCloseEvent;
+          if (asTicketEvent.eventData?.closedAt) {
+            const closedAtStamp = this.apiDateTimeService.toDateTime(asTicketEvent.eventData.closedAt as any);
+            asTicketEvent.eventData.closedAt = closedAtStamp || undefined;
+          }
         }
 
         return timeline;
@@ -67,7 +74,8 @@ export class EventHorizonService {
       "gamespaceOnOff",
       "solveComplete",
       "submissionRejected",
-      "submissionScored"
+      "submissionScored",
+      "ticketOpenClose"
     ];
   }
 
