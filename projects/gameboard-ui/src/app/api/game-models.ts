@@ -24,7 +24,6 @@ export interface GameDetail {
   feedbackConfig: string;
   certificateTemplateId?: string;
   practiceCertificateTemplateId?: string;
-  certificateTemplateLegacy: string;
   externalHostId?: string;
   feedbackTemplate?: FeedbackTemplate;
   challengesFeedbackTemplateId?: string;
