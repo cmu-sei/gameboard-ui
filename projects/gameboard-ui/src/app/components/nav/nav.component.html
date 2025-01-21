@@ -6,13 +6,17 @@
             <a *ngFor="let t of toc$ | async" class="btn btn-link text-success mx-1" routerLinkActive="active"
                 [routerLink]="['doc', t.link]">{{t.display}}</a>
         </ng-container>
+
         <a *ngIf="isPracticeModeEnabled" class="btn btn-link text-success mx-1" routerLinkActive="active"
             [routerLink]="['practice']">Practice</a>
+
         <ng-container *ngIf="user$ | async as user; else unauthed">
-            <a class="btn btn-link text-success mx-1" routerLinkActive="active" [routerLink]="['support']">
-                <span>Support</span>
+            <div>
+                <a class="btn btn-link text-success mx-1" [routerLink]="['support']" routerLinkActive="active">
+                    Support
+                </a>
                 <app-support-pill></app-support-pill>
-            </a>
+            </div>
 
             <a class="btn btn-link text-success mx-1" routerLinkActive="active" [routerLink]="profileUrl">Profile</a>
 
