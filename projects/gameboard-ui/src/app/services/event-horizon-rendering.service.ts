@@ -92,7 +92,7 @@ export class EventHorizonRenderingService {
         detail = this.toSubmissionScoredMarkdown(timelineEvent as EventHorizonSubmissionScoredEvent, challengeSpec);
         break;
       case "ticketOpenClose":
-        detail = this.toTicketOpenCloseMarkdown(timelineEvent as EventHorizonTicketOpenCloseEvent, challengeSpec);
+        detail = this.toTicketOpenCloseMarkdown(timelineEvent as EventHorizonTicketOpenCloseEvent);
     }
 
     let retVal = header;
@@ -139,7 +139,7 @@ export class EventHorizonRenderingService {
     `.trim();
   }
 
-  private toTicketOpenCloseMarkdown(timelineEvent: EventHorizonTicketOpenCloseEvent, challengeSpec: EventHorizonChallengeSpec) {
+  private toTicketOpenCloseMarkdown(timelineEvent: EventHorizonTicketOpenCloseEvent) {
     let firstTicketText = `The team opened ticket **${timelineEvent.eventData.ticketKey}** here.`;
     let closedInfo = timelineEvent.eventData.closedAt ? ` We fully closed it at ${timelineEvent.eventData.closedAt.toLocaleString(DateTime.DATETIME_MED)}.` : "";
 
