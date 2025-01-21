@@ -1,14 +1,16 @@
-<app-modal-content title="Filter by labels" [subtitle]="selectedCount + ' selected'" confirmButtonText="Filter"
+<app-modal-content title="Filter by labels" [subtitle]="selectedCount + ' labels selected'" confirmButtonText="Filter"
     (confirm)="handleConfirmSelections()">
     <div *ngIf="selectedCount < totalLabelCount; else allLabelsSelected">
         <div class="mb-4">
             <input type="text" class="form-control" placeholder="Search tags to filter by..." [(ngModel)]="searchText">
         </div>
         <ul class="d-flex flex-wrap align-items-center mb-0">
-            <li *ngFor="let entry of labels | keyvalue | filter:'value':false" class="mr-2 mb-2">
-                <app-colored-text-chip [text]="entry.key" [isClickable]="true" (click)="handleLabelSelection(entry.key)"
-                    colorMode="dim"></app-colored-text-chip>
-            </li>
+            <ng-container *ngFor="let entry of labels | keyvalue | filter:'value':false">
+                <li *ngIf="!searchText || entry.key.indexOf(searchText) >= 0">
+                    <app-colored-text-chip [text]="entry.key" [isClickable]="true"
+                        (click)="handleLabelSelection(entry.key)" colorMode="dim"></app-colored-text-chip>
+                </li>
+            </ng-container>
         </ul>
     </div>
     <hr />
