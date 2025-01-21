@@ -43,7 +43,7 @@ export class EventHorizonRenderingService {
       case "submissionScored":
         return this.toSubmissionScoredDataItem(timelineEvent, challengeSpec);
       case "ticketOpenClose":
-        return this.toTicketOpenCloseDataItem(timelineEvent, challengeSpec);
+        return this.toTicketOpenCloseDataItem(timelineEvent as EventHorizonTicketOpenCloseEvent, challengeSpec);
     }
     throw new Error("Timeline event type not templated.");
   }
@@ -91,6 +91,8 @@ export class EventHorizonRenderingService {
       case "submissionScored":
         detail = this.toSubmissionScoredMarkdown(timelineEvent as EventHorizonSubmissionScoredEvent, challengeSpec);
         break;
+      case "ticketOpenClose":
+        detail = this.toTicketOpenCloseMarkdown(timelineEvent as EventHorizonTicketOpenCloseEvent, challengeSpec);
     }
 
     let retVal = header;
@@ -137,6 +139,13 @@ export class EventHorizonRenderingService {
     `.trim();
   }
 
+  private toTicketOpenCloseMarkdown(timelineEvent: EventHorizonTicketOpenCloseEvent, challengeSpec: EventHorizonChallengeSpec) {
+    let firstTicketText = `The team opened ticket **${timelineEvent.eventData.ticketKey}** here.`;
+    let closedInfo = timelineEvent.eventData.closedAt ? ` We fully closed it at ${timelineEvent.eventData.closedAt.toLocaleString(DateTime.DATETIME_MED)}.` : "";
+
+    return `${firstTicketText}${closedInfo}`;
+  }
+
   private toGenericDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, eventName: string, className: string, isClickable = false): EventHorizonDataItem {
     return {
       id: timelineEvent.id,
@@ -177,13 +186,13 @@ export class EventHorizonRenderingService {
     return baseItem;
   }
 
-  private toTicketOpenCloseDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
+  private toTicketOpenCloseDataItem(timelineEvent: EventHorizonTicketOpenCloseEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
     const typedEvent = timelineEvent as EventHorizonTicketOpenCloseEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Ticket Active", "eh-event-type-ticket-open-close", false);
+    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Ticket ${timelineEvent.eventData.ticketKey}`, "eh-event-type-ticket-open-close", true);
 
     baseItem.end = typedEvent.eventData?.closedAt?.toJSDate() || this.nowService.now();
     baseItem.eventData = typedEvent;
-    baseItem.type = "background";
+    baseItem.type = "range";
 
     return baseItem;
   }

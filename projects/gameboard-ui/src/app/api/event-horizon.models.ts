@@ -38,7 +38,8 @@ export interface EventHorizonSolveCompleteEvent extends EventHorizonGenericEvent
 
 export interface EventHorizonTicketOpenCloseEvent extends EventHorizonGenericEvent {
     eventData: {
-        closedAt?: DateTime
+        closedAt?: DateTime;
+        ticketKey: string;
     }
 }
 

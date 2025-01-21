@@ -130,7 +130,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
         visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, spec));
       }
     }
-    console.log("visible adata items", visibleDataItems);
+
     this.timeline?.setItems(visibleDataItems);
     return visibleDataItems;
   }
