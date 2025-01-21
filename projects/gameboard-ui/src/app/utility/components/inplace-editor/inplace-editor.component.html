@@ -1,18 +1,25 @@
 <!-- in place edit + suggestions template  -->
-  <div *ngIf="editData.isEditing" class="editor" style="position: relative;">
-    <div class="input-group">
-      <input #input type="text" autoFocus class="form-control mb-0 py-0 pr-1 edit-h" (input)="editData.filtering$.next(input.value)">
-      <div class="input-group-append edit-h">
-        <button class="btn btn-secondary" type="button" (click)="editData.isEditing=false"><fa-icon class="p-0 m-0 " [icon]="faTimes"></fa-icon></button>
-      </div>
-    </div>
-    <div style="position: absolute; z-index: 20;" class="w-100">
-      <div *ngFor="let option of editData.filteredOptions" class="bg-white w-100 text-black px-2 py-1 select-item d-flex justify-content-between" (click)="selectOption(option)">
-        <span>{{option.name}} <span class="text-muted ml-2">{{option.secondary}}</span></span>
-        <span class="plus-icon text-muted"><fa-icon [icon]="faPlusSquare"></fa-icon></span>
-      </div>
+<div *ngIf="editData.isEditing" class="editor" style="position: relative;">
+  <div class="input-group">
+    <input #input type="text" autoFocus class="form-control mb-0 py-0 pr-1 edit-h"
+      (input)="editData.filtering$.next(input.value)">
+    <div class="input-group-append edit-h">
+      <button class="btn btn-secondary" type="button" (click)="editData.isEditing=false"><fa-icon class="p-0 m-0 "
+          [icon]="faTimes"></fa-icon></button>
     </div>
   </div>
-  <div *ngIf="!editData.isEditing" (click)="startEditing()" class="edit-h" [class.editable]="!noEdit" style="display:table;">
-    <span style="display:table-cell;vertical-align:middle;" class="mb-0 py-0 px-2 align-items-center">{{currentText}}&nbsp;&nbsp;<fa-icon *ngIf="!noEdit" class="p-0 m-0 " [icon]="faPen" size="sm"></fa-icon></span>
+  <div style="position: absolute; z-index: 20;" class="w-100">
+    <div *ngFor="let option of editData.filteredOptions"
+      class="bg-white w-100 text-black px-2 py-1 select-item d-flex justify-content-between"
+      (click)="selectOption(option)">
+      <span>{{option.name}} <span class="text-muted ml-2">{{option.secondary}}</span></span>
+      <span class="plus-icon text-muted"><fa-icon [icon]="faPlusSquare"></fa-icon></span>
+    </div>
   </div>
+</div>
+<div *ngIf="!editData.isEditing" (click)="startEditing()" class="edit-h" [class.editable]="!noEdit"
+  style="display:table;">
+  <span style="display:table-cell;vertical-align:middle;"
+    class="mb-0 py-0 align-items-center">{{currentText}}&nbsp;&nbsp;<fa-icon *ngIf="!noEdit" class="p-0 m-0 "
+      [icon]="faPen" size="sm"></fa-icon></span>
+</div>
