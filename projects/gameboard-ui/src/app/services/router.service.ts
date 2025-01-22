@@ -48,14 +48,14 @@ export class RouterService implements OnDestroy {
     return this.buildAppUrlWithQueryParams({ queryParams: { search: teamId } }, "admin", "game", gameId, "teams").toString();
   }
 
-  public getCertificatePrintableUrl(mode: PlayerMode, challengeSpecOrGameId: string) {
-    const localUserId = this.localUser.user$.value?.id;
+  public getCertificatePrintableUrl(mode: PlayerMode, challengeSpecOrGameId: string, ownerUserId?: string) {
+    const userId = ownerUserId || this.localUser.user$.value?.id;
 
-    if (!localUserId) {
+    if (!userId) {
       throw new Error("Can't navigate to printable certificate if not authenticated.");
     }
 
-    return `user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
+    return `user/${userId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
   public getCertificateListUrl() {

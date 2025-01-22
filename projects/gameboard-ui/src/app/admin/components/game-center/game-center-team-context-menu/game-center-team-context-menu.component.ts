@@ -66,7 +66,7 @@ export class GameCenterTeamContextMenuComponent {
       this.observeTeamUrl = this.routerService.getObserveTeamsUrl(this.game.id, this.team.id);
     }
 
-    this.certificateUrl = this.routerService.getCertificatePrintableUrl(PlayerMode.competition, this.game.id);
+    this.certificateUrl = this.routerService.getCertificatePrintableUrl(PlayerMode.competition, this.game.id, this.team.captain.userId);
   }
 
   protected confirmReset(request: TeamSessionResetRequest) {
