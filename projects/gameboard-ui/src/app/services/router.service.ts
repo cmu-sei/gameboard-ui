@@ -55,7 +55,7 @@ export class RouterService implements OnDestroy {
       throw new Error("Can't navigate to printable certificate if not authenticated.");
     }
 
-    return `/user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
+    return `user/${localUserId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
   public getCertificateListUrl() {
