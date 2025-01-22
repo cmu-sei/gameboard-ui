@@ -6,20 +6,27 @@
   }
 
   .eh-event-type-challenge-started {
-    background-color: #e7eaf6;
+    background-color: #9cdaa9;
   }
 
-  .eh-event-type-gamespace {
-    background-color: #a2a8d3;
+  .eh-event-type-gamespace-on-off {
+    background-color: #ceecd4;
+    font-weight: bold;
+    color: #eee;
   }
 
   .eh-event-type-solve-complete {
-    background-color: #38598b;
+    background-color: #41ad57;
   }
 
   .eh-event-type-submission-scored {
-    background-color: #113f67;
-    color: #e7eaf6;
+    background-color: #318241;
+    color: #eee;
+  }
+
+  .eh-event-type-ticket-open-close {
+    background-color: $warning;
+    color: #fff;
   }
 
   .vis-label {
@@ -29,6 +36,7 @@
       font-size: 1rem !important;
       font-weight: bold;
       margin: 0;
+      padding: 0 1rem;
     }
 
     h2 {

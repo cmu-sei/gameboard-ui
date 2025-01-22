@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, SecurityContext } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MarkdownService } from 'ngx-markdown';
 
 @Injectable({ providedIn: 'root' })
 export class MarkdownHelpersService {
-  constructor(private markdownService: MarkdownService) { }
+  private domSanitizer = inject(DomSanitizer);
+  private mdService = inject(MarkdownService);
 
   arrayToBulletList(items: string[]): string {
     return items.map(i => `\n - ${i}`).join('');
@@ -19,15 +21,15 @@ export class MarkdownHelpersService {
   getMarkdownPlaceholderHelp(header?: string): string {
     const paragraphs: string[] = [];
 
-    if (header)
+    if (header) {
       paragraphs.push(header);
-
+    }
     paragraphs.push("This is a markdown field. You can surround text with _underscores_ to make it italic or double **asterisks** to make it bold. You can also [link to content using this syntax](https://google.com).");
 
     return paragraphs.join("\n\n").trim();
   }
 
-  toHtml(markdownContent: string) {
-    return this.markdownService.parse(markdownContent);
+  toHtml(markdownContent: string): string {
+    return this.domSanitizer.sanitize(SecurityContext.HTML, this.domSanitizer.bypassSecurityTrustHtml(this.mdService.parse(markdownContent, { disableSanitizer: true }))) || "";
   }
 }

@@ -38,6 +38,7 @@ export class CertificatesService {
   }
 
   getCompetitiveCertificates(userId: string): Promise<CompetitiveModeCertificate[]> {
+    console.log("getting certs", userId);
     return firstValueFrom(this.http.get<CompetitiveModeCertificate[]>(this.apiUrl.build(`user/${userId}/certificates/competitive`)));
   }
 

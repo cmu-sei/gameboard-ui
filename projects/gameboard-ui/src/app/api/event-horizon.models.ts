@@ -5,7 +5,8 @@ export type EventHorizonEventType = "challengeStarted" |
     "gamespaceOnOff" |
     "solveComplete" |
     "submissionRejected" |
-    "submissionScored"
+    "submissionScored" |
+    "ticketOpenClose"
 
 export interface EventHorizonGenericEvent {
     id: string;
@@ -35,7 +36,18 @@ export interface EventHorizonSolveCompleteEvent extends EventHorizonGenericEvent
     };
 }
 
-export type EventHorizonEvent = EventHorizonGenericEvent | EventHorizonGamespaceOnOffEvent | EventHorizonSubmissionScoredEvent | EventHorizonSolveCompleteEvent;
+export interface EventHorizonTicketOpenCloseEvent extends EventHorizonGenericEvent {
+    eventData: {
+        closedAt?: DateTime;
+        ticketKey: string;
+    }
+}
+
+export type EventHorizonEvent = EventHorizonGenericEvent |
+    EventHorizonGamespaceOnOffEvent |
+    EventHorizonSubmissionScoredEvent |
+    EventHorizonSolveCompleteEvent |
+    EventHorizonTicketOpenCloseEvent;
 
 export interface EventHorizonChallenge {
     id: string;

@@ -1,4 +1,4 @@
-import { EventHorizonDataItem, EventHorizonGenericEvent, EventHorizonEventType, EventHorizonSolveCompleteEvent, EventHorizonSubmissionScoredEvent, EventHorizonChallengeSpec, EventHorizonViewOptions, TeamEventHorizonViewModel, EventHorizonGamespaceOnOffEvent } from '@/api/event-horizon.models';
+import { EventHorizonDataItem, EventHorizonGenericEvent, EventHorizonEventType, EventHorizonSolveCompleteEvent, EventHorizonSubmissionScoredEvent, EventHorizonChallengeSpec, EventHorizonViewOptions, TeamEventHorizonViewModel, EventHorizonGamespaceOnOffEvent, EventHorizonTicketOpenCloseEvent } from '@/api/event-horizon.models';
 import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 import { MarkdownHelpersService } from './markdown-helpers.service';
@@ -21,7 +21,7 @@ export class EventHorizonRenderingService {
       groupTemplate: (groupData: any, element: any) => this.toGroupTemplate(groupData),
       min: eventHorizonVm.team.session.start.toJSDate(),
       max: sessionEnd.toJSDate(),
-      selectable: true,
+      orientation: "top",
       stack: true,
       start: eventHorizonVm.team.session.start.toJSDate(),
       tooltip: {
@@ -40,9 +40,10 @@ export class EventHorizonRenderingService {
         return this.toGamespaceOnOffDataItem(timelineEvent, challengeSpec);
       case "solveComplete":
         return this.toSolveCompleteDataItem(timelineEvent, challengeSpec);
-      case "submissionScored": {
+      case "submissionScored":
         return this.toSubmissionScoredDataItem(timelineEvent, challengeSpec);
-      }
+      case "ticketOpenClose":
+        return this.toTicketOpenCloseDataItem(timelineEvent as EventHorizonTicketOpenCloseEvent, challengeSpec);
     }
     throw new Error("Timeline event type not templated.");
   }
@@ -59,8 +60,10 @@ export class EventHorizonRenderingService {
         return "Submission Rejected (Session Expired)";
       case "submissionScored":
         return "Submission";
+      case "ticketOpenClose":
+        return "Active Ticket";
       default:
-        throw new Error(`Couldn't find a friendly name for event type "${eventType}".`);
+        return eventType;
     }
   }
 
@@ -71,7 +74,7 @@ export class EventHorizonRenderingService {
     return `<div class="eh-group">${groupData.content}</div>`;
   }
 
-  public toModalHtmlContent(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, includeClipboardPrompt?: boolean): string {
+  public toModalMarkdown(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, includeClipboardPrompt?: boolean): string {
     if (!timelineEvent)
       return "";
 
@@ -88,6 +91,8 @@ export class EventHorizonRenderingService {
       case "submissionScored":
         detail = this.toSubmissionScoredMarkdown(timelineEvent as EventHorizonSubmissionScoredEvent, challengeSpec);
         break;
+      case "ticketOpenClose":
+        detail = this.toTicketOpenCloseMarkdown(timelineEvent as EventHorizonTicketOpenCloseEvent);
     }
 
     let retVal = header;
@@ -115,8 +120,7 @@ export class EventHorizonRenderingService {
     if (challengeSpec.maxAttempts)
       attemptSummary = `${attemptSummary}/${challengeSpec.maxAttempts}`;
 
-    return `
-**Attempt:** ${attemptSummary}
+    return `**Attempt:** ${attemptSummary}
 
 **Points after this attempt:** ${timelineEvent.eventData.score}/${challengeSpec.maxPossibleScore}
 
@@ -135,6 +139,13 @@ export class EventHorizonRenderingService {
     `.trim();
   }
 
+  private toTicketOpenCloseMarkdown(timelineEvent: EventHorizonTicketOpenCloseEvent) {
+    let firstTicketText = `The team opened ticket **${timelineEvent.eventData.ticketKey}** here.`;
+    let closedInfo = timelineEvent.eventData.closedAt ? ` We fully closed it at ${timelineEvent.eventData.closedAt.toLocaleString(DateTime.DATETIME_MED)}.` : "";
+
+    return `${firstTicketText}${closedInfo}`;
+  }
+
   private toGenericDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, eventName: string, className: string, isClickable = false): EventHorizonDataItem {
     return {
       id: timelineEvent.id,
@@ -143,13 +154,13 @@ export class EventHorizonRenderingService {
       content: eventName,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
       isClickable,
-      title: this.markdownHelpers.toHtml(this.toModalHtmlContent(timelineEvent, challengeSpec, true)),
+      title: this.markdownHelpers.toHtml(this.toModalMarkdown(timelineEvent, challengeSpec, true)),
       eventData: null
     };
   }
 
   private toGamespaceOnOffDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
-    const typedEvent = timelineEvent as unknown as EventHorizonGamespaceOnOffEvent;
+    const typedEvent = timelineEvent as EventHorizonGamespaceOnOffEvent;
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace On", "eh-event-type-gamespace-on-off", false);
 
     baseItem.end = typedEvent.eventData?.offAt ? typedEvent.eventData.offAt.toJSDate() : this.nowService.now();
@@ -160,7 +171,7 @@ export class EventHorizonRenderingService {
   }
 
   private toSolveCompleteDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
-    const typedEvent = timelineEvent as unknown as EventHorizonSolveCompleteEvent;
+    const typedEvent = timelineEvent as EventHorizonSolveCompleteEvent;
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Completed", "eh-event-type-challenge-complete", true);
     baseItem.eventData = typedEvent;
 
@@ -168,9 +179,20 @@ export class EventHorizonRenderingService {
   }
 
   private toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
-    const typedEvent = timelineEvent as unknown as EventHorizonSubmissionScoredEvent;
+    const typedEvent = timelineEvent as EventHorizonSubmissionScoredEvent;
     const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Submission", "eh-event-type-submission-scored", true);
     baseItem.eventData = typedEvent;
+
+    return baseItem;
+  }
+
+  private toTicketOpenCloseDataItem(timelineEvent: EventHorizonTicketOpenCloseEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
+    const typedEvent = timelineEvent as EventHorizonTicketOpenCloseEvent;
+    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Ticket ${timelineEvent.eventData.ticketKey}`, "eh-event-type-ticket-open-close", true);
+
+    baseItem.end = typedEvent.eventData?.closedAt?.toJSDate() || this.nowService.now();
+    baseItem.eventData = typedEvent;
+    baseItem.type = "range";
 
     return baseItem;
   }
