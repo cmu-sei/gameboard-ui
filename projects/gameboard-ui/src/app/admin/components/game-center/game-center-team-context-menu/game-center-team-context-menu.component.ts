@@ -17,7 +17,7 @@ import { GameSessionService } from '@/services/game-session.service';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 import { ApiUser } from '@/api/user-models';
 import { RouterService } from '@/services/router.service';
-import { NowService } from '@/services/now.service';
+import { PlayerMode } from '@/api/player-models';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -35,6 +35,7 @@ export class GameCenterTeamContextMenuComponent {
   @Output() error = new EventEmitter<string[]>();
   @Output() teamUpdated = new EventEmitter<SimpleEntity>();
 
+  protected certificateUrl?: string;
   protected fa = fa;
   protected hasStartedSession = false;
   protected hasEndedSession = false;
@@ -47,7 +48,6 @@ export class GameCenterTeamContextMenuComponent {
     private gameService: GameService,
     private gameSessionService: GameSessionService,
     private modalService: ModalConfirmService,
-    private nowService: NowService,
     private playerService: PlayerService,
     private routerService: RouterService,
     private syncStartService: SyncStartService,
@@ -65,6 +65,8 @@ export class GameCenterTeamContextMenuComponent {
     if (this.hasStartedSession && !this.hasEndedSession) {
       this.observeTeamUrl = this.routerService.getObserveTeamsUrl(this.game.id, this.team.id);
     }
+
+    this.certificateUrl = this.routerService.getCertificatePrintableUrl(PlayerMode.competition, this.game.id);
   }
 
   protected confirmReset(request: TeamSessionResetRequest) {

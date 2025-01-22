@@ -1,7 +1,7 @@
 import { ReportMetaData } from '@/reports/reports-models';
 import { ActiveReportService } from '@/reports/services/active-report.service';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-report-parameters-container',
@@ -19,9 +19,6 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: ['./report-parameters-container.component.scss']
 })
 export class ReportParametersContainerComponent {
-  @Output() cleanChange = new EventEmitter<boolean>();
-
   protected metaData$: Observable<ReportMetaData | null> = this.activeReportService.metaData$;
-
   constructor(private activeReportService: ActiveReportService) { }
 }
