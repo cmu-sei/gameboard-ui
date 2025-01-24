@@ -72,7 +72,7 @@ export class AppNotificationsService implements OnDestroy {
       this.toastService.show({
         text: `${sendNotification.title}: ${sendNotification.body}`,
         onClick: sendNotification.appUrl ? () => new Promise<boolean>(resolve => {
-          this.windowService.open(sendNotification.appUrl!);
+          this.windowService.open(`${this.config.absoluteUrl}${sendNotification.appUrl}`);
           return true;
         }) :
           undefined,

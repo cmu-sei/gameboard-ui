@@ -34,6 +34,11 @@
                 Manual Bonuses
             </button>
         </li>
+        <li role="menuitem" *ngIf="hasEndedSession">
+            <a class="dropdown-item btn" target="_blank" [href]="certificateUrl">
+                View Certificate
+            </a>
+        </li>
 
         <ng-container *ngIf="!hasStartedSession">
             <li class="divider dropdown-divider"></li>

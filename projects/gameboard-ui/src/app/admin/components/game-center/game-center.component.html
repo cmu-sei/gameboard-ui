@@ -39,9 +39,9 @@
             [label]="(ctx.isTeamGame ? 'Teams' : 'Players') + ' not started'"></app-big-stat>
         <app-big-stat [value]="ctx.stats.playerCountActive" label="Active players"></app-big-stat>
         <app-big-stat *ngIf="ctx.isTeamGame" [value]="ctx.stats.teamCountActive" label="Active teams"></app-big-stat>
-        <app-big-stat [value]="ctx.stats.playerCountTotal" label="Total players"></app-big-stat>
         <app-big-stat [value]="ctx.stats.teamCountComplete"
             label="{{ ctx.isTeamGame ? 'Teams' : 'Players' }} complete"></app-big-stat>
+        <app-big-stat [value]="ctx.stats.playerCountTotal" label="Total players"></app-big-stat>
         <app-big-stat *ngIf="ctx.isTeamGame" [value]="ctx.stats.teamCountTotal" label="Total teams"></app-big-stat>
         <app-big-stat *ngIf="ctx.stats.topScore" [value]="ctx.stats.topScore" label="Top Performance"
             [subLabel]="ctx.stats.topScoreTeamName"></app-big-stat>
