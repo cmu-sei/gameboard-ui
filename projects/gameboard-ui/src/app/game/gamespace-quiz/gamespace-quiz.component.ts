@@ -12,6 +12,7 @@ import { NotificationService } from '@/services/notification.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ChallengeSubmissionAnswers, ChallengeSubmissionViewModelLegacy, GetChallengeSubmissionsResponseLegacy } from '@/api/challenges.models';
 import { ToastService } from '@/utility/services/toast.service';
+import { ChallengeSubmissionsService } from '@/api/challenge-submissions.service';
 
 interface PendingSubmissionsUpdate {
   challengeId: string;
@@ -48,6 +49,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
   constructor(
     private api: BoardService,
     private challengesService: ChallengesService,
+    private challengeSubmissionsService: ChallengeSubmissionsService,
     private teamHub: NotificationService,
     private toastsService: ToastService,
     private unsub: UnsubscriberService) { }
@@ -64,7 +66,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
           delay(1500),
           takeUntil(this._answersSubmitted$)
         )),
-        switchMap(update => this.challengesService.savePendingSubmission(update.challengeId, {
+        switchMap(update => this.challengeSubmissionsService.savePendingSubmission(update.challengeId, {
           questionSetIndex: update.sectionIndex,
           answers: update.answers
         }))
@@ -101,7 +103,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
           this.resetPendingAnswers();
           this.handleChallengeUpdated(challenge);
         }),
-        switchMap(challenge => this.challengesService.getSubmissionsLegacy(challenge.id)),
+        switchMap(challenge => this.challengeSubmissionsService.getSubmissionsLegacy(challenge.id)),
         tap(submissions => this.handleSubmissionsRetrieved(submissions))
       ).subscribe()
     );
@@ -117,7 +119,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
       // the default state is a blank set of answers, but we might update these later from a previous submission
       this.resetPendingAnswers();
 
-      const pastSubmissions = await firstValueFrom(this.challengesService.getSubmissionsLegacy(currentChallengeId));
+      const pastSubmissions = await firstValueFrom(this.challengeSubmissionsService.getSubmissionsLegacy(currentChallengeId));
       this.handleSubmissionsRetrieved(pastSubmissions);
     }
 
@@ -164,7 +166,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
     this.spec.instance = challenge;
     this.api.setColor(this.spec);
 
-    const submissions = await firstValueFrom(this.challengesService.getSubmissionsLegacy(challenge.id));
+    const submissions = await firstValueFrom(this.challengeSubmissionsService.getSubmissionsLegacy(challenge.id));
     this.handleSubmissionsRetrieved(submissions);
 
     this.graded.emit(true);

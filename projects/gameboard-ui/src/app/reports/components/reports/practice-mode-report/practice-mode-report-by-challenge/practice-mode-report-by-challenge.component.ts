@@ -21,7 +21,9 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
   @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
   @ViewChild("sponsorPerformance") sponsorPerformanceTemplate?: TemplateRef<PracticeModeReportSponsorPerformance[]>;
 
+  protected errors: any[] = [];
   protected fa = fa;
+  protected isDownloadingCsv = false;
   protected results: ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord> | null = null;
 
   constructor(
@@ -34,12 +36,21 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
       return;
     }
 
+    this.errors = [];
     this.results = await firstValueFrom(this.reportService.getByChallengeData(this.parameters));
     this.overallStatsUpdate.emit(this.results.overallStats);
   }
 
-  handleGetSubmissionsCsvClicked(specId?: string) {
-    this.reportService.getSubmissionsCsv(this.parameters || { grouping: PracticeModeReportGrouping.challenge }, specId);
+  async handleGetSubmissionsCsvClicked(specId?: string) {
+    try {
+      this.isDownloadingCsv = true;
+      await this.reportService.getSubmissionsCsv(this.parameters || { grouping: PracticeModeReportGrouping.challenge }, specId);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
+
+    this.isDownloadingCsv = false;
   }
 
   handlePlayersClicked(specId: string) {

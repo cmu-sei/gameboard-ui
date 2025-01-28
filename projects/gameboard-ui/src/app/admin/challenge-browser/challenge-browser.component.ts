@@ -11,6 +11,7 @@ import { BoardService } from '../../api/board.service';
 import { Search } from '../../api/models';
 import { ChallengesService } from '@/api/challenges.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { ChallengeSubmissionsService } from '@/api/challenge-submissions.service';
 
 @Component({
   selector: 'app-challenge-browser',
@@ -42,6 +43,7 @@ export class ChallengeBrowserComponent {
     route: ActivatedRoute,
     private api: BoardService,
     private challengesService: ChallengesService,
+    private challengeSubmissionsService: ChallengeSubmissionsService,
     private toastService: ToastService,
   ) {
 
@@ -103,7 +105,7 @@ export class ChallengeBrowserComponent {
     this.isLoadingSubmissions = true;
 
     try {
-      const submissions = await firstValueFrom(this.challengesService.getSubmissionsLegacy(c.id));
+      const submissions = await firstValueFrom(this.challengeSubmissionsService.getSubmissionsLegacy(c.id));
       this.selectedAudit = submissions.submittedAnswers.map(s => {
         return { submittedOn: s.submittedOn, answers: s.answers.map(a => a || "(no response)") };
       });
