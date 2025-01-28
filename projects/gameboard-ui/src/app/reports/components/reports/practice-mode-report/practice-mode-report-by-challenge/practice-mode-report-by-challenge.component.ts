@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { PracticeModeReportByChallengeRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
+import { PracticeModeReportByChallengeRecord, PracticeModeReportFlatParameters, PracticeModeReportGrouping, PracticeModeReportOverallStats, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { RouterService } from '@/services/router.service';
@@ -38,8 +38,8 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
     this.overallStatsUpdate.emit(this.results.overallStats);
   }
 
-  handleGetSubmissionsCsvClicked(specId: string) {
-
+  handleGetSubmissionsCsvClicked(specId?: string) {
+    this.reportService.getSubmissionsCsv(this.parameters || { grouping: PracticeModeReportGrouping.challenge }, specId);
   }
 
   handlePlayersClicked(specId: string) {

@@ -1,17 +1,19 @@
-import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
+import { ApiUrlService } from '@/services/api-url.service';
 import { PracticeModeReportFlatParameters, PracticeModeReportByUserRecord, PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportByPlayerModePerformanceRecord, PracticeModeReportPlayerModeSummary, PracticeModeReportOverallStats, PracticeModeReportChallengeDetail, PracticeModeReportChallengeDetailParameters } from './practice-mode-report.models';
 import { Observable, firstValueFrom, map } from 'rxjs';
 import { ReportResultsWithOverallStats } from '../../../reports-models';
 import { ReportsService } from '../../../reports.service';
-import { DateTime } from 'luxon';
 import { PagingArgs } from '@/api/models';
+import { FilesService } from '@/services/files.service';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeModeReportService {
   constructor(
     private apiUrl: ApiUrlService,
+    private filesService: FilesService,
     private http: HttpClient,
     private reportsService: ReportsService,
   ) { }
@@ -56,6 +58,11 @@ export class PracticeModeReportService {
         return r;
       })
     );
+  }
+
+  getSubmissionsCsv(parameters: PracticeModeReportFlatParameters, challengeSpecId?: string): Promise<void> {
+    const fileName = !!challengeSpecId ? `${challengeSpecId}-practice-submissions` : "practice-submissions";
+    return this.filesService.downloadFileFrom(this.apiUrl.build(`reports/export/practice-area/submissions/${challengeSpecId || ""}`, parameters), fileName, "csv", "text/csv");
   }
 
   getByUserData(parameters: PracticeModeReportFlatParameters | null): Observable<ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByUserRecord>> {

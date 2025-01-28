@@ -1,4 +1,10 @@
 <div *ngIf="results; else loading" class="results">
+    <div class="export-submissions-button d-flex justify-content-end mt-0 mb-2">
+        <button class="btn btn-sm btn-success" tooltip="Download a CSV of all submissions for these challenges"
+            (click)="handleGetSubmissionsCsvClicked()">
+            Download Submissions CSV
+        </button>
+    </div>
     <table *ngIf="results.records.length; else noRecords" class="table table-hover gameboard-table gameboard-report">
         <thead>
             <tr class="super-headers-row chill-headers">
@@ -111,7 +117,7 @@
                 </td>
 
                 <td>
-                    <div dropdown>
+                    <div class="btn-group" *ngIf="record" dropdown placement="bottom right">
                         <button [id]="'context-trigger-basic-' + record.id" dropdownToggle type="button"
                             class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic">
                             <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>

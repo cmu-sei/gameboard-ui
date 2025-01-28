@@ -95,12 +95,12 @@
                                 <td class="text-center">{{record.activityCount}}</td>
                                 <td class="text-center">{{record.assignedTo?.name}}</td>
                                 <td class="text-center">
-                                    <p>{{record.createdOn | shortdate}} @ {{record.createdOn | friendlyTime}}</p>
+                                    <p>{{record.createdOn | shortdate}} &#64; {{record.createdOn | friendlyTime}}</p>
                                     <p class="subtle-info">{{record.createdBy.name}}</p>
                                 </td>
                                 <td class="text-center">
                                     <div *ngIf="record.updatedOn; else noValue">
-                                        {{record.updatedOn | shortdate}} @
+                                        {{record.updatedOn | shortdate}} &#64;
                                         {{record.updatedOn | friendlyTime}}
                                         <p class="subtle-info">{{record.updatedBy?.name}}</p>
                                     </div>

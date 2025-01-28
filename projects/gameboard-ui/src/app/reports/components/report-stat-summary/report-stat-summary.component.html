@@ -29,15 +29,18 @@
 </ng-container>
 
 <ng-template #collapsedView>
-    <ul class="d-flex">
-        <li *ngFor="let stat of allStats" class="d-block mr-4">
-            <strong>{{ stat.label }}: </strong>
-            <span class="text-success">
-                {{stat.value}}
-                <span class="text-muted" *ngIf="stat.additionalInfo">
-                    {{ stat.additionalInfo }}
+    <div class="d-flex align-tems-center">
+        <div class="collapsed-summary-label text-upper font-weight-bold pr-4">Summary</div>
+        <ul class="ml-4 d-flex">
+            <li *ngFor="let stat of allStats" class="d-block mr-4">
+                <strong>{{ stat.label }}: </strong>
+                <span class="text-success">
+                    {{stat.value}}
+                    <span class="text-muted" *ngIf="stat.additionalInfo">
+                        {{ stat.additionalInfo }}
+                    </span>
                 </span>
-            </span>
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
 </ng-template>
