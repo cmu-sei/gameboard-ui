@@ -5,11 +5,11 @@ import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { RouterService } from '@/services/router.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';
+import { SponsorChallengePerformanceComponent } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';
 import { PagingArgs, SimpleEntity } from '@/api/models';
-import { LogService } from '@/services/log.service';
 import { ChallengeDetailModalComponent } from '../challenge-detail-modal/challenge-detail-modal.component';
 import { ChallengeResult } from '@/api/board-models';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-practice-mode-report-by-challenge',
@@ -21,6 +21,7 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
   @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
   @ViewChild("sponsorPerformance") sponsorPerformanceTemplate?: TemplateRef<PracticeModeReportSponsorPerformance[]>;
 
+  protected fa = fa;
   protected results: ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord> | null = null;
 
   constructor(
@@ -35,6 +36,10 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
 
     this.results = await firstValueFrom(this.reportService.getByChallengeData(this.parameters));
     this.overallStatsUpdate.emit(this.results.overallStats);
+  }
+
+  handleGetSubmissionsCsvClicked(specId: string) {
+
   }
 
   handlePlayersClicked(specId: string) {

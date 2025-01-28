@@ -1,15 +1,12 @@
 <div *ngIf="results; else loading" class="results">
     <table *ngIf="results.records.length; else noRecords" class="table table-hover gameboard-table gameboard-report">
-        <col>
-        <colgroup span="2"></colgroup>
-        <colgroup span="6"></colgroup>
-
         <thead>
             <tr class="super-headers-row chill-headers">
                 <th scope="col"></th>
                 <th scope="col" colspan="3" class="group-header">Engagement</th>
                 <th scope="col" colSpan="3" class="group-header">Scoring</th>
                 <th scope="col" colSpan="3" class="group-header">Solves</th>
+                <th scope="col"></th>
             </tr>
 
             <tr class="headers-row">
@@ -41,6 +38,7 @@
                 <th class="numeric-col">
                     <app-sort-header sortBy="count-solve-none">None</app-sort-header>
                 </th>
+                <th></th>
             </tr>
         </thead>
 
@@ -109,6 +107,35 @@
                         <span class="text-muted">
                             ({{ record.overallPerformance.percentageZeroScoreSolved | percent }})
                         </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div dropdown>
+                        <button [id]="'context-trigger-basic-' + record.id" dropdownToggle type="button"
+                            class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic">
+                            <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
+                        </button>
+                        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                            aria-labelledby="button-basic">
+                            <li role="menuitem">
+                                <button class="dropdown-item btn" (click)="handlePlayersClicked(record.id)">
+                                    View players
+                                </button>
+                            </li>
+                            <li role="menuitem">
+                                <button class="dropdown-item btn"
+                                    (click)="handleSponsorsClicked({ id: record.id, name: record.name }, record.performanceBySponsor)">
+                                    View sponsors
+                                </button>
+                            </li>
+                            <li class="divider dropdown-divider"></li>
+                            <li role="menuitem">
+                                <button class="dropdown-item btn" (click)="handleGetSubmissionsCsvClicked(record.id)">
+                                    Download submissions (CSV)
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                 </td>
             </tr>

@@ -34,6 +34,7 @@ export interface PracticeChallengeView {
     text: string;
     averageDeploySeconds: number;
     isHidden: boolean;
+    feedbackTemplateId: string;
     solutionGuideUrl: string;
     tags: string[];
     game: {
