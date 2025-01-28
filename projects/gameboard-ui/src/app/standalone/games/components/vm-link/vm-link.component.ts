@@ -13,7 +13,7 @@ import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
     SafeUrlPipe
   ],
   styles: [
-    "fa-icon { border-right: solid 1px #fff; padding: 0px 8px }",
+    "fa-icon { border-right: solid 1px #fff; padding: 0px 8px !important }",
     "a { border: solid 1px #fff }",
     "a:hover { color: #41ad57; border: solid 1px #41ad57; }",
     "a:hover fa-icon { border-right: solid 1px #41ad57; }"

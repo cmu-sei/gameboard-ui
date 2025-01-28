@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable, tap } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { ChallengesService } from '@/api/challenges.service';
@@ -21,6 +21,7 @@ import { VmLinkComponent } from "../vm-link/vm-link.component";
 import { UserService } from '@/utility/user.service';
 import { UserSettingsService } from '@/services/user-settings.service';
 import { PracticeChallengeView } from '@/prac/practice.models';
+import { FeedbackSubmissionFormComponent } from "@/feedback/components/feedback-submission-form/feedback-submission-form.component";
 
 export type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
 
@@ -36,7 +37,8 @@ export type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" 
     ToSupportCodePipe,
     ChallengeQuestionsComponent,
     UtilityModule,
-    VmLinkComponent
+    VmLinkComponent,
+    FeedbackSubmissionFormComponent
   ],
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss'],
@@ -53,13 +55,13 @@ export class PlayComponent implements OnChanges {
   protected deployState$ = new BehaviorSubject<PlayChallengeDeployState>("undeployed");
   protected errors: any[] = [];
   protected fa = fa;
+  protected feedbackTemplateId$: Observable<string | null> = of(null);
   protected isStickyChallengePanelAvailable = false;
   protected isStickyChallengePanelSelected = false;
   protected showStickyChallengePanelPrompt = false;
   protected solutionGuide: ChallengeSolutionGuide | null = null;
   protected vmUrls: { [id: string]: string } = {};
   protected windowWidth$: Observable<number>;
-
 
   constructor(
     private activeChallengesRepo: ActiveChallengesRepo,
@@ -70,7 +72,10 @@ export class PlayComponent implements OnChanges {
     private unsub: UnsubscriberService,
     private userAppSettings: UserSettingsService,
     private windowService: WindowService) {
+    // wire up observables
     this.windowWidth$ = windowService.resize$;
+
+    // and subs
     this.unsub.add(
       windowService.resize$.subscribe(width => {
         this.isStickyChallengePanelAvailable = width >= 1140;
@@ -91,7 +96,7 @@ export class PlayComponent implements OnChanges {
   }
 
   public async ngOnChanges(changes: SimpleChanges) {
-    if (!(changes.autoPlay || changes.challengeSpec || changes.teamId))
+    if (!(changes.autoPlay || changes.challengeSpec))
       return;
 
     if (this.autoPlay && this.playerId && this.challengeSpec && this.challengeSpec.id !== changes.challengeSpec?.currentValue) {
@@ -121,7 +126,6 @@ export class PlayComponent implements OnChanges {
     if (this.isStickyChallengePanelAvailable) {
       this.isStickyChallengePanelSelected = isEnabled;
       this.localStorage.add(StorageKey.UseStickyChallengePanel, this.isStickyChallengePanelSelected);
-
     }
     else {
       this.isStickyChallengePanelSelected = false;

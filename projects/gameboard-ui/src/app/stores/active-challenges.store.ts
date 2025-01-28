@@ -51,7 +51,7 @@ export class ActiveChallengesRepo implements OnDestroy {
         teamService: TeamService,
         private nowService: NowService) {
         this._subs.push(localUser.user$.subscribe(async u => {
-            await this._initState(challengesService, u?.id || null);
+            if (u) { await this._initState(challengesService, u?.id || null); }
         }));
 
         this._subs.push(
@@ -62,8 +62,6 @@ export class ActiveChallengesRepo implements OnDestroy {
             teamService.teamSessionEndedManually$.subscribe(tId => this.handleTeamSessionEndedManually(tId)),
             teamService.teamSessionsChanged$.subscribe(updates => this.handleTeamSessionsChanged(updates))
         );
-
-        this._initState(challengesService, localUser.user$.value?.id || null);
     }
 
     ngOnDestroy(): void {
@@ -206,7 +204,7 @@ export class ActiveChallengesRepo implements OnDestroy {
         const response = await challengesService.getActiveChallenges(localUserId);
 
         // update the store
-        activeChallengesStore.update(state => ({
+        activeChallengesStore.update(() => ({
             challenges: response.challenges,
             user: response.user
         }));
@@ -221,6 +219,7 @@ export class ActiveChallengesRepo implements OnDestroy {
             id: challenge.id,
             name: challenge.name,
             endsAt: DateTime.fromJSDate(new Date(challenge.endTime)).toMillis(),
+            feedbackTemplateId: challenge.feedbackTemplateId,
             mode: PlayerMode.practice,
             game: { id: "", name: "" },
             spec: { id: challenge.specId, name: challenge.name },
