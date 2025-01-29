@@ -19,6 +19,7 @@ export interface UserActiveChallenge {
     spec: SimpleEntity;
     endsAt?: number;
     mode: PlayerMode;
+    feedbackTemplateId?: string;
     game: SimpleEntity;
     team: SimpleEntity;
     isDeployed: boolean;

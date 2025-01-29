@@ -4,8 +4,7 @@ import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 import { DateTime } from 'luxon';
 import { Challenge, NewChallenge, SectionSubmission } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
-import { ChallengeProgressResponse, ChallengeSolutionGuide, ChallengeSubmissionAnswers, ChallengeSubmissionHistory, GetChallengeSubmissionsResponseLegacy, GetUserActiveChallengesResponse } from './challenges.models';
-import { groupBy } from '../../tools/tools';
+import { ChallengeProgressResponse, ChallengeSolutionGuide, GetUserActiveChallengesResponse } from './challenges.models';
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesService {
@@ -64,34 +63,6 @@ export class ChallengesService {
     return this.http.get<ChallengeSolutionGuide>(this.apiUrl.build(`challenge/${challengeId}/solution-guide`));
   }
 
-  public getSubmissionsLegacy(challengeId: string): Observable<GetChallengeSubmissionsResponseLegacy> {
-    return this.http.get<GetChallengeSubmissionsResponseLegacy>(this.apiUrl.build(`challenge/${challengeId}/submissions`));
-  }
-
-  public async getSubmissions(challengeId: string): Promise<ChallengeSubmissionHistory> {
-    const legacySubmissions = await firstValueFrom(this.getSubmissionsLegacy(challengeId));
-    const submissionsBySection = groupBy(legacySubmissions.submittedAnswers, s => s.sectionIndex);
-    const retVal: ChallengeSubmissionHistory = {
-      challengeId: legacySubmissions.challengeId,
-      teamId: legacySubmissions.teamId,
-      sectionSubmissions: Array.from(submissionsBySection.keys()).reduce((dict, index) => {
-        dict[index] = [];
-        return dict;
-      }, {})
-    };
-
-    for (const section of submissionsBySection) {
-      for (const submission of section[1]) {
-        retVal.sectionSubmissions[section[0]].push({
-          answers: submission.answers,
-          submittedAt: DateTime.fromISO(submission.submittedOn?.toString()).toMillis()
-        });
-      }
-    }
-
-    return retVal;
-  }
-
   public getProgress(challengeId: string): Promise<ChallengeProgressResponse> {
     return firstValueFrom(this.http.get<ChallengeProgressResponse>(this.apiUrl.build(`challenge/${challengeId}/progress`)).pipe(
       tap(response => {
@@ -100,9 +71,5 @@ export class ChallengesService {
         }
       }),
     ));
-  }
-
-  public savePendingSubmission(challengeId: string, submission: ChallengeSubmissionAnswers) {
-    return this.http.put(this.apiUrl.build(`challenge/${challengeId}/submissions/pending`), submission);
   }
 }

@@ -14,7 +14,9 @@
 
                     <p>
                         <span class="fw-bold cursor-pointer"
-                            (click)="setIsStickyPanelEnabled(!isStickyChallengePanelSelected)">Click here</span>
+                            (click)="setIsStickyPanelEnabled(!isStickyChallengePanelSelected)">
+                            Click here
+                        </span>
                         to "sticky" the Challenge panel so it's always visible as you scroll down the page.
                         (You can return the panel to the bottom of the page at any time by clicking the appropriate link
                         in the panel.)
@@ -63,6 +65,13 @@
                         </div>
                     </div>
                 </ng-container>
+
+                <div id="feedback" *ngIf="challenge.feedbackTemplateId" class="mt-4 feedback-container">
+                    <h2>Challenge Feedback</h2>
+                    <app-feedback-submission-form
+                        [feedbackEntity]="{ id: challenge.spec.id, entityType: 'challengeSpec' }"
+                        [templateId]="challenge.feedbackTemplateId"></app-feedback-submission-form>
+                </div>
             </ng-container>
         </div>
 
@@ -83,6 +92,15 @@
             <h5>Questions</h5>
             <app-challenge-questions [challengeId]="challenge.id" size="compact"></app-challenge-questions>
         </div>
+
+        <ng-container *ngIf="challenge.feedbackTemplateId">
+            <hr class="light">
+            <p>
+                Have feedback for us?
+                <a routerLink="." fragment="feedback">Submit it here</a>.
+            </p>
+        </ng-container>
+
 
         <hr class="light">
 

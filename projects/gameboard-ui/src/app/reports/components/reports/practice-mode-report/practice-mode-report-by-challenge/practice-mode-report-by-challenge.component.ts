@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { PracticeModeReportByChallengeRecord, PracticeModeReportFlatParameters, PracticeModeReportOverallStats, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
+import { PracticeModeReportByChallengeRecord, PracticeModeReportFlatParameters, PracticeModeReportGrouping, PracticeModeReportOverallStats, PracticeModeReportSponsorPerformance } from '../practice-mode-report.models';
 import { ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
 import { RouterService } from '@/services/router.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { SponsorChallengePerformanceComponent, SponsorChallengePerformanceModalContext } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';
+import { SponsorChallengePerformanceComponent } from '../sponsor-challenge-performance/sponsor-challenge-performance.component';
 import { PagingArgs, SimpleEntity } from '@/api/models';
-import { LogService } from '@/services/log.service';
 import { ChallengeDetailModalComponent } from '../challenge-detail-modal/challenge-detail-modal.component';
 import { ChallengeResult } from '@/api/board-models';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-practice-mode-report-by-challenge',
@@ -21,6 +21,9 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
   @Output() overallStatsUpdate = new EventEmitter<PracticeModeReportOverallStats>();
   @ViewChild("sponsorPerformance") sponsorPerformanceTemplate?: TemplateRef<PracticeModeReportSponsorPerformance[]>;
 
+  protected errors: any[] = [];
+  protected fa = fa;
+  protected isDownloadingCsv = false;
   protected results: ReportResultsWithOverallStats<PracticeModeReportOverallStats, PracticeModeReportByChallengeRecord> | null = null;
 
   constructor(
@@ -33,8 +36,21 @@ export class PracticeModeReportByChallengeComponent implements OnChanges {
       return;
     }
 
+    this.errors = [];
     this.results = await firstValueFrom(this.reportService.getByChallengeData(this.parameters));
     this.overallStatsUpdate.emit(this.results.overallStats);
+  }
+
+  async handleGetSubmissionsCsvClicked(specId?: string) {
+    try {
+      this.isDownloadingCsv = true;
+      await this.reportService.getSubmissionsCsv(this.parameters || { grouping: PracticeModeReportGrouping.challenge }, specId);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
+
+    this.isDownloadingCsv = false;
   }
 
   handlePlayersClicked(specId: string) {

@@ -26,7 +26,7 @@ import { UserActivityListenerComponent } from './components/user-activity-listen
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    RouterModule.forRoot([], {}),
+    RouterModule.forRoot([], { anchorScrolling: "enabled" }),
     MarkdownModule.forRoot()
   ],
   providers: [

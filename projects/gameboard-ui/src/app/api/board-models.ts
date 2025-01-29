@@ -13,6 +13,7 @@ export interface Challenge {
   tag: string;
   startTime: Date;
   endTime: Date;
+  feedbackTemplateId?: string;
   lastScoreTime: Date;
   lastSyncTime: Date;
   hasDeployedGamespace: boolean;

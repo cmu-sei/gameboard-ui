@@ -9,8 +9,10 @@ import { SimpleEntity } from '@/api/models';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { SpecQuestionPerformanceModalComponent } from '../../spec-question-performance-modal/spec-question-performance-modal.component';
+import { fa } from '@/services/font-awesome.service';
 
 export interface ChallengesReportContext {
+  isDownloadingCsv: boolean,
   isLoading: boolean,
   results?: ReportResultsWithOverallStats<ChallengesReportStatSummary, ChallengesReportRecord>
   selectedParameters: ChallengesReportFlatParameters,
@@ -23,6 +25,7 @@ export interface ChallengesReportContext {
 })
 export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportFlatParameters> {
   protected ctx: ChallengesReportContext = {
+    isDownloadingCsv: false,
     isLoading: true,
     selectedParameters: {}
   };
@@ -61,6 +64,8 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     dateEndParamName: "startDateEnd"
   });
 
+  protected fa = fa;
+
   constructor(
     private challengesReportService: ChallengesReportService,
     private modalService: ModalConfirmService) {
@@ -73,6 +78,12 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
       context: { specId: spec.id },
       modalClasses: ["modal-lg"]
     });
+  }
+
+  protected async handleSubmissionsCsvClick(challengeSpecId?: string) {
+    this.ctx.isDownloadingCsv = true;
+    await this.challengesReportService.getSubmissionsCsv(this.ctx.selectedParameters, challengeSpecId);
+    this.ctx.isDownloadingCsv = false;
   }
 
   protected async updateView(parameters: ChallengesReportFlatParameters): Promise<ReportViewUpdate> {

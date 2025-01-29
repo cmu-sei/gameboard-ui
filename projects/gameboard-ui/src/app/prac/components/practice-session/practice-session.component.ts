@@ -4,7 +4,6 @@ import { Observable, combineLatest, firstValueFrom } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { NewPlayer, PlayerMode } from '@/api/player-models';
 import { PlayerService } from '@/api/player.service';
-import { SpecSummary } from '@/api/spec-models';
 import { UserService as LocalUserService } from '@/utility/user.service';
 import { fa } from "@/services/font-awesome.service";
 import { PracticeService } from '@/services/practice.service';

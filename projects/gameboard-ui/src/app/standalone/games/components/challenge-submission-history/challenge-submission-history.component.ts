@@ -6,6 +6,7 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 import { Challenge } from '@/api/board-models';
 import { firstValueFrom } from 'rxjs';
 import { CoreModule } from '@/core/core.module';
+import { ChallengeSubmissionsService } from '@/api/challenge-submissions.service';
 
 @Component({
   selector: 'app-challenge-submission-history',
@@ -21,6 +22,7 @@ import { CoreModule } from '@/core/core.module';
 export class ChallengeSubmissionHistoryComponent implements OnInit {
   @Input() challengeId?: string;
   private _challengeService = inject(ChallengesService);
+  private _challengeSubmissionsService = inject(ChallengeSubmissionsService);
 
   protected challenge?: Challenge;
   protected submissionHistory?: ChallengeSubmissionHistory;
@@ -31,6 +33,6 @@ export class ChallengeSubmissionHistoryComponent implements OnInit {
     }
 
     this.challenge = await firstValueFrom(this._challengeService.retrieve(this.challengeId));
-    this.submissionHistory = await this._challengeService.getSubmissions(this.challengeId);
+    this.submissionHistory = await this._challengeSubmissionsService.getSubmissions(this.challengeId);
   }
 }
