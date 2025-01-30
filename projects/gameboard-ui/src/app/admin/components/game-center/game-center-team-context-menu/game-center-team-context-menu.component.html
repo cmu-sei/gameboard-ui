@@ -23,9 +23,6 @@
             </button>
         </li>
         <li class="divider dropdown-divider"></li>
-        <li role="menuitem">
-            <button class="dropdown-item btn" (click)="handleViewChallenges(team)">View Challenges</button>
-        </li>
         <li role="menuitem" *ngIf="hasStartedSession && !hasEndedSession">
             <button class="dropdown-item btn" (click)="handleExtend(team)">Extend Session</button>
         </li>
@@ -76,6 +73,9 @@
         </ng-container>
 
         <li class="divider dropdown-divider"></li>
+        <li role="menuitem">
+            <button class="dropdown-item btn btn-danger" (click)="handleViewChallenges(team)">Manage Challenges</button>
+        </li>
         <ng-container *ngIf="hasStartedSession; else unenroll">
             <li role="menuitem">
                 <button class="dropdown-item btn btn-danger"
