@@ -42,14 +42,14 @@ export class BoardService {
   }
 
   public launch(model: NewChallenge): Observable<Challenge> {
-    return this.http.post<Challenge>(`${this.url}/challenge`, model);
+    return this.http.post<Challenge>(`${this.url}/challenge/launch`, model);
   }
 
-  public start(model: ChangedChallenge): Observable<Challenge> {
+  public deployResources(model: ChangedChallenge): Observable<Challenge> {
     return this.http.put<Challenge>(`${this.url}/challenge/start`, model);
   }
 
-  public stop(model: ChangedChallenge): Observable<Challenge> {
+  public undeployResources(model: ChangedChallenge): Observable<Challenge> {
     return this.http.put<Challenge>(`${this.url}/challenge/stop`, model);
   }
 

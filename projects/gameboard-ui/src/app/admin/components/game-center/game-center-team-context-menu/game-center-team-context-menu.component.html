@@ -24,20 +24,24 @@
         </li>
         <li class="divider dropdown-divider"></li>
         <li role="menuitem">
-            <a class="dropdown-item btn" *ngIf="observeTeamUrl" [href]="observeTeamUrl">Observe Team</a>
+            <button class="dropdown-item btn" (click)="handleViewChallenges(team)">View Challenges</button>
         </li>
         <li role="menuitem" *ngIf="hasStartedSession && !hasEndedSession">
             <button class="dropdown-item btn" (click)="handleExtend(team)">Extend Session</button>
         </li>
         <li role="menuitem">
-            <button class="dropdown-item btn" (click)="handleManageBonuses(team)">
-                Manual Bonuses
-            </button>
+            <a class="dropdown-item btn" *ngIf="observeTeamUrl" [href]="observeTeamUrl">Observe Team</a>
         </li>
+
         <li role="menuitem" *ngIf="hasEndedSession">
             <a class="dropdown-item btn" target="_blank" [href]="certificateUrl">
                 View Certificate
             </a>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleManageBonuses(team)">
+                Manual Bonuses
+            </button>
         </li>
 
         <ng-container *ngIf="!hasStartedSession">

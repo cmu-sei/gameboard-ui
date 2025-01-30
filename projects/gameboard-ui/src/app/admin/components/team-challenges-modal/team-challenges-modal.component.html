@@ -1,0 +1,105 @@
+<app-modal-content *ngIf="ctx; else loading" title="Challenges" [subtitle]="ctx.team.name" [subSubtitle]="ctx.game.name"
+    [hideCancel]=true>
+    <app-error-div [errors]="errors"></app-error-div>
+
+    <ng-container *ngIf="ctx.challengeSpecStatuses.length; else noChallenges">
+        <alert *ngIf="('Teams_CreateEditDeleteChallenges' | can) || ('Teams_DeployGameResources' | can)" type="danger">
+            <div class="d-flex align-items-center">
+                <fa-icon class="d-block mr-2" size="2xl" [icon]="fa.triangleExclamation"></fa-icon>
+                <div class="flex-grow-1 pl-2">
+                    <p>
+                        <strong>Be <em>very</em> careful with these tools.</strong> Starting a challenge on a player or
+                        team's behalf will affect their cumulative time, and undeploying or purging it will erase all
+                        progress they've made on it. Use with caution!
+                    </p>
+
+                    <p class="mt-2" *ngIf="!isUnlocked">
+                        Enter the team's admin code <strong>({{ unlockAdminCode }})</strong> below to unlock challenge
+                        management tools.
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group p-0 mt-4" *ngIf="!isUnlocked">
+                <input type="text" class="form-control" [placeholder]="unlockAdminCode"
+                    (input)="handleUnlockAdminCodeInput(unlockAdminCodeInput.value)" #unlockAdminCodeInput>
+            </div>
+        </alert>
+        <table class="table gameboard-table">
+            <thead>
+                <tr>
+                    <th>Challenge</th>
+                    <th>Available</th>
+                    <th>Manage</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let challenge of ctx.challengeSpecStatuses">
+                    <td>
+                        {{ challenge.spec.name }}
+                        <div *ngIf="challenge.challengeId" class="d-flex align-items-center text-muted">
+                            <div>{{ challenge.score || 0 }} / {{ challenge.scoreMax }} points &middot;</div>
+                            <button class="btn btn-link p-0" [appCopyOnClick]="challenge.challengeId">{{ {id:
+                                challenge.challengeId} | toSupportCode }}</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="challenge.availabilityRange; else noAvailability"
+                            class="challenge-availability-window">
+                            {{ challenge.availabilityRange.start | friendlyDateAndTime }}
+                            &dash;
+                            {{ challenge.availabilityRange.end | friendlyDateAndTime }}
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="!isWorking; else working">
+                            <div class="gb-button-group btn-group">
+                                <button
+                                    *ngIf="challenge.state == 'notStarted' && ('Teams_CreateEditDeleteChallenges' | can)"
+                                    class="btn btn-danger" tooltip="Start the challenge"
+                                    (click)="handleStartClick(challenge.spec.id)" [disabled]="!isUnlocked">
+                                    <fa-icon [icon]="fa.circlePlay"></fa-icon>
+                                </button>
+                                <button *ngIf="challenge.state == 'notDeployed' && ('Teams_DeployGameResources' | can)"
+                                    class="btn btn-danger" (click)="handleDeployClick(challenge.challengeId)"
+                                    tooltip="Deploy challenge resources" [disabled]="!isUnlocked">
+                                    <fa-icon [icon]="fa.play"></fa-icon>
+                                </button>
+                                <button *ngIf="challenge.state == 'deployed' && ('Teams_DeployGameResources' | can)"
+                                    class="btn btn-danger" (click)="handleUneployClick(challenge.challengeId)"
+                                    tooltip="Undeploy challenge resources" [disabled]="!isUnlocked">
+                                    <fa-icon [icon]="fa.stop"></fa-icon>
+                                </button>
+                                <button
+                                    *ngIf="challenge.state != 'notStarted' && ('Teams_CreateEditDeleteChallenges' | can)"
+                                    class="btn btn-danger" (click)="handlePurgeClick(challenge.challengeId)"
+                                    tooltip="Purge this challenge" [disabled]="!isUnlocked">
+                                    <fa-icon [icon]="fa.trash"></fa-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+</app-modal-content>
+
+<ng-template #loading>
+    <app-spinner>Loading challenges...</app-spinner>
+</ng-template>
+
+<ng-template #working>
+    <div class="d-flex align-items-center justify-content-center">
+        <app-spinner size="small" color="#fff"></app-spinner>
+    </div>
+</ng-template>
+
+<ng-template #noAvailability>
+    <div class="text-muted text-center">--</div>
+</ng-template>
+
+<ng-template #noChallenges>
+    <em class="d-block my-2 text-muted text-center">No challenges have been configured for this game.</em>
+</ng-template>

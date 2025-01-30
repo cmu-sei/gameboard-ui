@@ -56,6 +56,7 @@ export class ActiveChallengesRepo implements OnDestroy {
 
         this._subs.push(
             interval(1000).subscribe(() => this.checkActiveChallengesForEnd()),
+            challengesService.challengeDeleted$.subscribe(challengeId => this.handleChallengeDeleted(challengeId)),
             challengesService.challengeStarted$.subscribe(challenge => this.handleChallengeStarted(challenge)),
             challengesService.challengeGraded$.subscribe(challenge => this.handleChallengeGraded(challenge)),
             challengesService.challengeDeployStateChanged$.subscribe(challenge => this.handleChallengeDeployStateChanged(challenge)),
@@ -84,6 +85,10 @@ export class ActiveChallengesRepo implements OnDestroy {
                 this.removeFromActive(challenge.id);
             }
         }
+    }
+
+    private handleChallengeDeleted(challengeId: string) {
+        this.removeFromActive(challengeId);
     }
 
     private handleChallengeDeployStateChanged(challengeDeployStateChange: Challenge) {

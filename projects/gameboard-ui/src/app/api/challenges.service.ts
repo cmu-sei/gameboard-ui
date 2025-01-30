@@ -8,6 +8,9 @@ import { ChallengeProgressResponse, ChallengeSolutionGuide, GetUserActiveChallen
 
 @Injectable({ providedIn: 'root' })
 export class ChallengesService {
+  private _challengeDeleted$ = new Subject<string>();
+  public readonly challengeDeleted$ = this._challengeDeleted$.asObservable();
+
   private _challengeDeployStateChanged$ = new Subject<Challenge>();
   public readonly challengeDeployStateChanged$ = this._challengeDeployStateChanged$.asObservable();
 
@@ -21,6 +24,11 @@ export class ChallengesService {
     private apiUrl: ApiUrlService,
     private http: HttpClient) { }
 
+  public async delete(challengeId: string) {
+    await firstValueFrom(this.http.delete(this.apiUrl.build(`challenge/${challengeId}`)));
+    this._challengeDeleted$.next(challengeId);
+  }
+
   public getActiveChallenges(userId: string): Promise<GetUserActiveChallengesResponse> {
     return firstValueFrom(this.http.get<GetUserActiveChallengesResponse>(this.apiUrl.build(`/user/${userId}/challenges/active`)));
   }
@@ -29,8 +37,12 @@ export class ChallengesService {
     return this.http.get<Challenge>(this.apiUrl.build(`challenge/${id}`));
   }
 
+  public start(request: { teamId: string, challengeSpecId: string }): Promise<Challenge> {
+    return firstValueFrom(this.http.post<Challenge>(this.apiUrl.build(`challenge`), request));
+  }
+
   public startPlaying(challenge: NewChallenge): Observable<Challenge> {
-    return this.http.post<Challenge>(this.apiUrl.build("challenge"), challenge).pipe(
+    return this.http.post<Challenge>(this.apiUrl.build("challenge/launch"), challenge).pipe(
       tap(challenge => this._challengeStarted$.next(challenge))
     );
   }

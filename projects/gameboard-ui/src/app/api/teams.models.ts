@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { PlayerWithSponsor, SimpleEntity } from "./models";
+import { DateTimeRange, PlayerWithSponsor, SimpleEntity } from "./models";
 
 export interface AdminEnrollTeamRequest {
     gameId: string;
@@ -39,6 +39,22 @@ export interface RemoveFromTeamResponse {
     user: SimpleEntity;
 }
 
+export interface TeamChallengeSpecStatus {
+    availabilityRange?: DateTimeRange;
+    challengeId?: string;
+    score?: number;
+    scoreMax: number;
+    spec: SimpleEntity;
+    state: TeamChallengeSpecStatusState;
+}
+
+export interface GetTeamChallengeSpecsStatusesResponse {
+    game: SimpleEntity;
+    team: SimpleEntity;
+    challengeSpecStatuses: TeamChallengeSpecStatus[];
+}
+
+export type TeamChallengeSpecStatusState = "notStarted" | "deployed" | "notDeployed" | "ended";
 
 export type TeamSessionResetType = "unenrollAndArchiveChallenges" | "archiveChallenges" | "preserveChallenges";
 export interface TeamSessionUpdate {
