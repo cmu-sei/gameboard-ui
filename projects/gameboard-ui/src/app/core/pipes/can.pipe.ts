@@ -1,12 +1,18 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { UserService } from '@/utility/user.service';
 
 @Pipe({ name: 'can' })
 export class CanPipe implements PipeTransform {
-  constructor(private permissionsService: UserRolePermissionsService) { }
+  private localUser = inject(UserService);
+  private permissionsService = inject(UserRolePermissionsService);
 
-  transform(user: { rolePermissions: UserRolePermissionKey[] } | null, permission: UserRolePermissionKey): boolean {
-    return this.permissionsService.canUser(user, permission);
+  transform(permission: UserRolePermissionKey): boolean {
+    if (!this.localUser.user$.value) {
+      return false;
+    }
+
+    return this.permissionsService.canUser(this.localUser.user$.value, permission);
   }
 }

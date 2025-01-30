@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, Subject, firstValueFrom, map, tap } from "rxjs";
 import { SessionEndRequest, SessionExtendRequest, Team, TeamSummary } from "./player-models";
-import { AddToTeamResponse, AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, AdvanceTeamsRequest, RemoveFromTeamResponse, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
+import { AddToTeamResponse, AdminEnrollTeamRequest, AdminEnrollTeamResponse, AdminExtendTeamSessionResponse, AdvanceTeamsRequest, GetTeamChallengeSpecsStatusesResponse, RemoveFromTeamResponse, TeamChallengeSpecStatus, TeamSessionResetType, TeamSessionUpdate } from "./teams.models";
 import { ApiUrlService } from "@/services/api-url.service";
 import { unique } from "../../tools/tools";
 import { GamePlayState } from "./game-models";
@@ -73,6 +73,10 @@ export class TeamService {
 
     public get(teamId: string) {
         return this.http.get<Team>(this.apiUrl.build(`/team/${teamId}`));
+    }
+
+    public getChallengeSpecStatuses(teamId: string) {
+        return firstValueFrom(this.http.get<GetTeamChallengeSpecsStatusesResponse>(this.apiUrl.build(`/team/${teamId}/challenges`)));
     }
 
     public getMailMetadata(gameId: string) {

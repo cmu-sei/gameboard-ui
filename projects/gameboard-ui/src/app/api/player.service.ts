@@ -81,9 +81,6 @@ export class PlayerService {
     return this.http.get<Team>(`${this.url}/team/${id}`);
   }
 
-  public getTeamChallenges = (id: string): Observable<TeamChallenge[]> =>
-    this.http.get<TeamChallenge[]>(`${this.url}/team/${id}/challenges`);
-
   public observeTeams(id: string): Observable<any> {
     return this.http.get<Team>(`${this.url}/teams/observe/${id}`);
   }

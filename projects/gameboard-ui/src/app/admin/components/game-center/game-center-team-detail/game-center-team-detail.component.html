@@ -91,19 +91,9 @@
     </ng-container>
 
     <div class="other-tools-container mt-4">
-        <h4 class="mb-2 px-3">Other tools</h4>
+        <h4 class="mb-2 px-3">Announce</h4>
 
         <app-announce [teamId]="team.id" placeholderText="Your message (sends only to this player/team)"></app-announce>
-
-        <div class="other-tools-buttons px-3">
-            <button class="btn btn-success btn-sm mr-2" (click)="toggleRawView(!showChallengeYaml)">
-                <fa-icon [icon]="fa.infoCircle"></fa-icon>
-                <span>{{ (showChallengeYaml ? "Hide" : "View") }} Data</span>
-            </button>
-
-            <app-yaml-block *ngIf="showChallengeYaml && !isLoadingChallenges"
-                [source]="teamChallenges"></app-yaml-block>
-        </div>
     </div>
 </app-modal-content>
 

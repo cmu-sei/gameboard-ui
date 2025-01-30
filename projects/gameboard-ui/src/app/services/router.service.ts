@@ -84,12 +84,11 @@ export class RouterService implements OnDestroy {
 
   public getPracticeAreaUrl(searchTerm?: string) {
     const params: Params = {};
-
     if (searchTerm) {
       params.term = searchTerm;
     }
 
-    return this.router.createUrlTree(["practice"], { queryParams: params });
+    return this.buildAppUrlWithQueryParams(params, "practice");
   }
 
   public getProfileUrl() {
@@ -212,7 +211,7 @@ export class RouterService implements OnDestroy {
   }
 
   private buildAppUrlWithQueryParams(queryParams: any, ...urlBits: string[]) {
-    return this.router.createUrlTree([this.config.basehref || "", ...urlBits], { ...queryParams });
+    return this.router.createUrlTree([this.config.basehref || "", ...urlBits], { queryParams: { ...queryParams } });
   }
 
   ngOnDestroy(): void {

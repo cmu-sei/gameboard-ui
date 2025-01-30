@@ -90,23 +90,6 @@ export class GameCenterTeamDetailComponent implements OnInit {
       modalClasses: ["modal-lg"]
     });
   }
-
-  protected async toggleRawView(isExpanding: boolean) {
-    if (isExpanding) {
-      this.isLoadingChallenges = true;
-
-      this.teamChallenges = await firstValueFrom(
-        this
-          .playerService
-          .getTeamChallenges(this.team.id)
-      );
-
-      this.isLoadingChallenges = false;
-    }
-
-    this.showChallengeYaml = isExpanding;
-  }
-
   protected async updateNameChangeRequest(playerId: string, overrideName: string, args: UpdatePlayerNameChangeRequest) {
     if (!args.status) {
       args.approvedName = overrideName || args.requestedName;

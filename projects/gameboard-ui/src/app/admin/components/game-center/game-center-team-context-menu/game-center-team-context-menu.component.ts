@@ -18,6 +18,7 @@ import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams
 import { ApiUser } from '@/api/user-models';
 import { RouterService } from '@/services/router.service';
 import { PlayerMode } from '@/api/player-models';
+import { TeamChallengesModalComponent } from '../../team-challenges-modal/team-challenges-modal.component';
 
 export interface TeamSessionResetRequest {
   teamId: string;
@@ -206,6 +207,16 @@ export class GameCenterTeamContextMenuComponent {
       context: {
         team,
         game: this.game
+      },
+      modalClasses: ["modal-xl"]
+    });
+  }
+
+  handleViewChallenges(team: GameCenterTeamsResultsTeam) {
+    this.modalService.openComponent({
+      content: TeamChallengesModalComponent,
+      context: {
+        teamId: team.id
       },
       modalClasses: ["modal-xl"]
     });
