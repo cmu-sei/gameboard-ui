@@ -1,6 +1,6 @@
-# GameboardUi
+# Gameboard
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.0.
+Gameboard's web client is an Angular 15.2.10 app.
 
 ## Development server
 
@@ -25,3 +25,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## User documentation
+
+Gameboard is part of the [Crucible](https://cmu-sei.github.io/crucible/) framework. We maintain comprehensive documentation for all Crucible apps, including Gameboard, there. [Check it out!](https://cmu-sei.github.io/crucible/gameboard/)
