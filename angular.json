@@ -77,11 +77,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "gameboard-ui:build:production"
+              "buildTarget": "gameboard-ui:build:production"
             },
             "development": {
-              "browserTarget": "gameboard-ui:build:development",
-              "port": 4202
+              "port": 4202,
+              "buildTarget": "gameboard-ui:build:development"
             }
           },
           "options": {
@@ -92,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gameboard-ui:build"
+            "buildTarget": "gameboard-ui:build"
           }
         },
         "test": {
@@ -190,10 +190,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "gameboard-mks:build:production"
+              "buildTarget": "gameboard-mks:build:production"
             },
             "development": {
-              "browserTarget": "gameboard-mks:build:development"
+              "buildTarget": "gameboard-mks:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -201,7 +201,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gameboard-mks:build"
+            "buildTarget": "gameboard-mks:build"
           }
         },
         "test": {
