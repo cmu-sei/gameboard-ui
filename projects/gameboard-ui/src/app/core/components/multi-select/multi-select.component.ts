@@ -21,11 +21,11 @@ export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelec
   @Input() getSearchText: (option: TItem) => string = option => `${option}`;
   @Input() value: (option: TItem) => string = option => option as unknown as string;
 
-  private _itemTemplate: TemplateRef<TItem> | null = null;
+  private _itemTemplate: TemplateRef<Object> | null = null;
   public get itemTemplate() { return this._itemTemplate; }
-  @Input() public set itemTemplate(value: TemplateRef<TItem> | null) { this._itemTemplate = value; }
+  @Input() public set itemTemplate(value: TemplateRef<Object> | null) { this._itemTemplate = value; }
 
-  @ViewChild("defaultItemTemplate") defaultItemTemplate?: TemplateRef<TItem>;
+  @ViewChild("defaultItemTemplate") defaultItemTemplate?: TemplateRef<Object>;
 
   protected countSelectedOverDisplayThreshold = 0;
   protected fa = fa;

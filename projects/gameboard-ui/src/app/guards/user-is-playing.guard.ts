@@ -2,11 +2,11 @@ import { PlayerService } from '@/api/player.service';
 import { LogService } from '@/services/log.service';
 import { AuthService } from '@/utility/auth.service';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class UserIsPlayingGuard implements CanActivate, CanActivateChild {
+export class UserIsPlayingGuard  {
   constructor(
     private auth: AuthService,
     private log: LogService,

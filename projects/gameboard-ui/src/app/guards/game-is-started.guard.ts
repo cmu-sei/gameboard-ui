@@ -4,11 +4,11 @@ import { TeamService } from '@/api/team.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 import { LogService } from '@/services/log.service';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class GameIsStarted implements CanActivate, CanActivateChild {
+export class GameIsStarted  {
   constructor(
     private log: LogService,
     private permissionsService: UserRolePermissionsService,

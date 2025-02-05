@@ -2,14 +2,14 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, NavigationStart, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, NavigationStart, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { UserService as LocalUserService } from './user.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Injectable({ providedIn: 'root' })
-export class AdminGuard implements CanActivate, CanActivateChild {
+export class AdminGuard  {
   destinationUrl: string = "";
 
   constructor(
