@@ -16,7 +16,6 @@ import { FeedbackTemplate } from './feedback-models';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
-
   url = '';
   private cache: CachedGame[] = [];
 

@@ -20,15 +20,15 @@ export class FilesService {
     return year + '-' + month + '-' + day + '-' + hours + minutes + seconds;
   }
 
-  public async downloadFileFrom(url: string, name: string, extension: string, type: string, addTimestamp = true) {
+  public async downloadFileFrom(url: string, name: string, extension: string, contentType: string, addTimestamp = true) {
     const finalName = `${name}${addTimestamp ? this.buildTimestamp() : ''}.${extension}`;
     const response = await firstValueFrom(this.http.get(url, {
       headers: {
-        "Content-Type": "text/csv"
+        "Content-Type": contentType
       },
       responseType: 'arraybuffer'
     }));
-    this.downloadFile(response, finalName, type);
+    this.downloadFile(response, finalName, contentType);
   }
 
   public downloadFile(data: any, name: string, type: string) {
