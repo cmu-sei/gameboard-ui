@@ -29,7 +29,7 @@ export class MarkdownHelpersService {
     return paragraphs.join("\n\n").trim();
   }
 
-  toHtml(markdownContent: string): string {
-    return this.domSanitizer.sanitize(SecurityContext.HTML, this.domSanitizer.bypassSecurityTrustHtml(this.mdService.parse(markdownContent, { disableSanitizer: true }))) || "";
+  async toHtml(markdownContent: string): Promise<string> {
+    return this.domSanitizer.sanitize(SecurityContext.HTML, this.domSanitizer.bypassSecurityTrustHtml(await this.mdService.parse(markdownContent, { disableSanitizer: true }))) || "";
   }
 }

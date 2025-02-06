@@ -36,7 +36,7 @@ import { LogService } from './services/log.service';
 import { SystemNotificationsModule } from './system-notifications/system-notifications.module';
 import { UserNavItemComponent } from './standalone/user/components/user-nav-item/user-nav-item.component';
 import { markedOptionsFactory } from './core/config/marked.config';
-import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+import { MarkdownModule, MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -79,10 +79,12 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
       deps: [ConfigService, LogService, UserService],
     },
-    {
-      provide: MarkedOptions,
-      useFactory: markedOptionsFactory
-    },
+    provideMarkdown({
+      markedOptions: {
+        provide: MARKED_OPTIONS,
+        useFactory: markedOptionsFactory,
+      },
+    }),
     {
       provide: [NotificationService],
       useFactory: () => NotificationService,

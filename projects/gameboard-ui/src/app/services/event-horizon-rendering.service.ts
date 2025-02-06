@@ -32,18 +32,18 @@ export class EventHorizonRenderingService {
     };
   }
 
-  public toDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
+  public async toDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): Promise<EventHorizonDataItem> {
     switch (timelineEvent.type) {
       case "challengeStarted":
-        return this.toGenericDataItem(timelineEvent, challengeSpec, "Started", "eh-event-type-challenge-started", true);
+        return await this.toGenericDataItem(timelineEvent, challengeSpec, "Started", "eh-event-type-challenge-started", true);
       case "gamespaceOnOff":
-        return this.toGamespaceOnOffDataItem(timelineEvent, challengeSpec);
+        return await this.toGamespaceOnOffDataItem(timelineEvent, challengeSpec);
       case "solveComplete":
-        return this.toSolveCompleteDataItem(timelineEvent, challengeSpec);
+        return await this.toSolveCompleteDataItem(timelineEvent, challengeSpec);
       case "submissionScored":
-        return this.toSubmissionScoredDataItem(timelineEvent, challengeSpec);
+        return await this.toSubmissionScoredDataItem(timelineEvent, challengeSpec);
       case "ticketOpenClose":
-        return this.toTicketOpenCloseDataItem(timelineEvent as EventHorizonTicketOpenCloseEvent, challengeSpec);
+        return await this.toTicketOpenCloseDataItem(timelineEvent as EventHorizonTicketOpenCloseEvent, challengeSpec);
     }
     throw new Error("Timeline event type not templated.");
   }
@@ -146,7 +146,7 @@ export class EventHorizonRenderingService {
     return `${firstTicketText}${closedInfo}`;
   }
 
-  private toGenericDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, eventName: string, className: string, isClickable = false): EventHorizonDataItem {
+  private async toGenericDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec, eventName: string, className: string, isClickable = false): Promise<EventHorizonDataItem> {
     return {
       id: timelineEvent.id,
       group: challengeSpec.id,
@@ -154,14 +154,14 @@ export class EventHorizonRenderingService {
       content: eventName,
       className: `eh-event ${isClickable ? "eh-event-clickable" : ""} ${className}`,
       isClickable,
-      title: this.markdownHelpers.toHtml(this.toModalMarkdown(timelineEvent, challengeSpec, true)),
+      title: await this.markdownHelpers.toHtml(this.toModalMarkdown(timelineEvent, challengeSpec, true)),
       eventData: null
     };
   }
 
-  private toGamespaceOnOffDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
+  private async toGamespaceOnOffDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): Promise<EventHorizonDataItem> {
     const typedEvent = timelineEvent as EventHorizonGamespaceOnOffEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace On", "eh-event-type-gamespace-on-off", false);
+    const baseItem = await this.toGenericDataItem(timelineEvent, challengeSpec, "Gamespace On", "eh-event-type-gamespace-on-off", false);
 
     baseItem.end = typedEvent.eventData?.offAt ? typedEvent.eventData.offAt.toJSDate() : this.nowService.now();
     baseItem.eventData = typedEvent;
@@ -170,25 +170,25 @@ export class EventHorizonRenderingService {
     return baseItem;
   }
 
-  private toSolveCompleteDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
+  private async toSolveCompleteDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): Promise<EventHorizonDataItem> {
     const typedEvent = timelineEvent as EventHorizonSolveCompleteEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Completed", "eh-event-type-challenge-complete", true);
+    const baseItem = await this.toGenericDataItem(timelineEvent, challengeSpec, "Completed", "eh-event-type-challenge-complete", true);
     baseItem.eventData = typedEvent;
 
     return baseItem;
   }
 
-  private toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
+  private async toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): Promise<EventHorizonDataItem> {
     const typedEvent = timelineEvent as EventHorizonSubmissionScoredEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, "Submission", "eh-event-type-submission-scored", true);
+    const baseItem = await this.toGenericDataItem(timelineEvent, challengeSpec, "Submission", "eh-event-type-submission-scored", true);
     baseItem.eventData = typedEvent;
 
     return baseItem;
   }
 
-  private toTicketOpenCloseDataItem(timelineEvent: EventHorizonTicketOpenCloseEvent, challengeSpec: EventHorizonChallengeSpec): EventHorizonDataItem {
+  private async toTicketOpenCloseDataItem(timelineEvent: EventHorizonTicketOpenCloseEvent, challengeSpec: EventHorizonChallengeSpec): Promise<EventHorizonDataItem> {
     const typedEvent = timelineEvent as EventHorizonTicketOpenCloseEvent;
-    const baseItem = this.toGenericDataItem(timelineEvent, challengeSpec, `Ticket ${timelineEvent.eventData.ticketKey}`, "eh-event-type-ticket-open-close", true);
+    const baseItem = await this.toGenericDataItem(timelineEvent, challengeSpec, `Ticket ${timelineEvent.eventData.ticketKey}`, "eh-event-type-ticket-open-close", true);
 
     baseItem.end = typedEvent.eventData?.closedAt?.toJSDate() || this.nowService.now();
     baseItem.eventData = typedEvent;

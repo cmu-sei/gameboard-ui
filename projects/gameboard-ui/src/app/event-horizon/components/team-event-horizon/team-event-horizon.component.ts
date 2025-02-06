@@ -50,7 +50,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
       throw new Error("Couldn't find the timeline container.");
 
     const timelineViewOptions = this.eventHorizonRenderingService.getViewOptions(this.timelineViewModel);
-    const visibleDataItems = this.buildTimelineDataSet(this.timelineViewModel);
+    const visibleDataItems = await this.buildTimelineDataSet(this.timelineViewModel);
 
     this.timeline = new Timeline(
       this.timelineContainer.nativeElement,
@@ -116,7 +116,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     this.buildTimelineDataSet(this.timelineViewModel);
   }
 
-  private buildTimelineDataSet(eventHorizon?: TeamEventHorizonViewModel): EventHorizonDataItem[] {
+  private async buildTimelineDataSet(eventHorizon?: TeamEventHorizonViewModel): Promise<EventHorizonDataItem[]> {
     if (!eventHorizon || !this.timelineViewModel) {
       this.timeline?.setItems([]);
       return [];
@@ -127,7 +127,7 @@ export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestr
     for (const event of eventHorizon.team.events) {
       if (this.selectedEventTypes.indexOf(event.type) >= 0) {
         const spec = this.eventHorizonService.getSpecForEventId(this.timelineViewModel, event.id);
-        visibleDataItems.push(this.eventHorizonRenderingService.toDataItem(event, spec));
+        visibleDataItems.push(await this.eventHorizonRenderingService.toDataItem(event, spec));
       }
     }
 

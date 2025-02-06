@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -19,7 +19,6 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 // other 3rd party modules
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgChartsModule } from 'ng2-charts';
 // import luxon adapter for chartjs
 import 'chartjs-adapter-luxon';
 
@@ -55,9 +54,8 @@ import { DateTimeIsPastPipe } from './pipes/datetime-is-past.pipe';
 import { DatetimeToDatePipe } from './pipes/datetime-to-date.pipe';
 import { DateToDatetimePipe } from './pipes/date-to-datetime.pipe';
 import { DelimitedPipe } from './pipes/delimited.pipe';
-import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
-import { EpochMsToDateTimePipe as EpochMsToDateTimePipe } from './pipes/epoch-ms-to-datetime.pipe';
+import { EpochMsToDateTimePipe } from './pipes/epoch-ms-to-datetime.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
 import { FriendlyDateAndTimePipe } from './pipes/friendly-date-and-time.pipe';
 import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
@@ -120,158 +118,157 @@ import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permiss
 import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe';
 import { MarkdownModule } from 'ngx-markdown';
 import { StringArrayJoinPipe } from './pipes/string-array-join.pipe';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 const PUBLIC_DECLARATIONS = [
-  AbsoluteValuePipe,
-  AddDurationPipe,
-  AgedDatePipe,
-  ApiDatePipe,
-  ApiUrlPipe,
-  ArrayContainsPipe,
-  ArrayPropertyPipe,
-  ArrayToCountPipe,
-  AssetPathPipe,
-  AutofocusDirective,
-  AvatarComponent,
-  AvatarChipComponent,
-  BigStatComponent,
-  CanPipe,
-  ChallengeResultColorPipe,
-  ChallengeResultPrettyPipe,
-  ChallengeSolutionGuideComponent,
-  ColoredTextChipComponent,
-  ConfirmButtonComponent,
-  CopyOnClickDirective,
-  CountdownComponent,
-  CumulativeTimeClockComponent,
-  DateToCountdownPipe,
-  DateToDatetimePipe,
-  DateTimeIsFuturePipe,
-  DateTimeIsPastPipe,
-  DatetimeToDatePipe,
-  DelimitedPipe,
-  DoughnutChartComponent,
-  DropzoneComponent,
-  EpochMsToDateTimePipe,
-  FriendlyDateAndTimePipe,
-  GameboardPerformanceSummaryComponent,
-  GameCardImageComponent,
-  GameMapImageUrlPipe,
-  GbProgressBarComponent,
-  LineChartComponent,
-  LinkRendererPipe,
-  LongContentHiderComponent,
-  ModalConfirmComponent,
-  ModalConfirmDirective,
-  MsToDurationPipe,
-  MultiSelectComponent,
-  PagerComponent,
-  PlayerAvatarComponent,
-  PlayerAvatarLegacyComponent,
-  PlayerAvatarListComponent,
-  PlayerStatusComponent,
-  NumbersToPercentage,
-  ObserverConsoleComponent,
-  QueryParamModelDirective,
-  RefreshIframeOnReconnectDirective,
-  RelativeUrlsPipe,
-  RenderLinksInTextComponent,
-  TicketListComponent,
-  ToggleSwitchComponent,
-  TrimPipe,
-  UrlRewritePipe,
-  ClockPipe,
-  CountdownPipe,
-  CountdownColorPipe,
-  FilterPipe,
-  FriendlyTimePipe,
-  MinPipe,
-  ModalContentComponent,
-  PluralizerPipe,
-  RenderLinksInTextComponent,
-  RelativeImagePipe,
-  RelativeToAbsoluteHrefPipe,
-  RelativeUrlsPipe,
-  SelectPagerComponent,
-  ShareButtonComponent,
-  ShortDatePipe,
-  SimpleEntitiesToTooltipPipe,
-  SortPipe,
-  SponsoredEntitiesToSponsorsPipe,
-  SponsorToLogoUriPipe,
-  SponsorsToLogoUrisPipe,
-  SponsorLogoFileNamesToUrisPipe,
-  StatusLightComponent,
-  SumArrayPipe,
-  TextToColorPipe,
-  ToggleClassPipe,
-  ToTemplateContextPipe,
-  TicketLabelPickerComponent,
-  TicketListComponent,
-  TicketStatusBadgePipe,
-  UntilDateTimePipe,
-  UrlRewritePipe,
-  WhatsThisComponent,
-  WhitespacePipe,
-  YamlBlockComponent,
-  YamlPipe
+    AbsoluteValuePipe,
+    AddDurationPipe,
+    AgedDatePipe,
+    ApiDatePipe,
+    ApiUrlPipe,
+    ArrayContainsPipe,
+    ArrayPropertyPipe,
+    ArrayToCountPipe,
+    AssetPathPipe,
+    AutofocusDirective,
+    AvatarComponent,
+    AvatarChipComponent,
+    BigStatComponent,
+    CanPipe,
+    ChallengeResultColorPipe,
+    ChallengeResultPrettyPipe,
+    ChallengeSolutionGuideComponent,
+    ColoredTextChipComponent,
+    ConfirmButtonComponent,
+    CopyOnClickDirective,
+    CountdownComponent,
+    CumulativeTimeClockComponent,
+    DateToCountdownPipe,
+    DateToDatetimePipe,
+    DateTimeIsFuturePipe,
+    DateTimeIsPastPipe,
+    DatetimeToDatePipe,
+    DelimitedPipe,
+    DropzoneComponent,
+    EpochMsToDateTimePipe,
+    FriendlyDateAndTimePipe,
+    GameboardPerformanceSummaryComponent,
+    GameCardImageComponent,
+    GameMapImageUrlPipe,
+    GbProgressBarComponent,
+    LineChartComponent,
+    LinkRendererPipe,
+    LongContentHiderComponent,
+    ModalConfirmComponent,
+    ModalConfirmDirective,
+    MsToDurationPipe,
+    MultiSelectComponent,
+    PagerComponent,
+    PlayerAvatarComponent,
+    PlayerAvatarLegacyComponent,
+    PlayerAvatarListComponent,
+    PlayerStatusComponent,
+    NumbersToPercentage,
+    ObserverConsoleComponent,
+    QueryParamModelDirective,
+    RefreshIframeOnReconnectDirective,
+    RelativeUrlsPipe,
+    RenderLinksInTextComponent,
+    TicketListComponent,
+    ToggleSwitchComponent,
+    TrimPipe,
+    UrlRewritePipe,
+    ClockPipe,
+    CountdownPipe,
+    CountdownColorPipe,
+    FilterPipe,
+    FriendlyTimePipe,
+    MinPipe,
+    ModalContentComponent,
+    PluralizerPipe,
+    RenderLinksInTextComponent,
+    RelativeImagePipe,
+    RelativeToAbsoluteHrefPipe,
+    RelativeUrlsPipe,
+    SelectPagerComponent,
+    ShareButtonComponent,
+    ShortDatePipe,
+    SimpleEntitiesToTooltipPipe,
+    SortPipe,
+    SponsoredEntitiesToSponsorsPipe,
+    SponsorToLogoUriPipe,
+    SponsorsToLogoUrisPipe,
+    SponsorLogoFileNamesToUrisPipe,
+    StatusLightComponent,
+    SumArrayPipe,
+    TextToColorPipe,
+    ToggleClassPipe,
+    ToTemplateContextPipe,
+    TicketLabelPickerComponent,
+    TicketListComponent,
+    TicketStatusBadgePipe,
+    UntilDateTimePipe,
+    UrlRewritePipe,
+    WhatsThisComponent,
+    WhitespacePipe,
+    YamlBlockComponent,
+    YamlPipe
 ];
 
 const RELAYED_MODULES = [
-  AlertModule,
-  BsDatepickerModule,
-  BsDropdownModule,
-  ButtonsModule,
-  CollapseModule,
-  FontAwesomeModule,
-  FormsModule,
-  MarkdownModule,
-  ModalModule,
-  NgChartsModule,
-  PopoverModule,
-  ReactiveFormsModule,
-  RouterModule,
-  TabsModule,
-  TooltipModule,
-  TypeaheadModule
+    AlertModule,
+    BsDatepickerModule,
+    BsDropdownModule,
+    ButtonsModule,
+    CollapseModule,
+    FontAwesomeModule,
+    FormsModule,
+    MarkdownModule,
+    ModalModule,
+    PopoverModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TabsModule,
+    TooltipModule,
+    TypeaheadModule
 ];
 
 @NgModule({
-  declarations: [
-    ...PUBLIC_DECLARATIONS,
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ApiStatusInterceptor,
-      multi: true
-    },
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ProgressbarModule,
-    TooltipModule,
-    PopoverModule.forRoot(),
-    TypeaheadModule.forRoot(),
-    ...RELAYED_MODULES,
-
-    // standalones
-    IfHasPermissionDirective,
-    SpinnerComponent,
-    StringArrayJoinPipe,
-    ToSupportCodePipe
-  ],
-  exports: [
-    CommonModule,
-    ...RELAYED_MODULES,
-    ...PUBLIC_DECLARATIONS,
-    IfHasPermissionDirective
-  ]
+    declarations: [
+        ...PUBLIC_DECLARATIONS,
+    ],
+    exports: [
+        CommonModule,
+        ...RELAYED_MODULES,
+        ...PUBLIC_DECLARATIONS,
+        IfHasPermissionDirective
+    ],
+    imports: [
+        CommonModule,
+        ProgressbarModule,
+        TooltipModule,
+        PopoverModule.forRoot(),
+        TypeaheadModule.forRoot(),
+        ...RELAYED_MODULES,
+        // standalones
+        IfHasPermissionDirective,
+        SpinnerComponent,
+        StringArrayJoinPipe,
+        ToSupportCodePipe
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ApiStatusInterceptor,
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideCharts(withDefaultRegisterables()),
+    ]
 })
 export class CoreModule { }

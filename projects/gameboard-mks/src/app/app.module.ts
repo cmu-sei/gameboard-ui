@@ -3,7 +3,7 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { RouterModule } from '@angular/router';
@@ -14,28 +14,22 @@ import { MarkdownModule } from 'ngx-markdown';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { UserActivityListenerComponent } from './components/user-activity-listener/user-activity-listener.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    SpacesPipe,
-    ConsoleComponent,
-    SpinnerComponent,
-    UserActivityListenerComponent,
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    RouterModule.forRoot([], { anchorScrolling: "enabled" }),
-    MarkdownModule.forRoot()
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpInterceptorService,
-      multi: true,
-    }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        SpacesPipe,
+        ConsoleComponent,
+        SpinnerComponent,
+        UserActivityListenerComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        FormsModule,
+        RouterModule.forRoot([], { anchorScrolling: "enabled" }),
+        MarkdownModule.forRoot()], providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpInterceptorService,
+            multi: true,
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }

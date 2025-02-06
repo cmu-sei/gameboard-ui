@@ -9,6 +9,6 @@
         <span>Dismiss</span>
       </button>
     </div>
-    <div class="p-4" [innerHTML]="a.contentMarkdown | markdown"></div>
+    <div class="p-4" [innerHTML]="a.contentMarkdown | markdown | async"></div>
   </div>
 </div>
