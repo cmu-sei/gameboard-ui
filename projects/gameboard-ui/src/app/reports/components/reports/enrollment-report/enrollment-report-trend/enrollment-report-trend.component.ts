@@ -2,7 +2,6 @@ import { Component, Input, SimpleChanges } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportLineChartViewModel } from '../enrollment-report.models';
 import { EnrollmentReportService } from '../enrollment-report.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
-import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-enrollment-report-trend',
@@ -38,59 +37,54 @@ export class EnrollmentReportTrendComponent {
   }
 
   private buildLineChartByDate(viewModel: EnrollmentReportLineChartViewModel) {
-    this.chartConfig = {
-      type: 'line',
-      data: {
-        labels: Array.from(viewModel.byDate.keys()).map(k => k as any),
-        datasets: [
-          {
-            label: "Enrolled players",
-            data: Array.from(viewModel.byDate.values()),
-            backgroundColor: 'green',
-          },
-        ]
-      },
-      options: {
-        scales: {
-          x: {
-            type: 'time',
-            time: {
-              displayFormats: {
-                day: "MM/dd/yy",
-              },
-              tooltipFormat: 'DD',
-              unit: "day"
-            },
-            title: {
-              display: true,
-              text: "Enrollment Date"
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: "Players Enrolled"
-            }
-          }
-        }
-      }
+    const baseConfig = this.buildChartBaseConfig();
+    baseConfig.data = {
+      labels: Array.from(viewModel.byDate.keys()).map(k => k as any),
+      datasets: [
+        {
+          label: "Enrolled players",
+          data: Array.from(viewModel.byDate.values()),
+          pointBackgroundColor: "#fff",
+          pointBorderColor: "#41ad57"
+        },
+      ]
     };
+
+    this.chartConfig = baseConfig;
   }
 
   private buildLineChartByGameByDate(viewModel: EnrollmentReportLineChartViewModel) {
-    this.chartConfig = {
+    const baseConfig = this.buildChartBaseConfig();
+    baseConfig.data = {
+      labels: Array.from(viewModel.byDate.keys()).map(k => k as any),
+      datasets: Array.from(viewModel.byGameByDate.keys()).map(gameId => ({
+        label: viewModel.gameNames[gameId],
+        data: Array.from(viewModel.byGameByDate.get(gameId)!.values())
+      }))
+    };
+
+    this.chartConfig = baseConfig;
+  }
+
+  private buildChartBaseConfig(): LineChartConfig {
+    return {
       type: 'line',
       data: {
-        labels: Array.from(viewModel.byDate.keys()).map(k => k as any),
-        datasets: Array.from(viewModel.byGameByDate.keys()).map(gameId => ({
-          label: viewModel.gameNames[gameId],
-          data: Array.from(viewModel.byGameByDate.get(gameId)!.values())
-        }))
+        labels: [],
+        datasets: []
       },
       options: {
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: "#fff"
+            },
+          }
+        },
         scales: {
           x: {
-            type: 'time',
+            type: "time",
             time: {
               displayFormats: {
                 day: "MM/dd/yy",
@@ -98,15 +92,31 @@ export class EnrollmentReportTrendComponent {
               tooltipFormat: 'DD',
               unit: "day"
             },
+            ticks: {
+              color: "#fff",
+              font: { size: 14 },
+              maxTicksLimit: 10,
+            },
             title: {
+              color: "#fff",
               display: true,
-              text: "Enrollment Date"
+              font: { weight: "bold" },
+              padding: 12,
+              text: "ENROLLMENT DATE"
             }
           },
           y: {
             title: {
+              color: "#fff",
               display: true,
-              text: "Players Enrolled"
+              padding: 12,
+              font: { weight: "bold" },
+              text: "PLAYERS ENROLLED",
+            },
+            ticks: {
+              color: "#fff",
+              maxTicksLimit: 10,
+              font: { size: 14 }
             }
           }
         }

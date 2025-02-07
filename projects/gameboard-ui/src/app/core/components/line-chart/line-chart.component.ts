@@ -1,11 +1,16 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { Chart, ChartConfiguration, ChartConfigurationCustomTypesPerDataset, Colors, Legend, LinearScale, LineController, LineElement, PointElement, TimeScale, Tooltip } from 'chart.js';
 import { LogService } from '@/services/log.service';
-import { Chart, ChartConfiguration, ChartConfigurationCustomTypesPerDataset } from 'chart.js';
 
 export type LineChartConfig = ChartConfiguration<"line", number[], string> | ChartConfigurationCustomTypesPerDataset<"line", number[], string>;
 
 @Component({
   selector: 'app-line-chart',
+  standalone: true,
+  imports: [CommonModule],
+  providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss']
 })
@@ -36,6 +41,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
       return;
     }
 
+    // the fact that we have to do this suggests to me that we're not providing ng2-charts' dependencies correctly, but whatcha gonna do?
+    Chart.register(Colors, Legend, LinearScale, LineController, LineElement, PointElement, TimeScale, Tooltip);
     this.chart?.destroy();
     this.chart = new Chart(context, config);
   }

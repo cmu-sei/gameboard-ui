@@ -62,7 +62,6 @@ import { FriendlyTimePipe } from './pipes/friendly-time.pipe';
 import { GameboardPerformanceSummaryComponent } from './components/gameboard-performance-summary/gameboard-performance-summary.component';
 import { GameCardImageComponent } from './components/game-card-image/game-card-image.component';
 import { GbProgressBarComponent } from './components/progress-bar/progress-bar.component';
-import { LineChartComponent } from './components/line-chart/line-chart.component';
 import { LinkRendererPipe } from './pipes/link-renderer.pipe';
 import { LongContentHiderComponent } from './components/long-content-hider/long-content-hider.component';
 import { MinPipe } from './pipes/min.pipe';
@@ -156,7 +155,6 @@ const PUBLIC_DECLARATIONS = [
     GameCardImageComponent,
     GameMapImageUrlPipe,
     GbProgressBarComponent,
-    LineChartComponent,
     LinkRendererPipe,
     LongContentHiderComponent,
     ModalConfirmComponent,
