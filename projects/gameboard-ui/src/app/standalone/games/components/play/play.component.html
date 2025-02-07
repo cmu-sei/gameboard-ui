@@ -1,8 +1,8 @@
 <app-error-div [errors]="errors"></app-error-div>
 
 <ng-container *ngIf="challengeSpec">
-    <div class="d-flex align-items-start mb-4">
-        <div class="challenge-doc-container flex-grow-1">
+    <div class="d-flex align-items-start container mb-4">
+        <div class="challenge-doc-container container flex-grow-1">
             <ng-container *ngIf="(deployState$ | async) === 'deploying'">
                 <app-challenge-deploy-countdown *ngIf="challengeSpec"
                     [deploySeconds]="challengeSpec.averageDeploySeconds"></app-challenge-deploy-countdown>
