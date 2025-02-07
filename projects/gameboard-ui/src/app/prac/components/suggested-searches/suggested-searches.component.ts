@@ -1,4 +1,3 @@
-import { RouterService } from '@/services/router.service';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -8,6 +7,4 @@ import { Component, Input } from '@angular/core';
 })
 export class SuggestedSearchesComponent {
   @Input() searches: string[] = [];
-
-  constructor(private routerService: RouterService) { }
 }

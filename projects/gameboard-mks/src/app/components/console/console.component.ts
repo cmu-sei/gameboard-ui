@@ -17,7 +17,6 @@ import { ApiService } from '../../api.service';
 import { ClipboardService } from '../../clipboard.service';
 import { HubService } from '../../hub.service';
 import { UserActivityListenerEventType } from '../user-activity-listener/user-activity-listener.component';
-import { ConfigService } from '@/utility/config.service';
 import { LogService } from '@/services/log.service';
 
 @Component({
@@ -62,7 +61,6 @@ export class ConsoleComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     hubSvc: HubService,
-    private config: ConfigService,
     private injector: Injector,
     private api: ApiService,
     private logService: LogService,
