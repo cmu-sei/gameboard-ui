@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewChildren } from '@angular/core';
-import { faPen, faPlusSquare, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { fa } from '@/services/font-awesome.service';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -15,9 +15,8 @@ export class InplaceEditorComponent {
   @Input() currentText = "";
   @Output() startEditFunc = new EventEmitter<boolean>();
   @Output() selectOptionFunc = new EventEmitter<SuggestionOption>();
-  faPlusSquare = faPlusSquare;
-  faTimes = faTimes;
-  faPen = faPen;
+
+  protected fa = fa;
 
   startEditing() {
     if (!this.noEdit) {

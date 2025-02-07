@@ -1,13 +1,25 @@
-import { ApiUrlService } from '@/services/api-url.service';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { GameImportExportBatch, ImportedGame } from './game-import-export.models';
+import { firstValueFrom, map } from 'rxjs';
+import { ApiUrlService } from '@/services/api-url.service';
+import { FilesService } from '@/services/files.service';
+import { GameExportBatch, GameImportExportBatch, ImportedGame, ListGameExportBatchesResponse } from './game-import-export.models';
 
 @Injectable({ providedIn: 'root' })
 export class GameImportExportService {
   private apiUrl = inject(ApiUrlService);
+  private filesService = inject(FilesService);
   private http = inject(HttpClient);
+
+  async deleteExportBatch(exportBatchId: string) {
+    await firstValueFrom(
+      this.http.delete(this.apiUrl.build(`games/export-batches/${exportBatchId}`))
+    );
+  }
+
+  async downloadExportBatch(exportBatchId: string): Promise<void> {
+    await this.filesService.downloadFileFrom(this.apiUrl.build(`games/export-batches/${exportBatchId}`), `games-${exportBatchId}`, "zip", "application.zip");
+  }
 
   async export(gameIds: string[], includePracticeAreaDefaultCertificateTemplate: boolean) {
     return await firstValueFrom(
@@ -16,6 +28,10 @@ export class GameImportExportService {
         { gameIds, includePracticeAreaDefaultCertificateTemplate }
       )
     );
+  }
+
+  async listExportBatches(): Promise<GameExportBatch[]> {
+    return await firstValueFrom(this.http.get<ListGameExportBatchesResponse>(this.apiUrl.build("games/export-batches")).pipe(map(r => r.exportBatches)));
   }
 
   async import(importPackage: File) {

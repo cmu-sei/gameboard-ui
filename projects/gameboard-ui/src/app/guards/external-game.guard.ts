@@ -4,12 +4,12 @@ import { PlayerService } from '@/api/player.service';
 import { LogService } from '@/services/log.service';
 import { Injectable } from '@angular/core';
 import { UserService as LocalUserService } from '@/utility/user.service';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { TeamService } from '@/api/team.service';
 
 @Injectable({ providedIn: 'root' })
-export class ExternalGameGuard implements CanActivate, CanActivateChild {
+export class ExternalGameGuard  {
   constructor(
     private gameService: GameService,
     private localUserService: LocalUserService,

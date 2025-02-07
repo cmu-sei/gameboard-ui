@@ -4,7 +4,7 @@
 
         <div *ngIf="ctx.teams.length" class="global-controls-container my-2 d-flex">
             <div class="flex-grow-1 sync-start-description"
-                [innerHTML]="ctx | syncStartGameStateDescription | markdown"></div>
+                [innerHTML]="ctx | syncStartGameStateDescription | markdown | async"></div>
 
             <app-confirm-button btnClass="btn btn-lg btn-info" [disabled]="!canDeploy"
                 (confirm)="handlePreDeployAllClick(ctx.game.id)"

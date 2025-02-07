@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { fa } from "@/services/font-awesome.service";
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { PlayerMode } from '@/api/player-models';
 
 export interface GameInfoBubbleProperties {
   name: string;
@@ -18,6 +19,7 @@ export interface GameInfoBubbleProperties {
   maxTeamSize: number;
   mode: GameEngineMode;
   modeUrl: string;
+  playerMode: PlayerMode;
   startDate?: DateTime
 }
 
@@ -37,14 +39,20 @@ export interface GameInfoBubbleProperties {
   ],
   template: `
     <ul class="game-info-bubbles d-flex align-items-center py-0 px-2" *ngIf="game">
-      <li *ngIf="game.isLive" class="rounded-circle">
+      <li *ngIf="game.isLive && game.playerMode !== 'practice'" class="rounded-circle">
         <fa-icon [size]="bubbleSize" [icon]="fa.towerBroadcast" tooltip="Live now!" animation="beat-fade" style="--fa-animation-duration: 3s; --fa-beat-scale; 1.1; --fa-animation-timing: ease-in-out;"></fa-icon>
       </li>
+
       <li class="rounded-circle">
         <fa-icon [size]="bubbleSize" [icon]="fa.infoCircle" [tooltip]="tooltipTemplate"></fa-icon>
       </li>
+
       <li class="rounded-circle">
           <fa-icon [size]="bubbleSize" [icon]="teamSizeIcon" [tooltip]="teamSizeTooltip" [class.team-icon]="(game.maxTeamSize || 0) > 1"></fa-icon>
+      </li>
+
+      <li class="rounded-circle" *ngIf="game.playerMode == 'practice'">
+        <fa-icon [size]="bubbleSize" [icon]="fa.circlePlay" tooltip="Practice Mode"></fa-icon>
       </li>
 
       <li class="rounded-circle">

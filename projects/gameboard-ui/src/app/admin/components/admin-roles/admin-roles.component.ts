@@ -1,9 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UserRolePermissionKey, UserRolePermissionsOverviewResponse } from '@/api/user-role-permissions.models';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { CoreModule } from '@/core/core.module';
+import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-admin-roles',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CoreModule,
+    SpinnerComponent
+  ],
   templateUrl: './admin-roles.component.html',
   styleUrls: ['./admin-roles.component.scss']
 })

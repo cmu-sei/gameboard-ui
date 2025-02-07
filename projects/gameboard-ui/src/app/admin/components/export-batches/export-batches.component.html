@@ -1,0 +1,77 @@
+<div class="d-flex justify-content-end mb-3">
+    <button type="button" class="btn btn-success" (click)="handleNewExportClick()">New Export</button>
+</div>
+
+<ng-container *ngIf="!isLoading; else loading">
+    <table *ngIf="batches.length; else noBatches" class="table gameboard-table">
+        <thead>
+            <tr>
+                <th>Batch</th>
+                <th>Date</th>
+                <th>Games</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let batch of batches">
+                <td>{{ batch.id | slice:0:6 }}</td>
+                <td>{{ batch.exportedOn | friendlyDateAndTime }}</td>
+                <td class="text-center">{{ batch.gameCount }}</td>
+                <td class="text-center d-flex justify-content-start">
+                    <button class="btn btn-sm btn-success" (click)="handleDownload(batch)">
+                        Download
+                    </button>
+                    <button class="btn btn-sm btn-danger ml-2" (click)="handleConfirmDelete(batch.id)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+
+<ng-template #loading>
+    <app-spinner>Loading export batches...</app-spinner>
+</ng-template>
+
+<ng-template #noBatches>
+    <hr class="light">
+    <div class="my-3 text-muted text-center">
+        <em>No exports yet. Why not try a new one with the button over there? ↗</em>
+    </div>
+</ng-template>
+
+<ng-template #newExportModal>
+    <app-modal-content title="New Export" confirmButtonText="Export {{ selectedGameIds.length }} Games"
+        (confirm)="handleConfirmExport()" [confirmDisabled]="selectedGameIds.length == 0">
+        <table class="table gameboard-table">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" (input)="handleSelectAllGames()">
+                    </th>
+                    <th>Game</th>
+                    <th>Play Period</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let game of games">
+                    <td>
+                        <input #selected type="checkbox" (input)="handleGameSelected(game.id, selected.checked)"
+                            [checked]="game.id | arrayContains:selectedGameIds">
+                    </td>
+                    <td class="cursor-pointer" (click)="handleGameSelected(game.id, selected.checked)">
+                        {{ game.name }}
+                    </td>
+                    <td class="cursor-pointer" (click)="handleGameSelected(game.id, selected.checked)">
+                        {{ game.gameStart | friendlyDateAndTime }}
+                        -
+                        {{ game.gameEnd | friendlyDateAndTime }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </app-modal-content>
+</ng-template>

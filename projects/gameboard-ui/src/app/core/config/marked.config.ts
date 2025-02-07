@@ -23,8 +23,6 @@ export function markedOptionsFactory(): MarkedOptions {
         renderer,
         gfm: true,
         breaks: false,
-        pedantic: false,
-        smartLists: true,
-        smartypants: false
+        pedantic: false
     };
 }

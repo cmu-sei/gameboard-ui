@@ -61,6 +61,7 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
     private conf: ConfigService
   ) {
     this.mksHost = conf.mkshost;
+
     this.gameData = route.params.pipe(
       filter(a => !!(this.gameId || a.id)),
       switchMap(a => this.gameApi.retrieve(this.gameId || a.id))
@@ -76,12 +77,16 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
       switchMap(() => this.playerApi.observeTeams(this.gid)) // tomorrow do this instead of players
     ).subscribe(data => {
       const queryTerm = route.snapshot.queryParams?.search?.toLowerCase()?.trim();
-      this.searchText = queryTerm;
-      this.typing$.next(this.searchText);
+
+      if (queryTerm && !this.searchText) {
+        this.searchText = queryTerm;
+        this.typing$.next(this.searchText);
+      }
 
       this.updateTable(data);
       this.isLoading = false;
     });
+
     this.fetchActors$ = combineLatest([
       route.params,
       this.refresh$,

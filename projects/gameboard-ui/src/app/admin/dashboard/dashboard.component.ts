@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { fa } from '@/services/font-awesome.service';
 import { BehaviorSubject, Subject, Observable, firstValueFrom } from 'rxjs';
@@ -12,7 +12,6 @@ import { GameService } from '../../api/game.service';
 import { Search } from '../../api/models';
 import { AppTitleService } from '@/services/app-title.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { GameYamlImportModalComponent } from '../components/game-yaml-import-modal/game-yaml-import-modal.component';
 import { ToastService } from '@/utility/services/toast.service';
 import { GameImportExportService } from '@/api/game-import-export.service';
 
@@ -36,7 +35,6 @@ export class DashboardComponent implements OnInit {
   protected errors: any[] = [];
   protected isExporting = false;
   search: Search = { term: '' };
-  hot!: Game | null;
 
   fa = fa;
   faArrowLeft = faArrowLeft;
@@ -64,7 +62,6 @@ export class DashboardComponent implements OnInit {
     private api: GameService,
     private modalService: ModalConfirmService,
     private router: Router,
-    private route: ActivatedRoute,
     private titleService: AppTitleService,
     private toastService: ToastService
   ) {
@@ -96,20 +93,12 @@ export class DashboardComponent implements OnInit {
   async delete(game: Game): Promise<void> {
     try {
       await firstValueFrom(this.api.delete(game.id));
-      this.remove(game);
+      const index = this.games.indexOf(game);
+      this.games.splice(index, 1);
     }
     catch (err: any) {
       this.errors.push(err);
     }
-  }
-
-  remove(game: Game): void {
-    const index = this.games.indexOf(game);
-    this.games.splice(index, 1);
-  }
-
-  select(game: Game): void {
-    this.router.navigate(['../designer', game.id], { relativeTo: this.route });
   }
 
   typing(e: Event): void {
@@ -120,13 +109,6 @@ export class DashboardComponent implements OnInit {
     this.creating$.next({ ...game, name: `${game.name}_CLONE`, isPublished: false, isClone: true });
   }
 
-  // don't stringify parsed feedbackTemplate object, just string property
-  replacer(key: any, value: any) {
-    if (key == "id") return undefined;
-    if (key == "feedbackTemplate") return undefined;
-    else return value;
-  }
-
   trackById(index: number, g: Game): string {
     return g.id;
   }
@@ -135,8 +117,9 @@ export class DashboardComponent implements OnInit {
     this.isExporting = true;
 
     try {
-      await this.importExportService.export(gameIds, includePracticeAreaCertificateTemplate);
+      const batch = await this.importExportService.export(gameIds, includePracticeAreaCertificateTemplate);
       this.toastService.showMessage(`A package was exported! It contains **${gameIds.length}** game(s).`);
+      await this.importExportService.downloadExportBatch(batch.exportBatchId);
     }
     catch (err) {
       this.errors.push(err);
@@ -160,7 +143,6 @@ export class DashboardComponent implements OnInit {
     else {
       this.toastService.showMessage(`Imported **${result.length}** game(s). Let's play!`);
     }
-
   }
 
   toggleViewMode() {

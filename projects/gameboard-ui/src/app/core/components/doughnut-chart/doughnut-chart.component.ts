@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Chart, ChartOptions } from 'chart.js';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export interface DoughnutChartConfig {
   title?: string;
@@ -10,6 +11,9 @@ export interface DoughnutChartConfig {
 
 @Component({
   selector: 'app-doughnut-chart',
+  standalone: true,
+  imports: [CommonModule, BaseChartDirective],
+  providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './doughnut-chart.component.html',
   styleUrls: ['./doughnut-chart.component.scss']
 })

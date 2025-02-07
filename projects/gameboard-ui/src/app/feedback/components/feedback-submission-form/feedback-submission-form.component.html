@@ -12,7 +12,7 @@
                 <label for="{{q.id}}">
                     <div class="d-flex">
                         <div class="mr-1">{{i+1}}<span *ngIf="q.required" class="required">*</span>.</div>
-                        <div [innerHTML]="q.prompt | markdown"></div>
+                        <div [innerHTML]="q.prompt | markdown | async"></div>
                     </div>
                 </label>
 
@@ -63,7 +63,7 @@
                                         [disabled]="feedbackForm.submitted! || isPreview" id="check-{{q.id}}-{{option}}"
                                         [name]="q.id" [value]="option">
 
-                                    <span [innerHTML]="option | markdown"></span>
+                                    <span [innerHTML]="option | markdown | async"></span>
                                     {{q.specify && q.specify.key ==
                                     option ? ": " +
                                     (q.specify.prompt ? q.specify.prompt : "") : "" }}
@@ -89,7 +89,7 @@
                                     [disabled]="feedbackForm.submitted!" id="check-{{q.id}}-{{option}}" [name]="option"
                                     [value]="option">
                                 <label class="form-check-label" for="{{option}}">
-                                    <span [innerHTML]="option | markdown"></span>
+                                    <span [innerHTML]="option | markdown | async"></span>
                                     {{q.specify && q.specify.key == option ? ": " + (q.specify.prompt ?
                                     q.specify.prompt : "") : "" }}</label>
                                 <br>
@@ -129,7 +129,7 @@
             <li class="my-3" *ngFor="let response of submission.responses; index as i">
                 <div class="d-flex fw-bold">
                     <div class="flex-grow-1" class="mr-1">{{i+1}}.</div>
-                    <div class="answer-markdown" [innerHTML]="response.prompt | markdown"></div>
+                    <div class="answer-markdown" [innerHTML]="response.prompt | markdown | async"></div>
                 </div>
 
                 <div *ngIf="response.answer; else noResponse" class="finalized-answer">
@@ -149,5 +149,5 @@
 </ng-template>
 
 <ng-template #markdownOption let-content>
-    <span [innerHTML]="content | markdown"></span>
+    <span [innerHTML]="content | markdown | async"></span>
 </ng-template>

@@ -45,7 +45,6 @@ import { GameCenterTeamsComponent } from './components/game-center/game-center-t
 import { GameCenterTicketsComponent } from './components/game-center/game-center-tickets/game-center-tickets.component';
 import { GameCenterComponent } from './components/game-center/game-center.component';
 import { GameMapEditorComponent } from './components/game-map-editor/game-map-editor.component';
-import { GameYamlImportModalComponent } from './components/game-yaml-import-modal/game-yaml-import-modal.component';
 import { ManageManualChallengeBonusesModalComponent } from './components/manage-manual-challenge-bonuses-modal/manage-manual-challenge-bonuses-modal.component';
 import { ManageManualChallengeBonusesComponent } from './components/manage-manual-challenge-bonuses/manage-manual-challenge-bonuses.component';
 import { SiteOverviewStatsComponent } from './components/site-overview-stats/site-overview-stats.component';
@@ -91,12 +90,13 @@ import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.
 import { CertificateTemplatePickerComponent } from '@/certificates/components/certificate-template-picker/certificate-template-picker.component';
 import { CertificatePreviewerComponent } from '@/certificates/components/certificate-previewer/certificate-previewer.component';
 import { GameCenterPracticeTeamContextMenuComponent } from './components/game-center/game-center-practice-team-context-menu/game-center-practice-team-context-menu.component';
+import { ExportBatchesComponent } from './components/export-batches/export-batches.component';
+import { SystemAdminComponent } from './components/system-admin/system-admin.component';
 
 @NgModule({
   declarations: [
     ActiveChallengesModalComponent,
     AdminPageComponent,
-    AdminRolesComponent,
     AnnounceComponent,
     ChallengeBrowserComponent,
     ChallengeObserverComponent,
@@ -146,7 +146,6 @@ import { GameCenterPracticeTeamContextMenuComponent } from './components/game-ce
     ExtendTeamsModalComponent,
     ActiveTeamsModalComponent,
     AdminEnrollTeamModalComponent,
-    GameYamlImportModalComponent,
     SyncStartTeamPlayerReadyCountPipe,
     SyncStartGameStateDescriptionPipe,
     ExternalGameHostPickerComponent,
@@ -166,6 +165,7 @@ import { GameCenterPracticeTeamContextMenuComponent } from './components/game-ce
           { path: "certificates/templates/:templateId/preview", component: CertificatePreviewerComponent, title: "Certificate Template Preview" },
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
+          { path: "game/exports", component: ExportBatchesComponent, pathMatch: "full" },
           {
             path: "game/:gameId",
             component: GameCenterComponent,
@@ -212,7 +212,9 @@ import { GameCenterPracticeTeamContextMenuComponent } from './components/game-ce
           { path: 'report/participation', component: ParticipationReportComponent },
           { path: "notifications", component: AdminSystemNotificationsComponent, title: "System Notifications | Admin" },
           { path: "support/settings", component: SupportSettingsComponent, title: "Support | Admin" },
-          { path: 'support', component: ChallengeBrowserComponent, title: "Challenges | Admin" }
+          { path: 'support', component: ChallengeBrowserComponent, title: "Challenges | Admin" },
+          { path: "system/:tab", component: SystemAdminComponent, title: "System | Admin" },
+          { path: "system", component: SystemAdminComponent, title: "System | Admin" },
         ]
       },
     ]),
@@ -236,5 +238,4 @@ import { GameCenterPracticeTeamContextMenuComponent } from './components/game-ce
     UserPickerComponent,
   ]
 })
-
 export class AdminModule { }

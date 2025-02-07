@@ -5,7 +5,7 @@
       (input)="editData.filtering$.next(input.value)">
     <div class="input-group-append edit-h">
       <button class="btn btn-secondary" type="button" (click)="editData.isEditing=false"><fa-icon class="p-0 m-0 "
-          [icon]="faTimes"></fa-icon></button>
+          [icon]="fa.times"></fa-icon></button>
     </div>
   </div>
   <div style="position: absolute; z-index: 20;" class="w-100">
@@ -13,7 +13,7 @@
       class="bg-white w-100 text-black px-2 py-1 select-item d-flex justify-content-between"
       (click)="selectOption(option)">
       <span>{{option.name}} <span class="text-muted ml-2">{{option.secondary}}</span></span>
-      <span class="plus-icon text-muted"><fa-icon [icon]="faPlusSquare"></fa-icon></span>
+      <span class="plus-icon text-muted"><fa-icon [icon]="fa.plus"></fa-icon></span>
     </div>
   </div>
 </div>
@@ -21,5 +21,5 @@
   style="display:table;">
   <span style="display:table-cell;vertical-align:middle;"
     class="mb-0 py-0 align-items-center">{{currentText}}&nbsp;&nbsp;<fa-icon *ngIf="!noEdit" class="p-0 m-0 "
-      [icon]="faPen" size="sm"></fa-icon></span>
+      [icon]="fa.pen" size="sm"></fa-icon></span>
 </div>

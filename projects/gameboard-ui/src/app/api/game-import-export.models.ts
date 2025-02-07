@@ -2,6 +2,19 @@ import { DateTime } from "luxon";
 import { GameEngineType } from "./spec-models";
 import { GameEngineMode, GameRegistrationType } from "./game-models";
 import { PlayerMode } from "./player-models";
+import { SimpleEntity } from "./models";
+
+export interface GameExportBatch {
+    id: string;
+    exportedBy: SimpleEntity;
+    exportedOn: DateTime;
+    gameCount: number;
+    packageDownloadUrl: string;
+}
+
+export interface ListGameExportBatchesResponse {
+    exportBatches: GameExportBatch[];
+}
 
 export interface GameImportExportBatch {
     exportBatchId: string;

@@ -59,6 +59,9 @@ import { QueryParamModelDirective } from '@/core/directives/query-param-model.di
 import { IsNumberPipe } from '@/core/pipes/is-number.pipe';
 import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
 import { PlayerFeedbackResponsesModalComponent } from './components/reports/feedback-report/player-feedback-responses-modal/player-feedback-responses-modal.component';
+import { DoughnutChartComponent } from '@/core/components/doughnut-chart/doughnut-chart.component';
+import { LineChartComponent } from '@/core/components/line-chart/line-chart.component';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -135,12 +138,16 @@ import { PlayerFeedbackResponsesModalComponent } from './components/reports/feed
     FontAwesomeModule,
     CoreModule,
     // standalones
+    DoughnutChartComponent,
     ErrorDivComponent,
     FeedbackSubmissionFormComponent,
     IsNumberPipe,
+    LineChartComponent,
     SpinnerComponent,
     FeedbackSubmissionFormComponent
   ],
-  providers: [UnsubscriberService]
+  providers: [
+    UnsubscriberService
+  ]
 })
 export class ReportsModule { }

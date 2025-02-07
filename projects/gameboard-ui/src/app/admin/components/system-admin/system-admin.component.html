@@ -1,0 +1,27 @@
+<h2>System</h2>
+
+<p>
+    Use this page to go under the hood of {{appName}} - import and export content, view permissions, configure settings,
+    and all the stuff you don't have to do often, but when you do it, you're glad you can.
+</p>
+
+<hr />
+<div class="mt-4">
+    <tabset>
+        <tab heading="Permissions" [active]="selectedTab == 'permissions'">
+            <app-admin-roles></app-admin-roles>
+        </tab>
+
+        <tab heading="Export Games" [active]="selectedTab == 'export'">
+            <app-export-batches></app-export-batches>
+        </tab>
+
+        <tab heading="Debug &amp; Diagnostics" [active]="selectedTab == 'debug'">
+            <h4 class="mt-4">Your connections</h4>
+            <ul>
+                <li>Game Hub: <strong>{{ gameHubState$ | async }}</strong></li>
+                <li>Support Hub: <strong>{{ supportHubState$ | async }}</strong></li>
+            </ul>
+        </tab>
+    </tabset>
+</div>

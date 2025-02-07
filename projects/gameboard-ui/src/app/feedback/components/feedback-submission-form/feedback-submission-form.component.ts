@@ -12,7 +12,7 @@ import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-
 import { CoreModule } from '@/core/core.module';
 import { FeedbackQuestion } from '@/api/feedback-models';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
-import { MarkedOptions } from 'ngx-markdown';
+import { MARKED_OPTIONS, MarkedOptions } from 'ngx-markdown';
 import { markedOptionsFactory } from '@/core/config/marked.config';
 
 @Component({
@@ -28,7 +28,7 @@ import { markedOptionsFactory } from '@/core/config/marked.config';
     SpinnerComponent
   ],
   providers: [
-    { provide: MarkedOptions, useFactory: markedOptionsFactory }
+    { provide: MARKED_OPTIONS, useFactory: markedOptionsFactory }
   ],
   templateUrl: './feedback-submission-form.component.html',
   styleUrls: ['./feedback-submission-form.component.scss']
