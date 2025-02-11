@@ -55,8 +55,14 @@ textarea {
 .attachment {
   cursor: pointer;
   img {
-    max-height: 120px;
+    display: block;
+    object-position: center center;
+    object-fit: cover;
+    max-width: 100%;
   }
+
+  margin-right: 8px;
+  max-width: 30%;
 }
 
 // for table scroll bar to match theme

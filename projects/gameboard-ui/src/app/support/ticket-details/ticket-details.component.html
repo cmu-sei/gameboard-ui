@@ -91,7 +91,8 @@
               <textarea type="text" class="form-control w-100 text-white" rows=8 autocomplete="off"
                 style="background:#000" [(ngModel)]="changedTicket.description"></textarea>
             </ng-container>
-            <div *ngIf="ctx.ticket.attachmentFiles?.length" class="d-flex overflow-auto my-auto">
+            <div *ngIf="ctx.ticket.attachmentFiles?.length"
+              class="d-flex flex-wrap align-items-start justify-content-start">
               <ng-container *ngFor="let file of ctx.ticket.attachmentFiles; let i = index;">
                 <div class="attachment m-2" (click)="enlarge(ctx.ticket.attachmentFiles, i, attachmentObjectUrls)">
                   <img *ngIf="!!file.showPreview" id="attachment-{{i}}" class="rounded">
