@@ -14,6 +14,7 @@ import { AppTitleService } from '@/services/app-title.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { GameImportExportService } from '@/api/game-import-export.service';
+import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -61,6 +62,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private api: GameService,
     private modalService: ModalConfirmService,
+    private permissionsService: UserRolePermissionsService,
     private router: Router,
     private titleService: AppTitleService,
     private toastService: ToastService
@@ -90,11 +92,41 @@ export class DashboardComponent implements OnInit {
     this.creating$.next({ name: 'New Game' } as Game);
   }
 
-  async delete(game: Game): Promise<void> {
+  async handleDeleteClick(game: Game): Promise<void> {
+    const canDelete = this.permissionsService.can("Games_DeleteWithPlayerData");
+    let message = `Are you sure you want to delete **${game.name}**?`;
+
+    if (game.countTeams) {
+      message += `\n\n${game.countTeams} players/teams have registered or played. If you continue, their data will be deleted.`;
+    }
+
+    message += "\n\n**This can't be undone**.";
+
+    if (!game.countTeams || canDelete) {
+      this.modalService.openConfirm({
+        title: game.name,
+        subtitle: "Delete Game",
+        bodyContent: message,
+        renderBodyAsMarkdown: true,
+        onConfirm: async () => {
+          await this.delete(game);
+          this.toastService.showMessage(`Game **${game.name}** was deleted.`);
+        }
+      });
+    } else {
+      this.modalService.openConfirm({
+        title: game.name,
+        subtitle: "Delete Game",
+        bodyContent: "This game has registered players, so you can't delete it. Contact an administrator to request deletion.",
+        hideCancel: true
+      });
+    }
+  }
+
+  private async delete(game: Game): Promise<void> {
     try {
-      await firstValueFrom(this.api.delete(game.id));
-      const index = this.games.indexOf(game);
-      this.games.splice(index, 1);
+      await this.api.deleteWithPlayerData(game.id);
+      this.refresh$.next(true);
     }
     catch (err: any) {
       this.errors.push(err);

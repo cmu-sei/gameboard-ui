@@ -30,6 +30,16 @@ export class GameService {
     this.url = config.apphost + 'api';
   }
 
+  public delete(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.url}/game/${id}`).pipe(
+      tap(m => this.removeCache(id))
+    );
+  }
+
+  public deleteWithPlayerData(id: string): Promise<Object> {
+    return firstValueFrom(this.http.delete(`${this.url}/game/${id}`, { body: { allowPlayerDeletion: true } }).pipe(tap(() => this.removeCache(id))));
+  }
+
   public list(filter: any = ''): Observable<Game[]> {
     return this.http.get<Game[]>(this.url + '/games', { params: filter }).pipe(
       map(r => {
@@ -69,12 +79,6 @@ export class GameService {
     return this.http.put<any>(`${this.url}/game`, model).pipe(
       tap(m => this.removeCache(model.id)),
       tap(m => this._gameUpdated$.next(m))
-    );
-  }
-
-  public delete(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.url}/game/${id}`).pipe(
-      tap(m => this.removeCache(id))
     );
   }
 

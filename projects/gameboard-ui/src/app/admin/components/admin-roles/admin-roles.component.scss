@@ -47,3 +47,8 @@
     border-bottom: 1px solid #fff !important;
   }
 }
+
+::ng-deep .permission-description p {
+  margin: 0;
+  padding: 0;
+}

@@ -46,14 +46,15 @@
         <tbody>
             <ng-container *ngFor="let category of appPermissionsOverview.categories">
                 <tr class="category-header">
-                    <td colspan="7" class="category-header">
+                    <td colspan="5" class="category-header">
                         <h3>{{category.name}}</h3>
                     </td>
                 </tr>
                 <tr *ngFor="let permission of category.permissions">
                     <td>
                         <h4 class="fs-11">{{permission.name}}</h4>
-                        <p class="text-muted m-0 p-0">{{permission.description}}</p>
+                        <p class="permission-description text-muted m-0 p-0"
+                            [innerHTML]="permission.description | markdown | async"></p>
                     </td>
                     <td class="centered-col" [class.your-role]="appPermissionsOverview.yourRole === 'admin'">
                         <ng-container

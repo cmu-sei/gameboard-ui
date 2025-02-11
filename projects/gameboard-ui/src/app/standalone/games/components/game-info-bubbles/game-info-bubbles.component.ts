@@ -20,7 +20,8 @@ export interface GameInfoBubbleProperties {
   mode: GameEngineMode;
   modeUrl: string;
   playerMode: PlayerMode;
-  startDate?: DateTime
+  startDate?: DateTime;
+  countTeams?: number;
 }
 
 @Component({
@@ -66,7 +67,8 @@ export interface GameInfoBubbleProperties {
 
   <ng-template #tooltipTemplate>
       <div>{{ infoTooltip.name }}</div>
-      <div class="fs-09 text-muted">{{ infoTooltip.detail }}</div>
+      <div class="fs-09 text-muted font-style-italic">{{ infoTooltip.detail }}</div>
+      <div class="fs-085 text-muted font-weight-bold" *ngIf="infoTooltip.countTeams">{{ infoTooltip.countTeams }} {{ (game?.maxTeamSize || 0) > 1 ? "teams" : "players"}}</div>
   </ng-template>
   `
 })
@@ -77,7 +79,7 @@ export class GameInfoBubblesComponent implements OnChanges {
   protected engineModeIcon = fa.computer;
   protected engineModeTooltip = "";
   protected fa = fa;
-  protected infoTooltip: { name: string; detail?: string; } = { name: "" };
+  protected infoTooltip: { name: string; detail?: string; countTeams?: number } = { name: "" };
   protected teamSizeTooltip = "";
   protected teamSizeIcon = fa.person;
 
@@ -92,7 +94,8 @@ export class GameInfoBubblesComponent implements OnChanges {
 
     this.infoTooltip = {
       name: game.name,
-      detail: `${this.buildTooltipDetail(game)}`
+      detail: `${this.buildTooltipDetail(game)}`,
+      countTeams: game.countTeams,
     };
 
     this.teamSizeIcon = game.maxTeamSize > 1 ? fa.peopleGroup : fa.circleUser;

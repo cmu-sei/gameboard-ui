@@ -89,7 +89,7 @@
                 <li class="divider dropdown-divider"></li>
                 <li role="menuitem">
                   <button class="dropdown-item btn btn-danger text-danger bold-text font-weight-bold"
-                    (click)="delete(g)">
+                    (click)="handleDeleteClick(g)">
                     Delete
                   </button>
                 </li>
@@ -175,7 +175,7 @@
                         Export as a package
                       </button>
                       <div class="dropdown-divider"></div>
-                      <app-confirm-button btnClass="dropdown-item px-3" (confirm)="delete(game)">
+                      <app-confirm-button btnClass="dropdown-item px-3" (confirm)="handleDeleteClick(game)">
                         <fa-icon [icon]="faTrash"></fa-icon>
                         <span>Delete</span>
                       </app-confirm-button>
