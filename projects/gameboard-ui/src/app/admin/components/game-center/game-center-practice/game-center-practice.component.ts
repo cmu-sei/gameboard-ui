@@ -1,6 +1,6 @@
 import { Component, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, filter, map, merge, mergeAll, mergeMap, Subject, withLatestFrom } from 'rxjs';
 import { AdminService } from '@/api/admin.service';
 import { fa } from "@/services/font-awesome.service";
 import { TeamListCardContext } from '../../team-list-card/team-list-card.component';
@@ -32,10 +32,19 @@ export class GameCenterPracticeComponent {
   constructor(
     route$: ActivatedRoute,
     unsub: UnsubscriberService,
-    protected injector: Injector,
     private adminService: AdminService,
     private modalService: ModalConfirmService) {
-    unsub.add(route$.data.subscribe(async d => await this.load(d.gameId)));
+    unsub.add(route$.data.pipe(withLatestFrom(route$.queryParamMap)).subscribe(async someStuff => {
+      const merged = { routeData: someStuff[0], paramMap: someStuff[1] };
+      const routeSearch = merged.paramMap.get("search");
+
+      if (routeSearch) {
+        this.filterSettings.searchTerm = routeSearch;
+      }
+
+      await this.load(merged.routeData.gameId);
+    }));
+
     unsub.add(this.searchInput$.pipe(debounceTime(500)).subscribe(async searchTerm => {
       this.filterSettings.searchTerm = searchTerm;
       await this.load(this.ctx?.game?.id);
@@ -45,10 +54,6 @@ export class GameCenterPracticeComponent {
   protected async handleClearAllFilters() {
     this.filterSettings = { sort: "name" };
     await this.load(this.ctx?.game?.id);
-  }
-
-  protected async handleSearch(value: string) {
-    this.filterSettings.searchTerm = value;
   }
 
   protected async handleSessionReset(user: GameCenterPracticeContextUser) {
