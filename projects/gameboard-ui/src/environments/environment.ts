@@ -12,7 +12,7 @@ export const environment: Environment = {
     supporthost: 'http://localhost:5002/supportfiles',
     tocfile: '',
     countdownStartSecondsAtMinute: 5,
-    custom_background: 'custom-bg-blue',
+    custom_background: 'custom-bg-dark-gray',
     isProduction: false,
     oidc: {
       authority: 'http://localhost:8080/realms/foundry',
