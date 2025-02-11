@@ -1,4 +1,3 @@
-
 .group-count {
   font-size: 70%;
 }
@@ -19,10 +18,28 @@
   bottom: 0rem;
   left: 0rem;
   right: 0rem;
-  border-radius: .25rem;
-  background-color: rgba(black, .8);
+  border-radius: 0.25rem;
+  background-color: rgba(black, 0.8);
   z-index: 10;
 }
 .open-button {
   padding: 2rem 1rem;
+}
+
+.card-wrapper {
+  position: relative;
+}
+
+.is-unpublished {
+  background-color: #222;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 14px;
+  left: 28px;
+  height: 28px;
+  width: 28px;
+  z-index: 5;
 }
