@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { KeyValue } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faSyncAlt, faTv, faExternalLinkAlt, faExpandAlt, faUser, faThLarge, faMinusSquare, faPlusSquare, faCompressAlt, faSortAlphaDown, faSortAmountDownAlt, faAngleDoubleUp, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, timer, BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { Game } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
 import { MatchesTermPipe } from '@/utility/pipes/matches-term.pipe';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-challenge-observer',
@@ -22,8 +23,10 @@ import { MatchesTermPipe } from '@/utility/pipes/matches-term.pipe';
 })
 export class ChallengeObserverComponent implements OnInit, OnDestroy {
   @Input() gameId?: string;
+  @Output() observeByTeamRequest = new EventEmitter<void>();
 
   refresh$ = new BehaviorSubject<boolean>(true);
+  fa = fa;
   game?: Game;
   table: Map<string, ObserveChallenge> = new Map<string, ObserveChallenge>(); // table of player challenges to display
   fetchActors$: Observable<Map<string, ConsoleActor[]>>; // stream updates of mapping users to consoles

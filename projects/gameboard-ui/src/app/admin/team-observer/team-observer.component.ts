@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faSyncAlt, faTv, faExternalLinkAlt, faExpandAlt, faUser, faThLarge, faMinusSquare, faPlusSquare, faCompressAlt, faSortAlphaDown, faSortAmountDownAlt, faAngleDoubleUp, faUsers, faWindowMaximize, faBullseye, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, timer, BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -11,16 +11,19 @@ import { GameService } from '../../api/game.service';
 import { ObserveTeam, ObserveTeamMember, Team } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-team-observer',
   templateUrl: './team-observer.component.html',
   styleUrls: ['./team-observer.component.scss']
 })
-export class TeamObserverComponent implements OnInit, OnDestroy {
+export class TeamObserverComponent implements OnDestroy {
   @Input() gameId?: string;
+  @Output() observeByChallengeRequest = new EventEmitter<void>();
 
   refresh$ = new BehaviorSubject<boolean>(true);
+  fa = fa;
   game?: Game; // game info like team or individual
   table: Map<string, ObserveTeam> = new Map<string, ObserveTeam>(); // table of teams to display
   tableData: Subscription; // subscribe to stream of new data to update table map
@@ -50,7 +53,6 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
 
-  protected isLegacyMode = false;
   protected searchText = "";
 
   constructor(
@@ -98,10 +100,6 @@ export class TeamObserverComponent implements OnInit, OnDestroy {
       map(data => new Map(data.map(i => [i.userId, i])))
     );
     this.term$ = this.typing$.pipe(debounceTime(500));
-  }
-
-  public ngOnInit(): void {
-    this.isLegacyMode = !this.gameId;
   }
 
   updateTable(data: Team[]) {

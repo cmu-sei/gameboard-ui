@@ -1,14 +1,12 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
+<h2>Observe Challenges</h2>
+
 <a class="btn btn-link mr-2" *ngIf="isLegacyMode" routerLink="/admin">
   <fa-icon [icon]="faArrowLeft"></fa-icon>
   <span>Back</span>
 </a>
-<button class="btn btn-link mr-2" (click)="refresh$.next(true)">
-  <fa-icon [icon]="faSync"></fa-icon>
-  <span>Refresh</span>
-</button>
 
 <div *ngIf="isLegacyMode" class="d-flex">
   <h2>Observe Challenges</h2>
@@ -38,9 +36,26 @@
       </label>
     </div>
   </div>
+
+  <div class="mt-2">
+    <button class="btn btn-outline-dark btn-md text-white" tooltip="Observe by team"
+      (click)="observeByTeamRequest.emit()">
+      <fa-icon [icon]="fa.usersViewfinder"></fa-icon>
+      By Team
+    </button>
+
+    <button class="btn btn-outline-dark btn-md text-white ml-2" (click)="refresh$.next(true)" tooltip="Refresh view">
+      <fa-icon [icon]="faSync"></fa-icon>
+    </button>
+  </div>
 </div> <!-- end row for search and filtering -->
 
 <!-- Table of challenges -->
+
+<div *ngIf="!table.size" class="text-center text-muted font-style-italic my-4">
+  No active challenges
+</div>
+
 <div class="breakout bg-dark">
   <div *ngIf="!!game" class="row mx-0 py-2">
     <h4 class="col-2 text-left pl-3">{{game.allowTeam ? 'Team' : 'Player'}}</h4>
