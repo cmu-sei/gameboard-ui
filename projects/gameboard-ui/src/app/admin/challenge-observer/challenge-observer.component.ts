@@ -2,7 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { KeyValue } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faArrowLeft, faSyncAlt, faTv, faExternalLinkAlt, faExpandAlt, faUser, faThLarge, faMinusSquare, faPlusSquare, faCompressAlt, faSortAlphaDown, faSortAmountDownAlt, faAngleDoubleUp, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { combineLatest, timer, BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ import { fa } from '@/services/font-awesome.service';
   styleUrls: ['./challenge-observer.component.scss'],
   providers: [MatchesTermPipe]
 })
-export class ChallengeObserverComponent implements OnInit, OnDestroy {
+export class ChallengeObserverComponent implements OnDestroy {
   @Input() gameId?: string;
   @Output() observeByTeamRequest = new EventEmitter<void>();
 
@@ -54,7 +54,6 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
   faAngleDoubleUp = faAngleDoubleUp;
   faWindowRestore = faWindowRestore;
 
-  protected isLegacyMode = false;
   protected searchText = "";
 
   constructor(
@@ -109,10 +108,6 @@ export class ChallengeObserverComponent implements OnInit, OnDestroy {
     this.term$ = this.typing$.pipe(
       debounceTime(500)
     );
-  }
-
-  public ngOnInit() {
-    this.isLegacyMode == !this.gameId;
   }
 
   updateTable(data: ObserveChallenge[]) {
