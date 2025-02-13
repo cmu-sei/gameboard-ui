@@ -39,12 +39,12 @@ export class PracticeSessionComponent implements OnInit {
   protected showSpecMarkdown = true;
 
   constructor(
-    route: ActivatedRoute,
     private activeChallengesRepo: ActiveChallengesRepo,
     private modalService: ModalConfirmService,
     private localUser: LocalUserService,
     private playerService: PlayerService,
     private practiceService: PracticeService,
+    protected route: ActivatedRoute,
     private routerService: RouterService,
     private teamService: TeamService,
     private unsub: UnsubscriberService,
