@@ -80,6 +80,7 @@ import {
   faTv,
   faUser,
   faUsers,
+  faUsersViewfinder,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { faOpenid } from "@fortawesome/free-brands-svg-icons";
@@ -164,6 +165,7 @@ export const fa = {
   tv: faTv,
   user: faUser,
   users: faUsers,
+  usersViewfinder: faUsersViewfinder,
   xMark: faXmark
 };
 

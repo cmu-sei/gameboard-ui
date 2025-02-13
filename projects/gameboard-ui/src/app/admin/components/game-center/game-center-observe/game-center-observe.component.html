@@ -1,11 +1,6 @@
-<div class="gb-button-group btn-group mb-3">
-    <button type="button" class="btn btn-success" (click)="observeBy = 'challenge'"
-        [disabled]="observeBy == 'challenge'">Challenges</button>
-    <button type="button" class="btn btn-success" (click)="observeBy = 'team'"
-        [disabled]="observeBy == 'team'">Teams</button>
-</div>
-
 <div class="observe-container">
-    <app-challenge-observer *ngIf="observeBy == 'challenge'" [gameId]="gameId"></app-challenge-observer>
-    <app-team-observer *ngIf="observeBy == 'team'" [gameId]="gameId"></app-team-observer>
+    <app-challenge-observer *ngIf="observeBy == 'challenge'" [gameId]="gameId"
+        (observeByTeamRequest)="handleObserveByChangeRequest('team')"></app-challenge-observer>
+    <app-team-observer *ngIf="observeBy == 'team'" [gameId]="gameId"
+        (observeByChallengeRequest)="handleObserveByChangeRequest('challenge')"></app-team-observer>
 </div>

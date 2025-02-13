@@ -180,7 +180,7 @@ export class EventHorizonRenderingService {
 
   private async toSubmissionScoredDataItem(timelineEvent: EventHorizonGenericEvent, challengeSpec: EventHorizonChallengeSpec): Promise<EventHorizonDataItem> {
     const typedEvent = timelineEvent as EventHorizonSubmissionScoredEvent;
-    const baseItem = await this.toGenericDataItem(timelineEvent, challengeSpec, "Submission", "eh-event-type-submission-scored", true);
+    const baseItem = await this.toGenericDataItem(timelineEvent, challengeSpec, `Submission ${typedEvent.eventData.attemptNumber}`, "eh-event-type-submission-scored", true);
     baseItem.eventData = typedEvent;
 
     return baseItem;

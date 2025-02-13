@@ -60,6 +60,8 @@ export interface GameDetail {
   isFeatured: boolean;
   isLive: boolean;
   hasEnded: boolean;
+  countPlayers: number;
+  countTeams: number;
 }
 
 export interface GameCardContext {

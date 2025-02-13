@@ -10,6 +10,7 @@ import { BoardGame } from '../../api/board-models';
 import { Game, GameGroup } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 import { RouterService } from '@/services/router.service';
+import { fa } from '@/services/font-awesome.service';
 
 @Component({
   selector: 'app-landing',
@@ -26,6 +27,7 @@ export class LandingComponent {
 
   hot!: Game | null;
 
+  fa = fa;
   faGamepad = faGamepad;
   faUserPlus = faUserPlus;
   faSearch = faSearch;

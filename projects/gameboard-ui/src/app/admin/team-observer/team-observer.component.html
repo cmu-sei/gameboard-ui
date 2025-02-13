@@ -1,18 +1,5 @@
-<a class="btn btn-link mr-2" *ngIf="isLegacyMode" routerLink="/admin">
-  <fa-icon [icon]="faArrowLeft"></fa-icon>
-  <span>Back</span>
-</a>
-<button class="btn btn-link mr-2" (click)="refresh$.next(true)">
-  <fa-icon [icon]="faSync"></fa-icon>
-  <span>Refresh</span>
-</button>
-
-<!--For now, we assume an input gameId to mean that we're working in admin, which doesn't need the titling-->
-<div *ngIf="!!game && isLegacyMode" class="d-flex">
-  <h2>Observe {{game.allowTeam ? 'Teams' : 'Players'}}</h2>
-  <a *ngIf="!!gid" class="btn btn-link mr-2 align-self-center" [routerLink]="['/admin/observer/challenges', gid]">
-    <span>Observe Challenges</span>
-  </a>
+<div class="d-flex">
+  <h2>Observe Teams</h2>
 </div>
 
 <div class="row">
@@ -35,6 +22,18 @@
         Rank
       </label>
     </div>
+  </div>
+
+  <div class="mt-2">
+    <button class="btn btn-outline-dark btn-md text-white" tooltip="Observe by challenge"
+      (click)="observeByChallengeRequest.emit()">
+      <fa-icon [icon]="fa.chessBoard"></fa-icon>
+      By Challenge
+    </button>
+
+    <button class="btn btn-outline-dark btn-md text-white ml-2" (click)="refresh$.next(true)" tooltip="Refresh view">
+      <fa-icon [icon]="faSync"></fa-icon>
+    </button>
   </div>
 </div> <!-- end row for search and filtering -->
 

@@ -73,7 +73,26 @@
                                     <fa-icon [icon]="fa.barsStaggered"></fa-icon>
                                 </a>
 
+                                @if(!isPracticeMode) {
                                 <a [routerLink]="['admin', 'game', spec.game.id, 'teams']"
+                                    [queryParams]="{ search: challenge.team.id }" target="_blank"
+                                    class="btn btn-sm btn-success mr-2"
+                                    [tooltip]="'View this ' + (spec.game.isTeamGame ? 'team' : 'player') + '\'s session'"
+                                    placement="bottom">
+                                    <fa-icon [icon]="spec.game.isTeamGame ? fa.peopleGroup : fa.person"></fa-icon>
+                                </a>
+                                }
+                                @else {
+                                <a [routerLink]="['admin', 'game', spec.game.id, 'practice']"
+                                    [queryParams]="{ search: challenge.team.id }" target="_blank"
+                                    class="btn btn-sm btn-success mr-2"
+                                    [tooltip]="'View this ' + (spec.game.isTeamGame ? 'team' : 'player') + '\'s practice session'"
+                                    placement="bottom">
+                                    <fa-icon [icon]="spec.game.isTeamGame ? fa.peopleGroup : fa.person"></fa-icon>
+                                </a>
+                                }
+
+                                <a *ngIf="!isPracticeMode" [routerLink]="['admin', 'game', spec.game.id, 'teams']"
                                     [queryParams]="{ search: challenge.team.id }" target="_blank"
                                     class="btn btn-sm btn-success mr-2"
                                     [tooltip]="'View this ' + (spec.game.isTeamGame ? 'team' : 'player') + '\'s session'"
@@ -111,6 +130,10 @@
 
 <ng-template #noMatchingChallenges>
     <div class="text-center text-muted fs-11">None of the active challenges match your search.</div>
+</ng-template>
+
+<ng-template #seeSessionPractice>
+
 </ng-template>
 
 <ng-template #loading>

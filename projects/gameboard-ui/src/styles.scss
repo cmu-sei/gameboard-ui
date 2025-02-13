@@ -112,12 +112,20 @@ app-root {
   font-family: monospace;
 }
 
+.font-style-italic {
+  font-style: italic;
+}
+
 .font-weight-light {
   font-weight: lighter;
 }
 
 .fs-08 {
   font-size: 0.8rem;
+}
+
+.fs-085 {
+  font-size: 0.85rem;
 }
 
 .fs-09 {
@@ -401,6 +409,10 @@ tabset a.nav-link.active {
 
 .custom-bg-black {
   background-color: #000000;
+}
+
+.custom-bg-dark-gray {
+  background-color: #333;
 }
 
 .custom-bg-red {

@@ -91,6 +91,9 @@
 <!-- game wrapper template  -->
 <ng-template #gameWrapper let-game="game">
   <div class="card-wrapper col-lg-3 col-md-4 col-6 mb-4" tabindex="0">
+    <div *ngIf="!game.isPublished" class="is-unpublished">
+      <fa-icon [icon]="fa.eyeSlash" class="is-unpublished-icon rounded-circle" tooltip="Unpublished"></fa-icon>
+    </div>
     <div class="hover-wrapper" (mouseenter)="on(game)" (mouseleave)="off(game)" (focus)="on(game)">
       <app-game-card [game]="game">
       </app-game-card>

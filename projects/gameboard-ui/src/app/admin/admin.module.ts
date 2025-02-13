@@ -90,7 +90,6 @@ import { UserPickerComponent } from '@/standalone/users/user-picker/user-picker.
 import { CertificateTemplatePickerComponent } from '@/certificates/components/certificate-template-picker/certificate-template-picker.component';
 import { CertificatePreviewerComponent } from '@/certificates/components/certificate-previewer/certificate-previewer.component';
 import { GameCenterPracticeTeamContextMenuComponent } from './components/game-center/game-center-practice-team-context-menu/game-center-practice-team-context-menu.component';
-import { ExportBatchesComponent } from './components/export-batches/export-batches.component';
 import { SystemAdminComponent } from './components/system-admin/system-admin.component';
 
 @NgModule({
@@ -165,7 +164,6 @@ import { SystemAdminComponent } from './components/system-admin/system-admin.com
           { path: "certificates/templates/:templateId/preview", component: CertificatePreviewerComponent, title: "Certificate Template Preview" },
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
           { path: 'dashboard', component: DashboardComponent },
-          { path: "game/exports", component: ExportBatchesComponent, pathMatch: "full" },
           {
             path: "game/:gameId",
             component: GameCenterComponent,
@@ -184,26 +182,18 @@ import { SystemAdminComponent } from './components/system-admin/system-admin.com
             ]
           },
           {
-            path: 'game/:gameId',
-            component: GameCenterComponent,
-            pathMatch: 'full'
-          },
-          {
             path: "game/:gameId/external", pathMatch: 'full', component: ExternalGameAdminComponent
           },
           {
             path: "practice", component: PracticeComponent, children: [
-              { path: "", pathMatch: "full", redirectTo: "settings" },
               { path: "settings", component: PracticeSettingsComponent },
+              { path: "", pathMatch: "full", redirectTo: "settings" },
             ]
           },
           { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Sponsors | Admin" },
           { path: 'registrar/users', component: UserRegistrarComponent, title: "Users | Admin" },
           { path: 'registrar/players', component: PlayerNamesComponent, title: "Players | Admin" },
-          { path: 'observer/challenges/:id', component: ChallengeObserverComponent, title: "Observe | Admin" },
-          { path: 'observer/teams/:id', component: TeamObserverComponent },
           { path: 'overview', component: AdminOverviewComponent, title: "Live | Admin " },
-          { path: "permissions", component: AdminRolesComponent, title: "Permissions | Admin" },
           { path: 'report/users', component: UserReportComponent },
           { path: 'report/sponsors', component: PlayerSponsorReportComponent },
           { path: 'report/challenges', component: ChallengeReportComponent },

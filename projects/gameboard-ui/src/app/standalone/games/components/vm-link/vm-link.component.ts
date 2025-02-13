@@ -13,15 +13,17 @@ import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
     SafeUrlPipe
   ],
   styles: [
-    "fa-icon { border-right: solid 1px #fff; padding: 0px 8px !important }",
+    ".icon-container { border-right: solid 1px #fff; padding: 0px 4px 0px 4px !important }",
     "a { border: solid 1px #fff }",
     "a:hover { color: #41ad57; border: solid 1px #41ad57; }",
-    "a:hover fa-icon { border-right: solid 1px #41ad57; }"
+    "a:hover .icon-container { border-right: solid 1px #41ad57; }"
   ],
   template: `
     <a *ngIf="vm" class="btn btn-sm btn-dark mr-2 mb-2 d-flex p-0 align-items-center" [href]="vm.url | safeUrl" target="_blank"
         role="button">
-        <fa-icon class="d-block" [icon]="fa.computer"></fa-icon>
+        <div class="icon-container">
+          <fa-icon class="d-block" [icon]="fa.computer"></fa-icon>
+        </div>
         <div class="p-2">{{vm.name}}</div>
     </a>
 `,
