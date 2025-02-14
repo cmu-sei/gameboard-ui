@@ -107,7 +107,6 @@ app-root {
 }
 
 /* APP UTILITY CLASSES */
-
 .font-fixed-width {
   font-family: monospace;
 }
@@ -316,6 +315,11 @@ table.gameboard-table {
 .dropdown-item:hover,
 .dropdown-item:focus {
   background-color: theme-color("success");
+}
+
+.btn.focus,
+.btn:focus {
+  box-shadow: none !important;
 }
 
 .form-group {
