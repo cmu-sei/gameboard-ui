@@ -49,7 +49,7 @@ export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelec
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.options?.length && this?.ngModel?.selectedValues?.length) {
+    if (this.options?.length && this?.ngModel?.selectedValues?.length && !this.selectionSummary) {
       this.updateSelectionSummary((this.ngModel.selectedValues || []).map(o => this.value(o)));
     }
   }
