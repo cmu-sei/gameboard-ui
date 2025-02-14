@@ -43,9 +43,9 @@ export class PracticeChallengeListComponent {
 
   constructor(
     localUser: LocalUserService,
-    route: ActivatedRoute,
     private api: PracticeService,
     private authService: AuthService,
+    protected route: ActivatedRoute,
     private routerService: RouterService,
     private unsub: UnsubscriberService
   ) {

@@ -110,7 +110,8 @@
 </ng-template>
 
 <ng-template #canPlayChallengesItemTemplate let-challenge>
-    <a [routerLink]="[challenge.id, slug(challenge.name)]">
+    <a [routerLink]="[challenge.id, slug(challenge.name)]"
+        [queryParams]="{ practiceSearchTerm: (route.queryParams | async)?.term}">
         {{challenge.name}}
     </a>
 </ng-template>
