@@ -1,9 +1,9 @@
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SortDirection } from '@/core/models/sort-direction';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-sort-header',
@@ -11,7 +11,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
     <div class="content-container">
       <ng-content></ng-content>
     </div>
-    <fa-icon *ngIf="isActive" class="d-block ml-2" size="sm" [icon]="currentSortDirection == 'asc' ? fa.caretUp : fa.caretDown"></fa-icon>
+    <fa-icon class="d-block ml-2" [class.text-muted]="!isActive" size="xs" [icon]="!isActive || currentSortDirection == 'asc' ? fa.caretUp : fa.caretDown"></fa-icon>
   </div>`,
   styleUrls: ['./sort-header.component.scss']
 })

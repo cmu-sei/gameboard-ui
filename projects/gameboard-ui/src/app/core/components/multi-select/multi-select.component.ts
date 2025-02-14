@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '../custom-input/custom-input.component';
 import { fa } from "@/services/font-awesome.service";
@@ -12,7 +12,7 @@ import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-par
   styleUrls: ['./multi-select.component.scss'],
   providers: [createCustomInputControlValueAccessor(MultiSelectComponent)]
 })
-export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelectQueryParamModel<TItem>> implements OnInit, AfterViewInit, OnDestroy {
+export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelectQueryParamModel<TItem>> implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() label?: string;
   @Input() searchPlaceholder?: string = "Search items";
   @Input() options: TItem[] | null = [];
@@ -46,6 +46,12 @@ export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelec
     }
 
     this._ngModelChangeSub = this.ngModel.modelUpdate$.subscribe(model => this.handleNgModelChanged.bind(this)(model));
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.options?.length && this?.ngModel?.selectedValues?.length && !this.selectionSummary) {
+      this.updateSelectionSummary((this.ngModel.selectedValues || []).map(o => this.value(o)));
+    }
   }
 
   ngAfterViewInit(): void {
