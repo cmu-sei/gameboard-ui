@@ -51,8 +51,9 @@ export class ModalConfirmService implements OnDestroy {
   }
 
   private openWithDefaultStyles<TComponent>(config: ModalConfig<TComponent>) {
-    if (this.bsModalRef)
+    if (this.bsModalRef) {
       this.hide();
+    }
 
     return this.bsModalService.show(config.content, {
       initialState: config.context as unknown as Partial<TComponent>,

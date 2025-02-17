@@ -13,6 +13,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ChallengeSubmissionAnswers, ChallengeSubmissionViewModelLegacy, GetChallengeSubmissionsResponseLegacy } from '@/api/challenges.models';
 import { ToastService } from '@/utility/services/toast.service';
 import { ChallengeSubmissionsService } from '@/api/challenge-submissions.service';
+import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 interface PendingSubmissionsUpdate {
   challengeId: string;
@@ -50,6 +51,7 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
     private api: BoardService,
     private challengesService: ChallengesService,
     private challengeSubmissionsService: ChallengeSubmissionsService,
+    private modalService: ModalConfirmService,
     private teamHub: NotificationService,
     private toastsService: ToastService,
     private unsub: UnsubscriberService) { }
@@ -159,6 +161,15 @@ export class GamespaceQuizComponent implements OnInit, OnChanges {
       challengeId: args.challengeId,
       sectionIndex: args.sectionIndex,
       answers: args.answers
+    });
+  }
+
+  protected handleLastSubmissionHelp() {
+    this.modalService.openConfirm({
+      title: "Last Submission",
+      bodyContent: "This is your last submission. Win or lose, after you confirm your answers here, your consoles will become unavailable, and the challenge will end. Good luck!",
+      cancelButtonText: "Got it!",
+      hideCancel: true
     });
   }
 
