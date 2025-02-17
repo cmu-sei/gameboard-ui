@@ -8,7 +8,8 @@
     </p>
 
     <label for="supportPageGreeting">Enter a greeting (allows markdown)</label>
-    <textarea id="supportPageGreeting" rows="8" [placeholder]="placeholder" class="form-control"
+    <textarea id="supportPageGreeting" rows="8"
+        [placeholder]="'Welcome to ' + this.appName + ' Support!' | markdownPlaceholder" class="form-control"
         name="supportPageGreeting" [(ngModel)]="settings.supportPageGreeting"
         (input)="handleSettingsChanged()"></textarea>
 

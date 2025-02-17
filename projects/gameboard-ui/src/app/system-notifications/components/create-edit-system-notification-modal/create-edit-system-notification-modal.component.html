@@ -17,8 +17,8 @@
 
         <div class="form-group">
             <label for="markdown-content">Content (allows markdown)</label>
-            <textarea class="form-control" id="markdown-content" name="markdown-content" rows="5"
-                placeholder="What do you want to tell your players?"
+            <textarea class="form-control" id="markdown-content" name="markdown-content" rows="10"
+                [placeholder]="'What do you want to tell your players?' | markdownPlaceholder"
                 [(ngModel)]="context.model.markdownContent"></textarea>
         </div>
 

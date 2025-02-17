@@ -91,6 +91,7 @@ import { CertificateTemplatePickerComponent } from '@/certificates/components/ce
 import { CertificatePreviewerComponent } from '@/certificates/components/certificate-previewer/certificate-previewer.component';
 import { GameCenterPracticeTeamContextMenuComponent } from './components/game-center/game-center-practice-team-context-menu/game-center-practice-team-context-menu.component';
 import { SystemAdminComponent } from './components/system-admin/system-admin.component';
+import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
 
 @NgModule({
   declarations: [
@@ -219,6 +220,7 @@ import { SystemAdminComponent } from './components/system-admin/system-admin.com
     GameCenterPracticeTeamContextMenuComponent,
     GameInfoBubblesComponent,
     IfHasPermissionDirective,
+    MarkdownPlaceholderPipe,
     SafeUrlPipe,
     SpinnerComponent,
     ToSupportCodePipe,
