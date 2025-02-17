@@ -4,6 +4,7 @@ import { SupportSettings } from '@/api/support-models';
 import { SupportService } from '@/api/support.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ConfigService } from '@/utility/config.service';
+import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 
 @Component({
   selector: 'app-support-settings',
@@ -13,11 +14,13 @@ import { ConfigService } from '@/utility/config.service';
 })
 export class SupportSettingsComponent implements OnInit {
   protected appName: string;
+  protected placeholder = "Welcome to Support!";
   protected settings?: SupportSettings;
   private update$ = new Subject<SupportSettings>();
 
   constructor(
     config: ConfigService,
+    private markdownHelpers: MarkdownHelpersService,
     private supportService: SupportService,
     private unsub: UnsubscriberService) {
     // use the app name to personalize the placeholder
@@ -35,6 +38,7 @@ export class SupportSettingsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.load();
+    this.placeholder = this.markdownHelpers.getMarkdownPlaceholderHelp(`Welcome to ${this.appName} Support!`);
   }
 
   protected async handleSettingsChanged() {

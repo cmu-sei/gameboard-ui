@@ -8,8 +8,8 @@
     </p>
 
     <label for="supportPageGreeting">Enter a greeting (allows markdown)</label>
-    <textarea id="supportPageGreeting" rows="8" [placeholder]="'Welcome to **{{appName}}** Support!'"
-        class="form-control" name="supportPageGreeting" [(ngModel)]="settings.supportPageGreeting"
+    <textarea id="supportPageGreeting" rows="8" [placeholder]="placeholder" class="form-control"
+        name="supportPageGreeting" [(ngModel)]="settings.supportPageGreeting"
         (input)="handleSettingsChanged()"></textarea>
 
     <h3 class="mt-5">Ticket Auto-Labeling</h3>
