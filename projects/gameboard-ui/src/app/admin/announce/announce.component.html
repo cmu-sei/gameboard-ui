@@ -7,7 +7,7 @@
   <div class="form-group" *ngIf="!isLoading; else loading">
     <label class="mb-0" for="input-announce">Announcement</label>
     <div class="input-group">
-      <textarea name="input-announce" id="input-announce" rows="7" [placeholder]="placeholderText" class="form-control"
+      <textarea name="input-announce" id="input-announce" rows="7" [placeholder]="finalPlaceholder" class="form-control"
         [(ngModel)]="message">
       </textarea>
       <div class="input-group-append">
