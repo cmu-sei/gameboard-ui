@@ -1,80 +1,70 @@
-<div class="modal-content" *ngIf="apiTeams; else loading">
-    <div class="modal-header">
-        <h5 class="modal-title">{{ modalTitle }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+<app-modal-content *ngIf="apiTeams; else loading" title="Extend Session" [subtitle]="modalTitle"
+    [cancelDisabled]="isWorking" [confirmDisabled]="isWorking || !extensionInMinutes"
+    [confirmButtonText]="extensionInMinutes > 0 ? 'Extend' : 'Shorten'" [isDangerConfirm]="extensionInMinutes < 0"
+    (confirm)="extend(extensionInMinutes)">
+    <app-error-div [errors]="errors"></app-error-div>
+    <ng-container *ngIf="!isWorking; else loading">
+        <alert *ngIf="ineligibleTeamIds.length" type="warning">
+            The following teamIds are ineligible for extension. They may not have started their session yet:
 
-    <div class="modal-body">
-        <app-error-div [errors]="errors"></app-error-div>
-        <ng-container *ngIf="!isWorking; else loading">
-            <alert *ngIf="ineligibleTeamIds.length" type="warning">
-                The following teamIds are ineligible for extension. They may not have started their session yet:
+            <ul class="mt-2 mb-0">
+                <li *ngFor="let ineligibleTeamId of ineligibleTeamIds">{{ ineligibleTeamId }}</li>
+            </ul>
+        </alert>
 
-                <ul class="mt-2 mb-0">
-                    <li *ngFor="let ineligibleTeamId of ineligibleTeamIds">{{ ineligibleTeamId }}</li>
-                </ul>
-            </alert>
+        <div class="form-group px-0">
+            <label for="extensionInMinutes">Extension Length</label>
+            <input type="number" class="form-control" id="extensionInMinutes" [(ngModel)]="extensionInMinutes" required
+                placeholder="Extension length (in minutes)">
+        </div>
 
-            <div class="form-group px-0">
-                <label for="extensionInMinutes">Extension Length</label>
-                <input type="number" class="form-control" id="extensionInMinutes" [(ngModel)]="extensionInMinutes"
-                    required placeholder="Extension length (in minutes)">
+        <alert type="warning" *ngIf="extensionInMinutes < 0">
+            If you use a negative value for the extension length, you'll <em>decrease</em> the amount of time
+            available to the {{ (game?.maxTeamSize || 1) > 1 ? "teams" : "players" }} shown here. Ensure the session
+            times below are what you expect.
+        </alert>
+
+        <app-session-extension-game-end-warning *ngIf="maxCurrentSessionEnd && game"
+            [extensionInMinutes]="extensionInMinutes" [gameEnd]="game.endsOn" [sessionEnd]="maxCurrentSessionEnd">
+        </app-session-extension-game-end-warning>
+
+        <ng-container *ngIf="extensionInMinutes">
+            <div class="mb-4" *ngIf="extensionInMinutes">
+                {{ extensionInMinutes > 0 ? "Extend" : "Shorten" }}
+                {{ apiTeams.length === 1 ? "this session" : "the following sessions" }}
+                by <strong>{{extensionInMinutes | absoluteValue}}</strong> minutes?
             </div>
+            <div>
 
-            <alert type="warning" *ngIf="extensionInMinutes < 0">
-                If you use a negative value for the extension length, you'll <em>decrease</em> the amount of time
-                available to the {{ (game?.maxTeamSize || 1) > 1 ? "teams" : "players" }} shown here. Ensure the session
-                times below are what you expect.
-            </alert>
+                <ul *ngIf="apiTeams">
+                    <li *ngFor="let team of apiTeams" class="session-list-item d-flex align-items-center">
+                        <ng-container *ngIf="(team.sessionEnd | dateToDateTime) as sessionEndDateTime">
+                            <div class="flex-grow-1">{{team.approvedName}}</div>
 
-            <ng-container *ngIf="extensionInMinutes">
-                <div class="mb-4" *ngIf="extensionInMinutes">
-                    {{ extensionInMinutes > 0 ? "Extend" : "Shorten" }} {{ apiTeams.length === 1 ? "this session" : "the
-                    following sessions" }} by
-                    <strong>{{extensionInMinutes | absoluteValue}}</strong> minutes?
-                </div>
-                <div>
+                            <div *ngIf="((team.sessionEnd | dateToDateTime) != null) && (sessionEndDateTime | addDuration: { minutes: extensionInMinutes } | dateTimeIsPast)"
+                                class="badge badge-danger mr-2">Session will end</div>
+                            <div>
+                                (from
 
-                    <ul *ngIf="apiTeams">
-                        <li *ngFor="let team of apiTeams" class="session-list-item d-flex align-items-center">
-                            <ng-container *ngIf="(team.sessionEnd | dateToDateTime) as sessionEndDateTime">
-                                <div class="flex-grow-1">{{team.approvedName}}</div>
-
-                                <div *ngIf="((team.sessionEnd | dateToDateTime) != null) && (sessionEndDateTime | addDuration: { minutes: extensionInMinutes } | dateTimeIsPast)"
-                                    class="badge badge-danger mr-2">Session will end</div>
-                                <div>
-                                    (from
-
-                                    <strong class="fw-bold old-session-time">
-                                        {{team.sessionEnd | friendlyDateAndTime}}
-                                    </strong>
-                                    to
-                                    <ng-container
-                                        *ngIf="sessionEndDateTime | addDuration: { minutes: extensionInMinutes } as newSessionEnd">
-                                        <strong class="fw-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
-                                            [class.text-success]="!(newSessionEnd | dateTimeIsPast)">
-                                            {{ newSessionEnd | datetimeToDate | friendlyDateAndTime }}
-                                        </strong>)
-                                    </ng-container>
-                                </div>
-                            </ng-container>
-                        </li>
-                    </ul>
-                </div>
-            </ng-container>
+                                <strong class="fw-bold old-session-time">
+                                    {{team.sessionEnd | friendlyDateAndTime}}
+                                </strong>
+                                to
+                                <ng-container
+                                    *ngIf="sessionEndDateTime | addDuration: { minutes: extensionInMinutes } as newSessionEnd">
+                                    <strong class="fw-bold" [class.text-danger]="newSessionEnd | dateTimeIsPast"
+                                        [class.text-success]="!(newSessionEnd | dateTimeIsPast)">
+                                        {{ newSessionEnd | datetimeToDate | friendlyDateAndTime }}
+                                    </strong>)
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </li>
+                </ul>
+            </div>
         </ng-container>
-    </div>
-
-    <div class="modal-footer">
-        <button type="button" class="btn" (click)="close()" [disabled]="isWorking">Cancel</button>
-        <button type="button" [class.btn-success]="extensionInMinutes > 0 ||  !!extensionInMinutes"
-            [class.btn-warning]="extensionInMinutes < 0" class="btn btn-success" (click)="extend(extensionInMinutes)"
-            [disabled]="isWorking || !extensionInMinutes">{{
-            extensionInMinutes > 0 ? "Extend" : "Shorten" }} </button>
-    </div>
-</div>
+    </ng-container>
+</app-modal-content>
 
 <ng-template #loading>
     <app-spinner></app-spinner>

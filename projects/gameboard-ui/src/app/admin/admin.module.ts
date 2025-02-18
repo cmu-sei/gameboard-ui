@@ -20,7 +20,6 @@ import { ActiveTeamsModalComponent } from './components/active-teams-modal/activ
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { AdminOverviewComponent } from './components/admin-overview/admin-overview.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
-import { AdminRolesComponent } from './components/admin-roles/admin-roles.component';
 import { AnnounceComponent } from './announce/announce.component';
 import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
 import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
@@ -92,6 +91,7 @@ import { CertificatePreviewerComponent } from '@/certificates/components/certifi
 import { GameCenterPracticeTeamContextMenuComponent } from './components/game-center/game-center-practice-team-context-menu/game-center-practice-team-context-menu.component';
 import { SystemAdminComponent } from './components/system-admin/system-admin.component';
 import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
+import { SessionExtensionGameEndWarningComponent } from "./components/session-extension-game-end-warning/session-extension-game-end-warning.component";
 
 @NgModule({
   declarations: [
@@ -222,12 +222,14 @@ import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe'
     IfHasPermissionDirective,
     MarkdownPlaceholderPipe,
     SafeUrlPipe,
+    SessionExtensionGameEndWarningComponent,
     SpinnerComponent,
     ToSupportCodePipe,
     CertificatePreviewerComponent,
     CertificateTemplatePickerComponent,
     FeedbackTemplatePickerComponent,
     UserPickerComponent,
+    SessionExtensionGameEndWarningComponent
   ]
 })
 export class AdminModule { }

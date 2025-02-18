@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { DateTime } from 'luxon';
 import { ExtendTeamsModalComponent } from '../../extend-teams-modal/extend-teams-modal.component';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { firstValueFrom } from 'rxjs';
 import { TeamChallenge } from '@/api/player-models';
-import { PlayerService } from '@/api/player.service';
 import { fa } from '@/services/font-awesome.service';
 import { GameCenterTeamsResultsTeam } from '../game-center.models';
 import { AdminService } from '@/api/admin.service';
@@ -20,6 +19,7 @@ import { UpdatePlayerNameChangeRequest } from '@/api/admin.models';
 export class GameCenterTeamDetailComponent implements OnInit {
   game!: {
     id: string;
+    endsOn?: DateTime;
     maxTeamSize: number;
     name: string;
   };
@@ -47,7 +47,6 @@ export class GameCenterTeamDetailComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private modalService: ModalConfirmService,
-    private playerService: PlayerService,
     private teamService: TeamService,
     private toastService: ToastService) { }
 
@@ -75,21 +74,6 @@ export class GameCenterTeamDetailComponent implements OnInit {
     });
   }
 
-  protected openExtendModal(gameId: string) {
-    this.modalService.openComponent({
-      content: ExtendTeamsModalComponent,
-      context: {
-        extensionInMinutes: 30,
-        game: {
-          id: gameId,
-          maxTeamSize: this.game.maxTeamSize,
-          name: this.game.name,
-        },
-        teamIds: [this.team.id]
-      },
-      modalClasses: ["modal-lg"]
-    });
-  }
   protected async updateNameChangeRequest(playerId: string, overrideName: string, args: UpdatePlayerNameChangeRequest) {
     if (!args.status) {
       args.approvedName = overrideName || args.requestedName;

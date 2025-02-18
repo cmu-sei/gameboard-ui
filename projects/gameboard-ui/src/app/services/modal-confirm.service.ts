@@ -64,6 +64,10 @@ export class ModalConfirmService implements OnDestroy {
   }
 
   private cleanupModalRef(): void {
+    if (this.bsModalRef) {
+      this.bsModalRef.hide();
+    }
+
     this.bsModalRef = undefined;
   }
 }

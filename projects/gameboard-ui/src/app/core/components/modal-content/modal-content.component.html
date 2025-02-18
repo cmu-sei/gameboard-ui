@@ -23,7 +23,8 @@
         </div>
 
         <div class="modal-buttons">
-            <button type="button" *ngIf="!hideCancel" class="btn btn-link text-muted" (click)="handleClose()">
+            <button type="button" *ngIf="!hideCancel" class="btn btn-link text-muted" (click)="handleClose()"
+                [disabled]="cancelDisabled">
                 {{ cancelButtonText || "Cancel" }}
             </button>
             <button type="button" class="btn" [class.btn-danger]="isDangerConfirm"

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { DateTime } from 'luxon';
 import { TeamSessionResetType } from '@/api/teams.models';
 import { ApiError, SimpleEntity } from '@/api/models';
 import { fa } from '@/services/font-awesome.service';
@@ -31,7 +32,7 @@ export interface TeamSessionResetRequest {
   styleUrls: ['./game-center-team-context-menu.component.scss']
 })
 export class GameCenterTeamContextMenuComponent {
-  @Input() game?: { id: string; name: string; isSyncStart: boolean; maxTeamSize: number };
+  @Input() game?: { id: string; name: string; endsOn?: DateTime, isSyncStart: boolean; maxTeamSize: number };
   @Input() team?: GameCenterTeamsResultsTeam;
   @Output() error = new EventEmitter<string[]>();
   @Output() teamUpdated = new EventEmitter<SimpleEntity>();
@@ -145,7 +146,8 @@ export class GameCenterTeamContextMenuComponent {
       context: {
         game: this.game,
         teamIds: [team.id]
-      }
+      },
+      modalClasses: ["modal-lg"]
     });
   }
 

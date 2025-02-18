@@ -22,6 +22,7 @@ import { GameCenterTeamDetailComponent } from '../game-center-team-detail/game-c
 import { TeamService } from '@/api/team.service';
 import { eventTargetValueToString } from 'projects/gameboard-ui/src/tools/functions';
 import { AdvanceTeamsModalComponent } from '../../advance-teams-modal/advance-teams-modal.component';
+import { DateTime } from 'luxon';
 
 interface GameCenterTeamsFilterSettings {
   advancement?: GameCenterTeamsAdvancementFilter;
@@ -212,7 +213,12 @@ export class GameCenterTeamsComponent implements OnInit {
     this.modalService.openComponent({
       content: ExtendTeamsModalComponent,
       context: {
-        game: this.game,
+        game: {
+          id: this.game.id,
+          name: this.game.name,
+          endsOn: DateTime.fromJSDate(this.game.gameEnd),
+          maxTeamSize: this.game.maxTeamSize
+        },
         teamIds: selectedTeamIds
       },
       modalClasses: ["modal-lg"]
@@ -254,13 +260,20 @@ export class GameCenterTeamsComponent implements OnInit {
   }
 
   protected handleTeamClick(teamId: string) {
-    const team = this.results?.teams.items.find(t => t.id === teamId);
+    if (!this.game) {
+      return;
+    }
 
+    const team = this.results?.teams.items.find(t => t.id === teamId);
+    const thing = this.game?.gameEnd;
     this.modalService.openComponent({
       content: GameCenterTeamDetailComponent,
       context: {
         team,
-        game: this.game
+        game: {
+          ...this.game,
+          endsOn: this.game?.gameEnd ? DateTime.fromJSDate(new Date(thing)) : undefined
+        }
       },
       modalClasses: ["modal-xl"]
     });

@@ -12,6 +12,7 @@ export class ModalContentComponent<T> {
   @Input() subtitle?: string;
   @Input() subSubtitle?: string;
   @Input() cancelButtonText?: string;
+  @Input() cancelDisabled = false;
   @Input() confirmButtonText?: string;
   @Input() confirmDisabled = false;
   @Input() isDangerConfirm = false;
