@@ -21,11 +21,12 @@
 </ng-template>
 
 <ng-template #sponsorCard let-sponsor>
-    <div class="card h-100" *ngIf="localUser$ | async as localUser" [class.active]="localUser.sponsor.id === sponsor.id"
-        (click)="updateUserSponsor(localUser, sponsor)">
+    <div class="sponsor-card" *ngIf="localUser$ | async as localUser"
+        [class.active]="localUser.sponsor.id === sponsor.id" (click)="updateUserSponsor(localUser, sponsor)">
         <div class="card-body p-1">
             <div class="card-title">{{sponsor.name || sponsor.id}}</div>
         </div>
-        <img class="card-img-bottom" [src]="sponsor | sponsorToLogoUri" [alt]="sponsor.name">
+        <div class="flex-grow-1"></div>
+        <img class="card-img-bottom rounded-circle" [src]="sponsor | sponsorToLogoUri" [alt]="sponsor.name">
     </div>
 </ng-template>

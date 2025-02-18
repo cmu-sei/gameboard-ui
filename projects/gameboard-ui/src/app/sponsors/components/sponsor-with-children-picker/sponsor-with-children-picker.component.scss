@@ -1,50 +1,66 @@
 @import "../../../../scss/variables";
 
 :host {
-    display: block;
+  display: block;
 }
 
-.card {
-    width: 150px;
-    display: inline-block;
-    margin: 1rem;
-    cursor: pointer;
-    transition: all 0.25s linear;
+.sponsor-card {
+  align-items: center;
+  background-color: $gray-900;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 1rem;
+  text-align: center;
+  transition: all 0.2s linear;
+  width: 154px;
+
+  .card-img-bottom {
+    aspect-ratio: 1 / 1;
+    background-color: #eee;
+    object-fit: cover;
+    // width: 154px;
+  }
 }
 
 .active {
-    background-color: lightgray !important;
-    color: black;
+  background-color: lightgray !important;
+  color: black;
 
-    h2 {
-        color: black;
-    }
+  h2 {
+    color: black;
+  }
 }
 
 .parent-header {
-    font-size: 2.2rem;
+  font-size: 2.2rem;
 
-    &.no-parent {
-        background-color: $gray-900;
-        padding: 0.5rem 1rem;
-    }
+  &.no-parent {
+    background-color: $gray-900;
+    padding: 0.5rem 1rem;
+  }
 }
 
 .parent-sponsor-button {
-    background-color: $gray-900;
-    border-radius: 8px;
-    color: $foreground;
-    position: relative;
-    padding: 0.5rem 0.5rem 0.5rem 100px;
-    margin: 24px 0;
+  background-color: $gray-900;
+  border-radius: 8px;
+  color: $foreground;
+  position: relative;
+  padding: 0.5rem 0.5rem 0.5rem 100px;
+  margin: 24px 0;
 
-    img {
-        aspect-ratio: 1/1;
-        border-radius: 50%;
-        height: 96px;
-        width: 96px;
-        position: absolute;
-        left: -16px;
-        top: -16px;
-    }
+  img {
+    aspect-ratio: 1/1;
+    background-color: #eee;
+    border-radius: 50%;
+    height: 96px;
+    object-fit: cover;
+    width: 96px;
+    position: absolute;
+    left: -16px;
+    top: -16px;
+  }
 }
