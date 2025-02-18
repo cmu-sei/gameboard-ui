@@ -134,7 +134,7 @@
                         <div>Playing now</div>
                         <strong class="text-success d-block"
                             [tooltip]="'Ends ' + (team.session.end | epochMsToDateTime | friendlyDateAndTime) || ''">{{
-                            team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown | async
+                            team.session.end | epochMsToDateTime | datetimeToDate | dateToCountdown:120000 | async
                             }}</strong>
                         <div class="fs-08 text-muted">remaining</div>
                     </ng-container>

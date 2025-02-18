@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, firstValueFrom, map, tap } from 'rxjs';
 import { DateTime } from 'luxon';
-import { Challenge, NewChallenge, SectionSubmission } from './board-models';
+import { Challenge, GameState, NewChallenge, SectionSubmission } from './board-models';
 import { ApiUrlService } from '@/services/api-url.service';
 import { ChallengeProgressResponse, ChallengeSolutionGuide, GetUserActiveChallengesResponse } from './challenges.models';
 
@@ -45,6 +45,10 @@ export class ChallengesService {
     return this.http.post<Challenge>(this.apiUrl.build("challenge/launch"), challenge).pipe(
       tap(challenge => this._challengeStarted$.next(challenge))
     );
+  }
+
+  public sync(challengeId: string): Promise<GameState> {
+    return firstValueFrom(this.http.put<GameState>(this.apiUrl.build(`challenge/${challengeId}/sync`), {}));
   }
 
   public deploy(challenge: { id: string }): Observable<Challenge> {
