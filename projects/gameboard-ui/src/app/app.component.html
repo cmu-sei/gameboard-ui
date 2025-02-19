@@ -4,7 +4,7 @@
 <div class="app-container">
   <div class="app-bar-container print-hide" [class.sticky-content]="(stickyMenu$ | async)">
     <app-sponsor-select-banner></app-sponsor-select-banner>
-    <div class="d-flex align-items-center" [class]="customBackground">
+    <div class="d-flex align-items-center" appThemeBg>
       <app-gameboard-signalr-hubs class="flex-grow-1"></app-gameboard-signalr-hubs>
       <app-nav></app-nav>
     </div>

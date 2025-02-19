@@ -37,7 +37,7 @@
                 <colgroup [span]="ctx.results!.records[0].responses.length || 0"></colgroup>
 
                 <thead>
-                    <tr class="super-headers-row chill-headers">
+                    <tr class="super-headers-row chill-headers" appThemeBg>
                         <th scope="colgroup" colspan="3" class="group-header">Player</th>
                         <th scope="colgroup" [attr.colspan]="ctx.results!.records[0].responses.length || 0"
                             class="group-header">
@@ -45,7 +45,7 @@
                         </th>
                     </tr>
 
-                    <tr class="headers-row">
+                    <tr class="headers-row" appThemeBg>
                         <th class="width-15">
                             <app-sort-header sortBy="name">Name</app-sort-header>
                         </th>

@@ -28,7 +28,6 @@ nav li {
   border-left: solid 1px #ffffff;
 }
 
-$subtleColor: #aaaaaa;
 $subtleSize: 0.9rem;
 
 ::ng-deep {
@@ -39,6 +38,13 @@ $subtleSize: 0.9rem;
   table.gameboard-report {
     th {
       padding: 0;
+    }
+
+    thead {
+      background-color: inherit;
+      position: sticky;
+      top: 50px;
+      z-index: 5;
     }
 
     td {
@@ -75,12 +81,8 @@ $subtleSize: 0.9rem;
     }
   }
 
-  .subtle-color {
-    color: $subtleColor;
-  }
-
   .subtle-info {
-    color: $subtleColor;
+    color: $muted;
     font-size: $subtleSize;
     margin: 0;
   }

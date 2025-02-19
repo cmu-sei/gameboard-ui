@@ -37,6 +37,7 @@ import { SystemNotificationsModule } from './system-notifications/system-notific
 import { UserNavItemComponent } from './standalone/user/components/user-nav-item/user-nav-item.component';
 import { markedOptionsFactory } from './core/config/marked.config';
 import { MarkdownModule, MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
+import { ThemeBgDirective } from './core/directives/theme-bg.directive';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { MarkdownModule, MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
     ProgressbarModule.forRoot(),
 
     // standalones
+    ThemeBgDirective,
     UserNavItemComponent
   ],
   providers: [

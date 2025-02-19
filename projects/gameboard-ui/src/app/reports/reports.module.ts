@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CoreModule } from '../core/core.module';
+
 import { ChallengeAttemptSummaryComponent } from './components/challenge-attempt-summary/challenge-attempt-summary.component';
 import { ChallengeDetailModalComponent } from './components/reports/practice-mode-report/challenge-detail-modal/challenge-detail-modal.component';
 import { ChallengeOrGameFieldComponent } from './components/challenge-or-game-field/challenge-or-game-field.component';
@@ -55,13 +56,12 @@ import { FeedbackGameReportComponent } from './components/reports/feedback-game-
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 import { FeedbackReportComponent } from './components/reports/feedback-report/feedback-report.component';
-import { QueryParamModelDirective } from '@/core/directives/query-param-model.directive';
 import { IsNumberPipe } from '@/core/pipes/is-number.pipe';
 import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
 import { PlayerFeedbackResponsesModalComponent } from './components/reports/feedback-report/player-feedback-responses-modal/player-feedback-responses-modal.component';
 import { DoughnutChartComponent } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { LineChartComponent } from '@/core/components/line-chart/line-chart.component';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
 
 @NgModule({
   declarations: [
@@ -137,14 +137,14 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
     ]),
     FontAwesomeModule,
     CoreModule,
-    // standalones
+    // standalones,
     DoughnutChartComponent,
     ErrorDivComponent,
     FeedbackSubmissionFormComponent,
     IsNumberPipe,
     LineChartComponent,
     SpinnerComponent,
-    FeedbackSubmissionFormComponent
+    ThemeBgDirective,
   ],
   providers: [
     UnsubscriberService

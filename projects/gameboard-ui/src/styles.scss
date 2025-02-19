@@ -101,11 +101,6 @@ app-root {
   min-height: 100vh;
 }
 
-.reader {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 /* APP UTILITY CLASSES */
 .font-fixed-width {
   font-family: monospace;
@@ -226,24 +221,28 @@ th[align="center"] {
 table.gameboard-table {
   width: 100%;
   margin-bottom: 0;
+  border-collapse: collapse;
 
+  // note that we use box-shadow to fake the boder on these table headers,
+  // because for border-collapse reasons, the borders don't follow the headers when they're stickied
   thead {
     tr > th:not(:first-child) {
-      border-left: solid 1px $foreground;
+      box-shadow: inset 1px -1px $foreground;
     }
 
     th {
-      border-bottom: solid 1px $foreground;
+      box-shadow: inset 0 -1px $foreground;
       border-top: solid 1px $foreground;
       vertical-align: middle;
+
+      // override ngx-bootstrap table header stuff
+      border-bottom: none !important;
     }
 
     .super-headers-row {
       background-color: $foreground;
       font-size: 1.25rem;
       font-weight: bold;
-      border-bottom: solid 1px $foreground;
-      border-top: solid 1px $foreground;
       text-transform: uppercase;
       vertical-align: middle;
 
@@ -263,15 +262,9 @@ table.gameboard-table {
     .headers-row {
       font-size: 1.2rem;
       font-weight: bold;
-      border-bottom: solid 1px $foreground;
       vertical-align: middle;
 
-      td:not(:first-of-type) {
-        border-left: solid 1px $foreground;
-      }
-
       td {
-        border-bottom: solid 1px $foreground;
         vertical-align: middle;
       }
     }
@@ -412,35 +405,35 @@ tabset a.nav-link.active {
 }
 
 .custom-bg-black {
-  background-color: #000000;
+  background-color: #000000 !important;
 }
 
 .custom-bg-dark-gray {
-  background-color: #333;
+  background-color: #333 !important;
 }
 
 .custom-bg-red {
-  background-color: #422;
+  background-color: #422 !important;
 }
 
 .custom-bg-orange {
-  background-color: #ffac1c;
+  background-color: #ffac1c !important;
 }
 
 .custom-bg-yellow {
-  background-color: #442;
+  background-color: #442 !important;
 }
 
 .custom-bg-green {
-  background-color: #1c3417;
+  background-color: #1c3417 !important;
 }
 
 .custom-bg-blue {
-  background-color: #183248;
+  background-color: #183248 !important;
 }
 
 .custom-bg-purple {
-  background-color: #424;
+  background-color: #424 !important;
 }
 
 // reboot.css breaks th alignment, so set explicitly
