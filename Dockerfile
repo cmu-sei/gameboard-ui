@@ -1,6 +1,6 @@
 # multi-stage target: dev
 
-FROM node:20-alpine AS dev
+FROM node:18-alpine AS dev
 WORKDIR /app
 COPY package.json package-lock.json tools/ ./
 RUN npm install && \
