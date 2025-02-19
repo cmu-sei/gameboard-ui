@@ -2,11 +2,11 @@
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
 <!-- Search Bar -->
-<div *ngIf="showSearchBar" class="row mt-4 mb-0">
+<div class="row mt-4 mb-0">
   <div class="input-group input-group-sm col-5 ml-auto">
     <div class="input-group-prepend">
       <span class="input-group-text">
-        <fa-icon [icon]="faSearch"></fa-icon>
+        <fa-icon [icon]="fa.search"></fa-icon>
       </span>
     </div>
     <input type="search" [(ngModel)]="searchText" placeholder="Search games..." class="form-control border-0"
@@ -101,13 +101,13 @@
       </app-game-card>
       <div class="overlay py-4 px-4 d-flex" *ngIf="hot===game">
         <div class="rounded text-center py-3 px-2 mx-3 my-auto w-100">
-          <h5 class="mb-0 font-weight-bold">Registration<fa-icon [icon]="faUserPlus" class="ml-2"></fa-icon></h5>
+          <h5 class="mb-0 font-weight-bold">Registration<fa-icon [icon]="fa.userPlus" class="ml-2"></fa-icon></h5>
           <ng-container *ngIf="game.registrationType | registrationTypeToIsOpen; else registrationClosed">
             <p *ngIf="game.registration.isBefore">Opens in {{game.registrationOpen | until}}</p>
             <p *ngIf="game.registration.isDuring">Closes in {{game.registrationClose | until}}</p>
             <p *ngIf="game.registration.isAfter">Closed {{game.registrationClose | ago}}</p>
           </ng-container>
-          <h5 class="mb-0 font-weight-bold">Competition<fa-icon [icon]="faGamepad" class="ml-2"></fa-icon></h5>
+          <h5 class="mb-0 font-weight-bold">Competition<fa-icon [icon]="fa.gamepad" class="ml-2"></fa-icon></h5>
           <p class="mb-0 pb-0" *ngIf="game.session.isBefore">Starts in {{game.gameStart | until}}</p>
           <p class="mb-0 pb-0" *ngIf="game.session.isDuring">Ends in {{game.gameEnd | until}}</p>
           <p class="mb-0 pb-0" *ngIf="game.session.isAfter">Ended {{game.gameEnd | ago}}</p>

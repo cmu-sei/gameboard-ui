@@ -160,10 +160,6 @@ export class ConfigService {
       );
   }
 
-  buildConsoleUrl(vm: VmState) {
-    return `${this.mkshost}?`;
-  }
-
   openConsole(qs: string): void {
     window.open(this.mkshost + qs, "_blank");
   }
