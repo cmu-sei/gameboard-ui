@@ -96,7 +96,7 @@
     <div *ngIf="!game.isPublished" class="is-unpublished">
       <fa-icon [icon]="fa.eyeSlash" class="is-unpublished-icon rounded-circle" tooltip="Unpublished"></fa-icon>
     </div>
-    <div class="hover-wrapper" (mouseenter)="on(game)" (mouseleave)="off(game)" (focus)="on(game)">
+    <div class="hover-wrapper" (mouseenter)="on(game)" (mouseleave)="off()" (focus)="on(game)">
       <app-game-card [game]="game">
       </app-game-card>
       <div class="overlay py-4 px-4 d-flex" *ngIf="hot===game">

@@ -58,7 +58,7 @@ export class LandingComponent implements OnInit {
     this.hot = g;
   }
 
-  off(g: Game): void {
+  off(): void {
     this.hot = null;
   }
 
