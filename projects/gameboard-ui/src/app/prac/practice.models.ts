@@ -1,5 +1,6 @@
 import { GameCardContext } from "@/api/game-models";
 import { PagedArray, TimestampRange } from "@/api/models";
+import { DateTime } from "luxon";
 
 export interface SearchPracticeChallengesResult {
     results: PagedArray<PracticeChallengeView>;
@@ -42,5 +43,16 @@ export interface PracticeChallengeView {
         name: string;
         logo: string;
         isHidden: string;
-    }
+    },
+    userBestAttempt?: UserPracticeHistoryChallenge;
+}
+
+export interface UserPracticeHistoryChallenge {
+    challengeId: string;
+    challengeSpecId: string;
+    challengeName: string;
+    attemptCount: number;
+    bestAttemptDate?: DateTime;
+    bestAttemptScore?: number;
+    isComplete: boolean;
 }

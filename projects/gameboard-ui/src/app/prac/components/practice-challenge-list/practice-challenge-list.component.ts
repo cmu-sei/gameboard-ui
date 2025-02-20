@@ -25,7 +25,7 @@ export class PracticeChallengeListComponent {
   faSearch = faSearch;
 
   protected canPlayChallenges = false;
-  protected canPlayChallengesTooltip: string | null = null;
+  protected cantPlayChallengesTooltip: string | null = null;
   protected fa = fa;
   protected hasSponsor$: Observable<boolean>;
   protected introTextMarkdown = "";
@@ -78,12 +78,12 @@ export class PracticeChallengeListComponent {
         map((sponsorAndUser) => ({ hasSponsor: sponsorAndUser[0], hasLocalUser: !!sponsorAndUser[1] }))
       ).subscribe(ctx => {
         this.canPlayChallenges = ctx.hasLocalUser && ctx.hasSponsor;
-        this.canPlayChallengesTooltip = null;
+        this.cantPlayChallengesTooltip = null;
 
         if (!ctx.hasLocalUser) {
-          this.canPlayChallengesTooltip = "Come back after logging in to play this challenge.";
+          this.cantPlayChallengesTooltip = "Come back after logging in to play this challenge.";
         } else if (!ctx.hasSponsor) {
-          this.canPlayChallengesTooltip = "Come back after selecting your sponsor to play this challenge.";
+          this.cantPlayChallengesTooltip = "Come back after selecting your sponsor to play this challenge.";
         }
       })
     );

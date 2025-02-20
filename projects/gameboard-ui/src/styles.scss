@@ -222,6 +222,7 @@ table.gameboard-table {
   width: 100%;
   margin-bottom: 0;
   border-collapse: collapse;
+  border-bottom: solid 1px $foreground;
 
   // note that we use box-shadow to fake the boder on these table headers,
   // because for border-collapse reasons, the borders don't follow the headers when they're stickied
@@ -505,6 +506,10 @@ th[align="left"] {
   text-decoration: underline !important;
   text-decoration-style: dotted !important;
   text-decoration-thickness: 2px !important;
+}
+
+.text-success-light {
+  color: $success-light;
 }
 
 .text-upper {

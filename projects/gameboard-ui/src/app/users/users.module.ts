@@ -36,7 +36,7 @@ const DECLARED_COMPONENTS = [
     CoreModule,
     SponsorsModule,
     RouterModule.forChild([
-      { path: ":userId/certificates/:playerMode/:awardedForEntityId", component: CertificatePrinterComponent },
+      { path: ":userId/certificates/:playerMode/:awardedForEntityId", component: CertificatePrinterComponent, title: "Certificate" },
       {
         path: '',
         component: UserPageComponent,

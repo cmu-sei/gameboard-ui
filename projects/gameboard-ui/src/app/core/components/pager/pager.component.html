@@ -1,10 +1,9 @@
 <div *ngIf="display === 'always' || count > take" class="text-center">
-  <button [disabled]="skip===0" class="mr-1 btn btn-link text-warning btn-sm" (click)="prev()" aria-label="prev page">
+  <button [disabled]="skip===0" class="mr-1 btn btn-link btn-sm" (click)="prev()" aria-label="prev page">
     <span>prev</span>
   </button> |
   <small>{{ skip + 1 }} - {{ (skip + take) | min:count }} of {{count}}</small> |
-  <button [disabled]="skip + take >= count" class="mr-1 btn btn-link text-warning btn-sm" (click)="next()"
-    aria-label="next page">
+  <button [disabled]="skip + take >= count" class="mr-1 btn btn-link btn-sm" (click)="next()" aria-label="next page">
     <span>next</span>
   </button>
 </div>

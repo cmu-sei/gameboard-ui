@@ -11,6 +11,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { RouterService } from '@/services/router.service';
 import { ConfigService } from '@/utility/config.service';
+import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
   selector: 'app-certificate-printer',
@@ -45,7 +46,9 @@ export class CertificatePrinterComponent {
     private modalService: ModalConfirmService,
     private route: ActivatedRoute,
     private routerService: RouterService,
+    private titleService: AppTitleService,
     private unsub: UnsubscriberService) {
+    this.titleService.set("Certificate");
     this.unsub.add(this.route.queryParams.subscribe(async params => {
       await this.downloadCertificate(params.requestedNameOverride);
     }));
@@ -94,6 +97,7 @@ export class CertificatePrinterComponent {
     this.isDownloading = true;
     this.imageUrl = undefined;
     this.title = `${this.viewModel.mode} Certificate | ${this.configService.appName}`;
+    this.titleService.set(this.title);
 
     if (!this.viewModel.userId || !this.viewModel.awardedForEntityId) {
       throw new Error(`Couldn't resolve user and entity for certificate (user ${this.viewModel.userId}, entity ${this.viewModel.awardedForEntityId}).`);

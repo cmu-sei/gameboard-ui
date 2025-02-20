@@ -46,22 +46,38 @@
                 [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 
-        <app-pager *ngIf="count > 0" display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
+        <app-pager *ngIf="count > 0" display="ifPaging" [skip]="skip || 0" [take]="take || 0" [count]="count"
             (changed)="paged($event)"></app-pager>
 
-        <table class="table" *ngIf="count > 0; else noMatches">
+        <table class="table gameboard-table my-2" *ngIf="count > 0; else noMatches">
             <thead>
                 <tr>
                     <th>Challenge</th>
                     <th>Description</th>
-                    <th>Game</th>
+                    <th>Your Performance</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let c of list">
                     <td class="align-middle">
-                        <ng-container
-                            *ngTemplateOutlet="canPlayChallenges ? canPlayChallengesItemTemplate : cantPlayChallengesItemTemplate; context: { $implicit: c }"></ng-container>
+                        <div class="d-flex">
+                            <div class="game-card">
+                                <a class="ml-2 d-flex align-items-center" [routerLink]="['/practice']"
+                                    [queryParams]="{ term: c.game.id }">
+                                    <app-game-card-image [game]="c.game"></app-game-card-image>
+                                </a>
+                            </div>
+
+                            <div class="challenge-name-container ml-2">
+                                <ng-container
+                                    *ngTemplateOutlet="canPlayChallenges ? canPlayChallengesItemTemplate : cantPlayChallengesItemTemplate; context: { $implicit: c }"></ng-container>
+                                <div>
+                                    <app-info-bubble *ngIf="c.game.isHidden" class="mt-1 mr-2" [icon]="fa.eyeSlash"
+                                        tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
+                                    <span class="fs-09 text-muted">{{ c.game.name }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td class="align-middle">
                         <div class="practice-challenge-description">
@@ -81,23 +97,31 @@
                         </div>
                     </td>
                     <td class="align-middle">
-                        <a class="ml-2 d-flex align-items-center" [routerLink]="['/practice']"
-                            [queryParams]="{ term: c.game.id }">
-                            <app-game-card-image [game]="c.game"></app-game-card-image>
-
-                            <div class="ml-2">
-                                {{ c.game.name }}
-
-                                <app-info-bubble *ngIf="c.game.isHidden" class="d-block mt-1" [icon]="fa.eyeSlash"
-                                    tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
+                        @if(c.userBestAttempt?.isComplete) {
+                        <div class="user-complete">
+                            <div>
+                                <ng-container
+                                    *ngTemplateOutlet="completeTemplate; context: { $implicit: c }"></ng-container>
                             </div>
-                        </a>
+                            <div>
+                                <span>{{ c.userBestAttempt?.bestAttemptScore }} points</span>
+                            </div>
+                        </div>
+                        } @else if(c.userBestAttempt) {
+                        <div class="user-performance">
+                            {{ c.userBestAttempt.attemptCount }}
+                            <span class="text-muted">{{ "attempt" | pluralizer:c.userBestAttempt.attemptCount }}</span>
+                        </div>
+                        }
+                        @else {
+                        <div class="text-muted text-center">--</div>
+                        }
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <app-pager *ngIf="count > 0" display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
+        <app-pager *ngIf="count > 0" display="ifPaging" [skip]="skip || 0" [take]="take || 0" [count]="count"
             (changed)="paged($event)">
         </app-pager>
     </ng-container>
@@ -117,13 +141,22 @@
 </ng-template>
 
 <ng-template #cantPlayChallengesItemTemplate let-challenge>
-    <p *ngIf="!canPlayChallenges" class="p-0 m-0 text-success cursor-pointer"
-        [tooltip]="canPlayChallengesTooltip || ''">
+    <p class="p-0 m-0 text-success cursor-pointer" [tooltip]="cantPlayChallengesTooltip || ''">
         {{challenge.name}}
     </p>
 
     <app-info-bubble *ngIf="challenge.isHidden" class="d-block mt-1" [icon]="fa.eyeSlash"
         tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
+</ng-template>
+
+<ng-template #completeTemplate let-challenge>
+    @if(challenge.hasCertificateTemplate) {
+    <a [href]="challenge.id | toPracticeCertificateLink" target="_blank"
+        tooltip="You finished this challenge on {{ challenge.userBestAttempt.bestAttemptDate | friendlyDateAndTime }}. Click for a certificate showcasing your awesomeness.">Complete</a>
+    } @else {
+    <span class="text-success-light"
+        tooltip="You finished this challenge on {{ challenge.userBestAttempt.bestAttemptDate | friendlyDateAndTime }}. Way to go!">Complete</span>
+    }
 </ng-template>
 
 <ng-template #noDescription>
