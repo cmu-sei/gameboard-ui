@@ -56,3 +56,21 @@ export interface UserPracticeHistoryChallenge {
     bestAttemptScore?: number;
     isComplete: boolean;
 }
+
+export interface UserPracticeSummary {
+    countAttempted: number;
+    countAvailable: number;
+    countCompleted: number;
+    pointsAvailable: number;
+    pointsScored: number;
+    tags: UserPracticeSummaryTagEngagement[];
+}
+
+export interface UserPracticeSummaryTagEngagement {
+    tag: string;
+    countAttempted: number;
+    countAvailable: number;
+    countCompleted: number;
+    pointsAvailable: number;
+    pointsScored: number;
+}

@@ -94,7 +94,7 @@ import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
 import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
 import { StatusLightComponent } from './components/status-light/status-light.component';
 import { SumArrayPipe } from './pipes/sum-array.pipe';
-import { TextToColorPipe } from './pipes/text-to-color.pipe';
+import { TextToBadgeStylePipe } from './pipes/text-to-badge-style.pipe';
 import { TicketListComponent } from './components/ticket-list/ticket-list.component';
 import { TicketStatusBadgePipe } from './pipes/ticket-status-badge.pipe';
 import { ToggleClassPipe } from './pipes/toggle-class.pipe';
@@ -199,7 +199,7 @@ const PUBLIC_DECLARATIONS = [
     SponsorLogoFileNamesToUrisPipe,
     StatusLightComponent,
     SumArrayPipe,
-    TextToColorPipe,
+    TextToBadgeStylePipe,
     ToggleClassPipe,
     ToTemplateContextPipe,
     TicketLabelPickerComponent,

@@ -24,9 +24,13 @@
             </alert>
         </ng-container>
 
+        @if((localUser$ | async)?.id) {
+        <app-user-practice-summary [userId]="(localUser$ | async)!.id"></app-user-practice-summary>
+        }
+
         <div class="suggested-searches-container my-4" *ngIf="suggestedSearches?.length">
             <h2>Need a place to start?</h2>
-            Try some of these suggested searches:
+            Try one of these suggested searches:
 
             <app-suggested-searches class="d-block mt-4" *ngIf="suggestedSearches?.length"
                 [searches]="suggestedSearches"></app-suggested-searches>
@@ -74,7 +78,8 @@
                                 <div>
                                     <app-info-bubble *ngIf="c.game.isHidden" class="mt-1 mr-2" [icon]="fa.eyeSlash"
                                         tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
-                                    <span class="fs-09 text-muted">{{ c.game.name }}</span>
+                                    <a class="fs-09 text-muted cursor-pointer fw-bold" routerLink="/practice"
+                                        [queryParams]="{ term: c.game.id }">{{ c.game.name }}</a>
                                 </div>
                             </div>
                         </div>
@@ -151,10 +156,10 @@
 
 <ng-template #completeTemplate let-challenge>
     @if(challenge.hasCertificateTemplate) {
-    <a [href]="challenge.id | toPracticeCertificateLink" target="_blank"
+    <a [href]="challenge.id | toPracticeCertificateLink" target="_blank" class="fw-bold"
         tooltip="You finished this challenge on {{ challenge.userBestAttempt.bestAttemptDate | friendlyDateAndTime }}. Click for a certificate showcasing your awesomeness.">Complete</a>
     } @else {
-    <span class="text-success-light"
+    <span class="fw-bold"
         tooltip="You finished this challenge on {{ challenge.userBestAttempt.bestAttemptDate | friendlyDateAndTime }}. Way to go!">Complete</span>
     }
 </ng-template>

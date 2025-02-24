@@ -1,8 +1,8 @@
-import { TextToRgbService } from '@/services/text-to-rgb.service';
 import { Pipe, PipeTransform } from '@angular/core';
+import { TextToRgbService } from '@/services/text-to-rgb.service';
 
-@Pipe({ name: 'textToColor' })
-export class TextToColorPipe implements PipeTransform {
+@Pipe({ name: 'textToBadgeStyle' })
+export class TextToBadgeStylePipe implements PipeTransform {
 
   constructor(private textToRgb: TextToRgbService) { }
 

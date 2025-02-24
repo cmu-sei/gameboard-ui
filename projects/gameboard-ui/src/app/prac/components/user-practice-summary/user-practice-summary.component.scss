@@ -1,0 +1,16 @@
+.tag-chip {
+  margin: 0;
+  padding: 0;
+
+  .text-container {
+    border-top-right-radius: 10rem;
+    border-bottom-right-radius: 10rem;
+    border-collapse: collapse;
+  }
+
+  .count-container {
+    border-top-left-radius: 10rem;
+    border-bottom-left-radius: 10rem;
+    border-collapse: collapse;
+  }
+}

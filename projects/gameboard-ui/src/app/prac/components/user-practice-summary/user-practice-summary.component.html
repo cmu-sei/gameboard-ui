@@ -1,0 +1,22 @@
+@if(userSummary?.tags?.length) {
+<div class="my-5">
+    <h2>Your Progress</h2>
+
+    <p>
+        You've been here before! Let's take a look at everything you've done in the Practice Area:
+    </p>
+
+    <div class="my-4 d-flex flex-wrap">
+        @for(tag of userSummary!.tags; track tag) {
+        <div class="tag-chip mr-2 mb-2 fw-bold cursor-pointer" routerLink="/practice" [queryParams]="{ term: tag.tag }">
+            <span class="count-container pl-2" [style.color]="tag.tag | textToHexColor"
+                [ngStyle]="{ 'border': '1px solid ' + (tag.tag | textToHexColor) }">
+                {{ tag.countAttempted }} / {{ tag.countAvailable }}
+            </span>
+            <span class="text-container px-2" [ngStyle]="{ 'border': '1px solid ' + (tag.tag | textToHexColor) }"
+                [style.backgroundColor]="tag.tag | textToHexColor">{{tag.tag}}</span>&nbsp;
+        </div>
+        }
+    </div>
+</div>
+}

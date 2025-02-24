@@ -23,6 +23,7 @@ import { InfoBubbleComponent } from '@/standalone/core/components/info-bubble/in
 import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
 import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 import { ToPracticeCertificateLinkPipe } from './pipes/to-practice-certificate-link.pipe';
+import { UserPracticeSummaryComponent } from './components/user-practice-summary/user-practice-summary.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { ToPracticeCertificateLinkPipe } from './pipes/to-practice-certificate-l
     PlayComponent,
     SpinnerComponent,
     ToPracticeCertificateLinkPipe,
+    UserPracticeSummaryComponent
   ]
 })
 export class PracModule { }

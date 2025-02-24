@@ -135,7 +135,7 @@
             </a>
             <ng-container *ngIf="ctx.canManage">
               <span class="badge badge-pill text-black mr-2" *ngFor="let label of ticket.labelsList"
-                [ngStyle]="label | textToColor">{{label}}</span>
+                [ngStyle]="label | textToBadgeStyle">{{label}}</span>
             </ng-container>
           </div>
           <div class="text-muted">

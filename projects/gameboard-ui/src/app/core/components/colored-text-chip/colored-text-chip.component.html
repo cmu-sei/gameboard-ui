@@ -1,5 +1,5 @@
 <span [class]="'badge badge-pill mr-2 px-2 py-1 mb-2 colored-text-chip-' + size" [class.click-target]="isClickable"
-    [class.dim]="colorMode == 'dim'" [ngStyle]="(colorMode == 'normal' ? (text | textToColor) : undefined)"
+    [class.dim]="colorMode == 'dim'" [ngStyle]="(colorMode == 'normal' ? (text | textToBadgeStyle) : undefined)"
     (click)="isClickable && handleClick({text, id}, $event)">
     <span class="text-container">{{text}}</span>&nbsp;
     <span *ngIf="enableSecondaryAction" class="btn p-0 m-0 pt-1 border-0"
