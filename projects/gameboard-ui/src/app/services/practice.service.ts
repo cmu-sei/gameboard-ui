@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesResult, UserPracticeHistoryChallenge, UserPracticeSummary } from '@/prac/practice.models';
+import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UserPracticeHistoryChallenge, UserPracticeSummary } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { GameCardContext } from '@/api/game-models';
 
@@ -53,8 +53,8 @@ export class PracticeService {
     return this.http.get<GameCardContext[]>(this.apiUrl.build('/practice/games'));
   }
 
-  public searchChallenges(filter: any): Observable<SearchPracticeChallengesResult> {
-    return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', filter));
+  public searchChallenges(request: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {
+    return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', { ...request.filter, userProgress: request.userProgress }));
   }
 
   private async updateIsEnabled() {

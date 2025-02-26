@@ -482,6 +482,10 @@ th[align="left"] {
   flex-basis: 25%;
 }
 
+.flex-basis-33 {
+  flex-basis: 33%;
+}
+
 .flex-basis-50 {
   flex-basis: 50%;
 }
@@ -577,6 +581,7 @@ th[align="left"] {
 }
 
 .btn-link {
+  border: 0;
   color: theme-color("success");
   cursor: pointer;
 }

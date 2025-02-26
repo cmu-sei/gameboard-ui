@@ -8,8 +8,13 @@ import { inject, Pipe, PipeTransform } from '@angular/core';
 export class TextToHexColorPipe implements PipeTransform {
   private textToRgb = inject(TextToRgbService);
 
-  transform(value: string): unknown {
+  transform(value: string, getContrastColor?: boolean): string {
     const rgb = this.textToRgb.get((value || "").toLowerCase());
-    return this.textToRgb.rgbToHex(rgb);
+
+    if (!getContrastColor) {
+      return this.textToRgb.rgbToHex(rgb);
+    }
+
+    return this.textToRgb.getBrightness(rgb) > 120 ? 'black' : 'white';
   }
 }

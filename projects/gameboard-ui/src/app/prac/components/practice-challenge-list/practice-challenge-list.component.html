@@ -24,11 +24,7 @@
             </alert>
         </ng-container>
 
-        @if((localUser$ | async)?.id) {
-        <app-user-practice-summary [userId]="(localUser$ | async)!.id"></app-user-practice-summary>
-        }
-
-        <div class="suggested-searches-container my-4" *ngIf="suggestedSearches?.length">
+        <div class="suggested-searches-container my-4 flex-grow-1" *ngIf="suggestedSearches?.length">
             <h2>Need a place to start?</h2>
             Try one of these suggested searches:
 
@@ -36,24 +32,51 @@
                 [searches]="suggestedSearches"></app-suggested-searches>
         </div>
 
-        <div class="input-group input-group-sm col-5 ml-auto mb-4 pr-0 mt-5">
-            <app-share-button class="d-block mr-1" size="small" [disabled]="!term"
+        <div class="filter-controls-container d-flex align-items-center mt-5 mb-4">
+            <div class="flex-grow-1">
+                @if(userPracticeSummary) {
+                <strong>Your progress: </strong>
+                {{ userPracticeSummary.countCompleted }} /
+                {{ userPracticeSummary.countAvailable }}
+                <span class="text-muted">challenges</span>
+                <span class="mx-1"></span>
+                {{ userPracticeSummary.pointsScored }} /
+                {{ userPracticeSummary.pointsAvailable }}
+                <span class="text-muted">points</span>
+                <span class="ml-2 btn btn-link" (click)="handleViewSummaryClick()">[more]</span>
+                }
+            </div>
+
+            @if (localUser$ | async) {
+            <select class="form-control mr-1" [appQueryParamModel]="{ name: 'userProgress' }">
+                <option value="">[Filter by progress]</option>
+                <option value="notAttempted">Not Attempted</option>
+                <option value="attempted">Attempted</option>
+                <option value="completed">Completed</option>
+            </select>
+            }
+
+            <div class="input-group input-group-sm mx-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <fa-icon [icon]="faSearch"></fa-icon>
+                    </span>
+                </div>
+                <input type="search" placeholder="Search {{ count }} practice challenges..."
+                    class="form-control border-0" [(ngModel)]="term"
+                    [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
+            </div>
+
+            <app-share-button class="d-block ml-1" size="small" [disabled]="!term"
                 message="Copied a link to this search to your clipboard."
                 tooltip="Copy a link to this search"></app-share-button>
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <fa-icon [icon]="faSearch"></fa-icon>
-                </span>
-            </div>
-            <input type="search" placeholder="Search {{ count }} practice challenges..." class="form-control border-0"
-                [(ngModel)]="term"
-                [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 
         <app-pager *ngIf="count > 0" display="ifPaging" [skip]="skip || 0" [take]="take || 0" [count]="count"
             (changed)="paged($event)"></app-pager>
 
-        <table class="table gameboard-table my-2" *ngIf="count > 0; else noMatches">
+        @if (!isLoading) {
+        <table class="table gameboard-table mb-4" *ngIf="count > 0; else noMatches">
             <thead>
                 <tr>
                     <th>Challenge</th>
@@ -109,13 +132,24 @@
                                     *ngTemplateOutlet="completeTemplate; context: { $implicit: c }"></ng-container>
                             </div>
                             <div>
-                                <span>{{ c.userBestAttempt?.bestAttemptScore }} points</span>
+                                {{ c.userBestAttempt?.bestAttemptScore }}
+                                <span class="text-muted">points</span>
                             </div>
                         </div>
                         } @else if(c.userBestAttempt) {
                         <div class="user-performance">
-                            {{ c.userBestAttempt.attemptCount }}
-                            <span class="text-muted">{{ "attempt" | pluralizer:c.userBestAttempt.attemptCount }}</span>
+                            <div>
+                                {{ c.userBestAttempt.attemptCount }}
+                                <span class="text-muted">{{ "attempt" | pluralizer:c.userBestAttempt.attemptCount
+                                    }}</span>
+                            </div>
+
+                            @if(c.userBestAttempt.bestAttemptScore) {
+                            <div>
+                                {{ c.userBestAttempt.bestAttemptScore }} / {{ c.scoreMaxPossible }}
+                                <span class="text-muted">points</span>
+                            </div>
+                            }
                         </div>
                         }
                         @else {
@@ -125,6 +159,10 @@
                 </tr>
             </tbody>
         </table>
+        }
+        @else {
+        <app-spinner>Loading practice challenges...</app-spinner>
+        }
 
         <app-pager *ngIf="count > 0" display="ifPaging" [skip]="skip || 0" [take]="take || 0" [count]="count"
             (changed)="paged($event)">
@@ -172,4 +210,12 @@
     <div class="text-center mt-5">
         No challenges meet your search criteria. Try again with a new search term.
     </div>
+</ng-template>
+
+<ng-template #userSummaryModal>
+    @if((localUser$ | async)?.id) {
+    <app-modal-content title="Your Progress" subtitle="Practice Area" [hideCancel]="true">
+        <app-user-practice-summary [userId]="(localUser$ | async)!.id"></app-user-practice-summary>
+    </app-modal-content>
+    }
 </ng-template>

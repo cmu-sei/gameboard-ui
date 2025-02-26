@@ -10,7 +10,6 @@ export class ToPracticeCertificateLinkPipe implements PipeTransform {
   private routerService = inject(RouterService);
 
   transform(challengeSpecId: string): string {
-    console.log(this.routerService.getCertificatePrintableUrl(PlayerMode.practice, challengeSpecId));
     return this.routerService.getCertificatePrintableUrl(PlayerMode.practice, challengeSpecId);
   }
 }

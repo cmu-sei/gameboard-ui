@@ -1,3 +1,16 @@
 app-game-card-image {
   width: 32px;
 }
+
+.filter-controls-container {
+  width: unset;
+
+  select,
+  .input-group {
+    width: unset;
+  }
+
+  input[type="search"] {
+    width: 20rem;
+  }
+}

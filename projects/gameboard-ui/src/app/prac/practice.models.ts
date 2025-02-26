@@ -1,6 +1,13 @@
 import { GameCardContext } from "@/api/game-models";
-import { PagedArray, TimestampRange } from "@/api/models";
+import { PagedArray, Search, TimestampRange } from "@/api/models";
 import { DateTime } from "luxon";
+
+export interface SearchPracticeChallengesRequest {
+    filter: Search;
+    userProgress?: SearchPracticeChallengesRequestUserProgress;
+}
+
+export type SearchPracticeChallengesRequestUserProgress = "notAttempted" | "attempted" | "completed";
 
 export interface SearchPracticeChallengesResult {
     results: PagedArray<PracticeChallengeView>;
@@ -37,6 +44,7 @@ export interface PracticeChallengeView {
     isHidden: boolean;
     feedbackTemplateId: string;
     solutionGuideUrl: string;
+    scoreMaxPossible: number;
     tags: string[];
     game: {
         id: string;
@@ -63,7 +71,8 @@ export interface UserPracticeSummary {
     countCompleted: number;
     pointsAvailable: number;
     pointsScored: number;
-    tags: UserPracticeSummaryTagEngagement[];
+    tagsPlayed: UserPracticeSummaryTagEngagement[];
+    tagsUnplayed: string[];
 }
 
 export interface UserPracticeSummaryTagEngagement {

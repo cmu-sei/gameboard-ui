@@ -56,7 +56,7 @@ export class PracticeSessionComponent implements OnInit {
       filter(p => !!p.specId),
       map(p => p.specId),
       distinctUntilChanged(),
-      switchMap(p => practiceService.searchChallenges({ term: p })),
+      switchMap(p => practiceService.searchChallenges({ filter: { term: p } })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as PracticeChallengeView) : r.results.items[0]),
     );
 
