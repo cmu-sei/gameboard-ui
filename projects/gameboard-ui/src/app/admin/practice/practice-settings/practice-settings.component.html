@@ -1,3 +1,4 @@
+<app-error-div></app-error-div>
 <ng-container *ngIf="ctx">
     <div class="greeting-container settings-section mt-4">
         <h2>Practice Page Greeting</h2>
@@ -30,7 +31,7 @@
             [(ngModel)]="suggestedSearchesLineDelimited" rows="10">
 
         </textarea>
-        <small><strong>NOTE:</strong> Enter one suggested search per line.</small>
+        <small class="text-muted"><strong>NOTE:</strong> Enter one suggested search per line.</small>
     </div>
 
     <div class="greeting-container settings-section">
@@ -69,9 +70,8 @@
             <div class="form-group">
                 <label for="defaultSessionLength">Default Session Length (minutes)</label>
                 <input type="number" class="form-control" name="defaultSessionLength" min="5" required
-                    (change)="handleSettingsChanged(ctx.settings)"
-                    [popover]="'The default session length is required and defaults to 60 minutes if unset.'"
-                    [isOpen]="!ctx.settings.defaultPracticeSessionLengthMinutes" placement="bottom"
+                    (change)="handleSettingsChanged(ctx.settings)" [popover]="'Defaults to 60 minutes if unset.'"
+                    [isOpen]="!ctx.settings.defaultPracticeSessionLengthMinutes" placement="bottom" placeholder="60"
                     [(ngModel)]="ctx.settings.defaultPracticeSessionLengthMinutes">
             </div>
 

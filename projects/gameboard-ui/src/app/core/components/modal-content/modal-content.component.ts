@@ -17,11 +17,13 @@ export class ModalContentComponent<T> {
   @Input() confirmDisabled = false;
   @Input() isDangerConfirm = false;
 
+  @Output() cancel = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<void>();
 
   constructor(private modalService: ModalConfirmService) { }
 
-  protected handleClose() {
+  protected handleCancel() {
+    this.cancel.emit();
     this.modalService.hide();
   }
 

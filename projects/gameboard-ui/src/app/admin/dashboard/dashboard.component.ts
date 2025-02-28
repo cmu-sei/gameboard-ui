@@ -5,7 +5,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { fa } from '@/services/font-awesome.service';
-import { BehaviorSubject, Subject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap, mergeMap } from 'rxjs/operators';
 import { Game, NewGame } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
@@ -123,6 +123,10 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  protected handleImported() {
+    this.refresh$.next(true);
+  }
+
   private async delete(game: Game): Promise<void> {
     try {
       await this.api.deleteWithPlayerData(game.id);
@@ -158,22 +162,6 @@ export class DashboardComponent implements OnInit {
     }
     finally {
       this.isExporting = false;
-    }
-  }
-
-  async handlePackageUpload(files: File[]): Promise<void> {
-    this.errors = [];
-
-    if (files.length != 1) {
-      this.errors.push("Please specify a Gameboard package to upload.");
-    }
-
-    const result = await this.importExportService.import(files[0]);
-    if (result.length == 0) {
-      this.errors.push("No games imported.");
-    }
-    else {
-      this.toastService.showMessage(`Imported **${result.length}** game(s). Let's play!`);
     }
   }
 

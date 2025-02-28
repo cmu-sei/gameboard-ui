@@ -5,15 +5,9 @@
   width: 252px;
 }
 
-::ng-deep app-dropzone .dropzone {
+app-package-upload {
+  display: block;
   flex-grow: 1 !important;
-}
-
-.dropzone-target {
-  border: 0.25rem dashed lightgray;
-  border-radius: 0.25rem;
-  height: 100%;
-  padding: 0.25rem;
 }
 
 .table-wrapper {

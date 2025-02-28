@@ -63,6 +63,7 @@ import { GameClassificationToStringPipe } from './pipes/game-classification-to-s
 import { SupportAutoTagAdminComponent } from './components/support-auto-tag-admin/support-auto-tag-admin.component';
 import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state-description.pipe';
 import { SyncStartTeamPlayerReadyCountPipe } from './pipes/sync-start-team-player-ready-count.pipe';
+import { PackageUploadComponent } from './components/package-upload/package-upload.component';
 import { PlayerNamesComponent } from './player-names/player-names.component';
 import { PlayerSponsorReportComponent } from './player-sponsor-report/player-sponsor-report.component';
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
@@ -221,6 +222,7 @@ import { SessionExtensionGameEndWarningComponent } from "./components/session-ex
     GameInfoBubblesComponent,
     IfHasPermissionDirective,
     MarkdownPlaceholderPipe,
+    PackageUploadComponent,
     SafeUrlPipe,
     SessionExtensionGameEndWarningComponent,
     SpinnerComponent,

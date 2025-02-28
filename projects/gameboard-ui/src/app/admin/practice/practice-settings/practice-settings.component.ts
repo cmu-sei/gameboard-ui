@@ -20,6 +20,8 @@ export class PracticeSettingsComponent implements OnInit {
   ctx: PracticeSettingsContext | null = null;
 
   private _startUpdate$ = new Subject<PracticeModeSettings>();
+
+  protected errors: any = [];
   protected suggestedSearchesLineDelimited = "";
 
   constructor(
@@ -28,8 +30,9 @@ export class PracticeSettingsComponent implements OnInit {
     private unsub: UnsubscriberService) {
     this.unsub.add(this._startUpdate$.pipe(
       debounceTime(500),
-      map(settings => this.practiceService.updateSettings(settings))
-    ).subscribe());
+      map(settings => this.update(settings))
+    ).subscribe()
+    );
   }
 
   async ngOnInit(): Promise<void> {
@@ -68,6 +71,20 @@ export class PracticeSettingsComponent implements OnInit {
 
   protected handleSettingsChanged(settings: PracticeModeSettings) {
     settings.suggestedSearches = !this.suggestedSearchesLineDelimited ? [] : this.suggestedSearchesLineDelimited.split("\n").map(entry => entry.trim());
+    if (!settings.defaultPracticeSessionLengthMinutes) {
+      settings.defaultPracticeSessionLengthMinutes = 60;
+    }
+
     this._startUpdate$.next(settings);
+  }
+
+  private async update(settings: PracticeModeSettings) {
+    try {
+      this.errors = [];
+      await this.practiceService.updateSettings(settings);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
   }
 }

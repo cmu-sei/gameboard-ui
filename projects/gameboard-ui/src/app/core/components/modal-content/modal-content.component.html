@@ -10,7 +10,7 @@
             </h5>
         </div>
         <button *ngIf="!hideCancel" type="button" class="btn-close close pull-right" aria-label="Close"
-            (click)="handleClose()">
+            (click)="handleCancel()">
             <span aria-hidden="true" class="visually-hidden">&times;</span>
         </button>
     </div>
@@ -23,7 +23,7 @@
         </div>
 
         <div class="modal-buttons">
-            <button type="button" *ngIf="!hideCancel" class="btn btn-link text-muted" (click)="handleClose()"
+            <button type="button" *ngIf="!hideCancel" class="btn btn-link text-muted" (click)="handleCancel()"
                 [disabled]="cancelDisabled">
                 {{ cancelButtonText || "Cancel" }}
             </button>

@@ -51,15 +51,7 @@
 
         <p class="mt-2">OR</p>
 
-        <app-dropzone class="d-flex flex-grow-1 w-100" (dropped)="handlePackageUpload($event)"
-          [acceptMimeTypes]="['application/zip']">
-          <div class="dropzone-target h-100 d-flex flex-column align-items-center justify-content-center">
-            <div class="text-center">
-              Upload or drop a package
-              <em class="d-block fs-09 text-muted">(export games from a Gameboard app to create a package)</em>
-            </div>
-          </div>
-        </app-dropzone>
+        <app-package-upload (imported)="handleImported()"></app-package-upload>
       </div>
 
       <div class="wrapper col-3 my-4" *ngFor="let g of games">
