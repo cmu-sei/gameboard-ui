@@ -31,7 +31,7 @@
         {{ q.answer }}
       </div>
 
-      <div *ngIf="pastSubmissions.length">
+      <div *ngIf="(i | indexToSubmittedAnswers:pastSubmissions:q.isCorrect).length">
         <small>
           <strong>Previous attempts: </strong>
           <!--If the question has been answered correctly, don't show the last historical entry for it (because we display it above)-->

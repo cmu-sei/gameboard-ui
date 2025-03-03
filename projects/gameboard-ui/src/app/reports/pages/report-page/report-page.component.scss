@@ -42,8 +42,9 @@ $subtleSize: 0.9rem;
 
     thead {
       background-color: inherit;
+      border-top: solid 1px #fff;
       position: sticky;
-      top: 50px;
+      top: 48px;
       z-index: 5;
     }
 
