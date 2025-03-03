@@ -4,14 +4,14 @@
         You've been here before! Let's take a look at everything you've done in the Practice Area:
     </p>
 
-    <div class="d-flex flex-wrap my-5">
-        <div class="pr-4 total-points-container">
+    <div class="d-flex my-5">
+        <div class="pr-3 total-points-container">
             <app-big-stat [value]="userSummary?.pointsScored" label="Points Scored"
                 [subLabel]="(userSummary?.pointsAvailable || 0) + ' available'"></app-big-stat>
         </div>
         <div class="pl-5">
             <h4>Tags you've played</h4>
-            <div class="d-flex flex-wrap flex-grow-1">
+            <div class="d-flex flex-wrap">
                 @for(tag of userSummary!.tagsPlayed; track tag) {
                 <div class="tag-chip mr-2 mb-2 fw-bold cursor-pointer" routerLink="/practice"
                     [queryParams]="{ term: tag.tag }">
@@ -29,7 +29,7 @@
             </div>
 
             @if(userSummary?.tagsUnplayed?.length) {
-            <div class="tags-unplayed mt-4">
+            <div class="tags-unplayed mt-5">
                 <h4>Tags to try</h4>
                 @for(tag of userSummary!.tagsUnplayed; track tag) {
                 <app-colored-text-chip [text]="tag" class="cursor-pointer" routerLink="/practice"

@@ -309,6 +309,7 @@ table.gameboard-table {
 .dropdown-item:hover,
 .dropdown-item:focus {
   background-color: theme-color("success");
+  color: #fff !important;
 }
 
 .btn.focus,
