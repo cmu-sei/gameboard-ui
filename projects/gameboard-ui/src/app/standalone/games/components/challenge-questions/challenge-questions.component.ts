@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { firstValueFrom, map } from 'rxjs';
 import { ChallengeProgressView, ChallengeProgressViewSection } from '@/api/challenges.models';
 import { ChallengesService } from '@/api/challenges.service';
@@ -7,7 +8,6 @@ import { CoreModule } from '@/core/core.module';
 import { fa } from '@/services/font-awesome.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ToastService } from '@/utility/services/toast.service';
-import { AbstractControl, FormGroup } from '@angular/forms';
 import { ChallengeQuestionsFormService } from '@/services/challenge-questions-form.service';
 import { EpochMsToTimeRemainingStringPipe } from '@/standalone/core/pipes/epoch-ms-to-time-remaining.pipe';
 import { ModalConfirmService } from '@/services/modal-confirm.service';

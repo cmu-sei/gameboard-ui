@@ -46,15 +46,10 @@ export class ModalConfirmService implements OnDestroy {
       this.hiddenSub?.unsubscribe();
     }
 
-    this.bsModalRef?.hide();
     this.cleanupModalRef();
   }
 
   private openWithDefaultStyles<TComponent>(config: ModalConfig<TComponent>) {
-    if (this.bsModalRef) {
-      this.hide();
-    }
-
     return this.bsModalService.show(config.content, {
       initialState: config.context as unknown as Partial<TComponent>,
       class: ["modal-dialog-centered", ...(config.modalClasses || [])].join(" "),
