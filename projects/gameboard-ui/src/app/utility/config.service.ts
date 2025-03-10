@@ -10,7 +10,6 @@ import { environment } from '../../environments/environment';
 import { Location, PlatformLocation } from '@angular/common';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { LogService } from '../services/log.service';
-import { VmState } from '@/api/board-models';
 import { Environment, EnvironmentSettings } from '../../environments/environment-typed';
 
 @Injectable({ providedIn: 'root' })
