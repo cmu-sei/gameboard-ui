@@ -26,10 +26,13 @@
     }
   }
 
+  .toast-avatar {
+    padding: 0 1rem 0 0;
+  }
+
   svg {
     display: block;
     fill: $gray-100 !important;
-    margin-right: 0.5rem;
   }
 
   button.toast-close {
