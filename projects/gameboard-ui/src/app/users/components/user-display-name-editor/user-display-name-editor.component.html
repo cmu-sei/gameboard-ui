@@ -5,7 +5,7 @@
     game, the name you choose here will be your default name for the game. You can still customize it after you enroll.
 </div>
 
-@if(currentUser.name && currentUser.nameStatus && requestedName !== currentUser.approvedName) {
+@if(currentUser.name && currentUser.nameStatus && currentUser.name !== currentUser.approvedName) {
 @if (currentUser.nameStatus === "pending") {
 <alert type="success" class="my-3">
     <h3>Name change pending</h3>
@@ -37,31 +37,34 @@
 }
 }
 
-<div class="name-change-container d-flex align-items-end mt-4">
-    <div class="form-group flex-grow-1 p-0 mr-2">
-        <label for="approvedUserName" class="text-muted">Approved Display Name</label>
-        <div class="input-group">
-            <input id="approvedUserName" type="text" class="form-control" disabled [value]="currentUser.approvedName">
-            <div class="input-group-append">
-                <button class="btn btn-success" (click)="handleRefreshClick()">
-                    <fa-icon [icon]="fa.sync"
-                        tooltip="Press to refresh the status of your name change request"></fa-icon>
-                </button>
+<div class="name-change-container mt-4">
+    <form class="d-flex align-items-end" [formGroup]="requestNameForm" (ngSubmit)="handleSubmitClick()">
+        <div class="form-group flex-grow-1 p-0 mr-2">
+            <label for="approvedUserName" class="text-muted">Approved Display Name</label>
+            <div class="input-group">
+                <input id="approvedUserName" type="text" class="form-control" disabled
+                    [value]="currentUser.approvedName">
+                <div class="input-group-append">
+                    <button class="btn btn-success" (click)="handleRefreshClick()">
+                        <fa-icon [icon]="fa.sync"
+                            tooltip="Press to refresh the status of your name change request"></fa-icon>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="form-group flex-grow-1 p-0 mr-2">
-        <label for="nameInput" class="text-muted">Requested Display Name</label>
-        <input id="nameInput" class="form-control" [(ngModel)]="requestedName" placeholder="Enter a new name..."
-            maxlength="64" required>
-    </div>
+        <div class="form-group flex-grow-1 p-0 mr-2">
+            <label for="requestedName" class="text-muted">Requested Display Name</label>
+            <input id="requestedName" name="requestedName" type="text" class="form-control"
+                formControlName="requestedName" placeholder="Enter a new name..." maxlength="64" required>
+        </div>
 
-    <div class="d-flex flex-grow-1 py-2">
-        <button class="btn btn-success" (click)="handleSubmitClick()" [disabled]="!requestedName">
-            Request
-        </button>
-    </div>
+        <div class="d-flex flex-grow-1 py-2">
+            <button class="btn btn-success" type="submit">
+                Request
+            </button>
+        </div>
+    </form>
 </div>
 } @else {
 <div>

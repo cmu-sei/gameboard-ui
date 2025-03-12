@@ -1,6 +1,6 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { fa } from '@/services/font-awesome.service';
@@ -20,7 +20,7 @@ import { firstValueFrom } from 'rxjs';
   standalone: true,
   imports: [
     AsyncPipe,
-    FormsModule,
+    ReactiveFormsModule,
     AlertModule,
     TooltipModule,
     CommonModule,
@@ -40,8 +40,10 @@ export class UserDisplayNameEditorComponent implements OnInit {
 
   protected appName = this.configService.appName;
   protected currentUser$ = this.localUserService.user$;
-  protected requestedName = "";
   protected fa = fa;
+  protected requestNameForm = new FormGroup({
+    requestedName: new FormControl(this.localUserService.user$.value?.name || "")
+  });
   protected settings?: GameboardSettings;
 
   public async ngOnInit() {
@@ -62,15 +64,15 @@ export class UserDisplayNameEditorComponent implements OnInit {
     if (!this.localUserService.user$.value)
       throw new Error("Can't update user name if not logged in.");
 
-    if (!this.requestedName) {
+    if (!this.requestNameForm.value.requestedName) {
       return;
     }
 
-    await this.usersService.requestNameChange(this.localUserService.user$.value.id, { requestedName: this.requestedName });
+    const result = await this.usersService.requestNameChange(this.localUserService.user$.value.id, { requestedName: this.requestNameForm.value.requestedName });
     await this.bindNameStatus();
 
     if (this.permissions.can("Teams_ApproveNameChanges")) {
-      this.toasts.showMessage(`Your display name is now **${this.currentUser$.value?.approvedName}**. Nice!`);
+      this.toasts.showMessage(`Your display name is now **${result.name}**. Nice!`);
     } else {
       this.toasts.showMessage("Your name change request has been submitted.");
     }
@@ -78,6 +80,6 @@ export class UserDisplayNameEditorComponent implements OnInit {
 
   private async bindNameStatus() {
     await firstValueFrom(this.localUserService.refresh$);
-    this.requestedName = this.currentUser$.value?.name || "";
+    this.requestNameForm.patchValue({ requestedName: this.localUserService.user$.value?.name });
   }
 }
