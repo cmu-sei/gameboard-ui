@@ -93,6 +93,7 @@ import { GameCenterPracticeTeamContextMenuComponent } from './components/game-ce
 import { SystemAdminComponent } from './components/system-admin/system-admin.component';
 import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
 import { SessionExtensionGameEndWarningComponent } from "./components/session-extension-game-end-warning/session-extension-game-end-warning.component";
+import { GamesTableViewComponent } from './components/games-table-view/games-table-view.component';
 
 @NgModule({
   declarations: [
@@ -220,6 +221,7 @@ import { SessionExtensionGameEndWarningComponent } from "./components/session-ex
     ErrorDivComponent,
     GameCenterPracticeTeamContextMenuComponent,
     GameInfoBubblesComponent,
+    GamesTableViewComponent,
     IfHasPermissionDirective,
     MarkdownPlaceholderPipe,
     PackageUploadComponent,
@@ -231,7 +233,6 @@ import { SessionExtensionGameEndWarningComponent } from "./components/session-ex
     CertificateTemplatePickerComponent,
     FeedbackTemplatePickerComponent,
     UserPickerComponent,
-    SessionExtensionGameEndWarningComponent
   ]
 })
 export class AdminModule { }

@@ -14,38 +14,33 @@
       placeholder="Enter name, season, track, division, series, sponsor, key, mode, card text, or id">
   </div>
 </div>
+
 <div class="row">
-  <div class="col-12">
+  <div class="col-9">
+    @if(errors.length) {
     <app-error-div [errors]="errors"></app-error-div>
+    }
   </div>
 
-  <div *ngIf="tableView" class="col-4">
-    <button class="btn btn-secondary btn-sm" *appIfHasPermission="'Games_CreateEditDelete'" (click)="create()">
-      <fa-icon [icon]="faPlus"></fa-icon>
-      <span>New Game</span>
-    </button>
+  <div class="col-3 d-flex justify-content-end">
+    <label>Cards</label>
+    <label class="btn text-success my-0 py-0" btnCheckbox id="isPublished-input" name="isPublished"
+      (click)="toggleViewMode()">
+      <fa-icon *ngIf="!tableView" [icon]="fa.toggleOff" size="lg"></fa-icon>
+      <fa-icon *ngIf="tableView" [icon]="fa.toggleOn" size="lg"></fa-icon>
+    </label>
+    <label>Table</label>
   </div>
-  <div class="col-4 my-0 py-0" [class]="tableView ? 'offset-4' : 'offset-8'">
-    <div class="pb-0 pt-1 my-0 py-0">
-      <div class="text-white float-right h-auto d-flex align-items-center my-0 py-0">
-        <label class="py-0 my-0">Cards</label>
-        <label class="btn text-success my-0 py-0" btnCheckbox id="isPublished-input" name="isPublished"
-          (click)="toggleViewMode()">
-          <fa-icon *ngIf="!tableView" [icon]="faToggleOff" size="lg"></fa-icon>
-          <fa-icon *ngIf="tableView" [icon]="faToggleOn" size="lg"></fa-icon>
-        </label>
-        <label class="py-0 my-0">Table</label>
-      </div>
-    </div>
-  </div>
+</div>
 
+<div class="row">
   <ng-container *ngIf="games$ | async as games; else loading">
     <!-- Card view mode -->
     <ng-container *ngIf="!tableView">
       <div *appIfHasPermission="'Games_CreateEditDelete'"
         class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
         <button class="btn btn-success flex-grow-1 w-100" (click)="create()">
-          <fa-icon [icon]="faPlus"></fa-icon>
+          <fa-icon [icon]="fa.plus"></fa-icon>
           <span>New Game</span>
         </button>
 
@@ -93,133 +88,15 @@
     </ng-container> <!-- End card view -->
 
     <!-- Table view mode -->
-    <ng-container *ngIf="tableView">
-      <div class="col-12">
-        <div class="table-wrapper">
-          <table class="table mt-2 text-left">
-            <tbody>
-              <tr class="bg-dark">
-                <td class="thin-col sticky-card sticky-header"></td>
-                <td class="thin-col"></td>
-                <td class="thin-col"></td>
-                <td class="thin-col sticky-options sticky-header"></td>
-                <td class="sticky-name sticky-header">Name</td>
-                <td>Series</td>
-                <td>Track</td>
-                <td>Season</td>
-                <td>Division</td>
-                <td>Mode</td>
-                <td class="date-col">Start Ex.</td>
-                <td class="date-col">End Ex.</td>
-                <td class="date-col">Start Reg.</td>
-                <td class="date-col">End Reg.</td>
-                <td class="text-right">Team Size</td>
-                <td class="text-right">Sess. Duration</td>
-                <td class="text-right">Sess. Limit</td>
-                <td class="text-right">Space Limit</td>
-                <td class="text-right">Max Attempts</td>
-              </tr>
-              <tr *ngFor="let game of games; trackBy:trackById">
-                <td class="thin-col sticky-card sticky-cell">
-                  <app-game-card-image [game]="game"></app-game-card-image>
-                </td>
-                <td class="thin-col">
-                  <div [tooltip]="game.isPublished ? 'Published' : 'Unpublished'" containerClass="light-tooltip"
-                    container="body" [adaptivePosition]="true" placement="top">
-                    <fa-icon [icon]="game.isPublished ? faGlobe : faEyeSlash"></fa-icon>
-                  </div>
-                  <div [tooltip]="game.allowReset ? 'Reset Allowed' : 'Reset Not Allowed'"
-                    containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
-                    <fa-icon [icon]="game.allowReset ? faUndo : faLock"></fa-icon>
-                  </div>
-                </td>
-                <td class="thin-col">
-                  <div [tooltip]="game.allowTeam ? 'Team' : 'Individual'" containerClass="light-tooltip"
-                    container="body" [adaptivePosition]="true" placement="top">
-                    <fa-icon [icon]="game.allowTeam ? faTeam : faUser"></fa-icon>
-                  </div>
-                  <ng-container
-                    *ngTemplateOutlet="game.feedbackTemplate && (!!game.feedbackTemplate.challenge.length || !!game.feedbackTemplate.game.length) ? gameAcceptsFeedback : gameDoesntAcceptFeedback">
-                  </ng-container>
-                </td>
-                <td class="thin-col sticky-options sticky-cell">
-                  <div dropdown class="btn-group" container="body" #dropdown="bs-dropdown" [autoClose]="true"
-                    [insideClick]="true">
-                    <a class="btn btn-outline-success py-1 px-2" [routerLink]="['../game', game.id]">
-                      <fa-icon [icon]="faCog" size="sm"></fa-icon>
-                    </a>
-                    <button dropdownToggle
-                      class="btn btn-outline-success py-1 px-2 dropdown-toggle dropdown-toggle-split"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </button>
-                    <div *dropdownMenu class="dropdown-menu">
-                      <a class="dropdown-item px-3" [routerLink]="['../game', game.id]">
-                        <fa-icon [icon]="fa.peopleGroup" class="mr-1"></fa-icon>
-                        Game Center
-                      </a>
-                      <a class="dropdown-item px-3" [routerLink]="['/game', game.id]"><fa-icon class="mr-1"
-                          [icon]="faGamepad"></fa-icon>Lobby</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item px-3" (click)="clone(game)"><fa-icon class="mr-1"
-                          [icon]="faClone"></fa-icon>Clone</a>
-                      <button class="dropdown-item px-3" (click)="handleExport([game.id]); dropdown.isOpen = false">
-                        <fa-icon class="mr-1" [icon]="fa.fileExport"></fa-icon>
-                        Export as a package
-                      </button>
-                      <div class="dropdown-divider"></div>
-                      <app-confirm-button btnClass="dropdown-item px-3" (confirm)="handleDeleteClick(game)">
-                        <fa-icon [icon]="faTrash"></fa-icon>
-                        <span>Delete</span>
-                      </app-confirm-button>
-                    </div>
-                  </div>
-                </td>
-                <td class="sticky-name sticky-cell name-col">
-                  <div class="pr-1 d-flex flex-column">
-                    <span>{{game.name}}</span>
-                    <small class="text-muted">{{game.id | slice:0:12}}</small>
-                  </div>
-                </td>
-                <td>{{game.competition}}</td>
-                <td>{{game.track}}</td>
-                <td>{{game.season}}</td>
-                <td>{{game.division}}</td>
-                <td>{{game.mode}}</td>
-                <td class="date-col">{{game.gameStart | shorttime}}</td>
-                <td class="date-col">{{game.gameEnd | shorttime}}</td>
-                <td class="date-col">{{game.registrationOpen | shorttime}}</td>
-                <td class="date-col">{{game.registrationClose | shorttime}}</td>
-                <td class="text-right">{{game.minTeamSize}}-{{game.maxTeamSize}}</td>
-                <td class="text-right">{{game.sessionMinutes}}m</td>
-                <td class="text-right">{{game.sessionLimit}}</td>
-                <td class="text-right">{{game.gamespaceLimitPerSession}}</td>
-                <td class="text-right">{{game.maxAttempts}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </ng-container> <!-- End table view -->
+    @if (tableView) {
+    <app-games-table-view class="w-100 mt-4" [games]="games" (cloneRequest)="clone($event)"
+      (deleteRequest)="handleDeleteClick($event)" (exportRequest)="handleExport($event)"></app-games-table-view>
+    }
   </ng-container>
-
-  <div class="my-4"></div>
 </div>
 
 <ng-template #loading>
   <div class="text-center flex-grow-1">
     <app-spinner>Loading games...</app-spinner>
-  </div>
-</ng-template>
-
-<ng-template #gameAcceptsFeedback>
-  <div tooltip="Accepts Feedback" containerClass="light-tooltip" container="body" [adaptivePosition]="true"
-    placement="top">
-    <fa-icon [icon]="faChartBar"></fa-icon>
-  </div>
-</ng-template>
-
-<ng-template #gameDoesntAcceptFeedback>
-  <div tooltip="No Feedback" containerClass="light-tooltip" container="body" [adaptivePosition]="true" placement="top">
-    <fa-icon [icon]="faCommentSlash"></fa-icon>
   </div>
 </ng-template>

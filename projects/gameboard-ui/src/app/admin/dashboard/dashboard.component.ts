@@ -38,26 +38,6 @@ export class DashboardComponent implements OnInit {
   search: Search = { term: '' };
 
   fa = fa;
-  faArrowLeft = faArrowLeft;
-  faPlus = faPlus;
-  faCopy = faCopy;
-  faClone = faClone;
-  faTrash = faTrash;
-  faEdit = faEdit;
-  faUsers = faUsersCog;
-  faCog = faCog;
-  faTv = faTv;
-  faGamepad = faGamepad; // game lobby
-  faToggleOn = faToggleOn; // on table view
-  faToggleOff = faToggleOff; // on card view
-  faEyeSlash = faEyeSlash; // unpublished game
-  faGlobe = faGlobeAmericas; // published game
-  faUser = faUser; // individual game
-  faTeam = faUsers; // team game
-  faUndo = faUndo; // allow reset
-  faLock = faLock; // don't allow reset
-  faChartBar = faChartBar; // has feedback configured
-  faCommentSlash = faCommentSlash; // doesn't have feedback configured
 
   constructor(
     private api: GameService,

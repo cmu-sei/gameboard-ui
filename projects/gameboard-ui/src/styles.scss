@@ -594,8 +594,9 @@ th[align="left"] {
 }
 
 .sticky-under-menu {
+  background-color: inherit;
   position: sticky;
-  top: 60px;
+  top: 47px;
   z-index: 999;
 }
 
