@@ -3,7 +3,7 @@
 
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { BehaviorSubject, merge, Observable, Subject, timer } from 'rxjs';
+import { merge, Observable, Subject, timer } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { BoardGame } from '../../api/board-models';
 import { Game, GameGroup } from '../../api/game-models';
