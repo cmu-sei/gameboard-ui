@@ -5,6 +5,7 @@ export enum StorageKey {
   ExternalGameUrl = "gameServerUrl",
   GameCenterTeamsFilterSettings = "gameCenterTeamsFilterSettings",
   Gameboard = "gameboard",
+  GamesAdminUseTableView = "gamesAdminUseTableView",
   UseStickyChallengePanel = "usePlayPane"
 }
 

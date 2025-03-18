@@ -179,9 +179,63 @@ export interface GameSessionAvailibilityResponse {
   sessionsAvailable: number
 }
 
-
 export interface GetExternalTeamDataResponse {
   teamId: string;
   externalUrl: string;
   deployStatus: ExternalGameDeployStatus;
+}
+
+export interface ListGamesQuery {
+  executionStatus?: "live" | "ongoing" | "past" | "future";
+  isPublished?: boolean;
+  playerMode?: PlayerMode;
+  searchTerm?: string;
+}
+
+export interface ListGamesResponse {
+  games: ListGamesResponseGame[];
+}
+
+export interface ListGamesResponseGame {
+  id: string;
+  name: string;
+  competition: string;
+  season: string;
+  track: string;
+  division: string;
+  logo: string;
+  background: string;
+  sponsorId: string;
+  gameStart?: DateTime;
+  gameEnd?: DateTime;
+  registration: ListGamesResponseGameRegistration;
+  minTeamSize: number;
+  maxTeamSize: number;
+  maxAttempts: number;
+  sessionMinutes: number;
+  sessionLimit: number;
+  sessionAvailabilityWarningThreshold?: number;
+  gamespaceLimitPerSession: number;
+  isPublished: boolean;
+  allowLateStart: boolean;
+  allowPreview: boolean;
+  allowPublicScoreboardAccess: boolean;
+  allowRest: boolean;
+  cardText1: string;
+  cardText2: string;
+  cardText3: string;
+  isFeatured: boolean;
+  engineMode: GameEngineMode;
+  playerMode: PlayerMode;
+
+  // aggregates
+  registeredTeamCount: number;
+  registeredUserCount: number;
+}
+
+export interface ListGamesResponseGameRegistration {
+  startTime?: DateTime;
+  endTime?: DateTime;
+  registrationType: GameRegistrationType;
+  registrationConstraint?: string;
 }

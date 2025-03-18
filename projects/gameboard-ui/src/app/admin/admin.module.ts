@@ -166,7 +166,7 @@ import { GamesTableViewComponent } from './components/games-table-view/games-tab
         path: '', component: AdminPageComponent, title: "Admin", children: [
           { path: "certificates/templates/:templateId/preview", component: CertificatePreviewerComponent, title: "Certificate Template Preview" },
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-          { path: 'dashboard', component: DashboardComponent },
+          { path: 'dashboard', component: DashboardComponent, title: "Games" },
           {
             path: "game/:gameId",
             component: GameCenterComponent,

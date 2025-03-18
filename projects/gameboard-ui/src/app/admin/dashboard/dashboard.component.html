@@ -1,42 +1,66 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<span *ngIf="created$ | async"></span>
-
-<!-- game browser -->
 <div class="row">
   <div class="input-group mb-2 col-12">
     <div class="input-group-prepend">
       <span id="search-label" class="input-group-text">Search</span>
     </div>
-    <input id="search-input" type="search" autocomplete="off" class="form-control border-0" [(ngModel)]="search.term"
-      (input)="typing($event)" aria-label="search term" aria-describedby="search-label"
+    <input id="search-input" type="search" autocomplete="off" class="form-control border-0" #searchBox
+      [(ngModel)]="listGamesQuery.searchTerm" (input)="typing$.next(searchBox.value)" aria-label="search term"
+      aria-describedby="search-label"
       placeholder="Enter name, season, track, division, series, sponsor, key, mode, card text, or id">
   </div>
 </div>
 
-<div class="row">
-  <div class="col-9">
-    @if(errors.length) {
-    <app-error-div [errors]="errors"></app-error-div>
-    }
-  </div>
-
-  <div class="col-3 d-flex justify-content-end">
+<div class="row align-items-center vertical-align-middle filter-controls mt-2">
+  <div class="col-3">
     <label>Cards</label>
     <label class="btn text-success my-0 py-0" btnCheckbox id="isPublished-input" name="isPublished"
-      (click)="toggleViewMode()">
-      <fa-icon *ngIf="!tableView" [icon]="fa.toggleOff" size="lg"></fa-icon>
-      <fa-icon *ngIf="tableView" [icon]="fa.toggleOn" size="lg"></fa-icon>
+      (click)="handleToggleViewMode()">
+      <fa-icon *ngIf="!useTableView" [icon]="fa.toggleOff" size="lg"></fa-icon>
+      <fa-icon *ngIf="useTableView" [icon]="fa.toggleOn" size="lg"></fa-icon>
     </label>
     <label>Table</label>
+  </div>
+  <div class="col-3">
+    <select class="form-control" [(ngModel)]="listGamesQuery.executionStatus" (change)="handleLoadGames()">
+      <option [ngValue]="undefined">[filter by execution dates]</option>
+      <option value="past">Past</option>
+      <option value="live">Live Now</option>
+      <option value="ongoing">Ongoing</option>
+      <option value="future">Upcoming</option>
+    </select>
+  </div>
+  <div class="col-3">
+    <select class="form-control" [(ngModel)]="listGamesQuery.playerMode" (change)="handleLoadGames()">
+      <option [ngValue]="undefined">[filter by player mode]</option>
+      <option value="competition">Competitive</option>
+      <option value="practice">Practice</option>
+    </select>
+  </div>
+  <div class="col-3">
+    <select class="form-control" [(ngModel)]="listGamesQuery.isPublished" (change)="handleLoadGames()">
+      <option [ngValue]="undefined">[filter by publish status]</option>
+      <option [ngValue]="true">Published</option>
+      <option [ngValue]="false">Unpublished</option>
+    </select>
   </div>
 </div>
 
 <div class="row">
-  <ng-container *ngIf="games$ | async as games; else loading">
+  <div class="col-12">
+    @if(errors.length) {
+    <app-error-div [errors]="errors"></app-error-div>
+    }
+  </div>
+</div>
+
+
+<div class="row mt-4">
+  <ng-container *ngIf="!isLoadingGames; else loading">
     <!-- Card view mode -->
-    <ng-container *ngIf="!tableView">
+    <ng-container *ngIf="!useTableView">
       <div *appIfHasPermission="'Games_CreateEditDelete'"
         class="new-game-controls card col-3 my-3 bg-transparent d-flex flex-column align-items-center">
         <button class="btn btn-success flex-grow-1 w-100" (click)="create()">
@@ -49,7 +73,8 @@
         <app-package-upload (imported)="handleImported()"></app-package-upload>
       </div>
 
-      <div class="wrapper col-3 my-4" *ngFor="let g of games">
+      @for(g of games; track g.id) {
+      <div class="wrapper col-3 my-4">
         <app-game-card [game]="g" [routerLink]="['/admin', 'game', g.id]" [isClickable]="true"></app-game-card>
 
         <div class="info-bubbles mt-2 d-flex align-items-center">
@@ -85,10 +110,11 @@
           </div>
         </div>
       </div>
+      }
     </ng-container> <!-- End card view -->
 
     <!-- Table view mode -->
-    @if (tableView) {
+    @if (useTableView) {
     <app-games-table-view class="w-100 mt-4" [games]="games" (cloneRequest)="clone($event)"
       (deleteRequest)="handleDeleteClick($event)" (exportRequest)="handleExport($event)"></app-games-table-view>
     }

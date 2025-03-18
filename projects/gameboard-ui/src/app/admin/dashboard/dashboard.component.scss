@@ -5,6 +5,10 @@
   width: 252px;
 }
 
+.filter-controls label {
+  margin-bottom: 0;
+}
+
 app-package-upload {
   display: block;
   flex-grow: 1 !important;
@@ -15,6 +19,7 @@ app-package-upload {
   overflow-y: none;
   background-color: $body-bg;
 }
+
 table {
   border-collapse: separate;
   border-spacing: 0;

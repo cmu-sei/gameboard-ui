@@ -1,13 +1,13 @@
 import { Component, inject, input, output } from '@angular/core';
-import { Game } from '@/api/game-models';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { firstValueFrom } from 'rxjs';
+import { Game, ListGamesResponseGame } from '@/api/game-models';
 import { CoreModule } from '@/core/core.module';
 import { GameToMetadataTextPipe } from '@/core/pipes/game-to-metadata-text.pipe';
 import { fa } from "@/services/font-awesome.service";
 import { GameInfoBubblesComponent } from '@/standalone/games/components/game-info-bubbles/game-info-bubbles.component';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { GameToGameCenterLinkPipe } from '@/admin/pipes/game-to-game-center-link.pipe';
 import { GameService } from '@/api/game.service';
-import { firstValueFrom } from 'rxjs';
 import { RouterService } from '@/services/router.service';
 import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
 
@@ -26,12 +26,12 @@ import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
   ]
 })
 export class GamesTableViewComponent {
-  cloneRequest = output<Game>();
-  deleteRequest = output<Game>();
+  cloneRequest = output<ListGamesResponseGame>();
+  deleteRequest = output<ListGamesResponseGame>();
   exportRequest = output<string[]>();
 
-  games = input.required<Game[], Game[]>({
-    transform: (value: Game[]) => {
+  games = input.required<ListGamesResponseGame[], ListGamesResponseGame[]>({
+    transform: (value: ListGamesResponseGame[]) => {
       if (!value) {
         return [];
       }
@@ -47,7 +47,7 @@ export class GamesTableViewComponent {
   protected fa = fa;
   protected selectedGameIds: string[] = [];
 
-  protected handeClone(game: Game) {
+  protected handeClone(game: ListGamesResponseGame) {
     this.cloneRequest.emit(game);
   }
 
@@ -56,11 +56,11 @@ export class GamesTableViewComponent {
     this.routerService.toGameCenter(newGame.id);
   }
 
-  protected handleDeleteRequest(game: Game) {
+  protected handleDeleteRequest(game: ListGamesResponseGame) {
     this.deleteRequest.emit(game);
   }
 
-  protected handleExportRequest(game: Game) {
+  protected handleExportRequest(game: ListGamesResponseGame) {
     this.exportRequest.emit([game.id]);
   }
 

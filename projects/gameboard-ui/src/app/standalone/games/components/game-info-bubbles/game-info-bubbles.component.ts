@@ -1,24 +1,25 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DateTime } from 'luxon';
-import { GameEngineMode } from '@/api/game-models';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { fa } from "@/services/font-awesome.service";
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { DateTime } from 'luxon';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { GameEngineMode } from '@/api/game-models';
+import { fa } from "@/services/font-awesome.service";
 import { PlayerMode } from '@/api/player-models';
+import { IsLivePipe } from '@/games/pipes/is-live.pipe';
 
 export interface GameInfoBubbleProperties {
   name: string;
   season: string;
   competition: string;
   track: string;
+  gameStart?: DateTime;
+  gameEnd?: DateTime;
 
-  isLive: boolean;
   isPublished: boolean;
   maxTeamSize: number;
-  mode: GameEngineMode;
-  modeUrl: string;
+  engineMode: GameEngineMode;
   playerMode: PlayerMode;
   startDate?: DateTime;
   countTeams?: number;
@@ -30,6 +31,7 @@ export interface GameInfoBubbleProperties {
   imports: [
     CommonModule,
     FontAwesomeModule,
+    IsLivePipe,
     TooltipModule
   ],
   styles: [
@@ -40,7 +42,7 @@ export interface GameInfoBubbleProperties {
   ],
   template: `
     <ul class="game-info-bubbles d-flex align-items-center py-0 px-2" *ngIf="game">
-      <li *ngIf="game.isLive && game.playerMode !== 'practice'" class="rounded-circle">
+      <li *ngIf="(game | isLive) && game.playerMode !== 'practice'" class="rounded-circle">
         <fa-icon [size]="bubbleSize" [icon]="fa.towerBroadcast" tooltip="Live now!" animation="beat-fade" style="--fa-animation-duration: 3s; --fa-beat-scale; 1.1; --fa-animation-timing: ease-in-out;"></fa-icon>
       </li>
 

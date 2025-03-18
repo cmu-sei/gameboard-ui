@@ -1,4 +1,4 @@
-import { Game } from '@/api/game-models';
+import { Game, ListGamesResponseGame } from '@/api/game-models';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true
 })
 export class GameToMetadataTextPipe implements PipeTransform {
-  transform(value: Game): string {
+  transform(value: Game | ListGamesResponseGame): string {
     if (!value) {
       return "";
     }

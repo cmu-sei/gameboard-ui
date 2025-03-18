@@ -17,6 +17,7 @@
                 <input type="checkbox" (change)="handleSelectAll()">
             </th>
             <th>Game</th>
+            <th>Enrollment</th>
             <th>Mode</th>
             <th>Settings</th>
             <th></th>
@@ -35,11 +36,19 @@
                     <app-game-card-image class="d-block mr-2" [game]="game"></app-game-card-image>
                     <div>
                         <div>
-                            <a [routerLink]="game.id | gameToGameCenterLink">{{ game.name }}</a>
+                            <a class="fs-11" [routerLink]="game.id | gameToGameCenterLink">{{ game.name }}</a>
                         </div>
                         <div class="text-muted fs-09">{{ game | gameToMetadataText}}</div>
                     </div>
                 </div>
+            </td>
+            <td>
+                @if(game.maxTeamSize > 1) {
+                <div>{{game.registeredTeamCount}} teams</div>
+                <div class="text-muted">{{ game.registeredUserCount }} players</div>
+                } @else {
+                <div>{{ game.registeredTeamCount }} players</div>
+                }
             </td>
             <td>
                 <div>
@@ -51,10 +60,11 @@
                         {{ game.gameEnd | shortdate }}
                     </div>
 
-                    @if (game.registrationType === 'open' && game.registration.beginDate) {
+                    @if (game.registration.registrationType && game.registration.startTime) {
                     <div class="text-muted" placement="bottom"
-                        tooltip="Registration starts on {{ game.registration.beginDate | friendlyDateAndTime }}">{{
-                        game.registration.beginDate | friendlyDateAndTime }}</div>
+                        tooltip="Registration starts on {{ game.registration.startTime| friendlyDateAndTime }}">
+                        {{ game.registration.startTime| friendlyDateAndTime }}
+                    </div>
                     }
                     }
                     @else {
@@ -78,18 +88,20 @@
                                 View
                             </a>
                         </li>
-                        <li role="divider"></li>
+                        <li class="divider dropdown-divider"></li>
+                        @if ("Games_CreateEditDelete" | can) {
                         <li role="menuitem">
                             <button class="dropdown-item btn" (click)="handeClone(game)">
                                 Clone
                             </button>
                         </li>
+                        }
                         <li role="menuitem">
                             <button class="dropdown-item btn" (click)="handleExportRequest(game)">
                                 Export Package
                             </button>
                         </li>
-                        <li role="divider"></li>
+                        <li class="divider dropdown-divider"></li>
                         <li role="menuitem">
                             <button class="dropdown-item btn btn-danger" (click)="handleDeleteRequest(game)">
                                 Delete
