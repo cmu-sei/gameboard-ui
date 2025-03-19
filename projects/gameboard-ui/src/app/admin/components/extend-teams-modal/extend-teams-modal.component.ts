@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { firstValueFrom, map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable, tap } from 'rxjs';
 import { TeamService } from '@/api/team.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { Team } from '@/api/player-models';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-extend-teams-modal',
@@ -13,6 +14,7 @@ import { Team } from '@/api/player-models';
 export class ExtendTeamsModalComponent implements OnInit {
   game?: {
     id: string;
+    endsOn?: DateTime,
     maxTeamSize: number;
     name: string;
   };
@@ -23,6 +25,7 @@ export class ExtendTeamsModalComponent implements OnInit {
   protected errors: any[] = [];
   protected ineligibleTeamIds: string[] = [];
   protected isWorking = false;
+  protected maxCurrentSessionEnd?: DateTime;
   protected modalTitle = "Extend Sessions";
   protected apiTeams: Team[] = [];
 
@@ -41,10 +44,18 @@ export class ExtendTeamsModalComponent implements OnInit {
     }
 
     this.apiTeams = await firstValueFrom(this.teamService.search(this.teamIds).pipe(
-      map(teams => teams.filter(t => t.sessionEnd.getFullYear() !== 0))
+      map(teams => teams.filter(t => t.sessionEnd.getFullYear() !== 0)),
+      tap(teams => {
+        for (const team of teams) {
+          const sessionEnd = DateTime.fromJSDate(team.sessionEnd)
+          if (!this.maxCurrentSessionEnd || sessionEnd > this.maxCurrentSessionEnd) {
+            this.maxCurrentSessionEnd = sessionEnd;
+          }
+        }
+      })
     ));
     this.ineligibleTeamIds = this.teamIds.filter(tId => this.apiTeams.map(t => t.teamId).indexOf(tId) < 0);
-    this.modalTitle = this.apiTeams.length === 1 ? `Extend Session: ${this.apiTeams[0].approvedName}` : "Extend Sessions";
+    this.modalTitle = this.apiTeams.length === 1 ? this.apiTeams[0].approvedName : "Multiple Sessions";
   }
 
   async extend(extensionDurationInMinutes: number) {
@@ -58,7 +69,7 @@ export class ExtendTeamsModalComponent implements OnInit {
         await this.onExtend();
 
       this.close();
-      this.toastService.showMessage(`Extended sessions by **${extensionDurationInMinutes}** minutes for **${result.teams.length}** teams.`);
+      this.toastService.showMessage(`Extended **${result.teams.length}** session(s) by **${extensionDurationInMinutes}** minutes.`);
     }
     catch (err: any) {
       this.errors.push(err);

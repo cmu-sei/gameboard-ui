@@ -9,9 +9,11 @@ export type AvatarSize = 'tiny' | 'small' | 'medium' | 'large';
   styleUrls: ['./avatar.component.scss'],
   template: `
     <ng-template #tolTemplate>
-      <ng-content [select]="avatarTooltip"></ng-content>
+      <div #tooltipProjection>
+        <ng-content [select]="avatarTooltip"></ng-content>
+      </div>
     </ng-template>
-    <div [class]="'avatar-container avatar-size ' + this.sizeClass" [style.background-image]="escapedImgUrl" [tooltip]="tolTemplate" [placement]="tooltipPlacement"></div>
+    <div [class]="'avatar-container avatar-size ' + this.sizeClass" [style.background-image]="escapedImgUrl" [tooltip]="tooltipProjection?.nativeElement?.children?.length ? tolTemplate : undefined" [placement]="tooltipPlacement"></div>
   `,
 })
 export class AvatarComponent implements OnChanges {
@@ -20,6 +22,7 @@ export class AvatarComponent implements OnChanges {
   @Input() tooltipPlacement = PlacementForBs5.top;
 
   @ViewChild("searchBox") searchBox?: ElementRef<Input>;
+  @ViewChild("tooltipProjection") tooltipProjection?: ElementRef<HTMLDivElement>;
 
   protected escapedImgUrl = "";
   protected sizeClass = "avatar-size-medium";

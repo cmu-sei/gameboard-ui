@@ -2,7 +2,8 @@
   <nav class="d-block mb-4" aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a [routerLink]="['/practice']" class="text-success">
+        <a class="text-success" [routerLink]="['/practice']"
+          [queryParams]="{ term: (route.queryParams | async)?.practiceSearchTerm }">
           <fa-icon [icon]="fa.arrowLeft"></fa-icon>
           Back to the <strong>Practice Area</strong>
         </a>

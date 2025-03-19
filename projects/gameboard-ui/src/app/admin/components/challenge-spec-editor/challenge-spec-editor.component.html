@@ -3,7 +3,7 @@
     <h3 class="m-0 p-0 text-success fs-09 fw-bold cursor-pointer" [appCopyOnClick]="spec.id"
         appCopyOnClickMessage="Copied **{{spec.name}}**'s ID to your clipboard"
         class="text-success fs-09 fw-bold cursor-pointer">
-        {{ spec.id | slice:0:6 }}
+        <span tooltip="Copy this challenge's ID to your clipboard">{{ spec.id | slice:0:6 }}</span>
     </h3>
     <hr class="my-2" />
     <div class="spec-controls-container d-flex flex-wrap align-items-center">

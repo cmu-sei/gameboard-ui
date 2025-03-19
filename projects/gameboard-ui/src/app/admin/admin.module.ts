@@ -20,7 +20,6 @@ import { ActiveTeamsModalComponent } from './components/active-teams-modal/activ
 import { AdminEnrollTeamModalComponent } from './components/admin-enroll-team-modal/admin-enroll-team-modal.component';
 import { AdminOverviewComponent } from './components/admin-overview/admin-overview.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
-import { AdminRolesComponent } from './components/admin-roles/admin-roles.component';
 import { AnnounceComponent } from './announce/announce.component';
 import { ChallengeBrowserComponent } from './challenge-browser/challenge-browser.component';
 import { ChallengeObserverComponent } from './challenge-observer/challenge-observer.component';
@@ -64,6 +63,7 @@ import { GameClassificationToStringPipe } from './pipes/game-classification-to-s
 import { SupportAutoTagAdminComponent } from './components/support-auto-tag-admin/support-auto-tag-admin.component';
 import { SyncStartGameStateDescriptionPipe } from './pipes/sync-start-game-state-description.pipe';
 import { SyncStartTeamPlayerReadyCountPipe } from './pipes/sync-start-team-player-ready-count.pipe';
+import { PackageUploadComponent } from './components/package-upload/package-upload.component';
 import { PlayerNamesComponent } from './player-names/player-names.component';
 import { PlayerSponsorReportComponent } from './player-sponsor-report/player-sponsor-report.component';
 import { PracticeSettingsComponent } from './practice/practice-settings/practice-settings.component';
@@ -91,6 +91,9 @@ import { CertificateTemplatePickerComponent } from '@/certificates/components/ce
 import { CertificatePreviewerComponent } from '@/certificates/components/certificate-previewer/certificate-previewer.component';
 import { GameCenterPracticeTeamContextMenuComponent } from './components/game-center/game-center-practice-team-context-menu/game-center-practice-team-context-menu.component';
 import { SystemAdminComponent } from './components/system-admin/system-admin.component';
+import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
+import { SessionExtensionGameEndWarningComponent } from "./components/session-extension-game-end-warning/session-extension-game-end-warning.component";
+import { GamesTableViewComponent } from './components/games-table-view/games-table-view.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +166,7 @@ import { SystemAdminComponent } from './components/system-admin/system-admin.com
         path: '', component: AdminPageComponent, title: "Admin", children: [
           { path: "certificates/templates/:templateId/preview", component: CertificatePreviewerComponent, title: "Certificate Template Preview" },
           { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-          { path: 'dashboard', component: DashboardComponent },
+          { path: 'dashboard', component: DashboardComponent, title: "Games" },
           {
             path: "game/:gameId",
             component: GameCenterComponent,
@@ -218,8 +221,12 @@ import { SystemAdminComponent } from './components/system-admin/system-admin.com
     ErrorDivComponent,
     GameCenterPracticeTeamContextMenuComponent,
     GameInfoBubblesComponent,
+    GamesTableViewComponent,
     IfHasPermissionDirective,
+    MarkdownPlaceholderPipe,
+    PackageUploadComponent,
     SafeUrlPipe,
+    SessionExtensionGameEndWarningComponent,
     SpinnerComponent,
     ToSupportCodePipe,
     CertificatePreviewerComponent,

@@ -105,6 +105,7 @@ export class TicketListComponent implements OnDestroy {
       switchMap(() => api.list({
         term: this.searchText,
         filter: [this.statusFilter.toLowerCase(), this.assignFilter.toLowerCase()],
+        gameId: this.gameId,
         withAllLabels: (this.selectedLabels || []).join(","),
         take: 1,
         skip: this.skip + this.take,
@@ -146,13 +147,13 @@ export class TicketListComponent implements OnDestroy {
     this.config.updateLocal({ lastSeenSupport: Date.now() });
   }
 
-  next() {
+  protected next() {
     this.skip = this.skip + this.take;
     this.refresh$.next(true);
     this.advanceRefresh$.next(true);
   }
 
-  prev() {
+  protected prev() {
     this.skip = this.skip - this.take;
     if (this.skip < 0)
       this.skip = 0;
@@ -188,7 +189,7 @@ export class TicketListComponent implements OnDestroy {
     this.refresh$.next(true);
   }
 
-  async copyMarkdown(ticket: TicketSummary) {
+  protected async copyMarkdown(ticket: TicketSummary) {
     const ticketData = await firstValueFrom(this.api.retrieve(ticket.key));
     const md = await this.api.getTicketMarkdown(ticketData);
     await this.clipboard.copy(md);

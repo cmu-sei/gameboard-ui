@@ -13,7 +13,8 @@ export interface ColoredTextChipEvent {
   styleUrls: ['./colored-text-chip.component.scss']
 })
 export class ColoredTextChipComponent {
-  @Input() text = '';
+  @Input() text = "";
+  @Input() secondaryText = "";
   @Input() id?: any;
   @Input() isClickable = false;
   @Input() enableSecondaryAction = false;

@@ -1,4 +1,5 @@
 <div class="sponsor-select-component">
+    <app-error-div [errors]="errors"></app-error-div>
     <p>
         To play challenges on {{ appName }} you'll need to select your sponsoring organization. Their logo will
         appear next to your name on scoreboards.
@@ -17,14 +18,23 @@
     </p>
 </div>
 
-<div *ngIf="isAuthenticated$" class="sponsors-container mt-5">
+<div *ngIf="isAuthenticated$ | async" class="sponsors-container mt-5">
+
+    @if(!isLoading) {
     <ng-container *ngIf="(ctx$ | async) as ctx">
         <app-sponsor-with-children-picker class="my-4" *ngFor="let parentSponsor of ctx.parentSponsors"
-            [parentSponsor]="parentSponsor"
-            [childSponsors]="parentSponsor.childSponsors"></app-sponsor-with-children-picker>
+            [parentSponsor]="parentSponsor" [childSponsors]="parentSponsor.childSponsors"
+            [selectedSponsorId]="localUserSponsorId$ | async"
+            (selected)="handleSponsorSelect($event)"></app-sponsor-with-children-picker>
 
         <!-- an extra for sponsors with no parent-->
+        @if(ctx.nonParentSponsors.length) {
         <app-sponsor-with-children-picker [childSponsors]="ctx.nonParentSponsors"
-            [hideHeader]="!ctx.parentSponsors.length"></app-sponsor-with-children-picker>
+            (selected)="handleSponsorSelect($event)"></app-sponsor-with-children-picker>
+        }
     </ng-container>
+    }
+    @else {
+    <app-spinner>Loading sponsors...</app-spinner>
+    }
 </div>

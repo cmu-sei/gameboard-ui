@@ -2,107 +2,82 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { faArrowLeft, faPlus, faCopy, faTrash, faEdit, faUsers, faUser, faUsersCog, faCog, faTv, faToggleOff, faToggleOn, faEyeSlash, faUndo, faGlobeAmericas, faClone, faChartBar, faCommentSlash, faLock, faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { BehaviorSubject, debounceTime, firstValueFrom } from 'rxjs';
 import { fa } from '@/services/font-awesome.service';
-import { BehaviorSubject, Subject, Observable, firstValueFrom } from 'rxjs';
-import { debounceTime, switchMap, tap, mergeMap } from 'rxjs/operators';
-import { Game, NewGame } from '../../api/game-models';
+import { Game, ListGamesQuery, ListGamesResponseGame, NewGame } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
-import { Search } from '../../api/models';
-import { AppTitleService } from '@/services/app-title.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { GameImportExportService } from '@/api/game-import-export.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
+import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class DashboardComponent implements OnInit {
-  refresh$ = new BehaviorSubject<any>(true);
-  creating$ = new Subject<NewGame>();
-  created$: Observable<NewGame>;
-  games$: Observable<Game[]>;
-  games: Game[] = [];
-
   private importExportService = inject(GameImportExportService);
+  private localStorageService = inject(LocalStorageService);
+  private routerService = inject(RouterService);
+  private unsub = inject(UnsubscriberService);
 
-  preferenceKey = 'admin.dashboard.game.viewer.mode'; // key to save toggle in local storage
-  tableView: boolean; // true = table, false = cards
 
   protected errors: any[] = [];
+  protected fa = fa;
+  protected games: ListGamesResponseGame[] = [];
   protected isExporting = false;
-  search: Search = { term: '' };
-
-  fa = fa;
-  faArrowLeft = faArrowLeft;
-  faPlus = faPlus;
-  faCopy = faCopy;
-  faClone = faClone;
-  faTrash = faTrash;
-  faEdit = faEdit;
-  faUsers = faUsersCog;
-  faCog = faCog;
-  faTv = faTv;
-  faGamepad = faGamepad; // game lobby
-  faToggleOn = faToggleOn; // on table view
-  faToggleOff = faToggleOff; // on card view
-  faEyeSlash = faEyeSlash; // unpublished game
-  faGlobe = faGlobeAmericas; // published game
-  faUser = faUser; // individual game
-  faTeam = faUsers; // team game
-  faUndo = faUndo; // allow reset
-  faLock = faLock; // don't allow reset
-  faChartBar = faChartBar; // has feedback configured
-  faCommentSlash = faCommentSlash; // doesn't have feedback configured
+  protected isLoadingGames = false;
+  protected listGamesQuery: ListGamesQuery = {};
+  protected typing$ = new BehaviorSubject<string>("");
+  protected useTableView: boolean;
 
   constructor(
     private api: GameService,
     private modalService: ModalConfirmService,
     private permissionsService: UserRolePermissionsService,
-    private router: Router,
-    private titleService: AppTitleService,
     private toastService: ToastService
   ) {
-    this.games$ = this.refresh$.pipe(
-      debounceTime(250),
-      switchMap(() => api.list(this.search)),
-      tap(result => this.games = result)
-    );
-
-    this.created$ = this.creating$.pipe(
-      mergeMap(m => api.create(m)),
-      tap(m => this.games.unshift(m)),
-      tap(g => this.router.navigateByUrl(`/admin/game/${g.id}`))
-    );
-
     // use local storage to keep toggle preference when returning to dashboard for continuity
     // default to false (card view) when no preference stored yet
-    this.tableView = window.localStorage[this.preferenceKey] == 'true' ? true : false;
+    this.useTableView = this.localStorageService.getAs<boolean>(StorageKey.GamesAdminUseTableView, false);
+
+    this.unsub.add(this.typing$.pipe(
+      debounceTime(250),
+    ).subscribe(async () => {
+      await this.handleLoadGames();
+    }));
   }
 
   ngOnInit(): void {
-    this.titleService.set("Admin");
+    this.handleLoadGames();
   }
 
-  create(): void {
-    this.creating$.next({ name: 'New Game' } as Game);
+  async create() {
+    try {
+      const game = await firstValueFrom(this.api.create({ name: "New Game" } as Game));
+      this.routerService.toGameCenter(game.id);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
   }
 
-  async handleDeleteClick(game: Game): Promise<void> {
+  async handleDeleteClick(game: ListGamesResponseGame): Promise<void> {
     const canDelete = this.permissionsService.can("Games_DeleteWithPlayerData");
     let message = `Are you sure you want to delete **${game.name}**?`;
 
-    if (game.countTeams) {
-      message += `\n\n${game.countTeams} players/teams have registered or played. If you continue, their data will be deleted.`;
+    if (game.registeredTeamCount) {
+      message += `\n\n${game.registeredTeamCount} players/teams have registered or played. If you continue, their data will be deleted.`;
     }
 
     message += "\n\n**This can't be undone**.";
 
-    if (!game.countTeams || canDelete) {
+    if (!game.registeredTeamCount || canDelete) {
       this.modalService.openConfirm({
         title: game.name,
         subtitle: "Delete Game",
@@ -123,22 +98,22 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  private async delete(game: Game): Promise<void> {
+  protected async handleImported() {
+    await this.handleLoadGames();
+  }
+
+  private async delete(game: ListGamesResponseGame): Promise<void> {
     try {
       await this.api.deleteWithPlayerData(game.id);
-      this.refresh$.next(true);
+      await this.handleLoadGames();
     }
     catch (err: any) {
       this.errors.push(err);
     }
   }
 
-  typing(e: Event): void {
-    this.refresh$.next(true);
-  }
-
-  clone(game: Game): void {
-    this.creating$.next({ ...game, name: `${game.name}_CLONE`, isPublished: false, isClone: true });
+  clone(game: { id: string, name: string }): void {
+    // this.creating$.next({ ...game, name: `${game.name}_CLONE`, isPublished: false, isClone: true });
   }
 
   trackById(index: number, g: Game): string {
@@ -161,24 +136,23 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  async handlePackageUpload(files: File[]): Promise<void> {
+  protected async handleLoadGames() {
     this.errors = [];
+    this.isLoadingGames = true;
 
-    if (files.length != 1) {
-      this.errors.push("Please specify a Gameboard package to upload.");
+    try {
+      const response = await this.api.listAdmin(this.listGamesQuery);
+      this.games = response.games;
+    }
+    catch (err) {
+      this.errors.push(err);
     }
 
-    const result = await this.importExportService.import(files[0]);
-    if (result.length == 0) {
-      this.errors.push("No games imported.");
-    }
-    else {
-      this.toastService.showMessage(`Imported **${result.length}** game(s). Let's play!`);
-    }
+    this.isLoadingGames = false;
   }
 
-  toggleViewMode() {
-    this.tableView = !this.tableView;
-    window.localStorage[this.preferenceKey] = this.tableView;
+  protected handleToggleViewMode() {
+    this.useTableView = !this.useTableView;
+    this.localStorageService.add(StorageKey.GamesAdminUseTableView, this.useTableView);
   }
 }

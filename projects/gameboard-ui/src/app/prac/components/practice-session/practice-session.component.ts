@@ -39,12 +39,12 @@ export class PracticeSessionComponent implements OnInit {
   protected showSpecMarkdown = true;
 
   constructor(
-    route: ActivatedRoute,
     private activeChallengesRepo: ActiveChallengesRepo,
     private modalService: ModalConfirmService,
     private localUser: LocalUserService,
     private playerService: PlayerService,
     private practiceService: PracticeService,
+    protected route: ActivatedRoute,
     private routerService: RouterService,
     private teamService: TeamService,
     private unsub: UnsubscriberService,
@@ -56,7 +56,7 @@ export class PracticeSessionComponent implements OnInit {
       filter(p => !!p.specId),
       map(p => p.specId),
       distinctUntilChanged(),
-      switchMap(p => practiceService.searchChallenges({ term: p })),
+      switchMap(p => practiceService.searchChallenges({ filter: { term: p } })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as PracticeChallengeView) : r.results.items[0]),
     );
 

@@ -30,7 +30,6 @@ export class PlayerSponsorReportComponent {
   constructor(
     private api: ReportService,
     private gameService: GameService,
-    private sponsorService: SponsorService
   ) {
     this.gameService.list(this.search).subscribe(
       r => {

@@ -1,0 +1,71 @@
+<app-dropzone class="d-flex flex-grow-1 w-100 h-100" (dropped)="handlePackageUpload($event)"
+    [acceptMimeTypes]="['application/zip']">
+    <div class="dropzone-target h-100 d-flex flex-column align-items-center justify-content-center">
+        <div class="text-center">
+            Upload or drop a package
+            <em class="d-block fs-09 text-muted">(export games from a Gameboard app to create a package)</em>
+        </div>
+    </div>
+</app-dropzone>
+
+<ng-template #previewImportTemplate>
+    <app-modal-content title="Import Package"
+        confirmButtonText="Import {{ selectedGameIds.length == 0 ? 'All' : selectedGameIds.length }} Game(s)"
+        [confirmDisabled]="!file || !package?.games?.length" (confirm)="handleImport()" (cancel)="handleCancel()">
+        <app-error-div [errors]="errors"></app-error-div>
+
+        @if(!isLoading) {
+        @if(package?.games?.length) {
+        <p>
+            This package contains <strong class="text-success">{{ package!.games.length }} game(s)</strong>. Choose
+            which you want to import (or leave them all unchecked to import them all).
+        </p>
+
+        <table class="table gameboard-table">
+            <col>
+            <col>
+
+            <thead>
+                <tr>
+                    <th class="width-5">
+                        <input type="checkbox" (change)="handleSelectAll($event)"
+                            [checked]="selectedGameIds.length == package!.games.length">
+                    </th>
+                    <th>
+                        Game
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for(game of package!.games; track game) {
+                <tr>
+                    <td class="width-5">
+                        <input type="checkbox" (change)="handleSelect($event, game.id)"
+                            [checked]="game.id | arrayContains:selectedGameIds">
+                    </td>
+                    <td class="cursor-pointer" (click)="handleToggleSelect(game.id)">
+                        {{game.name}}
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="my-4">
+            <div class="form-group px-0">
+                <label class="form-label">Set Publish Status for Imported Games</label>
+                <select class="form-control" [(ngModel)]="setPublishStatus">
+                    <option [ngValue]="undefined">(per-game default)</option>
+                    <option [ngValue]="false">Unpublished</option>
+                    <option [ngValue]="true">Published</option>
+                </select>
+            </div>
+        </div>
+        }
+        }
+        @else {
+        <app-spinner>Loading your import package...</app-spinner>
+        }
+    </app-modal-content>
+</ng-template>

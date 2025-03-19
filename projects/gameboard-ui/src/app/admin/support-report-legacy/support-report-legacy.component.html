@@ -133,7 +133,7 @@
             <tr *ngFor="let stat of stats">
               <td>
                 <span class="badge badge-pill text-black mr-2"
-                  [ngStyle]="stat.label | textToColor">{{stat.label}}</span>
+                  [ngStyle]="stat.label | textToBadgeStyle">{{stat.label}}</span>
               </td>
               <td>
                 <div class="text-right">{{stat.count}}</div>

@@ -5,7 +5,7 @@ import { Observable, interval, map } from 'rxjs';
 @Pipe({ name: 'dateToCountdown' })
 export class DateToCountdownPipe implements PipeTransform {
 
-  transform(value: Date | string | undefined | null): Observable<string | null> | null {
+  transform(value: Date | string | undefined | null, showSecondsWhenRemainingLessThanMs?: number): Observable<string | null> | null {
     if (!value)
       return null;
 
@@ -13,19 +13,23 @@ export class DateToCountdownPipe implements PipeTransform {
 
     return interval(1000).pipe(
       map(_ => {
-        const diffed = date.diffNow().rescale();
-        diffed.normalize();
+        let diffed = date
+          .diffNow()
+          .rescale()
+          .set({ milliseconds: 0 });
 
-        return diffed
-          .set({ milliseconds: 0 })
-          .set({ seconds: Math.floor(diffed.get("seconds")) })
-          .rescale();
-      }),
-      map(duration => {
-        if (duration.as("milliseconds") < 0)
+        if (diffed.as("milliseconds") < 0)
           return null;
 
-        return duration.toHuman({ compactDisplay: "short", unitDisplay: "short" } as Intl.NumberFormatOptions);
+        if (showSecondsWhenRemainingLessThanMs && diffed.toMillis() > showSecondsWhenRemainingLessThanMs) {
+          diffed = diffed.set({ seconds: 0 });
+        } else {
+          diffed = diffed.set({ seconds: Math.floor(diffed.get("seconds")) });
+        }
+
+        return diffed
+          .rescale()
+          .toHuman({ compactDisplay: "short", unitDisplay: "short" } as Intl.NumberFormatOptions);
       })
     );
   }

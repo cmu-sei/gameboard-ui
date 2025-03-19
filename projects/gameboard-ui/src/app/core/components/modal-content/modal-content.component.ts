@@ -12,15 +12,18 @@ export class ModalContentComponent<T> {
   @Input() subtitle?: string;
   @Input() subSubtitle?: string;
   @Input() cancelButtonText?: string;
+  @Input() cancelDisabled = false;
   @Input() confirmButtonText?: string;
   @Input() confirmDisabled = false;
   @Input() isDangerConfirm = false;
 
+  @Output() cancel = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<void>();
 
   constructor(private modalService: ModalConfirmService) { }
 
-  protected handleClose() {
+  protected handleCancel() {
+    this.cancel.emit();
     this.modalService.hide();
   }
 

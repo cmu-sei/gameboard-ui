@@ -1,0 +1,20 @@
+@import "../../../../scss/variables";
+
+.tag-chip {
+  margin: 0;
+  padding: 0;
+
+  .text-container {
+    border-top-right-radius: 10rem;
+    border-bottom-right-radius: 10rem;
+  }
+
+  .count-container {
+    border-top-left-radius: 10rem;
+    border-bottom-left-radius: 10rem;
+  }
+}
+
+.total-points-container {
+  border-right: 1px solid $foreground;
+}

@@ -24,44 +24,88 @@
             </alert>
         </ng-container>
 
-        <div class="suggested-searches-container my-4" *ngIf="suggestedSearches?.length">
+        <div class="suggested-searches-container my-4 flex-grow-1" *ngIf="suggestedSearches?.length">
             <h2>Need a place to start?</h2>
-            Try some of these suggested searches:
+            Try one of these suggested searches:
 
             <app-suggested-searches class="d-block mt-4" *ngIf="suggestedSearches?.length"
                 [searches]="suggestedSearches"></app-suggested-searches>
         </div>
 
-        <div class="input-group input-group-sm col-5 ml-auto mb-4 pr-0 mt-5">
-            <app-share-button class="d-block mr-1" size="small" [disabled]="!term"
+        <div class="filter-controls-container d-flex align-items-center mt-5 mb-4">
+            <div class="flex-grow-1">
+                @if(userPracticeSummary) {
+                <strong>Your progress: </strong>
+                {{ userPracticeSummary.countCompleted }} /
+                {{ userPracticeSummary.countAvailable }}
+                <span class="text-muted">challenges</span>
+                <span class="mx-1"></span>
+                {{ userPracticeSummary.pointsScored }} /
+                {{ userPracticeSummary.pointsAvailable }}
+                <span class="text-muted">points</span>
+                <span class="ml-2 btn-link my-0 p-0" (click)="handleViewSummaryClick()">[more]</span>
+                }
+            </div>
+
+            @if (localUser$ | async) {
+            <select class="form-control mr-1" [appQueryParamModel]="{ name: 'userProgress' }">
+                <option value="">[Filter by progress]</option>
+                <option value="notAttempted">Not Attempted</option>
+                <option value="attempted">Attempted</option>
+                <option value="completed">Completed</option>
+            </select>
+            }
+
+            <div class="input-group input-group-sm mx-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <fa-icon [icon]="faSearch"></fa-icon>
+                    </span>
+                </div>
+                <input type="search" placeholder="Search {{ count }} practice challenges..."
+                    class="form-control border-0" [(ngModel)]="term"
+                    [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
+            </div>
+
+            <app-share-button class="d-block ml-1" size="small" [disabled]="!term"
                 message="Copied a link to this search to your clipboard."
                 tooltip="Copy a link to this search"></app-share-button>
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <fa-icon [icon]="faSearch"></fa-icon>
-                </span>
-            </div>
-            <input type="search" placeholder="Search {{ count }} practice challenges..." class="form-control border-0"
-                [(ngModel)]="term"
-                [appQueryParamModel]="{ name: 'term', debounce: 500, resetQueryParams: ['skip', 'take'] }">
         </div>
 
-        <app-pager *ngIf="count > 0" display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
+        <app-pager *ngIf="count > 0" display="ifPaging" [skip]="skip || 0" [take]="take || 0" [count]="count"
             (changed)="paged($event)"></app-pager>
 
-        <table class="table" *ngIf="count > 0; else noMatches">
+        @if (!isLoading) {
+        <table class="table gameboard-table mb-4" *ngIf="count > 0; else noMatches">
             <thead>
                 <tr>
                     <th>Challenge</th>
                     <th>Description</th>
-                    <th>Game</th>
+                    <th>Your Performance</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let c of list">
                     <td class="align-middle">
-                        <ng-container
-                            *ngTemplateOutlet="canPlayChallenges ? canPlayChallengesItemTemplate : cantPlayChallengesItemTemplate; context: { $implicit: c }"></ng-container>
+                        <div class="d-flex">
+                            <div class="game-card">
+                                <a class="ml-2 d-flex align-items-center" [routerLink]="['/practice']"
+                                    [queryParams]="{ term: c.game.id }">
+                                    <app-game-card-image [game]="c.game"></app-game-card-image>
+                                </a>
+                            </div>
+
+                            <div class="challenge-name-container ml-2">
+                                <ng-container
+                                    *ngTemplateOutlet="canPlayChallenges ? canPlayChallengesItemTemplate : cantPlayChallengesItemTemplate; context: { $implicit: c }"></ng-container>
+                                <div>
+                                    <app-info-bubble *ngIf="c.game.isHidden" class="mt-1 mr-2" [icon]="fa.eyeSlash"
+                                        tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
+                                    <a class="fs-09 text-muted cursor-pointer fw-bold" routerLink="/practice"
+                                        [queryParams]="{ term: c.game.id }">{{ c.game.name }}</a>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td class="align-middle">
                         <div class="practice-challenge-description">
@@ -81,23 +125,46 @@
                         </div>
                     </td>
                     <td class="align-middle">
-                        <a class="ml-2 d-flex align-items-center" [routerLink]="['/practice']"
-                            [queryParams]="{ term: c.game.id }">
-                            <app-game-card-image [game]="c.game"></app-game-card-image>
-
-                            <div class="ml-2">
-                                {{ c.game.name }}
-
-                                <app-info-bubble *ngIf="c.game.isHidden" class="d-block mt-1" [icon]="fa.eyeSlash"
-                                    tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
+                        @if(c.userBestAttempt?.isComplete) {
+                        <div class="user-complete">
+                            <div>
+                                <ng-container
+                                    *ngTemplateOutlet="completeTemplate; context: { $implicit: c }"></ng-container>
                             </div>
-                        </a>
+                            <div>
+                                {{ c.userBestAttempt?.bestAttemptScore }}
+                                <span class="text-muted">points</span>
+                            </div>
+                        </div>
+                        } @else if(c.userBestAttempt) {
+                        <div class="user-performance">
+                            <div>
+                                {{ c.userBestAttempt.attemptCount }}
+                                <span class="text-muted">{{ "attempt" | pluralizer:c.userBestAttempt.attemptCount
+                                    }}</span>
+                            </div>
+
+                            @if(c.userBestAttempt.bestAttemptScore) {
+                            <div>
+                                {{ c.userBestAttempt.bestAttemptScore }} / {{ c.scoreMaxPossible }}
+                                <span class="text-muted">points</span>
+                            </div>
+                            }
+                        </div>
+                        }
+                        @else {
+                        <div class="text-muted text-center">--</div>
+                        }
                     </td>
                 </tr>
             </tbody>
         </table>
+        }
+        @else {
+        <app-spinner>Loading practice challenges...</app-spinner>
+        }
 
-        <app-pager *ngIf="count > 0" display="always" [skip]="skip || 0" [take]="take || 0" [count]="count"
+        <app-pager *ngIf="count > 0" display="ifPaging" [skip]="skip || 0" [take]="take || 0" [count]="count"
             (changed)="paged($event)">
         </app-pager>
     </ng-container>
@@ -110,19 +177,29 @@
 </ng-template>
 
 <ng-template #canPlayChallengesItemTemplate let-challenge>
-    <a [routerLink]="[challenge.id, slug(challenge.name)]">
+    <a [routerLink]="[challenge.id, slug(challenge.name)]"
+        [queryParams]="{ practiceSearchTerm: (route.queryParams | async)?.term}">
         {{challenge.name}}
     </a>
 </ng-template>
 
 <ng-template #cantPlayChallengesItemTemplate let-challenge>
-    <p *ngIf="!canPlayChallenges" class="p-0 m-0 text-success cursor-pointer"
-        [tooltip]="canPlayChallengesTooltip || ''">
+    <p class="p-0 m-0 text-success cursor-pointer" [tooltip]="cantPlayChallengesTooltip || ''">
         {{challenge.name}}
     </p>
 
     <app-info-bubble *ngIf="challenge.isHidden" class="d-block mt-1" [icon]="fa.eyeSlash"
         tooltipText="Most players won't be able to see this challenge because its game is hidden."></app-info-bubble>
+</ng-template>
+
+<ng-template #completeTemplate let-challenge>
+    @if(challenge.hasCertificateTemplate) {
+    <a [href]="challenge.id | toPracticeCertificateLink" target="_blank" class="fw-bold"
+        tooltip="You finished this challenge on {{ challenge.userBestAttempt.bestAttemptDate | friendlyDateAndTime }}. Click for a certificate showcasing your awesomeness.">Complete</a>
+    } @else {
+    <span class="fw-bold"
+        tooltip="You finished this challenge on {{ challenge.userBestAttempt.bestAttemptDate | friendlyDateAndTime }}. Way to go!">Complete</span>
+    }
 </ng-template>
 
 <ng-template #noDescription>
@@ -133,4 +210,12 @@
     <div class="text-center mt-5">
         No challenges meet your search criteria. Try again with a new search term.
     </div>
+</ng-template>
+
+<ng-template #userSummaryModal>
+    @if((localUser$ | async)?.id) {
+    <app-modal-content title="Your Progress" subtitle="Practice Area" [hideCancel]="true">
+        <app-user-practice-summary [userId]="(localUser$ | async)!.id"></app-user-practice-summary>
+    </app-modal-content>
+    }
 </ng-template>

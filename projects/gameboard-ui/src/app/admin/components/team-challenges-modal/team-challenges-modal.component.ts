@@ -9,6 +9,7 @@ import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe'
 import { ChallengesService } from '@/api/challenges.service';
 import { firstValueFrom, Subject } from 'rxjs';
 import { fa } from '@/services/font-awesome.service';
+import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
   selector: 'app-team-challenges-modal',
@@ -26,6 +27,7 @@ import { fa } from '@/services/font-awesome.service';
 export class TeamChallengesModalComponent implements OnInit {
   private challengeService = inject(ChallengesService);
   private teamService = inject(TeamService);
+  private toasts = inject(ToastService);
   teamId!: string;
 
   protected ctx?: GetTeamChallengeSpecsStatusesResponse;
@@ -66,6 +68,11 @@ export class TeamChallengesModalComponent implements OnInit {
 
   async handleStartClick(challengeSpecId: string): Promise<void> {
     await this.doChallengeStuff(() => this.challengeService.start({ teamId: this.teamId, challengeSpecId }));
+  }
+
+  async handleSyncClick(challengeId: string): Promise<void> {
+    await this.doChallengeStuff(() => this.challengeService.sync(challengeId));
+    this.toasts.showMessage("The challenge was **synchronized** with the game engine.");
   }
 
   handleUnlockAdminCodeInput(value: string) {

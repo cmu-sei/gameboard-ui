@@ -8,11 +8,12 @@ import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, GameGroup, GameSessionAvailibilityResponse, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, Game, GameGroup, GameSessionAvailibilityResponse, ListGamesQuery, ListGamesResponse, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 import { YamlService } from '@/services/yaml.service';
 import { FeedbackTemplate } from './feedback-models';
+import { cloneNonNullAndDefinedProperties } from '../../tools/object-tools.lib';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -46,6 +47,12 @@ export class GameService {
         r.forEach(g => this.transform(g));
         return r;
       })
+    );
+  }
+
+  public listAdmin(query: ListGamesQuery): Promise<ListGamesResponse> {
+    return firstValueFrom(
+      this.http.get<ListGamesResponse>(this.url + '/games/admin', { params: { ...cloneNonNullAndDefinedProperties(query) } })
     );
   }
 

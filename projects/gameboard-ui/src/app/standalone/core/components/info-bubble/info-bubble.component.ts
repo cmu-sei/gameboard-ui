@@ -14,7 +14,7 @@ import { fa } from '@/services/font-awesome.service';
     TooltipModule,
   ],
   styleUrls: ['./info-bubble.component.scss'],
-  template: `<div class="info-bubble-component icon-container"><fa-icon *ngIf="icon" [icon]="icon" class="fa-circle" [tooltip]="tooltipText" size="sm"></fa-icon></div>`
+  template: `<div class="d-inline info-bubble-component icon-container"><fa-icon *ngIf="icon" [icon]="icon" class="fa-circle" [tooltip]="tooltipText" size="sm"></fa-icon></div>`
 })
 export class InfoBubbleComponent {
   @Input() icon: IconDefinition = fa.infoCircle;

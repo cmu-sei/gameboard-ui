@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from '@/core/core.module';
 import { SystemNotificationsComponent } from './components/system-notifications/system-notifications.component';
 import { NotificationTypeToAlertTypePipe } from './pipes/notification-type-to-alert-type.pipe';
+import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
 
 const DECLARED = [
   AdminSystemNotificationsComponent,
@@ -20,7 +21,9 @@ const DECLARED = [
   imports: [
     CommonModule,
     FormsModule,
-    CoreModule
+    CoreModule,
+    // standalones
+    MarkdownPlaceholderPipe
   ],
   exports: [...DECLARED]
 })

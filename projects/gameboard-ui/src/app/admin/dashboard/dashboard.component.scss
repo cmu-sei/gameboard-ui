@@ -5,15 +5,13 @@
   width: 252px;
 }
 
-::ng-deep app-dropzone .dropzone {
-  flex-grow: 1 !important;
+.filter-controls label {
+  margin-bottom: 0;
 }
 
-.dropzone-target {
-  border: 0.25rem dashed lightgray;
-  border-radius: 0.25rem;
-  height: 100%;
-  padding: 0.25rem;
+app-package-upload {
+  display: block;
+  flex-grow: 1 !important;
 }
 
 .table-wrapper {
@@ -21,6 +19,7 @@
   overflow-y: none;
   background-color: $body-bg;
 }
+
 table {
   border-collapse: separate;
   border-spacing: 0;

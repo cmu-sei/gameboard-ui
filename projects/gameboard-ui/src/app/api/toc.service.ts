@@ -47,7 +47,6 @@ export class TocService {
     }
 
     this.toc$ = this.toc$.pipe(tap(toc => this.loaded$.next(true)));
-
     this.tocfile$ = (id: string) => {
       const tocfile = this.cache.find(f =>
         f.filename === id ||

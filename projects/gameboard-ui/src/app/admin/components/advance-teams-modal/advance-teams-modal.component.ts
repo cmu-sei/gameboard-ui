@@ -19,7 +19,7 @@ export class AdvanceTeamsModalComponent implements OnInit {
   private teamService = inject(TeamService);
 
   game?: SimpleEntity;
-  onConfirm?: (targetGame: SimpleEntity) => Promise<void>
+  onConfirm?: (targetGame: SimpleEntity) => Promise<void>;
   teams: SimpleEntity[] = [];
 
   protected includeScores = false;

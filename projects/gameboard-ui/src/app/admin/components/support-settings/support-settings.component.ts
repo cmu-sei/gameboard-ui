@@ -13,6 +13,7 @@ import { ConfigService } from '@/utility/config.service';
 })
 export class SupportSettingsComponent implements OnInit {
   protected appName: string;
+  protected placeholder = "Welcome to Support!";
   protected settings?: SupportSettings;
   private update$ = new Subject<SupportSettings>();
 

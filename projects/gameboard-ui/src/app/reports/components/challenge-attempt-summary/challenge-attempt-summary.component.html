@@ -9,12 +9,12 @@
                 challengeResultPretty }}</div>
             <div class="subtle-size m-0 d-flex justify-content-between">
                 <div>
-                    <span class="subtle-color">Score: </span>
+                    <span class="text-muted">Score: </span>
                     {{ attempt.score }} / {{ attempt.maxPossibleScore }}
                 </div>
 
                 <div *ngIf="attempt.scorePercentile !== undefined">
-                    <span class="subtle-color">Percentile: </span>
+                    <span class="text-muted">Percentile: </span>
                     {{ attempt.scorePercentile | number:"1.0-2" }}
                 </div>
             </div>

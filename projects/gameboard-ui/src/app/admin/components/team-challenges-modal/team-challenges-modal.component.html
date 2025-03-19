@@ -66,6 +66,12 @@
                                     tooltip="Deploy challenge resources" [disabled]="!isUnlocked">
                                     <fa-icon [icon]="fa.play"></fa-icon>
                                 </button>
+                                <button
+                                    *ngIf="challenge.state != 'notStarted' && challenge.challengeId && ('Admin_View' | can)"
+                                    class="btn btn-danger" (click)="handleSyncClick(challenge.challengeId)"
+                                    tooltip="Sync with game engine" [disabled]="!isUnlocked">
+                                    <fa-icon [icon]="fa.sync"></fa-icon>
+                                </button>
                                 <button *ngIf="challenge.state == 'deployed' && ('Teams_DeployGameResources' | can)"
                                     class="btn btn-danger" (click)="handleUneployClick(challenge.challengeId)"
                                     tooltip="Undeploy challenge resources" [disabled]="!isUnlocked">

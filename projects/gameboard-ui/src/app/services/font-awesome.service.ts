@@ -79,6 +79,7 @@ import {
   faTriangleExclamation,
   faTv,
   faUser,
+  faUserPlus,
   faUsers,
   faUsersViewfinder,
   faXmark,
@@ -164,6 +165,7 @@ export const fa = {
   triangleExclamation: faTriangleExclamation,
   tv: faTv,
   user: faUser,
+  userPlus: faUserPlus,
   users: faUsers,
   usersViewfinder: faUsersViewfinder,
   xMark: faXmark

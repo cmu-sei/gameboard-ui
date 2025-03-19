@@ -21,6 +21,9 @@ import { EpochMsToTimeRemainingStringPipe } from '@/standalone/core/pipes/epoch-
 import { EpochMsToMsRemainingPipe } from '@/standalone/core/pipes/epoch-ms-to-ms-remaining.pipe';
 import { InfoBubbleComponent } from '@/standalone/core/components/info-bubble/info-bubble.component';
 import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
+import { ToPracticeCertificateLinkPipe } from './pipes/to-practice-certificate-link.pipe';
+import { UserPracticeSummaryComponent } from './components/user-practice-summary/user-practice-summary.component';
 
 @NgModule({
   declarations: [
@@ -50,11 +53,13 @@ import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback
     // standalones
     EpochMsToMsRemainingPipe,
     EpochMsToTimeRemainingStringPipe,
+    FeedbackSubmissionFormComponent,
     ErrorDivComponent,
     InfoBubbleComponent,
     PlayComponent,
     SpinnerComponent,
-    FeedbackSubmissionFormComponent
+    ToPracticeCertificateLinkPipe,
+    UserPracticeSummaryComponent
   ]
 })
 export class PracModule { }

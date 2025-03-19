@@ -1,6 +1,5 @@
 import { CertificateTemplateView } from '@/certificates/certificates.models';
 import { PracticeModeSettings } from '@/prac/practice.models';
-import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { PracticeService } from '@/services/practice.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
@@ -8,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
 import { Subject, debounceTime, firstValueFrom, map } from 'rxjs';
 
 interface PracticeSettingsContext {
-  introTextPlaceholder: string;
   settings: PracticeModeSettings;
 }
 
@@ -22,22 +20,23 @@ export class PracticeSettingsComponent implements OnInit {
   ctx: PracticeSettingsContext | null = null;
 
   private _startUpdate$ = new Subject<PracticeModeSettings>();
+
+  protected errors: any = [];
   protected suggestedSearchesLineDelimited = "";
 
   constructor(
     private modalService: ModalConfirmService,
-    private markdownHelpers: MarkdownHelpersService,
     private practiceService: PracticeService,
     private unsub: UnsubscriberService) {
     this.unsub.add(this._startUpdate$.pipe(
       debounceTime(500),
-      map(settings => this.practiceService.updateSettings(settings))
-    ).subscribe());
+      map(settings => this.update(settings))
+    ).subscribe()
+    );
   }
 
   async ngOnInit(): Promise<void> {
     this.ctx = {
-      introTextPlaceholder: this.markdownHelpers.getMarkdownPlaceholderHelp(`Enter your "intro to the Practice Area" text here!`),
       settings: await firstValueFrom(this.practiceService.getSettings())
     };
 
@@ -72,6 +71,20 @@ export class PracticeSettingsComponent implements OnInit {
 
   protected handleSettingsChanged(settings: PracticeModeSettings) {
     settings.suggestedSearches = !this.suggestedSearchesLineDelimited ? [] : this.suggestedSearchesLineDelimited.split("\n").map(entry => entry.trim());
+    if (!settings.defaultPracticeSessionLengthMinutes) {
+      settings.defaultPracticeSessionLengthMinutes = 60;
+    }
+
     this._startUpdate$.next(settings);
+  }
+
+  private async update(settings: PracticeModeSettings) {
+    try {
+      this.errors = [];
+      await this.practiceService.updateSettings(settings);
+    }
+    catch (err) {
+      this.errors.push(err);
+    }
   }
 }

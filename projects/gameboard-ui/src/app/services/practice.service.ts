@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesResult } from '@/prac/practice.models';
+import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UserPracticeHistoryChallenge, UserPracticeSummary } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { GameCardContext } from '@/api/game-models';
 
@@ -32,6 +32,14 @@ export class PracticeService {
     return this.http.get<PracticeModeSettings>(this.apiUrl.build("practice/settings"));
   }
 
+  async getUserPracticeHistory(userId: string) {
+    return firstValueFrom(this.http.get<UserPracticeHistoryChallenge[]>(this.apiUrl.build(`practice/user/${userId}/history`)));
+  }
+
+  async getUserPracticeSummary(userId: string) {
+    return firstValueFrom(this.http.get<UserPracticeSummary>(this.apiUrl.build(`practice/user/${userId}/summary`)));
+  }
+
   async isEnabled(): Promise<boolean> {
     // lazily load the value for practice mode
     if (this._isEnabled$.value === undefined) {
@@ -45,8 +53,8 @@ export class PracticeService {
     return this.http.get<GameCardContext[]>(this.apiUrl.build('/practice/games'));
   }
 
-  public searchChallenges(filter: any): Observable<SearchPracticeChallengesResult> {
-    return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', filter));
+  public searchChallenges(request: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {
+    return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', { ...request.filter, userProgress: request.userProgress }));
   }
 
   private async updateIsEnabled() {

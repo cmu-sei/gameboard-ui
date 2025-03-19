@@ -1,0 +1,117 @@
+<div class="controls-container d-flex justify-content-end my-2">
+    <button class="btn btn-secondary btn-sm mr-2" [disabled]="selectedGameIds.length === 0"
+        (click)="handleExportSelected()">
+        {{ selectedGameIds.length === 0 ? "Select Games to Export" : "Export " + selectedGameIds.length + " Game" |
+        pluralizer:selectedGameIds.length }}
+    </button>
+    <button class="btn btn-success btn-sm" *appIfHasPermission="'Games_CreateEditDelete'" (click)="handleCreate()">
+        <fa-icon [icon]="fa.plus"></fa-icon>
+        <span>New Game</span>
+    </button>
+</div>
+
+<table class="table gameboard-table">
+    <thead class="sticky-under-menu">
+        <tr appThemeBg>
+            <th>
+                <input type="checkbox" (change)="handleSelectAll()">
+            </th>
+            <th>Game</th>
+            <th>Enrollment</th>
+            <th>Mode</th>
+            <th>Settings</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @for(game of games(); track game) {
+        <tr>
+            <td>
+                <input type="checkbox" (change)="handleSelect(game.id)"
+                    [checked]="game.id | arrayContains:selectedGameIds">
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <app-game-card-image class="d-block mr-2" [game]="game"></app-game-card-image>
+                    <div>
+                        <div>
+                            <a class="fs-11" [routerLink]="game.id | gameToGameCenterLink">{{ game.name }}</a>
+                        </div>
+                        <div class="text-muted fs-09">{{ game | gameToMetadataText}}</div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                @if(game.maxTeamSize > 1) {
+                <div>{{game.registeredTeamCount}} teams</div>
+                <div class="text-muted">{{ game.registeredUserCount }} players</div>
+                } @else {
+                <div>{{ game.registeredTeamCount }} players</div>
+                }
+            </td>
+            <td>
+                <div>
+                    @if (game.playerMode === "competition") {
+                    <div>Competitive</div>
+                    <div>
+                        {{ game.gameStart | shortdate }}
+                        -
+                        {{ game.gameEnd | shortdate }}
+                    </div>
+
+                    @if (game.registration.registrationType && game.registration.startTime) {
+                    <div class="text-muted" placement="bottom"
+                        tooltip="Registration starts on {{ game.registration.startTime| friendlyDateAndTime }}">
+                        {{ game.registration.startTime| friendlyDateAndTime }}
+                    </div>
+                    }
+                    }
+                    @else {
+                    Practice
+                    }
+                </div>
+            </td>
+            <td>
+                <app-game-info-bubbles [game]="game" bubbleSize="sm"></app-game-info-bubbles>
+            </td>
+            <td>
+                <div class="btn-group" dropdown>
+                    <button id="button-basic" dropdownToggle type="button" class="btn ctx-menu-button rounded-circle"
+                        aria-controls="dropdown-basic">
+                        <fa-icon [icon]="fa.ellipsisVertical" size="lg"></fa-icon>
+                    </button>
+                    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                        aria-labelledby="button-basic">
+                        <li role="menuitem">
+                            <a class="dropdown-item btn" [routerLink]="game.id | gameToGameCenterLink">
+                                View
+                            </a>
+                        </li>
+                        <li class="divider dropdown-divider"></li>
+                        @if ("Games_CreateEditDelete" | can) {
+                        <li role="menuitem">
+                            <button class="dropdown-item btn" (click)="handeClone(game)">
+                                Clone
+                            </button>
+                        </li>
+                        }
+                        <li role="menuitem">
+                            <button class="dropdown-item btn" (click)="handleExportRequest(game)">
+                                Export Package
+                            </button>
+                        </li>
+                        <li class="divider dropdown-divider"></li>
+                        <li role="menuitem">
+                            <button class="dropdown-item btn btn-danger" (click)="handleDeleteRequest(game)">
+                                Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

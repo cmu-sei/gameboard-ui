@@ -11,7 +11,7 @@
     </div>
     <table *ngIf="results.records.length; else noRecords" class="table table-hover gameboard-table gameboard-report">
         <thead>
-            <tr class="super-headers-row chill-headers">
+            <tr class="super-headers-row chill-headers" appThemeBg>
                 <th scope="col"></th>
                 <th scope="col" colspan="3" class="group-header">Engagement</th>
                 <th scope="col" colSpan="3" class="group-header">Scoring</th>
@@ -19,7 +19,7 @@
                 <th scope="col"></th>
             </tr>
 
-            <tr class="headers-row">
+            <tr class="headers-row" appThemeBg>
                 <th>Challenge</th>
                 <th class="numeric-col">
                     <app-sort-header sortBy="players">Players</app-sort-header>

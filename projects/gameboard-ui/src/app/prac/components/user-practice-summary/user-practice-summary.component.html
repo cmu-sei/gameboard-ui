@@ -1,0 +1,43 @@
+@if(userSummary?.tagsPlayed?.length && userSummary?.pointsScored) {
+<div>
+    <p>
+        You've been here before! Let's take a look at everything you've done in the Practice Area:
+    </p>
+
+    <div class="d-flex my-5">
+        <div class="pr-3 total-points-container">
+            <app-big-stat [value]="userSummary?.pointsScored" label="Points Scored"
+                [subLabel]="(userSummary?.pointsAvailable || 0) + ' available'"></app-big-stat>
+        </div>
+        <div class="pl-5">
+            <h4>Tags you've played</h4>
+            <div class="d-flex flex-wrap">
+                @for(tag of userSummary!.tagsPlayed; track tag) {
+                <div class="tag-chip mr-2 mb-2 fw-bold cursor-pointer" routerLink="/practice"
+                    [queryParams]="{ term: tag.tag }">
+                    <span class="count-container pl-2 pr-1" [style.color]="tag.tag | textToHexColor"
+                        [style.backgroundColor]="tag.tag | textToHexColor:true"
+                        [ngStyle]="{ 'border': '2px solid ' + (tag.tag | textToHexColor) }">
+                        {{ tag.countAttempted }} / {{ tag.countAvailable }}
+                    </span>
+                    <span class="text-container px-2"
+                        [ngStyle]="{ 'border': '2px solid ' + (tag.tag | textToHexColor) }"
+                        [style.backgroundColor]="tag.tag | textToHexColor"
+                        [style.color]="tag.tag | textToHexColor:true">{{tag.tag}}</span>&nbsp;
+                </div>
+                }
+            </div>
+
+            @if(userSummary?.tagsUnplayed?.length) {
+            <div class="tags-unplayed mt-5">
+                <h4>Tags to try</h4>
+                @for(tag of userSummary!.tagsUnplayed; track tag) {
+                <app-colored-text-chip [text]="tag" class="cursor-pointer" routerLink="/practice"
+                    [queryParams]="{ term: tag }" queryParamsHandling="replace"></app-colored-text-chip>
+                }
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}

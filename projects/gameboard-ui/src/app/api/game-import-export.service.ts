@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
@@ -34,13 +34,27 @@ export class GameImportExportService {
     return await firstValueFrom(this.http.get<ListGameExportBatchesResponse>(this.apiUrl.build("games/export-batches")).pipe(map(r => r.exportBatches)));
   }
 
-  async import(importPackage: File) {
-    const payload: FormData = new FormData();
-    payload.append("packageFile", importPackage, importPackage.name);
+  async import(importPackage: File, gameIds: string[], setPublishStatus?: boolean) {
+    const payload = new FormData();
+    payload.set("delimitedGameIds", !gameIds?.length ? "" : gameIds!.join(","));
+    payload.set("packageFile", importPackage, importPackage.name);
+    payload.set("setGamesPublishStatus", (setPublishStatus === undefined ? "" : setPublishStatus).toString());
 
     return await firstValueFrom(
       this.http.post<ImportedGame[]>(
         this.apiUrl.build("games/import"),
+        payload
+      )
+    );
+  }
+
+  async importPreview(importPackage: File) {
+    const payload: FormData = new FormData();
+    payload.append("packageFile", importPackage, importPackage.name);
+
+    return await firstValueFrom(
+      this.http.post<GameImportExportBatch>(
+        this.apiUrl.build("games/import/preview"),
         payload
       )
     );

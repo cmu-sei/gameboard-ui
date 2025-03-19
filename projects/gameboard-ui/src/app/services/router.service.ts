@@ -186,8 +186,8 @@ export class RouterService implements OnDestroy {
   public reloadOnNextNavigateEnd() {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
-    ).subscribe(e => {
-      window.location = window.location;
+    ).subscribe(() => {
+      window.location.href = window.location.href;
     });
   }
 

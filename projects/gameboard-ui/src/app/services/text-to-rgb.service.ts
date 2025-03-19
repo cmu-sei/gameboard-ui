@@ -33,6 +33,14 @@ export class TextToRgbService {
     return `rgb(${output.r}, ${output.g}, ${output.b})`;
   }
 
+  public getBrightness(rgb: RGB): number {
+    return Math.sqrt(
+      0.299 * (rgb.r * rgb.r) +
+      0.587 * (rgb.g * rgb.g) +
+      0.114 * (rgb.b * rgb.b)
+    );
+  }
+
   public rgbToHex(rgb: RGB) {
     return `#${this.rgbComponentToHex(rgb.r)}${this.rgbComponentToHex(rgb.g)}${this.rgbComponentToHex(rgb.b)}`;
   }

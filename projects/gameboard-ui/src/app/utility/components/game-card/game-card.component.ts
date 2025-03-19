@@ -6,15 +6,24 @@ import { BoardGame } from '@/api/board-models';
 import { Game } from '@/api/game-models';
 import { fa } from '@/services/font-awesome.service';
 
+export type GameCardGame = {
+  id: string;
+  name: string;
+  cardText1?: string;
+  cardText2?: string;
+  cardText3?: string;
+  logo: string;
+}
+
 @Component({
   selector: 'app-game-card',
   templateUrl: './game-card.component.html',
   styleUrls: ['./game-card.component.scss']
 })
 export class GameCardComponent {
-  @Input() game?: Game | BoardGame;
+  @Input() game?: GameCardGame;
   @Input() isClickable = false;
-  @Output() selected = new EventEmitter<Game | BoardGame>();
+  @Output() selected = new EventEmitter<GameCardGame>();
 
   protected fa = fa;
 

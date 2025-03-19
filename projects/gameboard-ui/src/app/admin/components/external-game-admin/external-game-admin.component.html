@@ -6,7 +6,7 @@
             <div class="flex-grow-1 sync-start-description"
                 [innerHTML]="ctx | syncStartGameStateDescription | markdown | async"></div>
 
-            <app-confirm-button btnClass="btn btn-lg btn-info" [disabled]="!canDeploy"
+            <app-confirm-button btnClass="btn btn-lg btn-success" [disabled]="!canDeploy"
                 (confirm)="handlePreDeployAllClick(ctx.game.id)"
                 [tooltip]="ctx.overallDeployStatus == 'deploying' ? 'Resources are being deployed for this game. Hang tight...' : ''">
                 Deploy All
@@ -123,7 +123,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-info"
+                    <button type="button" class="btn btn-success"
                         [disabled]="(team.deployStatus != 'notStarted' && team.deployStatus != 'partiallyDeployed') || !canDeploy"
                         (click)="handlePreDeployTeamClick(ctx.game.id, team.id)">Deploy</button>
                 </div>
