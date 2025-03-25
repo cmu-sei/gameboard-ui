@@ -132,7 +132,7 @@ export class RouterService implements OnDestroy {
   }
 
   public toGameCenter(gameId: string, selectedTab?: GameCenterTab) {
-    return this.getGameCenterUrl(gameId, selectedTab);
+    return this.router.navigateByUrl(this.getGameCenterUrl(gameId, selectedTab));
   }
 
   public toReport<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): Promise<boolean> {

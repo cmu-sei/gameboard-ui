@@ -10,6 +10,7 @@ import { GameToGameCenterLinkPipe } from '@/admin/pipes/game-to-game-center-link
 import { GameService } from '@/api/game.service';
 import { RouterService } from '@/services/router.service';
 import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-games-table-view',
@@ -42,6 +43,7 @@ export class GamesTableViewComponent {
   });
 
   private gamesService = inject(GameService);
+  private router = inject(Router);
   private routerService = inject(RouterService);
 
   protected fa = fa;
@@ -53,7 +55,7 @@ export class GamesTableViewComponent {
 
   protected async handleCreate() {
     const newGame = await firstValueFrom(this.gamesService.create({ name: "New Game" } as Game));
-    this.routerService.toGameCenter(newGame.id);
+    this.routerService.toGameCenter(newGame.id, "settings");
   }
 
   protected handleDeleteRequest(game: ListGamesResponseGame) {
