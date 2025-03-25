@@ -1,4 +1,3 @@
-@if(userSummary?.tagsPlayed?.length && userSummary?.pointsScored) {
 <div>
     <p>
         You've been here before! Let's take a look at everything you've done in the Practice Area:
@@ -11,6 +10,7 @@
         </div>
         <div class="pl-5">
             <h4>Tags you've played</h4>
+            @if(userSummary?.tagsPlayed?.length && userSummary?.pointsScored) {
             <div class="d-flex flex-wrap">
                 @for(tag of userSummary!.tagsPlayed; track tag) {
                 <div class="tag-chip mr-2 mb-2 fw-bold cursor-pointer" routerLink="/practice"
@@ -27,22 +27,26 @@
                 </div>
                 }
             </div>
+            }
+            @else {
+            <div class="text-muted mt-4">
+                You haven't scored any practice challenges yet. When you do, they'll show up here. Get to it!
+            </div>
+            }
+
 
             @if(userSummary?.tagsUnplayed?.length) {
             <div class="tags-unplayed mt-5">
                 <h4>Tags to try</h4>
-                @for(tag of userSummary!.tagsUnplayed; track tag) {
-                <app-colored-text-chip [text]="tag" class="cursor-pointer" routerLink="/practice"
-                    [queryParams]="{ term: tag }" queryParamsHandling="replace"></app-colored-text-chip>
-                }
+
+                <div class="d-flex flex-wrap">
+                    @for(tag of userSummary!.tagsUnplayed; track tag) {
+                    <app-colored-text-chip [text]="tag" class="cursor-pointer d-block mr-2 mb-2" routerLink="/practice"
+                        [queryParams]="{ term: tag }" queryParamsHandling="replace"></app-colored-text-chip>
+                    }
+                </div>
             </div>
             }
         </div>
     </div>
 </div>
-}
-@else {
-<div class="text-muted text-center">
-    You haven't scored any practice challenges yet. When you do, they'll show up here. Get to it!
-</div>
-}
