@@ -8,7 +8,7 @@ import { map, tap } from 'rxjs/operators';
 import { SyncStartGameState } from '../game/game.models';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeGate } from './board-models';
-import { ChangedGame, Game, GameGroup, GameSessionAvailibilityResponse, ListGamesQuery, ListGamesResponse, NewGame, SessionForecast, UploadedFile } from './game-models';
+import { ChangedGame, CloneGameRequest, Game, GameGroup, GameSessionAvailibilityResponse, ListGamesQuery, ListGamesResponse, NewGame, SessionForecast, UploadedFile } from './game-models';
 import { TimeWindow } from './player-models';
 import { Spec } from './spec-models';
 import { YamlService } from '@/services/yaml.service';
@@ -20,6 +20,9 @@ export class GameService {
   url = '';
   private cache: CachedGame[] = [];
 
+  private _gameLogoUpdated$ = new Subject<{ id: string, logoFile?: string }>();
+  public gameLogoUpdated$ = this._gameLogoUpdated$.asObservable();
+
   private _gameUpdated$ = new Subject<Game>();
   public gameUpdated$ = this._gameUpdated$.asObservable();
 
@@ -29,6 +32,10 @@ export class GameService {
     private yamlService: YamlService
   ) {
     this.url = config.apphost + 'api';
+  }
+
+  public clone(request: CloneGameRequest): Promise<Game> {
+    return firstValueFrom(this.http.post<Game>(`${this.url}/game/clone`, request));
   }
 
   public delete(id: string): Observable<any> {
@@ -109,24 +116,28 @@ export class GameService {
     return this.http.get<SessionForecast[]>(`${this.url}/game/${id}/sessions`);
   }
 
-  public deleteImage(id: string, type: string): Observable<any> {
-    return this.http.delete(`${this.url}/game/${id}/${type}`);
+  public async deleteCardImage(gameId: string): Promise<void> {
+    await firstValueFrom(this.http.delete(`${this.url}/game/${gameId}/image/card`));
+    this._gameLogoUpdated$.next({ id: gameId });
   }
 
-  public async deleteGameCardImage(gameId: string): Promise<void> {
-    await firstValueFrom(this.http.delete(`${this.url}/game/${gameId}/card`));
+  public async deleteMapImage(gameId: string): Promise<void> {
+    await firstValueFrom(this.http.delete(`${this.url}/game/${gameId}/image/map`));
   }
 
-  public uploadImage(id: string, type: string, file: File): Observable<UploadedFile> {
+  public async updateCardImage(gameId: string, file: File): Promise<UploadedFile> {
     const payload: FormData = new FormData();
     payload.append('file', file, file.name);
-    return this.http.post<UploadedFile>(`${this.url}/game/${id}/${type}`, payload);
+    const result = await firstValueFrom(this.http.post<UploadedFile>(`${this.url}/game/${gameId}/image/card`, payload));
+
+    this._gameLogoUpdated$.next({ id: gameId, logoFile: result.filename });
+    return result;
   }
 
-  public async uploadGameCardImage(id: string, file: File): Promise<UploadedFile> {
-    const body = new FormData();
-    body.append('file', file, file.name);
-    return await firstValueFrom(this.http.post<UploadedFile>(`${this.url}/game/${id}/card`, body));
+  public async updateMapImage(gameId: string, file: File): Promise<UploadedFile> {
+    const payload: FormData = new FormData();
+    payload.append('file', file, file.name);
+    return firstValueFrom(this.http.post<UploadedFile>(`${this.url}/game/${gameId}/image/map`, payload));
   }
 
   public rerank(id: string): Observable<any> {

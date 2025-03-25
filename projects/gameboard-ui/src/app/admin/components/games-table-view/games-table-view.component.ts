@@ -47,7 +47,7 @@ export class GamesTableViewComponent {
   protected fa = fa;
   protected selectedGameIds: string[] = [];
 
-  protected handeClone(game: ListGamesResponseGame) {
+  protected handleClone(game: ListGamesResponseGame) {
     this.cloneRequest.emit(game);
   }
 

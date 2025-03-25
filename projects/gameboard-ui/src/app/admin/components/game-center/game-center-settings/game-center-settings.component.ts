@@ -141,7 +141,7 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     if (!this.game)
       throw new Error("Game is required");
 
-    await this.gameService.deleteGameCardImage(this.game.id);
+    await this.gameService.deleteCardImage(this.game.id);
     this.game.logo = "";
   }
 
@@ -165,13 +165,16 @@ export class GameCenterSettingsComponent implements AfterViewInit {
     this.selectedSubTab = tab;
   }
 
-  protected upload(files: File[], type: string): void {
+  protected async upload(files: File[]): Promise<void> {
     if (!this.game)
       throw new Error("Game is required");
 
-    this.gameService.uploadImage(this.game.id, type, files[0]).subscribe(
-      r => this.game!.logo = r.filename
-    );
+    if (files.length !== 1) {
+      throw new Error("Choose a single image file for upload");
+    }
+
+    const result = await this.gameService.updateCardImage(this.game.id, files[0]);
+    this.game!.logo = result.filename;
   }
 
   private countGameField(fieldMap: Map<string, number>, value: string) {
