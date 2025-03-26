@@ -15,8 +15,9 @@
     </app-report-parameters-container>
 </div>
 
+@if (!isLoading) {
 <div class="report-body">
-    <app-report-stat-summary class="d-block mb-4" *ngIf="ctx?.stats$ | async as stats; else loading"
+    <app-report-stat-summary class="d-block mb-4" *ngIf="ctx?.stats$ | async as stats;"
         [importantStat]="stats.importantStat" [stats]="stats.otherStats"></app-report-stat-summary>
 
     <tabset>
@@ -39,12 +40,9 @@
         </tab>
     </tabset>
 </div>
-
-<ng-template #loading>
-    <div class="page-height d-flex flex-column align-items-center justify-content-center">
-        <app-spinner>Loading your report...</app-spinner>
-    </div>
-</ng-template>
+} @else {
+<app-spinner>Loading enrollment...</app-spinner>
+}
 
 <ng-template #multiSelectGame let-context>
     <span class="game-name">{{ context.name }}</span>

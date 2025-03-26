@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DateTime } from 'luxon';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, subscribeOn } from 'rxjs';
 import { ReportComponentBase } from '../report-base.component';
 import { FeedbackGameReportParameters, FeedbackGameReportResponse, FeedbackReportDetails } from './feedback-game-report.models';
 import { ReportKey, ReportViewUpdate } from '@/reports/reports-models';
@@ -116,14 +116,14 @@ export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGam
   }
 
   makeSearchParams() {
-    let params: any = {};
-    params.challengeSpecId = this._currentParams?.challengeSpecId;
-    params.gameId = this._currentParams?.gameId;
-    params.submitStatus = "submitted";
-    params.sort = "newest";
-    params.skip = this.skip;
-    params.take = this._tablePageSize;
-    params.type = this._currentParams?.challengeSpecId ? "challenge" : "game";
-    return params;
+    return {
+      challengeSpecId: this._currentParams?.challengeSpecId,
+      gameId: this._currentParams?.gameId,
+      submitStatus: "submitted",
+      sort: "newest",
+      skip: this.skip,
+      take: this._tablePageSize,
+      type: this._currentParams?.challengeSpecId ? "challenge" : "game"
+    };
   }
 }

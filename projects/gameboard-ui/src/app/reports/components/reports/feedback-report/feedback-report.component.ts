@@ -15,7 +15,6 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { PlayerFeedbackResponsesModalComponent } from './player-feedback-responses-modal/player-feedback-responses-modal.component';
 
 export interface FeedbackReportViewContext {
-  isLoading: boolean;
   parameters: FeedbackReportParameters;
   results?: ReportResultsWithOverallStats<FeedbackReportStatSummary, FeedbackReportRecord>;
   stats: ReportSummaryStat[]
@@ -34,7 +33,6 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
   private modalService = inject(ModalConfirmService);
 
   protected ctx: FeedbackReportViewContext = {
-    isLoading: false,
     parameters: { templateId: "" },
     stats: []
   };
@@ -102,7 +100,6 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
       this.ctx.parameters.templateId = this.templates[0].id;
     }
 
-    this.ctx.isLoading = true;
     this.ctx.results = await this.feedbackReportService.getReportData(parameters);
     this.ctx.stats = [
       { label: "Unique Games", value: this.ctx.results.overallStats.uniqueGamesCount },
@@ -111,7 +108,6 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
       { label: "Unfinalized Responses", value: this.ctx.results.overallStats.unfinalizedCount },
       { label: "Questions", value: this.ctx.results.overallStats.questionCount || 0 }
     ];
-    this.ctx.isLoading = false;
 
     return {
       metaData: this.ctx.results.metaData

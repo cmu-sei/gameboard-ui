@@ -58,17 +58,9 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     dateEndParamName: "practiceDateEnd"
   });
 
-  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "seasons"
-  });
-
-  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "series"
-  });
-
-  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "tracks"
-  });
+  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("seasons");
+  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("series");
+  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("tracks");
 
   constructor(
     private reportService: EnrollmentReportService) {
@@ -111,11 +103,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   private loadSummaryStats(parameters: EnrollmentReportFlatParameters): Observable<EnrollmentReportSummaryStats> {
-    // still very confused about why this is sometimes null, but it appears not to affect the experience or performance.
-    if (!this.reportService) {
-      return of({ importantStat: { label: "--", value: "--" }, otherStats: [] });
-    }
-
     return this.reportService.getSummaryStats(parameters).pipe(
       map(stats => {
         const leadingSponsorStat: ReportSummaryStat = {

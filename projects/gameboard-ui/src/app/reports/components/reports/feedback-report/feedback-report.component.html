@@ -24,78 +24,87 @@
         <app-parameter-sponsor name="sponsors" ngDefaultControl></app-parameter-sponsor>
     </app-report-parameters-container>
 
-    <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats; else loading"
+    @if (isLoading) {
+    <app-spinner>Loading feedback...</app-spinner>
+    }
+    @else if (!ctx.results) {
+    <p class="text-center text-muted mb-4">
+        Choose your parameters and press <strong>Generate Report</strong> above to see
+        your results.
+    </p>
+    }
+    @else {
+    <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats"
         [importantStat]="{ label: 'Total Responses', value: ctx.results!.overallStats.responseCount } "
         [stats]="ctx.stats"></app-report-stat-summary>
 
-    <ng-container *ngIf="!ctx.isLoading; else loading">
-        <div class="report-body mt-4">
-            <table *ngIf="ctx.results?.records?.length; else noRecords"
-                class="table table-hover gameboard-table gameboard-report">
-                <colgroup span="2"></colgroup>
-                <col>
-                <colgroup [span]="ctx.results!.records[0].responses.length || 0"></colgroup>
+    <div class="report-body mt-4">
+        <table *ngIf="ctx.results?.records?.length; else noRecords"
+            class="table table-hover gameboard-table gameboard-report">
+            <colgroup span="2"></colgroup>
+            <col>
+            <colgroup [span]="ctx.results!.records[0].responses.length || 0"></colgroup>
 
-                <thead>
-                    <tr class="super-headers-row chill-headers" appThemeBg>
-                        <th scope="colgroup" colspan="3" class="group-header">Player</th>
-                        <th scope="colgroup" [attr.colspan]="ctx.results!.records[0].responses.length || 0"
-                            class="group-header">
-                            Feedback
-                        </th>
-                    </tr>
+            <thead>
+                <tr class="super-headers-row chill-headers" appThemeBg>
+                    <th scope="colgroup" colspan="3" class="group-header">Player</th>
+                    <th scope="colgroup" [attr.colspan]="ctx.results!.records[0].responses.length || 0"
+                        class="group-header">
+                        Feedback
+                    </th>
+                </tr>
 
-                    <tr class="headers-row" appThemeBg>
-                        <th class="width-15">
-                            <app-sort-header sortBy="name">Name</app-sort-header>
-                        </th>
-                        <th class="width-15">
-                            <app-sort-header sortBy="game">Game</app-sort-header>
-                        </th>
-                        <th class="width-5 date-col">
-                            <app-sort-header sortBy="when-created">Date</app-sort-header>
-                        </th>
-                        <th *ngFor="let question of ctx.results!.records[0].responses"
-                            class="feedback-question-column overflow-ellipsis" [tooltip]="question.prompt">
-                            <span>
-                                {{ question.shortName || question.prompt }}
-                            </span>
-                        </th>
-                    </tr>
-                </thead>
+                <tr class="headers-row" appThemeBg>
+                    <th class="width-15">
+                        <app-sort-header sortBy="name">Name</app-sort-header>
+                    </th>
+                    <th class="width-15">
+                        <app-sort-header sortBy="game">Game</app-sort-header>
+                    </th>
+                    <th class="width-5 date-col">
+                        <app-sort-header sortBy="when-created">Date</app-sort-header>
+                    </th>
+                    <th *ngFor="let question of ctx.results!.records[0].responses"
+                        class="feedback-question-column overflow-ellipsis" [tooltip]="question.prompt">
+                        <span>
+                            {{ question.shortName || question.prompt }}
+                        </span>
+                    </th>
+                </tr>
+            </thead>
 
-                <tbody>
-                    <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
-                        <td class="report-field width-15">
-                            <div class="d-flex align-items-center">
-                                <app-player-field class="d-block"
-                                    [player]="{ userId: record.user.id, name: record.user.name, sponsor: record.sponsor }"></app-player-field>
-                            </div>
-                        </td>
-                        <td class="report-field width-15">
-                            <app-challenge-or-game-field [challengeName]="record.challengeSpec?.name"
-                                [game]="record.logicalGame"></app-challenge-or-game-field>
-                        </td>
-                        <td class="report-field date width-5">
-                            <p>{{ record.whenCreated | shortdate }}</p>
-                            <p class="subtle-info">{{ record.whenCreated | friendlyTime }}</p>
-                        </td>
-                        <td *ngFor="let response of record.responses"
-                            class="report-field feedback-question-column cursor-pointer overflow-ellipsis"
-                            [class.numerical]="response.answer | isNumber" (click)="handleRecordClick(record)">
-                            {{ response.answer || "--" }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </ng-container>
+            <tbody>
+                <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
+                    <td class="report-field width-15">
+                        <div class="d-flex align-items-center">
+                            <app-player-field class="d-block"
+                                [player]="{ userId: record.user.id, name: record.user.name, sponsor: record.sponsor }"></app-player-field>
+                        </div>
+                    </td>
+                    <td class="report-field width-15">
+                        <app-challenge-or-game-field [challengeName]="record.challengeSpec?.name"
+                            [game]="record.logicalGame"></app-challenge-or-game-field>
+                    </td>
+                    <td class="report-field date width-5">
+                        <p>{{ record.whenCreated | shortdate }}</p>
+                        <p class="subtle-info">{{ record.whenCreated | friendlyTime }}</p>
+                    </td>
+                    <td *ngFor="let response of record.responses"
+                        class="report-field feedback-question-column cursor-pointer overflow-ellipsis"
+                        [class.numerical]="response.answer | isNumber" (click)="handleRecordClick(record)">
+                        {{ response.answer || "--" }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="pager-container d-flex justify-content-end mt-4">
         <div class="flex-grow-1"></div>
-        <app-select-pager [itemCount]="ctx.results?.paging?.itemCount" [pageSize]="ctx.results?.paging?.pageSize"
+        <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
             (change)="handlePagingChange($event)"></app-select-pager>
     </div>
+    }
 </div>
 
 <ng-template #multiSelectGame let-context>
@@ -106,4 +115,3 @@
     <app-no-report-records recordDescription="feedback"></app-no-report-records>
 </ng-template>
 <ng-template #noValue>--</ng-template>
-<ng-template #loading><app-spinner>Loading player feedback...</app-spinner></ng-template>

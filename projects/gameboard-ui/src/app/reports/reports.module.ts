@@ -26,7 +26,6 @@ import { ReportCardComponent } from './components/report-card/report-card.compon
 import { ReportFieldNoValueComponent } from './components/report-field-no-value/report-field-no-value.component';
 import { ReportGlobalControlsComponent } from './components/report-global-controls/report-global-controls.component';
 import { ReportParametersContainerComponent } from './components/report-parameters-container/report-parameters-container.component';
-import { ReportSelectComponent } from './components/report-select/report-select.component';
 import { ReportStatSummaryComponent } from './components/report-stat-summary/report-stat-summary.component';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
 import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
@@ -87,7 +86,6 @@ import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
     ReportGlobalControlsComponent,
     ReportPageComponent,
     ReportParametersContainerComponent,
-    ReportSelectComponent,
     ReportsHomeComponent,
     SupportReportComponent,
     SupportReportContextMenuComponent,
