@@ -3,36 +3,38 @@
     <app-parameter-sponsor ngDefaultControl></app-parameter-sponsor>
 </app-report-parameters-container>
 
-<ng-container *ngIf="reportData; else loading">
-    <h2>Players &amp; Sponsors</h2>
-    <div class="d-flex flex-wrap align-items-top justify-content-between">
-        <app-big-stat [value]="reportData.userCount" label="Active players" [isClickable]="true"
-            (click)="showPlayersModal()"></app-big-stat>
-        <app-big-stat [value]="reportData.sponsorCount" label="Sponsors represented" [isClickable]="true"
-            (click)="showSponsorsModal()"></app-big-stat>
-        <app-big-stat [value]="reportData.competitiveUsersWithNoPracticeCount" label="Competitive-Only Players"
-            [isClickable]="true"
-            (click)="showPlayersModal({ exclusiveToMode: playerModeEnumCompetitive})"></app-big-stat>
-        <app-big-stat [value]="reportData.practiceUsersWithNoCompetitiveCount" [isClickable]="true"
-            (click)="showPlayersModal({ exclusiveToMode: playerModeEnumPractice })"
-            label="Practice-Only Players"></app-big-stat>
-    </div>
+@if (isLoading) {
+<app-spinner>Analyzing site usage...</app-spinner>
+} @else if (!reportData) {
+<p class="text-muted text-center my-4">
+    Choose your parameters and press <strong>Generate Report</strong> above to see
+    your results.
+</p>
+} @else {
+<h2>Players &amp; Sponsors</h2>
+<div class="d-flex flex-wrap align-items-top justify-content-between">
+    <app-big-stat [value]="reportData.userCount" label="Active players" [isClickable]="true"
+        (click)="showPlayersModal()"></app-big-stat>
+    <app-big-stat [value]="reportData.sponsorCount" label="Sponsors represented" [isClickable]="true"
+        (click)="showSponsorsModal()"></app-big-stat>
+    <app-big-stat [value]="reportData.competitiveUsersWithNoPracticeCount" label="Competitive-Only Players"
+        [isClickable]="true" (click)="showPlayersModal({ exclusiveToMode: playerModeEnumCompetitive})"></app-big-stat>
+    <app-big-stat [value]="reportData.practiceUsersWithNoCompetitiveCount" [isClickable]="true"
+        (click)="showPlayersModal({ exclusiveToMode: playerModeEnumPractice })"
+        label="Practice-Only Players"></app-big-stat>
+</div>
 
-    <h2 class="report-section">Challenges &amp; Engagement</h2>
-    <div class="d-flex flex-wrap align-items-top justify-content-between mt-4">
-        <app-big-stat
-            [value]="((reportData.competitivePlayDurationHours + reportData.practicePlayDurationHours) | number:'1.0-2') || '--' "
-            label="Hours of play"
-            [subLabel]="(reportData.competitivePlayDurationHours | number:'1.0-2') + ' competitive + ' + (reportData.practicePlayDurationHours | number:'1.0-2') + ' practice'"></app-big-stat>
-        <app-big-stat [value]="reportData.deployedChallengesSpecCount" label="Unique challenges attempted"
-            [isClickable]="true" (click)="showChallengesModal()"></app-big-stat>
-        <app-big-stat [value]="reportData.deployedChallengesCount" label="Challenges attempted"
-            [subLabel]="reportData.deployedChallengesCompetitiveCount + ' competitive + ' + reportData.deployedChallengesPracticeCount + ' practice'"></app-big-stat>
-        <app-big-stat [value]="reportData.avgCompetitiveChallengesPerCompetitiveUser"
-            label="Avg. Challenges Per Competitive Player"></app-big-stat>
-    </div>
-</ng-container>
-
-<ng-template #loading>
-    <app-spinner>Loading your report...</app-spinner>
-</ng-template>
+<h2 class="report-section">Challenges &amp; Engagement</h2>
+<div class="d-flex flex-wrap align-items-top justify-content-between mt-4">
+    <app-big-stat
+        [value]="((reportData.competitivePlayDurationHours + reportData.practicePlayDurationHours) | number:'1.0-2') || '--' "
+        label="Hours of play"
+        [subLabel]="(reportData.competitivePlayDurationHours | number:'1.0-2') + ' competitive + ' + (reportData.practicePlayDurationHours | number:'1.0-2') + ' practice'"></app-big-stat>
+    <app-big-stat [value]="reportData.deployedChallengesSpecCount" label="Unique challenges attempted"
+        [isClickable]="true" (click)="showChallengesModal()"></app-big-stat>
+    <app-big-stat [value]="reportData.deployedChallengesCount" label="Challenges attempted"
+        [subLabel]="reportData.deployedChallengesCompetitiveCount + ' competitive + ' + reportData.deployedChallengesPracticeCount + ' practice'"></app-big-stat>
+    <app-big-stat [value]="reportData.avgCompetitiveChallengesPerCompetitiveUser"
+        label="Avg. Challenges Per Competitive Player"></app-big-stat>
+</div>
+}

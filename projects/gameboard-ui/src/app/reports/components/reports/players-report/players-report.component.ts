@@ -56,17 +56,9 @@ export class PlayersReportComponent extends ReportComponentBase<PlayersReportFla
     dateEndParamName: "practiceDateEnd"
   });
 
-  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "seasons"
-  });
-
-  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "series"
-  });
-
-  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "tracks"
-  });
+  protected seasonsQueryModel = MultiSelectQueryParamModel.fromParamName("seasons");
+  protected seriesQueryModel = MultiSelectQueryParamModel.fromParamName("series");
+  protected tracksQueryModel = MultiSelectQueryParamModel.fromParamName("tracks");
 
   constructor(
     private modalService: ModalConfirmService,

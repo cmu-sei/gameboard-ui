@@ -4,10 +4,10 @@
             <li><a [routerLink]="'/reports'">Reports</a></li>
             <li class="mx-2">&gt;</li>
             <li>
-                <ng-container *ngIf="(reports$ | async)?.length">
-                    <select name="reports-select" class="form-control mb-2"
-                        (change)="handleReportSelect(reportSelect.value)" #reportSelect required>
-                        <option *ngFor="let report of reports$ | async" [ngValue]="report.key">
+                <ng-container *ngIf="reports.length">
+                    <select name="reports-select" class="form-control mb-2" [ngModel]="selectedReport"
+                        (ngModelChange)="handleReportSelect($event)" #reportSelect required>
+                        <option *ngFor="let report of reports" [ngValue]="report.key">
                             {{ report.name }}
                         </option>
                     </select>

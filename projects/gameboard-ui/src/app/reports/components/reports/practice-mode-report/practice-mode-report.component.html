@@ -1,5 +1,10 @@
+@if(isLoading) {
+<app-spinner>Loading practice area usage...</app-spinner>
+} @else if (!overallStats) {
+
+} @else {
 <div class="practice-mode-report-component">
-    <app-report-parameters-container *ngIf="selectedParameters; else loading">
+    <app-report-parameters-container>
         <app-multi-select label="Series" name="series" ngDefaultControl [options]="series$ | async"
             [(ngModel)]="seriesQueryModel"></app-multi-select>
         <app-multi-select label="Tracks" name="tracks" ngDefaultControl [options]="tracks$ | async"
@@ -42,12 +47,7 @@
         </tabset>
     </div>
 </div>
-
-<ng-template #loading>
-    <div class="page-height d-flex flex-column align-items-center justify-content-center mt-5">
-        <app-spinner class="d-block">Loading your report...</app-spinner>
-    </div>
-</ng-template>
+}
 
 <ng-template #multiSelectGame let-option>
     {{ option.name }}

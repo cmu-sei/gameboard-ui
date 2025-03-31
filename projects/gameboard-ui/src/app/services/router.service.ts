@@ -96,7 +96,7 @@ export class RouterService implements OnDestroy {
   }
 
   public getReportRoute<T extends { [key: string]: any }>(key: ReportKey, query: T | null = null): UrlTree {
-    return this.router.createUrlTree(["reports", key], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
+    return this.router.createUrlTree(["reports", key.toLowerCase()], { queryParams: query ? this.objectService.cloneTruthyAndZeroKeys(query) : null });
   }
 
   public getTicketUrl(ticketKey: string) {
@@ -152,7 +152,11 @@ export class RouterService implements OnDestroy {
   }
 
   public deleteQueryParams(): Promise<boolean> {
-    return this.router.navigateByUrl(this.router.createUrlTree([this.getCurrentPathBase()]));
+    return this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: [],
+      queryParamsHandling: "replace"
+    });
   }
 
   public getExternalGamePageUrlTree(ctx: { gameId: string, teamId: string }) {
@@ -202,8 +206,14 @@ export class RouterService implements OnDestroy {
     }
 
     const updatedParams = { ...cleanParams, ...update.parameters };
-    const urlTree = this.router.createUrlTree([this.getCurrentPathBase()], { queryParams: updatedParams });
-    return this.router.navigateByUrl(urlTree);
+
+    return this.router.navigate(
+      [],
+      {
+        queryParams: updatedParams,
+        queryParamsHandling: "merge"
+      }
+    );
   }
 
   private buildAppUrl(...urlBits: string[]) {

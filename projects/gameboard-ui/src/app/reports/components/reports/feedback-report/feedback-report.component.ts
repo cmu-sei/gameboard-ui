@@ -1,4 +1,4 @@
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { FeedbackTemplateView } from '@/feedback/feedback.models';
 import { FeedbackService } from '@/api/feedback.service';
@@ -25,7 +25,7 @@ export interface FeedbackReportViewContext {
   templateUrl: './feedback-report.component.html',
   styleUrls: ['./feedback-report.component.scss']
 })
-export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportParameters> {
+export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportParameters> implements OnInit {
   @ViewChild("playerResponsesModal") playerResponsesModalTemplate?: TemplateRef<any>;
 
   private feedbackService = inject(FeedbackService);
@@ -56,23 +56,18 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
   });
 
   protected seasons$ = this.reportsService.getSeasons();
-  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "seasons"
-  });
-
+  protected seasonsQueryModel = MultiSelectQueryParamModel.fromParamName("seasons");
   protected series$ = this.reportsService.getSeries();
-  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "series"
-  });
-
+  protected seriesQueryModel = MultiSelectQueryParamModel.fromParamName("series");
   protected tracks$ = this.reportsService.getTracks();
-  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "tracks"
-  });
-
+  protected tracksQueryModel = MultiSelectQueryParamModel.fromParamName("tracks");
   protected templateQueryParamModel: QueryParamModelConfig<string> | null = {
     name: "templateId"
   };
+
+  public async ngOnInit(): Promise<void> {
+    this.templates = await this.feedbackService.getTemplates();
+  }
 
   protected handleRecordClick(record: FeedbackReportRecord) {
     this.modalService.openComponent({
@@ -90,14 +85,10 @@ export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportP
       return { metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.FeedbackReport)) };
     }
 
-    if (!this.templates.length) {
-      this.templates = await this.feedbackService.getTemplates();
-    }
-
     this.ctx.parameters = parameters;
     if (this.templates.length && !this.ctx.parameters.templateId) {
       this.routerService.updateQueryParams({ parameters: { templateId: this.templates[0].id } });
-      this.ctx.parameters.templateId = this.templates[0].id;
+      parameters.templateId = this.templates[0].id;
     }
 
     this.ctx.results = await this.feedbackReportService.getReportData(parameters);
