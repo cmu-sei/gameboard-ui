@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { SimpleEntity } from '@/api/models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { PlayersReportParticipationSummaryComponent, PlayersReportParticipationSummaryContext } from '../../players-report-participation-summary/players-report-participation-summary.component';
+import { PlayersReportParticipationSummaryComponent } from '../../players-report-participation-summary/players-report-participation-summary.component';
 
 interface PlayersReportContext {
   isLoading: boolean;
@@ -56,17 +56,9 @@ export class PlayersReportComponent extends ReportComponentBase<PlayersReportFla
     dateEndParamName: "practiceDateEnd"
   });
 
-  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "seasons"
-  });
-
-  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "series"
-  });
-
-  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "tracks"
-  });
+  protected seasonsQueryModel = MultiSelectQueryParamModel.fromParamName("seasons");
+  protected seriesQueryModel = MultiSelectQueryParamModel.fromParamName("series");
+  protected tracksQueryModel = MultiSelectQueryParamModel.fromParamName("tracks");
 
   constructor(
     private modalService: ModalConfirmService,

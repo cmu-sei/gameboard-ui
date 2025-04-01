@@ -1,14 +1,12 @@
-<div class="report-export d-flex align-items-center mt-5">
-    <div class="flex-grow-1">
-        <span class="about-filters-link btn-link fs-125" (click)="handleAboutFiltersClick()">
-            [ About report filters ]
-        </span>
-    </div>
+<div class="report-export d-flex align-items-center mt-4">
+    <button type="button" class="btn btn-lg btn-success d-block flex-grow-1 mr-2" (click)="handleGenerateClick()">
+        Generate Report
+    </button>
     <app-share-button class="d-block mr-2"
-        message="Copied a link to this report (and its filtering settings) to your clipboard."
+        message="Copied a **link to this report** (and its filtering settings) to your clipboard."
         tooltip="Copy a link to this report"></app-share-button>
     <div class="mr-2" *ngIf="enableExport">
-        <button class="btn btn-success btn-lg csv-export-button" (click)="exportRequestCsv.emit()" tabindex="0"
+        <button class="btn btn-warning btn-lg csv-export-button" (click)="exportRequestCsv.emit()" tabindex="0"
             role="button">Export to CSV</button>
     </div>
     <button type="button" class="btn btn-outline btn-lg btn-warning mr-2" (click)="handleResetClick()">

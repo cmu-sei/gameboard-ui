@@ -40,6 +40,10 @@ export class MultiSelectQueryParamModel<TOption> {
         }
     }
 
+    public static fromParamName(paramName: string): MultiSelectQueryParamModel<string> {
+        return new MultiSelectQueryParamModel<string>({ paramName });
+    }
+
     public get selectedValues(): TOption[] {
         return this._model$.getValue();
     }

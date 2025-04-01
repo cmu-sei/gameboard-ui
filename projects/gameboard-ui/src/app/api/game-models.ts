@@ -7,6 +7,11 @@ import { SimpleEntity } from "./models";
 import { Player, PlayerMode, TimeWindow } from "./player-models";
 import { ApiUser } from "./user-models";
 
+export interface CloneGameRequest {
+  gameId: string;
+  name: string;
+}
+
 export interface GameDetail {
   name: string;
   competition: string;

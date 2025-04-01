@@ -49,7 +49,7 @@
     <div *ngIf="(results.paging.itemCount || 0) > (results.paging.pageSize || 0)">
         <hr />
         <app-select-pager [itemCount]="results.paging.itemCount" [pageSize]="results.paging.pageSize"
-            (change)="handlePaging($event)"></app-select-pager>
+            (pageChange)="handlePaging($event)"></app-select-pager>
     </div>
 </app-modal-content>
 

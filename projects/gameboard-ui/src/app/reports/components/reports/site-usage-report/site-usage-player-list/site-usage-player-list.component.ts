@@ -23,6 +23,7 @@ export class SiteUsagePlayerListComponent implements OnInit {
   }
 
   protected async load(pagingArgs?: PagingArgs) {
+    console.log("paging args", pagingArgs);
     if (!this.reportParameters)
       throw new Error("No parameters passed.");
 

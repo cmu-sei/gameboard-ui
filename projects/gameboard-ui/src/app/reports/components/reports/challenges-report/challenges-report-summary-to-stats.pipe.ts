@@ -4,7 +4,6 @@ import { ChallengesReportStatSummary } from './challenges-report.models';
 
 @Pipe({ name: 'challengesReportSummaryToStats' })
 export class ChallengesReportSummaryToStatsPipe implements PipeTransform {
-
   transform(stats: ChallengesReportStatSummary): ReportSummaryStat[] {
     if (!stats)
       return [];

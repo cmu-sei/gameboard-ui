@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ReportComponentBase } from '../report-base.component';
 import { ChallengesReportFlatParameters, ChallengesReportRecord, ChallengesReportStatSummary } from './challenges-report.models';
-import { ReportKey, ReportResultsWithOverallStats, ReportViewUpdate } from '@/reports/reports-models';
+import { ReportResultsWithOverallStats, ReportViewUpdate } from '@/reports/reports-models';
 import { ChallengesReportService } from '../challenges-report.service';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { SimpleEntity } from '@/api/models';
@@ -13,7 +13,6 @@ import { fa } from '@/services/font-awesome.service';
 
 export interface ChallengesReportContext {
   isDownloadingCsv: boolean,
-  isLoading: boolean,
   results?: ReportResultsWithOverallStats<ChallengesReportStatSummary, ChallengesReportRecord>
   selectedParameters: ChallengesReportFlatParameters,
 }
@@ -26,7 +25,6 @@ export interface ChallengesReportContext {
 export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportFlatParameters> {
   protected ctx: ChallengesReportContext = {
     isDownloadingCsv: false,
-    isLoading: true,
     selectedParameters: {}
   };
 
@@ -45,19 +43,10 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
     deserializer: (value: string, options?: SimpleEntity[]) => options!.find(g => g.id === value) || null
   });
 
-  protected challengeTagsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({ paramName: "tags" });
-
-  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "seasons"
-  });
-
-  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "series"
-  });
-
-  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "tracks"
-  });
+  protected challengeTagsQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("tags");
+  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("seasons");
+  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("series");
+  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("tracks");
 
   protected startDateRangeModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
     dateStartParamName: "startDateStart",
@@ -87,13 +76,8 @@ export class ChallengesReportComponent extends ReportComponentBase<ChallengesRep
   }
 
   protected async updateView(parameters: ChallengesReportFlatParameters): Promise<ReportViewUpdate> {
-    if (!this.challengesReportService)
-      return { metaData: await firstValueFrom(this.reportsService.getReportMetaData(ReportKey.ChallengesReport)) };
-
     this.ctx.selectedParameters = parameters;
-    this.ctx.isLoading = true;
     this.ctx.results = await firstValueFrom(this.challengesReportService.getReportData(parameters));
-    this.ctx.isLoading = false;
 
     return { metaData: this.ctx.results.metaData };
   }

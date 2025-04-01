@@ -16,9 +16,15 @@
             ngDefaultControl></app-parameter-game-challengespec>
     </app-report-parameters-container>
 
+    @if (isLoading) {
+    <app-spinner>Loading tickets...</app-spinner>
+    } @else if (!ctx) {
+    <p></p>
+    } @else {
+
     <app-report-stat-summary class="d-block mb-4" *ngIf="ctx?.results?.overallStats; else loading"
-        [importantStat]="{ label: 'Open Tickets', value: ctx?.results?.overallStats?.openTicketsCount }"
-        [stats]="ctx?.results?.overallStats | toSupportReportStats">
+        [importantStat]="{ label: 'Open Tickets', value: ctx.results.overallStats.openTicketsCount }"
+        [stats]="ctx.results.overallStats | toSupportReportStats">
     </app-report-stat-summary>
 
     <ng-container *ngIf="!isLoading; else loading">
@@ -135,9 +141,10 @@
 
     <div class="pager-container d-flex justify-content-end mt-4">
         <div class="flex-grow-1"></div>
-        <app-select-pager [itemCount]="ctx?.results?.paging?.itemCount" [pageSize]="ctx?.results?.paging?.pageSize"
-            (change)="handlePagingChange($event)"></app-select-pager>
+        <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
+            (pageChange)="handlePagingChange($event)"></app-select-pager>
     </div>
+    }
 </div>
 
 <ng-template #noRecords>

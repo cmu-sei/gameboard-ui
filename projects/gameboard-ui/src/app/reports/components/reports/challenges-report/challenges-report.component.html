@@ -11,167 +11,171 @@
             [value]="getGameValue"></app-multi-select>
         <app-multi-select label="Tags" name="tags" [options]="challengeTags$ | async"
             [(ngModel)]="challengeTagsQueryModel" [itemTemplate]="multiSelectTag">
-
         </app-multi-select>
         <app-parameter-date-range ngDefaultControl name="startDateRange" [(ngModel)]="startDateRangeModel"
             label="Include Challenge Stats from"></app-parameter-date-range>
     </app-report-parameters-container>
 
-    <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats; else loading"
+    @if (isLoading) {
+    <app-spinner>Loading your report...</app-spinner>
+    } @else if (!ctx.results) {
+    <p class="text-center text-muted mb-4">
+        Choose your parameters and press <strong>Generate Report</strong> above to see
+        your results.
+    </p>
+    } @else {
+    <app-report-stat-summary class="d-block mb-4"
         [importantStat]="{ label: 'Challenges Configured', value: ctx.results!.overallStats.specCount} "
         [stats]="ctx.results!.overallStats | challengesReportSummaryToStats"></app-report-stat-summary>
 
-    <ng-container *ngIf="!ctx.isLoading; else loading">
-        <div class="export-submissions-button d-flex justify-content-end mt-0 mb-2">
-            <button class="btn btn-sm btn-success" tooltip="Download a CSV of all submissions for these challenges"
-                (click)="handleSubmissionsCsvClick()" [disabled]="ctx.isDownloadingCsv">
-                <ng-container *ngIf="!ctx.isDownloadingCsv; else downladingCsv">
-                    Download Submissions CSV
-                </ng-container>
-            </button>
-        </div>
+    <div class="export-submissions-button d-flex justify-content-end mt-0 mb-2">
+        <button class="btn btn-sm btn-success" tooltip="Download a CSV of all submissions for these challenges"
+            (click)="handleSubmissionsCsvClick()" [disabled]="ctx.isDownloadingCsv">
+            <ng-container *ngIf="!ctx.isDownloadingCsv; else downladingCsv">
+                Download Submissions CSV
+            </ng-container>
+        </button>
+    </div>
 
-        <div class="report-body mt-4">
-            <table *ngIf="ctx.results?.records?.length; else noRecords"
-                class="table table-hover gameboard-table gameboard-report">
-                <col>
-                <col>
-                <colgroup span="2"></colgroup>
-                <col>
-                <colgroup span="2"></colgroup>
-                <colgroup span="3"></colgroup>
-                <col>
+    <div class="report-body mt-4">
+        <table *ngIf="ctx.results?.records?.length; else noRecords"
+            class="table table-hover gameboard-table gameboard-report">
+            <col>
+            <col>
+            <colgroup span="2"></colgroup>
+            <col>
+            <colgroup span="2"></colgroup>
+            <colgroup span="3"></colgroup>
+            <col>
 
-                <thead>
-                    <tr class="super-headers-row chill-headers" appThemeBg>
-                        <th scope="col" class="group-header">Summary</th>
-                        <th scope="col" class="group-header">Players</th>
-                        <th scope="col" colspan="2" class="group-header">
-                            Average Performance
-                        </th>
-                        <th scope="col" colspan="2" class="group-header">
-                            Deploys
-                        </th>
-                        <th scope="col" colspan="3" class="group-header">
-                            Competitive Solves
-                        </th>
-                        <th></th>
-                    </tr>
+            <thead>
+                <tr class="super-headers-row chill-headers" appThemeBg>
+                    <th scope="col" class="group-header">Summary</th>
+                    <th scope="col" class="group-header">Players</th>
+                    <th scope="col" colspan="2" class="group-header">
+                        Average Performance
+                    </th>
+                    <th scope="col" colspan="2" class="group-header">
+                        Deploys
+                    </th>
+                    <th scope="col" colspan="3" class="group-header">
+                        Competitive Solves
+                    </th>
+                    <th></th>
+                </tr>
 
-                    <tr class="headers-row" appThemeBg>
-                        <th>Challenge</th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="player-count" justifyContent="center">Players</app-sort-header>
-                        </th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="avg-score" justifyContent="center">
-                                Score
-                            </app-sort-header>
-                        </th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="avg-solve-time" justifyContent="center">
-                                Solve Time
-                            </app-sort-header>
-                        </th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="deploy-count-competitive"
-                                justifyContent="center">Competitive</app-sort-header>
-                        </th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="deploy-count-practice"
-                                justifyContent="center">Practice</app-sort-header>
-                        </th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="score-none" justifyContent="center">None</app-sort-header>
-                        </th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="score-partial" justifyContent="center">Partial</app-sort-header>
-                        </th>
-                        <th class="numeric-col">
-                            <app-sort-header sortBy="score-complete" justifyContent="center">Complete</app-sort-header>
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
+                <tr class="headers-row" appThemeBg>
+                    <th>Challenge</th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="player-count" justifyContent="center">Players</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-score" justifyContent="center">
+                            Score
+                        </app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="avg-solve-time" justifyContent="center">
+                            Solve Time
+                        </app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="deploy-count-competitive"
+                            justifyContent="center">Competitive</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="deploy-count-practice"
+                            justifyContent="center">Practice</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="score-none" justifyContent="center">None</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="score-partial" justifyContent="center">Partial</app-sort-header>
+                    </th>
+                    <th class="numeric-col">
+                        <app-sort-header sortBy="score-complete" justifyContent="center">Complete</app-sort-header>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
 
-                <tbody>
-                    <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
-                        <td class="report-field">
-                            {{record.challengeSpec.name}}
+            <tbody>
+                <tr class="data-row my-2" *ngFor="let record of ctx?.results?.records">
+                    <td class="report-field">
+                        {{record.challengeSpec.name}}
 
-                            <ul *ngIf="record.tags.length" class="d-flex align-items-center mb-1">
-                                <li *ngFor="let tag of record.tags">
-                                    <app-colored-text-chip size="small" [text]="tag"></app-colored-text-chip>
+                        <ul *ngIf="record.tags.length" class="d-flex align-items-center mb-1">
+                            <li *ngFor="let tag of record.tags">
+                                <app-colored-text-chip size="small" [text]="tag"></app-colored-text-chip>
+                            </li>
+                        </ul>
+
+                        <app-challenge-or-game-field [game]="record.game"
+                            mainLabelClass="text-muted font-weight-bold"></app-challenge-or-game-field>
+                    </td>
+                    <td class="report-field numerical">
+                        {{ record.distinctPlayerCount }}
+                    </td>
+                    <td class="report-field numerical">
+                        <div *ngIf="record.avgScore; else noValue">
+                            {{ record.avgScore | number:"1.0-2" }}
+                            <div class="subtle-info">of {{ record.points }}</div>
+                        </div>
+                    </td>
+                    <td class="report-field numerical">
+                        <span *ngIf="record.avgCompleteSolveTimeMs; else noValue">
+                            {{ record.avgCompleteSolveTimeMs | msToDuration }}
+                        </span>
+                    </td>
+                    <td class="report-field numerical">
+                        {{ record.deployCompetitiveCount }}
+                    </td>
+                    <td class="report-field numerical">
+                        {{ record.deployPracticeCount }}
+                    </td>
+                    <td class="report-field numerical">
+                        {{ record.solveZeroCount }}
+                    </td>
+                    <td class="report-field numerical">
+                        {{ record.solvePartialCount }}
+                    </td>
+                    <td class="report-field numerical">
+                        {{ record.solveCompleteCount }}
+                    </td>
+                    <td>
+                        <div class="btn-group" *ngIf="record" dropdown placement="bottom right">
+                            <button [id]="'context-trigger-basic-' + record.challengeSpec.id" dropdownToggle
+                                type="button" class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic">
+                                <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem">
+                                    <button class="dropdown-item btn" (click)="handleSpecClick(record.challengeSpec)">
+                                        View question performance
+                                    </button>
+                                </li>
+                                <li role="menuitem">
+                                    <button class="dropdown-item btn"
+                                        (click)="handleSubmissionsCsvClick(record.challengeSpec.id)">
+                                        Download submissions (CSV)
+                                    </button>
                                 </li>
                             </ul>
-
-                            <app-challenge-or-game-field [game]="record.game"
-                                mainLabelClass="text-muted font-weight-bold"></app-challenge-or-game-field>
-                        </td>
-                        <td class="report-field numerical">
-                            {{ record.distinctPlayerCount }}
-                        </td>
-                        <td class="report-field numerical">
-                            <div *ngIf="record.avgScore; else noValue">
-                                {{ record.avgScore | number:"1.0-2" }}
-                                <div class="subtle-info">of {{ record.points }}</div>
-                            </div>
-                        </td>
-                        <td class="report-field numerical">
-                            <span *ngIf="record.avgCompleteSolveTimeMs; else noValue">
-                                {{ record.avgCompleteSolveTimeMs | msToDuration }}
-                            </span>
-                        </td>
-                        <td class="report-field numerical">
-                            {{ record.deployCompetitiveCount }}
-                        </td>
-                        <td class="report-field numerical">
-                            {{ record.deployPracticeCount }}
-                        </td>
-                        <td class="report-field numerical">
-                            {{ record.solveZeroCount }}
-                        </td>
-                        <td class="report-field numerical">
-                            {{ record.solvePartialCount }}
-                        </td>
-                        <td class="report-field numerical">
-                            {{ record.solveCompleteCount }}
-                        </td>
-                        <td>
-                            <div class="btn-group" *ngIf="record" dropdown placement="bottom right">
-                                <button [id]="'context-trigger-basic-' + record.challengeSpec.id" dropdownToggle
-                                    type="button" class="btn ctx-menu-button rounded-circle"
-                                    aria-controls="dropdown-basic">
-                                    <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
-                                </button>
-                                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
-                                    aria-labelledby="button-basic">
-                                    <li role="menuitem">
-                                        <button class="dropdown-item btn"
-                                            (click)="handleSpecClick(record.challengeSpec)">
-                                            View question performance
-                                        </button>
-                                    </li>
-                                    <li role="menuitem">
-                                        <button class="dropdown-item btn"
-                                            (click)="handleSubmissionsCsvClick(record.challengeSpec.id)">
-                                            Download submissions (CSV)
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </ng-container>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="pager-container d-flex justify-content-end mt-4">
         <div class="flex-grow-1"></div>
-        <app-select-pager [itemCount]="ctx.results?.paging?.itemCount" [pageSize]="ctx.results?.paging?.pageSize"
-            (change)="handlePagingChange($event)"></app-select-pager>
+        <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
+            (pageChange)="handlePagingChange($event)"></app-select-pager>
     </div>
+    }
 </div>
 
 <ng-template #downladingCsv>
@@ -190,4 +194,3 @@
     <app-no-report-records recordDescription="challenges"></app-no-report-records>
 </ng-template>
 <ng-template #noValue>--</ng-template>
-<ng-template #loading><app-spinner>Loading your report...</app-spinner></ng-template>

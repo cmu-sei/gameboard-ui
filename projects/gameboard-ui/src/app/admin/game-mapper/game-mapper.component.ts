@@ -119,7 +119,7 @@ export class GameMapperComponent {
     if (!this.game)
       return;
 
-    const result = await firstValueFrom(this.gameSvc.uploadImage(this.game.id, "map", files[0]));
+    const result = await this.gameSvc.updateMapImage(this.game.id, files[0]);
     this.updateGameMapImage(result.filename);
   }
 
@@ -127,8 +127,8 @@ export class GameMapperComponent {
     if (!this.game)
       return;
 
-    const result = await firstValueFrom(this.gameSvc.deleteImage(this.game.id, "map"));
-    this.updateGameMapImage(result.filename);
+    await this.gameSvc.deleteMapImage(this.game.id);
+    this.updateGameMapImage();
   }
 
   handleBonusesChanged() {
@@ -221,11 +221,11 @@ export class GameMapperComponent {
     this.checkForZeroPointActiveSpecs(this.specs);
   }
 
-  private updateGameMapImage(imagePath: string) {
+  private updateGameMapImage(imagePath?: string) {
     if (!this.game)
       return;
 
-    this.game.background = imagePath;
+    this.game.background = imagePath || "";
     this.game.mapUrl = `${this.config.basehref}assets/map.png`;
   }
 }

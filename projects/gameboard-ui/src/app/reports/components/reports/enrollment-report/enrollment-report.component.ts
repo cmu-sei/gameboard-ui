@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { EnrollmentReportFlatParameters, EnrollmentReportStatSummary, EnrollmentReportTab } from './enrollment-report.models';
 import { ReportKey, ReportSponsor, ReportViewUpdate } from '@/reports/reports-models';
 import { EnrollmentReportService } from '@/reports/components/reports/enrollment-report/enrollment-report.service';
-import { Observable, first, firstValueFrom, map, of } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
 import { ReportComponentBase } from '../report-base.component';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
@@ -58,17 +58,9 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
     dateEndParamName: "practiceDateEnd"
   });
 
-  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "seasons"
-  });
-
-  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "series"
-  });
-
-  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "tracks"
-  });
+  protected seasonsQueryModel = MultiSelectQueryParamModel.fromParamName("seasons");
+  protected seriesQueryModel = MultiSelectQueryParamModel.fromParamName("series");
+  protected tracksQueryModel = MultiSelectQueryParamModel.fromParamName("tracks");
 
   constructor(
     private reportService: EnrollmentReportService) {
@@ -111,11 +103,6 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
   }
 
   private loadSummaryStats(parameters: EnrollmentReportFlatParameters): Observable<EnrollmentReportSummaryStats> {
-    // still very confused about why this is sometimes null, but it appears not to affect the experience or performance.
-    if (!this.reportService) {
-      return of({ importantStat: { label: "--", value: "--" }, otherStats: [] });
-    }
-
     return this.reportService.getSummaryStats(parameters).pipe(
       map(stats => {
         const leadingSponsorStat: ReportSummaryStat = {
@@ -140,8 +127,7 @@ export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentRep
           importantStat: leadingSponsorStat,
           otherStats
         };
-      }),
-      first(),
+      })
     );
   }
 }

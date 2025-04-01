@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { EnrollmentReportFlatParameters, EnrollmentReportRecord } from '../enrollment-report.models';
 import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
@@ -6,7 +7,6 @@ import { ReportResults } from '@/reports/reports-models';
 import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
 import { EnrollmentReportService } from '../enrollment-report.service';
-import { firstValueFrom } from 'rxjs';
 
 interface EnrollmentReportSummaryContext {
   results: ReportResults<EnrollmentReportRecord>;

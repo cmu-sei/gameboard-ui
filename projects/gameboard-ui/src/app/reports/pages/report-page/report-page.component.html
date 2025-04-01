@@ -4,8 +4,14 @@
             <li><a [routerLink]="'/reports'">Reports</a></li>
             <li class="mx-2">&gt;</li>
             <li>
-                <app-report-select [selectedReportKey]="(metaData$ | async)?.key"
-                    (reportSelect)="handleReportSelect($event)" class="mb-2"></app-report-select>
+                <ng-container *ngIf="reports.length">
+                    <select name="reports-select" class="form-control mb-2" [ngModel]="selectedReport"
+                        (ngModelChange)="handleReportSelect($event)" #reportSelect required>
+                        <option *ngFor="let report of reports" [ngValue]="report.key">
+                            {{ report.name }}
+                        </option>
+                    </select>
+                </ng-container>
             </li>
         </ol>
     </nav>

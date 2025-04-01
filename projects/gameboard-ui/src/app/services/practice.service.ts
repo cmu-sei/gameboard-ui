@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UserPracticeHistoryChallenge, UserPracticeSummary } from '@/prac/practice.models';
+import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UserPracticeSummary } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { GameCardContext } from '@/api/game-models';
 
@@ -30,10 +30,6 @@ export class PracticeService {
 
   getSettings(): Observable<PracticeModeSettings> {
     return this.http.get<PracticeModeSettings>(this.apiUrl.build("practice/settings"));
-  }
-
-  async getUserPracticeHistory(userId: string) {
-    return firstValueFrom(this.http.get<UserPracticeHistoryChallenge[]>(this.apiUrl.build(`practice/user/${userId}/history`)));
   }
 
   async getUserPracticeSummary(userId: string) {

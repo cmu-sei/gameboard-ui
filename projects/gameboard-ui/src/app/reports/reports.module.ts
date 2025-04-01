@@ -26,7 +26,6 @@ import { ReportCardComponent } from './components/report-card/report-card.compon
 import { ReportFieldNoValueComponent } from './components/report-field-no-value/report-field-no-value.component';
 import { ReportGlobalControlsComponent } from './components/report-global-controls/report-global-controls.component';
 import { ReportParametersContainerComponent } from './components/report-parameters-container/report-parameters-container.component';
-import { ReportSelectComponent } from './components/report-select/report-select.component';
 import { ReportStatSummaryComponent } from './components/report-stat-summary/report-stat-summary.component';
 import { ReportsHomeComponent } from './components/reports-home/reports-home.component';
 import { EnrollmentReportComponent } from './components/reports/enrollment-report/enrollment-report.component';
@@ -62,6 +61,7 @@ import { PlayerFeedbackResponsesModalComponent } from './components/reports/feed
 import { DoughnutChartComponent } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { LineChartComponent } from '@/core/components/line-chart/line-chart.component';
 import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
+import { ReportKey } from './reports-models';
 
 @NgModule({
   declarations: [
@@ -87,7 +87,6 @@ import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
     ReportGlobalControlsComponent,
     ReportPageComponent,
     ReportParametersContainerComponent,
-    ReportSelectComponent,
     ReportsHomeComponent,
     SupportReportComponent,
     SupportReportContextMenuComponent,
@@ -124,14 +123,14 @@ import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
         path: '',
         component: ReportPageComponent,
         children: [
-          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
-          { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
-          { path: "feedback", component: FeedbackReportComponent, title: "Feedback Report" },
-          { path: 'feedback-legacy', component: FeedbackGameReportComponent, title: "Feedback Report (Legacy)" },
-          { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
-          { path: 'players', component: PlayersReportComponent, title: "Players Report" },
-          { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report" },
-          { path: 'support', component: SupportReportComponent, title: "Support Report" }
+          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report", data: { reportKey: ReportKey.ChallengesReport } },
+          { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report", data: { reportKey: ReportKey.EnrollmentReport } },
+          { path: "feedback", component: FeedbackReportComponent, title: "Feedback Report", data: { reportKey: ReportKey.FeedbackReport } },
+          { path: 'feedback-legacy', component: FeedbackGameReportComponent, title: "Feedback Report (Legacy)", data: { reportKey: ReportKey.FeedbackReportLegacy } },
+          { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report", data: { reportKey: ReportKey.PracticeAreaReport } },
+          { path: 'players', component: PlayersReportComponent, title: "Players Report", data: { reportKey: ReportKey.PlayersReport } },
+          { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report", data: { reportKey: ReportKey.SiteUsageReport } },
+          { path: 'support', component: SupportReportComponent, title: "Support Report", data: { reportKey: ReportKey.SupportReport } }
         ]
       }
     ]),

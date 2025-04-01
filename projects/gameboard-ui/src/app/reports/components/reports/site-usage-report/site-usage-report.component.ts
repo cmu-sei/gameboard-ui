@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { SiteUsageReportService } from './site-usage-report.service';
-import { SiteUsageReport, SiteUsageReportFlatParameters, SiteUsageReportPlayersModalParameters } from './site-usage-report.models';
+import { SiteUsageReport, SiteUsageReportFlatParameters as SiteUsageReportParameters, SiteUsageReportPlayersModalParameters } from './site-usage-report.models';
 import { ReportComponentBase } from '../report-base.component';
 import { ReportKey, ReportViewUpdate } from '@/reports/reports-models';
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
@@ -18,8 +18,8 @@ import { SiteUsageReportChallengesListComponent } from './site-usage-report-chal
   ],
   templateUrl: './site-usage-report.component.html',
 })
-export class SiteUsageReportComponent extends ReportComponentBase<SiteUsageReportFlatParameters> {
-  protected currentParameters?: SiteUsageReportFlatParameters;
+export class SiteUsageReportComponent extends ReportComponentBase<SiteUsageReportParameters> {
+  protected currentParameters?: SiteUsageReportParameters;
   protected reportData?: SiteUsageReport;
   protected dateQueryModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
     dateStartParamName: "startDate",
@@ -45,8 +45,9 @@ export class SiteUsageReportComponent extends ReportComponentBase<SiteUsageRepor
   }
 
   protected async showPlayersModal(playerParameters?: SiteUsageReportPlayersModalParameters) {
-    if (!this.currentParameters)
+    if (!this.currentParameters) {
       return;
+    }
 
     this.modalService.openComponent({
       content: SiteUsagePlayerListComponent,
@@ -61,8 +62,9 @@ export class SiteUsageReportComponent extends ReportComponentBase<SiteUsageRepor
   }
 
   protected async showSponsorsModal() {
-    if (!this.currentParameters)
+    if (!this.currentParameters) {
       return;
+    }
 
     this.modalService.openComponent({
       content: SiteUsageReportSponsorsModalComponent,
@@ -75,7 +77,7 @@ export class SiteUsageReportComponent extends ReportComponentBase<SiteUsageRepor
     });
   }
 
-  protected async updateView(parameters: SiteUsageReportFlatParameters): Promise<ReportViewUpdate> {
+  protected async updateView(parameters: SiteUsageReportParameters): Promise<ReportViewUpdate> {
     this.currentParameters = parameters;
     this.reportData = await this.reportService.get(parameters);
 

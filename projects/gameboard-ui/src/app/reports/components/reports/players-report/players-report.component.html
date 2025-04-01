@@ -16,9 +16,17 @@
         <app-parameter-sponsor name="sponsors" ngDefaultControl></app-parameter-sponsor>
     </app-report-parameters-container>
 
+    @if (isLoading) {
+    <app-spinner>Loading players...</app-spinner>
+    } @else if (!ctx.results) {
+    <p class="text-center text-muted mb-4">
+        Choose your parameters and press <strong>Generate Report</strong> above to see
+        your results.
+    </p>
+    } @else {
     <app-report-stat-summary class="d-block mb-4" *ngIf="ctx.results?.overallStats; else loading"
         [importantStat]="{ label: 'Total Players', value: ctx.results!.overallStats.userCount } "
-        [stats]="ctx.results?.overallStats | playersReportSummaryToStats"></app-report-stat-summary>
+        [stats]="ctx.results.overallStats | playersReportSummaryToStats"></app-report-stat-summary>
 
     <ng-container *ngIf="!ctx.isLoading; else loading">
         <div class="report-body mt-4">
@@ -128,9 +136,10 @@
 
     <div class="pager-container d-flex justify-content-end mt-4">
         <div class="flex-grow-1"></div>
-        <app-select-pager [itemCount]="ctx.results?.paging?.itemCount" [pageSize]="ctx.results?.paging?.pageSize"
-            (change)="handlePagingChange($event)"></app-select-pager>
+        <app-select-pager [itemCount]="ctx.results.paging.itemCount" [pageSize]="ctx.results.paging.pageSize"
+            (pageChange)="handlePagingChange($event)"></app-select-pager>
     </div>
+    }
 </div>
 
 <ng-template #multiSelectGame let-context>

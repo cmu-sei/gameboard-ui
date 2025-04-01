@@ -21,11 +21,14 @@ import { RouterService } from '@/services/router.service';
   providers: [UnsubscriberService]
 })
 export class DashboardComponent implements OnInit {
+  private api = inject(GameService);
   private importExportService = inject(GameImportExportService);
   private localStorageService = inject(LocalStorageService);
+  private modalService = inject(ModalConfirmService);
+  private permissionsService = inject(UserRolePermissionsService);
   private routerService = inject(RouterService);
+  private toastService = inject(ToastService);
   private unsub = inject(UnsubscriberService);
-
 
   protected errors: any[] = [];
   protected fa = fa;
@@ -34,18 +37,9 @@ export class DashboardComponent implements OnInit {
   protected isLoadingGames = false;
   protected listGamesQuery: ListGamesQuery = {};
   protected typing$ = new BehaviorSubject<string>("");
-  protected useTableView: boolean;
+  protected useTableView: boolean = false;
 
-  constructor(
-    private api: GameService,
-    private modalService: ModalConfirmService,
-    private permissionsService: UserRolePermissionsService,
-    private toastService: ToastService
-  ) {
-    // use local storage to keep toggle preference when returning to dashboard for continuity
-    // default to false (card view) when no preference stored yet
-    this.useTableView = this.localStorageService.getAs<boolean>(StorageKey.GamesAdminUseTableView, false);
-
+  constructor() {
     this.unsub.add(this.typing$.pipe(
       debounceTime(250),
     ).subscribe(async () => {
@@ -54,6 +48,9 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // use local storage to keep toggle preference when returning to dashboard for continuity
+    // default to false (card view) when no preference stored yet
+    this.useTableView = this.localStorageService.getAs<boolean>(StorageKey.GamesAdminUseTableView, false);
     this.handleLoadGames();
   }
 
@@ -112,12 +109,18 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  clone(game: { id: string, name: string }): void {
-    // this.creating$.next({ ...game, name: `${game.name}_CLONE`, isPublished: false, isClone: true });
-  }
+  async clone(game: { id: string, name: string }): Promise<void> {
+    this.errors = [];
+    const newGameName = `${game.name} (Cloned)`;
 
-  trackById(index: number, g: Game): string {
-    return g.id;
+    try {
+      await this.api.clone({ gameId: game.id, name: newGameName });
+      await this.handleLoadGames();
+      this.toastService.showMessage(`Created the cloned game **${newGameName}**.`);
+    }
+    catch (err: any) {
+      this.errors.push(err);
+    }
   }
 
   async handleExport(gameIds: string[], includePracticeAreaCertificateTemplate = false) {

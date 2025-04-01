@@ -41,6 +41,12 @@ export class GameCenterComponent {
       }
     }));
 
+    unsub.add(this.gameService.gameLogoUpdated$.subscribe(update => {
+      if (this.gameCenterCtx) {
+        this.gameCenterCtx.logo = update.logoFile;
+      }
+    }));
+
     unsub.add(interval(30000).subscribe(async () => {
       if (this.game && this.game?.isLive)
         this.gameCenterCtx = await this.adminService.getGameCenterContext(this.game.id);

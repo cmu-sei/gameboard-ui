@@ -44,17 +44,9 @@ export class PracticeModeReportComponent
     dateEndParamName: "practiceDateEnd"
   });
 
-  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "seasons"
-  });
-
-  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "series"
-  });
-
-  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = new MultiSelectQueryParamModel<string>({
-    paramName: "tracks"
-  });
+  protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("seasons");
+  protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("series");
+  protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("tracks");
 
   constructor(protected reportService: PracticeModeReportService) {
     super();
@@ -80,7 +72,7 @@ export class PracticeModeReportComponent
   }
 
   protected handleTabSelected(tabId: string) {
-    const tabIdToEnum: keyof typeof PracticeModeReportGrouping = tabId as keyof typeof PracticeModeReportGrouping;
+    const tabIdToEnum = tabId as keyof typeof PracticeModeReportGrouping;
     this.selectedTab = PracticeModeReportGrouping[tabIdToEnum];
   }
 

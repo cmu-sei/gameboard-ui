@@ -14,6 +14,6 @@ export class GameToGameCenterLinkPipe implements PipeTransform {
       return undefined;
     }
 
-    return this.routerService.toGameCenter(value);
+    return this.routerService.getGameCenterUrl(value);
   }
 }
