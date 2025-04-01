@@ -1,6 +1,5 @@
 import { PagingArgs } from '@/api/models';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-select-pager',
@@ -10,7 +9,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 export class SelectPagerComponent implements OnChanges {
   @Input() itemCount?: number;
   @Input() pageSize?: number;
-  @Output() change = new EventEmitter<PagingArgs>();
+  @Output() pageChange = new EventEmitter<PagingArgs>();
 
   protected isHidden = false;
   protected pageNumber = 0;
@@ -22,14 +21,15 @@ export class SelectPagerComponent implements OnChanges {
     const pageSize = changes.pageSize?.currentValue || this.pageSize;
     this.isHidden = (itemCount <= pageSize);
 
-    if (shouldCalcPages)
+    if (shouldCalcPages) {
       this.calcPages({ itemCount, pageSize });
+    }
   }
 
   private calcPages(config: { itemCount: number, pageSize: number }) {
     if (!config.itemCount || !config.pageSize) {
       this.pages = [];
-      this.setPageNumber(this.pageNumber || 0);
+      this.setPageNumber(0);
       return;
     }
 
@@ -40,17 +40,24 @@ export class SelectPagerComponent implements OnChanges {
     this.pages = Array(currentPages).fill(currentPages).map((x, i) => i);
 
     // set page to clamped value
-    this.setPageNumber(this.pageNumber);
+    const clampedPageNumber = this.clampPageNumber(this.pageNumber);
+
+    if (this.pageNumber !== clampedPageNumber) {
+      this.setPageNumber(clampedPageNumber);
+    }
   }
 
   protected setPageNumber(pageNumber: number) {
-    let clampedPageNumber = Math.max(0, pageNumber);
-    clampedPageNumber = Math.min(pageNumber, this.pages.length - 1);
+    const clampedPageNumber = this.clampPageNumber(pageNumber);
+    this.pageNumber = this.clampPageNumber(clampedPageNumber);
+    this.pageChange.emit({ pageNumber: clampedPageNumber, pageSize: this.pageSize! });
+  }
+
+  private clampPageNumber(newPageNumber: number): number {
+    let clampedPageNumber = Math.max(0, newPageNumber);
+    clampedPageNumber = Math.min(newPageNumber, this.pages.length - 1);
     clampedPageNumber = clampedPageNumber < 0 ? 0 : clampedPageNumber;
 
-    if (this.pageNumber !== clampedPageNumber) {
-      this.pageNumber = clampedPageNumber;
-      this.change.emit({ pageNumber: this.pageNumber, pageSize: this.pageSize! });
-    }
+    return clampedPageNumber;
   }
 }

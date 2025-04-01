@@ -33,9 +33,6 @@ export class ReportPageComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.reports = await this.reportsService.list();
-    this.unsub.add(this.activeReportService.metaData$.subscribe(m => {
-      console.log("report metadata", m);
-    }));
   }
 
   protected handleReportSelect(reportKey?: ReportKey) {

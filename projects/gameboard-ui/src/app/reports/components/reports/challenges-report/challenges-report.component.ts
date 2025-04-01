@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ReportComponentBase } from '../report-base.component';
 import { ChallengesReportFlatParameters, ChallengesReportRecord, ChallengesReportStatSummary } from './challenges-report.models';
-import { ReportKey, ReportResultsWithOverallStats, ReportViewUpdate } from '@/reports/reports-models';
+import { ReportResultsWithOverallStats, ReportViewUpdate } from '@/reports/reports-models';
 import { ChallengesReportService } from '../challenges-report.service';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { SimpleEntity } from '@/api/models';

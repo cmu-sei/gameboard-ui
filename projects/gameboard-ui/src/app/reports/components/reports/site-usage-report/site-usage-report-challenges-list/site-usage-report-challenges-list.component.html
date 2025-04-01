@@ -33,7 +33,7 @@
     <ng-container *ngIf="(results?.paging?.itemCount || 0) > (results?.paging?.pageSize || 0)">
         <hr />
         <app-select-pager [pageSize]="results?.paging?.pageSize" [itemCount]="results?.paging?.itemCount"
-            (change)="load($event)"></app-select-pager>
+            (pageChange)="load($event)"></app-select-pager>
     </ng-container>
 </app-modal-content>
 
