@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { SimpleEntity } from '@/api/models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { PlayersReportParticipationSummaryComponent, PlayersReportParticipationSummaryContext } from '../../players-report-participation-summary/players-report-participation-summary.component';
+import { PlayersReportParticipationSummaryComponent } from '../../players-report-participation-summary/players-report-participation-summary.component';
 
 interface PlayersReportContext {
   isLoading: boolean;

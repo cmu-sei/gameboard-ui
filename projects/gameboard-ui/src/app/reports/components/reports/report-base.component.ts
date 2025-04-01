@@ -27,6 +27,7 @@ export abstract class ReportComponentBase<TParameters extends {}> {
 
     protected handlePagingChange(paging: PagingArgs) {
         this.routerService.updateQueryParams({ parameters: { ...paging } });
+        this.activeReportService.generateRequested$.next();
     }
 
     private async _updateView(parameters: TParameters) {

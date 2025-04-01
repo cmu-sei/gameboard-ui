@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom, from, map } from 'rxjs';
-import { ReportKey, ReportMetaData, ReportViewModel } from '@/reports/reports-models';
+import { ReportKey, ReportViewModel } from '@/reports/reports-models';
 import { ReportsService } from '@/reports/reports.service';
 import { ActiveReportService } from '@/reports/services/active-report.service';
 import { RouterService } from '@/services/router.service';
@@ -33,6 +33,25 @@ export class ReportPageComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.reports = await this.reportsService.list();
+
+    if (this.reports.length) {
+      // if someone linked in a specific report, try to identify it here
+      const requestedReport = this.route.snapshot.firstChild?.data?.reportKey as ReportKey;
+
+      if (requestedReport) {
+        this.selectedReport = requestedReport;
+        this.displayReport(this.selectedReport, this.route.snapshot.queryParams);
+      } else {
+        this.selectedReport = this.reports[0].key as ReportKey;
+        this.displayReport(this.reports[0].key as ReportKey, this.route.snapshot.queryParams);
+
+        // automatically run the report if there are any
+        // parameters in the QS (to support linking in from outside the app)
+        if (this.route.snapshot.queryParams && Object.keys(this.route.snapshot.queryParams).length) {
+          this.activeReportService.generateRequested$.next();
+        }
+      }
+    }
   }
 
   protected handleReportSelect(reportKey?: ReportKey) {

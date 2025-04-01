@@ -1,5 +1,10 @@
 @import "../../../../scss/variables";
 
+:host {
+  display: block;
+  height: 100%;
+}
+
 .component-container {
   background-color: unset;
   color: $success;

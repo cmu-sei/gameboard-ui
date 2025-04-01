@@ -61,6 +61,7 @@ import { PlayerFeedbackResponsesModalComponent } from './components/reports/feed
 import { DoughnutChartComponent } from '@/core/components/doughnut-chart/doughnut-chart.component';
 import { LineChartComponent } from '@/core/components/line-chart/line-chart.component';
 import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
+import { ReportKey } from './reports-models';
 
 @NgModule({
   declarations: [
@@ -122,14 +123,14 @@ import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
         path: '',
         component: ReportPageComponent,
         children: [
-          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report" },
-          { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report" },
-          { path: "feedback", component: FeedbackReportComponent, title: "Feedback Report" },
-          { path: 'feedback-legacy', component: FeedbackGameReportComponent, title: "Feedback Report (Legacy)" },
-          { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report" },
-          { path: 'players', component: PlayersReportComponent, title: "Players Report" },
-          { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report" },
-          { path: 'support', component: SupportReportComponent, title: "Support Report" }
+          { path: 'challenges', component: ChallengesReportComponent, title: "Challenges Report", data: { reportKey: ReportKey.ChallengesReport } },
+          { path: 'enrollment', component: EnrollmentReportComponent, title: "Enrollment Report", data: { reportKey: ReportKey.EnrollmentReport } },
+          { path: "feedback", component: FeedbackReportComponent, title: "Feedback Report", data: { reportKey: ReportKey.FeedbackReport } },
+          { path: 'feedback-legacy', component: FeedbackGameReportComponent, title: "Feedback Report (Legacy)", data: { reportKey: ReportKey.FeedbackReportLegacy } },
+          { path: 'practice-area', component: PracticeModeReportComponent, title: "Practice Area Report", data: { reportKey: ReportKey.PracticeAreaReport } },
+          { path: 'players', component: PlayersReportComponent, title: "Players Report", data: { reportKey: ReportKey.PlayersReport } },
+          { path: 'site-usage', component: SiteUsageReportComponent, title: "Site Usage Report", data: { reportKey: ReportKey.SiteUsageReport } },
+          { path: 'support', component: SupportReportComponent, title: "Support Report", data: { reportKey: ReportKey.SupportReport } }
         ]
       }
     ]),
