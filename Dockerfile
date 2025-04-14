@@ -1,18 +1,17 @@
 # multi-stage target: dev
 
-FROM node:18-alpine AS dev
+FROM node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc AS dev
 WORKDIR /app
 COPY package.json package-lock.json tools/ ./
 RUN npm install && \
   sh fixup-wmks.sh
 COPY . .
 RUN if [ -e "wmks.tar" ]; then tar xf wmks.tar -C node_modules/vmware-wmks; fi
-RUN $(npm root)/.bin/ng build gameboard-ui --output-path /app/dist && \
-  $(npm root)/.bin/ng build gameboard-mks --base-href=/mks/ --output-path /app/dist/mks
+RUN $(npm root)/.bin/ng build gameboard-ui --output-path /app/dist
 CMD ["npm", "start"]
 
 # multi-stage target: prod
-FROM nginx:alpine
+FROM nginx:1.27.4-alpine-slim@sha256:b05aceb5ec1844435cae920267ff9949887df5b88f70e11d8b2871651a596612
 WORKDIR /var/www
 COPY --from=dev /app/dist .
 COPY --from=dev /app/dist/assets/oidc-silent.html .
