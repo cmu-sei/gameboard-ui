@@ -7,7 +7,7 @@ RUN npm install && \
   sh fixup-wmks.sh
 COPY . .
 RUN if [ -e "wmks.tar" ]; then tar xf wmks.tar -C node_modules/vmware-wmks; fi
-RUN $(npm root)/.bin/ng build gameboard-consoles --prod --output-path /app/dist
+RUN $(npm root)/.bin/ng build gameboard-consoles -c prod --output-path /app/dist
 RUN $(npm root)/.bin/ng build gameboard-ui --prod --output-path /app/dist
 CMD ["npm", "start"]
 
