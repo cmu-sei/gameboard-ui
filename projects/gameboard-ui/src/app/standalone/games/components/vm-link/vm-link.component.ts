@@ -14,7 +14,7 @@ import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
   ],
   styles: [
     ".icon-container { border-right: solid 1px #fff; padding: 0px 4px 4px 4px !important }",
-    "a { border: solid 1px #fff }",
+    "a, a:focus { border: solid 1px #fff; color: #fff }",
     "a:hover { color: #41ad57; border: solid 1px #41ad57; }",
     "a:hover .icon-container { border-right: solid 1px #41ad57; }",
     "fa-icon { margin-bottom: 4px }"
