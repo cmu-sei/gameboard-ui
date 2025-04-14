@@ -148,7 +148,7 @@ export class PlayComponent implements OnChanges {
       return vmUrls;
 
     for (const vm of challenge.vms) {
-      vmUrls[vm.id] = this.routerService.buildVmConsoleUrl(challenge.id, vm, challenge.mode === PlayerMode.practice);
+      vmUrls[vm.id] = this.routerService.buildVmConsoleUrl(challenge.id, vm, challenge.mode === PlayerMode.practice).toString();
     }
 
     return vmUrls;

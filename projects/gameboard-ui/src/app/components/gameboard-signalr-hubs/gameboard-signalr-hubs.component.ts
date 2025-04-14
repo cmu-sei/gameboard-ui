@@ -6,14 +6,21 @@ import { GameHubService } from '@/services/signalR/game-hub.service';
 import { LogService } from '@/services/log.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ApiUser } from '@/api/user-models';
-import { StatusLightState } from '@/core/components/status-light/status-light.component';
+import { StatusLightComponent, StatusLightState } from '@/core/components/status-light/status-light.component';
 import { SupportHubService } from '@/services/signalR/support-hub.service';
 import { UserHubService } from '@/services/signalR/user-hub.service';
 import { Observable } from 'rxjs';
 import { GameHubActiveEnrollment } from '@/services/signalR/game-hub.models';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-gameboard-signalr-hubs',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TitleCasePipe,
+    StatusLightComponent,
+  ],
   templateUrl: './gameboard-signalr-hubs.component.html',
   styleUrls: ['./gameboard-signalr-hubs.component.scss'],
   providers: [UnsubscriberService]

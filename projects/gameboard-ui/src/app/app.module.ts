@@ -19,7 +19,6 @@ import { AppComponent } from './app.component';
 import { ConfigService } from './utility/config.service';
 import { UserService as CurrentUserService } from './utility/user.service';
 import { UtilityModule } from './utility/utility.module';
-import { SupportPillComponent } from './support/support-pill/support-pill.component';
 import { CoreModule } from './core/core.module';
 import { ModalConfirmService } from './services/modal-confirm.service';
 import { NotificationService } from './services/notification.service';
@@ -28,9 +27,6 @@ import { UserService } from './api/user.service';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NAVIGATOR } from './services/navigator.service';
 
-import { AppNavComponent } from './components/nav/nav.component';
-import { SponsorSelectBannerComponent } from './components/sponsor-select-banner/sponsor-select-banner.component';
-import { GameboardSignalRHubsComponent } from './components/gameboard-signalr-hubs/gameboard-signalr-hubs.component';
 import { SignalRService } from './services/signalR/signalr.service';
 import { LogService } from './services/log.service';
 import { SystemNotificationsModule } from './system-notifications/system-notifications.module';
@@ -42,10 +38,6 @@ import { ThemeBgDirective } from './core/directives/theme-bg.directive';
 @NgModule({
   declarations: [
     AppComponent,
-    AppNavComponent,
-    SponsorSelectBannerComponent,
-    SupportPillComponent,
-    GameboardSignalRHubsComponent,
   ],
   imports: [
     BrowserModule,

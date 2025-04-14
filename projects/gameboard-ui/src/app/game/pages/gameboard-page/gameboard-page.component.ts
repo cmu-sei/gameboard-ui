@@ -236,20 +236,7 @@ export class GameboardPageComponent {
   }
 
   console(vm: VmState): void {
-    let isUrl = false;
-
-    try {
-      new URL(vm.id);
-      isUrl = true;
-    } catch {
-      isUrl = false;
-    }
-
-    if (isUrl) {
-      this.windowService.open(this.routerService.buildVmConsoleUrl(vm.isolationId, vm));
-    } else {
-      this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`);
-    }
+    this.windowService.open(this.routerService.buildVmConsoleUrl(vm.isolationId, vm));
   }
 
   mouseenter(e: MouseEvent, spec: BoardSpec) {

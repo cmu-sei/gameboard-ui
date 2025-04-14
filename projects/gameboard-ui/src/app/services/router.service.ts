@@ -148,7 +148,14 @@ export class RouterService implements OnDestroy {
       throw new Error(`Can't launch a VM console without a challengeId.`);
     }
 
-    return `${this.config.mkshost}?f=1&s=${challengeId}&v=${vm.name || 'Console'}${isPractice ? "&l=true" : ""}`;
+    return this.router.createUrlTree(["c", "console"], {
+      queryParams: {
+        fullscreen: true,
+        challengeId,
+        console: vm.name,
+        l: isPractice ? true : undefined
+      }
+    });
   }
 
   public deleteQueryParams(): Promise<boolean> {

@@ -13,10 +13,11 @@ import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
     SafeUrlPipe
   ],
   styles: [
-    ".icon-container { border-right: solid 1px #fff; padding: 0px 4px 0px 4px !important }",
+    ".icon-container { border-right: solid 1px #fff; padding: 0px 4px 4px 4px !important }",
     "a { border: solid 1px #fff }",
     "a:hover { color: #41ad57; border: solid 1px #41ad57; }",
-    "a:hover .icon-container { border-right: solid 1px #41ad57; }"
+    "a:hover .icon-container { border-right: solid 1px #41ad57; }",
+    "fa-icon { margin-bottom: 4px }"
   ],
   template: `
     <a *ngIf="vm" class="btn btn-sm btn-dark mr-2 mb-2 d-flex p-0 align-items-center" [href]="vm.url | safeUrl" target="_blank"
@@ -24,7 +25,7 @@ import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
         <div class="icon-container">
           <fa-icon class="d-block" [icon]="fa.computer"></fa-icon>
         </div>
-        <div class="p-2">{{vm.name}}</div>
+        <div class="py-1 px-2">{{vm.name}}</div>
     </a>
 `,
 })

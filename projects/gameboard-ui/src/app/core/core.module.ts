@@ -92,7 +92,6 @@ import { SponsoredEntitiesToSponsorsPipe } from './pipes/sponsored-entities-to-s
 import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
 import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
 import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
-import { StatusLightComponent } from './components/status-light/status-light.component';
 import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToBadgeStylePipe } from './pipes/text-to-badge-style.pipe';
 import { TicketListComponent } from './components/ticket-list/ticket-list.component';
@@ -197,7 +196,6 @@ const PUBLIC_DECLARATIONS = [
     SponsorToLogoUriPipe,
     SponsorsToLogoUrisPipe,
     SponsorLogoFileNamesToUrisPipe,
-    StatusLightComponent,
     SumArrayPipe,
     TextToBadgeStylePipe,
     ToggleClassPipe,

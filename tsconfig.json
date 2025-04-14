@@ -23,6 +23,9 @@
     "paths": {
       "@/*": [
         "./projects/gameboard-ui/src/app/*"
+      ],
+      "gameboard-consoles": [
+        "./dist/gameboard-consoles"
       ]
     },
     "sourceMap": true,

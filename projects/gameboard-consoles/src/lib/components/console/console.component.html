@@ -1,0 +1,118 @@
+<gb-edge-hover-listener edge="left" (isHovering)="handleToolsHover($event)"></gb-edge-hover-listener>
+
+<div class="console-wrapper">
+    @if (cogIsVisible()) {
+    <button class="btn btn-success gb-console-button overlay overlay-tl cog" (click)="showUtilities()">
+        &#9881;
+    </button>
+    }
+
+    <div #consoleCanvas id="console-canvas-" class="canvas" [class.embedded]="componentConfig().isReadOnly"
+        [class.mock-console-connected]="isMock && state==='connected'">
+
+        @if(state === "stopped" || state === "disconnected") {
+        <div class="align-mm" [class.hidden]="isConnected()">
+            <h1>{{shadowstate}}</h1>
+            <button class="btn btn-lg btn-success" (click)="stateButtonClicked()">{{stateIcon}}</button>
+        </div>
+        }
+
+        @if (shadowstate === "connected") {
+        <div class="align-mm overlay-box">
+            <h1>{{shadowstate}}</h1>
+        </div>
+        }
+
+        @if (state === 'loading') {
+        <gb-progress-indicator class="align-mm">Loading...</gb-progress-indicator>
+        }
+
+        @if (state === "failed" || state === "forbidden") {
+        <div class="align-mm">
+            <h1 class="text-danger">{{stateIcon}}</h1>
+            <button class="btn" (click)="stateButtonClicked()">Retry</button>
+        </div>
+        }
+    </div>
+
+    @if (isConnected() && showTools) {
+    <div class="tools" (mouseleave)="onToolsLeave($event)">
+        <div>
+            <button class="btn cog gb-console-button" (click)="showUtilities()">&#x2699;</button>
+        </div>
+
+        <div class="tools-text">
+            <p>
+                <small>
+                    If the "Tools" button is in the way, hide it here. If hidden, you can
+                    open the tools panel by moving the mouse to the left edge of the console.
+                </small>
+            </p>
+            <div class="show-tools-button-form-group form-group form-check">
+                <input type="checkbox" class="form-check-input" id="showCog" [(ngModel)]="showCog">
+                <label class="form-check-label pl-2" for="showCog">
+                    Show tools button
+                </label>
+            </div>
+        </div>
+
+        <div class="flex-vs mt-4">
+            <div class="text-light text-upper">System</div>
+            <button class="btn btn-success gb-console-button w-100 mb-2" (click)="console.sendCAD()">
+                <i class="fa fa-keyboard-o fa-2x"></i> Ctrl + Alt + Del
+            </button>
+            <button class="btn btn-success w-100" (click)="start()">
+                <i class="fa fa-power-off fa-2x"></i> Reset Power
+            </button>
+        </div>
+
+        <div class="flex-vs mt-4">
+            <div class="text-light text-upper">Screen</div>
+            <button class="btn  btn-success gb-console-button w-100 mb-2" (click)="handleToggleScale()">
+                <i class="fa fa-arrows-alt fa-2x"></i> Toggle Scale
+            </button>
+            <button class="btn btn-success gb-console-button w-100 mb-2" (click)="enterFullscreen()">
+                <i class="fa fa-arrows-alt fa-2x"></i> Enter Fullscreen
+            </button>
+            <button class="btn  btn-success gb-console-button w-100 mb-2" (click)="console.showKeyboard()">
+                <i class="fa fa-keyboard-o fa-2x"></i> Show Device Keyboard
+            </button>
+        </div>
+
+        <div class="mt-5">
+            <div class="tools-text">
+                <h3>Clipboard</h3>
+                <markdown>
+                    {{ clipboardHelpMarkdown$ | async }}
+                </markdown>
+            </div>
+        </div>
+        <div class="mt-2">
+            <div class="btn-group">
+                <button class="btn btn-success gb-console-button" (click)="clip()">
+                    @if(!justClipped) {
+                    <span class="fa fa-long-arrow-down">&#x21e7;</span>
+                    } @else {
+                    <i class="text-success">&#x2713;</i>
+                    }
+                    Copy
+                </button>
+                <button class="btn btn-success gb-console-button" (click)="paste()">
+                    @if (!justPasted) {
+                    <span class="fa fa-long-arrow-up">&#x21e9;</span>
+                    } @else {
+                    <i class="text-success">&#x2713;</i>
+                    }
+                    Paste
+                </button>
+                <button class="btn btn-success gb-console-button" (click)="cliptext=''">
+                    <i class="fa fa-remove"></i> Clear
+                </button>
+            </div>
+
+            <textarea class="form-control" placeholder="Use this textbox to move text to and from the virtual machine."
+                rows="20" [(ngModel)]="cliptext"></textarea>
+        </div>
+    </div>
+    }
+</div>

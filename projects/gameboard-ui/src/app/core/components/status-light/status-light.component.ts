@@ -1,9 +1,12 @@
 import { Component, Input, TemplateRef } from '@angular/core';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 export type StatusLightState = "none" | "preparing" | "active" | "error";
 
 @Component({
   selector: 'app-status-light',
+  standalone: true,
+  imports: [TooltipModule],
   styleUrls: ['./status-light.component.scss'],
   template: `
     <div class="component-container d-flex justify-content-center align-items-center" [tooltip]="tooltip || ''">

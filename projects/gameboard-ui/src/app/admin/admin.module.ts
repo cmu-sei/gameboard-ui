@@ -94,6 +94,7 @@ import { SystemAdminComponent } from './components/system-admin/system-admin.com
 import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
 import { SessionExtensionGameEndWarningComponent } from "./components/session-extension-game-end-warning/session-extension-game-end-warning.component";
 import { GamesTableViewComponent } from './components/games-table-view/games-table-view.component';
+import { StatusLightComponent } from '@/core/components/status-light/status-light.component';
 
 @NgModule({
   declarations: [
@@ -228,6 +229,7 @@ import { GamesTableViewComponent } from './components/games-table-view/games-tab
     SafeUrlPipe,
     SessionExtensionGameEndWarningComponent,
     SpinnerComponent,
+    StatusLightComponent,
     ToSupportCodePipe,
     CertificatePreviewerComponent,
     CertificateTemplatePickerComponent,

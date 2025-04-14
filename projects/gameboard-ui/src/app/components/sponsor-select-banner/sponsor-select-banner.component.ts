@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { Observable, filter, map, tap } from 'rxjs';
 import { LogService } from '@/services/log.service';
 import { RouterService } from '@/services/router.service';
@@ -9,6 +11,11 @@ import { Sponsor } from '@/api/sponsor-models';
 
 @Component({
   selector: 'app-sponsor-select-banner',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
   template: `
     <div *ngIf="(user$ | async) && (!(sponsor$ | async) || (user$ | async)!.hasDefaultSponsor)"
       class="sponsor-select-banner-component position-sticky width-100 bg-warning py-2 text-center">

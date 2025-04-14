@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { TocFile, TocService } from '@/api/toc.service';
 import { ApiUser } from '@/api/user-models';
@@ -8,9 +9,21 @@ import { Component, inject, OnInit } from '@angular/core';
 import { fa } from '@/services/font-awesome.service';
 import { AuthService } from '@/utility/auth.service';
 import { RouterService } from '@/services/router.service';
+import { SupportPillComponent } from '@/support/support-pill/support-pill.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CommonModule } from '@angular/common';
+import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 
 @Component({
   selector: 'app-nav',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FontAwesomeModule,
+    IfHasPermissionDirective,
+    SupportPillComponent,
+  ],
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.scss'],
   providers: [UnsubscriberService]
