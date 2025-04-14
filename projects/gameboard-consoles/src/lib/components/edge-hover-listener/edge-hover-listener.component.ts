@@ -6,7 +6,6 @@ import { debounceTime, distinctUntilChanged, fromEvent, map, Subscription } from
 @Component({
   selector: 'gb-edge-hover-listener',
   standalone: true,
-  imports: [],
   template: ""
 })
 export class EdgeHoverListenerComponent implements AfterViewInit, OnDestroy {

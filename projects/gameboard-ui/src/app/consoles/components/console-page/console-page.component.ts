@@ -8,7 +8,6 @@ import { ConsolesService } from '@/api/consoles.service';
 import { ConsoleId, ConsoleUserActivityType } from '@/api/consoles.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { AppTitleService } from '@/services/app-title.service';
-import { DateTime } from 'luxon';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
