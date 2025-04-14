@@ -1,6 +1,6 @@
 # multi-stage target: dev
 
-FROM node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc AS dev
+FROM node:slim@sha256:dfb18d8011c0b3a112214a32e772d9c6752131ffee512e974e59367e46fcee52 AS dev
 WORKDIR /app
 COPY package.json package-lock.json tools/ ./
 RUN npm install && \
