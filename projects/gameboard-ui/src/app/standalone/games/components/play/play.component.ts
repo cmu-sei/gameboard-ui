@@ -26,23 +26,22 @@ import { FeedbackSubmissionFormComponent } from "@/feedback/components/feedback-
 export type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
 
 @Component({
-  selector: 'app-play',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    ChallengeDeployCountdownComponent,
-    ErrorDivComponent,
-    SpinnerComponent,
-    ToSupportCodePipe,
-    ChallengeQuestionsComponent,
-    UtilityModule,
-    VmLinkComponent,
-    FeedbackSubmissionFormComponent
-  ],
-  templateUrl: './play.component.html',
-  styleUrls: ['./play.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-play',
+    imports: [
+        CommonModule,
+        CoreModule,
+        ChallengeDeployCountdownComponent,
+        ErrorDivComponent,
+        SpinnerComponent,
+        ToSupportCodePipe,
+        ChallengeQuestionsComponent,
+        UtilityModule,
+        VmLinkComponent,
+        FeedbackSubmissionFormComponent
+    ],
+    templateUrl: './play.component.html',
+    styleUrls: ['./play.component.scss'],
+    providers: [UnsubscriberService]
 })
 export class PlayComponent implements OnChanges {
   @Input() autoPlay = false;

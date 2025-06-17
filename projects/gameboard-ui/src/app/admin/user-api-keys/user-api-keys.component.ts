@@ -10,9 +10,10 @@ import { ClipboardService } from 'projects/gameboard-ui/src/app/utility/services
 import { ToastService } from '../../utility/services/toast.service';
 
 @Component({
-  selector: 'app-user-api-keys',
-  templateUrl: './user-api-keys.component.html',
-  styleUrls: ['./user-api-keys.component.scss']
+    selector: 'app-user-api-keys',
+    templateUrl: './user-api-keys.component.html',
+    styleUrls: ['./user-api-keys.component.scss'],
+    standalone: false
 })
 export class UserApiKeysComponent implements OnInit, OnDestroy {
   @Input() user!: { id: string, name: string };

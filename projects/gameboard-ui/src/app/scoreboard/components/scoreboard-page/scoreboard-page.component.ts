@@ -7,10 +7,11 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-scoreboard-page',
-  providers: [UnsubscriberService],
-  templateUrl: './scoreboard-page.component.html',
-  styleUrls: ['./scoreboard-page.component.scss']
+    selector: 'app-scoreboard-page',
+    providers: [UnsubscriberService],
+    templateUrl: './scoreboard-page.component.html',
+    styleUrls: ['./scoreboard-page.component.scss'],
+    standalone: false
 })
 export class ScoreboardPageComponent {
   protected game?: SimpleEntity;

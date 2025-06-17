@@ -13,9 +13,10 @@ interface EnrollmentReportSummaryContext {
 }
 
 @Component({
-  selector: 'app-enrollment-report-summary',
-  templateUrl: './enrollment-report-summary.component.html',
-  styleUrls: ['./enrollment-report-summary.component.scss']
+    selector: 'app-enrollment-report-summary',
+    templateUrl: './enrollment-report-summary.component.html',
+    styleUrls: ['./enrollment-report-summary.component.scss'],
+    standalone: false
 })
 export class EnrollmentReportSummaryComponent implements OnChanges {
   @Input() parameters: EnrollmentReportFlatParameters | null = null;

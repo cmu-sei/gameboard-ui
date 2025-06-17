@@ -3,7 +3,10 @@ import { ModalConfirmService } from '../../../services/modal-confirm.service';
 import { ModalConfirmConfig } from './modal.models';
 
 
-@Directive({ selector: '[appModalConfirm]' })
+@Directive({
+    selector: '[appModalConfirm]',
+    standalone: false
+})
 export class ModalConfirmDirective implements AfterViewInit {
   @Input('appModalConfirm') config?: ModalConfirmConfig;
 

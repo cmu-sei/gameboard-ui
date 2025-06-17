@@ -4,9 +4,10 @@ import { EnrollmentReportService } from '../enrollment-report.service';
 import { LineChartConfig } from '@/core/components/line-chart/line-chart.component';
 
 @Component({
-  selector: 'app-enrollment-report-trend',
-  templateUrl: './enrollment-report-trend.component.html',
-  styleUrls: ['./enrollment-report-trend.component.scss']
+    selector: 'app-enrollment-report-trend',
+    templateUrl: './enrollment-report-trend.component.html',
+    styleUrls: ['./enrollment-report-trend.component.scss'],
+    standalone: false
 })
 export class EnrollmentReportTrendComponent {
   @Input() parameters: EnrollmentReportFlatParameters | null = null;

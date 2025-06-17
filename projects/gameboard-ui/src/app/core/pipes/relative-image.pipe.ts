@@ -1,7 +1,10 @@
 import { ConfigService } from '@/utility/config.service';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'relativeImage' })
+@Pipe({
+    name: 'relativeImage',
+    standalone: false
+})
 export class RelativeImagePipe implements PipeTransform {
   constructor(private config: ConfigService) { }
 

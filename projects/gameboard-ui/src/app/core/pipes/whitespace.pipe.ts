@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'whitespace' })
+@Pipe({
+    name: 'whitespace',
+    standalone: false
+})
 export class WhitespacePipe implements PipeTransform {
   private static WHITESPACE_REGEX = /\r?\n+/g;
 

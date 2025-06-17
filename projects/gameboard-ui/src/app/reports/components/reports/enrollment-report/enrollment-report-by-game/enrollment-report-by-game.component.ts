@@ -9,9 +9,10 @@ import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
 
 @Component({
-  selector: 'app-enrollment-report-by-game',
-  templateUrl: './enrollment-report-by-game.component.html',
-  styleUrls: ['./enrollment-report-by-game.component.scss']
+    selector: 'app-enrollment-report-by-game',
+    templateUrl: './enrollment-report-by-game.component.html',
+    styleUrls: ['./enrollment-report-by-game.component.scss'],
+    standalone: false
 })
 export class EnrollmentReportByGameComponent implements OnChanges {
   @Input() parameters!: EnrollmentReportFlatParameters | null;

@@ -33,9 +33,10 @@ interface GameCenterTeamsFilterSettings {
 }
 
 @Component({
-  selector: 'app-game-center-teams',
-  templateUrl: './game-center-teams.component.html',
-  styleUrls: ['./game-center-teams.component.scss']
+    selector: 'app-game-center-teams',
+    templateUrl: './game-center-teams.component.html',
+    styleUrls: ['./game-center-teams.component.scss'],
+    standalone: false
 })
 export class GameCenterTeamsComponent implements OnInit {
   @Input() gameId?: string;

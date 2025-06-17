@@ -3,9 +3,10 @@ import { LogService } from '../../../services/log.service';
 import { ReportViewModel } from '../../reports-models';
 
 @Component({
-  selector: 'app-report-card',
-  templateUrl: './report-card.component.html',
-  styleUrls: ['./report-card.component.scss']
+    selector: 'app-report-card',
+    templateUrl: './report-card.component.html',
+    styleUrls: ['./report-card.component.scss'],
+    standalone: false
 })
 export class ReportCardComponent implements OnChanges {
   @Input() report?: ReportViewModel;

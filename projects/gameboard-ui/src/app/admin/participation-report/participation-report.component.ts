@@ -9,9 +9,10 @@ import { CorrelationReport, ParticipationReport } from '../../api/report-models'
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-participation-report',
-  templateUrl: './participation-report.component.html',
-  styleUrls: ['./participation-report.component.scss']
+    selector: 'app-participation-report',
+    templateUrl: './participation-report.component.html',
+    styleUrls: ['./participation-report.component.scss'],
+    standalone: false
 })
 export class ParticipationReportComponent implements OnInit {
   series?: ParticipationReport;

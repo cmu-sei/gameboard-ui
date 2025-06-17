@@ -13,10 +13,11 @@ export interface PracticeChallengeSolvedModalContext {
 }
 
 @Component({
-  selector: 'app-practice-challenge-solved-modal',
-  templateUrl: './practice-challenge-solved-modal.component.html',
-  styleUrls: ['./practice-challenge-solved-modal.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-practice-challenge-solved-modal',
+    templateUrl: './practice-challenge-solved-modal.component.html',
+    styleUrls: ['./practice-challenge-solved-modal.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class PracticeChallengeSolvedModalComponent implements OnInit {
   context?: PracticeChallengeSolvedModalContext;

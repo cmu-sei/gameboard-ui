@@ -13,9 +13,10 @@ import { ClipboardService } from '@/utility/services/clipboard.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
-  selector: 'app-ticket-list',
-  templateUrl: './ticket-list.component.html',
-  styleUrls: ['./ticket-list.component.scss']
+    selector: 'app-ticket-list',
+    templateUrl: './ticket-list.component.html',
+    styleUrls: ['./ticket-list.component.scss'],
+    standalone: false
 })
 export class TicketListComponent implements OnDestroy {
   @Input() gameId?: string;

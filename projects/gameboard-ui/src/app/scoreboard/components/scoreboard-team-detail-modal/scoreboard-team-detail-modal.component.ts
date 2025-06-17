@@ -9,9 +9,10 @@ export interface ScoreboardTeamDetailModalContext extends Partial<ScoreboardTeam
 }
 
 @Component({
-  selector: 'app-scoreboard-team-detail-modal',
-  templateUrl: './scoreboard-team-detail-modal.component.html',
-  styleUrls: ['./scoreboard-team-detail-modal.component.scss']
+    selector: 'app-scoreboard-team-detail-modal',
+    templateUrl: './scoreboard-team-detail-modal.component.html',
+    styleUrls: ['./scoreboard-team-detail-modal.component.scss'],
+    standalone: false
 })
 export class ScoreboardTeamDetailModalComponent implements OnInit {
   teamId?: string;

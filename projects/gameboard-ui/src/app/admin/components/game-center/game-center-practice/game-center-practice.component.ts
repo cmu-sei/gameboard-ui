@@ -16,9 +16,10 @@ interface GameCenterPracticeFilterSettings {
 }
 
 @Component({
-  selector: 'app-game-center-practice',
-  templateUrl: './game-center-practice.component.html',
-  styleUrls: ['./game-center-practice.component.scss']
+    selector: 'app-game-center-practice',
+    templateUrl: './game-center-practice.component.html',
+    styleUrls: ['./game-center-practice.component.scss'],
+    standalone: false
 })
 export class GameCenterPracticeComponent {
   protected ctx?: GameCenterPracticeContext;

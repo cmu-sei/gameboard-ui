@@ -5,7 +5,10 @@ export interface LinkRendererToken {
   text: string;
 }
 
-@Pipe({ name: 'linkRenderer' })
+@Pipe({
+    name: 'linkRenderer',
+    standalone: false
+})
 export class LinkRendererPipe implements PipeTransform {
   private static URL_REGEX = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/g;
 

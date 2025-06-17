@@ -10,7 +10,10 @@ export function createCustomInputControlValueAccessor(extendedInputComponent: an
   };
 }
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 @Injectable({ providedIn: 'root' })
 export abstract class CustomInputComponent<T> implements ControlValueAccessor {
   @Output() ngModelChange = new EventEmitter<T | null>();

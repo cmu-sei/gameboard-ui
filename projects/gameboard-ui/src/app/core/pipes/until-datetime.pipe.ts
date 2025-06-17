@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTime } from 'luxon';
 
-@Pipe({ name: 'untilDateTime' })
+@Pipe({
+    name: 'untilDateTime',
+    standalone: false
+})
 export class UntilDateTimePipe implements PipeTransform {
 
   transform(value: DateTime | null): string | null {

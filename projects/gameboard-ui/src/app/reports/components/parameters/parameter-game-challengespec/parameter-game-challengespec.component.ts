@@ -11,10 +11,11 @@ export interface ReportGameChallengeSpec {
 }
 
 @Component({
-  selector: 'app-parameter-game-challengespec',
-  templateUrl: './parameter-game-challengespec.component.html',
-  styleUrls: ['./parameter-game-challengespec.component.scss'],
-  providers: [createCustomInputControlValueAccessor(ParameterGameChallengespecComponent)]
+    selector: 'app-parameter-game-challengespec',
+    templateUrl: './parameter-game-challengespec.component.html',
+    styleUrls: ['./parameter-game-challengespec.component.scss'],
+    providers: [createCustomInputControlValueAccessor(ParameterGameChallengespecComponent)],
+    standalone: false
 })
 export class ParameterGameChallengespecComponent
   extends CustomInputComponent<GameChallengeSpecQueryModel> {

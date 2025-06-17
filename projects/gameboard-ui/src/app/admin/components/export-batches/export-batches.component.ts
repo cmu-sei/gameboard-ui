@@ -10,15 +10,14 @@ import { firstValueFrom, map } from 'rxjs';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
-  selector: 'app-export-batches',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    SpinnerComponent
-  ],
-  templateUrl: './export-batches.component.html',
-  styleUrls: ['./export-batches.component.scss']
+    selector: 'app-export-batches',
+    imports: [
+        CommonModule,
+        CoreModule,
+        SpinnerComponent
+    ],
+    templateUrl: './export-batches.component.html',
+    styleUrls: ['./export-batches.component.scss']
 })
 export class ExportBatchesComponent implements OnInit {
   private gameService = inject(GameService);

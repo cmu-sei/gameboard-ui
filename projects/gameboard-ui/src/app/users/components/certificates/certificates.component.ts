@@ -3,9 +3,10 @@ import { fa } from "@/services/font-awesome.service";
 import { PracticeService } from '@/services/practice.service';
 
 @Component({
-  selector: 'app-certificates',
-  templateUrl: './certificates.component.html',
-  styleUrls: ['./certificates.component.scss']
+    selector: 'app-certificates',
+    templateUrl: './certificates.component.html',
+    styleUrls: ['./certificates.component.scss'],
+    standalone: false
 })
 export class CertificatesComponent implements OnInit {
   protected fa = fa;

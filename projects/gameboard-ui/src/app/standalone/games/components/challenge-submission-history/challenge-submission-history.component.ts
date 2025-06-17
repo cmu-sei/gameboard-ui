@@ -9,15 +9,14 @@ import { CoreModule } from '@/core/core.module';
 import { ChallengeSubmissionsService } from '@/api/challenge-submissions.service';
 
 @Component({
-  selector: 'app-challenge-submission-history',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    SpinnerComponent
-  ],
-  templateUrl: './challenge-submission-history.component.html',
-  styleUrls: ['./challenge-submission-history.component.scss']
+    selector: 'app-challenge-submission-history',
+    imports: [
+        CommonModule,
+        CoreModule,
+        SpinnerComponent
+    ],
+    templateUrl: './challenge-submission-history.component.html',
+    styleUrls: ['./challenge-submission-history.component.scss']
 })
 export class ChallengeSubmissionHistoryComponent implements OnInit {
   @Input() challengeId?: string;

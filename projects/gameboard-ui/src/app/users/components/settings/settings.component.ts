@@ -6,9 +6,10 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ConfigService } from '@/utility/config.service';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+    selector: 'app-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss'],
+    standalone: false
 })
 export class SettingsComponent implements OnInit {
   protected appName = "Gameboard";

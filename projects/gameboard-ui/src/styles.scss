@@ -1,44 +1,16 @@
-@import "./scss/vis-timeline";
-@import "./scss/variables";
-@import "./scss/toastify";
+@use "sass:color";
+@use "sass:math";
 
-@import "../../../node_modules/bootstrap/scss/functions";
-@import "../../../node_modules/bootstrap/scss/variables";
-@import "../../../node_modules/bootstrap/scss/mixins";
-@import "../../../node_modules/bootstrap/scss/code";
-@import "../../../node_modules/bootstrap/scss/root";
-@import "../../../node_modules/bootstrap/scss/reboot";
-@import "../../../node_modules/bootstrap/scss/grid";
-@import "../../../node_modules/bootstrap/scss/type";
-@import "../../../node_modules/bootstrap/scss/images";
-@import "../../../node_modules/bootstrap/scss/tables";
-@import "../../../node_modules/bootstrap/scss/forms";
-@import "../../../node_modules/bootstrap/scss/buttons";
-@import "../../../node_modules/bootstrap/scss/transitions";
-@import "../../../node_modules/bootstrap/scss/dropdown";
-@import "../../../node_modules/bootstrap/scss/button-group";
-@import "../../../node_modules/bootstrap/scss/input-group";
-@import "../../../node_modules/bootstrap/scss/nav";
-@import "../../../node_modules/bootstrap/scss/navbar";
-@import "../../../node_modules/bootstrap/scss/card";
-@import "../../../node_modules/bootstrap/scss/badge";
-@import "../../../node_modules/bootstrap/scss/jumbotron";
-@import "../../../node_modules/bootstrap/scss/alert";
-@import "../../../node_modules/bootstrap/scss/progress";
-@import "../../../node_modules/bootstrap/scss/media";
-@import "../../../node_modules/bootstrap/scss/close";
-@import "../../../node_modules/bootstrap/scss/modal";
-@import "../../../node_modules/bootstrap/scss/tooltip";
-@import "../../../node_modules/bootstrap/scss/utilities";
-@import "../../../node_modules/bootstrap/scss/print";
-@import "../../../node_modules/ngx-bootstrap/datepicker/bs-datepicker.scss";
+@use "./scss/vis-timeline";
+@use "./scss/variables";
+@use "./scss/toastify";
 
-@import "./scss/bootswatch";
+@use "./scss/bootswatch";
 
-@each $color, $value in $theme-colors {
+@each $color, $value in variables.$theme-colors {
   .pop-#{$color} {
     background-color: theme-color-level($color, -8);
-    color: $dark;
+    color: variables.$dark;
     border: $value solid 2px;
     border-radius: 0.25rem;
   }
@@ -168,19 +140,19 @@ app-root {
 }
 
 .colorblind-danger {
-  color: lighten($danger, 20%);
+  color: color.adjust(variables.$danger, $lightness: 20%);
 }
 
 .countdown-green {
-  color: $success !important;
+  color: variables.$success !important;
 }
 
 .countdown-yellow {
-  color: $warning !important;
+  color: variables.$warning !important;
 }
 
 .countdown-red {
-  color: $danger !important;
+  color: variables.$danger !important;
 }
 
 a.btn fa-icon {
@@ -222,18 +194,18 @@ table.gameboard-table {
   width: 100%;
   margin-bottom: 0;
   border-collapse: collapse;
-  border-bottom: solid 1px $foreground;
+  border-bottom: solid 1px variables.$foreground;
 
   // note that we use box-shadow to fake the boder on these table headers,
   // because for border-collapse reasons, the borders don't follow the headers when they're stickied
   thead {
     tr > th:not(:first-child) {
-      box-shadow: inset 1px -1px $foreground;
+      box-shadow: inset 1px -1px variables.$foreground;
     }
 
     th {
-      box-shadow: inset 0 -1px $foreground;
-      border-top: solid 1px $foreground;
+      box-shadow: inset 0 -1px variables.$foreground;
+      border-top: solid 1px variables.$foreground;
       vertical-align: middle;
 
       // override ngx-bootstrap table header stuff
@@ -241,20 +213,20 @@ table.gameboard-table {
     }
 
     .super-headers-row {
-      background-color: $foreground;
+      background-color: variables.$foreground;
       font-size: 1.25rem;
       font-weight: bold;
       text-transform: uppercase;
       vertical-align: middle;
 
       th {
-        color: $body-bg;
+        color: variables.$body-bg;
       }
 
       &.chill-headers {
         background-color: rgba(0, 0, 0, 0);
         th {
-          color: $foreground;
+          color: variables.$foreground;
           text-align: center;
         }
       }
@@ -287,7 +259,7 @@ table.gameboard-table {
 
   .data-row td {
     border-top: none !important;
-    border-bottom: 1px dashed $foreground !important;
+    border-bottom: 1px dashed variables.$foreground !important;
   }
 }
 
@@ -451,7 +423,7 @@ th[align="left"] {
 }
 
 .color-foreground {
-  color: $foreground;
+  color: variables.$foreground;
 }
 
 .cursor-help {
@@ -514,7 +486,7 @@ th[align="left"] {
 }
 
 .text-success-light {
-  color: $success-light;
+  color: variables.$success-light;
 }
 
 .text-upper {

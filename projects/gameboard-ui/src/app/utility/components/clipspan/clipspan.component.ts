@@ -8,9 +8,10 @@ import { ClipboardService } from '../../services/clipboard.service';
 import { faClipboard, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-clipspan',
-  templateUrl: './clipspan.component.html',
-  styleUrls: ['./clipspan.component.scss']
+    selector: 'app-clipspan',
+    templateUrl: './clipspan.component.html',
+    styleUrls: ['./clipspan.component.scss'],
+    standalone: false
 })
 export class ClipspanComponent {
   @ViewChild('span') span!: ElementRef;

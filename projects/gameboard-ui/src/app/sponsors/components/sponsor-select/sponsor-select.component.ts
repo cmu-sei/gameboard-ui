@@ -13,8 +13,9 @@ interface SponsorSelectContext {
 }
 
 @Component({
-  selector: 'app-sponsor-select',
-  templateUrl: './sponsor-select.component.html',
+    selector: 'app-sponsor-select',
+    templateUrl: './sponsor-select.component.html',
+    standalone: false
 })
 export class SponsorSelectComponent {
   protected appName: string;

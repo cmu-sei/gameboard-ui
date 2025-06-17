@@ -8,15 +8,14 @@ import { UserService } from '@/api/user.service';
 import { ApiUser } from '@/api/user-models';
 
 @Component({
-  selector: 'app-user-picker',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TypeaheadModule,
-    CoreModule,
-  ],
-  templateUrl: './user-picker.component.html',
-  styleUrls: ['./user-picker.component.scss']
+    selector: 'app-user-picker',
+    imports: [
+        CommonModule,
+        TypeaheadModule,
+        CoreModule,
+    ],
+    templateUrl: './user-picker.component.html',
+    styleUrls: ['./user-picker.component.scss']
 })
 export class UserPickerComponent {
   @Input() eligibleForGameId?: string;

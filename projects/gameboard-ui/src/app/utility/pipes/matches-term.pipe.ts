@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'matchesterm' })
+@Pipe({
+    name: 'matchesterm',
+    standalone: false
+})
 export class MatchesTermPipe implements PipeTransform {
   transform(challenge: any, term: string, ...properties: string[]): unknown {
     term = term.toLowerCase();

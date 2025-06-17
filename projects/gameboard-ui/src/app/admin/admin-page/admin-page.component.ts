@@ -9,9 +9,10 @@ import { ApiUser } from '@/api/user-models';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 
 @Component({
-  selector: 'app-admin-page',
-  templateUrl: './admin-page.component.html',
-  styleUrls: ['./admin-page.component.scss'],
+    selector: 'app-admin-page',
+    templateUrl: './admin-page.component.html',
+    styleUrls: ['./admin-page.component.scss'],
+    standalone: false
 })
 export class AdminPageComponent {
   protected fa = fa;

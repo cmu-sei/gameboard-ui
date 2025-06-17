@@ -12,10 +12,11 @@ import { ConfigService } from '@/utility/config.service';
 import { SettingsService } from '@/api/settings.service';
 
 @Component({
-  selector: 'app-profile-editor',
-  templateUrl: './profile-editor.component.html',
-  styleUrls: ['./profile-editor.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-profile-editor',
+    templateUrl: './profile-editor.component.html',
+    styleUrls: ['./profile-editor.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class ProfileEditorComponent implements OnInit {
   protected appName = this.config.appName;

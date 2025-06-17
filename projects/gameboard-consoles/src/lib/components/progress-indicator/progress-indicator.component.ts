@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 
 @Component({
-  selector: 'gb-progress-indicator',
-  standalone: true,
-  imports: [CommonModule],
-  styles: [
-    ".spinner-component { display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; margin: 0 auto; }",
-    "h1 { font-size: 0.85rem !important; font-weight: bold; text-transform: uppercase; }"
-  ],
-  template: `
+    selector: 'gb-progress-indicator',
+    imports: [CommonModule],
+    styles: [
+        ".spinner-component { display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; margin: 0 auto; }",
+        "h1 { font-size: 0.85rem !important; font-weight: bold; text-transform: uppercase; }"
+    ],
+    template: `
     <div class="spinner-component">
       <div>
         @if(textPosition() === 'top') {

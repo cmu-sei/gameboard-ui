@@ -6,9 +6,10 @@ import { ConfigService } from '@/utility/config.service';
 import { PublishedCertificateViewModel } from '@/certificates/certificates.models';
 
 @Component({
-  selector: 'app-certificate-publish-controls',
-  templateUrl: './certificate-publish-controls.component.html',
-  styleUrls: ['./certificate-publish-controls.component.scss']
+    selector: 'app-certificate-publish-controls',
+    templateUrl: './certificate-publish-controls.component.html',
+    styleUrls: ['./certificate-publish-controls.component.scss'],
+    standalone: false
 })
 export class CertificatePublishControlsComponent implements OnInit {
   @Input() certificate?: PublishedCertificateViewModel;

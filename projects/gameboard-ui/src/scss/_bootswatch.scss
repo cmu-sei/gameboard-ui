@@ -1,30 +1,28 @@
+@use "sass:color";
+@use "sass:map";
+@use "variables";
+
 // Darkly 4.3.1
 // Bootswatch
-
-
-// Variables ===================================================================
-
-// $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic" !default;
-// @import url($web-font-path);
 
 // Navbar ======================================================================
 
 .bg-primary {
   .navbar-nav .active > .nav-link {
-    color: $success !important;
+    color: variables.$success !important;
   }
 }
 
 .bg-light {
   &.navbar {
-    background-color: $success !important;
+    background-color: variables.$success !important;
   }
 
   &.navbar-light .navbar-nav {
     .nav-link:focus,
     .nav-link:hover,
     .active > .nav-link {
-      color: $primary !important;
+      color: variables.$primary !important;
     }
   }
 }
@@ -35,124 +33,157 @@
 
 .blockquote {
   &-footer {
-    color: $gray-600;
+    color: variables.$gray-600;
   }
 }
 
 // Tables ======================================================================
 
 .table {
-
   &-primary {
-    &, > th, > td {
-      background-color: $primary;
+    &,
+    > th,
+    > td {
+      background-color: variables.$primary;
     }
   }
 
   &-secondary {
-    &, > th, > td {
-      background-color: $secondary;
+    &,
+    > th,
+    > td {
+      background-color: variables.$secondary;
     }
   }
 
   &-light {
-    &, > th, > td {
-      background-color: $light;
+    &,
+    > th,
+    > td {
+      background-color: variables.$light;
     }
   }
 
   &-dark {
-    &, > th, > td {
-      background-color: $dark;
+    &,
+    > th,
+    > td {
+      background-color: variables.$dark;
     }
   }
 
   &-success {
-    &, > th, > td {
-      background-color: $success;
+    &,
+    > th,
+    > td {
+      background-color: variables.$success;
     }
   }
 
   &-info {
-    &, > th, > td {
-      background-color: $info;
+    &,
+    > th,
+    > td {
+      background-color: variables.$info;
     }
   }
 
   &-danger {
-    &, > th, > td {
-      background-color: $danger;
+    &,
+    > th,
+    > td {
+      background-color: variables.$danger;
     }
   }
 
   &-warning {
-    &, > th, > td {
-      background-color: $warning;
+    &,
+    > th,
+    > td {
+      background-color: variables.$warning;
     }
   }
 
   &-active {
-    &, > th, > td {
-      background-color: $table-active-bg;
+    &,
+    > th,
+    > td {
+      background-color: variables.$table-active-bg;
     }
   }
 
   &-hover {
-
     .table-primary:hover {
-      &, > th, > td {
-        background-color: darken($primary, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$primary, $lightness: -5%);
       }
     }
 
     .table-secondary:hover {
-      &, > th, > td {
-        background-color: darken($secondary, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$secondary, $lightness: -5%);
       }
     }
 
     .table-light:hover {
-      &, > th, > td {
-        background-color: darken($light, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$light, $lightness: -5%);
       }
     }
 
     .table-dark:hover {
-      &, > th, > td {
-        background-color: darken($dark, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$dark, $lightness: -5%);
       }
     }
 
     .table-success:hover {
-      &, > th, > td {
-        background-color: darken($success, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$success, $lightness: -5%);
       }
     }
 
     .table-info:hover {
-      &, > th, > td {
-        background-color: darken($info, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$info, $lightness: -5%);
       }
     }
 
     .table-danger:hover {
-      &, > th, > td {
-        background-color: darken($danger, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$danger, $lightness: -5%);
       }
     }
 
     .table-warning:hover {
-      &, > th, > td {
-        background-color: darken($warning, 5%);
+      &,
+      > th,
+      > td {
+        background-color: color.adjust(variables.$warning, $lightness: -5%);
       }
     }
 
     .table-active:hover {
-      &, > th, > td {
-        background-color: $table-active-bg;
+      &,
+      > th,
+      > td {
+        background-color: variables.$table-active-bg;
       }
     }
-
   }
 }
 
@@ -166,7 +197,6 @@
 
 .nav-tabs,
 .nav-pills {
-
   .nav-link,
   .nav-link.active,
   .nav-link.active:focus,
@@ -201,7 +231,7 @@
 
 .alert {
   border: none;
-  color: $white;
+  color: variables.$white;
 
   a,
   .alert-link {
@@ -209,10 +239,12 @@
     text-decoration: underline;
   }
 
-  @each $color, $value in $theme-colors {
+  @each $color, $value in variables.$theme-colors {
     &-#{$color} {
-      @if $enable-gradients {
-        background: $value linear-gradient(180deg, mix($white, $value, 15%), $value) repeat-x;
+      @if variables.$enable-gradients {
+        background: $value
+          linear-gradient(180deg, mix(variables.$white, $value, 15%), $value)
+          repeat-x;
       } @else {
         background-color: $value;
       }
@@ -224,13 +256,12 @@
 
 // Containers ==================================================================
 
-
 .list-group-item-action {
   color: #fff;
 
   &:hover,
   &:focus {
-    background-color: $gray-900;
+    background-color: variables.$gray-900;
     color: #fff;
   }
 
@@ -238,4 +269,3 @@
     color: #fff;
   }
 }
-

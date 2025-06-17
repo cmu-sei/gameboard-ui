@@ -20,9 +20,10 @@ interface SessionStartCountdownContext {
 }
 
 @Component({
-  selector: 'app-session-start-countdown',
-  templateUrl: './session-start-countdown.component.html',
-  styleUrls: ['./session-start-countdown.component.scss']
+    selector: 'app-session-start-countdown',
+    templateUrl: './session-start-countdown.component.html',
+    styleUrls: ['./session-start-countdown.component.scss'],
+    standalone: false
 })
 export class SessionStartCountdownComponent implements OnChanges {
   @Input() game?: Game;

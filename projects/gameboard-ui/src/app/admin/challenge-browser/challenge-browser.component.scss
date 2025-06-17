@@ -1,4 +1,5 @@
-@import '../../../scss/variables';
+@use "sass:color";
+@use "../../../scss/variables";
 
 li {
   list-style-type: circle;
@@ -16,7 +17,6 @@ li {
   width: 25%;
   height: 75vh;
   overflow-y: scroll;
-
 }
 
 .detail {
@@ -29,7 +29,7 @@ li {
 
 .clickable {
   cursor: pointer;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .clickable:hover {
@@ -37,19 +37,19 @@ li {
 }
 
 .clicked {
-  background-color: darken(darkslategrey, 5%);
+  background-color: color.adjust(darkslategrey, $lightness: -5%);
 }
 
 // scroll bar to match theme
 ::-webkit-scrollbar {
   border-radius: 0.25rem;
-  background: $black;
+  background: variables.$black;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $dark;
+  background: variables.$dark;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: darken($dark, 5%)
+  background: color.adjust(variables.$dark, $lightness: -5%);
 }

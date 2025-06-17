@@ -5,10 +5,11 @@ import { fa } from "@/services/font-awesome.service";
 
 
 @Component({
-  selector: 'app-parameter-date-range',
-  templateUrl: './parameter-date-range.component.html',
-  styleUrls: ['./parameter-date-range.component.scss'],
-  providers: [createCustomInputControlValueAccessor(ParameterDateRangeComponent)]
+    selector: 'app-parameter-date-range',
+    templateUrl: './parameter-date-range.component.html',
+    styleUrls: ['./parameter-date-range.component.scss'],
+    providers: [createCustomInputControlValueAccessor(ParameterDateRangeComponent)],
+    standalone: false
 })
 export class ParameterDateRangeComponent extends CustomInputComponent<DateRangeQueryParamModel> {
   @Input() label = "Date range";

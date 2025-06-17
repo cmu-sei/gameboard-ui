@@ -1,7 +1,10 @@
 import { GameRegistrationType } from '@/api/game-models';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'registrationTypeToIsOpen' })
+@Pipe({
+    name: 'registrationTypeToIsOpen',
+    standalone: false
+})
 export class RegistrationTypeToIsOpenPipe implements PipeTransform {
 
   transform(type: GameRegistrationType): boolean {

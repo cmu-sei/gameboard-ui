@@ -10,13 +10,12 @@ import { ApiUser } from '@/api/user-models';
 import { Sponsor } from '@/api/sponsor-models';
 
 @Component({
-  selector: 'app-sponsor-select-banner',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule
-  ],
-  template: `
+    selector: 'app-sponsor-select-banner',
+    imports: [
+        CommonModule,
+        RouterModule
+    ],
+    template: `
     <div *ngIf="(user$ | async) && (!(sponsor$ | async) || (user$ | async)!.hasDefaultSponsor)"
       class="sponsor-select-banner-component position-sticky width-100 bg-warning py-2 text-center">
       <strong>Heads up!</strong>
@@ -25,7 +24,7 @@ import { Sponsor } from '@/api/sponsor-models';
       choose your sponsor!
     </div>
   `,
-  styleUrls: ['./sponsor-select-banner.component.scss']
+    styleUrls: ['./sponsor-select-banner.component.scss']
 })
 export class SponsorSelectBannerComponent {
   protected appName = "Gameboard";

@@ -21,9 +21,10 @@ export interface FeedbackReportViewContext {
 }
 
 @Component({
-  selector: 'app-feedback-report',
-  templateUrl: './feedback-report.component.html',
-  styleUrls: ['./feedback-report.component.scss']
+    selector: 'app-feedback-report',
+    templateUrl: './feedback-report.component.html',
+    styleUrls: ['./feedback-report.component.scss'],
+    standalone: false
 })
 export class FeedbackReportComponent extends ReportComponentBase<FeedbackReportParameters> implements OnInit {
   @ViewChild("playerResponsesModal") playerResponsesModalTemplate?: TemplateRef<any>;

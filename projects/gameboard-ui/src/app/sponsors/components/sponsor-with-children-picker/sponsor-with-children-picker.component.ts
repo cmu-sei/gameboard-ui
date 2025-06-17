@@ -2,9 +2,10 @@ import { Component, input, output } from '@angular/core';
 import { Sponsor } from '@/api/sponsor-models';
 
 @Component({
-  selector: 'app-sponsor-with-children-picker',
-  templateUrl: './sponsor-with-children-picker.component.html',
-  styleUrls: ['./sponsor-with-children-picker.component.scss']
+    selector: 'app-sponsor-with-children-picker',
+    templateUrl: './sponsor-with-children-picker.component.html',
+    styleUrls: ['./sponsor-with-children-picker.component.scss'],
+    standalone: false
 })
 export class SponsorWithChildrenPickerComponent {
   childSponsors = input.required<Sponsor[]>();

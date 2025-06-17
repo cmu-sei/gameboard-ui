@@ -9,8 +9,9 @@ import { PagingArgs } from '@/api/models';
 import { PlayerChallengeAttempts, PlayerChallengeAttemptsModalComponent } from '@/reports/components/player-challenge-attempts-modal/player-challenge-attempts-modal.component';
 
 @Component({
-  selector: 'app-practice-mode-report-by-user',
-  templateUrl: './practice-mode-report-by-user.component.html',
+    selector: 'app-practice-mode-report-by-user',
+    templateUrl: './practice-mode-report-by-user.component.html',
+    standalone: false
 })
 export class PracticeModeReportByUserComponent implements OnChanges {
   @Input() parameters: PracticeModeReportFlatParameters | null = null;

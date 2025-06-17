@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SyncStartPlayerStatus } from '../components/external-game-admin/external-game-admin.component';
 
-@Pipe({ name: 'syncStartTeamPlayerReadyCount' })
+@Pipe({
+    name: 'syncStartTeamPlayerReadyCount',
+    standalone: false
+})
 export class SyncStartTeamPlayerReadyCountPipe implements PipeTransform {
 
   transform(value: { status: SyncStartPlayerStatus }[]): string {

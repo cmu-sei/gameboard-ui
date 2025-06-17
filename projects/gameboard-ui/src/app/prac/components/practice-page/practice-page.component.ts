@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { ConfigService } from '@/utility/config.service';
 
 @Component({
-  selector: 'app-practice-page',
-  templateUrl: './practice-page.component.html',
-  styleUrls: ['./practice-page.component.scss']
+    selector: 'app-practice-page',
+    templateUrl: './practice-page.component.html',
+    styleUrls: ['./practice-page.component.scss'],
+    standalone: false
 })
 export class PracticePageComponent {
   protected appName?: string;

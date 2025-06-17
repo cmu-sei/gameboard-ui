@@ -12,9 +12,10 @@ import { SimpleEntity } from '@/api/models';
 import { UpdatePlayerNameChangeRequest } from '@/api/admin.models';
 
 @Component({
-  selector: 'app-game-center-team-detail',
-  templateUrl: './game-center-team-detail.component.html',
-  styleUrls: ['./game-center-team-detail.component.scss']
+    selector: 'app-game-center-team-detail',
+    templateUrl: './game-center-team-detail.component.html',
+    styleUrls: ['./game-center-team-detail.component.scss'],
+    standalone: false
 })
 export class GameCenterTeamDetailComponent implements OnInit {
   game!: {

@@ -11,9 +11,10 @@ export interface PlayerModePerformanceSummaryContext extends Partial<PlayerModeP
 }
 
 @Component({
-  selector: 'app-player-mode-performance-summary',
-  templateUrl: './player-mode-performance-summary.component.html',
-  styleUrls: ['./player-mode-performance-summary.component.scss']
+    selector: 'app-player-mode-performance-summary',
+    templateUrl: './player-mode-performance-summary.component.html',
+    styleUrls: ['./player-mode-performance-summary.component.scss'],
+    standalone: false
 })
 export class PlayerModePerformanceSummaryComponent implements OnInit {
   context!: PlayerModePerformanceSummaryContext;

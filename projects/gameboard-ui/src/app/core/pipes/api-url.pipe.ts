@@ -1,7 +1,10 @@
 import { ApiUrlService } from '@/services/api-url.service';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'apiUrl' })
+@Pipe({
+    name: 'apiUrl',
+    standalone: false
+})
 export class ApiUrlPipe implements PipeTransform {
   constructor(private apiUrlService: ApiUrlService) { }
 

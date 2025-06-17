@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTime } from 'luxon';
 
-@Pipe({ name: 'dateToDateTime' })
+@Pipe({
+    name: 'dateToDateTime',
+    standalone: false
+})
 export class DateToDatetimePipe implements PipeTransform {
   transform(value: Date): DateTime | null {
     if (!value)

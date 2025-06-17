@@ -15,18 +15,17 @@ import { CommonModule } from '@angular/common';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 
 @Component({
-  selector: 'app-nav',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    FontAwesomeModule,
-    IfHasPermissionDirective,
-    SupportPillComponent,
-  ],
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-nav',
+    imports: [
+        CommonModule,
+        RouterModule,
+        FontAwesomeModule,
+        IfHasPermissionDirective,
+        SupportPillComponent,
+    ],
+    templateUrl: './nav.component.html',
+    styleUrls: ['./nav.component.scss'],
+    providers: [UnsubscriberService]
 })
 export class AppNavComponent implements OnInit {
   private authService = inject(AuthService);

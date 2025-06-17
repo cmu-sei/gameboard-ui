@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'trim' })
+@Pipe({
+    name: 'trim',
+    standalone: false
+})
 export class TrimPipe implements PipeTransform {
 
   transform(value: string = "", trimString: string = "", trimTarget: "start" | "end" | "both" = "both"): string {

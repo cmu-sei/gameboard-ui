@@ -5,9 +5,10 @@ import { PagingArgs } from '@/api/models';
 import { ChallengeResult } from '@/api/board-models';
 
 @Component({
-  selector: 'app-challenge-detail-modal',
-  templateUrl: './challenge-detail-modal.component.html',
-  styleUrls: ['./challenge-detail-modal.component.scss']
+    selector: 'app-challenge-detail-modal',
+    templateUrl: './challenge-detail-modal.component.html',
+    styleUrls: ['./challenge-detail-modal.component.scss'],
+    standalone: false
 })
 export class ChallengeDetailModalComponent implements OnInit {
   challengeSpecId?: string;

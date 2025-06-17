@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'toTemplateContext' })
+@Pipe({
+    name: 'toTemplateContext',
+    standalone: false
+})
 export class ToTemplateContextPipe implements PipeTransform {
 
   transform(value: unknown): Object | null {

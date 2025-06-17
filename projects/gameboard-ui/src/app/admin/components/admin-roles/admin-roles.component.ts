@@ -6,15 +6,14 @@ import { CoreModule } from '@/core/core.module';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
 @Component({
-  selector: 'app-admin-roles',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    SpinnerComponent
-  ],
-  templateUrl: './admin-roles.component.html',
-  styleUrls: ['./admin-roles.component.scss']
+    selector: 'app-admin-roles',
+    imports: [
+        CommonModule,
+        CoreModule,
+        SpinnerComponent
+    ],
+    templateUrl: './admin-roles.component.html',
+    styleUrls: ['./admin-roles.component.scss']
 })
 export class AdminRolesComponent implements OnInit {
   protected appPermissionsOverview?: UserRolePermissionsOverviewResponse;

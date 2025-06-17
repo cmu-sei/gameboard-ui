@@ -6,7 +6,10 @@ type GameClassification = {
   track: string | null | undefined;
 }
 
-@Pipe({ name: 'gameClassificationToString' })
+@Pipe({
+    name: 'gameClassificationToString',
+    standalone: false
+})
 export class GameClassificationToStringPipe implements PipeTransform {
   transform(value: GameClassification): string | null {
     if (!value)

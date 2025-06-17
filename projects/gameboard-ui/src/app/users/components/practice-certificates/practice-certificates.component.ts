@@ -12,9 +12,10 @@ interface PracticeCertificatesContext {
 }
 
 @Component({
-  selector: 'app-practice-certificates',
-  templateUrl: './practice-certificates.component.html',
-  styleUrls: ['./practice-certificates.component.scss']
+    selector: 'app-practice-certificates',
+    templateUrl: './practice-certificates.component.html',
+    styleUrls: ['./practice-certificates.component.scss'],
+    standalone: false
 })
 export class PracticeCertificatesComponent implements OnInit {
   ctx: PracticeCertificatesContext | null = null;

@@ -10,9 +10,10 @@ export interface CreatedEditSystemNotificationModalContext {
 }
 
 @Component({
-  selector: 'app-create-edit-system-notification-modal',
-  templateUrl: './create-edit-system-notification-modal.component.html',
-  styleUrls: ['./create-edit-system-notification-modal.component.scss']
+    selector: 'app-create-edit-system-notification-modal',
+    templateUrl: './create-edit-system-notification-modal.component.html',
+    styleUrls: ['./create-edit-system-notification-modal.component.scss'],
+    standalone: false
 })
 export class CreateEditSystemNotificationModalComponent implements OnInit {
   context?: CreatedEditSystemNotificationModalContext;

@@ -16,10 +16,11 @@ import { MatchesTermPipe } from '@/utility/pipes/matches-term.pipe';
 import { fa } from '@/services/font-awesome.service';
 
 @Component({
-  selector: 'app-challenge-observer',
-  templateUrl: './challenge-observer.component.html',
-  styleUrls: ['./challenge-observer.component.scss'],
-  providers: [MatchesTermPipe]
+    selector: 'app-challenge-observer',
+    templateUrl: './challenge-observer.component.html',
+    styleUrls: ['./challenge-observer.component.scss'],
+    providers: [MatchesTermPipe],
+    standalone: false
 })
 export class ChallengeObserverComponent implements OnDestroy {
   @Input() gameId?: string;

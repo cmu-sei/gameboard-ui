@@ -5,9 +5,10 @@ import { StringArrayJoinPipe } from '@/core/pipes/string-array-join.pipe';
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-dropzone',
-  templateUrl: './dropzone.component.html',
-  styleUrls: ['./dropzone.component.scss']
+    selector: 'app-dropzone',
+    templateUrl: './dropzone.component.html',
+    styleUrls: ['./dropzone.component.scss'],
+    standalone: false
 })
 export class DropzoneComponent {
   @Input() inputId = 'dropzone-input';

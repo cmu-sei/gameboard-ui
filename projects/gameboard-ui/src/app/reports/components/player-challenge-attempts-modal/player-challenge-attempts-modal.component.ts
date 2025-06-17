@@ -23,9 +23,10 @@ export interface PlayerChallengeAttempts extends Partial<PlayerChallengeAttempts
 }
 
 @Component({
-  selector: 'app-player-challenge-attempts-modal',
-  templateUrl: './player-challenge-attempts-modal.component.html',
-  styleUrls: ['./player-challenge-attempts-modal.component.scss']
+    selector: 'app-player-challenge-attempts-modal',
+    templateUrl: './player-challenge-attempts-modal.component.html',
+    styleUrls: ['./player-challenge-attempts-modal.component.scss'],
+    standalone: false
 })
 export class PlayerChallengeAttemptsModalComponent {
   context!: PlayerChallengeAttempts;

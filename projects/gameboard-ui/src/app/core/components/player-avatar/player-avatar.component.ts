@@ -5,15 +5,16 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-player-avatar',
-  template: `
+    selector: 'app-player-avatar',
+    template: `
     <div [class]="'d-flex position-relative align-items-center justify-content-center player-avatar-component avatar-list-size ' + sizeClass +  ' ' + avatarCountClass">
       <app-avatar [size]="this.size" [imageUrl]="avatarUrl" [tooltip]="showSponsorTooltip ? tooltip : ''">
       </app-avatar>
       <app-player-status class="position-absolute status-light" *ngIf="session" [session]="session"></app-player-status>
     </div>
   `,
-  styleUrls: ['./player-avatar.component.scss']
+    styleUrls: ['./player-avatar.component.scss'],
+    standalone: false
 })
 export class PlayerAvatarComponent implements OnChanges {
   @Input() player?: PlayerWithSponsor;

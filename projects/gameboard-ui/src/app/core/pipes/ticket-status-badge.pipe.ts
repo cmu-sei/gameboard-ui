@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-@Pipe({ name: 'ticketStatusBadge' })
+@Pipe({
+    name: 'ticketStatusBadge',
+    standalone: false
+})
 export class TicketStatusBadgePipe implements PipeTransform {
   constructor(private domSanitizer: DomSanitizer) { }
 

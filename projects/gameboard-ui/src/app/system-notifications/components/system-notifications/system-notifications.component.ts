@@ -7,10 +7,11 @@ import { UserService as LocalUserService } from "@/utility/user.service";
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-system-notifications',
-  templateUrl: './system-notifications.component.html',
-  styleUrls: ['./system-notifications.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-system-notifications',
+    templateUrl: './system-notifications.component.html',
+    styleUrls: ['./system-notifications.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class SystemNotificationsComponent implements OnInit {
   protected notifications: ViewSystemNotification[] = [];

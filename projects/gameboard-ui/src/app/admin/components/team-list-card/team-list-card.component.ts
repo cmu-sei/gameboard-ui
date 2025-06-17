@@ -10,9 +10,10 @@ export type TeamListCardContext = {
 }
 
 @Component({
-  selector: 'app-team-list-card',
-  templateUrl: './team-list-card.component.html',
-  styleUrls: ['./team-list-card.component.scss']
+    selector: 'app-team-list-card',
+    templateUrl: './team-list-card.component.html',
+    styleUrls: ['./team-list-card.component.scss'],
+    standalone: false
 })
 export class TeamListCardComponent implements OnInit {
   @Input() allowSelection = true;

@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
 import { SupportReportStatSummary } from './support-report.models';
 
-@Pipe({ name: 'toSupportReportStats' })
+@Pipe({
+    name: 'toSupportReportStats',
+    standalone: false
+})
 export class ToSupportReportStatsPipe implements PipeTransform {
   transform(value?: SupportReportStatSummary): ReportSummaryStat[] {
     if (!value)

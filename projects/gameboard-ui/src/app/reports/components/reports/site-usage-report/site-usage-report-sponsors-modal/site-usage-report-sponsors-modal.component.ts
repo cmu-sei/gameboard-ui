@@ -3,8 +3,9 @@ import { SiteUsageReportFlatParameters, SiteUsageReportSponsor } from '../site-u
 import { SiteUsageReportService } from '../site-usage-report.service';
 
 @Component({
-  selector: 'app-site-usage-report-sponsors-modal',
-  templateUrl: './site-usage-report-sponsors-modal.component.html',
+    selector: 'app-site-usage-report-sponsors-modal',
+    templateUrl: './site-usage-report-sponsors-modal.component.html',
+    standalone: false
 })
 export class SiteUsageReportSponsorsModalComponent implements OnInit {
   title?: string;

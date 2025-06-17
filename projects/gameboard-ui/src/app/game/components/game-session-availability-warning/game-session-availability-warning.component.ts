@@ -7,15 +7,14 @@ import { GameSessionAvailibilityResponse } from '@/api/game-models';
 import { CoreModule } from '@/core/core.module';
 
 @Component({
-  selector: 'app-game-session-availability-warning',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-  ],
-  providers: [UnsubscriberService],
-  templateUrl: './game-session-availability-warning.component.html',
-  styleUrls: ['./game-session-availability-warning.component.scss']
+    selector: 'app-game-session-availability-warning',
+    imports: [
+        CommonModule,
+        CoreModule,
+    ],
+    providers: [UnsubscriberService],
+    templateUrl: './game-session-availability-warning.component.html',
+    styleUrls: ['./game-session-availability-warning.component.scss']
 })
 export class GameSessionAvailabilityWarningComponent implements OnInit, OnDestroy {
   @Input() game?: { id: string; sessionAvailabilityWarningThreshold?: number };

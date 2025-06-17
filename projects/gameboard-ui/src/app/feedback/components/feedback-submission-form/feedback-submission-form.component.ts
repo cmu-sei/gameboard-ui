@@ -16,22 +16,20 @@ import { MARKED_OPTIONS, MarkedOptions } from 'ngx-markdown';
 import { markedOptionsFactory } from '@/core/config/marked.config';
 
 @Component({
-  selector: 'app-feedback-submission-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    FontAwesomeModule,
-
-    // components
-    ErrorDivComponent,
-    SpinnerComponent
-  ],
-  providers: [
-    { provide: MARKED_OPTIONS, useFactory: markedOptionsFactory }
-  ],
-  templateUrl: './feedback-submission-form.component.html',
-  styleUrls: ['./feedback-submission-form.component.scss']
+    selector: 'app-feedback-submission-form',
+    imports: [
+        CommonModule,
+        CoreModule,
+        FontAwesomeModule,
+        // components
+        ErrorDivComponent,
+        SpinnerComponent
+    ],
+    providers: [
+        { provide: MARKED_OPTIONS, useFactory: markedOptionsFactory }
+    ],
+    templateUrl: './feedback-submission-form.component.html',
+    styleUrls: ['./feedback-submission-form.component.scss']
 })
 export class FeedbackSubmissionFormComponent implements OnInit, OnDestroy {
   @Input() feedbackEntity?: FeedbackSubmissionAttachedEntity;

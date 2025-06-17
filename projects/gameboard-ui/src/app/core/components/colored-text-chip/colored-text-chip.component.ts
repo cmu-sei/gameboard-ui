@@ -8,9 +8,10 @@ export interface ColoredTextChipEvent {
 }
 
 @Component({
-  selector: 'app-colored-text-chip',
-  templateUrl: './colored-text-chip.component.html',
-  styleUrls: ['./colored-text-chip.component.scss']
+    selector: 'app-colored-text-chip',
+    templateUrl: './colored-text-chip.component.html',
+    styleUrls: ['./colored-text-chip.component.scss'],
+    standalone: false
 })
 export class ColoredTextChipComponent {
   @Input() text = "";

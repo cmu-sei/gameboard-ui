@@ -6,10 +6,11 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { ConfigService } from '@/utility/config.service';
 
 @Component({
-  selector: 'app-support-settings',
-  templateUrl: './support-settings.component.html',
-  styleUrls: ['./support-settings.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-support-settings',
+    templateUrl: './support-settings.component.html',
+    styleUrls: ['./support-settings.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class SupportSettingsComponent implements OnInit {
   protected appName: string;

@@ -8,10 +8,11 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { slug } from '@/../tools/functions';
 
 @Component({
-  selector: 'app-challenge-spec-editor',
-  templateUrl: './challenge-spec-editor.component.html',
-  styleUrls: ['./challenge-spec-editor.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-challenge-spec-editor',
+    templateUrl: './challenge-spec-editor.component.html',
+    styleUrls: ['./challenge-spec-editor.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class ChallengeSpecEditorComponent implements OnChanges {
   @Input() spec?: Spec;

@@ -1,10 +1,13 @@
+@use "sass:color";
+@use "sass:map";
+@use "sass:math";
+
 // Darkly 4.3.1
 // Bootswatch
 
 //
 // Color system
 //
-
 $white: #fff !default;
 $gray-100: #f8f9fa !default;
 $gray-200: #ebebeb !default;
@@ -34,7 +37,7 @@ $cyan: #3498db !default;
 $primary: #181866 !default;
 $secondary: $gray-800 !default;
 $success: $light-green !default;
-$success-light: lighten($light-green, 20%);
+$success-light: color.adjust($light-green, $lightness: 20%) !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;
@@ -43,7 +46,12 @@ $dark: $gray-800 !default;
 $foreground: $gray-100 !default;
 $muted: $light !default;
 
-$yiq-contrasted-threshold: 175 !default;
+$theme-colors: (
+  "light": $light,
+  "success": $success,
+  "warning": $warning,
+  "danger": $danger,
+);
 
 // Body
 $body-bg: $black !default;
@@ -65,7 +73,7 @@ $h3-font-size: 1.5rem !default;
 
 // Tables
 $table-accent-bg: $gray-800 !default;
-
+$table-active-bg: $success-light !default;
 $table-border-color: $gray-700 !default;
 
 // Forms
@@ -118,14 +126,14 @@ $pagination-border-width: 0 !default;
 $pagination-border-color: transparent !default;
 
 $pagination-hover-color: $white !default;
-$pagination-hover-bg: lighten($success, 10%) !default;
+$pagination-hover-bg: color.adjust($success, $lightness: 10%) !default;
 $pagination-hover-border-color: transparent !default;
 
 $pagination-active-bg: $pagination-hover-bg !default;
 $pagination-active-border-color: transparent !default;
 
 $pagination-disabled-color: $white !default;
-$pagination-disabled-bg: darken($success, 15%) !default;
+$pagination-disabled-bg: color.adjust($success, $lightness: -15%) !default;
 $pagination-disabled-border-color: transparent !default;
 
 // Jumbotron
@@ -171,3 +179,9 @@ $z-index-relative: 5;
 
 // sizes
 $max-reading-size: 1140px;
+
+//
+$enable-gradients: false;
+// $yiq-contrasted-threshold: 175 !default;
+
+@use "../../../../node_modules/bootstrap/scss/bootstrap.scss";

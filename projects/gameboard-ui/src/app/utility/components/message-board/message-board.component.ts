@@ -12,12 +12,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-message-board',
-  standalone: true,
   imports: [
     CommonModule,
     FontAwesomeModule,
     MarkdownModule,
   ],
+  standalone: true,
   styleUrls: ['./message-board.component.scss'],
   template: `
   <div *ngIf="list?.length" class="message-div">

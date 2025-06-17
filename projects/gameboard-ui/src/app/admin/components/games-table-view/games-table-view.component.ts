@@ -13,18 +13,17 @@ import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-games-table-view',
-  standalone: true,
-  templateUrl: './games-table-view.component.html',
-  styleUrl: './games-table-view.component.scss',
-  imports: [
-    BsDropdownModule,
-    CoreModule,
-    GameInfoBubblesComponent,
-    GameToGameCenterLinkPipe,
-    GameToMetadataTextPipe,
-    ThemeBgDirective
-  ]
+    selector: 'app-games-table-view',
+    templateUrl: './games-table-view.component.html',
+    styleUrl: './games-table-view.component.scss',
+    imports: [
+        BsDropdownModule,
+        CoreModule,
+        GameInfoBubblesComponent,
+        GameToGameCenterLinkPipe,
+        GameToMetadataTextPipe,
+        ThemeBgDirective
+    ]
 })
 export class GamesTableViewComponent {
   cloneRequest = output<ListGamesResponseGame>();

@@ -3,8 +3,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
 
 @Component({
-  selector: 'app-modal-confirm',
-  template: `
+    selector: 'app-modal-confirm',
+    template: `
     <div class="modal-confirm-component">
       <div class="modal-header">
           <div class="titles-container">
@@ -28,7 +28,8 @@ import { ModalConfirmConfig } from '@/core/components/modal/modal.models';
       </div>
     </ng-template>
   `,
-  styleUrls: ['./modal-confirm.component.scss']
+    styleUrls: ['./modal-confirm.component.scss'],
+    standalone: false
 })
 export class ModalConfirmComponent {
   context!: ModalConfirmConfig;

@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'relativeUrls' })
+@Pipe({
+    name: 'relativeUrls',
+    standalone: false
+})
 export class RelativeUrlsPipe implements PipeTransform {
 
   // goal here: transform a relative link in markdown to an absolute one using the `uriBase` param as the origin

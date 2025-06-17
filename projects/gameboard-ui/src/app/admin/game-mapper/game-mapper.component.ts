@@ -18,9 +18,10 @@ import { ToastService } from '@/utility/services/toast.service';
 import { slug } from 'projects/gameboard-ui/src/tools/functions';
 
 @Component({
-  selector: 'app-game-mapper',
-  templateUrl: './game-mapper.component.html',
-  styleUrls: ['./game-mapper.component.scss']
+    selector: 'app-game-mapper',
+    templateUrl: './game-mapper.component.html',
+    styleUrls: ['./game-mapper.component.scss'],
+    standalone: false
 })
 export class GameMapperComponent {
   @Output() specsUpdated = new EventEmitter<Spec[]>();

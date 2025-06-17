@@ -12,9 +12,10 @@ export interface ExternalGameAdminPlayerContextMenuData {
 }
 
 @Component({
-  selector: 'app-external-game-admin-player-context-menu',
-  templateUrl: './external-game-admin-player-context-menu.component.html',
-  styleUrls: ['./external-game-admin-player-context-menu.component.scss']
+    selector: 'app-external-game-admin-player-context-menu',
+    templateUrl: './external-game-admin-player-context-menu.component.html',
+    styleUrls: ['./external-game-admin-player-context-menu.component.scss'],
+    standalone: false
 })
 export class ExternalGameAdminPlayerContextMenuComponent implements OnChanges {
   @Input() player?: ExternalGameAdminPlayerContextMenuData;

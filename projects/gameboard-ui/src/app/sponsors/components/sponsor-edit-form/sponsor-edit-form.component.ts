@@ -4,9 +4,10 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-sponsor-edit-form',
-  templateUrl: './sponsor-edit-form.component.html',
-  styleUrls: ['./sponsor-edit-form.component.scss']
+    selector: 'app-sponsor-edit-form',
+    templateUrl: './sponsor-edit-form.component.html',
+    styleUrls: ['./sponsor-edit-form.component.scss'],
+    standalone: false
 })
 export class SponsorEditFormComponent implements OnInit, OnChanges {
   @Input() existingSponsor?: Sponsor;

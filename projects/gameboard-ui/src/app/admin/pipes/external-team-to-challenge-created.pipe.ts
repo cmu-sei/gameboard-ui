@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ExternalGameAdminTeam } from '@/admin/components/external-game-admin/external-game-admin.component';
 
-@Pipe({ name: 'externalTeamToChallengeCreated' })
+@Pipe({
+    name: 'externalTeamToChallengeCreated',
+    standalone: false
+})
 export class ExternalTeamToChallengeCreatedPipe implements PipeTransform {
 
   transform(value: ExternalGameAdminTeam, specId: string): boolean {

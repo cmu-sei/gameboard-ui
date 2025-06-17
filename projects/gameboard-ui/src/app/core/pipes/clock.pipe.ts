@@ -3,7 +3,10 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'clock' })
+@Pipe({
+    name: 'clock',
+    standalone: false
+})
 export class ClockPipe implements PipeTransform {
 
   transform(value?: number): string | null {

@@ -10,8 +10,9 @@ import { PagingArgs } from '@/api/models';
 import { RouterService } from '@/services/router.service';
 
 @Component({
-  selector: 'app-practice-mode-report-by-player-mode-performance',
-  templateUrl: './practice-mode-report-by-player-mode-performance.component.html',
+    selector: 'app-practice-mode-report-by-player-mode-performance',
+    templateUrl: './practice-mode-report-by-player-mode-performance.component.html',
+    standalone: false
 })
 export class PracticeModeReportByPlayerModePerformanceComponent implements OnChanges {
   @Input() parameters: PracticeModeReportFlatParameters | null = null;

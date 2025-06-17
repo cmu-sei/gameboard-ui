@@ -5,8 +5,9 @@ import { ToastService } from '@/utility/services/toast.service';
 import { AfterViewInit, Directive, ElementRef } from '@angular/core';
 
 @Directive({
-  providers: [UnsubscriberService],
-  selector: '[appRefreshIframeOnReconnect]'
+    providers: [UnsubscriberService],
+    selector: '[appRefreshIframeOnReconnect]',
+    standalone: false
 })
 export class RefreshIframeOnReconnectDirective implements AfterViewInit {
   private iframe?: HTMLIFrameElement;

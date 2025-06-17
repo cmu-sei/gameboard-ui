@@ -5,10 +5,9 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 
 @Component({
-  selector: 'app-spinner',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+    selector: 'app-spinner',
+    imports: [CommonModule],
+    template: `
     <div class="spinner-component">
       <div>
         <ng-container *ngIf="textPosition() === 'top'">
@@ -54,10 +53,10 @@ import { Component, input } from '@angular/core';
       <h1><ng-content></ng-content></h1>
     </ng-template>
   `,
-  styles: [
-    ".spinner-component { display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; margin: 0 auto; }",
-    "h1 { font-size: 0.85rem !important; font-weight: bold; text-transform: uppercase; }"
-  ],
+    styles: [
+        ".spinner-component { display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; margin: 0 auto; }",
+        "h1 { font-size: 0.85rem !important; font-weight: bold; text-transform: uppercase; }"
+    ]
 })
 export class SpinnerComponent {
   public color = input<string>("#41ad57");

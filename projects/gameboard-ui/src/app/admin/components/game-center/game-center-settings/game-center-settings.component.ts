@@ -15,9 +15,10 @@ import { CertificateTemplateView } from '@/certificates/certificates.models';
 export type SelectedSubTab = "settings" | "modes" | "registration";
 
 @Component({
-  selector: 'app-game-center-settings',
-  templateUrl: './game-center-settings.component.html',
-  styleUrls: ['./game-center-settings.component.scss']
+    selector: 'app-game-center-settings',
+    templateUrl: './game-center-settings.component.html',
+    styleUrls: ['./game-center-settings.component.scss'],
+    standalone: false
 })
 export class GameCenterSettingsComponent implements AfterViewInit {
   @ViewChild(NgForm) form?: FormGroup;

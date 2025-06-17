@@ -3,10 +3,9 @@ import { CoreModule } from '@/core/core.module';
 import { DateTime } from 'luxon';
 
 @Component({
-  selector: 'app-session-extension-game-end-warning',
-  standalone: true,
-  styleUrl: './session-extension-game-end-warning.component.scss',
-  template: `
+    selector: 'app-session-extension-game-end-warning',
+    styleUrl: './session-extension-game-end-warning.component.scss',
+    template: `
   <ng-container *ngIf="sessionEnd && gameEnd && extensionInMinutes && (sessionEnd | datetimeIsFuture)">
     <alert type="danger" *ngIf="(sessionEnd | addDuration:{ minutes: extensionInMinutes }) > gameEnd">
         <h3>Warning</h3>
@@ -27,7 +26,7 @@ import { DateTime } from 'luxon';
     </alert>
 </ng-container>
 `,
-  imports: [CoreModule],
+    imports: [CoreModule]
 })
 export class SessionExtensionGameEndWarningComponent {
   @Input() extensionInMinutes = 0;

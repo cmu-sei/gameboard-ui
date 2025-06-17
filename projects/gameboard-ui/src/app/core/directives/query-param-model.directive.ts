@@ -32,7 +32,10 @@ export interface QueryParamModelConfig<TValue> {
   deserializeMulti?: QueryStringMultiDeserializer<TValue>;
 }
 
-@Directive({ selector: '[appQueryParamModel]', providers: [UnsubscriberService] })
+@Directive({
+    selector: '[appQueryParamModel]', providers: [UnsubscriberService],
+    standalone: false
+})
 export class QueryParamModelDirective<T> implements OnChanges {
   @Input('appQueryParamModel') config?: QueryParamModelConfig<T>;
 

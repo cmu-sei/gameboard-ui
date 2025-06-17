@@ -4,9 +4,10 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { TicketLabelPickerModalComponent } from '../../../support/components/ticket-label-picker-modal/ticket-label-picker-modal.component';
 
 @Component({
-  selector: 'app-ticket-label-picker',
-  templateUrl: './ticket-label-picker.component.html',
-  styleUrls: ['./ticket-label-picker.component.scss']
+    selector: 'app-ticket-label-picker',
+    templateUrl: './ticket-label-picker.component.html',
+    styleUrls: ['./ticket-label-picker.component.scss'],
+    standalone: false
 })
 export class TicketLabelPickerComponent implements OnInit {
   @Output() selectionChanged = new EventEmitter<string[]>();

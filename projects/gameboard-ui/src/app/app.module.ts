@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -62,12 +62,10 @@ import { ThemeBgDirective } from './core/directives/theme-bg.directive';
     UserNavItemComponent
   ],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: loadSettings,
-      deps: [ConfigService],
-      multi: true
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (loadSettings)(inject(ConfigService));
+        return initializerFn();
+      }),
     {
       provide: SignalRService,
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),

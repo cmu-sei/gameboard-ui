@@ -7,8 +7,8 @@ export interface ParameterChangeRouterLinkConfig {
 }
 
 @Component({
-  selector: 'app-parameter-change-link',
-  template: `
+    selector: 'app-parameter-change-link',
+    template: `
     <a *ngIf="!isDisabled; else disabled" [routerLink]="'./'" [queryParams]="queryParams" [hidden]="isDisabled">
         <ng-container *ngTemplateOutlet="content"></ng-container>
     </a>
@@ -22,7 +22,8 @@ export interface ParameterChangeRouterLinkConfig {
     <ng-template #content>
       <ng-content></ng-content>
     </ng-template>
-  `
+  `,
+    standalone: false
 })
 export class ParameterChangeLinkComponent implements OnInit {
   @Input() config?: ParameterChangeRouterLinkConfig;

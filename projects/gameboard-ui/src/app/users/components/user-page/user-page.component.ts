@@ -5,9 +5,10 @@ import { Observable, map } from 'rxjs';
 import { ApiUser } from '@/api/user-models';
 
 @Component({
-  selector: 'app-user-page',
-  templateUrl: './user-page.component.html',
-  styleUrls: ['./user-page.component.scss']
+    selector: 'app-user-page',
+    templateUrl: './user-page.component.html',
+    styleUrls: ['./user-page.component.scss'],
+    standalone: false
 })
 export class UserPageComponent {
   protected appName: string;

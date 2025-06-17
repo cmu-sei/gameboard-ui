@@ -1,7 +1,7 @@
-@import "../../../../../scss/variables";
+@use "../../../../../scss/variables";
 
 .q-label {
-  border-right: solid 2px $success;
+  border-right: solid 2px variables.$success;
   font-size: 2.8rem;
   line-height: 2.6rem;
 }

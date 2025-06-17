@@ -7,9 +7,10 @@ import { Team } from '@/api/player-models';
 import { DateTime } from 'luxon';
 
 @Component({
-  selector: 'app-extend-teams-modal',
-  templateUrl: './extend-teams-modal.component.html',
-  styleUrls: ['./extend-teams-modal.component.scss']
+    selector: 'app-extend-teams-modal',
+    templateUrl: './extend-teams-modal.component.html',
+    styleUrls: ['./extend-teams-modal.component.scss'],
+    standalone: false
 })
 export class ExtendTeamsModalComponent implements OnInit {
   game?: {

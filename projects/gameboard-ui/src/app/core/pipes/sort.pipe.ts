@@ -1,7 +1,10 @@
 import { SortService } from '@/services/sort.service';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'sort' })
+@Pipe({
+    name: 'sort',
+    standalone: false
+})
 export class SortPipe implements PipeTransform {
   constructor(private sortService: SortService) { }
 

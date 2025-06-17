@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'app-manage-manual-challenge-bonuses-modal',
-  templateUrl: './manage-manual-challenge-bonuses-modal.component.html',
-  styleUrls: ['./manage-manual-challenge-bonuses-modal.component.scss']
+    selector: 'app-manage-manual-challenge-bonuses-modal',
+    templateUrl: './manage-manual-challenge-bonuses-modal.component.html',
+    styleUrls: ['./manage-manual-challenge-bonuses-modal.component.scss'],
+    standalone: false
 })
 export class ManageManualChallengeBonusesModalComponent {
   teamId!: string;

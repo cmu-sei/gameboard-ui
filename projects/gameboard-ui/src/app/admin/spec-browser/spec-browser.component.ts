@@ -10,9 +10,10 @@ import { ExternalSpec } from '../../api/spec-models';
 import { SpecService } from '../../api/spec.service';
 
 @Component({
-  selector: 'app-spec-browser',
-  templateUrl: './spec-browser.component.html',
-  styleUrls: ['./spec-browser.component.scss']
+    selector: 'app-spec-browser',
+    templateUrl: './spec-browser.component.html',
+    styleUrls: ['./spec-browser.component.scss'],
+    standalone: false
 })
 export class SpecBrowserComponent {
   @Output() selected = new EventEmitter<ExternalSpec>();

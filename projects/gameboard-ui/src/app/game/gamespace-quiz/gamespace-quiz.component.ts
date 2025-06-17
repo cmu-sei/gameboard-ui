@@ -22,10 +22,11 @@ interface PendingSubmissionsUpdate {
 }
 
 @Component({
-  selector: 'app-gamespace-quiz',
-  templateUrl: './gamespace-quiz.component.html',
-  styleUrls: ['./gamespace-quiz.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-gamespace-quiz',
+    templateUrl: './gamespace-quiz.component.html',
+    styleUrls: ['./gamespace-quiz.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class GamespaceQuizComponent implements OnInit, OnChanges {
   @Input() challengeId?: string;

@@ -7,16 +7,15 @@ import { NotificationService } from '../../services/notification.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'app-support-pill',
-  standalone: true,
-  imports: [
-    FontAwesomeModule
-  ],
-  template: `
+    selector: 'app-support-pill',
+    imports: [
+        FontAwesomeModule
+    ],
+    template: `
   @if (count > 0) {
     <fa-icon [icon]="faPill" class="ml-2 text-warning"></fa-icon>
   }
-  `,
+  `
 })
 export class SupportPillComponent implements OnDestroy {
   count = 0;

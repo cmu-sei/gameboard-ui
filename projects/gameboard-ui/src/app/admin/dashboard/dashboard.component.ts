@@ -15,10 +15,11 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { RouterService } from '@/services/router.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class DashboardComponent implements OnInit {
   private api = inject(GameService);

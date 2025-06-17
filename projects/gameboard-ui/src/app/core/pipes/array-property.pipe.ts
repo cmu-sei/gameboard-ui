@@ -1,7 +1,10 @@
 import { hasProperty } from '@/../tools/functions';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'arrayProperty' })
+@Pipe({
+    name: 'arrayProperty',
+    standalone: false
+})
 export class ArrayPropertyPipe<T extends {}, U> implements PipeTransform {
   transform(value: T, propertyName: string): U[] | null {
     if (!value || !Array.isArray(value))

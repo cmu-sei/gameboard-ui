@@ -1,4 +1,4 @@
-@import "../../../../scss/variables";
+@use "../../../../scss/variables";
 
 ul {
   padding-inline-start: 2rem;
@@ -23,5 +23,5 @@ li {
 
 tr.team-bonuses-row > td,
 tr.advance-score-row > td {
-  border-top: solid 1px $success;
+  border-top: solid 1px variables.$success;
 }

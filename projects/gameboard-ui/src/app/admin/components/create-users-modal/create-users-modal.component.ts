@@ -10,9 +10,10 @@ import { SimpleEntity } from '@/api/models';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
-  selector: 'app-create-users-modal',
-  templateUrl: './create-users-modal.component.html',
-  styleUrls: ['./create-users-modal.component.scss']
+    selector: 'app-create-users-modal',
+    templateUrl: './create-users-modal.component.html',
+    styleUrls: ['./create-users-modal.component.scss'],
+    standalone: false
 })
 export class CreateUsersModalComponent {
   onCreated?: (response: TryCreateUsersResponse) => void | Promise<void>;

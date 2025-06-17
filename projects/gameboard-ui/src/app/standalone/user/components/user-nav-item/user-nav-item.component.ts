@@ -8,15 +8,14 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
 
 @Component({
-  selector: 'app-user-nav-item',
-  standalone: true,
-  imports: [
-    CoreModule,
-    RouterModule,
-    IfHasPermissionDirective
-  ],
-  templateUrl: './user-nav-item.component.html',
-  styleUrls: ['./user-nav-item.component.scss']
+    selector: 'app-user-nav-item',
+    imports: [
+        CoreModule,
+        RouterModule,
+        IfHasPermissionDirective
+    ],
+    templateUrl: './user-nav-item.component.html',
+    styleUrls: ['./user-nav-item.component.scss']
 })
 export class UserNavItemComponent implements OnInit {
   private authService = inject(AuthService);

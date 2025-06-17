@@ -1,4 +1,4 @@
-@import "../../../scss/variables";
+@use "../../../scss/variables";
 
 .card {
   border: 1px solid #222;
@@ -71,11 +71,11 @@ textarea {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $dark;
+  background: variables.$dark;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: darken($dark, 5%);
+  background: darken(variables.$dark, 5%);
 }
 
 ::-webkit-scrollbar-corner {
@@ -136,7 +136,7 @@ textarea {
 }
 
 .copy-id-button {
-  color: $success;
+  color: variables.$success;
 }
 
 .ticket-field-label {

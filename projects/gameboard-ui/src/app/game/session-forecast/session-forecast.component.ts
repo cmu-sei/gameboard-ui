@@ -8,9 +8,10 @@ import { Game, SessionForecast } from '../../api/game-models';
 import { GameService } from '../../api/game.service';
 
 @Component({
-  selector: 'app-session-forecast',
-  templateUrl: './session-forecast.component.html',
-  styleUrls: ['./session-forecast.component.scss']
+    selector: 'app-session-forecast',
+    templateUrl: './session-forecast.component.html',
+    styleUrls: ['./session-forecast.component.scss'],
+    standalone: false
 })
 export class SessionForecastComponent implements OnInit, AfterViewInit {
   @Input() game!: Game;

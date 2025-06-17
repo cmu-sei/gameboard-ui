@@ -12,11 +12,12 @@ import { SiteUsageReportSponsorsModalComponent } from './site-usage-report-spons
 import { SiteUsageReportChallengesListComponent } from './site-usage-report-challenges-list/site-usage-report-challenges-list.component';
 
 @Component({
-  selector: 'app-site-usage-report',
-  styles: [
-    ".report-section { margin-top: 60px; }"
-  ],
-  templateUrl: './site-usage-report.component.html',
+    selector: 'app-site-usage-report',
+    styles: [
+        ".report-section { margin-top: 60px; }"
+    ],
+    templateUrl: './site-usage-report.component.html',
+    standalone: false
 })
 export class SiteUsageReportComponent extends ReportComponentBase<SiteUsageReportParameters> {
   protected currentParameters?: SiteUsageReportParameters;

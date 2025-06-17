@@ -7,9 +7,10 @@ import { AdminService } from '@/api/admin.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
-  selector: 'app-active-challenges-modal',
-  templateUrl: './active-challenges-modal.component.html',
-  styleUrls: ['./active-challenges-modal.component.scss']
+    selector: 'app-active-challenges-modal',
+    templateUrl: './active-challenges-modal.component.html',
+    styleUrls: ['./active-challenges-modal.component.scss'],
+    standalone: false
 })
 export class ActiveChallengesModalComponent implements OnInit {
   playerMode?: PlayerMode;

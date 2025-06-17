@@ -12,17 +12,16 @@ import { fa } from '@/services/font-awesome.service';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
-  selector: 'app-team-challenges-modal',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    ErrorDivComponent,
-    SpinnerComponent,
-    ToSupportCodePipe
-  ],
-  templateUrl: './team-challenges-modal.component.html',
-  styleUrls: ['./team-challenges-modal.component.scss']
+    selector: 'app-team-challenges-modal',
+    imports: [
+        CommonModule,
+        CoreModule,
+        ErrorDivComponent,
+        SpinnerComponent,
+        ToSupportCodePipe
+    ],
+    templateUrl: './team-challenges-modal.component.html',
+    styleUrls: ['./team-challenges-modal.component.scss']
 })
 export class TeamChallengesModalComponent implements OnInit {
   private challengeService = inject(ChallengesService);

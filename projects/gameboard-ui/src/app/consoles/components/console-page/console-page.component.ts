@@ -11,15 +11,14 @@ import { AppTitleService } from '@/services/app-title.service';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
-  selector: 'app-console-page',
-  standalone: true,
-  imports: [
-    ConsoleComponent,
-    UserActivityListenerComponent
-  ],
-  providers: [UnsubscriberService],
-  templateUrl: './console-page.component.html',
-  styleUrl: './console-page.component.scss'
+    selector: 'app-console-page',
+    imports: [
+        ConsoleComponent,
+        UserActivityListenerComponent
+    ],
+    providers: [UnsubscriberService],
+    templateUrl: './console-page.component.html',
+    styleUrl: './console-page.component.scss'
 })
 export class ConsolePageComponent {
   private readonly consolesApi = inject(ConsolesService);

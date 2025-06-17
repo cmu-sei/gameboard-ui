@@ -4,9 +4,9 @@ import { fa } from "@/services/font-awesome.service";
 import { AvatarSize } from '../avatar/avatar.component';
 
 @Component({
-  selector: 'app-avatar-chip',
-  styleUrls: ['./avatar-chip.component.scss'],
-  template: `
+    selector: 'app-avatar-chip',
+    styleUrls: ['./avatar-chip.component.scss'],
+    template: `
     <div class="avatar-chip-component d-flex align-content-center align-items-center" [class.avatar-size-small]="avatarSize == 'small'">
       <app-avatar *ngIf="avatarImageUrl" [imageUrl]="avatarImageUrl" [size]="avatarSize"></app-avatar>
       <div class="avatar-chip-content-container ml-2 pr-2">
@@ -18,7 +18,8 @@ import { AvatarSize } from '../avatar/avatar.component';
         </button>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class AvatarChipComponent {
   @Input() avatarImageUrl?: SafeUrl;

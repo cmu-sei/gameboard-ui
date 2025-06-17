@@ -2,9 +2,10 @@ import { PagingArgs } from '@/api/models';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-select-pager',
-  templateUrl: './select-pager.component.html',
-  styleUrls: ['./select-pager.component.scss']
+    selector: 'app-select-pager',
+    templateUrl: './select-pager.component.html',
+    styleUrls: ['./select-pager.component.scss'],
+    standalone: false
 })
 export class SelectPagerComponent implements OnChanges {
   @Input() itemCount?: number;

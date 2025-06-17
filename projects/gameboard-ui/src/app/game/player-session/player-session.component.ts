@@ -14,9 +14,10 @@ import { TeamService } from '@/api/team.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
-  selector: 'app-player-session',
-  templateUrl: './player-session.component.html',
-  styleUrls: ['./player-session.component.scss']
+    selector: 'app-player-session',
+    templateUrl: './player-session.component.html',
+    styleUrls: ['./player-session.component.scss'],
+    standalone: false
 })
 export class PlayerSessionComponent implements OnDestroy {
   @Input() ctx$!: Observable<GameContext | undefined>;

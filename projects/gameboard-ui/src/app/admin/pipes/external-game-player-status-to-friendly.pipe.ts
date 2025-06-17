@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SyncStartPlayerStatus } from '../components/external-game-admin/external-game-admin.component';
 
-@Pipe({ name: 'externalGamePlayerStatusToFriendly' })
+@Pipe({
+    name: 'externalGamePlayerStatusToFriendly',
+    standalone: false
+})
 export class ExternalGamePlayerStatusToFriendlyPipe implements PipeTransform {
 
   transform(value: SyncStartPlayerStatus): string {

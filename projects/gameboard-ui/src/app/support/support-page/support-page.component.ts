@@ -8,10 +8,11 @@ import { SupportService } from '@/api/support.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-support-page',
-  templateUrl: './support-page.component.html',
-  styleUrls: ['./support-page.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-support-page',
+    templateUrl: './support-page.component.html',
+    styleUrls: ['./support-page.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class SupportPageComponent implements OnInit {
   protected settings?: SupportSettings;

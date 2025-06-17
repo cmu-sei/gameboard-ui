@@ -2,7 +2,10 @@ import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
 import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 
-@Directive({ selector: '[appCopyOnClick]' })
+@Directive({
+    selector: '[appCopyOnClick]',
+    standalone: false
+})
 export class CopyOnClickDirective implements AfterViewInit {
   @Input('appCopyOnClick') text?: string;
   @Input('appCopyOnClickMessage') message?: string;

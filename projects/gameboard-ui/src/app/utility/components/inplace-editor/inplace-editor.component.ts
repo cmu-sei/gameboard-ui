@@ -3,9 +3,10 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-inplace-editor',
-  templateUrl: './inplace-editor.component.html',
-  styleUrls: ['./inplace-editor.component.scss']
+    selector: 'app-inplace-editor',
+    templateUrl: './inplace-editor.component.html',
+    styleUrls: ['./inplace-editor.component.scss'],
+    standalone: false
 })
 export class InplaceEditorComponent {
   @ViewChild('input') input!: ElementRef;

@@ -14,9 +14,10 @@ import { ConfigService } from '../../utility/config.service';
 import { fa } from '@/services/font-awesome.service';
 
 @Component({
-  selector: 'app-team-observer',
-  templateUrl: './team-observer.component.html',
-  styleUrls: ['./team-observer.component.scss']
+    selector: 'app-team-observer',
+    templateUrl: './team-observer.component.html',
+    styleUrls: ['./team-observer.component.scss'],
+    standalone: false
 })
 export class TeamObserverComponent implements OnDestroy {
   @Input() gameId?: string;

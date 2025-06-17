@@ -13,9 +13,10 @@ export interface ChallengeAttemptSummary {
 }
 
 @Component({
-  selector: 'app-challenge-attempt-summary',
-  templateUrl: './challenge-attempt-summary.component.html',
-  styleUrls: ['./challenge-attempt-summary.component.scss']
+    selector: 'app-challenge-attempt-summary',
+    templateUrl: './challenge-attempt-summary.component.html',
+    styleUrls: ['./challenge-attempt-summary.component.scss'],
+    standalone: false
 })
 export class ChallengeAttemptSummaryComponent {
   @Input() attempt?: ChallengeAttemptSummary;

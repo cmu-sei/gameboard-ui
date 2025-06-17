@@ -8,10 +8,11 @@ import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-notifications',
-  templateUrl: './admin-system-notifications.component.html',
-  styleUrls: ['./admin-system-notifications.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-notifications',
+    templateUrl: './admin-system-notifications.component.html',
+    styleUrls: ['./admin-system-notifications.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class AdminSystemNotificationsComponent implements OnInit {
   private _forceLoad$ = new Subject<boolean>();

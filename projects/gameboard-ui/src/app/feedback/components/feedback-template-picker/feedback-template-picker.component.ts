@@ -19,17 +19,16 @@ interface UpsertFeedbackTemplateForm {
 }
 
 @Component({
-  selector: 'app-feedback-template-picker',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FontAwesomeModule,
-    CoreModule,
-    FeedbackSubmissionFormComponent
-  ],
-  templateUrl: './feedback-template-picker.component.html',
-  styleUrls: ['./feedback-template-picker.component.scss']
+    selector: 'app-feedback-template-picker',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FontAwesomeModule,
+        CoreModule,
+        FeedbackSubmissionFormComponent
+    ],
+    templateUrl: './feedback-template-picker.component.html',
+    styleUrls: ['./feedback-template-picker.component.scss']
 })
 export class FeedbackTemplatePickerComponent implements OnInit {
   @Input() labelText?: string;

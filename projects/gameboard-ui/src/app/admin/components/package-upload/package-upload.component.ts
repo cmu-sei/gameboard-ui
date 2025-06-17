@@ -9,15 +9,14 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { unique } from 'projects/gameboard-ui/src/tools/tools';
 
 @Component({
-  selector: 'app-package-upload',
-  standalone: true,
-  templateUrl: './package-upload.component.html',
-  styleUrl: './package-upload.component.scss',
-  imports: [
-    CoreModule,
-    ErrorDivComponent,
-    SpinnerComponent
-  ]
+    selector: 'app-package-upload',
+    templateUrl: './package-upload.component.html',
+    styleUrl: './package-upload.component.scss',
+    imports: [
+        CoreModule,
+        ErrorDivComponent,
+        SpinnerComponent
+    ]
 })
 export class PackageUploadComponent {
   imported = output();

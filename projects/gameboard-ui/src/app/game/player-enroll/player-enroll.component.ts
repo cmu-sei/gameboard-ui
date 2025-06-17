@@ -17,9 +17,10 @@ import { GameRegistrationType } from '@/api/game-models';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 
 @Component({
-  selector: 'app-player-enroll',
-  templateUrl: './player-enroll.component.html',
-  styleUrls: ['./player-enroll.component.scss']
+    selector: 'app-player-enroll',
+    templateUrl: './player-enroll.component.html',
+    styleUrls: ['./player-enroll.component.scss'],
+    standalone: false
 })
 export class PlayerEnrollComponent implements OnInit, OnDestroy {
   @Input() ctx!: GameContext;

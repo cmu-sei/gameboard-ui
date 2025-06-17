@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ConfigService } from '../../utility/config.service';
 
-@Pipe({ name: 'countdowncolor' })
+@Pipe({
+    name: 'countdowncolor',
+    standalone: false
+})
 export class CountdownColorPipe implements PipeTransform {
   startSecondsAtMinute: number = 5; // default to 5 minutes
 

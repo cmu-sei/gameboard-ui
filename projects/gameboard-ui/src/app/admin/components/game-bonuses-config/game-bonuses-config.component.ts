@@ -7,9 +7,10 @@ import { GameScoringConfig, UpdateGameAutoChallengeBonusConfig } from '@/service
 import { YamlService } from '@/services/yaml.service';
 
 @Component({
-  selector: 'app-game-bonuses-config',
-  templateUrl: './game-bonuses-config.component.html',
-  styleUrls: ['./game-bonuses-config.component.scss']
+    selector: 'app-game-bonuses-config',
+    templateUrl: './game-bonuses-config.component.html',
+    styleUrls: ['./game-bonuses-config.component.scss'],
+    standalone: false
 })
 export class GameBonusesConfigComponent implements OnInit, OnChanges {
   @Input() isEnabled = false;

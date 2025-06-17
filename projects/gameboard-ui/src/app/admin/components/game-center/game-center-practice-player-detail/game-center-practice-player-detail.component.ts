@@ -12,9 +12,10 @@ export interface GameCenterPracticePlayerDetailContext {
 }
 
 @Component({
-  selector: 'app-game-center-practice-player-detail',
-  templateUrl: './game-center-practice-player-detail.component.html',
-  styleUrls: ['./game-center-practice-player-detail.component.scss']
+    selector: 'app-game-center-practice-player-detail',
+    templateUrl: './game-center-practice-player-detail.component.html',
+    styleUrls: ['./game-center-practice-player-detail.component.scss'],
+    standalone: false
 })
 export class GameCenterPracticePlayerDetailComponent {
   ctx?: GameCenterPracticePlayerDetailContext;

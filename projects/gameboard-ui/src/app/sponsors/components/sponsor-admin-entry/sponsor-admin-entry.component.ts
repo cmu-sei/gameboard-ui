@@ -5,9 +5,10 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { SponsorEditModalComponent } from '../sponsor-edit-modal/sponsor-edit-modal.component';
 
 @Component({
-  selector: 'app-sponsor-admin-entry',
-  templateUrl: './sponsor-admin-entry.component.html',
-  styleUrls: ['./sponsor-admin-entry.component.scss']
+    selector: 'app-sponsor-admin-entry',
+    templateUrl: './sponsor-admin-entry.component.html',
+    styleUrls: ['./sponsor-admin-entry.component.scss'],
+    standalone: false
 })
 export class SponsorAdminEntryComponent {
   @Input() sponsor?: Sponsor;

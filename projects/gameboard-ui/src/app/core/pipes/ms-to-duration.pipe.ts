@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'msToDuration' })
+@Pipe({
+    name: 'msToDuration',
+    standalone: false
+})
 export class MsToDurationPipe implements PipeTransform {
   transform(value?: number): string {
     if (!value)

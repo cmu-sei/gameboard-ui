@@ -9,9 +9,10 @@ import { UserReport, PlayerReport } from '../../api/report-models';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-user-report',
-  templateUrl: './user-report.component.html',
-  styleUrls: ['./user-report.component.scss']
+    selector: 'app-user-report',
+    templateUrl: './user-report.component.html',
+    styleUrls: ['./user-report.component.scss'],
+    standalone: false
 })
 export class UserReportComponent implements OnInit {
   users?: UserReport;

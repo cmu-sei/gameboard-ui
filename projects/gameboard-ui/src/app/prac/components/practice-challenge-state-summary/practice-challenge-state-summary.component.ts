@@ -11,10 +11,11 @@ import { ToastService } from '@/utility/services/toast.service';
 import { UserSettingsService } from '@/services/user-settings.service';
 
 @Component({
-  selector: 'app-practice-challenge-state-summary',
-  templateUrl: './practice-challenge-state-summary.component.html',
-  styleUrls: ['./practice-challenge-state-summary.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-practice-challenge-state-summary',
+    templateUrl: './practice-challenge-state-summary.component.html',
+    styleUrls: ['./practice-challenge-state-summary.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class PracticeChallengeStateSummaryComponent {
   protected activeChallenge$: Observable<UserActiveChallenge | null>;
