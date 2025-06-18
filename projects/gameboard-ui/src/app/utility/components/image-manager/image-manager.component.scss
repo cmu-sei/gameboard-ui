@@ -1,5 +1,5 @@
 @use "sass:color";
-@use "../../../../scss/variables";
+@import "theme/theme";
 
 .dropzone-active {
   background-color: rgba(215, 154, 254, 0.5);
@@ -54,9 +54,9 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: variables.$light;
+  background: $light;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: color.adjust(variables.$light, $lightness: -5%);
+  background: color.adjust($light, $lightness: -5%);
 }

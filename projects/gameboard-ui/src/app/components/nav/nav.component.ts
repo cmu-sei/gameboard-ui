@@ -13,19 +13,21 @@ import { SupportPillComponent } from '@/support/support-pill/support-pill.compon
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { IfHasPermissionDirective } from '@/standalone/directives/if-has-permission.directive';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @Component({
-    selector: 'app-nav',
-    imports: [
-        CommonModule,
-        RouterModule,
-        FontAwesomeModule,
-        IfHasPermissionDirective,
-        SupportPillComponent,
-    ],
-    templateUrl: './nav.component.html',
-    styleUrls: ['./nav.component.scss'],
-    providers: [UnsubscriberService]
+  selector: 'app-nav',
+  imports: [
+    CommonModule,
+    RouterModule,
+    FontAwesomeModule,
+    BsDropdownModule,
+    IfHasPermissionDirective,
+    SupportPillComponent,
+  ],
+  templateUrl: './nav.component.html',
+  styleUrls: ['./nav.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class AppNavComponent implements OnInit {
   private authService = inject(AuthService);

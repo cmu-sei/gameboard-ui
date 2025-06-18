@@ -1,4 +1,4 @@
-@import "../../../../scss/variables";
+@import "theme/theme";
 
 .report-page-component {
   width: 1600px;
@@ -53,7 +53,6 @@ $subtleSize: 0.9rem;
       padding: 4px 8px;
     }
 
-    /* override reboot.scss */
     td p {
       margin: 0;
     }
@@ -84,7 +83,7 @@ $subtleSize: 0.9rem;
   }
 
   .subtle-info {
-    color: $muted;
+    color: $light;
     font-size: $subtleSize;
     margin: 0;
   }

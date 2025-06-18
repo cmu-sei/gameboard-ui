@@ -1,4 +1,4 @@
-@import "../../../../../scss/variables";
+@import "theme/theme";
 
 label {
   margin-bottom: 0;
@@ -10,7 +10,7 @@ label {
 }
 
 .dropzone-target {
-  border: dashed 1px $foreground;
+  border: dashed 1px $body-color;
 }
 
 .section-header {
@@ -31,7 +31,7 @@ label {
 }
 
 .form-group small {
-  color: $muted;
+  color: $light;
 }
 
 .help-text {

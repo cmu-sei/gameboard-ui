@@ -1,4 +1,4 @@
-@import "../../../../scss/variables";
+@import "theme/theme";
 
 :host {
   display: block;
@@ -47,7 +47,7 @@
 .parent-sponsor-button {
   background-color: $gray-900;
   border-radius: 8px;
-  color: $foreground;
+  color: $body-color;
   position: relative;
   padding: 0.5rem 0.5rem 0.5rem 100px;
   margin: 24px 0;

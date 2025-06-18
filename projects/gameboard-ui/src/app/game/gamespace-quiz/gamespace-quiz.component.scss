@@ -1,5 +1,5 @@
 @use "sass:color";
-@use "../../../scss/variables";
+@import "theme/theme";
 
 label {
   font-size: 1rem !important;
@@ -12,8 +12,8 @@ label {
 }
 
 .incorrect {
-  background-color: color.adjust(variables.$warning, $lightness: 5%);
-  color: variables.$body-bg;
+  background-color: color.adjust($warning, $lightness: 5%);
+  color: $body-bg;
 }
 
 .no-wrap {

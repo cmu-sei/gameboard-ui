@@ -1,4 +1,4 @@
-@import "../../../../scss/variables";
+@import "theme/theme";
 
 app-game-card-image {
   width: 120px;
@@ -10,7 +10,7 @@ app-big-stat {
 
 ::ng-deep .tabs-container {
   a {
-    color: $foreground !important;
+    color: $body-color !important;
     display: block;
     padding: 8px 20px 8px 20px;
     text-decoration: none;

@@ -1,9 +1,9 @@
 @use "sass:color";
-@use "../../../../scss/variables";
+@import "theme/theme";
 
 .category-header {
-  background-color: variables.$foreground;
-  color: color.adjust(variables.$body-bg, $lightness: 20%);
+  background-color: $body-color;
+  color: color.adjust($body-bg, $lightness: 20%);
   margin: 0;
   padding: 0.5rem;
   vertical-align: middle;
@@ -18,22 +18,22 @@
 }
 
 .has-permission {
-  color: variables.$success;
+  color: $success;
 }
 
 .no-permission {
-  color: variables.$light;
+  color: $light;
 }
 
 .your-role {
-  background-color: variables.$success;
+  background-color: $success;
 
   .has-permission {
-    color: variables.$foreground;
+    color: $body-color;
   }
 
   .no-permission {
-    color: color.adjust(variables.$foreground, $lightness: -20%);
+    color: color.adjust($body-color, $lightness: -20%);
   }
 }
 
@@ -42,7 +42,7 @@
   left: 0px;
   position: sticky;
   z-index: 999;
-  background-color: color.adjust(variables.$foreground, $lightness: -80%);
+  background-color: color.adjust($body-color, $lightness: -80%);
 
   th {
     border-bottom: 1px solid #fff !important;

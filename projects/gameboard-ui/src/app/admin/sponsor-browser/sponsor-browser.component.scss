@@ -1,17 +1,17 @@
-@import "../../../scss/variables";
+@import "theme/theme";
 
 h4 {
   margin-bottom: 1.5rem;
 }
 
 .panel {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 hr {
-  border: solid 1px $foreground;
+  border: solid 1px $body-color;
 }
 
 .root-sponsor-container {
-  border-bottom: dashed 1px $foreground;
+  border-bottom: dashed 1px $body-color;
 }

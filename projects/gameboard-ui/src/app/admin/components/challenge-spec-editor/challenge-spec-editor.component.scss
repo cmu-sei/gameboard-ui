@@ -1,13 +1,13 @@
-@use "../../../../scss/variables";
+@import "theme/theme";
 
 .challenge-spec-editor-component {
-  background-color: variables.$secondary;
-  border: solid 1px variables.$foreground;
+  background-color: $secondary;
+  border: solid 1px $body-color;
   border-radius: 6px;
   padding: 0.5rem;
 
   hr {
-    border: dashed 1px variables.$foreground;
+    border: dashed 1px $body-color;
   }
 }
 

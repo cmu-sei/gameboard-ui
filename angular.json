@@ -35,9 +35,21 @@
               "node_modules/toastify-js/src/toastify.css",
               "node_modules/vis-timeline/styles/vis-timeline-graph2d.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "projects/gameboard-ui/src/styles.scss"
+              "projects/gameboard-ui/src/styles/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/gameboard-ui/src/styles"],
+              "sass": {
+                "silenceDeprecations": [
+                  "mixed-decls",
+                  "color-functions",
+                  "global-builtin",
+                  "import"
+                ]
+              }
+            },
             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/marked/marked.min.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js"
             ],
@@ -110,9 +122,18 @@
             ],
             "styles": [
               "node_modules/toastify-js/src/toastify.css",
-              "projects/gameboard-ui/src/styles.scss"
+              "node_modules/vis-timeline/styles/vis-timeline-graph2d.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "projects/gameboard-ui/src/styles/styles.scss"
             ],
-            "scripts": []
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles"]
+            },
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/marked/marked.min.js",
+              "node_modules/emoji-toolkit/lib/js/joypixels.min.js"
+            ]
           }
         }
       }

@@ -1,4 +1,4 @@
-@import "../../../../scss/variables";
+@import "theme/theme";
 
 :host {
   display: block;
@@ -12,6 +12,6 @@
 
   &.active {
     background-color: $success;
-    color: $foreground;
+    color: $body-color;
   }
 }

@@ -1,28 +1,21 @@
-@use "sass:color";
-@use "sass:map";
-@use "variables";
-
-// Darkly 4.3.1
-// Bootswatch
-
-// Navbar ======================================================================
+@import "./theme/full";
 
 .bg-primary {
   .navbar-nav .active > .nav-link {
-    color: variables.$success !important;
+    color: $success !important;
   }
 }
 
 .bg-light {
   &.navbar {
-    background-color: variables.$success !important;
+    background-color: $success !important;
   }
 
   &.navbar-light .navbar-nav {
     .nav-link:focus,
     .nav-link:hover,
     .active > .nav-link {
-      color: variables.$primary !important;
+      color: $primary !important;
     }
   }
 }
@@ -33,7 +26,7 @@
 
 .blockquote {
   &-footer {
-    color: variables.$gray-600;
+    color: $gray-600;
   }
 }
 
@@ -44,7 +37,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$primary;
+      background-color: $primary;
     }
   }
 
@@ -52,7 +45,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$secondary;
+      background-color: $secondary;
     }
   }
 
@@ -60,7 +53,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$light;
+      background-color: $light;
     }
   }
 
@@ -68,7 +61,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$dark;
+      background-color: $dark;
     }
   }
 
@@ -76,7 +69,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$success;
+      background-color: $success;
     }
   }
 
@@ -84,7 +77,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$info;
+      background-color: $info;
     }
   }
 
@@ -92,7 +85,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$danger;
+      background-color: $danger;
     }
   }
 
@@ -100,7 +93,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$warning;
+      background-color: $warning;
     }
   }
 
@@ -108,7 +101,7 @@
     &,
     > th,
     > td {
-      background-color: variables.$table-active-bg;
+      background-color: $table-active-bg;
     }
   }
 
@@ -117,7 +110,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$primary, $lightness: -5%);
+        background-color: darken($primary, 5%);
       }
     }
 
@@ -125,7 +118,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$secondary, $lightness: -5%);
+        background-color: darken($secondary, 5%);
       }
     }
 
@@ -133,7 +126,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$light, $lightness: -5%);
+        background-color: darken($light, 5%);
       }
     }
 
@@ -141,7 +134,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$dark, $lightness: -5%);
+        background-color: darken($dark, 5%);
       }
     }
 
@@ -149,7 +142,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$success, $lightness: -5%);
+        background-color: darken($success, 5%);
       }
     }
 
@@ -157,7 +150,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$info, $lightness: -5%);
+        background-color: darken($info, 5%);
       }
     }
 
@@ -165,7 +158,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$danger, $lightness: -5%);
+        background-color: darken($danger, 5%);
       }
     }
 
@@ -173,7 +166,7 @@
       &,
       > th,
       > td {
-        background-color: color.adjust(variables.$warning, $lightness: -5%);
+        background-color: darken($warning, 5%);
       }
     }
 
@@ -181,7 +174,7 @@
       &,
       > th,
       > td {
-        background-color: variables.$table-active-bg;
+        background-color: $table-active-bg;
       }
     }
   }
@@ -231,7 +224,7 @@
 
 .alert {
   border: none;
-  color: variables.$white;
+  color: $white;
 
   a,
   .alert-link {
@@ -239,11 +232,11 @@
     text-decoration: underline;
   }
 
-  @each $color, $value in variables.$theme-colors {
+  @each $color, $value in $theme-colors {
     &-#{$color} {
-      @if variables.$enable-gradients {
+      @if $enable-gradients {
         background: $value
-          linear-gradient(180deg, mix(variables.$white, $value, 15%), $value)
+          linear-gradient(180deg, mix($white, $value, 15%), $value)
           repeat-x;
       } @else {
         background-color: $value;
@@ -252,8 +245,6 @@
   }
 }
 
-// Progress bars ===============================================================
-
 // Containers ==================================================================
 
 .list-group-item-action {
@@ -261,7 +252,7 @@
 
   &:hover,
   &:focus {
-    background-color: variables.$gray-900;
+    background-color: $gray-900;
     color: #fff;
   }
 

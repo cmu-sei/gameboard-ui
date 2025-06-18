@@ -1,5 +1,5 @@
 @use "sass:color";
-@use "../../../scss/variables";
+@import "theme/theme";
 
 li {
   list-style-type: circle;
@@ -43,13 +43,13 @@ li {
 // scroll bar to match theme
 ::-webkit-scrollbar {
   border-radius: 0.25rem;
-  background: variables.$black;
+  background: $black;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: variables.$dark;
+  background: $dark;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: color.adjust(variables.$dark, $lightness: -5%);
+  background: color.adjust($dark, $lightness: -5%);
 }

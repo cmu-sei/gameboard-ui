@@ -1,4 +1,4 @@
-@import "../../../../scss/variables";
+@import "theme/theme";
 
 .tag-chip {
   margin: 0;
@@ -16,5 +16,5 @@
 }
 
 .total-points-container {
-  border-right: 1px solid $foreground;
+  border-right: 1px solid $body-color;
 }

@@ -1,85 +1,86 @@
-@import '../../../scss/variables';
+@import "theme/theme";
 
 .text-col {
-    min-width: 400px;
+  min-width: 400px;
 }
 
 .num-col {
-    min-width: 80px;
-    max-width: 150px;
+  min-width: 80px;
+  max-width: 150px;
 }
 
 .table-cell {
-    max-width: 900px;
+  max-width: 900px;
 }
 
 .long-text {
-    min-width: 800px;
+  min-width: 800px;
 }
 
 .num-col > .prompt {
-    max-width: 200px;
+  max-width: 200px;
 }
 
 .q-id {
-    opacity: 70%;
+  opacity: 70%;
 }
 
 .time-col {
-    min-width: 120px;
+  min-width: 120px;
 }
 
 .feedback-table {
-    width: 100%;
+  width: 100%;
 }
 
 .table-wrapper {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 
 td {
-    white-space: normal;
-    overflow-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .required {
-    color: red;
-    opacity: 40%;
-    position: relative;
-    top: -0.2rem;
-    padding-left: 0.1rem;
+  color: red;
+  opacity: 40%;
+  position: relative;
+  top: -0.2rem;
+  padding-left: 0.1rem;
 }
 
 .minimized > td > div {
-    height: 80px;
-    overflow: hidden;
+  height: 80px;
+  overflow: hidden;
 }
 
-:not(.minimized) > td, .minimized:hover {
-    background-color: rgba($dark, 0.5);
+:not(.minimized) > td,
+.minimized:hover {
+  background-color: rgba($dark, 0.5);
 }
 
 .table-row > td > div {
-    min-height: 80px;
+  min-height: 80px;
 }
 
 .table-row {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .blank-cell {
-    opacity: 50%;
+  opacity: 50%;
 }
 
 // for table scroll bar to match theme
 .table-wrapper::-webkit-scrollbar {
-    background: $black; 
+  background: $black;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-    background: $dark; 
+  background: $dark;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: darken($dark, 5%); 
+  background: darken($dark, 5%);
 }

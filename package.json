@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/core": "^19.2.15",
     "@angular/animations": "^19.2.14",
     "@angular/cdk": "^19.2.18",
     "@angular/common": "^19.2.14",
@@ -35,7 +36,7 @@
     "@ngneat/elf-requests": "^1.7.0",
     "@ngneat/elf-state-history": "^1.3.0",
     "@novnc/novnc": "1.4.0",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "^5.3.7",
     "chart.js": "^4.4.7",
     "chartjs-adapter-luxon": "^1.3.1",
     "jquery": "^3.7.1",

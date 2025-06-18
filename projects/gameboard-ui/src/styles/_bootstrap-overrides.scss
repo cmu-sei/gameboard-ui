@@ -1,0 +1,160 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #ebebeb;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #999;
+$gray-700: #444;
+$gray-800: #303030;
+$gray-900: #222;
+$black: #000;
+
+$blue: #375a7f;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #e83e8c;
+$red: #a41e25;
+$orange: #fd7e14;
+$yellow: #f39c12;
+$green: #257423;
+$alt-green: #2e8540;
+$light-green: #41ad57;
+$teal: #20c997;
+$cyan: #3498db;
+
+$primary: #181866;
+$secondary: $gray-800;
+$success: $light-green;
+$success-light: lighten($light-green, 20%);
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-600;
+$dark: $gray-800;
+
+$yiq-contrasted-threshold: 175;
+
+// Body
+$body-bg: $black;
+$body-color: $gray-100;
+
+// Links
+$link-color: $success;
+
+// Fonts
+$font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI",
+  Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol";
+
+$font-size-base: 0.9375rem;
+
+$h1-font-size: 2.5rem;
+$h2-font-size: 2rem;
+$h3-font-size: 1.5rem;
+
+// Tables
+$table-accent-bg: $gray-800;
+
+$table-border-color: $gray-700;
+
+// Forms
+$input-border-color: transparent;
+
+$input-group-addon-color: $gray-500;
+$input-group-addon-bg: $gray-700;
+
+$custom-file-color: $gray-500;
+$custom-file-border-color: $gray-700;
+
+// Dropdowns
+$dropdown-bg: $gray-900;
+$dropdown-border-color: $gray-700;
+$dropdown-divider-bg: $gray-700;
+
+$dropdown-link-color: $white;
+$dropdown-link-hover-color: $white;
+$dropdown-link-hover-bg: $primary;
+
+// Navs
+$nav-link-padding-x: 2rem;
+$nav-link-disabled-color: $gray-500;
+
+$nav-tabs-border-color: $gray-700;
+$nav-tabs-link-hover-border-color: $nav-tabs-border-color $nav-tabs-border-color
+  transparent;
+$nav-tabs-link-active-color: $white;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color
+  $nav-tabs-border-color transparent;
+
+// Navbar
+
+$navbar-padding-y: 1rem;
+
+$navbar-dark-color: rgba($white, 0.6);
+$navbar-dark-hover-color: $white;
+
+$navbar-light-color: $white;
+$navbar-light-hover-color: $success;
+$navbar-light-active-color: $white;
+$navbar-light-disabled-color: rgba($white, 0.3);
+$navbar-light-toggler-border-color: rgba($white, 0.1);
+
+// Pagination
+
+$pagination-color: $white;
+$pagination-bg: $success;
+$pagination-border-width: 0;
+$pagination-border-color: transparent;
+
+$pagination-hover-color: $white;
+$pagination-hover-bg: lighten($success, 10%);
+$pagination-hover-border-color: transparent;
+
+$pagination-active-bg: $pagination-hover-bg;
+$pagination-active-border-color: transparent;
+
+$pagination-disabled-color: $white;
+$pagination-disabled-bg: darken($success, 15%);
+$pagination-disabled-border-color: transparent;
+
+// Jumbotron
+$jumbotron-bg: $gray-900;
+
+// Cards
+$card-cap-bg: $black;
+$card-bg: $gray-900;
+
+// Popovers
+$popover-bg: $gray-800;
+$popover-header-bg: $gray-700;
+
+// Modals
+$modal-content-bg: $gray-800;
+$modal-content-border-color: $gray-700;
+
+$modal-header-border-color: $gray-700;
+
+// Progress bars
+$progress-height: 0.625rem;
+$progress-font-size: 0.625rem;
+$progress-bg: $gray-700;
+
+// List group
+$list-group-bg: $gray-900;
+$list-group-border-color: $gray-700;
+
+$list-group-hover-bg: $gray-800;
+
+// Breadcrumbs
+$breadcrumb-bg: $gray-700;
+
+// Close
+$close-color: $white;
+$close-text-shadow: none;
+
+// Code
+$pre-color: inherit;

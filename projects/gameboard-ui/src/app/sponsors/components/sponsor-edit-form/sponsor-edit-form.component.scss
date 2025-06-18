@@ -1,30 +1,31 @@
-@import "../../../../scss/variables";
+@import "theme/theme";
 
-img, .dropzone-target {
-    height: 96px;
-    width: 96px;
-    object-fit: cover;
+img,
+.dropzone-target {
+  height: 96px;
+  width: 96px;
+  object-fit: cover;
 }
 
 .dropzone-target {
-    border: dashed 1px $foreground;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 50%;
+  border: dashed 1px $body-color;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
 
-    &.is-dropping {
-        border-color: $success;
-    }
+  &.is-dropping {
+    border-color: $success;
+  }
 }
 
 .add-button {
-    font-size: 4rem;
-    margin-bottom: 8px;
+  font-size: 4rem;
+  margin-bottom: 8px;
 }
 
 .input-with-label {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 }

@@ -1,9 +1,9 @@
-@use "./variables";
+@import "bootstrap";
 
 .gb-toast {
-  background-color: variables.$dark !important;
+  background-color: $dark !important;
   background-image: none !important;
-  border: solid 2px variables.$success;
+  border: solid 2px $success;
   border-radius: 6px;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -18,11 +18,11 @@
     justify-content: center;
 
     strong {
-      color: variables.$success;
+      color: $success;
     }
 
     em {
-      color: variables.$muted;
+      color: $light;
     }
   }
 
@@ -32,7 +32,7 @@
 
   svg {
     display: block;
-    fill: variables.$gray-100 !important;
+    fill: $gray-100 !important;
   }
 
   button.toast-close {
