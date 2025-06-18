@@ -1,0 +1,856 @@
+// FORMERLY OF BOOTSWATCH FAME
+
+.bg-primary {
+  .navbar-nav .active > .nav-link {
+    color: $success !important;
+  }
+}
+
+.bg-light {
+  &.navbar {
+    background-color: $success !important;
+  }
+
+  &.navbar-light .navbar-nav {
+    .nav-link:focus,
+    .nav-link:hover,
+    .active > .nav-link {
+      color: $primary !important;
+    }
+  }
+}
+
+// Buttons =====================================================================
+
+// Typography ==================================================================
+
+.blockquote {
+  &-footer {
+    color: $gray-600;
+  }
+}
+
+// Tables ======================================================================
+
+.table {
+  &-primary {
+    &,
+    > th,
+    > td {
+      background-color: $primary;
+    }
+  }
+
+  &-secondary {
+    &,
+    > th,
+    > td {
+      background-color: $secondary;
+    }
+  }
+
+  &-light {
+    &,
+    > th,
+    > td {
+      background-color: $light;
+    }
+  }
+
+  &-dark {
+    &,
+    > th,
+    > td {
+      background-color: $dark;
+    }
+  }
+
+  &-success {
+    &,
+    > th,
+    > td {
+      background-color: $success;
+    }
+  }
+
+  &-info {
+    &,
+    > th,
+    > td {
+      background-color: $info;
+    }
+  }
+
+  &-danger {
+    &,
+    > th,
+    > td {
+      background-color: $danger;
+    }
+  }
+
+  &-warning {
+    &,
+    > th,
+    > td {
+      background-color: $warning;
+    }
+  }
+
+  &-active {
+    &,
+    > th,
+    > td {
+      background-color: $table-active-bg;
+    }
+  }
+
+  &-hover {
+    .table-primary:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($primary, 5%);
+      }
+    }
+
+    .table-secondary:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($secondary, 5%);
+      }
+    }
+
+    .table-light:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($light, 5%);
+      }
+    }
+
+    .table-dark:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($dark, 5%);
+      }
+    }
+
+    .table-success:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($success, 5%);
+      }
+    }
+
+    .table-info:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($info, 5%);
+      }
+    }
+
+    .table-danger:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($danger, 5%);
+      }
+    }
+
+    .table-warning:hover {
+      &,
+      > th,
+      > td {
+        background-color: darken($warning, 5%);
+      }
+    }
+
+    .table-active:hover {
+      &,
+      > th,
+      > td {
+        background-color: $table-active-bg;
+      }
+    }
+  }
+}
+
+// Forms =======================================================================
+
+.input-group-addon {
+  color: #fff;
+}
+
+// Navs ========================================================================
+
+.nav-tabs,
+.nav-pills {
+  .nav-link,
+  .nav-link.active,
+  .nav-link.active:focus,
+  .nav-link.active:hover,
+  .nav-item.open .nav-link,
+  .nav-item.open .nav-link:focus,
+  .nav-item.open .nav-link:hover {
+    color: #fff;
+  }
+}
+
+.breadcrumb a {
+  color: #fff;
+}
+
+.pagination {
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+// Indicators ==================================================================
+
+.close {
+  opacity: 0.4;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+.alert {
+  border: none;
+  color: $white;
+
+  a,
+  .alert-link {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  @each $color, $value in $theme-colors {
+    &-#{$color} {
+      @if $enable-gradients {
+        background: $value
+          linear-gradient(180deg, mix($white, $value, 15%), $value)
+          repeat-x;
+      } @else {
+        background-color: $value;
+      }
+    }
+  }
+}
+
+// Containers ==================================================================
+
+.list-group-item-action {
+  color: #fff;
+
+  &:hover,
+  &:focus {
+    background-color: $gray-900;
+    color: #fff;
+  }
+
+  .list-group-item-heading {
+    color: #fff;
+  }
+}
+
+// bootstrap 5 dropped support for various form defaults. placeholder until we can reevalute with grid and utilies
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-inline .form-control {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row > .col {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+label {
+  margin-bottom: 0.5rem;
+}
+// END BOOTSWATCH FAME
+
+@each $color, $value in $theme-colors {
+  .pop-#{$color} {
+    background-color: theme-color-level($color, -8);
+    color: $dark;
+    border: $value solid 2px;
+    border-radius: 0.25rem;
+  }
+}
+
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+ol,
+ul {
+  margin-bottom: 0;
+  padding-inline-start: 0;
+}
+
+/* In the majority of cases, we style <li>s in a custom way */
+li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ... but for markdown we just go with the classics  */
+markdown {
+  ol,
+  ul {
+    margin-bottom: 1rem;
+  }
+
+  ol li {
+    list-style-type: decimal;
+    padding: unset;
+    margin-left: 1rem;
+  }
+
+  ul li {
+    list-style-type: disc;
+    padding: unset;
+    margin-left: 1rem;
+  }
+}
+
+select option {
+  .group-parent {
+    font-weight: bold;
+  }
+
+  .group-child {
+    padding-left: 12px;
+  }
+}
+
+input:disabled {
+  background-color: #ccc !important;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+/* APP UTILITY CLASSES */
+.font-fixed-width {
+  font-family: monospace;
+}
+
+.font-style-italic {
+  font-style: italic;
+}
+
+.font-weight-light {
+  font-weight: lighter;
+}
+
+.fs-08 {
+  font-size: 0.8rem;
+}
+
+.fs-085 {
+  font-size: 0.85rem;
+}
+
+.fs-09 {
+  font-size: 0.9rem;
+}
+
+.fs-10 {
+  font-size: 1rem;
+}
+
+.fs-11 {
+  font-size: 1.1rem;
+}
+
+.fs-12 {
+  font-size: 1.2rem;
+}
+
+.fs-125 {
+  font-size: 1.25rem;
+}
+
+.fs-13 {
+  font-size: 1.3rem;
+}
+
+.fs-15 {
+  font-size: 1.5rem;
+}
+
+.fs-20 {
+  font-size: 2em;
+}
+
+@media print {
+  .print-hide {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+.sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  z-index: 1020;
+}
+
+.colorblind-danger {
+  color: lighten($danger, 20%);
+}
+
+.countdown-green {
+  color: $success !important;
+}
+
+.countdown-yellow {
+  color: $warning !important;
+}
+
+.countdown-red {
+  color: $danger !important;
+}
+
+a.btn fa-icon {
+  display: block;
+  padding: 4px;
+  margin: 4px 2px 0 2px;
+}
+
+fa-icon + span {
+  margin-left: 4px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 300;
+}
+
+/* TABLE-Y STUFF */
+th[align="right"] {
+  text-align: right;
+}
+
+th[align="center"] {
+  text-align: center;
+}
+
+.gb-button-group > button:not(:first-of-type) {
+  border-left: solid 1px white;
+}
+
+.gb-button-group > a {
+  border-left: solid 1px #fff;
+}
+
+table.gameboard-table {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: collapse;
+  border-bottom: solid 1px $body-color;
+
+  // note that we use box-shadow to fake the boder on these table headers,
+  // because for border-collapse reasons, the borders don't follow the headers when they're stickied
+  thead {
+    tr > th:not(:first-child) {
+      box-shadow: inset 1px -1px $body-color;
+    }
+
+    th {
+      box-shadow: inset 0 -1px $body-color;
+      border-top: solid 1px $body-color;
+      vertical-align: middle;
+
+      // override ngx-bootstrap table header stuff
+      border-bottom: none !important;
+    }
+
+    .super-headers-row {
+      background-color: $body-color;
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      vertical-align: middle;
+
+      th {
+        color: $body-bg;
+      }
+
+      &.chill-headers {
+        background-color: rgba(0, 0, 0, 0);
+        th {
+          color: $body-color;
+          text-align: center;
+        }
+      }
+    }
+
+    .headers-row {
+      font-size: 1.2rem;
+      font-weight: bold;
+      vertical-align: middle;
+
+      td {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  td.centered-col,
+  td.numeric-col,
+  td.date-col,
+  th.centered-col,
+  th.numeric-col,
+  th.date-col {
+    padding: 0 !important;
+    text-align: center !important;
+  }
+
+  tbody td {
+    vertical-align: middle;
+  }
+
+  .data-row td {
+    border-top: none !important;
+    border-bottom: 1px dashed $body-color !important;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.label {
+  padding: 0.375rem 0.25rem !important;
+  min-width: 240px;
+  margin: 0;
+}
+
+.li-style-type-circle > li {
+  list-style-type: disc;
+  margin-left: 0.5rem;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: theme-color("success");
+  color: #fff !important;
+}
+
+.btn.focus,
+.btn:focus {
+  box-shadow: none !important;
+}
+
+.form-group {
+  padding: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.form-group > .form-control {
+  font-size: 0.875rem !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+.form-group > label {
+  font-size: 0.875rem !important;
+}
+
+.nav-tabs {
+  margin: 1.5rem 0 2rem 0;
+}
+
+.untack > svg {
+  transform: rotate(45deg);
+}
+
+.jambotron {
+  margin: 6rem auto;
+}
+
+alert {
+  display: block;
+
+  p {
+    margin-block-end: 0;
+    margin-bottom: 0;
+  }
+}
+
+a[routerLink] {
+  cursor: pointer;
+}
+
+.nav-tabs li {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+app-spinner svg.default-theme {
+  rect,
+  path {
+    fill: theme-color("success");
+  }
+}
+
+.text-black {
+  color: black;
+}
+
+// bootstrap tooltip styled to show up on dark theme
+.light-tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: white;
+}
+
+.light-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: white;
+}
+
+.light-tooltip.bs-tooltip-right .tooltip-arrow::before {
+  border-right-color: white;
+}
+
+.light-tooltip.bs-tooltip-left .tooltip-arrow::before {
+  border-left-color: white;
+}
+
+.light-tooltip .tooltip-inner {
+  background-color: white;
+  color: black;
+}
+
+hr.light {
+  border-color: #dddddd;
+}
+
+// override bootstrap tabs to play nice with custom backgrounds
+tabset a.nav-link.active {
+  border-color: #fff !important;
+  border-width: 1px 1px 0 1px;
+  border-bottom-color: transparent !important;
+}
+
+.custom-bg-black {
+  background-color: #000000 !important;
+}
+
+.custom-bg-dark-gray {
+  background-color: #333 !important;
+}
+
+.custom-bg-red {
+  background-color: #422 !important;
+}
+
+.custom-bg-orange {
+  background-color: #ffac1c !important;
+}
+
+.custom-bg-yellow {
+  background-color: #442 !important;
+}
+
+.custom-bg-green {
+  background-color: #1c3417 !important;
+}
+
+.custom-bg-blue {
+  background-color: #183248 !important;
+}
+
+.custom-bg-purple {
+  background-color: #424 !important;
+}
+
+// reboot.css breaks th alignment, so set explicitly
+th[align="left"] {
+  text-align: left;
+}
+
+// _reboot.scss does weird stuff to checkboxes apparently for the sake of IE10, so... just don't
+.form-control input[type="checkbox"] {
+  position: static;
+  padding: 0;
+  margin: 0;
+}
+
+.color-foreground {
+  color: $body-color;
+}
+
+.cursor-help {
+  cursor: help;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.page-width {
+  max-width: 1380px;
+  width: 100%;
+}
+
+.page-min-height {
+  min-height: 85vh;
+}
+
+.flex-basis-10 {
+  flex-basis: 10%;
+}
+
+.flex-basis-15 {
+  flex-basis: 15%;
+}
+
+.flex-basis-25 {
+  flex-basis: 25%;
+}
+
+.flex-basis-33 {
+  flex-basis: 33%;
+}
+
+.flex-basis-50 {
+  flex-basis: 50%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.fw-bold {
+  font-weight: bold !important;
+}
+
+.rounded-circle {
+  aspect-ratio: 1/1;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-dashed-underline {
+  text-decoration: underline !important;
+  text-decoration-style: dotted !important;
+  text-decoration-thickness: 2px !important;
+}
+
+.text-upper {
+  text-transform: uppercase;
+}
+
+.h-auto {
+  height: auto !important;
+}
+
+.h-100 {
+  height: 100% !important;
+}
+
+.width-5 {
+  width: 5%;
+}
+
+.width-10 {
+  width: 10%;
+}
+
+.width-15 {
+  width: 15%;
+}
+
+.width-20 {
+  width: 20%;
+}
+
+.width-25 {
+  width: 25%;
+}
+
+.width-30 {
+  width: 30%;
+}
+
+.width-35 {
+  width: 35%;
+}
+
+.width-40 {
+  width: 40%;
+}
+
+.width-45 {
+  width: 45%;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.width-60 {
+  width: 60%;
+}
+
+.width-70 {
+  width: 70%;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.btn-link {
+  border: 0;
+  color: theme-color("success");
+  cursor: pointer;
+}
+
+.overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sticky-under-menu {
+  background-color: inherit;
+  position: sticky;
+  top: 47px;
+  z-index: 999;
+}
+
+.ticket-status-badge {
+  font-size: 0.8rem;
+  line-height: 0.85rem;
+}

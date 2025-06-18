@@ -13,7 +13,7 @@
   <form #form="ngForm" class="pop-light p-4 mt-2">
     <ng-container *ngIf="canManage$ | async as canManage">
       <div *ngIf="canManage" class="mb-3">
-        <label class="mb-0" for="form-requester">Requested By</label>
+        <label class="mb-0 form-label" for="form-requester">Requested By</label>
         <app-inplace-editor [editData]="requesters"
           [currentText]="(!!ticket.requester ? ticket.requester.name + ' ('+(ticket.requesterId | slice:0:8)+')' : 'Me')"
           (startEditFunc)="startEditRequesters()" (selectOptionFunc)="selectRequester($event)"></app-inplace-editor>
@@ -22,7 +22,7 @@
     </ng-container>
 
     <div class="mb-3">
-      <label class="mb-0" for="form-challenges">Challenge</label>
+      <label class="mb-0 form-label" for="form-challenges">Challenge</label>
 
       <div class="input-group">
         <select [(ngModel)]="ticket.challengeId" class="form-control" name="challenges" id="challenges">
@@ -36,7 +36,7 @@
 
 
     <div class="mb-3">
-      <label class="mb-0" for="form-summary">Summary</label>
+      <label class="mb-0 form-label" for="form-summary">Summary</label>
       <input type="text" class="form-control" id="form-summary" name="form-summary" autocomplete="off"
         [maxlength]="summaryLimit" [(ngModel)]="ticket.summary">
       <small class="d-flex justify-content-between"
@@ -46,7 +46,7 @@
       </small>
     </div>
     <div class="mb-3">
-      <label class="mb-0" for="form-description">
+      <label class="mb-0 form-label" for="form-description">
         Description
       </label>
       <textarea rows="3" type="text" class="form-control" id="form-description" name="form-description"
@@ -54,7 +54,7 @@
       <small class="text-dark">All the details that would help resolve this issue</small>
     </div>
     <div class="mb-0">
-      <label class="mb-0" for="form-attachments">Attachments</label>
+      <label class="mb-0 form-label" for="form-attachments">Attachments</label>
       <app-image-manager (added)="attachments($event)" [defaultHeight]="100" id="form-attachments"></app-image-manager>
       <small class="text-dark">Screenshots will help this ticket be resolved more quickly</small>
     </div>

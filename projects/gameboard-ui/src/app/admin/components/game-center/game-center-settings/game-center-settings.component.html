@@ -13,13 +13,13 @@
             <!-- left (form) -->
             <div class="col-lg-6 col-sm-12">
                 <div class="form-group pb-0 pt-1">
-                    <label for="name-input">Name</label>
+                    <label class="form-label" for="name-input">Name</label>
                     <input type="text" class="form-control" id="name-input" name="name" [(ngModel)]="game.name">
                     <small>event name (i.e. Open, Semis, Finals)</small>
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label class="mb-0" for="hidden-toggle">Publish</label>
+                    <label class="mb-0 form-label" for="hidden-toggle">Publish</label>
                     <div class="form-control h-auto d-flex align-items-center">
                         <label>Hidden</label>
                         <label class="btn text-success" btnCheckbox [ngModelOptions]="{updateOn: 'change'}"
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label class="mb-0" for="feature-toggle">Feature</label>
+                    <label class="mb-0 form-label" for="feature-toggle">Feature</label>
                     <div class="form-control h-auto d-flex align-items-center">
                         <label>Normal</label>
                         <label class="btn text-success" btnCheckbox [ngModelOptions]="{updateOn: 'change'}"
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="competition-input">Series</label>
+                    <label for="competition-input" class="form-label">Series</label>
                     <input type="text" list="competition-list" class="form-control" id="competition-input"
                         name="competition" [(ngModel)]="game.competition">
                     <datalist id="competition-list">
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="track-input">Track</label>
+                    <label for="track-input" class="form-label">Track</label>
                     <input type="text" list="track-list" class="form-control" id="track-input" name="track"
                         [(ngModel)]="game.track">
                     <datalist id="track-list">
@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="season-input">Season</label>
+                    <label for="season-input" class="form-label">Season</label>
                     <input type="text" list="season-list" class="form-control" id="season-input" name="season"
                         [(ngModel)]="game.season">
                     <datalist id="season-list">
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="division-input">Division</label>
+                    <label for="division-input" class="form-label">Division</label>
                     <input type="text" list="division-list" class="form-control" id="division-input" name="division"
                         [(ngModel)]="game.division">
                     <datalist id="division-list">
@@ -88,7 +88,7 @@
 
             <div class="col-md-6 col-sm-12">
                 <div class="form-group pb-1 pt-1">
-                    <label for="logo-input">Card Image</label>
+                    <label for="logo-input" class="form-label">Card Image</label>
                     <p class="help-text">
                         Select an image for the game card shown in the public-facing portion of the app. For best
                         results, use an image with an aspect ratio of <strong>1:1.44</strong> (e.g. 750x1080).
@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="cardtext1-input">Card Text Top</label>
+                    <label for="cardtext1-input" class="form-label">Card Text Top</label>
                     <input type="text" list="cardText1-list" class="form-control" id="cardtext1-input" name="cardText1"
                         [(ngModel)]="game.cardText1">
                     <datalist id="cardText1-list">
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="cardtext2-input">Card Text Middle</label>
+                    <label for="cardtext2-input" class="form-label">Card Text Middle</label>
                     <input type="text" list="cardText2-list" class="form-control" id="cardtext2-input" name="cardText2"
                         [(ngModel)]="game.cardText2">
                     <datalist id="cardText2-list">
@@ -127,7 +127,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="cardtext3-input">Card Text Bottom</label>
+                    <label for="cardtext3-input" class="form-label">Card Text Bottom</label>
                     <input type="text" list="cardText3-list" class="form-control" id="cardtext3-input" name="cardText3"
                         [(ngModel)]="game.cardText3">
                     <datalist id="cardText3-list">
@@ -139,7 +139,7 @@
 
             <div class="col-12">
                 <div class="form-group pb-0 pt-1">
-                    <label for="gameMarkdown-input">Lobby Markdown</label>
+                    <label for="gameMarkdown-input" class="form-label">Lobby Markdown</label>
                     <textarea rows="11" type="text" class="form-control" id="gameMarkdown-input" name="gameMarkdown"
                         placeholder="You can use **markdown** in the lobby description. _If_ you want."
                         [(ngModel)]="game.gameMarkdown"></textarea>
@@ -177,7 +177,7 @@
         <div *ngIf="selectedSubTab === 'modes'"
             class="modes-container d-flex flex-wrap align-items-baseline justify-content-start form-group">
             <div class="form-group flex-basis-50 flex-shrink-1 py-2">
-                <label class="mb-0" for="reset-toggle">Player Mode</label>
+                <label class="mb-0 form-label" for="reset-toggle">Player Mode</label>
                 <div class="form-control h-auto d-flex align-items-center">
                     <label>Competition</label>
                     <label class="btn text-success" btnCheckbox btnCheckboxTrue="practice"
@@ -191,7 +191,7 @@
             </div>
 
             <div class="form-group flex-basis-50 flex-shrink-1 py-2">
-                <label class="mb-0" for="sync-start-toggle">Show On Homepage When In Practice Mode</label>
+                <label class="mb-0 form-label" for="sync-start-toggle">Show On Homepage When In Practice Mode</label>
                 <div class="form-control h-auto d-flex align-items-center">
                     <label>No</label>
                     <label class="btn text-success" btnCheckbox [btnCheckboxTrue]="true" [btnCheckboxFalse]="false"
@@ -208,7 +208,7 @@
             </div>
 
             <div class="form-group flex-basis-50 flex-shrink-1 py-2">
-                <label class="mb-0" for="sync-start-toggle">Require Synchronized Start</label>
+                <label class="mb-0 form-label" for="sync-start-toggle">Require Synchronized Start</label>
                 <div class="form-control h-auto d-flex align-items-center">
                     <label>No</label>
                     <label class="btn text-success" btnCheckbox [btnCheckboxTrue]="true" [btnCheckboxFalse]="false"
@@ -226,7 +226,7 @@
             </div>
 
             <div class="form-group flex-basis-50 flex-shrink-1 py-2">
-                <label for="mode-input">Engine Mode</label>
+                <label for="mode-input" class="form-label">Engine Mode</label>
                 <select id="mode-input" name="mode-input" class="form-control mt-1" [(ngModel)]="game.mode"
                     (change)="handleModeChange($event)">
                     <option [value]="'vm'">Standard (Gameboard VMs)</option>
@@ -254,14 +254,14 @@
                 <div class="row">
 
                     <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
-                        <label for="gameStart-input">Opens</label>
+                        <label for="gameStart-input" class="form-label">Opens</label>
                         <input type="text" class="form-control" id="gameStart-input" name="gameStart"
                             [(ngModel)]="game.gameStart">
                         <small>yyyy-mm-ddT00:00:00+00:00</small>
                     </div>
 
                     <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
-                        <label for="gameEnd-input">Closes</label>
+                        <label for="gameEnd-input" class="form-label">Closes</label>
                         <input type="text" class="form-control" id="gameEnd-input" name="gameEnd"
                             [(ngModel)]="game.gameEnd" [min]="game.gameStart">
                         <small>yyyy-mm-ddT00:00:00+00:00</small>
@@ -274,7 +274,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="sessionMinutes-input">Session Duration</label>
+                    <label for="sessionMinutes-input" class="form-label">Session Duration</label>
                     <input type="number" class="form-control" id="sessionMinutes-input" name="sessionMinutes"
                         [(ngModel)]="game.sessionMinutes">
                     <small>duration of game session in minutes</small>
@@ -282,15 +282,16 @@
 
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="sessionLimit-input">Session Limit</label>
+                    <label for="sessionLimit-input" class="form-label">Session Limit</label>
                     <input type="number" class="form-control" id="sessionLimit-input" name="sessionLimit"
                         [(ngModel)]="game.sessionLimit">
                     <small>total concurrent sessions allowed for game</small>
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="sessionAvailabilityWarningThreshold-input">Session Availability Warning
-                        Threshold</label>
+                    <label class="form-label" for="sessionAvailabilityWarningThreshold-input">
+                        Session Availability Warning Threshold
+                    </label>
                     <input type="number" class="form-control" id="sessionLimit-input"
                         name="sessionAvailabilityWarningThreshold"
                         [(ngModel)]="game.sessionAvailabilityWarningThreshold">
@@ -301,21 +302,21 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="gamespaceLimit-input">Gamespace Limit</label>
+                    <label for="gamespaceLimit-input" class="form-label">Gamespace Limit</label>
                     <input type="number" class="form-control" id="gamespaceLimit-input" name="gamespaceLimit"
                         [(ngModel)]="game.gamespaceLimitPerSession">
                     <small>max gamespaces per session</small>
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="maxAttempts-input">Max Submissions</label>
+                    <label for="maxAttempts-input" class="form-label">Max Submissions</label>
                     <input type="number" class="form-control" id="maxAttempts-input" name="maxAttempts"
                         [(ngModel)]="game.maxAttempts">
                     <small>max grading attempts</small>
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label class="mb-0" for="preview-toggle">Allow Preview</label>
+                    <label class="mb-0" for="preview-toggle" class="form-label">Allow Preview</label>
                     <div class="form-control h-auto d-flex align-items-center">
                         <label>Hidden</label>
                         <label class="btn text-success" btnCheckbox tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
@@ -329,7 +330,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label class="mb-0" for="reset-toggle">Allow Reset</label>
+                    <label class="mb-0 form-label" for="reset-toggle">Allow Reset</label>
                     <div class="form-control h-auto d-flex align-items-center">
                         <label>Forbidden</label>
                         <label class="btn text-success" btnCheckbox tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
@@ -343,7 +344,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label class="mb-0" for="late-start-toggle">Allow Late Starts</label>
+                    <label class="mb-0 form-label" for="late-start-toggle">Allow Late Starts</label>
                     <div class="form-control h-auto d-flex align-items-center">
                         <label>Forbidden</label>
                         <label class="btn text-success" btnCheckbox tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
@@ -357,7 +358,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label class="mb-0" for="public-scoreboard-toggle">Allow Public Scoreboard Access</label>
+                    <label class="mb-0 form-label" for="public-scoreboard-toggle">Allow Public Scoreboard Access</label>
                     <div class="form-control h-auto d-flex align-items-center">
                         <label>Forbidden</label>
                         <label class="btn text-success" btnCheckbox tabindex="0" [ngModelOptions]="{updateOn: 'change'}"
@@ -376,7 +377,7 @@
             <div class="col-lg-6 col-sm-12">
                 <h4>Registration</h4>
                 <div class="form-group pb-0 pt-1">
-                    <label for="registrationType-input">Access</label><br />
+                    <label for="registrationType-input" class="form-label">Access</label><br />
                     <div id="registrationType-input" class="btn-group" btnRadioGroup name="registrationType"
                         tabindex="0" [(ngModel)]="game.registrationType" [ngModelOptions]="{updateOn: 'change'}">
                         <label class="btn btn-outline-success btn-sm" btnRadio="none">None</label>
@@ -389,7 +390,7 @@
                 <div [hidden]="game.registrationType==='none'">
 
                     <div [hidden]="game.registrationType!=='domain'" class="form-group pb-0 pt-1">
-                        <label for="registrationConstraint-input">Constraints</label>
+                        <label for="registrationConstraint-input" class="form-label">Constraints</label>
                         <input type="text" class="form-control" id="registrationConstraint-input"
                             name="registrationConstraint" [(ngModel)]="game.registrationConstraint">
                         <small>email domain list for RegistrationType.Domain</small>
@@ -397,7 +398,7 @@
 
                     <div class="row">
                         <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
-                            <label for="registrationOpen-input">Opens</label>
+                            <label for="registrationOpen-input" class="form-label">Opens</label>
                             <input type="text" class="form-control" id="registrationOpen-input" name="registrationOpen"
                                 [(ngModel)]="game.registrationOpen">
                             <small>yyyy-mm-ddT00:00:00+00:00</small>
@@ -405,7 +406,7 @@
                         </div>
 
                         <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
-                            <label for="registrationClose-input">Closes</label>
+                            <label for="registrationClose-input" class="form-label">Closes</label>
                             <input type="text" class="form-control" id="registrationClose-input"
                                 name="registrationClose" [(ngModel)]="game.registrationClose">
                             <small>yyyy-mm-ddT00:00:00+00:00</small>
@@ -422,14 +423,14 @@
 
                     <div class="row">
                         <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
-                            <label for="minTeamSize-input">Minimum Team Size</label>
+                            <label for="minTeamSize-input" class="form-label">Minimum Team Size</label>
                             <input type="number" class="form-control" id="minTeamSize-input" name="minTeamSize"
                                 [min]="1" [(ngModel)]="game.minTeamSize">
                             <small></small>
                         </div>
 
                         <div class="col-lg-6 col-sm-12 form-group pb-0 pt-1">
-                            <label for="maxTeamSize-input">Maximum Team Size</label>
+                            <label for="maxTeamSize-input" class="form-label">Maximum Team Size</label>
                             <input type="number" class="form-control" id="maxTeamSize-input" name="maxTeamSize"
                                 [min]="game.minTeamSize" [(ngModel)]="game.maxTeamSize">
                             <small></small>
@@ -452,7 +453,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label class="mb-0" for="hidden-toggle">Team Sponsorship</label>
+                    <label class="mb-0 form-label" for="hidden-toggle">Team Sponsorship</label>
                     <div class="form-control h-auto d-flex align-items-center">
                         <label>Open</label>
                         <label class="btn text-success" btnCheckbox [ngModelOptions]="{updateOn: 'change'}" tabindex="0"
@@ -467,7 +468,7 @@
                 </div>
 
                 <div class="form-group pb-0 pt-1">
-                    <label for="registrationMarkdown-input">Registration Markdown</label>
+                    <label for="registrationMarkdown-input" class="form-label">Registration Markdown</label>
                     <textarea rows="11" type="text" class="form-control" id="registrationMarkdown-input"
                         name="registrationMarkdown" [(ngModel)]="game.registrationMarkdown"></textarea>
                     <small>presented and approved when registering for this game</small>

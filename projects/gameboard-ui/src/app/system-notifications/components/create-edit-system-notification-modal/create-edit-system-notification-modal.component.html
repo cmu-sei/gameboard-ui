@@ -10,20 +10,20 @@
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label for="title">Title</label>
+            <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title"
                 [(ngModel)]="context.model.title" required="true">
         </div>
 
         <div class="form-group">
-            <label for="markdown-content">Content (allows markdown)</label>
+            <label for="markdown-content" class="form-label">Content (allows markdown)</label>
             <textarea class="form-control" id="markdown-content" name="markdown-content" rows="10"
                 [placeholder]="'What do you want to tell your players?' | markdownPlaceholder"
                 [(ngModel)]="context.model.markdownContent"></textarea>
         </div>
 
         <div class="form-group">
-            <label for="available-from">Availability dates</label>
+            <label for="available-from" class="form-label">Availability dates</label>
             <div class="d-flex align-content-middle">
                 <input type="datetime" class="form-control" id="available-from" [(ngModel)]="context.model.startsOn"
                     bsDatepicker>
@@ -38,7 +38,7 @@
         </div>
 
         <div class="form-group">
-            <label for="is-dismissible">Dismissible?</label>
+            <label for="is-dismissible" class="form-label">Dismissible?</label>
             <div class="">
                 <input type="checkbox" id="is-dismissible" [(ngModel)]="context.model.isDismissible">
             </div>
@@ -50,7 +50,7 @@
         </div>
 
         <div class="form-group">
-            <label for="title" class="d-block">Type</label>
+            <label for="title" class="d-block form-label">Type</label>
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn" [class.btn-success]="context.model.notificationType == 'generalInfo'"
                     [class.btn-success-outline]="context.model.notificationType != 'generalInfo'"

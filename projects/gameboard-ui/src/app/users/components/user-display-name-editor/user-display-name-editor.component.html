@@ -40,7 +40,7 @@
 <div class="name-change-container mt-4">
     <form class="d-flex align-items-end" [formGroup]="requestNameForm" (ngSubmit)="handleSubmitClick()">
         <div class="form-group flex-grow-1 p-0 mr-2">
-            <label for="approvedUserName" class="text-muted">Approved Display Name</label>
+            <label for="approvedUserName" class="form-label text-muted">Approved Display Name</label>
             <div class="input-group">
                 <input id="approvedUserName" type="text" class="form-control" disabled
                     [value]="currentUser.approvedName">
@@ -54,7 +54,7 @@
         </div>
 
         <div class="form-group flex-grow-1 p-0 mr-2">
-            <label for="requestedName" class="text-muted">Requested Display Name</label>
+            <label for="requestedName" class="form-label text-muted">Requested Display Name</label>
             <input id="requestedName" name="requestedName" type="text" class="form-control"
                 formControlName="requestedName" placeholder="Enter a new name..." maxlength="64" required>
         </div>

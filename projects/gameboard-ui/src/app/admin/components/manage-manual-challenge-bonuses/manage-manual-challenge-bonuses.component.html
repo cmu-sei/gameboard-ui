@@ -122,13 +122,13 @@
                 </select>
             </div>
             <div class="form-group px-0">
-                <label for="bonusDescription">Description</label>
+                <label for="bonusDescription" class="form-label">Description</label>
                 <input type="text" class="form-control" id="bonusDescription" name="bonusDescription"
                     placeholder="Description for this bonus (shown on the scoreboard)" required
                     [(ngModel)]="newChallengeBonusModel.description">
             </div>
             <div class="form-group px-0">
-                <label for="bonusValue">Points</label>
+                <label for="bonusValue" class="form-label">Points</label>
                 <input type="number" class="form-control" id="bonusValue" name="pointValue"
                     placeholder="Points to award" min="1" [(ngModel)]="newChallengeBonusModel.pointValue">
             </div>

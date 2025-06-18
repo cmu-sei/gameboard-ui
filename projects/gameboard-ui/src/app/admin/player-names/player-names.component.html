@@ -80,13 +80,13 @@
 
     <div *ngIf="viewed === player" class="col-12">
       <div class="form-group">
-        <label class="mb-0" for="name-input">Approved Name</label>
+        <label class="mb-0 form-label" for="name-input">Approved Name</label>
         <input id="name-input" class="form-control" type="text" [(ngModel)]="player.approvedName"
           (change)="update(player)">
         <small></small>
       </div>
       <div class="form-group">
-        <label class="mb-0" for="reason-input">Disapproved Reason</label>
+        <label class="mb-0 form-label" for="reason-input">Disapproved Reason</label>
         <input id="reason-input" class="form-control" type="text" [(ngModel)]="player.nameStatus"
           (change)="update(player)">
         <small> <button *ngFor="let reason of reasons" class="btn btn-link btn-sm" (click)="setStatus(player, reason)">

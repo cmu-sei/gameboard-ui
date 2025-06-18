@@ -24,24 +24,26 @@
             <div class="form-check ml-2">
                 <input type="checkbox" class="form-check-input" name="allow-subset-creation"
                     [(ngModel)]="allowSubsetCreation">
-                <label for="allow-subset-creation">Show an error if one of these IDs already exists</label>
+                <label class="form-label" for="allow-subset-creation">Show an error if one of these IDs already
+                    exists</label>
             </div>
 
             <div class="form-check ml-2">
                 <input type="checkbox" class="form-check-input" name="unset-default-sponsor-flag"
                     [(ngModel)]="unsetDefaultSponsorFlag">
-                <label for="unset-default-sponsor-flag">Don't force users to select their sponsor before playing</label>
+                <label class="form-label" for="unset-default-sponsor-flag">Don't force users to select their sponsor
+                    before playing</label>
             </div>
 
             <div class="my-3">
-                <label for="createWithRole">Create users with role</label>
+                <label class="form-label" for="createWithRole">Create users with role</label>
                 <select class="form-control" name="createWithRole" [(ngModel)]="createWithRole">
                     <option *ngFor="let role of roles" [ngValue]="role">{{ role | titlecase }}</option>
                 </select>
             </div>
 
             <div class="my-3">
-                <label for="createWithSponsorId">Create users with sponsor</label>
+                <label class="form-label" for="createWithSponsorId">Create users with sponsor</label>
                 <select class="form-control" name="createWithSponsorId" [(ngModel)]="createWithSponsorId">
                     <option [ngValue]="undefined">[the default sponsor]</option>
                     <ng-container *ngFor="let parent of sponsors">
@@ -55,7 +57,7 @@
             </div>
 
             <div class="my-3">
-                <label for="enrollInGameId">Enroll users in game</label>
+                <label class="form-label" for="enrollInGameId">Enroll users in game</label>
                 <select class="form-control" name="enrollInGameId" [(ngModel)]="enrollInGameId">
                     <option [ngValue]="undefined">[don't enroll them]</option>
                     <option *ngFor="let game of games" [value]="game.id">{{ game.name }}</option>

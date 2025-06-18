@@ -13,11 +13,11 @@
   <div class="input-group mt-2 mb-0 ml-auto col-5">
     <div id="feedbackType-input" #selectType class="btn-group mb-2 ml-auto" btnRadioGroup name="sortType" tabindex="0"
       [(ngModel)]="sort" [ngModelOptions]="{updateOn: 'change'}">
-      <label class="btn btn-outline-dark btn-md text-white" btnRadio="byName">
+      <label class="btn btn-outline-dark btn-md text-white form-label" btnRadio="byName">
         <fa-icon [icon]="faSortAlphaDown"></fa-icon>
         Name
       </label>
-      <label class="btn btn-outline-dark btn-md text-white" btnRadio="byRank">
+      <label class="btn btn-outline-dark btn-md text-white form-label" btnRadio="byRank">
         <fa-icon [icon]="faSortAmountDown"></fa-icon>
         Rank
       </label>

@@ -91,7 +91,8 @@
             </ng-container>
           </ng-container>
 
-          <label for="name-input">Set {{ctx.game.maxTeamSize > 1 ? 'Team' : 'Game'}} Display Name</label>
+          <label for="name-input" class="form-label">Set {{ctx.game.maxTeamSize > 1 ? 'Team' : 'Game'}} Display
+            Name</label>
           <div class="input-group mb-0">
             <input id="name-input" type="text" class="form-control" [(ngModel)]="ctx.player.name" maxlength="64"
               autocomplete="off" placeholder="display name">

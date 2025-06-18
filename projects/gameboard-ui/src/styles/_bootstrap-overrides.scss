@@ -29,7 +29,6 @@ $cyan: #3498db;
 $primary: #181866;
 $secondary: $gray-800;
 $success: $light-green;
-$success-light: lighten($light-green, 20%);
 $info: $cyan;
 $warning: $yellow;
 $danger: $red;
@@ -39,7 +38,7 @@ $dark: $gray-800;
 $yiq-contrasted-threshold: 175;
 
 // Body
-$body-bg: $black;
+// $body-bg: $black;
 $body-color: $gray-100;
 
 // Links
@@ -66,9 +65,6 @@ $input-border-color: transparent;
 
 $input-group-addon-color: $gray-500;
 $input-group-addon-bg: $gray-700;
-
-$custom-file-color: $gray-500;
-$custom-file-border-color: $gray-700;
 
 // Dropdowns
 $dropdown-bg: $gray-900;

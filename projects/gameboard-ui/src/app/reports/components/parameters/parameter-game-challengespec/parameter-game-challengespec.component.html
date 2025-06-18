@@ -1,5 +1,5 @@
 <div *ngIf="ngModel" class="parameter-game-challengespec-component">
-    <label class="report-component-label">Game &amp; Challenge</label>
+    <label class="report-component-label form-label">Game &amp; Challenge</label>
     <div class="d-flex input-group-lg">
         <select name="game" [(ngModel)]="ngModel.gameId" class="form-control mr-1" (change)="handleGameChanged($event)">
             <option *ngIf="!requireGameSelection" [ngValue]="null" selected>[any game]</option>

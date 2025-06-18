@@ -34,7 +34,7 @@
         <form (ngSubmit)="handleNameProvided()" [formGroup]="requestNameOverrideForm"
             #requestedNameOverrideFormTemplate>
             <div class="form-group px-0">
-                <label for="provided-name-input">Name</label>
+                <label for="provided-name-input" class="form-label">Name</label>
                 <input class="form-control" name="requestedNameOverride" type="text" minlength="2" required appAutofocus
                     placeholder="The name you want to appear on your certificate"
                     formControlName="requestedNameOverride">

@@ -11,7 +11,7 @@
 <form #form="ngForm" autocomplete="off">
   <div class="input-group mb-4" *ngIf="sponsorStats; else loading">
     <div class="pr-4">
-      <label for="gameSelect">Select a board: </label>
+      <label cclass="form-label" for="gameSelect">Select a board: </label>
     </div>
     <div>
       <select class="form-control" #selectGame (change)="updateGame(selectGame.value)">

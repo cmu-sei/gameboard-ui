@@ -8,21 +8,21 @@
     <hr class="my-2" />
     <div class="spec-controls-container d-flex flex-wrap align-items-center">
         <div class="form-group">
-            <label for="slug-input-{{spec.id}}">Support Key</label>
+            <label class="form-label" for="slug-input-{{spec.id}}">Support Key</label>
             <input type="text" class="form-control" id="slug-input-{{spec.id}}" name="slug" [(ngModel)]="spec.tag"
                 [placeholder]="'Enter a support key (e.g. ' + slug(spec.name) + ')'"
                 (ngModelChange)="handleSpecUpdated(spec)">
         </div>
 
         <div class="form-group">
-            <label for="points-input-{{spec.id}}">Points</label>
+            <label class="form-label" for="points-input-{{spec.id}}">Points</label>
             <input type="number" class="form-control" id="points-input-{{spec.id}}" name="points"
                 placeholder="Enter a point value for this challenge" [(ngModel)]="spec.points"
                 (input)="handleSpecUpdated(spec)">
         </div>
 
         <div class="form-group">
-            <label for="guide-input-{{spec.id}}">Solution Guide URL</label>
+            <label class="form-label" for="guide-input-{{spec.id}}">Solution Guide URL</label>
             <input type="text" class="form-control" id="guide-input-{{spec.id}}" name="guide"
                 placeholder="Enter the solution guide's URL" [(ngModel)]="spec.solutionGuideUrl"
                 (input)="handleSpecUpdated(spec)">
@@ -32,7 +32,8 @@
             <input type="checkbox" class="form-check-input" id="guide-show-in-competitive-{{spec.id}}"
                 name="guide-in-competitive" [(ngModel)]="spec.showSolutionGuideInCompetitiveMode"
                 (input)="handleSpecUpdated(spec)">
-            <label for="guide-show-in-competitive-{{spec.id}}">Show Solution Guide in Competitive Mode</label>
+            <label class="form-label" for="guide-show-in-competitive-{{spec.id}}">Show Solution Guide in Competitive
+                Mode</label>
         </div>
 
         <div class="form-check mt-2">
@@ -40,7 +41,7 @@
                 [(ngModel)]="spec.disabled" (ngModelChange)="handleSpecUpdated(spec)">
 
             <app-whats-this whatItIs="Players can see disabled challenge specs but can't deploy them.">
-                <label for="disabled-input-{{spec.id}}">Disabled</label>
+                <label class="form-label" for="disabled-input-{{spec.id}}">Disabled</label>
             </app-whats-this>
         </div>
 
@@ -49,7 +50,7 @@
                 [(ngModel)]="spec.isHidden" (ngModelChange)="handleSpecUpdated(spec)">
             <app-whats-this
                 whatItIs="Hidden challenge specs are invisible to players and don't contribute to their score. They also don't appear in reports.">
-                <label for="hidden-input-{{spec.id}}">Hidden</label>
+                <label class="form-label" for="hidden-input-{{spec.id}}">Hidden</label>
             </app-whats-this>
         </div>
     </div>

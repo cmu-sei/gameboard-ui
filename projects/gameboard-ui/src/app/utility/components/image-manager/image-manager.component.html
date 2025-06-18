@@ -4,7 +4,7 @@
 <div class="dropzone d-flex flex-column my-0" [class.dropzone-active]="dropzone" [style.min-height.px]="defaultHeight">
   <app-error-div [errors]="errors"></app-error-div>
   <div>
-    <label for="fileSelector">
+    <label for="fileSelector" class="form-label">
       <input id="fileSelector" type="file" style="display:none;" multiple (change)="filesSelected($event)">
       <span class="btn btn-sm" [class]="browseButtonStyle">Browse</span>
     </label>

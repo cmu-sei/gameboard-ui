@@ -1,4 +1,4 @@
-<div class="suggested-searches-component d-flex flex-wrap w-100">
+<div class="suggested-searches-component d-flex flex-wrap gap-2 w-100">
     <a *ngFor="let search of searches" [routerLink]="['/practice']" [queryParams]="{ term: search }">
         <app-colored-text-chip class="d-block mb-2" [text]="search"></app-colored-text-chip>
     </a>

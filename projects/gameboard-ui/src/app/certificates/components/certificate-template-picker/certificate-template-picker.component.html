@@ -86,7 +86,7 @@
                 <label class="copy-from-label d-block text-muted mr-2 mb-0">Copy from: </label>
 
                 <div class="input-group">
-                    <select class="form-control custom-select custom-select-sm" #copyTemplateContentSelect>
+                    <select class="form-control form-select form-select-sm" #copyTemplateContentSelect>
                         <option value="">[Choose a template to copy from]</option>
                         <option *ngFor="let template of templates" [value]="template.content">
                             {{ template.name }}

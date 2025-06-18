@@ -11,7 +11,7 @@
         </ul>
     </div>
     <div class="form-group">
-        <label for="target-host">Transfer these games to host</label>
+        <label class="form-label" for="target-host">Transfer these games to host</label>
         <select id="target-host" name="target-host" class="form-control" [(ngModel)]="replaceHost">
             <option *ngFor="let host of hosts" [ngValue]="host">{{host.name}} ({{host.hostUrl}})</option>
         </select>

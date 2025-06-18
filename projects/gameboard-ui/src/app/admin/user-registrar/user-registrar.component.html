@@ -132,12 +132,12 @@
       <div class="name-info mb-4">
         <h5>Name</h5>
         <div class="form-group mb-0 pb-1">
-          <label class="mb-0" for="name-input">Approved Name</label>
+          <label class="mb-0 form-label" for="name-input">Approved Name</label>
           <input id="name-input" class="form-control" type="text" [value]="user.approvedName" #nameInput
             (change)="handleSetName(user.id, nameInput.value, '')">
         </div>
         <div class="form-group mb-0 pb-1">
-          <label class="mb-0" for="reason-input">Disapproved Reason</label>
+          <label class="mb-0 form-label" for="reason-input">Disapproved Reason</label>
           <input id="reason-input" class="form-control" type="text" [value]="user.nameStatus" #disapprovedInput
             (change)="handleSetName(user.id, user.approvedName, disapprovedInput.value)">
           <small>

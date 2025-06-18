@@ -9,7 +9,7 @@
 
         <ng-container *ngIf="!submission.whenFinalized; else finalized">
             <div *ngFor="let q of submission.responses; let i = index" class="mb-4">
-                <label for="{{q.id}}">
+                <label for="{{q.id}}" class="form-label">
                     <div class="d-flex">
                         <div class="mr-1">{{i+1}}<span *ngIf="q.required" class="required">*</span>.</div>
                         <div [innerHTML]="q.prompt | markdown | async"></div>
@@ -32,8 +32,8 @@
                     <small class="pr-2 text-dark">{{q.minLabel}}</small>
                     <div id={{q.id}} class="btn-group" btnRadioGroup name={{q.id}} tabindex="0" [(ngModel)]="q.answer"
                         [disabled]="feedbackForm.submitted! || isPreview">
-                        <label *ngFor="let i of options(q.min ?? 1, q.max ?? 1)" class="btn btn-outline-dark btn-sm m-0"
-                            btnRadio="{{i}}">{{i}}
+                        <label *ngFor="let i of options(q.min ?? 1, q.max ?? 1)"
+                            class="btn btn-outline-dark btn-sm m-0 form-label" btnRadio="{{i}}">{{i}}
                         </label>
                     </div>
                     <small class="pl-2 text-dark">{{q.maxLabel}}</small>

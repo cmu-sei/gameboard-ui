@@ -8,7 +8,7 @@
     <div *ngFor="let q of state.challenge.questions; let i = index" class="form-group p-4 mt-4"
       [class.pop-info]="!q.isGraded" [class.pop-success]="q.isGraded && q.isCorrect"
       [class.incorrect]="q.isGraded && !q.isCorrect">
-      <label class="d-flex">
+      <label class="d-flex form-label">
         <div class="flex-grow-1">
           {{i+1}}.
           <strong>{{q.text}}</strong>
