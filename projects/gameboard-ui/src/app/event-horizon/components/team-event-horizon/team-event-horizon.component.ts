@@ -8,9 +8,10 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChi
 import { Timeline } from 'vis-timeline/esnext';
 
 @Component({
-  selector: 'app-team-event-horizon',
-  templateUrl: './team-event-horizon.component.html',
-  styleUrls: ['./team-event-horizon.component.scss']
+    selector: 'app-team-event-horizon',
+    templateUrl: './team-event-horizon.component.html',
+    styleUrls: ['./team-event-horizon.component.scss'],
+    standalone: false
 })
 export class TeamEventHorizonComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() teamId?: string;

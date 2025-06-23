@@ -9,14 +9,13 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
-  selector: 'app-certificate-template-picker',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-  ],
-  templateUrl: './certificate-template-picker.component.html',
-  styleUrls: ['./certificate-template-picker.component.scss']
+    selector: 'app-certificate-template-picker',
+    imports: [
+        CommonModule,
+        CoreModule,
+    ],
+    templateUrl: './certificate-template-picker.component.html',
+    styleUrls: ['./certificate-template-picker.component.scss']
 })
 export class CertificateTemplatePickerComponent implements OnInit, OnChanges {
   @Input() defaultOptionText = "[no certificate template]";

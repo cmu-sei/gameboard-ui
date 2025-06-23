@@ -18,12 +18,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/gameboard-ui",
+            "outputPath": {
+              "base": "dist/gameboard-ui"
+            },
             "index": "projects/gameboard-ui/src/index.html",
-            "main": "projects/gameboard-ui/src/main.ts",
-            "polyfills": "projects/gameboard-ui/src/polyfills.ts",
+            "polyfills": [
+              "projects/gameboard-ui/src/polyfills.ts"
+            ],
             "tsConfig": "projects/gameboard-ui/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -38,7 +41,8 @@
             "scripts": [
               "node_modules/marked/marked.min.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js"
-            ]
+            ],
+            "browser": "projects/gameboard-ui/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -63,9 +67,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -131,12 +133,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/gameboard-mks",
+            "outputPath": {
+              "base": "dist/gameboard-mks"
+            },
             "index": "projects/gameboard-mks/src/index.html",
-            "main": "projects/gameboard-mks/src/main.ts",
-            "polyfills": "projects/gameboard-mks/src/polyfills.ts",
+            "polyfills": [
+              "projects/gameboard-mks/src/polyfills.ts"
+            ],
             "tsConfig": "projects/gameboard-mks/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -151,7 +156,8 @@
               "node_modules/jquery/dist/jquery.js",
               "node_modules/jquery-ui-dist/jquery-ui.js",
               "node_modules/vmware-wmks/wmks.min.js"
-            ]
+            ],
+            "browser": "projects/gameboard-mks/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -176,9 +182,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true

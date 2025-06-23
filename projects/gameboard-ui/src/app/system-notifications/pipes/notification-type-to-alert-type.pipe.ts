@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SystemNotificationType } from '../system-notifications.models';
 
-@Pipe({ name: 'notificationTypeToAlertType' })
+@Pipe({
+    name: 'notificationTypeToAlertType',
+    standalone: false
+})
 export class NotificationTypeToAlertTypePipe implements PipeTransform {
 
   transform(value: SystemNotificationType): string {

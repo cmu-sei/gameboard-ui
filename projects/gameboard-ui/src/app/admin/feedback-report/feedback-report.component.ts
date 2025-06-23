@@ -8,9 +8,10 @@ import { ReportService } from '../../api/report.service';
 import { Spec } from '../../api/spec-models';
 
 @Component({
-  selector: 'app-feedback-report',
-  templateUrl: './feedback-report.component.html',
-  styleUrls: ['./feedback-report.component.scss']
+    selector: 'app-feedback-report',
+    templateUrl: './feedback-report.component.html',
+    styleUrls: ['./feedback-report.component.scss'],
+    standalone: false
 })
 export class FeedbackReportComponent implements OnInit {
   errors: any[] = [];

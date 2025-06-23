@@ -6,9 +6,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable, combineLatest, firstValueFrom, map } from 'rxjs';
 
 @Component({
-  selector: 'app-external-game-link-banner',
-  templateUrl: './external-game-link-banner.component.html',
-  styleUrls: ['./external-game-link-banner.component.scss']
+    selector: 'app-external-game-link-banner',
+    templateUrl: './external-game-link-banner.component.html',
+    styleUrls: ['./external-game-link-banner.component.scss'],
+    standalone: false
 })
 export class ExternalGameLinkBannerComponent implements OnInit {
   @Input() gameId?: string;

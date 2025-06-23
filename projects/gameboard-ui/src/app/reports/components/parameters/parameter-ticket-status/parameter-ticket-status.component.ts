@@ -4,10 +4,11 @@ import { SupportReportService } from '@/reports/components/reports/support-repor
 import { CustomInputComponent, createCustomInputControlValueAccessor } from '@/core/components/custom-input/custom-input.component';
 
 @Component({
-  selector: 'app-parameter-ticket-status',
-  templateUrl: './parameter-ticket-status.component.html',
-  styleUrls: ['./parameter-ticket-status.component.scss'],
-  providers: [createCustomInputControlValueAccessor(ParameterTicketStatusComponent)]
+    selector: 'app-parameter-ticket-status',
+    templateUrl: './parameter-ticket-status.component.html',
+    styleUrls: ['./parameter-ticket-status.component.scss'],
+    providers: [createCustomInputControlValueAccessor(ParameterTicketStatusComponent)],
+    standalone: false
 })
 export class ParameterTicketStatusComponent extends CustomInputComponent<string> implements OnInit {
   statuses$: Observable<string[]> = of([]);

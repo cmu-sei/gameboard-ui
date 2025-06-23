@@ -27,9 +27,10 @@ export interface TeamSessionResetRequest {
 }
 
 @Component({
-  selector: 'app-game-center-team-context-menu',
-  templateUrl: './game-center-team-context-menu.component.html',
-  styleUrls: ['./game-center-team-context-menu.component.scss']
+    selector: 'app-game-center-team-context-menu',
+    templateUrl: './game-center-team-context-menu.component.html',
+    styleUrls: ['./game-center-team-context-menu.component.scss'],
+    standalone: false
 })
 export class GameCenterTeamContextMenuComponent {
   @Input() game?: { id: string; name: string; endsOn?: DateTime, isSyncStart: boolean; maxTeamSize: number };

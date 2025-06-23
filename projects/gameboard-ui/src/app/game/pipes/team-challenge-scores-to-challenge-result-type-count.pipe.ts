@@ -2,7 +2,10 @@ import { ChallengeResult } from '@/api/board-models';
 import { TeamScoreChallenge } from '@/services/scoring/scoring.models';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'teamChallengeScoresToChallengeResultTypeCount' })
+@Pipe({
+    name: 'teamChallengeScoresToChallengeResultTypeCount',
+    standalone: false
+})
 export class TeamChallengeScoresToChallengeResultTypeCountPipe implements PipeTransform {
 
   transform(value: TeamScoreChallenge[], resultType: ChallengeResult): number | null {

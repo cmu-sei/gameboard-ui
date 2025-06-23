@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DateTime } from 'luxon';
 import { Observable, interval, map } from 'rxjs';
 
-@Pipe({ name: 'dateToCountdown' })
+@Pipe({
+    name: 'dateToCountdown',
+    standalone: false
+})
 export class DateToCountdownPipe implements PipeTransform {
 
   transform(value: Date | string | undefined | null, showSecondsWhenRemainingLessThanMs?: number): Observable<string | null> | null {

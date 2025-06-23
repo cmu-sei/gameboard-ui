@@ -16,9 +16,10 @@ export type GameCardGame = {
 }
 
 @Component({
-  selector: 'app-game-card',
-  templateUrl: './game-card.component.html',
-  styleUrls: ['./game-card.component.scss']
+    selector: 'app-game-card',
+    templateUrl: './game-card.component.html',
+    styleUrls: ['./game-card.component.scss'],
+    standalone: false
 })
 export class GameCardComponent {
   @Input() game?: GameCardGame;

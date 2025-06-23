@@ -8,10 +8,11 @@ import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-report-page',
-  templateUrl: './report-page.component.html',
-  styleUrls: ['./report-page.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-report-page',
+    templateUrl: './report-page.component.html',
+    styleUrls: ['./report-page.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class ReportPageComponent implements OnInit {
   private unsub = inject(UnsubscriberService);

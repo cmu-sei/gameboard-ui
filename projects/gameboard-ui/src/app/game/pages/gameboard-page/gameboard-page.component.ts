@@ -22,10 +22,11 @@ import { WindowService } from '@/services/window.service';
 import { RouterService } from '@/services/router.service';
 
 @Component({
-  selector: 'app-gameboard-page',
-  templateUrl: './gameboard-page.component.html',
-  styleUrls: ['./gameboard-page.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-gameboard-page',
+    templateUrl: './gameboard-page.component.html',
+    styleUrls: ['./gameboard-page.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class GameboardPageComponent {
   refresh$ = new Subject<string>();

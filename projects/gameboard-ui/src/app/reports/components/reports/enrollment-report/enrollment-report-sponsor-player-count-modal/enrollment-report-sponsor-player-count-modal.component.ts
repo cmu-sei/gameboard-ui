@@ -9,9 +9,10 @@ export interface EnrollmentReportSponsorPlayerCountModalContext {
 }
 
 @Component({
-  selector: 'app-enrollment-report-sponsor-player-count-modal',
-  templateUrl: './enrollment-report-sponsor-player-count-modal.component.html',
-  styleUrls: ['./enrollment-report-sponsor-player-count-modal.component.scss']
+    selector: 'app-enrollment-report-sponsor-player-count-modal',
+    templateUrl: './enrollment-report-sponsor-player-count-modal.component.html',
+    styleUrls: ['./enrollment-report-sponsor-player-count-modal.component.scss'],
+    standalone: false
 })
 export class EnrollmentReportSponsorPlayerCountModalComponent {
   context!: EnrollmentReportSponsorPlayerCountModalContext;

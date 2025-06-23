@@ -9,9 +9,10 @@ import { ApiUser } from '@/api/user-models';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-certificate-list',
-  templateUrl: './competitive-certificates.component.html',
-  styleUrls: ['./competitive-certificates.component.scss']
+    selector: 'app-certificate-list',
+    templateUrl: './competitive-certificates.component.html',
+    styleUrls: ['./competitive-certificates.component.scss'],
+    standalone: false
 })
 export class CompetitiveCertificatesComponent implements OnInit {
   faArrowLeft = faArrowLeft;

@@ -22,9 +22,10 @@ interface SupportReportContext {
 }
 
 @Component({
-  selector: 'app-support-report',
-  templateUrl: './support-report.component.html',
-  styleUrls: ['./support-report.component.scss']
+    selector: 'app-support-report',
+    templateUrl: './support-report.component.html',
+    styleUrls: ['./support-report.component.scss'],
+    standalone: false
 })
 export class SupportReportComponent extends ReportComponentBase<SupportReportFlatParameters> {
   protected ticketLabels$ = this.reportService.getTicketLabels();

@@ -3,9 +3,10 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, map, of, timer } from 'rxjs';
 
 @Component({
-  selector: 'app-countdown',
-  templateUrl: './countdown.component.html',
-  styleUrls: ['./countdown.component.scss']
+    selector: 'app-countdown',
+    templateUrl: './countdown.component.html',
+    styleUrls: ['./countdown.component.scss'],
+    standalone: false
 })
 export class CountdownComponent implements OnChanges {
   // note that this should be in MS since epoch (e.g. new Date().valueOf())

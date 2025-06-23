@@ -3,9 +3,10 @@ import { ExternalGameService } from '@/services/external-game.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-external-host-editor',
-  templateUrl: './external-host-editor.component.html',
-  styleUrls: ['./external-host-editor.component.scss']
+    selector: 'app-external-host-editor',
+    templateUrl: './external-host-editor.component.html',
+    styleUrls: ['./external-host-editor.component.scss'],
+    standalone: false
 })
 export class ExternalHostEditorComponent implements OnInit {
   protected editHost: UpsertExternalGameHost = {

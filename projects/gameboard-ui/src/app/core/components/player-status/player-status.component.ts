@@ -8,8 +8,8 @@ export enum PlayerStatus {
 }
 
 @Component({
-  selector: 'app-player-status',
-  template: `
+    selector: 'app-player-status',
+    template: `
     <div class="game-hub-status-component d-flex justify-content-center align-items-center" [tooltip]="tooltipText || ''">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36px" height="36px">
         <circle
@@ -21,7 +21,8 @@ export enum PlayerStatus {
       </svg>
     </div>
   `,
-  styleUrls: ['./player-status.component.scss']
+    styleUrls: ['./player-status.component.scss'],
+    standalone: false
 })
 export class PlayerStatusComponent implements OnChanges {
   @Input() session?: TimeWindow;

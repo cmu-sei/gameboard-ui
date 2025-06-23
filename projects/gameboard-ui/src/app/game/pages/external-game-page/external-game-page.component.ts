@@ -13,9 +13,10 @@ import { WindowService } from '@/services/window.service';
 import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
-  selector: 'app-external-game-page',
-  templateUrl: './external-game-page.component.html',
-  styleUrls: ['./external-game-page.component.scss']
+    selector: 'app-external-game-page',
+    templateUrl: './external-game-page.component.html',
+    styleUrls: ['./external-game-page.component.scss'],
+    standalone: false
 })
 export class ExternalGamePageComponent implements OnInit, OnDestroy {
   errors: string[] = [];

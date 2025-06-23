@@ -6,9 +6,10 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { AdminService } from '@/api/admin.service';
 
 @Component({
-  selector: 'app-active-teams-modal',
-  templateUrl: './active-teams-modal.component.html',
-  styleUrls: ['./active-teams-modal.component.scss']
+    selector: 'app-active-teams-modal',
+    templateUrl: './active-teams-modal.component.html',
+    styleUrls: ['./active-teams-modal.component.scss'],
+    standalone: false
 })
 export class ActiveTeamsModalComponent implements OnInit {
   constructor(

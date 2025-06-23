@@ -10,9 +10,10 @@ import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-par
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
 
 @Component({
-  selector: 'app-practice-mode-report',
-  templateUrl: './practice-mode-report.component.html',
-  styleUrls: ['./practice-mode-report.component.scss']
+    selector: 'app-practice-mode-report',
+    templateUrl: './practice-mode-report.component.html',
+    styleUrls: ['./practice-mode-report.component.scss'],
+    standalone: false
 })
 export class PracticeModeReportComponent
   extends ReportComponentBase<PracticeModeReportFlatParameters> {

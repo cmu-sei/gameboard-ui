@@ -7,8 +7,9 @@ import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
-  selector: 'app-deployment-admin-team-context-menu',
-  templateUrl: './external-game-admin-team-context-menu.component.html'
+    selector: 'app-deployment-admin-team-context-menu',
+    templateUrl: './external-game-admin-team-context-menu.component.html',
+    standalone: false
 })
 export class ExternalGameAdminTeamContextMenuComponent {
   @Input() team?: SimpleEntity;

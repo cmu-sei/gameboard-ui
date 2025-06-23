@@ -15,9 +15,10 @@ import { UserRolePermissionsService } from '@/api/user-role-permissions.service'
 import { ChallengesService } from '@/api/challenges.service';
 
 @Component({
-  selector: 'app-ticket-form',
-  templateUrl: './ticket-form.component.html',
-  styleUrls: ['./ticket-form.component.scss']
+    selector: 'app-ticket-form',
+    templateUrl: './ticket-form.component.html',
+    styleUrls: ['./ticket-form.component.scss'],
+    standalone: false
 })
 export class TicketFormComponent implements OnDestroy {
   summaryLimit = 128;

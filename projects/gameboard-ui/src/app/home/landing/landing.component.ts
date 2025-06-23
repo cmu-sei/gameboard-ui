@@ -13,9 +13,10 @@ import { PracticeService } from '@/services/practice.service';
 import { RouterService } from '@/services/router.service';
 
 @Component({
-  selector: 'app-landing',
-  templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss']
+    selector: 'app-landing',
+    templateUrl: './landing.component.html',
+    styleUrls: ['./landing.component.scss'],
+    standalone: false
 })
 export class LandingComponent implements OnInit {
   private practiceService = inject(PracticeService);

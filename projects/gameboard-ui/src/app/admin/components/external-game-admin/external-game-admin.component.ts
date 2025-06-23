@@ -50,10 +50,11 @@ export interface ExternalGameAdminContext {
 }
 
 @Component({
-  selector: 'app-external-game-admin',
-  templateUrl: './external-game-admin.component.html',
-  styleUrls: ['./external-game-admin.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-external-game-admin',
+    templateUrl: './external-game-admin.component.html',
+    styleUrls: ['./external-game-admin.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class ExternalGameAdminComponent implements OnInit {
   private gameId?: string;

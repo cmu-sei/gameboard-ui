@@ -20,9 +20,10 @@ interface EnrollmentReportSummaryStats {
 }
 
 @Component({
-  selector: 'app-enrollment-report',
-  templateUrl: './enrollment-report.component.html',
-  styleUrls: ['./enrollment-report.component.scss']
+    selector: 'app-enrollment-report',
+    templateUrl: './enrollment-report.component.html',
+    styleUrls: ['./enrollment-report.component.scss'],
+    standalone: false
 })
 export class EnrollmentReportComponent extends ReportComponentBase<EnrollmentReportFlatParameters> {
   games$ = this.reportsService.getGames();

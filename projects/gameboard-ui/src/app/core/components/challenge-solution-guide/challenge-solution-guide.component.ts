@@ -5,9 +5,10 @@ import { firstValueFrom } from 'rxjs';
 import { fa } from '@/services/font-awesome.service';
 
 @Component({
-  selector: 'app-challenge-solution-guide',
-  styleUrls: ["./challenge-solution-guide.component.scss"],
-  templateUrl: './challenge-solution-guide.component.html'
+    selector: 'app-challenge-solution-guide',
+    styleUrls: ["./challenge-solution-guide.component.scss"],
+    templateUrl: './challenge-solution-guide.component.html',
+    standalone: false
 })
 export class ChallengeSolutionGuideComponent implements OnChanges {
   @Input() challengeId?: string;

@@ -16,18 +16,17 @@ import { ToastService } from '@/utility/services/toast.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-user-display-name-editor',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    ReactiveFormsModule,
-    AlertModule,
-    TooltipModule,
-    CommonModule,
-    FontAwesomeModule
-  ],
-  templateUrl: './user-display-name-editor.component.html',
-  styleUrl: './user-display-name-editor.component.scss'
+    selector: 'app-user-display-name-editor',
+    imports: [
+        AsyncPipe,
+        ReactiveFormsModule,
+        AlertModule,
+        TooltipModule,
+        CommonModule,
+        FontAwesomeModule
+    ],
+    templateUrl: './user-display-name-editor.component.html',
+    styleUrl: './user-display-name-editor.component.scss'
 })
 export class UserDisplayNameEditorComponent implements OnInit {
   private configService = inject(ConfigService);

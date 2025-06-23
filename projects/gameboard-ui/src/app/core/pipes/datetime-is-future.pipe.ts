@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTime } from 'luxon';
 
-@Pipe({ name: 'datetimeIsFuture' })
+@Pipe({
+    name: 'datetimeIsFuture',
+    standalone: false
+})
 export class DateTimeIsFuturePipe implements PipeTransform {
   transform(value: DateTime | null): boolean {
     if (!value)

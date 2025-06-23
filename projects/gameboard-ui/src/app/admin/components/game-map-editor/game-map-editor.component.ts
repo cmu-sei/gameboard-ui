@@ -7,9 +7,10 @@ import { fa } from '@/services/font-awesome.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-game-map-editor',
-  templateUrl: './game-map-editor.component.html',
-  styleUrls: ['./game-map-editor.component.scss']
+    selector: 'app-game-map-editor',
+    templateUrl: './game-map-editor.component.html',
+    styleUrls: ['./game-map-editor.component.scss'],
+    standalone: false
 })
 export class GameMapEditorComponent implements OnInit {
   @Input() gameId!: string;

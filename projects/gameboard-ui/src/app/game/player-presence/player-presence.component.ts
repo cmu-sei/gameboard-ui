@@ -24,9 +24,10 @@ interface PlayerPresenceContext {
 }
 
 @Component({
-  selector: 'app-player-presence',
-  styleUrls: ['./player-presence.component.scss'],
-  templateUrl: './player-presence.component.html',
+    selector: 'app-player-presence',
+    styleUrls: ['./player-presence.component.scss'],
+    templateUrl: './player-presence.component.html',
+    standalone: false
 })
 export class PlayerPresenceComponent implements OnInit {
   @Input() player$: Observable<Player | undefined> = of(undefined);

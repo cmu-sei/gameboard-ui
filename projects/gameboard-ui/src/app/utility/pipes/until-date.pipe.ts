@@ -3,7 +3,10 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({name: 'until'})
+@Pipe({
+    name: 'until',
+    standalone: false
+})
 export class UntilPipe implements PipeTransform {
     transform(date: any): string {
         let r = '';

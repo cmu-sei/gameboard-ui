@@ -11,15 +11,14 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'app-message-board',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    MarkdownModule,
-  ],
-  styleUrls: ['./message-board.component.scss'],
-  template: `
+    selector: 'app-message-board',
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        MarkdownModule,
+    ],
+    styleUrls: ['./message-board.component.scss'],
+    template: `
   <div *ngIf="list?.length" class="message-div">
   <div *ngFor="let a of list" tabindex="0" class="pop-warning m-2">
     <div class="text-right m-1">
@@ -33,7 +32,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 </div>
 
 `,
-  providers: [UnsubscriberService]
+    providers: [UnsubscriberService]
 })
 export class MessageBoardComponent {
   protected list: UserHubAnnouncement[] = [];

@@ -5,10 +5,11 @@ import { Subject, debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-parameter-timespan-picker',
-  templateUrl: './parameter-timespan-picker.component.html',
-  styleUrls: ['./parameter-timespan-picker.component.scss'],
-  providers: [createCustomInputControlValueAccessor(ParameterTimespanPickerComponent), UnsubscriberService]
+    selector: 'app-parameter-timespan-picker',
+    templateUrl: './parameter-timespan-picker.component.html',
+    styleUrls: ['./parameter-timespan-picker.component.scss'],
+    providers: [createCustomInputControlValueAccessor(ParameterTimespanPickerComponent), UnsubscriberService],
+    standalone: false
 })
 export class ParameterTimespanPickerComponent extends CustomInputComponent<TimespanQueryParamModel> implements OnInit {
   @Input() label = '';

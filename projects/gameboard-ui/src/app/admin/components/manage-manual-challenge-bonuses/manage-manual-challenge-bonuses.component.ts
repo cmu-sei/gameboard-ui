@@ -4,9 +4,10 @@ import { CreateManualChallengeBonus, TeamScoreQueryResponse } from '@/services/s
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-manage-manual-challenge-bonuses',
-  templateUrl: './manage-manual-challenge-bonuses.component.html',
-  styleUrls: ['./manage-manual-challenge-bonuses.component.scss']
+    selector: 'app-manage-manual-challenge-bonuses',
+    templateUrl: './manage-manual-challenge-bonuses.component.html',
+    styleUrls: ['./manage-manual-challenge-bonuses.component.scss'],
+    standalone: false
 })
 export class ManageManualChallengeBonusesComponent implements OnInit {
   @Input() teamId!: string;

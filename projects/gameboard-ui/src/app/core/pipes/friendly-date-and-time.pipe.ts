@@ -2,7 +2,10 @@ import { FriendlyDatesService } from '@/services/friendly-dates.service';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTime } from 'luxon';
 
-@Pipe({ name: 'friendlyDateAndTime' })
+@Pipe({
+    name: 'friendlyDateAndTime',
+    standalone: false
+})
 export class FriendlyDateAndTimePipe implements PipeTransform {
   constructor(private friendlyDates: FriendlyDatesService) { }
 

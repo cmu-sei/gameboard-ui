@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ExternalGameAdminChallenge } from '../components/external-game-admin/external-game-admin.component';
 
-@Pipe({ name: 'externalSpecIdToChallenge' })
+@Pipe({
+    name: 'externalSpecIdToChallenge',
+    standalone: false
+})
 export class ExternalSpecIdToChallengePipe implements PipeTransform {
 
   transform(value: string, challenges: ExternalGameAdminChallenge[]): ExternalGameAdminChallenge | null {

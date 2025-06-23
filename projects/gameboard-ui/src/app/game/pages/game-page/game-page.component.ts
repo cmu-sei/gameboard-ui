@@ -31,10 +31,11 @@ interface GameEnrollmentContext {
 }
 
 @Component({
-  selector: 'app-game-page',
-  templateUrl: './game-page.component.html',
-  styleUrls: ['./game-page.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-game-page',
+    templateUrl: './game-page.component.html',
+    styleUrls: ['./game-page.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class GamePageComponent implements OnDestroy {
   ctx$ = new Observable<GameContext | undefined>(undefined);

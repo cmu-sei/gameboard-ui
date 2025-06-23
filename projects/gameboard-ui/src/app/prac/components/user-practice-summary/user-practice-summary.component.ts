@@ -5,14 +5,13 @@ import { PracticeService } from '@/services/practice.service';
 import { Component, inject, input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-user-practice-summary',
-  standalone: true,
-  templateUrl: './user-practice-summary.component.html',
-  styleUrl: './user-practice-summary.component.scss',
-  imports: [
-    CoreModule,
-    TextToHexColorPipe
-  ],
+    selector: 'app-user-practice-summary',
+    templateUrl: './user-practice-summary.component.html',
+    styleUrl: './user-practice-summary.component.scss',
+    imports: [
+        CoreModule,
+        TextToHexColorPipe
+    ]
 })
 export class UserPracticeSummaryComponent implements OnInit {
   userId = input.required<string>();

@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ConfigService } from '../config.service';
 
-@Pipe({ name: 'shorttime' })
+@Pipe({
+    name: 'shorttime',
+    standalone: false
+})
 export class ShortTimePipe implements PipeTransform {
   constructor(private config: ConfigService) { }
 

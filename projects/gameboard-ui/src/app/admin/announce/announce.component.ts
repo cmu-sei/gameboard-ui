@@ -9,9 +9,10 @@ import { ToastService } from '@/utility/services/toast.service';
 import { AdminService } from '@/api/admin.service';
 
 @Component({
-  selector: 'app-announce',
-  templateUrl: './announce.component.html',
-  styleUrls: ['./announce.component.scss']
+    selector: 'app-announce',
+    templateUrl: './announce.component.html',
+    styleUrls: ['./announce.component.scss'],
+    standalone: false
 })
 export class AnnounceComponent {
   @Input() teamId = '';

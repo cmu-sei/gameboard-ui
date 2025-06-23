@@ -10,12 +10,11 @@ export interface DoughnutChartConfig {
 }
 
 @Component({
-  selector: 'app-doughnut-chart',
-  standalone: true,
-  imports: [CommonModule, BaseChartDirective],
-  providers: [provideCharts(withDefaultRegisterables())],
-  templateUrl: './doughnut-chart.component.html',
-  styleUrls: ['./doughnut-chart.component.scss']
+    selector: 'app-doughnut-chart',
+    imports: [CommonModule, BaseChartDirective],
+    providers: [provideCharts(withDefaultRegisterables())],
+    templateUrl: './doughnut-chart.component.html',
+    styleUrls: ['./doughnut-chart.component.scss']
 })
 export class DoughnutChartComponent {
   @Input() config!: DoughnutChartConfig;

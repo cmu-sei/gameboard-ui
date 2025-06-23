@@ -8,9 +8,10 @@ export interface ReportSummaryStat {
 }
 
 @Component({
-  selector: 'app-report-stat-summary',
-  templateUrl: './report-stat-summary.component.html',
-  styleUrls: ['./report-stat-summary.component.scss']
+    selector: 'app-report-stat-summary',
+    templateUrl: './report-stat-summary.component.html',
+    styleUrls: ['./report-stat-summary.component.scss'],
+    standalone: false
 })
 export class ReportStatSummaryComponent implements OnChanges {
   @Input() importantStat?: ReportSummaryStat;

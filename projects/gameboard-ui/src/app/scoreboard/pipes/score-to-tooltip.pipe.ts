@@ -1,7 +1,10 @@
 import { DenormalizedTeamScore, Score } from '@/services/scoring/scoring.models';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'scoreToTooltip' })
+@Pipe({
+    name: 'scoreToTooltip',
+    standalone: false
+})
 export class ScoreToTooltipPipe implements PipeTransform {
   transform(value: DenormalizedTeamScore | Score): string {
     if (!value)

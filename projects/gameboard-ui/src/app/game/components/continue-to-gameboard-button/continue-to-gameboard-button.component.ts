@@ -13,8 +13,9 @@ export interface ContinueToGameboardButtonContext {
 }
 
 @Component({
-  selector: 'app-continue-to-gameboard-button',
-  templateUrl: './continue-to-gameboard-button.component.html',
+    selector: 'app-continue-to-gameboard-button',
+    templateUrl: './continue-to-gameboard-button.component.html',
+    standalone: false
 })
 export class ContinueToGameboardButtonComponent implements OnChanges {
   @Input() context?: ContinueToGameboardButtonContext;

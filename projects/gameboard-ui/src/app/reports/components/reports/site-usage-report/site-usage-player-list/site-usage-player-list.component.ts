@@ -4,8 +4,9 @@ import { SiteUsageReportFlatParameters, SiteUsageReportPlayer, SiteUsageReportPl
 import { SiteUsageReportService } from '../site-usage-report.service';
 
 @Component({
-  selector: 'app-site-usage-player-list',
-  templateUrl: './site-usage-player-list.component.html',
+    selector: 'app-site-usage-player-list',
+    templateUrl: './site-usage-player-list.component.html',
+    standalone: false
 })
 export class SiteUsagePlayerListComponent implements OnInit {
   title = "Players";

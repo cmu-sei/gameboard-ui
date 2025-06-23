@@ -8,9 +8,10 @@ import { TicketChallengeGroup, TicketDayGroup, TicketDayReport, TicketLabelGroup
 import { fa } from '@/services/font-awesome.service';
 
 @Component({
-  selector: 'app-support-report-legacy',
-  templateUrl: './support-report-legacy.component.html',
-  styleUrls: ['./support-report-legacy.component.scss']
+    selector: 'app-support-report-legacy',
+    templateUrl: './support-report-legacy.component.html',
+    styleUrls: ['./support-report-legacy.component.scss'],
+    standalone: false
 })
 export class SupportReportLegacyComponent implements OnInit {
   refresh$ = new BehaviorSubject<any>(true);

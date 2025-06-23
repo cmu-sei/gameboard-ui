@@ -13,9 +13,10 @@ import { ReportService } from '@/api/report.service';
 import { cloneNonNullAndDefinedProperties } from '@/../tools/object-tools.lib';
 
 @Component({
-  selector: 'app-feedback-game-report',
-  templateUrl: './feedback-game-report.component.html',
-  styleUrls: ['./feedback-game-report.component.scss']
+    selector: 'app-feedback-game-report',
+    templateUrl: './feedback-game-report.component.html',
+    styleUrls: ['./feedback-game-report.component.scss'],
+    standalone: false
 })
 export class FeedbackGameReportComponent extends ReportComponentBase<FeedbackGameReportParameters> {
   protected fa = fa;

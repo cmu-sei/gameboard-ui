@@ -6,9 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-game-center-tickets',
-  templateUrl: './game-center-tickets.component.html',
-  styleUrls: ['./game-center-tickets.component.scss']
+    selector: 'app-game-center-tickets',
+    templateUrl: './game-center-tickets.component.html',
+    styleUrls: ['./game-center-tickets.component.scss'],
+    standalone: false
 })
 export class GameCenterTicketsComponent {
   protected gameId?: string;

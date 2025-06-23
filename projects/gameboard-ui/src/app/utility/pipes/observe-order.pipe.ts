@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ObserveChallenge } from '../../api/board-models';
 
 @Pipe({
-  name: 'observeorder'
+    name: 'observeorder',
+    standalone: false
 })
 export class ObserveOrderPipe implements PipeTransform {
 

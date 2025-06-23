@@ -9,9 +9,10 @@ import { SponsorService } from '../../api/sponsor.service';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
-  selector: 'app-sponsor-browser',
-  templateUrl: './sponsor-browser.component.html',
-  styleUrls: ['./sponsor-browser.component.scss']
+    selector: 'app-sponsor-browser',
+    templateUrl: './sponsor-browser.component.html',
+    styleUrls: ['./sponsor-browser.component.scss'],
+    standalone: false
 })
 export class SponsorBrowserComponent implements OnInit {
   protected errors: any[] = [];

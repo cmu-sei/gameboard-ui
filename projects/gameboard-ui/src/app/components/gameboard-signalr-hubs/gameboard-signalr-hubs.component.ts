@@ -14,16 +14,15 @@ import { GameHubActiveEnrollment } from '@/services/signalR/game-hub.models';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-gameboard-signalr-hubs',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TitleCasePipe,
-    StatusLightComponent,
-  ],
-  templateUrl: './gameboard-signalr-hubs.component.html',
-  styleUrls: ['./gameboard-signalr-hubs.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-gameboard-signalr-hubs',
+    imports: [
+        CommonModule,
+        TitleCasePipe,
+        StatusLightComponent,
+    ],
+    templateUrl: './gameboard-signalr-hubs.component.html',
+    styleUrls: ['./gameboard-signalr-hubs.component.scss'],
+    providers: [UnsubscriberService]
 })
 export class GameboardSignalRHubsComponent implements OnDestroy {
   protected isDevMode = false;

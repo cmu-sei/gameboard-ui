@@ -8,11 +8,10 @@ import { firstValueFrom } from 'rxjs';
 import { TeamService } from '@/api/team.service';
 
 @Component({
-  selector: 'app-advance-teams-modal',
-  standalone: true,
-  imports: [CommonModule, CoreModule],
-  templateUrl: './advance-teams-modal.component.html',
-  styleUrls: ['./advance-teams-modal.component.scss']
+    selector: 'app-advance-teams-modal',
+    imports: [CommonModule, CoreModule],
+    templateUrl: './advance-teams-modal.component.html',
+    styleUrls: ['./advance-teams-modal.component.scss']
 })
 export class AdvanceTeamsModalComponent implements OnInit {
   private gameService = inject(GameService);

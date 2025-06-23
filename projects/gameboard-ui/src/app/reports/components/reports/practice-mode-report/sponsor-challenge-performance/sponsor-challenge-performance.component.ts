@@ -9,8 +9,9 @@ export interface SponsorChallengePerformanceModalContext extends Partial<Sponsor
 }
 
 @Component({
-  selector: 'app-sponsor-challenge-performance',
-  templateUrl: './sponsor-challenge-performance.component.html',
+    selector: 'app-sponsor-challenge-performance',
+    templateUrl: './sponsor-challenge-performance.component.html',
+    standalone: false
 })
 export class SponsorChallengePerformanceComponent {
   context!: SponsorChallengePerformanceModalContext;

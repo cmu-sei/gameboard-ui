@@ -10,9 +10,10 @@ import { PlayerService } from '../../api/player.service';
 import { AdminService } from '@/api/admin.service';
 
 @Component({
-  selector: 'app-player-names',
-  templateUrl: './player-names.component.html',
-  styleUrls: ['./player-names.component.scss']
+    selector: 'app-player-names',
+    templateUrl: './player-names.component.html',
+    styleUrls: ['./player-names.component.scss'],
+    standalone: false
 })
 export class PlayerNamesComponent {
   refresh$ = new BehaviorSubject<boolean>(true);

@@ -13,9 +13,10 @@ import { GameService } from '../../api/game.service';
 import { ChallengeReport, ChallengeDetailReportView } from '../../api/report-models';
 
 @Component({
-  selector: 'app-challenge-report',
-  templateUrl: './challenge-report.component.html',
-  styleUrls: ['./challenge-report.component.scss']
+    selector: 'app-challenge-report',
+    templateUrl: './challenge-report.component.html',
+    styleUrls: ['./challenge-report.component.scss'],
+    standalone: false
 })
 export class ChallengeReportComponent implements OnInit {
   @ViewChild(NgForm) form!: FormGroup;

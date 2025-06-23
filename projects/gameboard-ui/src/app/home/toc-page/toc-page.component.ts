@@ -8,11 +8,11 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { TocService } from '@/api/toc.service';
 
 @Component({
-  selector: 'app-toc-page',
-  styles: [
-    ".reader { max-width: 1080px; margin: 0 auto; }"
-  ],
-  template: `
+    selector: 'app-toc-page',
+    styles: [
+        ".reader { max-width: 1080px; margin: 0 auto; }"
+    ],
+    template: `
     <div class="reader">
       <ng-container *ngIf="doc$ | async as doc; else loading">
           <markdown [data]="doc"></markdown>
@@ -24,7 +24,8 @@ import { TocService } from '@/api/toc.service';
           <app-spinner></app-spinner>
       </div>
   </ng-template>
-`
+`,
+    standalone: false
 })
 export class TocPageComponent {
   doc$: Observable<string>;

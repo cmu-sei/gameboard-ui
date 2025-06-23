@@ -5,8 +5,9 @@ import { TimeWindow } from '@/api/player-models';
 import { GameSessionService } from '@/services/game-session.service';
 
 @Component({
-  selector: 'app-cumulative-time-clock',
-  templateUrl: './cumulative-time-clock.component.html',
+    selector: 'app-cumulative-time-clock',
+    templateUrl: './cumulative-time-clock.component.html',
+    standalone: false
 })
 export class CumulativeTimeClockComponent implements OnInit, OnChanges {
   @Input() session?: TimeWindow;

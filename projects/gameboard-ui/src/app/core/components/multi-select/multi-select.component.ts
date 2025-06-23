@@ -7,10 +7,11 @@ import { MarkdownHelpersService } from '@/services/markdown-helpers.service';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 
 @Component({
-  selector: 'app-multi-select',
-  templateUrl: './multi-select.component.html',
-  styleUrls: ['./multi-select.component.scss'],
-  providers: [createCustomInputControlValueAccessor(MultiSelectComponent)]
+    selector: 'app-multi-select',
+    templateUrl: './multi-select.component.html',
+    styleUrls: ['./multi-select.component.scss'],
+    providers: [createCustomInputControlValueAccessor(MultiSelectComponent)],
+    standalone: false
 })
 export class MultiSelectComponent<TItem> extends CustomInputComponent<MultiSelectQueryParamModel<TItem>> implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() label?: string;

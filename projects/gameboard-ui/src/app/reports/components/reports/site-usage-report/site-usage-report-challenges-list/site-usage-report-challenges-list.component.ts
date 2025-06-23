@@ -4,8 +4,9 @@ import { SiteUsageReportChallenge, SiteUsageReportFlatParameters } from '../site
 import { SiteUsageReportService } from '../site-usage-report.service';
 
 @Component({
-  selector: 'app-site-usage-report-challenges-list',
-  templateUrl: './site-usage-report-challenges-list.component.html',
+    selector: 'app-site-usage-report-challenges-list',
+    templateUrl: './site-usage-report-challenges-list.component.html',
+    standalone: false
 })
 export class SiteUsageReportChallengesListComponent implements OnInit {
   title?: string;

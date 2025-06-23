@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-game-center-observe',
-  templateUrl: './game-center-observe.component.html',
+    selector: 'app-game-center-observe',
+    templateUrl: './game-center-observe.component.html',
+    standalone: false
 })
 export class GameCenterObserveComponent {
   protected gameId?: string;

@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
-  selector: 'app-modal-content',
-  templateUrl: './modal-content.component.html',
-  styleUrls: ['./modal-content.component.scss']
+    selector: 'app-modal-content',
+    templateUrl: './modal-content.component.html',
+    styleUrls: ['./modal-content.component.scss'],
+    standalone: false
 })
 export class ModalContentComponent<T> {
   @Input() hideCancel = false;

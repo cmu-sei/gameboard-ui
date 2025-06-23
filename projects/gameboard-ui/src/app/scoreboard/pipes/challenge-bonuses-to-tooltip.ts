@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'challengeBonusesToTooltip' })
+@Pipe({
+    name: 'challengeBonusesToTooltip',
+    standalone: false
+})
 export class ChallengeBonusesToTooltip implements PipeTransform {
 
   transform(value: { description: string }[]): string {

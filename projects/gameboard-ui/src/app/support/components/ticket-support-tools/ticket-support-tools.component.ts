@@ -17,9 +17,9 @@ export interface TicketSupportToolsContext {
 }
 
 @Component({
-  selector: 'app-ticket-support-tools',
-  styleUrls: ['./ticket-support-tools.component.scss'],
-  template: `
+    selector: 'app-ticket-support-tools',
+    styleUrls: ['./ticket-support-tools.component.scss'],
+    template: `
   <ul *ngIf="hasGameContext; else noGameContext">
     <li *ngIf="isActiveSession && (observeChallengeUrl || observeTeamUrl)">
       Observe
@@ -65,7 +65,8 @@ export interface TicketSupportToolsContext {
       Attach this ticket to a game or challenge to use these tools.
     </div>
   </ng-template>
-`
+`,
+    standalone: false
 })
 export class TicketSupportToolsComponent implements OnInit {
   @Input() context?: TicketSupportToolsContext;

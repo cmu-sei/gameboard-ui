@@ -11,14 +11,13 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { RouterService } from '@/services/router.service';
 
 @Component({
-  selector: 'app-game-center-practice-team-context-menu',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-  ],
-  templateUrl: './game-center-practice-team-context-menu.component.html',
-  styleUrls: ['./game-center-practice-team-context-menu.component.scss']
+    selector: 'app-game-center-practice-team-context-menu',
+    imports: [
+        CommonModule,
+        CoreModule,
+    ],
+    templateUrl: './game-center-practice-team-context-menu.component.html',
+    styleUrls: ['./game-center-practice-team-context-menu.component.scss']
 })
 export class GameCenterPracticeTeamContextMenuComponent implements OnInit {
   @Input() user?: GameCenterPracticeContextUser;

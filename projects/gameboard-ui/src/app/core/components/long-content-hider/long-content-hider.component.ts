@@ -2,9 +2,10 @@ import { WindowService } from '@/services/window.service';
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-long-content-hider',
-  templateUrl: './long-content-hider.component.html',
-  styleUrls: ['./long-content-hider.component.scss']
+    selector: 'app-long-content-hider',
+    templateUrl: './long-content-hider.component.html',
+    styleUrls: ['./long-content-hider.component.scss'],
+    standalone: false
 })
 export class LongContentHiderComponent implements AfterViewInit {
   @Input() defaultExpanded = false;

@@ -7,12 +7,11 @@ import { LogService } from '@/services/log.service';
 export type LineChartConfig = ChartConfiguration<"line", number[], string> | ChartConfigurationCustomTypesPerDataset<"line", number[], string>;
 
 @Component({
-  selector: 'app-line-chart',
-  standalone: true,
-  imports: [CommonModule],
-  providers: [provideCharts(withDefaultRegisterables())],
-  templateUrl: './line-chart.component.html',
-  styleUrls: ['./line-chart.component.scss']
+    selector: 'app-line-chart',
+    imports: [CommonModule],
+    providers: [provideCharts(withDefaultRegisterables())],
+    templateUrl: './line-chart.component.html',
+    styleUrls: ['./line-chart.component.scss']
 })
 export class LineChartComponent implements AfterViewInit, OnChanges {
   @Input() config?: LineChartConfig;

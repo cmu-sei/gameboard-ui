@@ -25,18 +25,17 @@ interface SectionTabViewModel {
 }
 
 @Component({
-  selector: 'app-challenge-questions',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    ChallengeSubmissionHistoryComponent,
-    EpochMsToTimeRemainingStringPipe,
-    SpinnerComponent,
-  ],
-  providers: [ActiveChallengesRepo, ModalConfirmService],
-  templateUrl: "./challenge-questions.component.html",
-  styleUrls: ["./challenge-questions.component.scss"]
+    selector: 'app-challenge-questions',
+    imports: [
+        CommonModule,
+        CoreModule,
+        ChallengeSubmissionHistoryComponent,
+        EpochMsToTimeRemainingStringPipe,
+        SpinnerComponent,
+    ],
+    providers: [ActiveChallengesRepo, ModalConfirmService],
+    templateUrl: "./challenge-questions.component.html",
+    styleUrls: ["./challenge-questions.component.scss"]
 })
 export class ChallengeQuestionsComponent implements OnChanges {
   @Input() challengeId?: string;

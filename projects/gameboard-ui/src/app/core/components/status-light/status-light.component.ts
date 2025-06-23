@@ -4,11 +4,10 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 export type StatusLightState = "none" | "preparing" | "active" | "error";
 
 @Component({
-  selector: 'app-status-light',
-  standalone: true,
-  imports: [TooltipModule],
-  styleUrls: ['./status-light.component.scss'],
-  template: `
+    selector: 'app-status-light',
+    imports: [TooltipModule],
+    styleUrls: ['./status-light.component.scss'],
+    template: `
     <div class="component-container d-flex justify-content-center align-items-center" [tooltip]="tooltip || ''">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36px" height="36px">
         <circle

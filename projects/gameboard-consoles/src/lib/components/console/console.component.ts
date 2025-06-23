@@ -15,22 +15,21 @@ import { ProgressIndicatorComponent } from "../progress-indicator/progress-indic
 import { EdgeHoverListenerComponent } from "../edge-hover-listener/edge-hover-listener.component";
 
 @Component({
-  selector: 'gb-console',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    FormsModule,
-    MarkdownComponent,
-    ProgressIndicatorComponent,
-    EdgeHoverListenerComponent
-  ],
-  providers: [
-    MockConsoleService,
-    NoVNCConsoleService,
-    WmksConsoleService,
-  ],
-  templateUrl: './console.component.html',
-  styleUrl: './console.component.scss'
+    selector: 'gb-console',
+    imports: [
+        AsyncPipe,
+        FormsModule,
+        MarkdownComponent,
+        ProgressIndicatorComponent,
+        EdgeHoverListenerComponent
+    ],
+    providers: [
+        MockConsoleService,
+        NoVNCConsoleService,
+        WmksConsoleService,
+    ],
+    templateUrl: './console.component.html',
+    styleUrl: './console.component.scss'
 })
 export class ConsoleComponent {
   // i/o

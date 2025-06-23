@@ -3,9 +3,10 @@ import { SpecService } from '@/api/spec.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-spec-question-performance-modal',
-  templateUrl: './spec-question-performance-modal.component.html',
-  styleUrls: ['./spec-question-performance-modal.component.scss']
+    selector: 'app-spec-question-performance-modal',
+    templateUrl: './spec-question-performance-modal.component.html',
+    styleUrls: ['./spec-question-performance-modal.component.scss'],
+    standalone: false
 })
 export class SpecQuestionPerformanceModalComponent implements OnInit {
   specId?: string;
