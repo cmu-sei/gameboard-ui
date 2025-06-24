@@ -35,10 +35,16 @@ export class NoVNCConsoleService implements ConsoleService {
     // update options
     this.options = { ...this.options, ...options };
 
+    console.log("url", url);
+    console.log("options", this.options);
+
     // wire up state callback
     if (stateCallback) {
       this.stateChanged = stateCallback;
     }
+
+    const typedUrl = new URL(url);
+    console.log("identical cred?", decodeURIComponent(typedUrl.searchParams.get("vncticket") || "") === this.options.accessCredential);
 
     // create and configure client
     this.client = new NoVncClient(
