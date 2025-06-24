@@ -1,8 +1,8 @@
-import { Component, computed, HostListener, inject, model, Signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, model, Signal, viewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from "@angular/core/rxjs-interop";
 import { map } from 'rxjs';
-import { ConsoleComponent, ConsoleComponentConfig } from 'gameboard-consoles';
+import { ConsoleComponent, ConsoleComponentConfig } from "@cmusei/console-forge";
 import { UserActivityListenerComponent } from '../user-activity-listener/user-activity-listener.component';
 import { ConsolesService } from '@/api/consoles.service';
 import { ConsoleId, ConsoleUserActivityType } from '@/api/consoles.models';
@@ -11,14 +11,14 @@ import { AppTitleService } from '@/services/app-title.service';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
-    selector: 'app-console-page',
-    imports: [
-        ConsoleComponent,
-        UserActivityListenerComponent
-    ],
-    providers: [UnsubscriberService],
-    templateUrl: './console-page.component.html',
-    styleUrl: './console-page.component.scss'
+  selector: 'app-console-page',
+  imports: [
+    ConsoleComponent,
+    UserActivityListenerComponent
+  ],
+  providers: [UnsubscriberService],
+  templateUrl: './console-page.component.html',
+  styleUrl: './console-page.component.scss'
 })
 export class ConsolePageComponent {
   private readonly consolesApi = inject(ConsolesService);
@@ -28,6 +28,7 @@ export class ConsolePageComponent {
   private readonly unsub = inject(UnsubscriberService);
 
   protected consoleConfig = model<ConsoleComponentConfig | undefined>(undefined);
+  protected consoleComponent = viewChild(ConsoleComponent);
   private consoleId: Signal<ConsoleId | undefined> = toSignal(this.route.queryParamMap.pipe(map(qps => {
     if (qps.has("challengeId") && qps.has("console")) {
       return { challengeId: qps.get("challengeId") || "", name: qps.get("console") || "" };
@@ -47,14 +48,23 @@ export class ConsolePageComponent {
 
       const consoleData = await this.consolesApi.getConsole(consoleId.challengeId, consoleId.name);
       this.title.set(`${consoleData.id.name} (console)`);
-      this.consoleConfig.update(v => ({
-        ...v,
-        id: `${consoleData.id.name}#${consoleData.id.challengeId}`,
-        autofocus: true,
-        accessCredential: consoleData.accessTicket,
-        isReadOnly: false,
-        url: consoleData.url,
+
+      this.consoleConfig.update(() => ({
+        autoFocusOnConnect: true,
+        credentials: {
+          accessTicket: consoleData.accessTicket
+        },
+        url: consoleData.url
       }));
+
+      // this.consoleConfig.update(v => ({
+      //   ...v,
+      //   id: `${consoleData.id.name}#${consoleData.id.challengeId}`,
+      //   autofocus: true,
+      //   accessCredential: consoleData.accessTicket,
+      //   isReadOnly: false,
+      //   url: consoleData.url,
+      // }));
     }));
   }
 
@@ -62,9 +72,9 @@ export class ConsolePageComponent {
     await this.consolesApi.logUserActivity(ev);
   }
 
-  protected onConsoleConnectionStateChange(state: { isConnected: boolean }) {
-    this.toastService.showMessage(`Console **${state.isConnected ? "connected" : "disconnected"}**.`);
-  }
+  // protected onConsoleConnectionStateChange(state: { isConnected: boolean }) {
+  //   this.toastService.showMessage(`Console **${state.isConnected ? "connected" : "disconnected"}**.`);
+  // }
 
   @HostListener('window:focus', ['$event'])
   protected async onGainedFocus(event: Event): Promise<void> {

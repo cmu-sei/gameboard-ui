@@ -13,6 +13,7 @@
 }
 
 @if (consoleConfig()) {
-<gb-console [componentConfig]="consoleConfig()!"
-    (connectionStateChanged)="onConsoleConnectionStateChange($event)"></gb-console>
+<cf-console [config]="consoleConfig()!"></cf-console>
+<!-- <gb-console [componentConfig]="consoleConfig()!"
+    (connectionStateChanged)="onConsoleConnectionStateChange($event)"></gb-console> -->
 }
