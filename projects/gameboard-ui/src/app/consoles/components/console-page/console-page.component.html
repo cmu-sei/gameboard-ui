@@ -8,12 +8,7 @@
     so turning this on via querystring hacking will just result in a maximum of an extra API call 
     every minute.
 -->
-
 <app-user-activity-listener (userAction)="handleUserActivity($event)"></app-user-activity-listener>
 }
 
-@if (consoleConfig()) {
-<cf-console [config]="consoleConfig()!"></cf-console>
-<!-- <gb-console [componentConfig]="consoleConfig()!"
-    (connectionStateChanged)="onConsoleConnectionStateChange($event)"></gb-console> -->
-}
+<cf-console [autoConnect]="false" [config]="consoleConfig()!"></cf-console>
