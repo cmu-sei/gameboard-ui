@@ -21,3 +21,28 @@
 .sticky-controls-container {
   border-top: solid 1px $success;
 }
+
+.consoles-container {
+  gap: 1rem;
+  a {
+    display: block;
+  }
+
+  & > li {
+    display: block;
+    width: 35%;
+  }
+
+  .console-label {
+    color: $foreground;
+    font-weight: bold;
+    margin: 4px 0 0 0;
+    text-transform: uppercase;
+  }
+
+  li:mouseover {
+    .console-label {
+      color: $foreground !important;
+    }
+  }
+}

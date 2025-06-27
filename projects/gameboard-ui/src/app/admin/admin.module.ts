@@ -95,6 +95,7 @@ import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe'
 import { SessionExtensionGameEndWarningComponent } from "./components/session-extension-game-end-warning/session-extension-game-end-warning.component";
 import { GamesTableViewComponent } from './components/games-table-view/games-table-view.component';
 import { StatusLightComponent } from '@/core/components/status-light/status-light.component';
+import { ConsoleTileComponent } from '@cmusei/console-forge';
 
 @NgModule({
   declarations: [
@@ -218,6 +219,8 @@ import { StatusLightComponent } from '@/core/components/status-light/status-ligh
     ScoreboardModule,
     SponsorsModule,
     SystemNotificationsModule,
+    // library components
+    ConsoleTileComponent,
     // standalones
     ErrorDivComponent,
     GameCenterPracticeTeamContextMenuComponent,

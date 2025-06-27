@@ -5,6 +5,7 @@ import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LogLevel, provideConsoleForge } from '@cmusei/console-forge';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
@@ -63,14 +64,20 @@ import { ThemeBgDirective } from './core/directives/theme-bg.directive';
   ],
   providers: [
     provideAppInitializer(() => {
-        const initializerFn = (loadSettings)(inject(ConfigService));
-        return initializerFn();
-      }),
+      const initializerFn = (loadSettings)(inject(ConfigService));
+      return initializerFn();
+    }),
     {
       provide: SignalRService,
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
       deps: [ConfigService, LogService, UserService],
     },
+    provideConsoleForge({
+      consoleBackgroundStyle: "rgb(0, 0, 0)",
+      defaultConsoleClientType: "vnc",
+      logThreshold: LogLevel.DEBUG,
+      showBrowserNotificationsOnConsoleEvents: true
+    }),
     provideMarkdown({
       markedOptions: {
         provide: MARKED_OPTIONS,
