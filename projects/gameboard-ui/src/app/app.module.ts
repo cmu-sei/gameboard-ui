@@ -73,8 +73,10 @@ import { ThemeBgDirective } from './core/directives/theme-bg.directive';
       deps: [ConfigService, LogService, UserService],
     },
     provideConsoleForge({
+      consoleBackgroundStyle: "rgb(0, 0, 0)",
       defaultConsoleClientType: "vnc",
-      logThreshold: LogLevel.DEBUG
+      logThreshold: LogLevel.DEBUG,
+      showBrowserNotificationsOnConsoleEvents: true
     }),
     provideMarkdown({
       markedOptions: {

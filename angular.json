@@ -126,36 +126,6 @@
           }
         }
       }
-    },
-    "gameboard-consoles": {
-      "projectType": "library",
-      "root": "projects/gameboard-consoles",
-      "sourceRoot": "projects/gameboard-consoles/src",
-      "prefix": "gb",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "projects/gameboard-consoles/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/gameboard-consoles/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/gameboard-consoles/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "tsConfig": "projects/gameboard-consoles/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
-          }
-        }
-      }
     }
   },
   "cli": {

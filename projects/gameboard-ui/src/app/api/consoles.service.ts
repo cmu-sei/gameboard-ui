@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiUrlService } from '@/services/api-url.service';
-import { ConsoleId, ConsoleState, ConsoleUserActivityResponse, ConsoleUserActivityType } from './consoles.models';
+import { ConsoleId, ConsoleState, ConsoleUserActivityResponse, ConsoleUserActivityType, ListConsolesRequest, ListConsolesResponse } from './consoles.models';
 
 @Injectable({ providedIn: 'root' })
 export class ConsolesService {
@@ -11,6 +11,10 @@ export class ConsolesService {
 
   getConsole(challengeId: string, name: string): Promise<ConsoleState> {
     return firstValueFrom(this.http.get<ConsoleState>(this.apiUrl.build("consoles", { challengeId, name })));
+  }
+
+  listConsoles(request: ListConsolesRequest): Promise<ListConsolesResponse> {
+    return firstValueFrom(this.http.get<ListConsolesResponse>(this.apiUrl.build("consoles/list", request)));
   }
 
   logUserActivity(eventType: ConsoleUserActivityType): Promise<ConsoleUserActivityResponse> {

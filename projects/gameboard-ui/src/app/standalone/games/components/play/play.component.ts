@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, signal, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
@@ -17,31 +17,38 @@ import { ChallengeQuestionsComponent } from "../challenge-questions/challenge-qu
 import { UtilityModule } from '@/utility/utility.module';
 import { ChallengeDeployCountdownComponent } from '@/game/components/challenge-deploy-countdown/challenge-deploy-countdown.component';
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
-import { VmLinkComponent } from "../vm-link/vm-link.component";
 import { UserService } from '@/utility/user.service';
 import { UserSettingsService } from '@/services/user-settings.service';
 import { PracticeChallengeView } from '@/prac/practice.models';
 import { FeedbackSubmissionFormComponent } from "@/feedback/components/feedback-submission-form/feedback-submission-form.component";
+import { ConsolesService } from '@/api/consoles.service';
+import { ConsoleComponentConfig, ConsoleTileComponent } from '@cmusei/console-forge';
 
-export type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
+type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
+interface PlayConsole {
+  config: ConsoleComponentConfig;
+  linkUrl: string;
+  name: string;
+}
+
 
 @Component({
-    selector: 'app-play',
-    imports: [
-        CommonModule,
-        CoreModule,
-        ChallengeDeployCountdownComponent,
-        ErrorDivComponent,
-        SpinnerComponent,
-        ToSupportCodePipe,
-        ChallengeQuestionsComponent,
-        UtilityModule,
-        VmLinkComponent,
-        FeedbackSubmissionFormComponent
-    ],
-    templateUrl: './play.component.html',
-    styleUrls: ['./play.component.scss'],
-    providers: [UnsubscriberService]
+  selector: 'app-play',
+  imports: [
+    CommonModule,
+    CoreModule,
+    ChallengeDeployCountdownComponent,
+    ConsoleTileComponent,
+    ErrorDivComponent,
+    SpinnerComponent,
+    ToSupportCodePipe,
+    ChallengeQuestionsComponent,
+    UtilityModule,
+    FeedbackSubmissionFormComponent
+  ],
+  templateUrl: './play.component.html',
+  styleUrls: ['./play.component.scss'],
+  providers: [UnsubscriberService]
 })
 export class PlayComponent implements OnChanges {
   @Input() autoPlay = false;
@@ -50,7 +57,10 @@ export class PlayComponent implements OnChanges {
   @Output() challengeStarted = new EventEmitter<void>();
   @Output() deployStateChange = new EventEmitter<PlayChallengeDeployState>();
 
+  private consolesService = inject(ConsolesService);
+
   protected challenge: UserActiveChallenge | null = null;
+  protected consoles = signal<PlayConsole[]>([]);
   protected deployState$ = new BehaviorSubject<PlayChallengeDeployState>("undeployed");
   protected errors: any[] = [];
   protected fa = fa;
@@ -86,10 +96,12 @@ export class PlayComponent implements OnChanges {
       }),
 
       userAppSettings.updated$.subscribe(settings => this.setIsStickyPanelEnabled(settings.useStickyChallengePanel, false)),
-      this.deployState$.subscribe(state => {
+      this.deployState$.subscribe(async state => {
         this.deployStateChange.emit(state);
         this.challenge = this.activeChallengesRepo.getActivePracticeChallenge();
-        this.vmUrls = this.buildVmLinks(this.challenge);
+
+        const consoleData = await this.buildConsoleData(this.challenge);
+        this.consoles.update(() => consoleData);
       })
     );
   }
@@ -140,17 +152,27 @@ export class PlayComponent implements OnChanges {
     }
   }
 
-  private buildVmLinks(challenge: UserActiveChallenge | null) {
-    const vmUrls: { [id: string]: string } = {};
-
-    if (!challenge)
-      return vmUrls;
-
-    for (const vm of challenge.vms) {
-      vmUrls[vm.id] = this.routerService.buildVmConsoleUrl(challenge.id, vm, challenge.mode === PlayerMode.practice).toString();
+  private async buildConsoleData(challenge: UserActiveChallenge | null): Promise<PlayConsole[]> {
+    if (!challenge || this.deployState$.value !== "deployed") {
+      return [];
     }
 
-    return vmUrls;
+    const consolesResponse = await this.consolesService.listConsoles({ teamId: challenge?.team.id, playerMode: PlayerMode.practice });
+    const consoleData: PlayConsole[] = [];
+    for (const console of consolesResponse.consoles) {
+      consoleData.push({
+        config: {
+          consoleClientType: "vnc",
+          credentials: { accessTicket: console.accessTicket },
+          url: console.url
+        },
+        linkUrl: this.routerService.buildVmConsoleUrl(challenge.id, { id: console.consoleId.challengeId, name: console.consoleId.name }, challenge.mode === PlayerMode.practice).toString(),
+        name: console.consoleId.name
+      });
+    }
+
+
+    return consoleData;
   }
 
   private async startChallenge(args: { challengeSpecId: string, playerId: string }) {

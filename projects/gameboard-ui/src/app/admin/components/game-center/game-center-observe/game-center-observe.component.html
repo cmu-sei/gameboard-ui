@@ -1,6 +1,15 @@
 <div class="observe-container">
-    <app-challenge-observer *ngIf="observeBy == 'challenge'" [gameId]="gameId"
+    <!-- <app-challenge-observer *ngIf="observeBy == 'challenge'" [gameId]="gameId"
         (observeByTeamRequest)="handleObserveByChangeRequest('team')"></app-challenge-observer>
     <app-team-observer *ngIf="observeBy == 'team'" [gameId]="gameId"
-        (observeByChallengeRequest)="handleObserveByChangeRequest('challenge')"></app-team-observer>
+        (observeByChallengeRequest)="handleObserveByChangeRequest('challenge')"></app-team-observer> -->
+
+    <div class="console-group">
+        @for(consoleConfig of consoles(); track consoleConfig.url)
+        {
+        <a class="d-block">
+            <cf-console-tile [config]="consoleConfig"></cf-console-tile>
+        </a>
+        }
+    </div>
 </div>

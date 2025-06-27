@@ -1,3 +1,6 @@
+import { SimpleEntity } from "./models";
+import { PlayerMode } from "./player-models";
+
 export type ConsoleUserActivityType = "input" | "mouse";
 
 export interface ConsoleActionRequest {
@@ -26,4 +29,22 @@ export interface ConsoleState {
 
 export interface ConsoleUserActivityResponse {
     message?: string;
+}
+
+export interface ListConsolesRequest {
+    gameId?: string;
+    teamId?: string;
+    playerMode?: PlayerMode;
+}
+
+export interface ListConsolesResponse {
+    consoles: ListConsolesResponseConsole[];
+}
+
+export interface ListConsolesResponseConsole {
+    consoleId: ConsoleId;
+    accessTicket: string;
+    isPractice: boolean;
+    team: SimpleEntity;
+    url: string;
 }

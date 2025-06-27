@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, computed, effect, HostListener, inject, model, Signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, inject, model, Signal, viewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from "@angular/core/rxjs-interop";
 import { map } from 'rxjs';
@@ -9,6 +9,7 @@ import { ConsoleId, ConsoleUserActivityType } from '@/api/consoles.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { ToastService } from '@/utility/services/toast.service';
+import { ConfigService } from '@/utility/config.service';
 
 @Component({
   selector: 'app-console-page',
@@ -21,11 +22,11 @@ import { ToastService } from '@/utility/services/toast.service';
   styleUrl: './console-page.component.scss'
 })
 export class ConsolePageComponent implements AfterViewInit {
+  private readonly config = inject(ConfigService);
   private readonly consolesApi = inject(ConsolesService);
   private readonly route = inject(ActivatedRoute);
   private readonly toastService = inject(ToastService);
   private readonly title = inject(AppTitleService);
-  private readonly unsub = inject(UnsubscriberService);
 
   protected consoleConfig = model<ConsoleComponentConfig | undefined>(undefined);
   protected consoleComponent = viewChild(ConsoleComponent);
@@ -38,39 +39,11 @@ export class ConsolePageComponent implements AfterViewInit {
   })));
   protected enableActivityListener = toSignal(this.route.queryParamMap.pipe(map(qps => qps?.get("l") === "true")));
 
-  constructor() {
-    // this.unsub.add(this.route.queryParamMap.subscribe(async qp => {
-    //   const consoleId = this.consoleId();
-
-    //   if (!consoleId) {
-    //     return;
-    //   }
-
-    //   const consoleData = await this.consolesApi.getConsole(consoleId.challengeId, consoleId.name);
-    //   this.title.set(`${consoleData.id.name} (console)`);
-
-    //   this.consoleConfig.update(() => ({
-    //     autoFocusOnConnect: true,
-    //     credentials: {
-    //       accessTicket: consoleData.accessTicket
-    //     },
-    //     url: consoleData.url
-    //   }));
-
-    //   // this.consoleConfig.update(v => ({
-    //   //   ...v,
-    //   //   id: `${consoleData.id.name}#${consoleData.id.challengeId}`,
-    //   //   autofocus: true,
-    //   //   accessCredential: consoleData.accessTicket,
-    //   //   isReadOnly: false,
-    //   //   url: consoleData.url,
-    //   // }));
-    // }));
-  }
-
   async ngAfterViewInit(): Promise<void> {
     const consoleId = this.consoleId()!;
     const consoleData = await this.consolesApi.getConsole(consoleId.challengeId, consoleId.name);
+
+    this.title.set(`${consoleData.id.name} : ${this.config.appName} Console`);
 
     this.consoleConfig.update(() => ({
       autoFocusOnConnect: true,
@@ -81,8 +54,8 @@ export class ConsolePageComponent implements AfterViewInit {
     }));
 
     if (this.consoleComponent()) {
-      console.log("connecting with", this.consoleConfig());
       this.consoleComponent()!.connect(this.consoleConfig()!);
+      await this.consolesApi.setConsoleActiveUser(consoleId);
     }
   }
 
