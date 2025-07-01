@@ -236,10 +236,6 @@ export class GameboardPageComponent {
     this.refresh$.next(this.ctx.id);
   }
 
-  console(vm: VmState): void {
-    this.windowService.open(this.routerService.buildVmConsoleUrl(vm.isolationId, vm.name));
-  }
-
   mouseenter(e: MouseEvent, spec: BoardSpec) {
     this.hoveredItem = spec;
     spec.c = 'purple';
