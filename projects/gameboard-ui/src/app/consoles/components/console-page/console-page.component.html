@@ -11,4 +11,12 @@
 <app-user-activity-listener (userAction)="handleUserActivity($event)"></app-user-activity-listener>
 }
 
-<cf-console [autoConnect]="false" [config]="consoleConfig()!"></cf-console>
+<div class="layout-container">
+    @if (expiresAt())
+    {
+    <div class="clock">
+        {{ expiresAt() | countdown }}
+    </div>
+    }
+    <cf-console [autoConnect]="false" [config]="consoleConfig()!" [isViewOnly]="consoleIsViewOnly()"></cf-console>
+</div>

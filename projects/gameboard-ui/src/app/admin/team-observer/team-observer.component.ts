@@ -12,12 +12,13 @@ import { ObserveTeam, ObserveTeamMember, Team } from '../../api/player-models';
 import { PlayerService } from '../../api/player.service';
 import { ConfigService } from '../../utility/config.service';
 import { fa } from '@/services/font-awesome.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
-    selector: 'app-team-observer',
-    templateUrl: './team-observer.component.html',
-    styleUrls: ['./team-observer.component.scss'],
-    standalone: false
+  selector: 'app-team-observer',
+  templateUrl: './team-observer.component.html',
+  styleUrls: ['./team-observer.component.scss'],
+  standalone: false
 })
 export class TeamObserverComponent implements OnDestroy {
   @Input() gameId?: string;
@@ -61,9 +62,10 @@ export class TeamObserverComponent implements OnDestroy {
     private api: BoardService,
     private playerApi: PlayerService,
     private gameApi: GameService,
-    private conf: ConfigService
+    private conf: ConfigService,
+    private routerService: RouterService,
   ) {
-    this.mksHost = conf.mkshost;
+    this.mksHost = "";
 
     this.gameData = route.params.pipe(
       filter(a => !!(this.gameId || a.id)),
@@ -125,7 +127,9 @@ export class TeamObserverComponent implements OnDestroy {
   }
 
   go(member: ObserveTeamMember): void {
-    this.conf.openConsole(`?f=0&o=1&u=${member.id}`);
+    // window.open(this.routerService.buildVmConsoleUrl(member.))
+    // this.conf.openConsole(`?f=0&o=1&u=${member.id}`);
+    throw new Error("Not implemented");
   }
 
   toggleShowConsole(player: ObserveTeam) {

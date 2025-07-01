@@ -23,6 +23,7 @@ import { PracticeChallengeView } from '@/prac/practice.models';
 import { FeedbackSubmissionFormComponent } from "@/feedback/components/feedback-submission-form/feedback-submission-form.component";
 import { ConsolesService } from '@/api/consoles.service';
 import { ConsoleComponentConfig, ConsoleTileComponent } from '@cmusei/console-forge';
+import { VmLinkComponent } from '../vm-link/vm-link.component';
 
 type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
 interface PlayConsole {
@@ -44,7 +45,8 @@ interface PlayConsole {
     ToSupportCodePipe,
     ChallengeQuestionsComponent,
     UtilityModule,
-    FeedbackSubmissionFormComponent
+    FeedbackSubmissionFormComponent,
+    VmLinkComponent
   ],
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss'],
@@ -160,13 +162,14 @@ export class PlayComponent implements OnChanges {
     const consolesResponse = await this.consolesService.listConsoles({ teamId: challenge?.team.id, playerMode: PlayerMode.practice });
     const consoleData: PlayConsole[] = [];
     for (const console of consolesResponse.consoles) {
+      const consoleUrl = this.routerService.buildVmConsoleUrl(challenge.id, console.consoleId.name, challenge.mode === PlayerMode.practice).toString();
       consoleData.push({
         config: {
           consoleClientType: "vnc",
           credentials: { accessTicket: console.accessTicket },
           url: console.url
         },
-        linkUrl: this.routerService.buildVmConsoleUrl(challenge.id, { id: console.consoleId.challengeId, name: console.consoleId.name }, challenge.mode === PlayerMode.practice).toString(),
+        linkUrl: consoleUrl,
         name: console.consoleId.name
       });
     }

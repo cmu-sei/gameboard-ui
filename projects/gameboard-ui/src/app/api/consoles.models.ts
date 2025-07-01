@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { SimpleEntity } from "./models";
 import { PlayerMode } from "./player-models";
 
@@ -29,13 +30,26 @@ export interface ConsoleState {
 
 export interface ConsoleUserActivityResponse {
     message?: string;
+    sessionAutoExtended: boolean;
+    sessionExpiresAt: DateTime;
+}
+
+export interface GetConsoleResponse {
+    consoleState: ConsoleState;
+    expiresAt: DateTime | null;
+    isViewOnly: boolean;
 }
 
 export interface ListConsolesRequest {
+    challengeSpecId?: string;
     gameId?: string;
     teamId?: string;
     playerMode?: PlayerMode;
+    searchTerm?: string;
+    sortBy?: ListConsolesRequestSort;
 }
+
+export type ListConsolesRequestSort = "rank" | "teamName";
 
 export interface ListConsolesResponse {
     consoles: ListConsolesResponseConsole[];
@@ -44,7 +58,22 @@ export interface ListConsolesResponse {
 export interface ListConsolesResponseConsole {
     consoleId: ConsoleId;
     accessTicket: string;
-    isPractice: boolean;
-    team: SimpleEntity;
+    activeUsers: SimpleEntity[];
+    challenge: ListConsolesResponseChallenge;
+    team: ListConsolesResponseTeam;
     url: string;
+}
+
+export interface ListConsolesResponseChallenge {
+    id: string;
+    isPractice: boolean;
+    name: string;
+    specId: string;
+}
+
+export interface ListConsolesResponseTeam {
+    id: string;
+    name: string;
+    rank?: number;
+    score?: number;
 }

@@ -46,7 +46,6 @@ import { CopyOnClickDirective } from './directives/copy-on-click.directive';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { CountdownComponent } from './components/countdown/countdown.component';
-import { CountdownPipe } from './pipes/countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { DateTimeIsFuturePipe } from './pipes/datetime-is-future.pipe';
@@ -117,6 +116,7 @@ import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe'
 import { MarkdownModule } from 'ngx-markdown';
 import { StringArrayJoinPipe } from './pipes/string-array-join.pipe';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { CountdownPipe } from './pipes/countdown.pipe';
 
 const PUBLIC_DECLARATIONS = [
     AbsoluteValuePipe,
@@ -176,7 +176,6 @@ const PUBLIC_DECLARATIONS = [
     TrimPipe,
     UrlRewritePipe,
     ClockPipe,
-    CountdownPipe,
     CountdownColorPipe,
     FilterPipe,
     FriendlyTimePipe,
@@ -247,6 +246,7 @@ const RELAYED_MODULES = [
         TypeaheadModule.forRoot(),
         ...RELAYED_MODULES,
         // standalones
+        CountdownPipe,
         IfHasPermissionDirective,
         SpinnerComponent,
         StringArrayJoinPipe,

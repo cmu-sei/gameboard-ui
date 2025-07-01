@@ -22,11 +22,11 @@ import { WindowService } from '@/services/window.service';
 import { RouterService } from '@/services/router.service';
 
 @Component({
-    selector: 'app-gameboard-page',
-    templateUrl: './gameboard-page.component.html',
-    styleUrls: ['./gameboard-page.component.scss'],
-    providers: [UnsubscriberService],
-    standalone: false
+  selector: 'app-gameboard-page',
+  templateUrl: './gameboard-page.component.html',
+  styleUrls: ['./gameboard-page.component.scss'],
+  providers: [UnsubscriberService],
+  standalone: false
 })
 export class GameboardPageComponent {
   refresh$ = new Subject<string>();
@@ -237,7 +237,7 @@ export class GameboardPageComponent {
   }
 
   console(vm: VmState): void {
-    this.windowService.open(this.routerService.buildVmConsoleUrl(vm.isolationId, vm));
+    this.windowService.open(this.routerService.buildVmConsoleUrl(vm.isolationId, vm.name));
   }
 
   mouseenter(e: MouseEvent, spec: BoardSpec) {

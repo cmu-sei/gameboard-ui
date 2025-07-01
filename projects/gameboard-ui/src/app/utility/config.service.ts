@@ -100,14 +100,6 @@ export class ConfigService {
     return this.environment.settings.appname || "Gameboard";
   }
 
-  get mkshost(): string {
-    let path = this.environment.settings.mkshost || `${this.basehref}mks`;
-    if (!path.endsWith('/')) {
-      path += '/';
-    }
-    return path;
-  }
-
   get imagehost(): string {
     return this.environment.settings.imghost || `${this.basehref}img`;
   }
@@ -157,10 +149,6 @@ export class ConfigService {
           }
         })
       );
-  }
-
-  openConsole(qs: string): void {
-    window.open(this.mkshost + qs, "_blank");
   }
 
   updateLocal(model: LocalAppSettings): void {

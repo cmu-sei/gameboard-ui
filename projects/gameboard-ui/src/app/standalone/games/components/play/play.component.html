@@ -10,7 +10,7 @@
 
             <ng-container *ngIf="challenge">
                 <alert *ngIf="showStickyChallengePanelPrompt" type="info" class="my-3" [dismissible]="true">
-                    <h2>Check out the new challenge resources panel!</h2>
+                    <h2>Check out the new sticky Challenge panel!</h2>
 
                     <p>
                         <span class="fw-bold cursor-pointer"
@@ -86,7 +86,17 @@
         <ng-container *ngTemplateOutlet="solutionGuideAlert"></ng-container>
 
         <h5>Challenge Consoles</h5>
-        <ng-container *ngTemplateOutlet="vms"></ng-container>
+        @if (consoles().length)
+        {
+        <ul class="sticky-panel console-list d-flex">
+            @for(console of consoles(); track console.linkUrl)
+            {
+            <li>
+                <app-vm-link [vm]="{ name: console.name, url: console.linkUrl }"></app-vm-link>
+            </li>
+            }
+        </ul>
+        }
 
         <div *ngIf="challenge.id" class="my-3">
             <h5>Questions</h5>
@@ -100,7 +110,6 @@
                 <a routerLink="." fragment="feedback">Submit it here</a>.
             </p>
         </ng-container>
-
 
         <hr class="light">
 
@@ -125,7 +134,7 @@
         <hr class="light">
 
         <div class="text-muted">
-            Click <span class="btn-link" role="button"
+            Click <span class="btn-link text-success" role="button"
                 (click)="setIsStickyPanelEnabled(!isStickyChallengePanelSelected)">here</span>
             to deactivate the sticky Challenge panel
         </div>

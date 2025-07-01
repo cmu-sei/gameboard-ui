@@ -40,6 +40,7 @@ import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
 import { ScoreboardPageComponent } from '@/scoreboard/components/scoreboard-page/scoreboard-page.component';
 import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
 import { GameSessionAvailabilityWarningComponent } from "./components/game-session-availability-warning/game-session-availability-warning.component";
+import { CountdownPipe } from '@/core/pipes/countdown.pipe';
 
 const MODULE_DECLARATIONS = [
   ContinueToGameboardButtonComponent,
@@ -83,6 +84,7 @@ const MODULE_DECLARATIONS = [
     ScoreboardModule,
     // standalones
     ChallengeQuestionsComponent,
+    CountdownPipe,
     ErrorDivComponent,
     FeedbackSubmissionFormComponent,
     SafeUrlPipe,

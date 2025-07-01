@@ -5,7 +5,7 @@ import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LogLevel, provideConsoleForge } from '@cmusei/console-forge';
+import { provideConsoleForge } from '@cmusei/console-forge';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
@@ -35,6 +35,7 @@ import { UserNavItemComponent } from './standalone/user/components/user-nav-item
 import { markedOptionsFactory } from './core/config/marked.config';
 import { MarkdownModule, MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { ThemeBgDirective } from './core/directives/theme-bg.directive';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -72,12 +73,7 @@ import { ThemeBgDirective } from './core/directives/theme-bg.directive';
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
       deps: [ConfigService, LogService, UserService],
     },
-    provideConsoleForge({
-      consoleBackgroundStyle: "rgb(0, 0, 0)",
-      defaultConsoleClientType: "vnc",
-      logThreshold: LogLevel.DEBUG,
-      showBrowserNotificationsOnConsoleEvents: true
-    }),
+    provideConsoleForge(environment.settings.consoleForgeConfig),
     provideMarkdown({
       markedOptions: {
         provide: MARKED_OPTIONS,

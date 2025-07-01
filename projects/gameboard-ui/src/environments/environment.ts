@@ -1,3 +1,4 @@
+import { LogLevel } from "@cmusei/console-forge";
 import { Environment } from "./environment-typed";
 
 export const environment: Environment = {
@@ -6,7 +7,6 @@ export const environment: Environment = {
     appname: 'Gameboard',
     apphost: 'http://localhost:5002',
     basehref: "gb",
-    mkshost: 'http://localhost:4201',
     imghost: 'http://localhost:5002/img',
     tochost: 'http://localhost:5002/doc',
     supporthost: 'http://localhost:5002/supportfiles',
@@ -14,6 +14,12 @@ export const environment: Environment = {
     countdownStartSecondsAtMinute: 5,
     custom_background: 'custom-bg-dark-gray',
     isProduction: false,
+    consoleForgeConfig: {
+      consoleBackgroundStyle: "rgb(0, 0, 0)",
+      defaultConsoleClientType: "vnc",
+      logThreshold: LogLevel.DEBUG,
+      showBrowserNotificationsOnConsoleEvents: true
+    },
     oidc: {
       authority: 'http://localhost:8080/realms/foundry',
       client_id: 'dev.gameboard.web',

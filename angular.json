@@ -29,7 +29,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/gameboard-ui/src/favicon.ico",
-              "projects/gameboard-ui/src/assets"
+              "projects/gameboard-ui/src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/@cmusei/console-forge/assets",
+                "output": "assets/"
+              }
             ],
             "styles": [
               "node_modules/toastify-js/src/toastify.css",

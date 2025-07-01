@@ -13,3 +13,17 @@ cf-console {
   height: 100vh;
   width: 100vw;
 }
+
+.layout-container {
+  position: relative;
+
+  .clock {
+    border-radius: 6px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-size: 2rem;
+    padding: 8px;
+    right: 1rem;
+    top: 1rem;
+  }
+}
