@@ -26,7 +26,6 @@ import { CountdownPipe } from '@/core/pipes/countdown.pipe';
   styleUrl: './console-page.component.scss'
 })
 export class ConsolePageComponent implements AfterViewInit {
-  private readonly config = inject(ConfigService);
   private readonly consolesApi = inject(ConsolesService);
   private readonly friendlyDates = inject(FriendlyDatesService);
   private readonly route = inject(ActivatedRoute);
@@ -50,7 +49,7 @@ export class ConsolePageComponent implements AfterViewInit {
     await this.connect(this.consoleId()!);
   }
 
-  protected async handleConsoleReconnectRequest(config: ConsoleComponentConfig) {
+  protected async handleConsoleReconnectRequest() {
     await this.connect(this.consoleId()!);
   }
 
@@ -86,7 +85,7 @@ export class ConsolePageComponent implements AfterViewInit {
     const consoleData = await this.consolesApi.getConsole(consoleId.challengeId, consoleId.name);
     const consoleState = consoleData.consoleState;
 
-    this.title.set(`${consoleState.id.name} : ${this.config.appName} Console${consoleData.isViewOnly ? '[view only]' : ''}`);
+    this.title.set(`${consoleState.id.name} :: Console${consoleData.isViewOnly ? '[view only]' : ''}`);
     this.consoleIsViewOnly.update(() => consoleData.isViewOnly);
     this.updateConsoleExpirationTime(consoleData.expiresAt);
 

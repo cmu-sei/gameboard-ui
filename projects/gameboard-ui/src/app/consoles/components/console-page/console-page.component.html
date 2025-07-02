@@ -18,5 +18,6 @@
         {{ expiresAt() | countdown }}
     </div>
     }
-    <cf-console [autoConnect]="false" [config]="consoleConfig()!" [isViewOnly]="consoleIsViewOnly()"></cf-console>
+    <cf-console [autoConnect]="false" [config]="consoleConfig()!" [isViewOnly]="consoleIsViewOnly()"
+        (reconnectRequest)="handleConsoleReconnectRequest()"></cf-console>
 </div>

@@ -96,6 +96,8 @@ import { SessionExtensionGameEndWarningComponent } from "./components/session-ex
 import { GamesTableViewComponent } from './components/games-table-view/games-table-view.component';
 import { StatusLightComponent } from '@/core/components/status-light/status-light.component';
 import { ConsoleTileComponent } from '@cmusei/console-forge';
+import { PracticeObserveComponent } from './practice/practice-observe/practice-observe.component';
+import { ObserveViewComponent } from './components/observe-view/observe-view.component';
 
 @NgModule({
   declarations: [
@@ -191,7 +193,8 @@ import { ConsoleTileComponent } from '@cmusei/console-forge';
           },
           {
             path: "practice", component: PracticeComponent, children: [
-              { path: "settings", component: PracticeSettingsComponent },
+              { path: "settings", component: PracticeSettingsComponent, title: "Practice Settings" },
+              { path: "observe", component: PracticeObserveComponent, title: "Practice Observe" },
               { path: "", pathMatch: "full", redirectTo: "settings" },
             ]
           },
@@ -228,6 +231,7 @@ import { ConsoleTileComponent } from '@cmusei/console-forge';
     GamesTableViewComponent,
     IfHasPermissionDirective,
     MarkdownPlaceholderPipe,
+    ObserveViewComponent,
     PackageUploadComponent,
     SafeUrlPipe,
     SessionExtensionGameEndWarningComponent,

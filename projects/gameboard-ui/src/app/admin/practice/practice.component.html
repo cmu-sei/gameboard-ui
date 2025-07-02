@@ -5,13 +5,19 @@
     letting players hone their skills and ultimately improve their competitive performance.
 </p>
 
-<!-- <ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link" [routerLink]="['challenges']" routerLinkActive="active">Challenges</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" [routerLink]="['settings']" routerLinkActive="active">Settings</a>
-    </li>
-</ul> -->
+<div class="tabs-container d-block mt-4">
+    <ul role="tablist" class="nav nav-tabs" aria-label="tabs">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/admin/practice/settings" routerLinkActive="active">
+                Settings
+            </a>
+        </li>
+        <li routerLinkActive="active">
+            <a class="nav-link" routerLink="/admin/practice/observe" routerLinkActive="active">
+                Observe
+            </a>
+        </li>
+    </ul>
+</div>
 
 <router-outlet></router-outlet>
