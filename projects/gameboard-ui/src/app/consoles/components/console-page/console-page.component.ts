@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, HostListener, inject, model, Signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, HostListener, inject, model, signal, Signal, viewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from "@angular/core/rxjs-interop";
-import { ConsoleComponent, ConsoleComponentConfig } from "@cmusei/console-forge";
+import { ConsoleComponent, ConsoleComponentConfig, ConsoleConnectionStatus } from "@cmusei/console-forge";
 import { DateTime } from 'luxon';
 import { map } from 'rxjs';
 import { UserActivityListenerComponent } from '../user-activity-listener/user-activity-listener.component';
@@ -10,7 +10,6 @@ import { ConsoleId, ConsoleUserActivityType } from '@/api/consoles.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { ToastService } from '@/utility/services/toast.service';
-import { ConfigService } from '@/utility/config.service';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
 import { CountdownPipe } from '@/core/pipes/countdown.pipe';
 
@@ -26,12 +25,14 @@ import { CountdownPipe } from '@/core/pipes/countdown.pipe';
   styleUrl: './console-page.component.scss'
 })
 export class ConsolePageComponent implements AfterViewInit {
+  // services
   private readonly consolesApi = inject(ConsolesService);
   private readonly friendlyDates = inject(FriendlyDatesService);
   private readonly route = inject(ActivatedRoute);
   private readonly toastService = inject(ToastService);
   private readonly title = inject(AppTitleService);
 
+  // models and component state
   protected consoleConfig = model<ConsoleComponentConfig | undefined>(undefined);
   protected consoleComponent = viewChild(ConsoleComponent);
   private consoleId: Signal<ConsoleId | undefined> = toSignal(this.route.queryParamMap.pipe(map(qps => {
@@ -41,35 +42,39 @@ export class ConsolePageComponent implements AfterViewInit {
 
     return undefined;
   })));
-  protected consoleIsViewOnly = model<boolean>(false);
-  protected enableActivityListener = toSignal(this.route.queryParamMap.pipe(map(qps => qps?.get("l") === "true")));
-  protected expiresAt = model<number>();
+  private readonly consoleIsConnected = signal<boolean>(false);
+  protected readonly consoleIsViewOnly = model<boolean>(false);
+  protected readonly enableActivityListener = toSignal(this.route.queryParamMap.pipe(map(qps => qps?.get("l") === "true")));
+  protected readonly expiresAt = model<number>();
 
   async ngAfterViewInit(): Promise<void> {
     await this.connect(this.consoleId()!);
   }
 
   protected async handleConsoleReconnectRequest() {
-    await this.connect(this.consoleId()!);
+    try {
+      this.toastService.showMessage(`Reconnecting to **${this.consoleId()?.name}**...`);
+      await this.connect(this.consoleId()!);
+      this.toastService.showMessage(`Reconnected to **${this.consoleId()?.name}**!`);
+    }
+    catch (err) {
+      this.toastService.showMessage(`Error: ${err}`);
+    }
+  }
+
+  protected handleConsoleConnectionStatusChanged(status?: ConsoleConnectionStatus) {
+    this.consoleIsConnected.update(() => status === "connected");
   }
 
   protected async handleUserActivity(ev: ConsoleUserActivityType) {
-    if (!this.consoleIsViewOnly() && this.consoleId()) {
+    if (!this.consoleIsViewOnly() && this.consoleId() && this.consoleIsConnected()) {
       const response = await this.consolesApi.logUserActivity(this.consoleId()!, ev);
 
       if (response.sessionAutoExtended) {
         this.toastService.showMessage(`Your session was automatically extended! It now ends at **${this.friendlyDates.toFriendlyDateAndTime(response.sessionExpiresAt)}**.`);
       }
-
-      // if (response.sessionExpiresAt) {
-      //   this.expiresAt.update(() => response.sessionExpiresAt.toMillis());
-      // }
     }
   }
-
-  // protected onConsoleConnectionStateChange(state: { isConnected: boolean }) {
-  //   this.toastService.showMessage(`Console **${state.isConnected ? "connected" : "disconnected"}**.`);
-  // }
 
   @HostListener('window:focus', ['$event'])
   protected async onGainedFocus(event: Event): Promise<void> {
@@ -78,7 +83,9 @@ export class ConsolePageComponent implements AfterViewInit {
       return;
     }
 
-    await this.consolesApi.setConsoleActiveUser(consoleId);
+    if (this.consoleIsConnected()) {
+      await this.consolesApi.setConsoleActiveUser(consoleId);
+    }
   }
 
   private async connect(consoleId: ConsoleId) {

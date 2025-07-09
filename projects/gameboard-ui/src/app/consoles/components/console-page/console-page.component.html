@@ -19,5 +19,6 @@
     </div>
     }
     <cf-console [autoConnect]="false" [config]="consoleConfig()!" [isViewOnly]="consoleIsViewOnly()"
+        (connectionStatusChanged)="handleConsoleConnectionStatusChanged($event)"
         (reconnectRequest)="handleConsoleReconnectRequest()"></cf-console>
 </div>

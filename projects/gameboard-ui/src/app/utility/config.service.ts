@@ -22,7 +22,6 @@ export class ConfigService {
   local: LocalAppSettings = {};
   absoluteUrl = '';
   settings$ = new BehaviorSubject<EnvironmentSettings>(this.environment.settings);
-  sidebar$ = new Subject<boolean>();
 
   get lastUrl(): string {
     const url = !this.restorationComplete
