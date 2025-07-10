@@ -12,6 +12,7 @@ import { SpecService } from '@/api/spec.service';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 
 interface ObserveViewTeam {
   team: ListConsolesResponseTeam;
@@ -27,6 +28,7 @@ interface ObserveViewTeam {
   imports: [
     FormsModule,
     ConsoleTileComponent,
+    ErrorDivComponent,
     FontAwesomeModule,
     SpinnerComponent,
   ],
@@ -46,9 +48,10 @@ export class ObserveViewComponent {
   private readonly searchInput$ = new Subject<string>();
 
   protected readonly challengeSpecs = signal<SimpleEntity[]>([]);
+  protected readonly errors = model<any[]>([]);
   protected readonly searchText = model<string>("");
   protected readonly selectedChallengeSpecId = model<string>("");
-  protected readonly sortBy = model<ListConsolesRequestSort>("rank");
+  protected readonly sortBy = model<ListConsolesRequestSort>("teamName");
   protected readonly teams = signal<ObserveViewTeam[]>([]);
 
   constructor() {
@@ -99,38 +102,49 @@ export class ObserveViewComponent {
 
   private async loadConsoles(request: ListConsolesRequest): Promise<void> {
     // this endpoint sends down the consoles as a list, but we want to group by team
+    this.errors.update(() => []);
     this.isLoading.update(() => true);
-    const response = await this.consolesService.listConsoles(request);
-    const teamsToPush = new Map<string, ObserveViewTeam>();
+    this.teams.update(() => []);
 
-    for (const console of response.consoles) {
-      const consoleConfig: ConsoleComponentConfig = {
-        autoFocusOnConnect: false,
-        credentials: { accessTicket: console.accessTicket },
-        url: console.url
-      };
-      const consoleAppUrl = this.routerService.buildVmConsoleUrl(console.consoleId.challengeId, console.consoleId.name).toString();
+    try {
+      const response = await this.consolesService.listConsoles(request);
+      const teamsToPush = new Map<string, ObserveViewTeam>();
 
-      if (teamsToPush.has(console.team.id)) {
-        teamsToPush.get(console.team.id)!.consoles.push({
-          appUrl: consoleAppUrl,
-          config: consoleConfig,
-          consoleData: console,
-        });
-      } else {
-        teamsToPush.set(console.team.id, {
-          team: console.team,
-          consoles: [{
+      for (const console of response.consoles) {
+        const consoleConfig: ConsoleComponentConfig = {
+          autoFocusOnConnect: false,
+          credentials: { accessTicket: console.accessTicket },
+          url: console.url
+        };
+        const consoleAppUrl = this.routerService.buildVmConsoleUrl(console.consoleId.challengeId, console.consoleId.name).toString();
+
+        if (teamsToPush.has(console.team.id)) {
+          teamsToPush.get(console.team.id)!.consoles.push({
             appUrl: consoleAppUrl,
             config: consoleConfig,
-            consoleData: console
-          }]
-        });
+            consoleData: console,
+          });
+        } else {
+          teamsToPush.set(console.team.id, {
+            team: console.team,
+            consoles: [{
+              appUrl: consoleAppUrl,
+              config: consoleConfig,
+              consoleData: console
+            }]
+          });
+        }
+
+        this.teams.update(() => [...teamsToPush.values()]);
       }
     }
+    catch (err) {
+      this.errors.update(() => [err]);
+    }
+    finally {
+      this.isLoading.update(() => false);
+    }
 
-    this.teams.update(() => [...teamsToPush.values()]);
-    this.isLoading.update(() => false);
   }
 
   private async loadSpecs(gameId: string) {

@@ -12,12 +12,21 @@
 }
 
 <div class="layout-container">
-    @if (expiresAt())
-    {
-    <div class="clock">
-        {{ expiresAt() | countdown }}
+    <div class="console-status" tabindex="-1">
+        @if (expiresAt())
+        {
+        <div class="clock">
+            {{ expiresAt() | countdown }}
+        </div>
+        }
+
+        @if(consoleIsViewOnly())
+        {
+        <div class="is-view-only">
+            View Only
+        </div>
+        }
     </div>
-    }
     <cf-console [autoConnect]="false" [config]="consoleConfig()!" [isViewOnly]="consoleIsViewOnly()"
         (connectionStatusChanged)="handleConsoleConnectionStatusChanged($event)"
         (reconnectRequest)="handleConsoleReconnectRequest()"></cf-console>

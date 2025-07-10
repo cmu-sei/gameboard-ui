@@ -1,3 +1,5 @@
+<app-error-div [errors]="errors()"></app-error-div>
+
 <div class="d-flex mb-4">
     <div class="flex-grow-1">
         <div class="input-group mt-2 mb-3 col-5">
@@ -23,10 +25,13 @@
         </select>
         }
 
+        @if (playerMode() !== "practice")
+        {
         <select class="d-block form-control" [(ngModel)]="sortBy" (change)="loadConsolesWithSelectedParams()">
             <option value="teamName">Name</option>
             <option value="rank">Rank/Score</option>
         </select>
+        }
 
         <button class="btn btn-outline-light btn-md text-white ml-2" (click)="loadConsolesWithSelectedParams()"
             tooltip="Refresh view">
@@ -62,7 +67,8 @@
             <li class="d-block">
                 <a [href]="console.appUrl" target="_blank">
                     <cf-console-tile [config]="console.config"></cf-console-tile>
-                    <div class="challenge-name text-upper font-weight-bold">{{ console.consoleData.challenge.name }}
+                    <div class="challenge-name text-upper font-weight-bold">
+                        {{ console.consoleData.challenge.name }}
                     </div>
                     <div class="console-name">{{ console.consoleData.consoleId.name }}</div>
 

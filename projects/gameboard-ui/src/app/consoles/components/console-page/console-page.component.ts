@@ -92,7 +92,7 @@ export class ConsolePageComponent implements AfterViewInit {
     const consoleData = await this.consolesApi.getConsole(consoleId.challengeId, consoleId.name);
     const consoleState = consoleData.consoleState;
 
-    this.title.set(`${consoleState.id.name} :: Console${consoleData.isViewOnly ? '[view only]' : ''}`);
+    this.title.set(`${consoleState.id.name} :: Console${consoleData.isViewOnly ? ' [view only]' : ''}`);
     this.consoleIsViewOnly.update(() => consoleData.isViewOnly);
     this.updateConsoleExpirationTime(consoleData.expiresAt);
 
