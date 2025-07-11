@@ -3,9 +3,10 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-sponsor-edit-modal',
-  templateUrl: './sponsor-edit-modal.component.html',
-  styleUrls: ['./sponsor-edit-modal.component.scss']
+    selector: 'app-sponsor-edit-modal',
+    templateUrl: './sponsor-edit-modal.component.html',
+    styleUrls: ['./sponsor-edit-modal.component.scss'],
+    standalone: false
 })
 export class SponsorEditModalComponent {
   protected editingSponsor?: Sponsor;

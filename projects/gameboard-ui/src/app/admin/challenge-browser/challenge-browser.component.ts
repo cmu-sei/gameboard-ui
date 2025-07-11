@@ -14,9 +14,10 @@ import { ToastService } from '@/utility/services/toast.service';
 import { ChallengeSubmissionsService } from '@/api/challenge-submissions.service';
 
 @Component({
-  selector: 'app-challenge-browser',
-  templateUrl: './challenge-browser.component.html',
-  styleUrls: ['./challenge-browser.component.scss']
+    selector: 'app-challenge-browser',
+    templateUrl: './challenge-browser.component.html',
+    styleUrls: ['./challenge-browser.component.scss'],
+    standalone: false
 })
 export class ChallengeBrowserComponent {
   refresh$ = new BehaviorSubject<boolean>(true);

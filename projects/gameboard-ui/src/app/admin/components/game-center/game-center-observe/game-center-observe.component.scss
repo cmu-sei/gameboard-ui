@@ -1,0 +1,8 @@
+.console-group {
+  display: flex;
+  gap: 1rem;
+
+  > li {
+    width: 20%;
+  }
+}

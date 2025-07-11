@@ -25,7 +25,8 @@ import { RouterService } from '@/services/router.service';
   selector: 'app-gameboard-page',
   templateUrl: './gameboard-page.component.html',
   styleUrls: ['./gameboard-page.component.scss'],
-  providers: [UnsubscriberService]
+  providers: [UnsubscriberService],
+  standalone: false
 })
 export class GameboardPageComponent {
   refresh$ = new Subject<string>();
@@ -233,23 +234,6 @@ export class GameboardPageComponent {
 
   graded(): void {
     this.refresh$.next(this.ctx.id);
-  }
-
-  console(vm: VmState): void {
-    let isUrl = false;
-
-    try {
-      new URL(vm.id);
-      isUrl = true;
-    } catch {
-      isUrl = false;
-    }
-
-    if (isUrl) {
-      this.windowService.open(this.routerService.buildVmConsoleUrl(vm.isolationId, vm));
-    } else {
-      this.config.openConsole(`?f=1&s=${vm.isolationId}&v=${vm.name}`);
-    }
   }
 
   mouseenter(e: MouseEvent, spec: BoardSpec) {

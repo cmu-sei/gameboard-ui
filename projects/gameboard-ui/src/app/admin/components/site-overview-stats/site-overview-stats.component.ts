@@ -7,9 +7,10 @@ import { ActiveChallengesModalComponent } from '../active-challenges-modal/activ
 import { ActiveTeamsModalComponent } from '../active-teams-modal/active-teams-modal.component';
 
 @Component({
-  selector: 'app-site-overview-stats',
-  templateUrl: './site-overview-stats.component.html',
-  styleUrls: ['./site-overview-stats.component.scss']
+    selector: 'app-site-overview-stats',
+    templateUrl: './site-overview-stats.component.html',
+    styleUrls: ['./site-overview-stats.component.scss'],
+    standalone: false
 })
 export class SiteOverviewStatsComponent implements OnInit, OnDestroy {
   constructor(

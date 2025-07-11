@@ -2,7 +2,8 @@ import { ConfigService } from '@/utility/config.service';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'assetPath'
+    name: 'assetPath',
+    standalone: false
 })
 export class AssetPathPipe implements PipeTransform {
   constructor(private config: ConfigService) { }

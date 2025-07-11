@@ -1,0 +1,33 @@
+@if (enableActivityListener()) {
+<!--
+    Only here if requested via the querystring (done by Gameboard for practice challenges)
+
+    NOTE: Even if the querystring is manipulated to turn this on for a competitive challenge, it won't
+    matter for the end user, functionally. The querystring parameter exists to eliminate unnecessary
+    API calls for competitive challenges - the API still only proactively extends practice sessions,
+    so turning this on via querystring hacking will just result in a maximum of an extra API call 
+    every minute.
+-->
+<app-user-activity-listener (userAction)="handleUserActivity($event)"></app-user-activity-listener>
+}
+
+<div class="layout-container">
+    <div class="console-status" tabindex="-1">
+        @if (expiresAt())
+        {
+        <div class="clock">
+            {{ expiresAt() | countdown }}
+        </div>
+        }
+
+        @if(consoleIsViewOnly())
+        {
+        <div class="is-view-only">
+            View Only
+        </div>
+        }
+    </div>
+    <cf-console [autoConnect]="false" [config]="consoleConfig()!" [isViewOnly]="consoleIsViewOnly()"
+        (connectionStatusChanged)="handleConsoleConnectionStatusChanged($event)"
+        (reconnectRequest)="handleConsoleReconnectRequest()"></cf-console>
+</div>

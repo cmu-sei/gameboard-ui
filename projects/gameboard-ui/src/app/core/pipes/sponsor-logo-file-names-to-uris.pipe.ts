@@ -1,7 +1,10 @@
 import { SponsorService } from '@/api/sponsor.service';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'sponsorLogoFileNamesToUris' })
+@Pipe({
+    name: 'sponsorLogoFileNamesToUris',
+    standalone: false
+})
 export class SponsorLogoFileNamesToUrisPipe implements PipeTransform {
   constructor(private sponsorService: SponsorService) { }
 

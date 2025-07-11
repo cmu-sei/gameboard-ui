@@ -11,10 +11,11 @@ interface PracticeSettingsContext {
 }
 
 @Component({
-  selector: 'app-practice-settings',
-  templateUrl: './practice-settings.component.html',
-  styleUrls: ['./practice-settings.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-practice-settings',
+    templateUrl: './practice-settings.component.html',
+    styleUrls: ['./practice-settings.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class PracticeSettingsComponent implements OnInit {
   ctx: PracticeSettingsContext | null = null;

@@ -143,12 +143,19 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.parseUrl(`/support/tickets/${highlightTicketKey}`));
   }
 
-  public buildVmConsoleUrl(challengeId: string, vm: SimpleEntity, isPractice = false) {
-    if (!vm || !challengeId) {
+  public buildVmConsoleUrl(challengeId: string, vmName: string, isPractice = false) {
+    if (!vmName || !challengeId) {
       throw new Error(`Can't launch a VM console without a challengeId.`);
     }
 
-    return `${this.config.mkshost}?f=1&s=${challengeId}&v=${vm.name || 'Console'}${isPractice ? "&l=true" : ""}`;
+    return this.router.createUrlTree(["c", "console"], {
+      queryParams: {
+        fullscreen: true,
+        challengeId,
+        console: vmName,
+        l: isPractice ? true : undefined
+      }
+    });
   }
 
   public deleteQueryParams(): Promise<boolean> {

@@ -7,9 +7,10 @@ import { UserService } from '../../../utility/user.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 
 @Component({
-  selector: 'app-profile-history',
-  templateUrl: './profile-history.component.html',
-  styleUrls: ['./profile-history.component.scss']
+    selector: 'app-profile-history',
+    templateUrl: './profile-history.component.html',
+    styleUrls: ['./profile-history.component.scss'],
+    standalone: false
 })
 export class ProfileHistoryComponent {
   list$: Observable<Player[]>;

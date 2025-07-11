@@ -3,9 +3,10 @@ import { ReportsService } from '../../reports.service';
 import { ReportViewModel } from '../../reports-models';
 
 @Component({
-  selector: 'app-reports-home',
-  templateUrl: './reports-home.component.html',
-  styleUrls: ['./reports-home.component.scss']
+    selector: 'app-reports-home',
+    templateUrl: './reports-home.component.html',
+    styleUrls: ['./reports-home.component.scss'],
+    standalone: false
 })
 export class ReportsHomeComponent implements OnInit {
   reports?: ReportViewModel[];

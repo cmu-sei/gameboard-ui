@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-big-stat',
-  templateUrl: './big-stat.component.html',
-  styleUrls: ['./big-stat.component.scss']
+    selector: 'app-big-stat',
+    templateUrl: './big-stat.component.html',
+    styleUrls: ['./big-stat.component.scss'],
+    standalone: false
 })
 export class BigStatComponent {
   @Input() label = "";

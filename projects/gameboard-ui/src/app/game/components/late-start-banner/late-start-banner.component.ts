@@ -2,9 +2,10 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DateTime, Duration } from 'luxon';
 
 @Component({
-  selector: 'app-late-start-banner',
-  templateUrl: './late-start-banner.component.html',
-  styleUrls: ['./late-start-banner.component.scss']
+    selector: 'app-late-start-banner',
+    templateUrl: './late-start-banner.component.html',
+    styleUrls: ['./late-start-banner.component.scss'],
+    standalone: false
 })
 export class LateStartBannerComponent implements OnChanges {
   @Input() gameAllowsLateStart?: boolean;

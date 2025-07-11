@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, signal, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';
@@ -7,7 +7,6 @@ import { ChallengesService } from '@/api/challenges.service';
 import { ChallengeSolutionGuide, UserActiveChallenge } from '@/api/challenges.models';
 import { PlayerMode } from '@/api/player-models';
 import { ActiveChallengesRepo } from '@/stores/active-challenges.store';
-import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { WindowService } from '@/services/window.service';
 import { LocalStorageService, StorageKey } from '@/services/local-storage.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
@@ -17,32 +16,40 @@ import { ChallengeQuestionsComponent } from "../challenge-questions/challenge-qu
 import { UtilityModule } from '@/utility/utility.module';
 import { ChallengeDeployCountdownComponent } from '@/game/components/challenge-deploy-countdown/challenge-deploy-countdown.component';
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
-import { VmLinkComponent } from "../vm-link/vm-link.component";
 import { UserService } from '@/utility/user.service';
 import { UserSettingsService } from '@/services/user-settings.service';
 import { PracticeChallengeView } from '@/prac/practice.models';
 import { FeedbackSubmissionFormComponent } from "@/feedback/components/feedback-submission-form/feedback-submission-form.component";
+import { ConsolesService } from '@/api/consoles.service';
+import { ConsoleComponentConfig, ConsoleTileComponent } from '@cmusei/console-forge';
+import { VmLinkComponent } from '../vm-link/vm-link.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ConfigService } from '@/utility/config.service';
 
-export type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
+type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
+interface PlayConsole {
+  config: ConsoleComponentConfig;
+  linkUrl: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-play',
-  standalone: true,
   imports: [
     CommonModule,
     CoreModule,
     ChallengeDeployCountdownComponent,
+    ConsoleTileComponent,
     ErrorDivComponent,
     SpinnerComponent,
     ToSupportCodePipe,
     ChallengeQuestionsComponent,
     UtilityModule,
-    VmLinkComponent,
-    FeedbackSubmissionFormComponent
+    FeedbackSubmissionFormComponent,
+    VmLinkComponent
   ],
   templateUrl: './play.component.html',
-  styleUrls: ['./play.component.scss'],
-  providers: [UnsubscriberService]
+  styleUrls: ['./play.component.scss']
 })
 export class PlayComponent implements OnChanges {
   @Input() autoPlay = false;
@@ -51,7 +58,11 @@ export class PlayComponent implements OnChanges {
   @Output() challengeStarted = new EventEmitter<void>();
   @Output() deployStateChange = new EventEmitter<PlayChallengeDeployState>();
 
+  private readonly appConfigService = inject(ConfigService);
+  private readonly consolesService = inject(ConsolesService);
+
   protected challenge: UserActiveChallenge | null = null;
+  protected consoles = signal<PlayConsole[]>([]);
   protected deployState$ = new BehaviorSubject<PlayChallengeDeployState>("undeployed");
   protected errors: any[] = [];
   protected fa = fa;
@@ -69,30 +80,28 @@ export class PlayComponent implements OnChanges {
     private localStorage: LocalStorageService,
     private localUser: UserService,
     private routerService: RouterService,
-    private unsub: UnsubscriberService,
     private userAppSettings: UserSettingsService,
     private windowService: WindowService) {
     // wire up observables
     this.windowWidth$ = windowService.resize$;
 
     // and subs
-    this.unsub.add(
-      windowService.resize$.subscribe(width => {
-        this.isStickyChallengePanelAvailable = width >= 1140;
-        this.isStickyChallengePanelSelected = this.localStorage.get(StorageKey.UseStickyChallengePanel) === "true";
-        this.showStickyChallengePanelPrompt = this.localStorage.get(StorageKey.UseStickyChallengePanel) === null;
+    windowService.resize$.pipe(takeUntilDestroyed()).subscribe(width => {
+      this.isStickyChallengePanelAvailable = width >= 1140;
+      this.isStickyChallengePanelSelected = this.localStorage.get(StorageKey.UseStickyChallengePanel) === "true";
+      this.showStickyChallengePanelPrompt = this.localStorage.get(StorageKey.UseStickyChallengePanel) === null;
 
-        if (!this.isStickyChallengePanelAvailable && this.isStickyChallengePanelSelected)
-          this.setIsStickyPanelEnabled(this.isStickyChallengePanelSelected, false);
-      }),
-
-      userAppSettings.updated$.subscribe(settings => this.setIsStickyPanelEnabled(settings.useStickyChallengePanel, false)),
-      this.deployState$.subscribe(state => {
+      if (!this.isStickyChallengePanelAvailable && this.isStickyChallengePanelSelected)
+        this.setIsStickyPanelEnabled(this.isStickyChallengePanelSelected, false);
+    });
+    userAppSettings.updated$.pipe(takeUntilDestroyed()).subscribe(settings => this.setIsStickyPanelEnabled(settings.useStickyChallengePanel, false)),
+      this.deployState$.pipe(takeUntilDestroyed()).subscribe(async state => {
         this.deployStateChange.emit(state);
         this.challenge = this.activeChallengesRepo.getActivePracticeChallenge();
-        this.vmUrls = this.buildVmLinks(this.challenge);
-      })
-    );
+
+        const consoleData = await this.buildConsoleData(this.challenge);
+        this.consoles.update(() => consoleData);
+      });
   }
 
   public async ngOnChanges(changes: SimpleChanges) {
@@ -120,7 +129,7 @@ export class PlayComponent implements OnChanges {
     this.deployState$.next("undeployed");
   }
 
-  protected setIsStickyPanelEnabled(isEnabled: boolean, notify = true) {
+  protected async setIsStickyPanelEnabled(isEnabled: boolean, notify = true) {
     this.showStickyChallengePanelPrompt = false;
 
     if (this.isStickyChallengePanelAvailable) {
@@ -137,21 +146,37 @@ export class PlayComponent implements OnChanges {
     }
 
     if (!this.isStickyChallengePanelSelected) {
+      // if we're changing this to DISABLED, that means they get console previews. this means we need to ask the API
+      // for updated credentials.
+      const consoleData = await this.buildConsoleData(this.challenge);
+      this.consoles.update(() => consoleData);
+
       this.windowService.scrollToBottom();
     }
   }
 
-  private buildVmLinks(challenge: UserActiveChallenge | null) {
-    const vmUrls: { [id: string]: string } = {};
-
-    if (!challenge)
-      return vmUrls;
-
-    for (const vm of challenge.vms) {
-      vmUrls[vm.id] = this.routerService.buildVmConsoleUrl(challenge.id, vm, challenge.mode === PlayerMode.practice);
+  private async buildConsoleData(challenge: UserActiveChallenge | null): Promise<PlayConsole[]> {
+    if (!challenge || this.deployState$.value !== "deployed") {
+      return [];
     }
 
-    return vmUrls;
+    const consolesResponse = await this.consolesService.listConsoles({ teamId: challenge?.team.id, playerMode: PlayerMode.practice });
+    const consoleData: PlayConsole[] = [];
+    for (const console of consolesResponse.consoles) {
+      const consoleUrl = this.routerService.buildVmConsoleUrl(challenge.id, console.consoleId.name, challenge.mode === PlayerMode.practice).toString();
+      consoleData.push({
+        config: {
+          consoleClientType: this.appConfigService.settings$.value.consoleForgeConfig?.defaultConsoleClientType || "vnc",
+          credentials: { accessTicket: console.accessTicket },
+          url: console.url
+        },
+        linkUrl: consoleUrl,
+        name: console.consoleId.name
+      });
+    }
+
+
+    return consoleData;
   }
 
   private async startChallenge(args: { challengeSpecId: string, playerId: string }) {

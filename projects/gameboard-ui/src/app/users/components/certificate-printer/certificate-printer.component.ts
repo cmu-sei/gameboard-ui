@@ -14,10 +14,11 @@ import { ConfigService } from '@/utility/config.service';
 import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
-  selector: 'app-certificate-printer',
-  templateUrl: './certificate-printer.component.html',
-  styleUrls: ['./certificate-printer.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-certificate-printer',
+    templateUrl: './certificate-printer.component.html',
+    styleUrls: ['./certificate-printer.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class CertificatePrinterComponent {
   @ViewChild("provideNameModal") provideNameModalTemplate?: TemplateRef<any>;

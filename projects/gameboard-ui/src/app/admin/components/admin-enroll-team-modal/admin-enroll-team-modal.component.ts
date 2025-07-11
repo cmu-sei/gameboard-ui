@@ -9,9 +9,10 @@ import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { AdminEnrollTeamResponse } from '@/api/teams.models';
 
 @Component({
-  selector: 'app-admin-enroll-team-modal',
-  templateUrl: './admin-enroll-team-modal.component.html',
-  styleUrls: ['./admin-enroll-team-modal.component.scss']
+    selector: 'app-admin-enroll-team-modal',
+    templateUrl: './admin-enroll-team-modal.component.html',
+    styleUrls: ['./admin-enroll-team-modal.component.scss'],
+    standalone: false
 })
 export class AdminEnrollTeamModalComponent implements OnInit {
   @ViewChild("searchBox") searchBoxRef?: ElementRef<HTMLInputElement>;

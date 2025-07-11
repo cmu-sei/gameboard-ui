@@ -3,7 +3,10 @@ import { UserRolePermissionKey } from '@/api/user-role-permissions.models';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 import { UserService } from '@/utility/user.service';
 
-@Pipe({ name: 'can' })
+@Pipe({
+    name: 'can',
+    standalone: false
+})
 export class CanPipe implements PipeTransform {
   private localUser = inject(UserService);
   private permissionsService = inject(UserRolePermissionsService);

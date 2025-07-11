@@ -12,10 +12,11 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
-  selector: 'app-session-start-controls',
-  templateUrl: './session-start-controls.component.html',
-  styleUrls: ['./session-start-controls.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-session-start-controls',
+    templateUrl: './session-start-controls.component.html',
+    styleUrls: ['./session-start-controls.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class SessionStartControlsComponent implements OnInit {
   @Input() ctx!: GameContext;

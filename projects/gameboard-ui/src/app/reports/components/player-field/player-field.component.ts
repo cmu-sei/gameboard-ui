@@ -3,8 +3,9 @@ import { ReportSponsor } from '@/reports/reports-models';
 import { SimpleEntity } from '@/api/models';
 
 @Component({
-  selector: 'app-player-field',
-  templateUrl: './player-field.component.html',
+    selector: 'app-player-field',
+    templateUrl: './player-field.component.html',
+    standalone: false
 })
 export class PlayerFieldComponent {
   @Input() player?: {

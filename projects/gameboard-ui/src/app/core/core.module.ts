@@ -46,7 +46,6 @@ import { CopyOnClickDirective } from './directives/copy-on-click.directive';
 import { ConfirmButtonComponent } from '@/core/components/confirm-button/confirm-button.component';
 import { CountdownColorPipe } from './pipes/countdown-color.pipe';
 import { CountdownComponent } from './components/countdown/countdown.component';
-import { CountdownPipe } from './pipes/countdown.pipe';
 import { CumulativeTimeClockComponent } from './components/cumulative-time-clock/cumulative-time-clock.component';
 import { DateToCountdownPipe } from './pipes/date-to-countdown.pipe';
 import { DateTimeIsFuturePipe } from './pipes/datetime-is-future.pipe';
@@ -92,7 +91,6 @@ import { SponsoredEntitiesToSponsorsPipe } from './pipes/sponsored-entities-to-s
 import { SponsorToLogoUriPipe } from './pipes/sponsor-to-logo-uri.pipe';
 import { SponsorsToLogoUrisPipe } from './pipes/sponsors-to-logo-uris.pipe';
 import { SponsorLogoFileNamesToUrisPipe } from './pipes/sponsor-logo-file-names-to-uris.pipe';
-import { StatusLightComponent } from './components/status-light/status-light.component';
 import { SumArrayPipe } from './pipes/sum-array.pipe';
 import { TextToBadgeStylePipe } from './pipes/text-to-badge-style.pipe';
 import { TicketListComponent } from './components/ticket-list/ticket-list.component';
@@ -118,6 +116,7 @@ import { ToSupportCodePipe } from '@/standalone/core/pipes/to-support-code.pipe'
 import { MarkdownModule } from 'ngx-markdown';
 import { StringArrayJoinPipe } from './pipes/string-array-join.pipe';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { CountdownPipe } from './pipes/countdown.pipe';
 
 const PUBLIC_DECLARATIONS = [
     AbsoluteValuePipe,
@@ -177,7 +176,6 @@ const PUBLIC_DECLARATIONS = [
     TrimPipe,
     UrlRewritePipe,
     ClockPipe,
-    CountdownPipe,
     CountdownColorPipe,
     FilterPipe,
     FriendlyTimePipe,
@@ -197,7 +195,6 @@ const PUBLIC_DECLARATIONS = [
     SponsorToLogoUriPipe,
     SponsorsToLogoUrisPipe,
     SponsorLogoFileNamesToUrisPipe,
-    StatusLightComponent,
     SumArrayPipe,
     TextToBadgeStylePipe,
     ToggleClassPipe,
@@ -249,6 +246,7 @@ const RELAYED_MODULES = [
         TypeaheadModule.forRoot(),
         ...RELAYED_MODULES,
         // standalones
+        CountdownPipe,
         IfHasPermissionDirective,
         SpinnerComponent,
         StringArrayJoinPipe,

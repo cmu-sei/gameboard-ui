@@ -1,0 +1,99 @@
+<app-error-div [errors]="errors()"></app-error-div>
+
+<div class="d-flex mb-4">
+    <div class="flex-grow-1">
+        <div class="input-group mt-2 mb-3 col-5">
+            <div class="input-group-prepend">
+                <span id="search-label" class="input-group-text">Search</span>
+            </div>
+            <input id="search-input" type="search" class="form-control" #search [(ngModel)]="searchText"
+                (input)="handleSearchBoxInput()" aria-label="search term" aria-describedby="search-label"
+                placeholder="term">
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center">
+        @if (challengeSpecs().length)
+        {
+        <select class="d-block form-control mr-2" [(ngModel)]="selectedChallengeSpecId"
+            (change)="loadConsolesWithSelectedParams()">
+            <option value="">[any challenge]</option>
+            @for(spec of challengeSpecs(); track spec.id)
+            {
+            <option [value]="spec.id">{{ spec.name }}</option>
+            }
+        </select>
+        }
+
+        @if (playerMode() !== "practice")
+        {
+        <select class="d-block form-control" [(ngModel)]="sortBy" (change)="loadConsolesWithSelectedParams()">
+            <option value="teamName">Name</option>
+            <option value="rank">Rank/Score</option>
+        </select>
+        }
+
+        <button class="btn btn-outline-light btn-md text-white ml-2" (click)="loadConsolesWithSelectedParams()"
+            tooltip="Refresh view">
+            <fa-icon [icon]="fa.sync"></fa-icon>
+        </button>
+    </div>
+</div>
+
+@if (isLoading())
+{
+<app-spinner>Loading teams and consoles...</app-spinner>
+}
+@else if(teams().length)
+{
+<div class="observe-container">
+    @for(team of teams(); track team.team.id)
+    {
+    <div class="team-container my-4">
+        <h3>
+            {{ team.team.name }}
+
+            @if (team.team.rank)
+            {
+            <span class="text-muted">({{ team.team.rank }}, {{ team.team.score || 0 }} points)</span>
+            }
+            @else {
+            <span class="text-muted">(unranked)</span>
+            }
+        </h3>
+        <ul class="console-group">
+            @for(console of team.consoles; track console.appUrl)
+            {
+            <li class="d-block">
+                <a [href]="console.appUrl" target="_blank">
+                    <cf-console-tile [config]="console.config"></cf-console-tile>
+                    <div class="challenge-name text-upper font-weight-bold">
+                        {{ console.consoleData.challenge.name }}
+                    </div>
+                    <div class="console-name">{{ console.consoleData.consoleId.name }}</div>
+
+                    @if (console.consoleData.activeUsers.length)
+                    {
+                    <ul class="active-users-list">
+                        @for (user of console.consoleData.activeUsers; track user.id)
+                        {
+                        <li>
+                            <fa-icon [icon]="fa.person"></fa-icon>
+                            {{ user.name }}
+                        </li>
+                        }
+                    </ul>
+                    }
+                </a>
+            </li>
+            }
+        </ul>
+    </div>
+    }
+</div>
+}
+@else {
+<div class="text-muted text-center">
+    <em>No consoles matched your search.</em>
+</div>
+}

@@ -31,7 +31,6 @@ const components = [
   ImageManagerComponent,
   GameCardComponent,
   LoginComponent,
-  MessageBoardComponent,
   InplaceEditorComponent,
   UntilPipe,
   ShortTimePipe,

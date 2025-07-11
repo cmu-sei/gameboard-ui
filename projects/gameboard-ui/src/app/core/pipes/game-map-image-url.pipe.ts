@@ -2,7 +2,10 @@ import { ConfigService } from '@/utility/config.service';
 import { DOCUMENT } from '@angular/common';
 import { inject, Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'gameMapImageUrl' })
+@Pipe({
+    name: 'gameMapImageUrl',
+    standalone: false
+})
 export class GameMapImageUrlPipe implements PipeTransform {
   private document = inject(DOCUMENT);
   constructor(private config: ConfigService) { }

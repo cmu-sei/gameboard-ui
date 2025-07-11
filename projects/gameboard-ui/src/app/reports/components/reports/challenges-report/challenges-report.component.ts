@@ -18,9 +18,10 @@ export interface ChallengesReportContext {
 }
 
 @Component({
-  selector: 'app-challenges-report',
-  templateUrl: './challenges-report.component.html',
-  styleUrls: ['./challenges-report.component.scss']
+    selector: 'app-challenges-report',
+    templateUrl: './challenges-report.component.html',
+    styleUrls: ['./challenges-report.component.scss'],
+    standalone: false
 })
 export class ChallengesReportComponent extends ReportComponentBase<ChallengesReportFlatParameters> {
   protected ctx: ChallengesReportContext = {

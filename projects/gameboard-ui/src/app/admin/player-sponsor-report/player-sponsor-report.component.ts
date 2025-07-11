@@ -12,9 +12,10 @@ import { Game } from '../../api/game-models';
 import { SponsorService } from '../../api/sponsor.service';
 
 @Component({
-  selector: 'player-sponsor-user-report',
-  templateUrl: './player-sponsor-report.component.html',
-  styleUrls: ['./player-sponsor-report.component.scss']
+    selector: 'player-sponsor-user-report',
+    templateUrl: './player-sponsor-report.component.html',
+    styleUrls: ['./player-sponsor-report.component.scss'],
+    standalone: false
 })
 export class PlayerSponsorReportComponent {
   @ViewChild(NgForm) form!: FormGroup;

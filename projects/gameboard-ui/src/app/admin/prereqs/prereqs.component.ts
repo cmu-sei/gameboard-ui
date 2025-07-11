@@ -10,9 +10,10 @@ import { GameService } from '../../api/game.service';
 import { Spec } from '../../api/spec-models';
 
 @Component({
-  selector: 'app-prereqs',
-  templateUrl: './prereqs.component.html',
-  styleUrls: ['./prereqs.component.scss']
+    selector: 'app-prereqs',
+    templateUrl: './prereqs.component.html',
+    styleUrls: ['./prereqs.component.scss'],
+    standalone: false
 })
 export class PrereqsComponent implements OnChanges {
   @Input() gameId = '';

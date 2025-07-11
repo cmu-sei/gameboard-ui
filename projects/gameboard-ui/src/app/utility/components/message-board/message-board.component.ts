@@ -6,12 +6,33 @@ import { fa } from '@/services/font-awesome.service';
 import { UserHubService } from '@/services/signalR/user-hub.service';
 import { UserHubAnnouncement } from '@/services/signalR/user-hub.models';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { MarkdownModule } from 'ngx-markdown';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'app-message-board',
-  templateUrl: './message-board.component.html',
-  styleUrls: ['./message-board.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-message-board',
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        MarkdownModule,
+    ],
+    styleUrls: ['./message-board.component.scss'],
+    template: `
+  <div *ngIf="list?.length" class="message-div">
+  <div *ngFor="let a of list" tabindex="0" class="pop-warning m-2">
+    <div class="text-right m-1">
+      <button class="btn btn-outline-warning" (click)="dismiss(a)">
+        <fa-icon [icon]="fa.xMark"></fa-icon>
+        <span>Dismiss</span>
+      </button>
+    </div>
+    <div class="p-4" [innerHTML]="a.contentMarkdown | markdown | async"></div>
+  </div>
+</div>
+
+`,
+    providers: [UnsubscriberService]
 })
 export class MessageBoardComponent {
   protected list: UserHubAnnouncement[] = [];

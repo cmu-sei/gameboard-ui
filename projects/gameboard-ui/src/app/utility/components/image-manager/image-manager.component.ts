@@ -9,9 +9,10 @@ import { SupportService } from '../../../api/support.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-image-manager',
-  templateUrl: './image-manager.component.html',
-  styleUrls: ['./image-manager.component.scss']
+    selector: 'app-image-manager',
+    templateUrl: './image-manager.component.html',
+    styleUrls: ['./image-manager.component.scss'],
+    standalone: false
 })
 export class ImageManagerComponent implements OnInit, OnChanges {
   @Input() maxCombinedSizeMB = 30;

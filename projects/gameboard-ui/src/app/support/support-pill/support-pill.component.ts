@@ -4,10 +4,18 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { NotificationService } from '../../services/notification.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'app-support-pill',
-  templateUrl: './support-pill.component.html',
+    selector: 'app-support-pill',
+    imports: [
+        FontAwesomeModule
+    ],
+    template: `
+  @if (count > 0) {
+    <fa-icon [icon]="faPill" class="ml-2 text-warning"></fa-icon>
+  }
+  `
 })
 export class SupportPillComponent implements OnDestroy {
   count = 0;

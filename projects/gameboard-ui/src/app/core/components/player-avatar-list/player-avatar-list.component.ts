@@ -3,8 +3,8 @@ import { TimeWindow } from '../../../api/player-models';
 import { PlayerWithSponsor } from '@/api/models';
 
 @Component({
-  selector: 'app-player-avatar-list',
-  template: `
+    selector: 'app-player-avatar-list',
+    template: `
   <div [class]="'player-avatar-list-component position-relative d-flex align-items-center avatar-list-size ' + this.sizeClass + ' ' + this.countClass">
     <ul *ngIf="(players.length || 0) > 0; else justUris" class="m-0 p-0 d-flex align-items-center justify-content-start">
       <li *ngFor="let player of players; index as i" [class]="'m-0 avatar-position-' + i + ' ' + this.sizeClass">
@@ -23,7 +23,8 @@ import { PlayerWithSponsor } from '@/api/models';
     </ul>
   </ng-template>
   `,
-  styleUrls: ['./player-avatar-list.component.scss']
+    styleUrls: ['./player-avatar-list.component.scss'],
+    standalone: false
 })
 export class PlayerAvatarListComponent implements OnInit {
   // both the pure uri and the sponsors are here because some places we don't have

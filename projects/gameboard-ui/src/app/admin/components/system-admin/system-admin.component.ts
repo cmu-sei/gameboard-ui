@@ -12,17 +12,16 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 type SystemAdminTab = "permissions" | "export" | "debug";
 
 @Component({
-  selector: 'app-system-admin',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CoreModule,
-    AdminRolesComponent,
-    ExportBatchesComponent
-  ],
-  providers: [UnsubscriberService],
-  templateUrl: './system-admin.component.html',
-  styleUrls: ['./system-admin.component.scss']
+    selector: 'app-system-admin',
+    imports: [
+        CommonModule,
+        CoreModule,
+        AdminRolesComponent,
+        ExportBatchesComponent
+    ],
+    providers: [UnsubscriberService],
+    templateUrl: './system-admin.component.html',
+    styleUrls: ['./system-admin.component.scss']
 })
 export class SystemAdminComponent implements OnInit {
   private route = inject(ActivatedRoute);

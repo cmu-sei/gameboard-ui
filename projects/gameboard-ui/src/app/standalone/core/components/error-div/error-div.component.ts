@@ -7,14 +7,13 @@ import { CamelspacePipe } from '../../pipes/camelspace.pipe';
 import { AlertModule } from 'ngx-bootstrap/alert';
 
 @Component({
-  selector: 'app-error-div',
-  standalone: true,
-  imports: [
-    CommonModule,
-    AlertModule,
-    CamelspacePipe
-  ],
-  template: `
+    selector: 'app-error-div',
+    imports: [
+        CommonModule,
+        AlertModule,
+        CamelspacePipe
+    ],
+    template: `
     <alert class="d-block m-2" *ngFor="let e of errors" type="danger" [dismissible]="true" (onClosed)="closed(e)">
       {{e.error?.message || e.message || e | camelspace}}
     </alert>

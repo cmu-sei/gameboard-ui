@@ -4,7 +4,10 @@
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'shortdate' })
+@Pipe({
+    name: 'shortdate',
+    standalone: false
+})
 export class ShortDatePipe implements PipeTransform {
   constructor(private friendlyDates: FriendlyDatesService) { }
 

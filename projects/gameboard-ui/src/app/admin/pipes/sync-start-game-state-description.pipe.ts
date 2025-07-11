@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ExternalGameAdminContext, SyncStartPlayerStatus } from '../components/external-game-admin/external-game-admin.component';
 import { NowService } from '@/services/now.service';
 
-@Pipe({ name: 'syncStartGameStateDescription' })
+@Pipe({
+    name: 'syncStartGameStateDescription',
+    standalone: false
+})
 export class SyncStartGameStateDescriptionPipe implements PipeTransform {
   constructor(now: NowService) { }
 

@@ -1,6 +1,1 @@
-<div class="observe-container">
-    <app-challenge-observer *ngIf="observeBy == 'challenge'" [gameId]="gameId"
-        (observeByTeamRequest)="handleObserveByChangeRequest('team')"></app-challenge-observer>
-    <app-team-observer *ngIf="observeBy == 'team'" [gameId]="gameId"
-        (observeByChallengeRequest)="handleObserveByChangeRequest('challenge')"></app-team-observer>
-</div>
+<app-observe-view [gameId]="gameId()" [playerMode]="playerMode"></app-observe-view>

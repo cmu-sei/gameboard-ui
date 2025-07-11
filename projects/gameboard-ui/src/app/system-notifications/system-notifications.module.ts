@@ -14,7 +14,7 @@ const DECLARED = [
   CreateEditSystemNotificationModalComponent,
   SystemNotificationTypeToTextPipe,
   SystemNotificationsComponent
-]
+];
 
 @NgModule({
   declarations: [...DECLARED, NotificationTypeToAlertTypePipe],

@@ -16,9 +16,10 @@ import { UserRolePermissionsService } from '@/api/user-role-permissions.service'
 type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 
 @Component({
-  selector: 'app-user-registrar',
-  templateUrl: './user-registrar.component.html',
-  styleUrls: ['./user-registrar.component.scss']
+    selector: 'app-user-registrar',
+    templateUrl: './user-registrar.component.html',
+    styleUrls: ['./user-registrar.component.scss'],
+    standalone: false
 })
 export class UserRegistrarComponent {
   protected roles$: Observable<UserRoleKey[]>;

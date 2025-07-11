@@ -6,15 +6,16 @@ import { RouterService } from '@/services/router.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-sort-header',
-  template: `
+    selector: 'app-sort-header',
+    template: `
   <div class="component-container cursor-pointer d-flex justify-content-center align-items-stretch" [class.active]="isActive" (click)="handleClick()">
     <div class="content-container">
       <ng-content></ng-content>
     </div>
     <fa-icon class="d-block ml-2" [class.text-muted]="!isActive" size="xs" [icon]="!isActive || currentSortDirection == 'asc' ? fa.caretUp : fa.caretDown"></fa-icon>
   </div>`,
-  styleUrls: ['./sort-header.component.scss']
+    styleUrls: ['./sort-header.component.scss'],
+    standalone: false
 })
 export class SortHeaderComponent implements OnInit, OnChanges {
   @Input() sortBy?: string;

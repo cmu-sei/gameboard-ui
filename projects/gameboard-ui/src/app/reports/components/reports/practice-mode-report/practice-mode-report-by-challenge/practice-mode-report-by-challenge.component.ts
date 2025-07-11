@@ -12,9 +12,10 @@ import { ChallengeResult } from '@/api/board-models';
 import { fa } from '@/services/font-awesome.service';
 
 @Component({
-  selector: 'app-practice-mode-report-by-challenge',
-  templateUrl: './practice-mode-report-by-challenge.component.html',
-  styleUrls: ['./practice-mode-report-by-challenge.component.scss']
+    selector: 'app-practice-mode-report-by-challenge',
+    templateUrl: './practice-mode-report-by-challenge.component.html',
+    styleUrls: ['./practice-mode-report-by-challenge.component.scss'],
+    standalone: false
 })
 export class PracticeModeReportByChallengeComponent implements OnChanges {
   @Input() parameters: PracticeModeReportFlatParameters | null = null;

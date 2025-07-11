@@ -11,10 +11,11 @@ import { AppTitleService } from '@/services/app-title.service';
 import { UserService } from '@/utility/user.service';
 
 @Component({
-  selector: 'app-game-center',
-  templateUrl: './game-center.component.html',
-  styleUrls: ['./game-center.component.scss'],
-  providers: [UnsubscriberService]
+    selector: 'app-game-center',
+    templateUrl: './game-center.component.html',
+    styleUrls: ['./game-center.component.scss'],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class GameCenterComponent {
   protected fa = fa;

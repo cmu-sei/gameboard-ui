@@ -3,9 +3,10 @@ import { ExternalGameService } from '@/services/external-game.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-delete-external-game-host-modal',
-  templateUrl: './delete-external-game-host-modal.component.html',
-  styleUrls: ['./delete-external-game-host-modal.component.scss']
+    selector: 'app-delete-external-game-host-modal',
+    templateUrl: './delete-external-game-host-modal.component.html',
+    styleUrls: ['./delete-external-game-host-modal.component.scss'],
+    standalone: false
 })
 export class DeleteExternalGameHostModalComponent implements OnInit {
   deleteHostId?: string;

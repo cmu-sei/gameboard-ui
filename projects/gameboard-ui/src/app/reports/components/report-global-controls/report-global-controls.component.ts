@@ -3,9 +3,10 @@ import { RouterService } from '@/services/router.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-report-global-controls',
-  templateUrl: './report-global-controls.component.html',
-  styleUrls: ['./report-global-controls.component.scss']
+    selector: 'app-report-global-controls',
+    templateUrl: './report-global-controls.component.html',
+    styleUrls: ['./report-global-controls.component.scss'],
+    standalone: false
 })
 export class ReportGlobalControlsComponent {
   @Input() enableExport = true;

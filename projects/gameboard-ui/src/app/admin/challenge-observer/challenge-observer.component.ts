@@ -14,12 +14,14 @@ import { GameService } from '../../api/game.service';
 import { ConfigService } from '../../utility/config.service';
 import { MatchesTermPipe } from '@/utility/pipes/matches-term.pipe';
 import { fa } from '@/services/font-awesome.service';
+import { RouterService } from '@/services/router.service';
 
 @Component({
   selector: 'app-challenge-observer',
   templateUrl: './challenge-observer.component.html',
   styleUrls: ['./challenge-observer.component.scss'],
-  providers: [MatchesTermPipe]
+  providers: [MatchesTermPipe],
+  standalone: false
 })
 export class ChallengeObserverComponent implements OnDestroy {
   @Input() gameId?: string;
@@ -60,9 +62,10 @@ export class ChallengeObserverComponent implements OnDestroy {
     route: ActivatedRoute,
     private api: BoardService,
     private gameApi: GameService,
-    private conf: ConfigService
+    private conf: ConfigService,
+    private routerService: RouterService,
   ) {
-    this.mksHost = conf.mkshost;
+    this.mksHost = "";
     this.gameData = route.params.pipe(
       filter(a => !!a.id),
       switchMap(a => this.gameApi.retrieve(a.id))
@@ -134,7 +137,7 @@ export class ChallengeObserverComponent implements OnDestroy {
   }
 
   go(vm: ObserveVM): void {
-    this.conf.openConsole(`?f=0&o=1&s=${vm.challengeId}&v=${vm.name}`);
+    this.routerService.buildVmConsoleUrl(vm.challengeId, vm.name)
   }
 
   toggleShowConsoles(challenge: ObserveChallenge) {

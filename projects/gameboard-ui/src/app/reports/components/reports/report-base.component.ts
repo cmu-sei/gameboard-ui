@@ -7,7 +7,10 @@ import { ActivatedRoute } from "@angular/router";
 import { UnsubscriberService } from "@/services/unsubscriber.service";
 import { RouterService } from "@/services/router.service";
 
-@Component({ template: '', providers: [UnsubscriberService] })
+@Component({
+    template: '', providers: [UnsubscriberService],
+    standalone: false
+})
 export abstract class ReportComponentBase<TParameters extends {}> {
     protected readonly activeReportService = inject(ActiveReportService);
     protected readonly reportsService = inject(ReportsService);

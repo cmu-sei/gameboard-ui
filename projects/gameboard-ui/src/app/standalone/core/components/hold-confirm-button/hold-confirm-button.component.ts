@@ -4,11 +4,10 @@ import { fromEvent, interval, switchMap, takeUntil, takeWhile, tap, timer } from
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-  selector: 'app-hold-confirm-button',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './hold-confirm-button.component.html',
-  styleUrls: ['./hold-confirm-button.component.scss']
+    selector: 'app-hold-confirm-button',
+    imports: [CommonModule],
+    templateUrl: './hold-confirm-button.component.html',
+    styleUrls: ['./hold-confirm-button.component.scss']
 })
 export class HoldConfirmButtonComponent implements AfterViewInit {
   @Input() confirmTimeMs = 1500;

@@ -7,7 +7,6 @@ export const environment: Environment = {
     appname: 'Gameboard',
     apphost: '',
     countdownStartSecondsAtMinute: 5,
-    mkshost: '',
     imghost: '',
     isProduction: true,
     tochost: '',

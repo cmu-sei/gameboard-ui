@@ -4,9 +4,10 @@ import { fa } from "@/services/font-awesome.service";
 import { SupportService } from '@/api/support.service';
 
 @Component({
-  selector: 'app-ticket-label-picker-modal',
-  templateUrl: './ticket-label-picker-modal.component.html',
-  styleUrls: ['./ticket-label-picker-modal.component.scss']
+    selector: 'app-ticket-label-picker-modal',
+    templateUrl: './ticket-label-picker-modal.component.html',
+    styleUrls: ['./ticket-label-picker-modal.component.scss'],
+    standalone: false
 })
 export class TicketLabelPickerModalComponent implements OnInit {
   protected fa = fa;

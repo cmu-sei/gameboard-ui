@@ -3,7 +3,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { Component } from '@angular/core';
 
 @Component({
-  template: `
+    template: `
     <div class="modal-confirm-component">
       <div class="modal-header">
           <div class="titles-container">
@@ -22,8 +22,9 @@ import { Component } from '@angular/core';
       </div>
     </div>
 `,
-  selector: 'app-event-horizon-modal',
-  styleUrls: ['./event-horizon-modal.component.scss']
+    selector: 'app-event-horizon-modal',
+    styleUrls: ['./event-horizon-modal.component.scss'],
+    standalone: false
 })
 export class EventHorizonModalComponent {
   team?: SimpleEntity;

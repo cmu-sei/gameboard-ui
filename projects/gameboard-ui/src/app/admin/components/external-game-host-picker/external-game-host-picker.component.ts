@@ -7,9 +7,10 @@ import { ExternalGameService } from '@/services/external-game.service';
 import { DeleteExternalGameHostModalComponent } from '../delete-external-game-host-modal/delete-external-game-host-modal.component';
 
 @Component({
-  selector: 'app-external-game-host-picker',
-  templateUrl: './external-game-host-picker.component.html',
-  styleUrls: ['./external-game-host-picker.component.scss']
+    selector: 'app-external-game-host-picker',
+    templateUrl: './external-game-host-picker.component.html',
+    styleUrls: ['./external-game-host-picker.component.scss'],
+    standalone: false
 })
 export class ExternalGameHostPickerComponent implements OnInit {
   @Input() selectedHostId?: string;

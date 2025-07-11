@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'urlRewrite' })
+@Pipe({
+    name: 'urlRewrite',
+    standalone: false
+})
 export class UrlRewritePipe implements PipeTransform {
 
   transform(value: string, origin: string): string {

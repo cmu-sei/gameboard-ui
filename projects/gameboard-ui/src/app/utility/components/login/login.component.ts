@@ -7,9 +7,10 @@ import { AuthService } from '@/utility/auth.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent {
   protected authority: string | undefined;

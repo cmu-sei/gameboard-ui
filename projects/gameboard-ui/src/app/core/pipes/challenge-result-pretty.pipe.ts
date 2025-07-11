@@ -1,7 +1,10 @@
 import { ChallengeResult } from '@/api/board-models';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'challengeResultPretty' })
+@Pipe({
+    name: 'challengeResultPretty',
+    standalone: false
+})
 export class ChallengeResultPrettyPipe implements PipeTransform {
 
   transform(value: ChallengeResult): string {

@@ -87,10 +87,8 @@
               <div class="vms-container my-4">
                 <ul class="d-flex">
                   <li *ngFor="let vm of spec.instance!.state.vms">
-                    <button class="btn btn-sm btn-dark mr-2" (click)="console(vm)">
-                      <fa-icon [icon]="faTv"></fa-icon>
-                      <span>{{vm.name}}</span>
-                    </button>
+                    <app-vm-link
+                      [vm]="{ name: vm.name, url: { challengeId: vm.isolationId, name: vm.name } | consoleIdToUrl }"></app-vm-link>
                   </li>
                 </ul>
               </div>

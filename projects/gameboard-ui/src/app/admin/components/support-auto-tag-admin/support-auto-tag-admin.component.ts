@@ -9,9 +9,10 @@ import { GameService } from '@/api/game.service';
 import { SpecService } from '@/api/spec.service';
 
 @Component({
-  selector: 'app-support-auto-tag-admin',
-  templateUrl: './support-auto-tag-admin.component.html',
-  styleUrls: ['./support-auto-tag-admin.component.scss']
+    selector: 'app-support-auto-tag-admin',
+    templateUrl: './support-auto-tag-admin.component.html',
+    styleUrls: ['./support-auto-tag-admin.component.scss'],
+    standalone: false
 })
 export class SupportAutoTagAdminComponent implements OnInit {
   protected autoTags: SupportSettingsAutoTagViewModel[] = [];

@@ -5,8 +5,9 @@ import { ClipboardService } from '@/utility/services/clipboard.service';
 import { ToastService } from '@/utility/services/toast.service';
 
 @Component({
-  selector: 'app-share-button',
-  templateUrl: './share-button.component.html',
+    selector: 'app-share-button',
+    templateUrl: './share-button.component.html',
+    standalone: false
 })
 export class ShareButtonComponent {
   @Input() disabled?: boolean;

@@ -2,13 +2,15 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, firstValueFrom, of } from 'rxjs';
 import { ConfigService } from '../utility/config.service';
 import { ChallengeSpecBonusViewModel, ChangedSpec, ExternalSpec, GameChallengeSpecs, GetChallengeSpecQuestionPerformanceResult, NewSpec, Spec } from './spec-models';
+import { ApiUrlService } from '@/services/api-url.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpecService {
+  private readonly apiUrlService = inject(ApiUrlService);
   url = '';
 
   constructor(
@@ -26,8 +28,8 @@ export class SpecService {
     return this.http.get<Spec[]>(this.url + '/challengespecs', { params: filter });
   }
 
-  public listByGame(): Promise<GameChallengeSpecs[]> {
-    return firstValueFrom(this.http.get<GameChallengeSpecs[]>(this.url + "/challengespecs/by-game"));
+  public listByGame(gameId?: string): Promise<GameChallengeSpecs[]> {
+    return firstValueFrom(this.http.get<GameChallengeSpecs[]>(this.apiUrlService.build("challengespecs/by-game", { gameId })));
   }
 
   public retrieve(id: string): Observable<Spec> {

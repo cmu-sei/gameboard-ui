@@ -17,9 +17,10 @@ interface PlayersReportContext {
 }
 
 @Component({
-  selector: 'app-players-report',
-  templateUrl: './players-report.component.html',
-  styleUrls: ['./players-report.component.scss']
+    selector: 'app-players-report',
+    templateUrl: './players-report.component.html',
+    styleUrls: ['./players-report.component.scss'],
+    standalone: false
 })
 export class PlayersReportComponent extends ReportComponentBase<PlayersReportFlatParameters> {
   protected ctx: PlayersReportContext = {

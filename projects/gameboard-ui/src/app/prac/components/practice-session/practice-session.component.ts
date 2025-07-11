@@ -18,12 +18,13 @@ import { UserActiveChallenge } from '@/api/challenges.models';
 import { PracticeChallengeView, PracticeSession } from '@/prac/practice.models';
 
 @Component({
-  selector: 'app-practice-session',
-  templateUrl: './practice-session.component.html',
-  styles: [
-    ".container.miniplayer-available { max-width: 1440px }"
-  ],
-  providers: [UnsubscriberService]
+    selector: 'app-practice-session',
+    templateUrl: './practice-session.component.html',
+    styles: [
+        ".container.miniplayer-available { max-width: 1440px }"
+    ],
+    providers: [UnsubscriberService],
+    standalone: false
 })
 export class PracticeSessionComponent implements OnInit {
   protected windowWidth$ = this.windowService.resize$;

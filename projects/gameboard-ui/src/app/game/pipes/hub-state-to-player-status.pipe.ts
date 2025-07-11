@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { HubState } from '../../services/notification.service';
 import { PlayerStatus } from '../../core/components/player-status/player-status.component';
 
-@Pipe({ name: 'hubStateToPlayerStatus' })
+@Pipe({
+    name: 'hubStateToPlayerStatus',
+    standalone: false
+})
 export class HubStateToPlayerStatusPipe implements PipeTransform {
 
   transform(value: HubState): unknown {

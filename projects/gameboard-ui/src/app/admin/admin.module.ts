@@ -94,6 +94,10 @@ import { SystemAdminComponent } from './components/system-admin/system-admin.com
 import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
 import { SessionExtensionGameEndWarningComponent } from "./components/session-extension-game-end-warning/session-extension-game-end-warning.component";
 import { GamesTableViewComponent } from './components/games-table-view/games-table-view.component';
+import { StatusLightComponent } from '@/core/components/status-light/status-light.component';
+import { ConsoleTileComponent } from '@cmusei/console-forge';
+import { PracticeObserveComponent } from './practice/practice-observe/practice-observe.component';
+import { ObserveViewComponent } from './components/observe-view/observe-view.component';
 
 @NgModule({
   declarations: [
@@ -189,7 +193,8 @@ import { GamesTableViewComponent } from './components/games-table-view/games-tab
           },
           {
             path: "practice", component: PracticeComponent, children: [
-              { path: "settings", component: PracticeSettingsComponent },
+              { path: "settings", component: PracticeSettingsComponent, title: "Practice Settings" },
+              { path: "observe", component: PracticeObserveComponent, title: "Practice Observe" },
               { path: "", pathMatch: "full", redirectTo: "settings" },
             ]
           },
@@ -217,6 +222,8 @@ import { GamesTableViewComponent } from './components/games-table-view/games-tab
     ScoreboardModule,
     SponsorsModule,
     SystemNotificationsModule,
+    // library components
+    ConsoleTileComponent,
     // standalones
     ErrorDivComponent,
     GameCenterPracticeTeamContextMenuComponent,
@@ -224,10 +231,12 @@ import { GamesTableViewComponent } from './components/games-table-view/games-tab
     GamesTableViewComponent,
     IfHasPermissionDirective,
     MarkdownPlaceholderPipe,
+    ObserveViewComponent,
     PackageUploadComponent,
     SafeUrlPipe,
     SessionExtensionGameEndWarningComponent,
     SpinnerComponent,
+    StatusLightComponent,
     ToSupportCodePipe,
     CertificatePreviewerComponent,
     CertificateTemplatePickerComponent,

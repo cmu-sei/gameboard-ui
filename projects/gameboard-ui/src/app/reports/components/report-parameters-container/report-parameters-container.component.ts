@@ -8,9 +8,9 @@ import { deepEquals, isEmpty } from 'projects/gameboard-ui/src/tools/object-tool
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-report-parameters-container',
-  providers: [UnsubscriberService],
-  template: `<div class="report-parameters-component mb-5" *ngIf="metaData$ | async">
+    selector: 'app-report-parameters-container',
+    providers: [UnsubscriberService],
+    template: `<div class="report-parameters-component mb-5" *ngIf="metaData$ | async">
     <hr />
     <div class="mb-4">
       <span class="about-filters-link btn-link fs-125" (click)="handleAboutFiltersClick()">
@@ -30,7 +30,8 @@ import { Observable } from 'rxjs';
   }
   <hr />
 </div>`,
-  styleUrls: ['./report-parameters-container.component.scss']
+    styleUrls: ['./report-parameters-container.component.scss'],
+    standalone: false
 })
 export class ReportParametersContainerComponent implements OnInit {
   private activeReport = inject(ActiveReportService);

@@ -40,6 +40,9 @@ import { SafeUrlPipe } from '@/standalone/core/pipes/safe-url.pipe';
 import { ScoreboardPageComponent } from '@/scoreboard/components/scoreboard-page/scoreboard-page.component';
 import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback-submission-form/feedback-submission-form.component";
 import { GameSessionAvailabilityWarningComponent } from "./components/game-session-availability-warning/game-session-availability-warning.component";
+import { CountdownPipe } from '@/core/pipes/countdown.pipe';
+import { VmLinkComponent } from '@/standalone/games/components/vm-link/vm-link.component';
+import { ConsoleIdToUrlPipe } from '@/consoles/pipes/console-id-to-url.pipe';
 
 const MODULE_DECLARATIONS = [
   ContinueToGameboardButtonComponent,
@@ -83,12 +86,15 @@ const MODULE_DECLARATIONS = [
     ScoreboardModule,
     // standalones
     ChallengeQuestionsComponent,
+    ConsoleIdToUrlPipe,
+    CountdownPipe,
     ErrorDivComponent,
     FeedbackSubmissionFormComponent,
     SafeUrlPipe,
     SpinnerComponent,
     FeedbackSubmissionFormComponent,
-    GameSessionAvailabilityWarningComponent
+    GameSessionAvailabilityWarningComponent,
+    VmLinkComponent
   ]
 })
 export class GameModule { }

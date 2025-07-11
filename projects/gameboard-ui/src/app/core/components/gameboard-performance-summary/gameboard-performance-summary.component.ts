@@ -24,7 +24,8 @@ interface GameboardPerformanceSummaryViewModel {
 @Component({
   selector: 'app-gameboard-performance-summary',
   templateUrl: './gameboard-performance-summary.component.html',
-  styleUrls: ['./gameboard-performance-summary.component.scss']
+  styleUrls: ['./gameboard-performance-summary.component.scss'],
+  standalone: false
 })
 export class GameboardPerformanceSummaryComponent implements OnInit, OnChanges {
   @Input() playerId?: string;
