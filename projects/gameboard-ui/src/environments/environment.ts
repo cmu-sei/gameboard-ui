@@ -1,4 +1,3 @@
-import { LogLevel } from "@cmusei/console-forge";
 import { Environment } from "./environment-typed";
 
 export const environment: Environment = {
@@ -18,7 +17,6 @@ export const environment: Environment = {
     consoleForgeConfig: {
       consoleBackgroundStyle: "rgb(0, 0, 0)",
       defaultConsoleClientType: "vnc",
-      logThreshold: LogLevel.DEBUG,
       showBrowserNotificationsOnConsoleEvents: true
     },
     oidc: {

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { toSignal } from "@angular/core/rxjs-interop";
 import { ConsoleComponent, ConsoleComponentConfig, ConsoleConnectionStatus } from "@cmusei/console-forge";
 import { DateTime } from 'luxon';
-import { map } from 'rxjs';
+import { interval, map } from 'rxjs';
 import { UserActivityListenerComponent } from '../user-activity-listener/user-activity-listener.component';
 import { ConsolesService } from '@/api/consoles.service';
 import { ConsoleId, ConsoleUserActivityType } from '@/api/consoles.models';
@@ -12,6 +12,7 @@ import { AppTitleService } from '@/services/app-title.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { FriendlyDatesService } from '@/services/friendly-dates.service';
 import { CountdownPipe } from '@/core/pipes/countdown.pipe';
+import { NowService } from '@/services/now.service';
 
 @Component({
   selector: 'app-console-page',
@@ -28,6 +29,7 @@ export class ConsolePageComponent implements AfterViewInit {
   // services
   private readonly consolesApi = inject(ConsolesService);
   private readonly friendlyDates = inject(FriendlyDatesService);
+  private readonly now = inject(NowService);
   private readonly route = inject(ActivatedRoute);
   private readonly toastService = inject(ToastService);
   private readonly title = inject(AppTitleService);
@@ -45,7 +47,16 @@ export class ConsolePageComponent implements AfterViewInit {
   private readonly consoleIsConnected = signal<boolean>(false);
   protected readonly consoleIsViewOnly = model<boolean>(false);
   protected readonly enableActivityListener = toSignal(this.route.queryParamMap.pipe(map(qps => qps?.get("l") === "true")));
-  protected readonly expiresAt = model<number>();
+
+  // we have to wrap the value in an RXJS timer thing to get it to count down correctly (we should maybe reevaluate the countdown pipe)
+  private _expiresAtTimestamp?: number;
+  protected expiresAt = toSignal(interval(1000).pipe(map(() => {
+    if (!this._expiresAtTimestamp) {
+      return undefined;
+    }
+
+    return this._expiresAtTimestamp - this.now.nowToMsEpoch();
+  })));
 
   async ngAfterViewInit(): Promise<void> {
     await this.connect(this.consoleId()!);
@@ -94,7 +105,7 @@ export class ConsolePageComponent implements AfterViewInit {
 
     this.title.set(`${consoleState.id.name} :: Console${consoleData.isViewOnly ? ' [view only]' : ''}`);
     this.consoleIsViewOnly.update(() => consoleData.isViewOnly);
-    this.updateConsoleExpirationTime(consoleData.expiresAt);
+    this._expiresAtTimestamp = consoleData.expiresAt?.toMillis();
 
     this.consoleConfig.update(() => ({
       autoFocusOnConnect: true,
@@ -107,12 +118,6 @@ export class ConsolePageComponent implements AfterViewInit {
     if (this.consoleComponent()) {
       await this.consoleComponent()!.connect(this.consoleConfig()!);
       await this.consolesApi.setConsoleActiveUser(consoleId);
-    }
-  }
-
-  private updateConsoleExpirationTime(consoleExpiresAt: DateTime | null) {
-    if (consoleExpiresAt) {
-      this.expiresAt.update(() => consoleExpiresAt.toMillis() - DateTime.now().toMillis());
     }
   }
 }
