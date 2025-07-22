@@ -181,9 +181,7 @@ const PUBLIC_DECLARATIONS = [
     FriendlyTimePipe,
     MinPipe,
     ModalContentComponent,
-    PluralizerPipe,
     RenderLinksInTextComponent,
-    RelativeImagePipe,
     RelativeToAbsoluteHrefPipe,
     RelativeUrlsPipe,
     SelectPagerComponent,
@@ -248,6 +246,8 @@ const RELAYED_MODULES = [
         // standalones
         CountdownPipe,
         IfHasPermissionDirective,
+        PluralizerPipe,
+        RelativeImagePipe,
         SpinnerComponent,
         StringArrayJoinPipe,
         ToSupportCodePipe

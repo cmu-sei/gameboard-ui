@@ -7,11 +7,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "lib": [
-      "es2018",
-      "dom",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2019", "dom", "DOM.Iterable"],
     "module": "es2020",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
@@ -19,12 +15,8 @@
     "noImplicitReturns": true,
     "outDir": "./dist/out-tsc",
     "paths": {
-      "@/*": [
-        "./projects/gameboard-ui/src/app/*"
-      ],
-      "gameboard-consoles": [
-        "./dist/gameboard-consoles"
-      ]
+      "@/*": ["./projects/gameboard-ui/src/app/*"],
+      "gameboard-consoles": ["./dist/gameboard-consoles"]
     },
     "sourceMap": true,
     "strict": true,

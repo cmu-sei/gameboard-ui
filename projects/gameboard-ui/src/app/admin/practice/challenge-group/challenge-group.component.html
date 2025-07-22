@@ -1,0 +1,246 @@
+@if(groupResource.isLoading())
+{
+<app-spinner>Loading group...</app-spinner>
+}
+
+@if (groupResource.hasValue())
+{
+<div class="layout-container d-flex">
+    <div class="quasi-sidebar">
+        <div class="quasi-sidebar-content">
+            <div class="my-2">
+                <a routerLink="/admin/practice/content">« Back to all challenge collections</a>
+            </div>
+
+            @if (groupResource.value().parentGroup?.id)
+            {
+            <div class="my-2">
+                <a [routerLink]="['/admin', 'practice', 'content', 'group', groupResource.value().parentGroup?.id]">
+                    « Back to
+                    <strong>{{ groupResource.value().parentGroup?.name }}</strong>
+                </a>
+            </div>
+            }
+
+            <app-challenge-group-card class="main-group-card" [challengeGroup]="groupResource.value()!.group">
+                <button type="button" class="btn btn-success mr-2"
+                    (click)="handleOpenEditCollectionModal(groupResource.value()!.group, groupResource.value()!.parentGroup?.id)">Edit</button>
+
+                <button type="button" class="btn btn-danger"
+                    (click)="handleDeleteCollectionModal(groupResource.value()!.group, !!groupResource.value().childGroups.length)">
+                    Delete
+                </button>
+            </app-challenge-group-card>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!--Can only have subcollections (child groups) if this group has no parent-->
+        @if (canAddSubCollections())
+        {
+        @if(groupResource.value().childGroups.length == 0 && groupResource.value().group.challenges.length == 0)
+        {
+        <alert type="success" class="mb-5">
+            <h6>About challenge collections</h6>
+
+            A <strong>collection</strong> can <em>technically</em> contain both subcollections and challenges. In
+            practice, we recommend choosing one or the other. For example, you add all the challenges from a specific
+            event to this collection, or you might instead create subcollections by difficulty (e.g. "Easy", "Medium",
+            and "Hard") which contain the challenges.
+        </alert>
+        }
+        <div class="child-groups mb-5">
+            <h4 class="mb-4">Subcollections</h4>
+
+            @if (groupResource.value().childGroups.length)
+            {
+            <div class="add-child-group-controls text-right">
+                <button type="button" class="btn btn-success" (click)="handleOpenAddSubCollectionModal()">
+                    <fa-icon [icon]="fa.plus"></fa-icon>
+                    Add Subcollection
+                </button>
+            </div>
+            <div class="child-groups-container d-flex flex-wrap gap-4 my-4">
+                @for (childGroup of groupResource.value().childGroups; track childGroup.id)
+                {
+                <app-challenge-group-card [challengeGroup]="childGroup">
+                    <div class="text-muted my-2">
+                        {{ childGroup.challenges.length }} {{ "challenge" | pluralizer:childGroup.challenges.length }}
+                    </div>
+                    <a class="btn btn-success mr-2"
+                        [routerLink]="['/admin', 'practice', 'content', 'group', childGroup.id]">View</a>
+                    <button type="button" class="btn btn-success mr-2"
+                        (click)="handleOpenEditCollectionModal(childGroup, group()!.id)">Edit</button>
+                    <button type="button" class="btn btn-danger"
+                        (click)="handleDeleteCollectionModal(childGroup, false)">Delete</button>
+                </app-challenge-group-card>
+                }
+            </div>
+            }
+            @else
+            {
+            <div class="text-center text-muted">
+                This collection doesn't have any subcollections.
+                <span class="btn-link" (click)="handleOpenAddSubCollectionModal()">Add one now</span>!
+            </div>
+            }
+        </div>
+        }
+
+        <div class="challenges">
+            <h4>
+                Challenges
+                {{ groupResource.value().group.challenges.length ? " (" + groupResource.value().group.challenges.length
+                + ")" : ""
+                }}
+            </h4>
+
+            @if (groupResource.value().group.challenges.length)
+            {
+            <div class="add-challenge-controls my-4 text-right">
+                <button type="button" class="btn btn-success" (click)="handleOpenAddChallengeModal()">
+                    <fa-icon [icon]="fa.plus"></fa-icon>
+                    Add Challenge
+                </button>
+            </div>
+
+            <div
+                *ngTemplateOutlet="childGroupChallenges; context: { $implicit: { group: group(), isThisGroup: true } }">
+            </div>
+            }
+            @else
+            {
+            <div class="my-4 text-center text-muted">
+                This collection doesn't have any challenges yet.
+                <span class="btn-link" (click)="handleOpenAddChallengeModal()">Add some now</span>!
+            </div>
+            }
+
+            @for (childGroup of groupResource.value().childGroups; track childGroup.id)
+            {
+            <div
+                *ngTemplateOutlet="childGroupChallenges; context: { $implicit: { group: childGroup, isThisGroup: false } }">
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}
+
+<ng-template #addChallengeModal>
+    <app-modal-content title="Add Challenge" [subtitle]="groupResource.value()?.group?.name"
+        [confirmDisabled]="!selectedChallenge()" (confirm)="handleAddChallenges()">
+
+        <div class="my-2">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="addByRadio" id="addByChallenge"
+                    [(ngModel)]="addChallengesByValue" value="challenge">
+                <label class="form-check-label" for="addByChallenge">
+                    By challenge
+                </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="addByRadio" id="addByTag" value="tag"
+                    [(ngModel)]="addChallengesByValue">
+                <label class="form-check-label" for="addByTag">
+                    By tag
+                </label>
+            </div>
+
+            @if (gamesResource.value()?.length)
+            {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="addByRadio" id="addByGame" value="game"
+                    [(ngModel)]="addChallengesByValue">
+                <label class="form-check-label" for="addByGame">
+                    By game
+                </label>
+            </div>
+            }
+        </div>
+
+        @if (addChallengesByValue() === "challenge")
+        {
+        <alert type="success">
+            <strong>NOTE:</strong> To be available in the Practice Area, a challenge's game must be in Practice Mode.
+        </alert>
+        <select class="form-control" [(ngModel)]="selectedChallenge">
+            @for (challenge of challenges(); track challenge.id)
+            {
+            <option [ngValue]="challenge">{{ challenge.name }} ({{ challenge.game.name }})</option>
+            }
+        </select>
+        }
+        @else if (addChallengesByValue() === "tag")
+        {
+        <select class="form-control" [(ngModel)]="selectedTag">
+            @for (tag of tags(); track tag)
+            {
+            <option [ngValue]="tag">{{ tag }}</option>
+            }
+        </select>
+        }
+        @else if (addChallengesByValue() === "game")
+        {
+        <select class="form-control" [(ngModel)]="selectedGame">
+            @for (game of gamesResource.value(); track game.id)
+            {
+            <option [ngValue]="game">{{ game.name }}</option>
+            }
+        </select>
+        }
+    </app-modal-content>
+</ng-template>
+
+<ng-template #addChildGroupModal>
+    <app-challenge-group-upsert-dialog [group]="creatingChildGroup()"
+        (saved)="handleGroupSaved()"></app-challenge-group-upsert-dialog>
+</ng-template>
+
+<ng-template #editGroupModal>
+    <app-challenge-group-upsert-dialog [group]="editingGroup()!"
+        (saved)="handleGroupSaved()"></app-challenge-group-upsert-dialog>
+</ng-template>
+
+<ng-template #childGroupChallenges let-context>
+    <div class="group-challenges-header d-flex align-items-center mt-5">
+        <img [src]="context.group.imageUrl | challengeGroupCardImage" alt="{{ context.group.name }} header image"
+            class="mr-2">
+        <h5>{{ context.isThisGroup ? "In this collection" : context.group.name }}</h5>
+    </div>
+
+    @if (context.group.challenges.length)
+    {
+    <table class="table gameboard-table">
+        <thead>
+            <th class="challenge-title-cell">Challenge</th>
+            <th>Times Launched/Completed</th>
+            <th>Last Launch</th>
+            <th>
+                <!--Delete button and stuff-->
+            </th>
+        </thead>
+
+        <tbody>
+            @for (challenge of context.group.challenges; track challenge.id)
+            {
+            <tr>
+                <td class="challenge-title-cell">{{ challenge.name }}</td>
+                <td>{{ challenge.countLaunched }} / {{ challenge.countCompleted }}</td>
+                <td>{{ challenge.lastLaunched | friendlyDateAndTime }}</td>
+                <td>
+                    <button type="button" class="btn btn-danger"
+                        (click)="handleOpenRemoveChallengeModal(context.group.id, challenge)">Remove</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    }
+    @else
+    {
+    <div class="text-center text-muted my-4">
+        This subcollection doesn't have any challenges.
+    </div>
+    }
+</ng-template>

@@ -1,0 +1,43 @@
+<app-error-div [errors]="errors"></app-error-div>
+
+<div class="controls-container d-flex justify-content-end">
+    <button type="button" class="btn btn-success" (click)="handleOpenCreateDialog()">
+        <fa-icon [icon]="fa.plus"></fa-icon>
+        Add Collection
+    </button>
+</div>
+
+@if (existingGroupsResource.isLoading())
+{
+<app-spinner>Loading challenge groups...</app-spinner>
+}
+@else if (!existingGroups()?.length)
+{
+<hr>
+<div class="text-muted text-center my-4">
+    No collections yet. Hit the "Add Collection" button to start structuring your challenges into handy
+    collections!
+</div>
+}
+
+<div class="practice-content-container my-4 d-flex">
+    @for (group of existingGroups(); track group.id)
+    {
+    <app-challenge-group-card [challengeGroup]="group">
+        <div class="d-flex gap-2">
+            <a role="button" class="btn btn-success d-block" [routerLink]="['group', group.id]">
+                View
+            </a>
+            <button type="button" class="btn btn-success" (click)="handleOpenEditDialog(group)">
+                Edit
+            </button>
+            <button type="button" class="btn btn-danger" (click)="handleOpenDeleteDialog(group)">Delete</button>
+        </div>
+    </app-challenge-group-card>
+    }
+</div>
+
+<ng-template #upsertGroupModal>
+    <app-challenge-group-upsert-dialog [group]="editGroup()"
+        (saved)="handleGroupSaved($event)"></app-challenge-group-upsert-dialog>
+</ng-template>

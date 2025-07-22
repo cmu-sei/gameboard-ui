@@ -98,6 +98,10 @@ import { StatusLightComponent } from '@/core/components/status-light/status-ligh
 import { ConsoleTileComponent } from '@cmusei/console-forge';
 import { PracticeObserveComponent } from './practice/practice-observe/practice-observe.component';
 import { ObserveViewComponent } from './components/observe-view/observe-view.component';
+import { PracticeContentComponent } from './practice/practice-content/practice-content.component';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
+import { ChallengeGroupComponent } from './practice/challenge-group/challenge-group.component';
+import { ChallengeGroupListComponent } from './practice/challenge-group-list/challenge-group-list.component';
 
 @NgModule({
   declarations: [
@@ -193,9 +197,18 @@ import { ObserveViewComponent } from './components/observe-view/observe-view.com
           },
           {
             path: "practice", component: PracticeComponent, children: [
+              {
+                path: "content",
+                component: PracticeContentComponent,
+                title: "Practice Content",
+                children: [
+                  { path: "", component: ChallengeGroupListComponent, title: "Practice Content", pathMatch: "full" },
+                  { path: "group/:id", component: ChallengeGroupComponent, title: "Challenge Group" }
+                ]
+              },
               { path: "settings", component: PracticeSettingsComponent, title: "Practice Settings" },
               { path: "observe", component: PracticeObserveComponent, title: "Practice Observe" },
-              { path: "", pathMatch: "full", redirectTo: "settings" },
+              { path: "", pathMatch: "full", redirectTo: "content" },
             ]
           },
           { path: 'registrar/sponsors', component: SponsorBrowserComponent, title: "Sponsors | Admin" },
@@ -233,6 +246,7 @@ import { ObserveViewComponent } from './components/observe-view/observe-view.com
     MarkdownPlaceholderPipe,
     ObserveViewComponent,
     PackageUploadComponent,
+    PluralizerPipe,
     SafeUrlPipe,
     SessionExtensionGameEndWarningComponent,
     SpinnerComponent,

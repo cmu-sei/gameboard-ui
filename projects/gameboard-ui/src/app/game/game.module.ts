@@ -43,6 +43,7 @@ import { GameSessionAvailabilityWarningComponent } from "./components/game-sessi
 import { CountdownPipe } from '@/core/pipes/countdown.pipe';
 import { VmLinkComponent } from '@/standalone/games/components/vm-link/vm-link.component';
 import { ConsoleIdToUrlPipe } from '@/consoles/pipes/console-id-to-url.pipe';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 const MODULE_DECLARATIONS = [
   ContinueToGameboardButtonComponent,
@@ -90,6 +91,7 @@ const MODULE_DECLARATIONS = [
     CountdownPipe,
     ErrorDivComponent,
     FeedbackSubmissionFormComponent,
+    PluralizerPipe,
     SafeUrlPipe,
     SpinnerComponent,
     FeedbackSubmissionFormComponent,

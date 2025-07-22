@@ -62,6 +62,8 @@ import { DoughnutChartComponent } from '@/core/components/doughnut-chart/doughnu
 import { LineChartComponent } from '@/core/components/line-chart/line-chart.component';
 import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
 import { ReportKey } from './reports-models';
+import { RelativeImagePipe } from '@/core/pipes/relative-image.pipe';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 @NgModule({
   declarations: [
@@ -142,6 +144,8 @@ import { ReportKey } from './reports-models';
     FeedbackSubmissionFormComponent,
     IsNumberPipe,
     LineChartComponent,
+    PluralizerPipe,
+    RelativeImagePipe,
     SpinnerComponent,
     ThemeBgDirective,
   ],

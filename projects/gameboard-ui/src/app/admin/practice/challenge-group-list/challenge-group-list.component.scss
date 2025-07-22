@@ -1,0 +1,11 @@
+.practice-content-container {
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+app-challenge-group-card {
+  display: block;
+  height: auto;
+  flex: 0 0 30%;
+}

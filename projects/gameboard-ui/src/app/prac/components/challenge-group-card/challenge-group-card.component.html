@@ -1,0 +1,20 @@
+<div class="card">
+    @if (challengeGroup().isFeatured)
+    {
+    <div class="card-header">
+        Featured
+    </div>
+    }
+
+    <img [src]="challengeGroup().imageUrl | challengeGroupCardImage" class="card-img-top"
+        [alt]="challengeGroup().name + ' cover image'">
+
+    <div class="card-body">
+        <h4 class="card-title overflow-ellipsis">{{ challengeGroup().name }}</h4>
+        <p class="card-text" [innerHTML]="challengeGroup().description | markdown | async"></p>
+    </div>
+
+    <div class="card-footer">
+        <ng-content></ng-content>
+    </div>
+</div>

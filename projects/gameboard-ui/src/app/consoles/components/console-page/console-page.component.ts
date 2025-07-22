@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, effect, HostListener, inject, model, signal, Signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, inject, model, signal, Signal, viewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from "@angular/core/rxjs-interop";
 import { ConsoleComponent, ConsoleComponentConfig, ConsoleConnectionStatus } from "@cmusei/console-forge";
-import { DateTime } from 'luxon';
 import { interval, map } from 'rxjs';
 import { UserActivityListenerComponent } from '../user-activity-listener/user-activity-listener.component';
 import { ConsolesService } from '@/api/consoles.service';
@@ -47,6 +46,12 @@ export class ConsolePageComponent implements AfterViewInit {
   private readonly consoleIsConnected = signal<boolean>(false);
   protected readonly consoleIsViewOnly = model<boolean>(false);
   protected readonly enableActivityListener = toSignal(this.route.queryParamMap.pipe(map(qps => qps?.get("l") === "true")));
+
+  // NOTE: this query param doesn't solely dictate whether the user can interact with the console - they still have to have logical permission to do that
+  // (expressed in the "isViewOnly" property of the response from the API below). This param just forces view-only even if the user _could_
+  // interact with this console otherwise (say, if they opened it from the admin observe mode, but it's their own console they're observing.) This forces
+  // the user to intentionally interact with a player-facing console in order to start messing with it.
+  protected readonly forceViewOnly = toSignal(this.route.queryParamMap.pipe(map(qps => qps?.get("viewOnly") === "true")));
 
   // we have to wrap the value in an RXJS timer thing to get it to count down correctly (we should maybe reevaluate the countdown pipe)
   private _expiresAtTimestamp?: number;
@@ -104,7 +109,7 @@ export class ConsolePageComponent implements AfterViewInit {
     const consoleState = consoleData.consoleState;
 
     this.title.set(`${consoleState.id.name} :: Console${consoleData.isViewOnly ? ' [view only]' : ''}`);
-    this.consoleIsViewOnly.update(() => consoleData.isViewOnly);
+    this.consoleIsViewOnly.update(() => !!this.forceViewOnly() || consoleData.isViewOnly);
     this._expiresAtTimestamp = consoleData.expiresAt?.toMillis();
 
     this.consoleConfig.update(() => ({

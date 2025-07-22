@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, Subject, firstValueFrom, startWith, switchMap } from 'rxjs';
 import { AdminViewSystemNotification } from '@/system-notifications/system-notifications.models';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { CreateEditSystemNotificationModalComponent, CreatedEditSystemNotificationModalContext } from '../create-edit-system-notification-modal/create-edit-system-notification-modal.component';
+import { CreateEditSystemNotificationModalComponent } from '../create-edit-system-notification-modal/create-edit-system-notification-modal.component';
 import { SystemNotificationsService } from '@/system-notifications/system-notifications.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
 
 @Component({
-    selector: 'app-notifications',
-    templateUrl: './admin-system-notifications.component.html',
-    styleUrls: ['./admin-system-notifications.component.scss'],
-    providers: [UnsubscriberService],
-    standalone: false
+  selector: 'app-notifications',
+  templateUrl: './admin-system-notifications.component.html',
+  styleUrls: ['./admin-system-notifications.component.scss'],
+  providers: [UnsubscriberService],
+  standalone: false
 })
 export class AdminSystemNotificationsComponent implements OnInit {
   private _forceLoad$ = new Subject<boolean>();

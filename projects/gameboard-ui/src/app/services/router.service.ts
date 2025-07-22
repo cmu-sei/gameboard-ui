@@ -1,13 +1,12 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, } from '@angular/core';
 import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
-import { Subscription, filter } from 'rxjs';
+import { filter } from 'rxjs';
 import { ReportKey } from '@/reports/reports-models';
 import { PlayerMode } from '@/api/player-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/../tools/functions";
 import { GameCenterTab } from '@/admin/components/game-center/game-center.models';
-import { SimpleEntity } from '@/api/models';
 import { ObjectService } from './object.service';
 
 export interface QueryParamsUpdate {
@@ -16,9 +15,7 @@ export interface QueryParamsUpdate {
 }
 
 @Injectable({ providedIn: 'root' })
-export class RouterService implements OnDestroy {
-  private _navEndSub?: Subscription;
-
+export class RouterService {
   constructor(
     private config: ConfigService,
     private localUser: LocalUser,
@@ -143,7 +140,7 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.parseUrl(`/support/tickets/${highlightTicketKey}`));
   }
 
-  public buildVmConsoleUrl(challengeId: string, vmName: string, isPractice = false) {
+  public buildVmConsoleUrl(challengeId: string, vmName: string, enableActivityListener = false, forceViewOnly = false) {
     if (!vmName || !challengeId) {
       throw new Error(`Can't launch a VM console without a challengeId.`);
     }
@@ -153,7 +150,8 @@ export class RouterService implements OnDestroy {
         fullscreen: true,
         challengeId,
         console: vmName,
-        l: isPractice ? true : undefined
+        l: enableActivityListener ? true : undefined,
+        viewOnly: forceViewOnly ? true : undefined
       }
     });
   }
@@ -229,9 +227,5 @@ export class RouterService implements OnDestroy {
 
   private buildAppUrlWithQueryParams(queryParams: any, ...urlBits: string[]) {
     return this.router.createUrlTree([this.config.basehref || "", ...urlBits], { queryParams: { ...queryParams } });
-  }
-
-  ngOnDestroy(): void {
-    this._navEndSub?.unsubscribe();
   }
 }

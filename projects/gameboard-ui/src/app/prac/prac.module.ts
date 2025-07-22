@@ -57,6 +57,7 @@ import { UserPracticeSummaryComponent } from './components/user-practice-summary
     ErrorDivComponent,
     InfoBubbleComponent,
     PlayComponent,
+    PluralizerPipe,
     SpinnerComponent,
     ToPracticeCertificateLinkPipe,
     UserPracticeSummaryComponent

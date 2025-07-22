@@ -2,8 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BoardGame } from '@/api/board-models';
-import { Game } from '@/api/game-models';
 import { fa } from '@/services/font-awesome.service';
 
 export type GameCardGame = {
@@ -16,10 +14,10 @@ export type GameCardGame = {
 }
 
 @Component({
-    selector: 'app-game-card',
-    templateUrl: './game-card.component.html',
-    styleUrls: ['./game-card.component.scss'],
-    standalone: false
+  selector: 'app-game-card',
+  templateUrl: './game-card.component.html',
+  styleUrls: ['./game-card.component.scss'],
+  standalone: false
 })
 export class GameCardComponent {
   @Input() game?: GameCardGame;

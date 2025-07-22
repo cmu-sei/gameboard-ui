@@ -1,6 +1,5 @@
 import { ConsoleId } from '@/api/consoles.models';
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { UrlTree } from '@angular/router';
 import { RouterService } from '@/services/router.service';
 
 @Pipe({ name: 'consoleIdToUrl' })

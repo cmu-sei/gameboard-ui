@@ -1,0 +1,101 @@
+<svg width="331" height="240" viewBox="0 0 331 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Glowing effects -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="strongGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Gradient for background -->
+    <radialGradient id="bgGradient" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="331" height="240" fill="url(#bgGradient)"/>
+  
+  <!-- Main circuit traces -->
+  <path d="M 20 60 L 120 60 L 120 20 L 200 20 L 200 80 L 280 80" 
+        stroke="#00ff41" stroke-width="2" fill="none" filter="url(#glow)"/>
+  
+  <path d="M 50 120 L 150 120 L 150 180 L 250 180 L 250 140 L 310 140" 
+        stroke="#ff0080" stroke-width="2" fill="none" filter="url(#glow)"/>
+  
+  <path d="M 10 200 L 80 200 L 80 160 L 160 160 L 160 220 L 320 220" 
+        stroke="#0080ff" stroke-width="1.5" fill="none" filter="url(#glow)"/>
+  
+  <!-- Vertical traces -->
+  <line x1="60" y1="10" x2="60" y2="100" stroke="#00ff41" stroke-width="1" filter="url(#glow)"/>
+  <line x1="180" y1="40" x2="180" y2="200" stroke="#ff0080" stroke-width="1" filter="url(#glow)"/>
+  <line x1="270" y1="60" x2="270" y2="180" stroke="#0080ff" stroke-width="1" filter="url(#glow)"/>
+  
+  <!-- Circuit nodes/junctions -->
+  <circle cx="120" cy="60" r="4" fill="#00ff41" filter="url(#strongGlow)"/>
+  <circle cx="200" cy="20" r="3" fill="#00ff41" filter="url(#strongGlow)"/>
+  <circle cx="200" cy="80" r="4" fill="#00ff41" filter="url(#strongGlow)"/>
+  
+  <circle cx="150" cy="120" r="4" fill="#ff0080" filter="url(#strongGlow)"/>
+  <circle cx="250" cy="180" r="3" fill="#ff0080" filter="url(#strongGlow)"/>
+  <circle cx="250" cy="140" r="4" fill="#ff0080" filter="url(#strongGlow)"/>
+  
+  <circle cx="80" cy="200" r="3" fill="#0080ff" filter="url(#strongGlow)"/>
+  <circle cx="160" cy="160" r="4" fill="#0080ff" filter="url(#strongGlow)"/>
+  
+  <!-- Microchip rectangles -->
+  <rect x="90" y="45" width="30" height="15" fill="#1a1a1a" stroke="#00ff41" stroke-width="1" rx="2"/>
+  <rect x="170" y="105" width="25" height="12" fill="#1a1a1a" stroke="#ff0080" stroke-width="1" rx="2"/>
+  <rect x="40" y="185" width="20" height="10" fill="#1a1a1a" stroke="#0080ff" stroke-width="1" rx="1"/>
+  <rect x="220" y="125" width="35" height="20" fill="#1a1a1a" stroke="#ff0080" stroke-width="1" rx="2"/>
+  
+  <!-- Chip pins -->
+  <rect x="85" y="47" width="5" height="2" fill="#00ff41"/>
+  <rect x="85" y="50" width="5" height="2" fill="#00ff41"/>
+  <rect x="85" y="53" width="5" height="2" fill="#00ff41"/>
+  <rect x="125" y="47" width="5" height="2" fill="#00ff41"/>
+  <rect x="125" y="50" width="5" height="2" fill="#00ff41"/>
+  <rect x="125" y="53" width="5" height="2" fill="#00ff41"/>
+  
+  <!-- Capacitor symbols -->
+  <g transform="translate(140, 40)">
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#ffff00" stroke-width="2"/>
+    <line x1="3" y1="-5" x2="3" y2="5" stroke="#ffff00" stroke-width="2"/>
+    <circle cx="1.5" cy="0" r="8" fill="none" stroke="#ffff00" stroke-width="0.5" opacity="0.3"/>
+  </g>
+  
+  <g transform="translate(300, 100)">
+    <line x1="0" y1="-4" x2="0" y2="4" stroke="#ff0080" stroke-width="1.5"/>
+    <line x1="2" y1="-4" x2="2" y2="4" stroke="#ff0080" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Additional small traces and details -->
+  <path d="M 25 90 L 45 90 L 45 110 L 65 110" stroke="#00ff41" stroke-width="0.8" fill="none" opacity="0.7"/>
+  <path d="M 190 45 L 210 45 L 210 65" stroke="#0080ff" stroke-width="0.8" fill="none" opacity="0.7"/>
+  <path d="M 260 195 L 290 195 L 290 165" stroke="#ff0080" stroke-width="0.8" fill="none" opacity="0.7"/>
+  
+  <!-- Small connection dots -->
+  <circle cx="45" cy="90" r="1.5" fill="#00ff41" opacity="0.8"/>
+  <circle cx="65" cy="110" r="1.5" fill="#00ff41" opacity="0.8"/>
+  <circle cx="210" cy="45" r="1.5" fill="#0080ff" opacity="0.8"/>
+  <circle cx="290" cy="195" r="1.5" fill="#ff0080" opacity="0.8"/>
+  
+  <!-- Grid pattern overlay -->
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#333333" stroke-width="0.3" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="331" height="240" fill="url(#grid)"/>
+</svg>

@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UserPracticeSummary } from '@/prac/practice.models';
+import { CreatePracticeChallengeGroupRequest, PracticeChallengeGroupDto, ListChallengeGroupsResponse, ListChallengeGroupsResponseGroup, PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UpdateChallengeGroupRequest, UserPracticeSummary, GetPracticeChallengeGroupResponse, PracticeChallengeView, ListChallengesRequest, ChallengesAddToGroupRequest, ChallengesAddToGroupResponse } from '@/prac/practice.models';
 import { LogService } from './log.service';
-import { GameCardContext } from '@/api/game-models';
+import { toFormData } from '../../tools/object-tools.lib';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
@@ -45,12 +45,43 @@ export class PracticeService {
     return this._isEnabled$.value!;
   }
 
-  public listGames(): Observable<GameCardContext[]> {
-    return this.http.get<GameCardContext[]>(this.apiUrl.build('/practice/games'));
+  public async challengeGroupCreate(request: CreatePracticeChallengeGroupRequest): Promise<PracticeChallengeGroupDto> {
+    const asFormData = toFormData(request, "request");
+    return await firstValueFrom(this.http.post<PracticeChallengeGroupDto>(this.apiUrl.build("practice/challenge-group"), asFormData));
   }
 
-  public searchChallenges(request: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {
-    return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', { ...request.filter, userProgress: request.userProgress }));
+  public challengeGroupDelete(id: string): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(this.apiUrl.build(`practice/challenge-group/${id}`)));
+  }
+
+  public async challengeGroupGet(id: string): Promise<GetPracticeChallengeGroupResponse> {
+    return await firstValueFrom(this.http.get<GetPracticeChallengeGroupResponse>(this.apiUrl.build(`practice/challenge-group/${id}`)));
+  }
+
+  public async challengeGroupList(): Promise<ListChallengeGroupsResponseGroup[]> {
+    const response = await firstValueFrom(this.http.get<ListChallengeGroupsResponse>(this.apiUrl.build("practice/challenge-group/list")));
+    return response.groups;
+  }
+
+  public async challengeGroupUpdate(request: UpdateChallengeGroupRequest): Promise<PracticeChallengeGroupDto> {
+    const asFormData = toFormData(request, "request");
+    return await firstValueFrom(this.http.put<PracticeChallengeGroupDto>(this.apiUrl.build("practice/challenge-group"), asFormData));
+  }
+
+  public async challengesAddToGroup(challengeGroupId: string, request: ChallengesAddToGroupRequest): Promise<ChallengesAddToGroupResponse> {
+    return await firstValueFrom(this.http.post<ChallengesAddToGroupResponse>(this.apiUrl.build(`practice/challenge-group/${challengeGroupId}/challenges`), request));
+  }
+
+  public async challengesRemoveFromGroup(request: { challengeGroupId: string, challengeSpecIds: string[] }): Promise<void> {
+    return await firstValueFrom(this.http.delete<void>(this.apiUrl.build(`practice/challenge-group/${request.challengeGroupId}/challenges`), { body: { challengeSpecIds: request.challengeSpecIds } }));
+  }
+
+  public challengesList(request?: ListChallengesRequest): Promise<PracticeChallengeView[]> {
+    return firstValueFrom(this.http.get<PracticeChallengeView[]>(this.apiUrl.build("practice/challenge/list", request)));
+  }
+
+  public searchChallenges(request?: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {
+    return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', { ...request?.filter, userProgress: request?.userProgress }));
   }
 
   private async updateIsEnabled() {

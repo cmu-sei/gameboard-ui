@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 
 @Component({
-    selector: 'app-spinner',
-    imports: [CommonModule],
-    template: `
+  selector: 'app-spinner',
+  imports: [CommonModule],
+  template: `
     <div class="spinner-component">
       <div>
         <ng-container *ngIf="textPosition() === 'top'">
@@ -16,7 +16,7 @@ import { Component, input } from '@angular/core';
 
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
           y="0px" attr.width="{{ size() === 'small' ? 56 : 108}}px" height="132px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;"
-          xml:space="preserve" [class.default-theme]="!color">
+          xml:space="preserve" [class.default-theme]="!color()">
           <rect x="0" y="10" width="4" height="10" [attr.fill]="color()" opacity="0.2">
             <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.9s"
               repeatCount="indefinite" />
@@ -53,10 +53,10 @@ import { Component, input } from '@angular/core';
       <h1><ng-content></ng-content></h1>
     </ng-template>
   `,
-    styles: [
-        ".spinner-component { display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; margin: 0 auto; }",
-        "h1 { font-size: 0.85rem !important; font-weight: bold; text-transform: uppercase; }"
-    ]
+  styles: [
+    ".spinner-component { display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; margin: 0 auto; }",
+    "h1 { font-size: 0.85rem !important; font-weight: bold; text-transform: uppercase; }"
+  ]
 })
 export class SpinnerComponent {
   public color = input<string>("#41ad57");

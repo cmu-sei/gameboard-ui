@@ -1,0 +1,60 @@
+<app-modal-content [title]="upsertGroupForm.value.id ? 'Edit Collection' : 'Create Collection'"
+    [subtitle]="upsertGroupForm.value.id ? (upsertGroupForm.value.name || '') : ''"
+    [confirmDisabled]="!upsertGroupForm.valid" (confirm)="(handleConfirm())">
+    <app-error-div [errors]="errors"></app-error-div>
+
+    <form [formGroup]="upsertGroupForm">
+        <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" formControlName="name" required appAutofocus
+                placeholder="Enter a name for your practice challenge group (like &quot;Threat Analysis&quot;)">
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" formControlName="description"
+                [placeholder]="'Enter a description for the group here.' | markdownPlaceholder" rows="6"></textarea>
+        </div>
+
+        <div class="form-group">
+            <app-whats-this whatItIs="Featured collections are listed prominently in the Practice Area.">
+                <label for="isFeatured" class="form-label">Feature?</label>
+            </app-whats-this>
+            <input class="form-check" type="checkbox" formControlName="isFeatured">
+        </div>
+
+        <div class="form-group">
+            <label for="imageUrl" class="form-label">Card Image</label>
+            <div>
+                @if (previewImageUrl())
+                {
+                <img class="preview-group-card-image" [src]="previewImageUrl()" alt="Uploaded image (for group card)">
+                }
+                @else if (isEditing() && !this.previewImageUrl() && this.upsertGroupForm.value.previousImageUrl)
+                {
+                <img class="preview-group-card-image"
+                    [src]="this.upsertGroupForm.value.previousImageUrl | relativeImage">
+                }
+            </div>
+
+            <div class="input-group">
+                <input type="file" class="form-control" accept="image/*" (change)="handleImagePicked($event)">
+                <div class="input-group-append">
+                    <button class="btn btn-warning" (click)="handleRevertToDefaultImage()">Remove</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="parentGroupId" class="form-label">Parent Group</label>
+            <select class="form-control" formControlName="parentGroupId">
+                <option [ngValue]="null">[no parent]</option>
+
+                @for(group of existingGroups(); track group.id)
+                {
+                <option [value]="group.id">{{ group.name }} ({{ group.challengeCount }} challenges)</option>
+                }
+            </select>
+        </div>
+    </form>
+</app-modal-content>

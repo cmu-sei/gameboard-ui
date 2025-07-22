@@ -10,6 +10,7 @@ import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { ToastService } from '@/utility/services/toast.service';
 import { FeedbackSubmissionFormComponent } from "../feedback-submission-form/feedback-submission-form.component";
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 interface UpsertFeedbackTemplateForm {
   id: string | null | undefined;
@@ -19,16 +20,17 @@ interface UpsertFeedbackTemplateForm {
 }
 
 @Component({
-    selector: 'app-feedback-template-picker',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FontAwesomeModule,
-        CoreModule,
-        FeedbackSubmissionFormComponent
-    ],
-    templateUrl: './feedback-template-picker.component.html',
-    styleUrls: ['./feedback-template-picker.component.scss']
+  selector: 'app-feedback-template-picker',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    CoreModule,
+    FeedbackSubmissionFormComponent,
+    PluralizerPipe
+  ],
+  templateUrl: './feedback-template-picker.component.html',
+  styleUrls: ['./feedback-template-picker.component.scss']
 })
 export class FeedbackTemplatePickerComponent implements OnInit {
   @Input() labelText?: string;

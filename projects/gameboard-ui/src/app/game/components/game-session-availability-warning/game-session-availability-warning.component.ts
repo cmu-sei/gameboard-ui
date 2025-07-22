@@ -5,16 +5,18 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { interval, startWith } from 'rxjs';
 import { GameSessionAvailibilityResponse } from '@/api/game-models';
 import { CoreModule } from '@/core/core.module';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 @Component({
-    selector: 'app-game-session-availability-warning',
-    imports: [
-        CommonModule,
-        CoreModule,
-    ],
-    providers: [UnsubscriberService],
-    templateUrl: './game-session-availability-warning.component.html',
-    styleUrls: ['./game-session-availability-warning.component.scss']
+  selector: 'app-game-session-availability-warning',
+  imports: [
+    CommonModule,
+    CoreModule,
+    PluralizerPipe,
+  ],
+  providers: [UnsubscriberService],
+  templateUrl: './game-session-availability-warning.component.html',
+  styleUrls: ['./game-session-availability-warning.component.scss']
 })
 export class GameSessionAvailabilityWarningComponent implements OnInit, OnDestroy {
   @Input() game?: { id: string; sessionAvailabilityWarningThreshold?: number };

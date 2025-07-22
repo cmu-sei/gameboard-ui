@@ -1,0 +1,13 @@
+.practice-content-container {
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+app-challenge-group-card {
+  display: block;
+  flex: 0 0 30%;
+}
+
+.preview-group-card-image {
+  max-height: 200px;
+}

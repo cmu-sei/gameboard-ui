@@ -25,6 +25,7 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { GameInfoBubblesComponent } from "../standalone/games/components/game-info-bubbles/game-info-bubbles.component";
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { RelativeImagePipe } from '@/core/pipes/relative-image.pipe';
 
 const components = [
   ClipspanComponent,
@@ -50,8 +51,11 @@ const components = [
     ProgressbarModule,
     RouterModule,
     CoreModule,
+
+    // standalones
     ErrorDivComponent,
     GameInfoBubblesComponent,
+    RelativeImagePipe,
     SpinnerComponent
   ],
 })

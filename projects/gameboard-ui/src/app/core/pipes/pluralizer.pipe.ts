@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-    name: 'pluralizer',
-    standalone: false
-})
+@Pipe({ name: 'pluralizer' })
 export class PluralizerPipe implements PipeTransform {
   transform(label: string, count: number = 0, addE: boolean = false): string {
     if (!label)
