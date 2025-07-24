@@ -54,9 +54,11 @@
               }
             },
             "scripts": [
-              "projects/gameboard-ui/src/assets/vendor/vmware-wmks/wmks.min.js",
               "node_modules/marked/marked.min.js",
-              "node_modules/emoji-toolkit/lib/js/joypixels.min.js"
+              "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery-ui-dist/jquery-ui.min.js",
+              "projects/gameboard-ui/src/assets/vendor/vmware-wmks/wmks.min.js"
             ],
             "browser": "projects/gameboard-ui/src/main.ts"
           },
