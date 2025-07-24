@@ -37,6 +37,7 @@
               }
             ],
             "styles": [
+              "projects/gameboard-ui/src/assets/vendor/vmware-wmks/css/main-ui.css",
               "node_modules/toastify-js/src/toastify.css",
               "node_modules/vis-timeline/styles/vis-timeline-graph2d.css",
               "projects/gameboard-ui/src/styles.scss"
@@ -53,6 +54,7 @@
               }
             },
             "scripts": [
+              "projects/gameboard-ui/src/assets/vendor/vmware-wmks/wmks.min.js",
               "node_modules/marked/marked.min.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js"
             ],

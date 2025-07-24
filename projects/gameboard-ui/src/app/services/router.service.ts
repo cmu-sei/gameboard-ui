@@ -142,7 +142,7 @@ export class RouterService {
       throw new Error(`Can't launch a VM console without a challengeId.`);
     }
 
-    return this.router.createUrlTree(["c", "console"], {
+    return this.router.createUrlTree([this.config.basehref, "c", "console"], {
       queryParams: {
         fullscreen: true,
         challengeId,
