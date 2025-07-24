@@ -45,6 +45,7 @@ import { UserPracticeSummaryComponent } from './components/user-practice-summary
       {
         path: "", component: PracticePageComponent, children: [
           { path: ":specId/:slug", component: PracticeSessionComponent },
+          { path: ":specId", component: PracticeSessionComponent },
           { path: "", pathMatch: 'full', component: PracticeChallengeListComponent }
         ]
       }

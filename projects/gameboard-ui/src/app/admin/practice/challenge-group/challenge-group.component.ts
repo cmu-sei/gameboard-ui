@@ -17,6 +17,8 @@ import { GameService } from '@/api/game.service';
 import { PlayerMode } from '@/api/player-models';
 import { SimpleEntity } from '@/api/models';
 import { ToastService } from '@/utility/services/toast.service';
+import { ErrorDivComponent } from "@/standalone/core/components/error-div/error-div.component";
+import { PracticeChallengeUrlPipe } from '@/prac/pipes/practice-challenge-url.pipe';
 
 @Component({
   selector: 'app-challenge-group',
@@ -25,8 +27,11 @@ import { ToastService } from '@/utility/services/toast.service';
     ChallengeGroupCardComponent,
     ChallengeGroupCardImagePipe,
     ChallengeGroupUpsertDialogComponent,
+    ErrorDivComponent,
     PluralizerPipe,
+    PracticeChallengeUrlPipe,
     SpinnerComponent,
+    ErrorDivComponent
   ],
   templateUrl: './challenge-group.component.html',
   styleUrl: './challenge-group.component.scss'
@@ -45,7 +50,8 @@ export class ChallengeGroupComponent {
   protected readonly addChildGroupModalTemplate = viewChild<TemplateRef<any>>("addChildGroupModal");
   protected readonly editGroupModalTemplate = viewChild<TemplateRef<any>>("editGroupModal");
 
-  protected readonly challengesResource = resource({ loader: async () => this.practiceService.challengesList() });
+  protected readonly challengesResource = resource({ loader: () => this.practiceService.challengesList() });
+  protected readonly challengeTagsResource = resource({ loader: () => this.practiceService.challengeTagsList() });
   protected readonly gamesResource = resource({
     loader: async () => {
       return firstValueFrom(this.gamesService.list().pipe(
@@ -78,15 +84,12 @@ export class ChallengeGroupComponent {
   });
   protected readonly creatingChildGroup = computed(() => ({ parentGroupId: this.group()?.id }));
   protected readonly editingGroup = signal<UpsertChallengeGroup | undefined>(undefined);
+  protected errors: any[] = [];
   protected readonly fa = fa;
   protected readonly group = computed(() => this.groupResource.value()?.group);
   protected readonly selectedChallenge = model<PracticeChallengeView>();
   protected readonly selectedGame = model<SimpleEntity>();
   protected readonly selectedTag = model<string>();
-  protected readonly tags = computed(() => {
-    const settings = this.settingsResource.value();
-    return settings?.suggestedSearches?.sort() || [];
-  });
 
   constructor() {
     // need to update the title based on the groupResource
@@ -110,9 +113,9 @@ export class ChallengeGroupComponent {
       }
     });
     effect(() => {
-      const tags = this.tags();
-      if (tags.length) {
-        this.selectedTag.update(() => tags[0]);
+      const tagsResponse = this.challengeTagsResource.value();
+      if (tagsResponse?.challengeTags.length) {
+        this.selectedTag.update(() => tagsResponse.challengeTags![0].tag);
       }
     });
   }
@@ -136,8 +139,13 @@ export class ChallengeGroupComponent {
     }
 
     const addedSpecIds = await this.practiceService.challengesAddToGroup(this.groupId()!, addChallengesRequest);
-    this.toasts.showMessage(`Added **${addedSpecIds.addedChallengeSpecIds.length} challenges** to the **${this.group()?.name || ""}** group.`);
-    this.groupResource.reload();
+
+    if (addedSpecIds.addedChallengeSpecIds.length) {
+      this.toasts.showMessage(`Added **${addedSpecIds.addedChallengeSpecIds.length}** challenge(s) to the **${this.group()?.name || ""}** group.`);
+      this.groupResource.reload();
+    } else {
+      this.errors.push("No challenges were added. A challenge can only appear in a collection once, so if the challenge(s) you added are already present, this is normal.");
+    }
   }
 
   protected handleOpenAddSubCollectionModal() {
@@ -172,14 +180,20 @@ export class ChallengeGroupComponent {
       bodyContent: `Are you sure you want to delete the collection **${group.name}**?${childGroupsText}\n\nChallenges in the collection will still be available in the Practice Area.`,
       renderBodyAsMarkdown: true,
       onConfirm: async () => {
-        await this.practiceService.challengeGroupDelete(group.id);
+        try {
+          this.errors = [];
+          await this.practiceService.challengeGroupDelete(group.id);
 
-        if (group.id === this.groupResource.value()?.group?.id) {
-          // if the deleted group is this page's group, return to the group list screen
-          this.router.navigateByUrl("/admin/practice/content");
-        } else {
-          // otherwise, just reload
-          this.groupResource.reload();
+          if (group.id === this.groupResource.value()?.group?.id) {
+            // if the deleted group is this page's group, return to the group list screen
+            this.router.navigateByUrl("/admin/practice/content");
+          } else {
+            // otherwise, just reload
+            this.groupResource.reload();
+          }
+        }
+        catch (err) {
+          this.errors.push(err);
         }
       }
     });
@@ -207,8 +221,14 @@ export class ChallengeGroupComponent {
       subtitle: this.groupResource.value()?.group?.name,
       bodyContent: `Remove **${challenge.name}** from this collection? (It'll still be available in the Practice Area.)`,
       onConfirm: async () => {
-        await this.practiceService.challengesRemoveFromGroup({ challengeGroupId: groupId, challengeSpecIds: [challenge.id] });
-        this.groupResource.reload();
+        try {
+          this.errors = [];
+          await this.practiceService.challengesRemoveFromGroup({ challengeGroupId: groupId, challengeSpecIds: [challenge.id] });
+          this.groupResource.reload();
+        }
+        catch (err) {
+          this.errors.push(err);
+        }
       },
       confirmButtonText: "Remove",
       renderBodyAsMarkdown: true

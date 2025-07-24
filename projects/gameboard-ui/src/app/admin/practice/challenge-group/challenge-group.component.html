@@ -35,6 +35,8 @@
     </div>
 
     <div class="main-content">
+        <app-error-div [errors]="errors"></app-error-div>
+
         <!--Can only have subcollections (child groups) if this group has no parent-->
         @if (canAddSubCollections())
         {
@@ -88,12 +90,7 @@
         }
 
         <div class="challenges">
-            <h4>
-                Challenges
-                {{ groupResource.value().group.challenges.length ? " (" + groupResource.value().group.challenges.length
-                + ")" : ""
-                }}
-            </h4>
+            <h4>Challenges</h4>
 
             @if (groupResource.value().group.challenges.length)
             {
@@ -174,9 +171,11 @@
         @else if (addChallengesByValue() === "tag")
         {
         <select class="form-control" [(ngModel)]="selectedTag">
-            @for (tag of tags(); track tag)
+            @for (tag of challengeTagsResource.value()?.challengeTags; track tag.tag)
             {
-            <option [ngValue]="tag">{{ tag }}</option>
+            <option [ngValue]="tag.tag">
+                {{ tag.tag }} ({{ tag.challengeCount }} {{ "challenge" | pluralizer: tag.challengeCount}})
+            </option>
             }
         </select>
         }
@@ -206,7 +205,10 @@
     <div class="group-challenges-header d-flex align-items-center mt-5">
         <img [src]="context.group.imageUrl | challengeGroupCardImage" alt="{{ context.group.name }} header image"
             class="mr-2">
-        <h5>{{ context.isThisGroup ? "In this collection" : context.group.name }}</h5>
+        <h5>
+            {{ context.isThisGroup ? "In this collection" : context.group.name }}
+            ({{ context.group.challenges.length }})
+        </h5>
     </div>
 
     @if (context.group.challenges.length)
@@ -225,7 +227,14 @@
             @for (challenge of context.group.challenges; track challenge.id)
             {
             <tr>
-                <td class="challenge-title-cell">{{ challenge.name }}</td>
+                <td class="challenge-title-cell">
+                    <div>
+                        <a target="_blank" [routerLink]="challenge | practiceChallengeUrl">
+                            {{ challenge.name }}
+                        </a>
+                    </div>
+                    <div class="text-muted">{{ challenge.game.name }}</div>
+                </td>
                 <td>{{ challenge.countLaunched }} / {{ challenge.countCompleted }}</td>
                 <td>{{ challenge.lastLaunched | friendlyDateAndTime }}</td>
                 <td>

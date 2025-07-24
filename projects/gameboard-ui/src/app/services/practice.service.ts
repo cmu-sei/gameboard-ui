@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { CreatePracticeChallengeGroupRequest, PracticeChallengeGroupDto, ListChallengeGroupsResponse, ListChallengeGroupsResponseGroup, PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UpdateChallengeGroupRequest, UserPracticeSummary, GetPracticeChallengeGroupResponse, PracticeChallengeView, ListChallengesRequest, ChallengesAddToGroupRequest, ChallengesAddToGroupResponse } from '@/prac/practice.models';
+import { CreatePracticeChallengeGroupRequest, PracticeChallengeGroupDto, ListChallengeGroupsResponse, ListChallengeGroupsResponseGroup, PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UpdateChallengeGroupRequest, UserPracticeSummary, GetPracticeChallengeGroupResponse, PracticeChallengeView, ListChallengesRequest, ChallengesAddToGroupRequest, ChallengesAddToGroupResponse, ChallengeTagsListResponse } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { toFormData } from '../../tools/object-tools.lib';
 
@@ -78,6 +78,10 @@ export class PracticeService {
 
   public challengesList(request?: ListChallengesRequest): Promise<PracticeChallengeView[]> {
     return firstValueFrom(this.http.get<PracticeChallengeView[]>(this.apiUrl.build("practice/challenge/list", request)));
+  }
+
+  public challengeTagsList(): Promise<ChallengeTagsListResponse> {
+    return firstValueFrom(this.http.get<ChallengeTagsListResponse>(this.apiUrl.build("practice/challenge-tags")));
   }
 
   public searchChallenges(request?: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {

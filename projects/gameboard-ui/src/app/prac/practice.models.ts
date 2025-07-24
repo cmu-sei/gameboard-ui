@@ -12,6 +12,15 @@ export interface ChallengesAddToGroupResponse {
     addedChallengeSpecIds: string[];
 }
 
+export interface ChallengeTagsListResponse {
+    challengeTags: ChallengeTagsListResponseTag[];
+}
+
+export interface ChallengeTagsListResponseTag {
+    tag: string;
+    challengeCount: number;
+}
+
 export interface CreatePracticeChallengeGroupRequest {
     name: string;
     description: string;
@@ -29,6 +38,7 @@ export interface GetPracticeChallengeGroupResponse {
 export interface GetPracticeChallengeGroupResponseChallenge {
     id: string;
     name: string;
+    game: SimpleEntity;
     countCompleted: number;
     countLaunched: number;
     lastLaunched?: DateTime;

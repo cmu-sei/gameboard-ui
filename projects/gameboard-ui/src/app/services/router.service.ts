@@ -23,16 +23,6 @@ export class RouterService {
     public route: ActivatedRoute,
     private router: Router) { }
 
-  public getCurrentPathBase(): string {
-    const urlTree = this.router.parseUrl(this.router.url);
-    urlTree.queryParams = {};
-    return urlTree.toString();
-  }
-
-  public getCurrentQueryParams(): Params {
-    return this.route.queryParams;
-  }
-
   public goHome(): void {
     this.router.navigateByUrl("/");
   }
@@ -88,6 +78,13 @@ export class RouterService {
     return this.buildAppUrlWithQueryParams(params, "practice");
   }
 
+  public getPracticeChallengeUrl(challenge: { id: string; name?: string }) {
+    if (challenge.name) {
+      return this.router.createUrlTree(["practice", challenge.id, slug(challenge.name)]).toString();
+    }
+    return this.router.createUrlTree(["practice", challenge.id]).toString();
+  }
+
   public getProfileUrl() {
     return this.router.createUrlTree(["user", "profile"]).toString();
   }
@@ -120,8 +117,8 @@ export class RouterService {
     return this.router.navigateByUrl("/user/certificates/practice");
   }
 
-  public toPracticeChallenge(challengeSpec: { id: string, name: string }) {
-    return this.router.navigateByUrl(`/practice/${challengeSpec.id}/${slug(challengeSpec.name)}`);
+  public toPracticeChallenge(challengeSpec: { id: string; name?: string }) {
+    return this.router.navigateByUrl(this.getPracticeChallengeUrl(challengeSpec));
   }
 
   public toCertificatePrintable(mode: PlayerMode, challengeSpecOrGameId: string) {
