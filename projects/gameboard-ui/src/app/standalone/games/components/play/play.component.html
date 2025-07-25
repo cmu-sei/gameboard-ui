@@ -190,13 +190,13 @@
 <ng-template #vmsDeployed>
     @if (consoles().length)
     {
-    <ul *ngIf="consoles().length" class="d-flex flex-wrap consoles-container">
+    <ul *ngIf="consoles().length" class="d-flex flex-wrap consoles-container mb-4">
         @for (console of consoles(); track console.linkUrl)
         {
         <li>
-            <cf-console-tile [config]="console.config"
-                (reconnectRequest)="handleConsoleTileReconnectRequest()"></cf-console-tile>
             <a [href]="console.linkUrl" target="_blank">
+                <cf-console-tile [config]="console.config"
+                    (reconnectRequest)="handleConsoleTileReconnectRequest()"></cf-console-tile>
                 <p class="console-label">{{ console.name }}</p>
             </a>
         </li>

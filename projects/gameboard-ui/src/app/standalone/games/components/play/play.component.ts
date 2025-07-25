@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, signal, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
@@ -61,6 +61,7 @@ export class PlayComponent implements OnChanges {
 
   private readonly appConfigService = inject(ConfigService);
   private readonly consolesService = inject(ConsolesService);
+  private readonly document = inject(DOCUMENT);
 
   protected challenge: UserActiveChallenge | null = null;
   protected consoles = signal<PlayConsole[]>([]);
