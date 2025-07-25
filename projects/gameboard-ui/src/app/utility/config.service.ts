@@ -18,6 +18,14 @@ export class ConfigService {
   private url = environment.settingsJson;
   private restorationComplete = false;
 
+  // console forge defaults if unspecified
+  public static defaultConsoleForgeConfig = {
+    consoleBackgroundStyle: "rgb(0, 0, 0)",
+    defaultConsoleClientType: "vmware" as ConsoleClientType,
+    logThreshold: LogLevel.DEBUG,
+    showBrowserNotificationsOnConsoleEvents: true
+  };
+
   basehref = '';
   environment: Environment = environment;
   local: LocalAppSettings = {};
@@ -130,23 +138,17 @@ export class ConfigService {
 
   load(): Observable<EnvironmentSettings> {
     // console forge defaults if unspecified
-    const defaultConsoleForgeConfig = {
-      consoleBackgroundStyle: "rgb(0, 0, 0)",
-      defaultConsoleClientType: "vmware" as ConsoleClientType,
-      logThreshold: LogLevel.DEBUG,
-      showBrowserNotificationsOnConsoleEvents: true
-    };
 
     if (!environment.settingsJson) {
       return of({
-        consoleForgeConfig: defaultConsoleForgeConfig
+        consoleForgeConfig: ConfigService.defaultConsoleForgeConfig
       } as EnvironmentSettings);
     }
 
     return this.http.get<EnvironmentSettings>(this.basehref + this.url)
       .pipe(
         catchError((err: Error) => {
-          return of({ consoleForgeConfig: defaultConsoleForgeConfig } as EnvironmentSettings);
+          return of({ consoleForgeConfig: ConfigService.defaultConsoleForgeConfig } as EnvironmentSettings);
         }),
         tap(s => {
           if (!s || Object.keys(s).length == 0) {
@@ -154,7 +156,7 @@ export class ConfigService {
           }
           if (s) {
             this.environment.settings = {
-              consoleForgeConfig: defaultConsoleForgeConfig,
+              consoleForgeConfig: ConfigService.defaultConsoleForgeConfig,
               ...this.environment.settings,
               ...s
             };
