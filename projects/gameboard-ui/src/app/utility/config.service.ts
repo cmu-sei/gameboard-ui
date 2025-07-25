@@ -129,22 +129,24 @@ export class ConfigService {
   }
 
   load(): Observable<EnvironmentSettings> {
+    // console forge defaults if unspecified
+    const defaultConsoleForgeConfig = {
+      consoleBackgroundStyle: "rgb(0, 0, 0)",
+      defaultConsoleClientType: "vmware",
+      logThreshold: LogLevel.DEBUG,
+      showBrowserNotificationsOnConsoleEvents: true
+    };
+
     if (!environment.settingsJson) {
       return of({
-        // console forge defaults if unspecified
-        consoleForgeConfig: {
-          consoleBackgroundStyle: "rgb(0, 0, 0)",
-          defaultConsoleClientType: "vmware",
-          logThreshold: LogLevel.DEBUG,
-          showBrowserNotificationsOnConsoleEvents: true
-        }
+        consoleForgeConfig: defaultConsoleForgeConfig
       } as EnvironmentSettings);
     }
 
     return this.http.get<EnvironmentSettings>(this.basehref + this.url)
       .pipe(
         catchError((err: Error) => {
-          return of({} as EnvironmentSettings);
+          return of({ consoleForgeConfig: defaultConsoleForgeConfig } as EnvironmentSettings);
         }),
         tap(s => {
           if (!s || Object.keys(s).length == 0) {

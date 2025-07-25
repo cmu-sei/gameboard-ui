@@ -8,29 +8,33 @@ import { ExportBatchesComponent } from '../export-batches/export-batches.compone
 import { GameHubService } from '@/services/signalR/game-hub.service';
 import { SupportHubService } from '@/services/signalR/support-hub.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';
+import { Environment } from 'projects/gameboard-ui/src/environments/environment-typed';
 
 type SystemAdminTab = "permissions" | "export" | "debug";
 
 @Component({
-    selector: 'app-system-admin',
-    imports: [
-        CommonModule,
-        CoreModule,
-        AdminRolesComponent,
-        ExportBatchesComponent
-    ],
-    providers: [UnsubscriberService],
-    templateUrl: './system-admin.component.html',
-    styleUrls: ['./system-admin.component.scss']
+  selector: 'app-system-admin',
+  imports: [
+    CommonModule,
+    CoreModule,
+    AdminRolesComponent,
+    ExportBatchesComponent
+  ],
+  providers: [UnsubscriberService],
+  templateUrl: './system-admin.component.html',
+  styleUrls: ['./system-admin.component.scss']
 })
 export class SystemAdminComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private unsub = inject(UnsubscriberService);
+  private readonly configService = inject(ConfigService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly unsub = inject(UnsubscriberService);
 
-  protected appName = inject(ConfigService).appName;
-  protected gameHubState$ = inject(GameHubService).hubState$;
+  protected readonly appName = inject(ConfigService).appName;
+  protected readonly gameHubState$ = inject(GameHubService).hubState$;
+  protected readonly supportHubState$ = inject(SupportHubService).hubState$;
+
+  protected appConfigSettings?: Environment;
   protected selectedTab: SystemAdminTab = "permissions";
-  protected supportHubState$ = inject(SupportHubService).hubState$;
 
   ngOnInit(): void {
     this.unsub.add(
@@ -38,5 +42,7 @@ export class SystemAdminComponent implements OnInit {
         this.selectedTab = p.tab || "permissions";
       })
     );
+
+    this.appConfigSettings = this.configService.environment;
   }
 }
