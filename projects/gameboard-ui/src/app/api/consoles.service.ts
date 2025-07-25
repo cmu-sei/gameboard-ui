@@ -26,7 +26,13 @@ export class ConsolesService {
   }
 
   logUserActivity(consoleId: ConsoleId, eventType: ConsoleUserActivityType): Promise<ConsoleUserActivityResponse> {
-    return firstValueFrom(this.http.post<ConsoleUserActivityResponse>(this.apiUrl.build("consoles/active"), consoleId));
+    return firstValueFrom(this.http.post<ConsoleUserActivityResponse>(this.apiUrl.build("consoles/active"), consoleId).pipe(map(r => {
+      if (r.sessionExpiresAt) {
+        r.sessionExpiresAt = this.apiDates.toDateTime(r.sessionExpiresAt.toString()) || r.sessionExpiresAt;
+      }
+
+      return r;
+    })));
   }
 
   setConsoleActiveUser(consoleId: ConsoleId) {
