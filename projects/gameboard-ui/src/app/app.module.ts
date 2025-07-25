@@ -75,11 +75,7 @@ import { MessageBoardComponent } from './utility/components/message-board/messag
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
       deps: [ConfigService, LogService, UserService],
     },
-    provideConsoleForge(environment.settings.consoleForgeConfig || {
-      consoleBackgroundStyle: "rgb(0, 0, 0)",
-      defaultConsoleClientType: "vmware",
-      showBrowserNotificationsOnConsoleEvents: true
-    }),
+    provideConsoleForge(environment.settings.consoleForgeConfig),
     provideMarkdown({
       markedOptions: {
         provide: MARKED_OPTIONS,

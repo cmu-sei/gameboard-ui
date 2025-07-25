@@ -11,6 +11,7 @@ import { Location, PlatformLocation } from '@angular/common';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { LogService } from '../services/log.service';
 import { Environment, EnvironmentSettings } from '../../environments/environment-typed';
+import { LogLevel } from '@cmusei/console-forge';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
@@ -129,7 +130,15 @@ export class ConfigService {
 
   load(): Observable<EnvironmentSettings> {
     if (!environment.settingsJson) {
-      return of({} as EnvironmentSettings);
+      return of({
+        // console forge defaults if unspecified
+        consoleForgeConfig: {
+          consoleBackgroundStyle: "rgb(0, 0, 0)",
+          defaultConsoleClientType: "vmware",
+          logThreshold: LogLevel.DEBUG,
+          showBrowserNotificationsOnConsoleEvents: true
+        }
+      } as EnvironmentSettings);
     }
 
     return this.http.get<EnvironmentSettings>(this.basehref + this.url)
