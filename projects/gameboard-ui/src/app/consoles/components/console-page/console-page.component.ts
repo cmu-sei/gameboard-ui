@@ -87,7 +87,8 @@ export class ConsolePageComponent implements AfterViewInit {
       const response = await this.consolesApi.logUserActivity(this.consoleId()!, ev);
 
       if (response.sessionAutoExtended) {
-        this.toastService.showMessage(`Your session was automatically extended! It now ends at **${this.friendlyDates.toFriendlyDateAndTime(response.sessionExpiresAt)}**.`);
+        this._expiresAtTimestamp = response.sessionExpiresAt.toMillis();
+        this.toastService.showMessage(`Your session was automatically extended! It now ends at **${this.friendlyDates.toFriendlyDateAndTime(response.sessionExpiresAt)}**. Updating your console...`);
       }
     }
   }
