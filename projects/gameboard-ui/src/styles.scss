@@ -64,6 +64,15 @@ li {
 
 /* ... but for markdown we just go with the classics  */
 markdown {
+  // prevent code blocks from ending up in a horizontal overflow pane (and style them a bit)
+  pre {
+    border: solid 1px $foreground;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    white-space: pre-wrap;
+  }
+
   ol,
   ul {
     margin-bottom: 1rem;
