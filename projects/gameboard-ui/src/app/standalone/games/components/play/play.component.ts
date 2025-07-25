@@ -25,6 +25,7 @@ import { ConsoleComponentConfig, ConsoleTileComponent } from '@cmusei/console-fo
 import { VmLinkComponent } from '../vm-link/vm-link.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfigService } from '@/utility/config.service';
+import { ConsoleId } from '@/api/consoles.models';
 
 type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
 interface PlayConsole {
@@ -111,6 +112,11 @@ export class PlayComponent implements OnChanges {
     if (this.autoPlay && this.playerId && this.challengeSpec && this.challengeSpec.id !== changes.challengeSpec?.currentValue) {
       await this.startChallenge({ challengeSpecId: changes.challengeSpec.currentValue.id, playerId: this.playerId });
     }
+  }
+
+  protected async handleConsoleTileReconnectRequest() {
+    const consoleData = await this.buildConsoleData(this.challenge);
+    this.consoles.update(() => consoleData);
   }
 
   protected async deployVms(challengeId: string) {
