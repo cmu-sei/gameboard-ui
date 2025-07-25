@@ -23,10 +23,10 @@
                 <li>Support Hub: <strong>{{ supportHubState$ | async }}</strong></li>
             </ul>
 
-            <h4 class="mt-5">Your client configuration</h4>
+            <h4 class="mt-5">Your console client configuration</h4>
             <pre>
                 <code>
-                    {{ appConfigSettings | json }}
+                    {{ appConfigSettings?.settings?.consoleForgeConfig| json }}
                 </code>
             </pre>
         </tab>
