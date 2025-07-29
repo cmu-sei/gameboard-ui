@@ -18,12 +18,12 @@
 
 <!-- list -->
 <ng-container *ngFor="let item of list$ | async">
-  <div class="card m-2 cursor-pointer" tabindex="0" (click)="select(item)">
+  <div class="card my-3 cursor-pointer" tabindex="0" (click)="select(item)">
     <div class="card-body">
-      <div class="card-title">
+      <div class="card-title font-weight-bold">
         {{ item.name }} ({{ item.gameEngineType | titlecase }})
       </div>
-      <p>{{ item.description }}</p>
+      <p class="m-0 text-muted">{{ item.description || "(no description)" }}</p>
     </div>
   </div>
 </ng-container>

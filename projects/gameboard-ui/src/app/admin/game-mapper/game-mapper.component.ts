@@ -18,10 +18,10 @@ import { ToastService } from '@/utility/services/toast.service';
 import { slug } from 'projects/gameboard-ui/src/tools/functions';
 
 @Component({
-    selector: 'app-game-mapper',
-    templateUrl: './game-mapper.component.html',
-    styleUrls: ['./game-mapper.component.scss'],
-    standalone: false
+  selector: 'app-game-mapper',
+  templateUrl: './game-mapper.component.html',
+  styleUrls: ['./game-mapper.component.scss'],
+  standalone: false
 })
 export class GameMapperComponent {
   @Output() specsUpdated = new EventEmitter<Spec[]>();
@@ -181,7 +181,7 @@ export class GameMapperComponent {
 
     await firstValueFrom(this.api.create(newSpec));
     await this.reloadSpecs();
-    this.toastService.showMessage(`Added challenge ${newSpec.name} to the game.`);
+    this.toastService.showMessage(`Added challenge **${newSpec.name}** to the game.`);
   }
 
   protected async handleSpecDeleteRequested(specId: string) {
