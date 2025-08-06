@@ -5,9 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { ApiModule } from '@/api/api.module';
 import { CoreModule } from '@/core/core.module';
-import { GameModule } from '@/game/game.module';
 import { UtilityModule } from '../utility/utility.module';
 
+import { ChallengeGroupComponent } from './components/challenge-group/challenge-group.component';
+import { ChallengeGroupsComponent } from './components/challenge-groups/challenge-groups.component';
 import { PracticePageComponent } from './components/practice-page/practice-page.component';
 import { PracticeChallengeListComponent } from './components/practice-challenge-list/practice-challenge-list.component';
 import { PracticeSessionComponent } from './components/practice-session/practice-session.component';
@@ -44,13 +45,21 @@ import { UserPracticeSummaryComponent } from './components/user-practice-summary
     RouterModule.forChild([
       {
         path: "", component: PracticePageComponent, children: [
-          { path: ":specId/:slug", component: PracticeSessionComponent },
-          { path: ":specId", component: PracticeSessionComponent },
-          { path: "", pathMatch: 'full', component: PracticeChallengeListComponent }
+          {
+            path: "challenges",
+            children: [
+              { path: ":specId/:slug", component: PracticeSessionComponent },
+              { path: ":specId", component: PracticeSessionComponent },
+              { path: "", pathMatch: "full", component: PracticeChallengeListComponent, title: "Challenges" }
+            ]
+          },
+          { path: "collections/:id", component: ChallengeGroupComponent, title: "Collection" },
+          { path: "collections", component: ChallengeGroupsComponent, title: "Collections" },
+          // catch routes for :specId and :specId/:slug
+          { path: "", pathMatch: 'full', redirectTo: "challenges" }
         ]
       }
     ]),
-    GameModule,
     // standalones
     EpochMsToMsRemainingPipe,
     EpochMsToTimeRemainingStringPipe,

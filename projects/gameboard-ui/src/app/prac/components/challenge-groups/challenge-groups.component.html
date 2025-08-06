@@ -1,0 +1,52 @@
+<div class="container">
+    <h2>Challenge Collections</h2>
+
+    @if(groupsResource.isLoading())
+    {
+    <app-spinner>Loading collections...</app-spinner>
+    }
+    @else if (!groupsResource.value()?.groups?.length)
+    {
+    <!--App logic should hide navigation to this page if no collections exist, but just in case...-->
+    <div class="text-muted text-center my-4">
+        No collections have been created yet. To start learning, you can head to the
+        <a routerLink="/practice/challenges">Practice Area's challenge repository</a> to
+        see what's available!
+    </div>
+    }
+
+    @else
+    {
+    <div class="search-controls d-flex mb-4">
+        <div class="flex-grow-1"></div>
+        <div>
+            <div class="input-group input-group-sm mx-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <fa-icon [icon]="fa.search"></fa-icon>
+                    </span>
+                </div>
+                <input type="search" placeholder="Search collections..." class="form-control border-0"
+                    [value]="searchTerm()" [appQueryParamModel]="{ name: 'searchTerm', debounce: 500 }">
+            </div>
+        </div>
+    </div>
+
+    @if (featuredGroups()?.length)
+    {
+    @for(group of featuredGroups(); track group.id)
+    {
+    <app-challenge-group-user-card [group]="group" class="d-block my-4"></app-challenge-group-user-card>
+    }
+    <hr class="my-2 light">
+    }
+
+    @if (unfeaturedGroups()?.length)
+    {
+    @for(group of unfeaturedGroups(); track group.id)
+    {
+    <app-challenge-group-user-card [group]="group" class="d-block my-4"></app-challenge-group-user-card>
+    }
+    }
+    }
+</div>

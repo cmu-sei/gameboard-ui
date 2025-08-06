@@ -1,0 +1,39 @@
+@if (group())
+{
+<div class="challenge-group-user-card cursor-pointer">
+    @if(group().isFeatured)
+    {
+    <div class="featured-banner text-upper font-weight-bold pl-4 py-2" [routerLink]="routerLink()">
+        Featured
+    </div>
+    }
+
+    <div class="d-flex">
+        <img class="challenge-group-user-card-img cursor-pointer" [src]="group().imageUrl | challengeGroupCardImage"
+            alt="{{ group().name }} logo" [routerLink]="routerLink()">
+        <div class="group-info p-4">
+            <div class="group-name fs-14">
+                <a [routerLink]="routerLink()">
+                    {{group().name}}
+                </a>
+            </div>
+            <div class="group-stats d-flex text-muted text-upper font-weight-bold mb-4">
+                <div>{{ group().challengeCount }} {{ "challenge" | pluralizer:group().challengeCount }}</div>
+                <div class="mx-1">&middot;</div>
+                <div>{{ group().challengePoints }} points</div>
+            </div>
+            <div class="group-description" [innerHTML]="group().description | markdown | async"></div>
+
+            @if(group().tags.length)
+            {
+            <div class="group-tags d-flex flex-wrap my-4 gap-1">
+                @for(tag of group().tags; track tag)
+                {
+                <app-colored-text-chip [text]="tag"></app-colored-text-chip>
+                }
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}

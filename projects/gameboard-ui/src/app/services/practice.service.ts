@@ -1,24 +1,26 @@
 import { GameService } from '@/api/game.service';
 import { PlayerMode } from '@/api/player-models';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { ApiUrlService } from './api-url.service';
-import { CreatePracticeChallengeGroupRequest, PracticeChallengeGroupDto, ListChallengeGroupsResponse, ListChallengeGroupsResponseGroup, PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UpdateChallengeGroupRequest, UserPracticeSummary, GetPracticeChallengeGroupResponse, PracticeChallengeView, ListChallengesRequest, ChallengesAddToGroupRequest, ChallengesAddToGroupResponse, ChallengeTagsListResponse } from '@/prac/practice.models';
+import { CreatePracticeChallengeGroupRequest, PracticeChallengeGroupDto, ListChallengeGroupsResponse, ListChallengeGroupsResponseGroup, PracticeModeSettings, PracticeSession, SearchPracticeChallengesRequest, SearchPracticeChallengesResult, UpdateChallengeGroupRequest, UserPracticeSummary, GetPracticeChallengeGroupResponse, PracticeChallengeView, ListChallengesRequest, ChallengesAddToGroupRequest, ChallengesAddToGroupResponse, ChallengeTagsListResponse, GetUserChallengeGroupsResponse, GetUserChallengeGroupsRequest } from '@/prac/practice.models';
 import { LogService } from './log.service';
 import { toFormData } from '../../tools/object-tools.lib';
+import { ApiDateTimeService } from './api-date-time.service';
+import { UserService } from '@/utility/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
   private _isEnabled$ = new BehaviorSubject<boolean | undefined>(undefined);
   public isEnabled$ = this._isEnabled$.pipe(map(isEnabled => !!isEnabled));
 
-  constructor(
-    private apiUrl: ApiUrlService,
-    private gameService: GameService,
-    private http: HttpClient,
-    private logService: LogService) {
-  }
+  private readonly apiDates = inject(ApiDateTimeService);
+  private readonly apiUrl = inject(ApiUrlService);
+  private readonly localUser = inject(UserService);
+  private readonly gameService = inject(GameService);
+  private readonly http = inject(HttpClient);
+  private readonly logService = inject(LogService);
 
   async gamePlayerModeChanged(playerModeEvent: { gameId: string, isPractice: boolean }) {
     await this.updateIsEnabled();
@@ -103,5 +105,34 @@ export class PracticeService {
     const result = await firstValueFrom(this.http.put(this.apiUrl.build("/practice/settings"), settings));
     await this.updateIsEnabled();
     return result;
+  }
+
+  /**
+   * Get practice challenge groups (called "collections" in user-facing speak.)
+   * Note that this is different than `.challengeGroupsGet` because it's meant to retrieve these groups with the context of the requested user (e.g. their best attempts.)
+   * Used in the player-facing practice area
+   * @param userId The user to be inquired about. Defaults to the authenticated user if a value isn't passed.
+   */
+  public userChallengeGroupsGet(request?: GetUserChallengeGroupsRequest): Promise<GetUserChallengeGroupsResponse> {
+    return firstValueFrom(
+      this.http.get<GetUserChallengeGroupsResponse>(this.apiUrl.build("practice/user/challenge-groups", {
+        groupId: request?.groupId,
+        parentGroupId: request?.parentGroupId,
+        searchTerm: request?.searchTerm,
+        userId: request?.userId || this.localUser.user$.value?.id
+      })).pipe(
+        map(response => {
+          for (const group of response.groups) {
+            for (const challenge of group.challenges) {
+              if (challenge.bestAttempt?.date) {
+                challenge.bestAttempt.date = this.apiDates.toDateTime(challenge.bestAttempt.date.toString()) || challenge.bestAttempt.date;
+              }
+            }
+          }
+
+          return response;
+        })
+      )
+    );
   }
 }

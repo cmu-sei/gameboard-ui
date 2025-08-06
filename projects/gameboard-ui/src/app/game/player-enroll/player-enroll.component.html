@@ -43,7 +43,7 @@
 
           <!-- disclosure -->
           <div *ngIf="ctx.game.registrationMarkdown">
-            <alert type="info">By enrolling in {{ctx.game.name}}, you are accepting the following terms.</alert>
+            <alert type="warning">By enrolling in {{ctx.game.name}}, you are accepting the following terms.</alert>
             <markdown [data]="ctx.game.registrationMarkdown"></markdown>
           </div>
 

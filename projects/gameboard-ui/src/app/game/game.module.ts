@@ -80,7 +80,7 @@ const MODULE_DECLARATIONS = [
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
       { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalGameGuard], component: ExternalGamePageComponent },
       { path: ":gameId/scoreboard", component: ScoreboardPageComponent },
-      { path: ':id', component: GamePageComponent, children: [] }
+      { path: ':id', component: GamePageComponent }
     ]),
     CoreModule,
     UtilityModule,
@@ -91,11 +91,10 @@ const MODULE_DECLARATIONS = [
     CountdownPipe,
     ErrorDivComponent,
     FeedbackSubmissionFormComponent,
+    GameSessionAvailabilityWarningComponent,
     PluralizerPipe,
     SafeUrlPipe,
     SpinnerComponent,
-    FeedbackSubmissionFormComponent,
-    GameSessionAvailabilityWarningComponent,
     VmLinkComponent
   ]
 })

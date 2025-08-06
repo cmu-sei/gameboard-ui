@@ -53,6 +53,47 @@ export interface GetPracticeChallengeGroupResponseGroup {
     challenges: GetPracticeChallengeGroupResponseChallenge[];
 }
 
+export interface GetUserChallengeGroupsRequest {
+    groupId?: string;
+    parentGroupId?: string;
+    searchTerm?: string;
+    userId?: string;
+}
+
+export interface GetUserChallengeGroupsResponse {
+    groups: GetUserChallengeGroupsResponseGroup[];
+}
+
+export interface GetUserChallengeGroupsResponseGroup {
+    id: string;
+    name: string;
+    description: string;
+    challengeCount: number;
+    challengePoints: number;
+    imageUrl?: string;
+    isFeatured: boolean;
+    tags: string[];
+    challenges: GetUserChallengeGroupsResponseChallenge[];
+    childGroups: SimpleEntity[];
+    parentGroup?: SimpleEntity;
+}
+
+export interface GetUserChallengeGroupsResponseChallenge {
+    id: string;
+    name: string;
+    description: string;
+    hasCertificateTemplate: boolean;
+    maxPossibleScore: number;
+    tags: string[];
+    bestAttempt?: GetUserChallengeGroupsResponseChallengeAttempt;
+}
+
+export interface GetUserChallengeGroupsResponseChallengeAttempt {
+    certificateAwarded: boolean;
+    date: DateTime;
+    score: number;
+}
+
 export interface PracticeChallengeGroupDto {
     id: string;
     name: string;
