@@ -3,7 +3,9 @@ import { Component, computed, input } from '@angular/core';
 import { MarkdownPipe } from 'ngx-markdown';
 import { CoreModule } from '@/core/core.module';
 import { ChallengeGroupCardImagePipe } from '@/prac/pipes/challenge-group-card-image.pipe';
-import { GetUserChallengeGroupsResponseGroup } from '@/prac/practice.models';
+import { PracticeChallengeGroupDto } from '@/prac/practice.models';
+import { ListPracticeChallengeGroupsResponseGroup } from '@/prac/models/list-practice-challenge-groups';
+import { UrlTree } from '@angular/router';
 import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 @Component({
@@ -19,7 +21,7 @@ import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
   styleUrl: './challenge-group-user-card.component.scss'
 })
 export class ChallengeGroupUserCardComponent {
-  group = input.required<GetUserChallengeGroupsResponseGroup>();
-
-  protected readonly routerLink = computed(() => `/practice/collections/${this.group().id}`);
+  group = input.required<ListPracticeChallengeGroupsResponseGroup | PracticeChallengeGroupDto>();
+  // just a renaming of RouterLink (if you call this routerLink, Angular interprets this as you wanting to put its RouterLink directive on this component)
+  linkTo = input<string | any[] | UrlTree | null | undefined>();
 }

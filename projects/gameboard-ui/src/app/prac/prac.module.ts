@@ -25,6 +25,7 @@ import { FeedbackSubmissionFormComponent } from "../feedback/components/feedback
 import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 import { ToPracticeCertificateLinkPipe } from './pipes/to-practice-certificate-link.pipe';
 import { UserPracticeSummaryComponent } from './components/user-practice-summary/user-practice-summary.component';
+import { PracticeTabsLayoutComponent } from './components/practice-tabs-layout/practice-tabs-layout.component';
 
 @NgModule({
   declarations: [
@@ -44,19 +45,31 @@ import { UserPracticeSummaryComponent } from './components/user-practice-summary
     MarkdownModule,
     RouterModule.forChild([
       {
+        // the practice page layout adds the little widget in the upper right
+        // that shows the player's active practice challenge
         path: "", component: PracticePageComponent, children: [
           {
-            path: "challenges",
+            // the tabs layout (which shows "challenges" and "collections") is visible
+            // throughout most of the practice area, but we allow the screen where they actually
+            // play to break out of it because it takes advantage of more width if the client
+            // resolution has it
+            path: "",
+            component: PracticeTabsLayoutComponent,
             children: [
-              { path: ":specId/:slug", component: PracticeSessionComponent },
-              { path: ":specId", component: PracticeSessionComponent },
-              { path: "", pathMatch: "full", component: PracticeChallengeListComponent, title: "Challenges" }
+              {
+                path: "challenges",
+                children: [
+                  { path: "", pathMatch: "full", component: PracticeChallengeListComponent, title: "Challenges" }
+                ]
+              },
+              { path: "collections/:id", component: ChallengeGroupComponent, title: "Collection" },
+              { path: "collections", component: ChallengeGroupsComponent, title: "Collections" },
+              { path: "", pathMatch: 'full', redirectTo: "challenges" }
             ]
           },
-          { path: "collections/:id", component: ChallengeGroupComponent, title: "Collection" },
-          { path: "collections", component: ChallengeGroupsComponent, title: "Collections" },
           // catch routes for :specId and :specId/:slug
-          { path: "", pathMatch: 'full', redirectTo: "challenges" }
+          { path: "challenges/:specId/:slug", component: PracticeSessionComponent },
+          { path: "challenges/:specId", component: PracticeSessionComponent },
         ]
       }
     ]),

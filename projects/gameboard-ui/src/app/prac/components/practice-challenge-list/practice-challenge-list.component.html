@@ -1,10 +1,4 @@
 <div class="container">
-    <h1 class="mb-4">Practice Area</h1>
-
-    <p *ngIf="introTextMarkdown" class="mt-4 mb-5">
-        <markdown [data]="introTextMarkdown"></markdown>
-    </p>
-
     <ng-container *ngIf="list$ | async as list; else loading">
         <ng-container *ngIf="!(localUser$ | async)">
             <alert type="warning">

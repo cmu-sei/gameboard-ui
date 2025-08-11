@@ -20,24 +20,18 @@
 </div>
 }
 
-<div class="practice-content-container my-4 d-flex">
+<div class="practice-content-container my-4 ">
     @for (group of existingGroups(); track group.id)
     {
-    <app-challenge-group-card [challengeGroup]="group">
-        <div class="d-flex gap-2">
-            <a role="button" class="btn btn-success d-block" [routerLink]="['group', group.id]">
-                View
-            </a>
-            <button type="button" class="btn btn-success" (click)="handleOpenEditDialog(group)">
-                Edit
-            </button>
-            <button type="button" class="btn btn-danger" (click)="handleOpenDeleteDialog(group)">Delete</button>
-        </div>
-    </app-challenge-group-card>
+    <app-challenge-group-user-card [group]="group"
+        [linkTo]="['/', 'admin', 'practice', 'content', 'collection', group.id]" class="d-block my-4">
+        <app-challenge-group-card-menu [group]="group" (groupDeleted)="handleGroupSaved()"
+            (groupSaved)="handleGroupSaved()" menu-button></app-challenge-group-card-menu>
+    </app-challenge-group-user-card>
     }
 </div>
 
 <ng-template #upsertGroupModal>
     <app-challenge-group-upsert-dialog [group]="editGroup()"
-        (saved)="handleGroupSaved($event)"></app-challenge-group-upsert-dialog>
+        (saved)="handleGroupSaved()"></app-challenge-group-upsert-dialog>
 </ng-template>

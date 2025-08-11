@@ -30,68 +30,7 @@ export interface CreatePracticeChallengeGroupRequest {
 }
 
 export interface GetPracticeChallengeGroupResponse {
-    group: GetPracticeChallengeGroupResponseGroup;
-    parentGroup?: SimpleEntity;
-    childGroups: GetPracticeChallengeGroupResponseGroup[];
-}
-
-export interface GetPracticeChallengeGroupResponseChallenge {
-    id: string;
-    name: string;
-    game: SimpleEntity;
-    countCompleted: number;
-    countLaunched: number;
-    lastLaunched?: DateTime;
-}
-
-export interface GetPracticeChallengeGroupResponseGroup {
-    id: string;
-    name: string;
-    description: string;
-    imageUrl: string;
-    isFeatured: boolean;
-    challenges: GetPracticeChallengeGroupResponseChallenge[];
-}
-
-export interface GetUserChallengeGroupsRequest {
-    groupId?: string;
-    parentGroupId?: string;
-    searchTerm?: string;
-    userId?: string;
-}
-
-export interface GetUserChallengeGroupsResponse {
-    groups: GetUserChallengeGroupsResponseGroup[];
-}
-
-export interface GetUserChallengeGroupsResponseGroup {
-    id: string;
-    name: string;
-    description: string;
-    challengeCount: number;
-    challengePoints: number;
-    imageUrl?: string;
-    isFeatured: boolean;
-    tags: string[];
-    challenges: GetUserChallengeGroupsResponseChallenge[];
-    childGroups: SimpleEntity[];
-    parentGroup?: SimpleEntity;
-}
-
-export interface GetUserChallengeGroupsResponseChallenge {
-    id: string;
-    name: string;
-    description: string;
-    hasCertificateTemplate: boolean;
-    maxPossibleScore: number;
-    tags: string[];
-    bestAttempt?: GetUserChallengeGroupsResponseChallengeAttempt;
-}
-
-export interface GetUserChallengeGroupsResponseChallengeAttempt {
-    certificateAwarded: boolean;
-    date: DateTime;
-    score: number;
+    group: PracticeChallengeGroupDto;
 }
 
 export interface PracticeChallengeGroupDto {
@@ -100,26 +39,32 @@ export interface PracticeChallengeGroupDto {
     description: string;
     imageUrl?: string;
     isFeatured: boolean;
-    parentGroupId?: string;
+    challengeCount: number;
+    challengeMaxScoreTotal: number;
+    challenges: PracticeChallengeGroupDtoChallenge[];
+    tags: string[];
+    parentGroup?: SimpleEntity;
+    childGroups: SimpleEntity[];
+}
+
+export interface PracticeChallengeGroupDtoChallenge {
+    id: string;
+    name: string;
+    game: SimpleEntity;
+    description: string;
+    tags: string[];
+    launchData: PracticeChallengeGroupDtoChallengeLaunchData;
+    maxPossibleScore: number;
+}
+
+export interface PracticeChallengeGroupDtoChallengeLaunchData {
+    countCompletions: number;
+    countLaunches: number;
+    lastLaunch: DateTime;
 }
 
 export interface ListChallengesRequest {
     searchTerm?: string;
-}
-
-export interface ListChallengeGroupsResponse {
-    groups: ListChallengeGroupsResponseGroup[];
-}
-
-export interface ListChallengeGroupsResponseGroup {
-    id: string;
-    name: string;
-    description: string;
-    challengeCount: number;
-    imageUrl?: string;
-    isFeatured: boolean;
-    parentGroupId?: string;
-    childGroups: ListChallengeGroupsResponseGroup[]
 }
 
 export interface UpdateChallengeGroupRequest {

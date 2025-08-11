@@ -6,8 +6,7 @@ import { CoreModule } from '@/core/core.module';
 import { PracticeService } from '@/services/practice.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
-import { ChallengesAddToGroupRequest, GetPracticeChallengeGroupResponseChallenge, GetPracticeChallengeGroupResponseGroup, PracticeChallengeView } from '@/prac/practice.models';
-import { ChallengeGroupCardComponent } from '@/prac/components/challenge-group-card/challenge-group-card.component';
+import { ChallengesAddToGroupRequest, PracticeChallengeGroupDtoChallenge, PracticeChallengeView } from '@/prac/practice.models';
 import { fa } from '@/services/font-awesome.service';
 import { AppTitleService } from '@/services/app-title.service';
 import { ChallengeGroupUpsertDialogComponent, UpsertChallengeGroup } from '../challenge-group-upsert-dialog/challenge-group-upsert-dialog.component';
@@ -19,14 +18,18 @@ import { SimpleEntity } from '@/api/models';
 import { ToastService } from '@/utility/services/toast.service';
 import { ErrorDivComponent } from "@/standalone/core/components/error-div/error-div.component";
 import { PracticeChallengeUrlPipe } from '@/prac/pipes/practice-challenge-url.pipe';
+import { ChallengeGroupUserCardComponent } from '@/prac/components/challenge-group-user-card/challenge-group-user-card.component';
+import { ListPracticeChallengeGroupsResponseGroup } from '@/prac/models/list-practice-challenge-groups';
+import { ChallengeGroupCardMenuComponent } from '../challenge-group-card-menu/challenge-group-card-menu.component';
 
 @Component({
   selector: 'app-challenge-group',
   imports: [
     CoreModule,
-    ChallengeGroupCardComponent,
     ChallengeGroupCardImagePipe,
+    ChallengeGroupCardMenuComponent,
     ChallengeGroupUpsertDialogComponent,
+    ChallengeGroupUserCardComponent,
     ErrorDivComponent,
     PluralizerPipe,
     PracticeChallengeUrlPipe,
@@ -52,6 +55,16 @@ export class ChallengeGroupComponent {
 
   protected readonly challengesResource = resource({ loader: () => this.practiceService.challengesList() });
   protected readonly challengeTagsResource = resource({ loader: () => this.practiceService.challengeTagsList() });
+  protected readonly childGroupsResource = resource({
+    request: () => ({ parentGroupId: this.groupId() }),
+    loader: async req => {
+      if (!req.request.parentGroupId) {
+        return [];
+      }
+
+      return await this.practiceService.challengeGroupList({ parentGroupId: req.request.parentGroupId });
+    }
+  });
   protected readonly gamesResource = resource({
     loader: async () => {
       return firstValueFrom(this.gamesService.list().pipe(
@@ -70,7 +83,7 @@ export class ChallengeGroupComponent {
   protected readonly settingsResource = resource({ loader: () => firstValueFrom(this.practiceService.getSettings()) });
 
   protected readonly addChallengesByValue = model<"challenge" | "game" | "tag">("challenge");
-  protected readonly canAddSubCollections = computed(() => !this.groupResource.value()?.parentGroup);
+  protected readonly canAddSubCollections = computed(() => !this.groupResource.value()?.group.parentGroup);
   protected readonly challenges = computed(() => {
     // the API will reject duplicates, but hide any challenges already in the group
     const challenges = this.challengesResource.value();
@@ -156,7 +169,7 @@ export class ChallengeGroupComponent {
     this.modalService.openTemplate(this.addChildGroupModalTemplate()!);
   }
 
-  protected handleOpenEditCollectionModal(group: GetPracticeChallengeGroupResponseGroup, parentGroupId?: string) {
+  protected handleOpenEditCollectionModal(group: ListPracticeChallengeGroupsResponseGroup, parentGroupId?: string) {
     if (!this.editGroupModalTemplate()) {
       throw new Error("Couldn't resolve the template.");
     }
@@ -172,7 +185,7 @@ export class ChallengeGroupComponent {
     this.modalService.openTemplate(this.editGroupModalTemplate()!);
   }
 
-  protected handleDeleteCollectionModal(group: GetPracticeChallengeGroupResponseGroup, hasChildGroups: boolean) {
+  protected handleDeleteCollectionModal(group: ListPracticeChallengeGroupsResponseGroup, hasChildGroups: boolean) {
     const childGroupsText = !hasChildGroups ? "" : " Its subcollections will also be deleted.";
     this.modalService.openConfirm({
       title: "Delete Collection",
@@ -199,8 +212,13 @@ export class ChallengeGroupComponent {
     });
   }
 
+  protected handleCollectionDeleted() {
+    this.childGroupsResource.reload();
+  }
+
   protected handleGroupSaved() {
     this.groupResource.reload();
+    this.childGroupsResource.reload();
   }
 
   protected handleOpenAddChallengeModal() {
@@ -211,7 +229,7 @@ export class ChallengeGroupComponent {
     this.modalService.openTemplate(this.addChallengeModalTemplate()!);
   }
 
-  protected handleOpenRemoveChallengeModal(groupId: string, challenge: GetPracticeChallengeGroupResponseChallenge) {
+  protected handleOpenRemoveChallengeModal(groupId: string, challenge: PracticeChallengeGroupDtoChallenge) {
     if (!this.groupId()) {
       throw new Error("Can't resolve the groupId.");
     }

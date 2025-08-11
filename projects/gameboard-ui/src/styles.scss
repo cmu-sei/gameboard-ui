@@ -214,6 +214,24 @@ h5 {
   font-weight: 300;
 }
 
+/* BOOTSTRAP GRID STUFF */
+.container {
+  .header-row {
+    border-top: 1px solid $foreground;
+    border-bottom: 1px solid $foreground;
+    font-weight: bold;
+
+    div {
+      padding: 1rem 0;
+    }
+
+    :not(:first-child) {
+      border-left: 1px solid $foreground;
+      padding-left: 1rem;
+    }
+  }
+}
+
 /* TABLE-Y STUFF */
 th[align="right"] {
   text-align: right;

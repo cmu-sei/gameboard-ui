@@ -35,22 +35,22 @@ export class ChallengeGroupsComponent {
       searchTerm: this.searchTerm(),
       userId: this.localUserId()
     }),
-    loader: req => this.practiceService.userChallengeGroupsGet({
+    loader: req => this.practiceService.challengeGroupList({
+      getRootOnly: true,
       searchTerm: req.request.searchTerm,
-      userId: req.request.userId
     })
   });
   protected readonly searchTerm = toSignal(this.route.queryParams.pipe(map(qp => qp.searchTerm || "")));
 
   protected featuredGroups = computed(() => {
     // read signals
-    const featuredGroups = this.groupsResource.value()?.groups.filter(g => g.isFeatured);
+    const featuredGroups = this.groupsResource.value()?.filter(g => g.isFeatured);
     return featuredGroups;
   });
 
   protected unfeaturedGroups = computed(() => {
     // read signals
-    const unfeaturedGroups = this.groupsResource.value()?.groups.filter(g => !g.isFeatured);
+    const unfeaturedGroups = this.groupsResource.value()?.filter(g => !g.isFeatured);
     return unfeaturedGroups;
   });
 }

@@ -80,9 +80,9 @@ export class RouterService {
 
   public getPracticeChallengeUrl(challenge: { id: string; name?: string }) {
     if (challenge.name) {
-      return this.router.createUrlTree(["practice", challenge.id, slug(challenge.name)]).toString();
+      return this.router.createUrlTree(["practice", "challenges", challenge.id, slug(challenge.name)]).toString();
     }
-    return this.router.createUrlTree(["practice", challenge.id]).toString();
+    return this.router.createUrlTree(["practice", "challenges", challenge.id]).toString();
   }
 
   public getProfileUrl() {

@@ -7,66 +7,82 @@
 {
 <div class="container">
     <div class="breadcrumbs mb-4">
-        <a routerLink="/practice/collections">
-            « Back to all challenge collections
-        </a>
+
+        <div>
+            <a routerLink="/practice/collections">
+                « Back to all challenge collections
+            </a>
+        </div>
 
         @if (groupResource.value()?.parentGroup)
         {
-        <a [routerLink]="['practice', 'collections', groupResource.value()!.parentGroup!.id]">
-            « Back to <strong>{{ groupResource.value()!.parentGroup!.name }}</strong>
-        </a>
+        <div>
+            <a [routerLink]="['/', 'practice', 'collections', groupResource.value()!.parentGroup!.id]">
+                « Back to <strong>{{ groupResource.value()!.parentGroup!.name }}</strong>
+            </a>
+        </div>
         }
     </div>
 
     <app-challenge-group-user-card [group]="groupResource.value()!"></app-challenge-group-user-card>
 
+    @if (childGroupsResource.value()?.length)
+    {
+    <h3 class="mt-5">Subcollections</h3>
+    @for(childGroup of childGroupsResource.value(); track childGroup.id)
+    {
+    <app-challenge-group-user-card class="d-block my-4" [group]="childGroup"></app-challenge-group-user-card>
+    }
+    }
+
+    @if (groupResource.value()!.challenges.length)
+    {
     <h3 class="mt-5">Challenges</h3>
 
-    <table class="table gameboard-table challenges-table mt-4">
+    <div class="container mt-4">
+        <div class="row header-row">
+            <div class="col">Challenge</div>
+            <div class="col-2">Best Attempt</div>
+        </div>
 
-        <thead>
-            <tr>
-                <th>Challenge</th>
-                <th class="best-attempt-column">Best Attempt</th>
-            </tr>
-        </thead>
+        @for(challenge of groupResource.value()!.challenges; track challenge.id)
+        {
+        <div class="row challenge-row">
+            <div class="col pl-0">
+                <div class="challenge-info d-flex fs-12">
+                    <a [routerLink]="['/', 'practice', 'challenges', challenge.id]">
+                        {{ challenge.name }}
+                    </a>
+                    <div class="text-muted ml-2">({{ challenge.maxPossibleScore }} points)</div>
+                </div>
+                <div class="challenge-description">{{ challenge.description }}</div>
+                <div class="challenge-tags d-flex gap-2 my-4">
+                    @for(tag of challenge.tags; track tag)
+                    {
+                    <app-colored-text-chip [text]="tag"></app-colored-text-chip>
+                    }
+                </div>
+            </div>
 
-        <tbody>
-            @for(challenge of groupResource.value()!.challenges; track challenge.id)
-            {
-            <tr>
-                <td>
-                    <div class="challenge-info d-flex fs-12">
-                        <a [routerLink]="['/', 'practice', 'challenges', challenge.id]">
-                            {{ challenge.name }}
-                        </a>
-                        <div class="text-muted ml-2">({{ challenge.maxPossibleScore }} points)</div>
-                    </div>
-                    <div class="challenge-description">{{ challenge.description }}</div>
-                    <div class="challenge-tags d-flex gap-2 my-4">
-                        @for(tag of challenge.tags; track tag)
-                        {
-                        <app-colored-text-chip [text]="tag"></app-colored-text-chip>
-                        }
-                    </div>
-                </td>
-                <td class="best-attempt-column">
-                    @if(challenge.bestAttempt)
-                    {
-                    <div class="best-attempt-score">
-                        {{ challenge.bestAttempt.score }} / {{ challenge.maxPossibleScore }} points
-                    </div>
-                    <div class="best-attempt-date">{{ challenge.bestAttempt.date | friendlyDateAndTime}}</div>
-                    }
-                    @else
-                    {
-                    <div class="text-muted">(not attempted)</div>
-                    }
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+            <div class="col-2">
+                <!-- @if(challenge.bestAttempt)
+                {
+                <div class="best-attempt-score font-weight-bold"
+                    [class.text-success]="challenge.bestAttempt.score >= challenge.maxPossibleScore"
+                    [class.text-warning]="challenge.bestAttempt.score < challenge.maxPossibleScore">
+                    {{ challenge.bestAttempt.score }} / {{ challenge.maxPossibleScore }} points
+                </div>
+                <div class="best-attempt-date text-muted">{{ challenge.bestAttempt.date | friendlyDateAndTime}}
+                </div>
+                }
+                @else
+                {
+                <div class="text-muted">(not attempted)</div>
+                } -->
+            </div>
+        </div>
+        }
+    </div>
+    }
 </div>
 }

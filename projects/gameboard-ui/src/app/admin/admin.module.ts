@@ -203,7 +203,7 @@ import { ChallengeGroupListComponent } from './practice/challenge-group-list/cha
                 title: "Practice Content",
                 children: [
                   { path: "", component: ChallengeGroupListComponent, title: "Practice Content", pathMatch: "full" },
-                  { path: "group/:id", component: ChallengeGroupComponent, title: "Challenge Group" }
+                  { path: "collection/:id", component: ChallengeGroupComponent, title: "Challenge Collection" }
                 ]
               },
               { path: "settings", component: PracticeSettingsComponent, title: "Practice Settings" },

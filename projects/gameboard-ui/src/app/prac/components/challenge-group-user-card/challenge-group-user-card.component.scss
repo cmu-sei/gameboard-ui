@@ -2,6 +2,7 @@
 
 .challenge-group-user-card {
   background-color: $body-bg;
+  border: 1px solid $success;
   border-radius: 6px;
 }
 
@@ -16,4 +17,9 @@
   color: $body-color;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
+}
+
+.menu-content-container {
+  top: 0;
+  right: 0;
 }

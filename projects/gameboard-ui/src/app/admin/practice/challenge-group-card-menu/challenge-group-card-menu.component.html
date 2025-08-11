@@ -1,0 +1,32 @@
+<div class="btn-group" dropdown placement="bottom right" menu-button>
+    <button [id]="'context-trigger-basic-' + group().id" dropdownToggle type="button"
+        class="btn ctx-menu-button rounded-circle" aria-controls="dropdown-basic">
+        <fa-icon [icon]="fa.ellipsisVertical" size="2x"></fa-icon>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <li role="menuitem">
+            <a role="button" class="dropdown-item btn"
+                [routerLink]="['/', 'admin', 'practice', 'content', 'collection', group().id]">
+                View
+            </a>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleOpenEditDialog(group())">
+                Edit
+            </button>
+        </li>
+        <li role="divider">
+            <div class="dropdown-divider"></div>
+        </li>
+        <li role="menuitem">
+            <button class="dropdown-item btn" (click)="handleOpenDeleteDialog(group())">
+                Delete
+            </button>
+        </li>
+    </ul>
+</div>
+
+<ng-template #upsertGroupModal>
+    <app-challenge-group-upsert-dialog [group]="editGroup()"
+        (saved)="groupSaved.emit()"></app-challenge-group-upsert-dialog>
+</ng-template>
