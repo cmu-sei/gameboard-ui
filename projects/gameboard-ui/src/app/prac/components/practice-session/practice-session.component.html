@@ -8,6 +8,19 @@
           Back to the <strong>Practice Area</strong>
         </a>
       </li>
+
+      @if (challengeGroupsResource.value()?.length)
+      {
+      @for(group of challengeGroupsResource.value(); track group.id)
+      {
+      <li class="breadcrumb-item">
+        <a class="text-success" [routerLink]="['/practice', 'collections', group.id]">
+          <fa-icon [icon]="fa.arrowLeft"></fa-icon>
+          Back to the <strong>{{ group.name }}</strong> collection
+        </a>
+      </li>
+      }
+      }
     </ol>
   </nav>
 

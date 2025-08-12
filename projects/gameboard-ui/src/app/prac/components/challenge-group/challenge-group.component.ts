@@ -1,4 +1,4 @@
-import { Component, effect, inject, resource } from '@angular/core';
+import { Component, computed, effect, inject, resource } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
@@ -8,13 +8,18 @@ import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.c
 import { AppTitleService } from '@/services/app-title.service';
 import { CoreModule } from '@/core/core.module';
 import { UserService } from '@/utility/user.service';
+import { GetPracticeChallengeGroupsUserDataChallengeAttempt, GetPracticeChallengeGroupsUserDataResponseGroup } from '@/prac/models/get-practice-challenge-groups-user-data';
+import { ToPracticeCertificateLinkPipe } from '@/prac/pipes/to-practice-certificate-link.pipe';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 @Component({
   selector: 'app-challenge-group',
   imports: [
     CoreModule,
     ChallengeGroupUserCardComponent,
-    SpinnerComponent
+    PluralizerPipe,
+    SpinnerComponent,
+    ToPracticeCertificateLinkPipe
   ],
   templateUrl: './challenge-group.component.html',
   styleUrl: './challenge-group.component.scss'
@@ -26,7 +31,7 @@ export class ChallengeGroupComponent {
   private readonly groupId = toSignal(this.route.paramMap.pipe(map(params => params.get("id"))));
   private readonly title = inject(AppTitleService);
 
-  protected childGroupsResource = resource({
+  protected readonly childGroupsResource = resource({
     request: () => ({ groupId: this.groupId() }),
     loader: async req => {
       if (!req.request.groupId) {
@@ -37,7 +42,7 @@ export class ChallengeGroupComponent {
     }
   });
 
-  protected groupResource = resource({
+  protected readonly groupResource = resource({
     request: () => ({ groupId: this.groupId() }),
     loader: async req => {
       if (!req.request.groupId) {
@@ -49,7 +54,7 @@ export class ChallengeGroupComponent {
     }
   });
 
-  protected userDataResource = resource({
+  protected readonly userDataResource = resource({
     request: () => ({ group: this.groupResource.value(), userId: this.localUser.user$.value?.id }),
     loader: async req => {
       if (!req.request.group || !req.request.userId) {
@@ -60,7 +65,40 @@ export class ChallengeGroupComponent {
       const response = await this.practiceService.challengeGroupsGetUserData({ userId: req.request.userId, challengeGroupIds: groupIds });
       return response.groups
     }
-  })
+  });
+
+  protected readonly userChallengeData = computed(() => {
+    const challengeData = new Map<string, GetPracticeChallengeGroupsUserDataChallengeAttempt | undefined>();
+    const userData = this.userDataResource.value();
+
+    if (!userData) {
+      return challengeData;
+    }
+
+    for (const challengeGroup of userData) {
+      for (const challenge of challengeGroup.challenges) {
+        challengeData.set(challenge.id, challenge.bestAttempt);
+      }
+    }
+
+    return challengeData;
+  });
+
+  protected readonly userChallengeGroupData = computed(() => {
+    const userData = this.userDataResource.value();
+    const challengeGroupData = new Map<string, GetPracticeChallengeGroupsUserDataResponseGroup>();
+
+    if (!userData) {
+      return challengeGroupData;
+    }
+
+
+    for (const group of userData) {
+      challengeGroupData.set(group.id, group);
+    }
+
+    return challengeGroupData;
+  });
 
   constructor() {
     effect(() => {

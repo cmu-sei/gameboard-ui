@@ -1,4 +1,5 @@
 <div class="certificate-printer-component">
+    <app-error-div [errors]="errors"></app-error-div>
     <app-spinner *ngIf="isDownloading">Loading your certificate...</app-spinner>
 
     <div class="print-button-container" *ngIf="!isDownloading && isPublished">

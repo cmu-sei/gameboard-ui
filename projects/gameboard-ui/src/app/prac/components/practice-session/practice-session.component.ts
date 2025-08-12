@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, resource, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, combineLatest, firstValueFrom } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
@@ -16,15 +16,16 @@ import { TeamService } from '@/api/team.service';
 import { WindowService } from '@/services/window.service';
 import { UserActiveChallenge } from '@/api/challenges.models';
 import { PracticeChallengeView, PracticeSession } from '@/prac/practice.models';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-practice-session',
-    templateUrl: './practice-session.component.html',
-    styles: [
-        ".container.miniplayer-available { max-width: 1440px }"
-    ],
-    providers: [UnsubscriberService],
-    standalone: false
+  selector: 'app-practice-session',
+  templateUrl: './practice-session.component.html',
+  styles: [
+    ".container.miniplayer-available { max-width: 1440px }"
+  ],
+  providers: [UnsubscriberService],
+  standalone: false
 })
 export class PracticeSessionComponent implements OnInit {
   protected windowWidth$ = this.windowService.resize$;
@@ -38,6 +39,18 @@ export class PracticeSessionComponent implements OnInit {
   protected isStartingSession = false;
   protected practiceSession: PracticeSession | null = null;
   protected showSpecMarkdown = true;
+
+  private readonly challengeSpec: Signal<PracticeChallengeView | undefined>;
+  protected readonly challengeGroupsResource = resource({
+    request: () => ({ challengeSpecId: this.challengeSpec()?.id }),
+    loader: async req => {
+      if (!req.request.challengeSpecId) {
+        return [];
+      }
+
+      return await this.practiceService.challengeGroupList({ containChallengeSpecId: req.request.challengeSpecId });
+    }
+  });
 
   constructor(
     private activeChallengesRepo: ActiveChallengesRepo,
@@ -60,6 +73,7 @@ export class PracticeSessionComponent implements OnInit {
       switchMap(p => practiceService.searchChallenges({ filter: { term: p } })),
       map(r => !r.results.items.length ? ({ name: "Not Found" } as PracticeChallengeView) : r.results.items[0]),
     );
+    this.challengeSpec = toSignal(this.spec$);
 
     this.unsub.add(this.activeChallengesRepo.challengeCompleted$.subscribe(c => this.handleActiveChallengeCompleted(c)));
     this.unsub.add(this.activeChallengesRepo.challengeExpired$.subscribe(c => this.handleActiveChallengeExpired(c)));

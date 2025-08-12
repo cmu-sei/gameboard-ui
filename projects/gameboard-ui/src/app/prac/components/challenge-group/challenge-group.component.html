@@ -24,14 +24,37 @@
         }
     </div>
 
-    <app-challenge-group-user-card [group]="groupResource.value()!"></app-challenge-group-user-card>
+    <app-challenge-group-user-card [group]="groupResource.value()!">
+        @if (userChallengeGroupData().get(groupResource.value()!.id))
+        {
+        <div class="d-flex gap-2" group-stats-line>
+            <div>Your Progress: </div>
+
+            <div class="d-flex text-success">
+                <!--We override the default stat line, which just shows the number of available points and challenges, with the user's data-->
+                <div class="user-challenges-total">
+                    {{ userChallengeGroupData().get(groupResource.value()!.id)?.userData?.challengesCompleteCount }} /
+                    {{ groupResource.value()!.challengeCount }}
+                    {{ "challenge" | pluralizer:groupResource.value()!.challengeCount }}
+                </div>
+                <div class="mx-2">&middot;</div>
+
+                <div>
+                    {{ userChallengeGroupData().get(groupResource.value()!.id)?.userData?.score}} /
+                    {{ groupResource.value()!.challengeMaxScoreTotal }} points
+                </div>
+            </div>
+        </div>
+        }
+    </app-challenge-group-user-card>
 
     @if (childGroupsResource.value()?.length)
     {
     <h3 class="mt-5">Subcollections</h3>
     @for(childGroup of childGroupsResource.value(); track childGroup.id)
     {
-    <app-challenge-group-user-card class="d-block my-4" [group]="childGroup"></app-challenge-group-user-card>
+    <app-challenge-group-user-card class="d-block my-4" [group]="childGroup"
+        [linkTo]="['/', 'practice', 'collections', childGroup.id]"></app-challenge-group-user-card>
     }
     }
 
@@ -65,20 +88,30 @@
             </div>
 
             <div class="col-2">
-                <!-- @if(challenge.bestAttempt)
+                @if(userChallengeData().has(challenge.id) && userChallengeData().get(challenge.id))
                 {
                 <div class="best-attempt-score font-weight-bold"
-                    [class.text-success]="challenge.bestAttempt.score >= challenge.maxPossibleScore"
-                    [class.text-warning]="challenge.bestAttempt.score < challenge.maxPossibleScore">
-                    {{ challenge.bestAttempt.score }} / {{ challenge.maxPossibleScore }} points
+                    [class.text-success]="userChallengeData().get(challenge.id)!.score >= challenge.maxPossibleScore"
+                    [class.text-warning]="userChallengeData().get(challenge.id)!.score < challenge.maxPossibleScore">
+                    {{ userChallengeData().get(challenge.id)!.score }} / {{ challenge.maxPossibleScore }} points
                 </div>
-                <div class="best-attempt-date text-muted">{{ challenge.bestAttempt.date | friendlyDateAndTime}}
+                <div class="best-attempt-date text-muted">
+                    {{ userChallengeData().get(challenge.id)!.date | friendlyDateAndTime}}
                 </div>
+
+                @if (userChallengeData().get(challenge.id)?.certificateAwarded)
+                {
+                <div class="certificate-link mt-4">
+                    <a [routerLink]="challenge.id | toPracticeCertificateLink" target="_blank">
+                        Certificate Awarded
+                    </a>
+                </div>
+                }
                 }
                 @else
                 {
                 <div class="text-muted">(not attempted)</div>
-                } -->
+                }
             </div>
         </div>
         }

@@ -1,6 +1,7 @@
 import { SimpleEntity } from "@/api/models";
 
 export interface ListPracticeChallengeGroupsRequest {
+    containChallengeSpecId?: string;
     getRootOnly?: boolean;
     parentGroupId?: string;
     searchTerm?: string;

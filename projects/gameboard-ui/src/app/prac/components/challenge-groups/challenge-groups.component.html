@@ -36,8 +36,7 @@
     {
     @for(group of featuredGroups(); track group.id)
     {
-    <app-challenge-group-user-card [group]="group" [linkTo]="['/', 'practice', 'collections', group.id]"
-        class="d-block my-4"></app-challenge-group-user-card>
+    <div *ngTemplateOutlet="groupCard; context: { $implicit: group }"></div>
     }
     <hr class="my-2 light">
     }
@@ -46,9 +45,53 @@
     {
     @for(group of unfeaturedGroups(); track group.id)
     {
-    <app-challenge-group-user-card [group]="group" [linkTo]="['/', 'practice', 'collections', group.id]"
-        class="d-block my-4"></app-challenge-group-user-card>
+    <div *ngTemplateOutlet="groupCard; context: { $implicit: group }"></div>
     }
     }
     }
 </div>
+
+<ng-template #groupCard let-group>
+    <app-challenge-group-user-card [group]="group" [linkTo]="['/', 'practice', 'collections', group.id]"
+        class="d-block my-4">
+        @if (localUserId())
+        {
+        <div class="d-flex gap-2" group-stats-line>
+            <!--We override the default stat line, which just shows the number of available points and challenges, with the user's data-->
+            <div>Your Progress:</div>
+            <div class="text-success d-flex">
+                <div class="user-challenges-total">
+                    {{ userDataResource.value()?.get(group.id)?.userData?.challengesCompleteCount }} /
+                    {{ group.challengeCount }}
+                    {{ "challenge" | pluralizer:group.challengeCount }}
+                </div>
+
+                <div class="mx-2">&middot;</div>
+
+                <div>
+                    {{ userDataResource.value()?.get(group.id)?.userData?.score}} /
+                    {{ group.challengeMaxScoreTotal }} points
+                </div>
+            </div>
+        </div>
+        } @else
+        {
+        <!--
+                we really want this to fall back to the default template for the projection slot specified in the component, but 
+                in spite of the fact that the above is wrapped in a conditional, it still seems to override the slot's template
+                (and produce nothing) when the condition fails
+            -->
+        <div class="d-flex" group-stats-line>
+            <!--We override the default stat line, which just shows the number of available points and challenges, with the user's data-->
+            <div class="user-challenges-total">
+                {{ group.challengeCount }}
+                {{ "challenge" | pluralizer:group.challengeCount }}
+            </div>
+
+            <div class="mx-2">&middot;</div>
+
+            <div>{{ group.challengeMaxScoreTotal }} points </div>
+        </div>
+        }
+    </app-challenge-group-user-card>
+</ng-template>

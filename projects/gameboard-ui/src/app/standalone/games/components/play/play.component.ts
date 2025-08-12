@@ -60,7 +60,6 @@ export class PlayComponent implements OnChanges {
 
   private readonly appConfigService = inject(ConfigService);
   private readonly consolesService = inject(ConsolesService);
-  private readonly document = inject(DOCUMENT);
 
   protected challenge: UserActiveChallenge | null = null;
   protected consoles = signal<PlayConsole[]>([]);

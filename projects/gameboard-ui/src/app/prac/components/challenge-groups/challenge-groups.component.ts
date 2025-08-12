@@ -10,6 +10,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fa } from '@/services/font-awesome.service';
 import { CoreModule } from '@/core/core.module';
 import { ActivatedRoute } from '@angular/router';
+import { GetPracticeChallengeGroupsUserDataResponseGroup } from '@/prac/models/get-practice-challenge-groups-user-data';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 @Component({
   selector: 'app-challenge-groups',
@@ -18,13 +20,13 @@ import { ActivatedRoute } from '@angular/router';
     FontAwesomeModule,
     CoreModule,
     ChallengeGroupUserCardComponent,
+    PluralizerPipe,
     SpinnerComponent,
   ],
   templateUrl: './challenge-groups.component.html',
   styleUrl: './challenge-groups.component.scss'
 })
 export class ChallengeGroupsComponent {
-  private readonly localUserId = toSignal(inject(UserService).user$.pipe(map(u => u?.id)));
   private readonly practiceService = inject(PracticeService);
   private readonly route = inject(ActivatedRoute);
 
@@ -40,7 +42,28 @@ export class ChallengeGroupsComponent {
       searchTerm: req.request.searchTerm,
     })
   });
+  protected readonly localUserId = toSignal(inject(UserService).user$.pipe(map(u => u?.id)));
   protected readonly searchTerm = toSignal(this.route.queryParams.pipe(map(qp => qp.searchTerm || "")));
+  protected readonly userDataResource = resource({
+    request: () => ({
+      groupIds: this.groupsResource.value()?.map(g => g.id),
+      userId: this.localUserId()
+    }),
+    loader: async req => {
+      const userData = new Map<string, GetPracticeChallengeGroupsUserDataResponseGroup>();
+
+      if (!req.request.userId || !req.request.groupIds?.length) {
+        return userData;
+      }
+
+      const response = await this.practiceService.challengeGroupsGetUserData({ challengeGroupIds: req.request.groupIds, userId: req.request.userId });
+      for (const group of response.groups) {
+        userData.set(group.id, group);
+      }
+
+      return userData;
+    }
+  });
 
   protected featuredGroups = computed(() => {
     // read signals

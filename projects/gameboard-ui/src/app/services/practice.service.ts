@@ -111,7 +111,7 @@ export class PracticeService {
 
   public challengeGroupsGetUserData(request: GetPracticeChallengeGroupsUserDataRequest): Promise<GetPracticeChallengeGroupsUserDataResponse> {
     return firstValueFrom(
-      this.http.get<GetPracticeChallengeGroupsUserDataResponse>(this.apiUrl.build("practice/challenge-group/user-data", request)).pipe(
+      this.http.get<GetPracticeChallengeGroupsUserDataResponse>(this.apiUrl.build("practice/challenge-group/user-data", request, { arraysToDuplicateKeys: true })).pipe(
         map(response => {
           for (const group of response.groups) {
             for (const challenge of group.challenges) {

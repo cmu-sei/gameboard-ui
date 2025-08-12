@@ -43,6 +43,7 @@ export class ChallengeGroupUpsertDialogComponent {
     image: new FormControl<File | null>(null),
     parentGroupId: new FormControl<string | null>(null),
     previousImageUrl: new FormControl(""),
+    removeImage: new FormControl(false)
   });
   protected existingGroupsResource = resource({ loader: () => this.practiceService.challengeGroupList() });
   protected existingGroups = computed(() => this.existingGroupsResource.value());
@@ -90,7 +91,7 @@ export class ChallengeGroupUpsertDialogComponent {
   }
 
   protected handleRevertToDefaultImage() {
-    this.upsertGroupForm.patchValue({ image: null, previousImageUrl: null });
+    this.upsertGroupForm.patchValue({ image: null, previousImageUrl: null, removeImage: true });
     this.previewImageUrl.update(() => null);
   }
 }

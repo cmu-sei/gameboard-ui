@@ -14,16 +14,17 @@ import { ConfigService } from '@/utility/config.service';
 import { AppTitleService } from '@/services/app-title.service';
 
 @Component({
-    selector: 'app-certificate-printer',
-    templateUrl: './certificate-printer.component.html',
-    styleUrls: ['./certificate-printer.component.scss'],
-    providers: [UnsubscriberService],
-    standalone: false
+  selector: 'app-certificate-printer',
+  templateUrl: './certificate-printer.component.html',
+  styleUrls: ['./certificate-printer.component.scss'],
+  providers: [UnsubscriberService],
+  standalone: false
 })
 export class CertificatePrinterComponent {
   @ViewChild("provideNameModal") provideNameModalTemplate?: TemplateRef<any>;
 
   protected appName = this.configService.appName;
+  protected errors: any[] = [];
   protected isDownloading = false;
   protected isPublished = true;
   protected imageUrl?: SafeUrl;
@@ -71,6 +72,7 @@ export class CertificatePrinterComponent {
   }
 
   protected handlePrintClick() {
+    this.errors = [];
     setTimeout(() => this.windowService.print(), 500);
   }
 
@@ -95,6 +97,7 @@ export class CertificatePrinterComponent {
   }
 
   private async downloadCertificate(providedName?: string) {
+    this.errors = [];
     this.isDownloading = true;
     this.imageUrl = undefined;
     this.title = `${this.viewModel.mode} Certificate | ${this.configService.appName}`;
@@ -109,6 +112,7 @@ export class CertificatePrinterComponent {
       this.imageUrl = await firstValueFrom(this.certificatesService.getCertificateImage(this.viewModel.mode, this.viewModel.userId, this.viewModel.awardedForEntityId, providedName));
     }
     catch (err) {
+      this.errors.push(err);
       this.isPublished = false;
     }
     this.isDownloading = false;

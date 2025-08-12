@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from '../utility/config.service';
 
+export interface BuildQueryModelOptions {
+  arraysToDuplicateKeys?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiUrlService {
   private readonly API_ROOT = `${this.config.apphost}api`;
 
   constructor(private config: ConfigService) { }
 
-  build<TQuery>(relativeUrl: string, queryModel: TQuery | null = null) {
+  build<TQuery>(relativeUrl: string, queryModel: TQuery | null = null, options: BuildQueryModelOptions = { arraysToDuplicateKeys: false }) {
     const finalRelativeUrl = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`;
-    return `${this.API_ROOT}${finalRelativeUrl}${queryModel ? this.objectToQuery(queryModel) : ''}`;
+    return `${this.API_ROOT}${finalRelativeUrl}${queryModel ? this.objectToQuery(queryModel, options) : ''}`;
   }
 
-  objectToQuery<TObject extends { [key: string]: any }>(target: TObject | null | undefined, prependQuestionMark = true): string {
+  objectToQuery<TObject extends { [key: string]: any }>(target: TObject | null | undefined, options: BuildQueryModelOptions = { arraysToDuplicateKeys: false }): string {
     if (!target) {
       return '';
     }
@@ -32,18 +36,18 @@ export class ApiUrlService {
         continue;
       }
 
-      finalParams.push(`${key}=${value}`);
+      if (Array.isArray(value) && options.arraysToDuplicateKeys) {
+        for (const arrayValue of value) {
+          finalParams.push(`${key}=${arrayValue}`);
+        }
+      } else {
+        finalParams.push(`${key}=${value}`);
+      }
     }
 
     if (finalParams.length) {
       const queryString = finalParams.join("&");
-
-      if (prependQuestionMark) {
-        return `?${queryString}`;
-      }
-      else {
-        return queryString;
-      }
+      return `?${queryString}`;
     }
 
     return '';
