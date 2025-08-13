@@ -23,7 +23,10 @@
     }
 </div>
 
-<app-challenge-group-user-card [group]="groupResource.value()!.group"></app-challenge-group-user-card>
+<app-challenge-group-user-card [group]="groupResource.value()!.group">
+    <app-challenge-group-card-menu menu-button [group]="groupResource.value()!.group"
+        (groupDeleted)="handleCollectionDeleted()" (groupSaved)="handleGroupSaved()"></app-challenge-group-card-menu>
+</app-challenge-group-user-card>
 
 @if (canAddSubCollections())
 {

@@ -72,6 +72,7 @@ export class ChallengeGroupCardMenuComponent {
 
     this.editGroup.update(() => ({
       ...group,
+      parentGroupId: group.parentGroup?.id,
       previousImageUrl: group.imageUrl,
     }));
     this.modalService.openTemplate(this.upsertGroupModalTemplate()!);
