@@ -61,7 +61,7 @@ export class PracticeModeReportComponent
 
   // resources
   protected readonly collectionsResource = resource({
-    loader: () => this.practiceService.challengeGroupList({ getRootOnly: true })
+    loader: () => this.reportsService.getPracticeCollections()
   });
 
   constructor(protected reportService: PracticeModeReportService) {
