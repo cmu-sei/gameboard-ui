@@ -204,7 +204,10 @@
         <select class="form-control" [(ngModel)]="selectedGame">
             @for (game of gamesResource.value(); track game.id)
             {
-            <option [ngValue]="game">{{ game.name }}</option>
+            <option [ngValue]="game">
+                {{ game.name }}
+                ({{ game.challengeCount }} {{ "challenge" | pluralizer:game.challengeCount }})
+            </option>
             }
         </select>
         }

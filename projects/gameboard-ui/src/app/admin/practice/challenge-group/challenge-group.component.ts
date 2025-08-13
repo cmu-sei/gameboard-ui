@@ -12,8 +12,6 @@ import { AppTitleService } from '@/services/app-title.service';
 import { ChallengeGroupUpsertDialogComponent, UpsertChallengeGroup } from '../challenge-group-upsert-dialog/challenge-group-upsert-dialog.component';
 import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 import { ChallengeGroupCardImagePipe } from '@/prac/pipes/challenge-group-card-image.pipe';
-import { GameService } from '@/api/game.service';
-import { PlayerMode } from '@/api/player-models';
 import { SimpleEntity } from '@/api/models';
 import { ToastService } from '@/utility/services/toast.service';
 import { ErrorDivComponent } from "@/standalone/core/components/error-div/error-div.component";
@@ -34,14 +32,12 @@ import { ChallengeGroupCardMenuComponent } from '../challenge-group-card-menu/ch
     PluralizerPipe,
     PracticeChallengeUrlPipe,
     SpinnerComponent,
-    ErrorDivComponent
   ],
   templateUrl: './challenge-group.component.html',
   styleUrl: './challenge-group.component.scss'
 })
 export class ChallengeGroupComponent {
   private readonly activeRoute = inject(ActivatedRoute);
-  private readonly gamesService = inject(GameService);
   private readonly groupId = toSignal(this.activeRoute.paramMap.pipe(map(p => p.get("id"))));
   private readonly modalService = inject(ModalConfirmService);
   private readonly practiceService = inject(PracticeService);
@@ -67,13 +63,7 @@ export class ChallengeGroupComponent {
   });
   protected readonly gamesResource = resource({
     loader: async () => {
-      return firstValueFrom(this.gamesService.list().pipe(
-        map(games => games
-          .filter(g => g.playerMode == PlayerMode.practice)
-          .map(g => ({ id: g.id, name: g.name } as SimpleEntity))
-          .sort((a, b) => a.name.localeCompare(b.name))
-        )
-      ));
+      return this.practiceService.gamesList();
     }
   });
   protected readonly groupResource = resource({

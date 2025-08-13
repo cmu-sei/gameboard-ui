@@ -11,6 +11,7 @@ import { ApiDateTimeService } from './api-date-time.service';
 import { UserService } from '@/utility/user.service';
 import { ListPracticeChallengeGroupsRequest, ListPracticeChallengeGroupsResponse, ListPracticeChallengeGroupsResponseGroup } from '@/prac/models/list-practice-challenge-groups';
 import { GetPracticeChallengeGroupsUserDataRequest, GetPracticeChallengeGroupsUserDataResponse } from '@/prac/models/get-practice-challenge-groups-user-data';
+import { ListPracticeGamesResponse, ListPracticeGamesResponseGame } from '@/prac/models/list-practice-games';
 
 @Injectable({ providedIn: 'root' })
 export class PracticeService {
@@ -90,6 +91,14 @@ export class PracticeService {
 
   public challengesSearch(request?: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {
     return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', { ...request?.filter, userProgress: request?.userProgress }));
+  }
+
+  public async gamesList(): Promise<ListPracticeGamesResponseGame[]> {
+    const response = await firstValueFrom(
+      this.http.get<ListPracticeGamesResponse>(this.apiUrl.build("/practice/games"))
+    );
+
+    return response.games;
   }
 
   private async updateIsEnabled() {
