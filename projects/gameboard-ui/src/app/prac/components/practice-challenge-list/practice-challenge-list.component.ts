@@ -14,11 +14,11 @@ import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 
 @Component({
-    selector: 'app-practice-challenge-list',
-    templateUrl: './practice-challenge-list.component.html',
-    styleUrls: ['./practice-challenge-list.component.scss'],
-    providers: [UnsubscriberService],
-    standalone: false
+  selector: 'app-practice-challenge-list',
+  templateUrl: './practice-challenge-list.component.html',
+  styleUrls: ['./practice-challenge-list.component.scss'],
+  providers: [UnsubscriberService],
+  standalone: false
 })
 export class PracticeChallengeListComponent {
   list$: Observable<PracticeChallengeView[]>;
@@ -66,7 +66,7 @@ export class PracticeChallengeListComponent {
         userProgress: queryParams.userProgress
       } as SearchPracticeChallengesRequest)),
       tap(m => this.isLoading = true),
-      switchMap(m => api.searchChallenges(m)),
+      switchMap(m => api.challengesSearch(m)),
       tap(r => {
         this.isLoading = false;
         this.count = r.results.paging.itemCount;

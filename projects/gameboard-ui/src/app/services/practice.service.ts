@@ -88,7 +88,7 @@ export class PracticeService {
     return firstValueFrom(this.http.get<ChallengeTagsListResponse>(this.apiUrl.build("practice/challenge-tags")));
   }
 
-  public searchChallenges(request?: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {
+  public challengesSearch(request?: SearchPracticeChallengesRequest): Observable<SearchPracticeChallengesResult> {
     return this.http.get<SearchPracticeChallengesResult>(this.apiUrl.build('/practice', { ...request?.filter, userProgress: request?.userProgress }));
   }
 
