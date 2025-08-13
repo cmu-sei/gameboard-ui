@@ -36,6 +36,10 @@ export class ReportsService {
     return this.http.get<SimpleEntity[]>(this.apiUrlService.build("/reports/parameter/games"));
   }
 
+  getPracticeCollections(): Promise<SimpleEntity[]> {
+    return firstValueFrom(this.http.get<SimpleEntity[]>(this.apiUrlService.build("/reports/parameter/collections")));
+  }
+
   getSeasons(): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrlService.build("/reports/parameter/seasons"));
   }

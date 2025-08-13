@@ -12,9 +12,17 @@
         <app-multi-select label="Seasons" name="seasons" ngDefaultControl [options]="seasons$ | async"
             [(ngModel)]="seasonsQueryModel"></app-multi-select>
         <app-multi-select label="Games" name="games" ngDefaultControl [options]="games$ | async"
-            [itemTemplate]="multiSelectGame" [value]="getGameValue" [getSearchText]="getGameSearchText"
-            [(ngModel)]="gamesQueryModel">
+            [itemTemplate]="multiSelectSimpleEntity" [value]="getSimpleEntityValue"
+            [getSearchText]="getSimpleEntitySearchText" [(ngModel)]="gamesQueryModel">
         </app-multi-select>
+
+        @if (collectionsResource.value()?.length)
+        {
+        <app-multi-select label="Collections" name="collections" ngDefaultControl [(ngModel)]="collectionsQueryModel"
+            [options]="collectionsResource.value()!" [itemTemplate]="multiSelectSimpleEntity"
+            [value]="getSimpleEntityValue" [getSearchText]="getSimpleEntitySearchText"></app-multi-select>
+        }
+
         <app-parameter-sponsor ngDefaultControl></app-parameter-sponsor>
         <app-parameter-date-range label="Practice Session Date" ngDefaultControl
             [(ngModel)]="practiceDateQueryModel"></app-parameter-date-range>
@@ -48,6 +56,10 @@
     </div>
 </div>
 }
+
+<ng-template #multiSelectSimpleEntity let-option>
+    {{ option.name }}
+</ng-template>
 
 <ng-template #multiSelectGame let-option>
     {{ option.name }}

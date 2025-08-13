@@ -7,20 +7,17 @@
 {
 <div class="container">
     <div class="breadcrumbs mb-4">
-
-        <div>
-            <a routerLink="/practice/collections">
-                « Back to all challenge collections
-            </a>
-        </div>
+        <a routerLink="/practice/collections">
+            « All challenge collections
+        </a>
 
         @if (groupResource.value()?.parentGroup)
         {
-        <div>
-            <a [routerLink]="['/', 'practice', 'collections', groupResource.value()!.parentGroup!.id]">
-                « Back to <strong>{{ groupResource.value()!.parentGroup!.name }}</strong>
-            </a>
-        </div>
+        <span class="mx-2"> / </span>
+        <a [routerLink]="['/', 'practice', 'collections', groupResource.value()!.parentGroup!.id]">
+            <!-- « Back to <strong></strong> -->
+            {{ groupResource.value()!.parentGroup!.name }}
+        </a>
         }
     </div>
 
@@ -79,10 +76,10 @@
                     <div class="text-muted ml-2">({{ challenge.maxPossibleScore }} points)</div>
                 </div>
                 <div class="challenge-description">{{ challenge.description }}</div>
-                <div class="challenge-tags d-flex gap-2 my-4">
+                <div class="challenge-tags d-flex gap-2 my-2">
                     @for(tag of challenge.tags; track tag)
                     {
-                    <app-colored-text-chip [text]="tag"></app-colored-text-chip>
+                    <app-colored-text-chip [text]="tag" size="small"></app-colored-text-chip>
                     }
                 </div>
             </div>

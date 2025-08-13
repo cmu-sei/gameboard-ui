@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, resource } from '@angular/core';
 import { PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters, PracticeModeReportOverallStats } from './practice-mode-report.models';
 import { ReportKey, ReportResults, ReportSponsor } from '@/reports/reports-models';
 import { Observable, firstValueFrom } from 'rxjs';
@@ -8,15 +8,18 @@ import { PracticeModeReportService } from '@/reports/components/reports/practice
 import { DateRangeQueryParamModel } from '@/core/models/date-range-query-param.model';
 import { MultiSelectQueryParamModel } from '@/core/models/multi-select-query-param.model';
 import { ReportSummaryStat } from '../../report-stat-summary/report-stat-summary.component';
+import { PracticeService } from '@/services/practice.service';
 
 @Component({
-    selector: 'app-practice-mode-report',
-    templateUrl: './practice-mode-report.component.html',
-    styleUrls: ['./practice-mode-report.component.scss'],
-    standalone: false
+  selector: 'app-practice-mode-report',
+  templateUrl: './practice-mode-report.component.html',
+  styleUrls: ['./practice-mode-report.component.scss'],
+  standalone: false
 })
 export class PracticeModeReportComponent
   extends ReportComponentBase<PracticeModeReportFlatParameters> {
+  private readonly practiceService = inject(PracticeService);
+
   protected overallStats: ReportSummaryStat[] = [];
   protected games$: Observable<SimpleEntity[]> = this.reportsService.getGames();
   protected seasons$: Observable<string[]> = this.reportsService.getSeasons();
@@ -27,17 +30,24 @@ export class PracticeModeReportComponent
   protected selectedParameters: PracticeModeReportFlatParameters | null = null;
   protected selectedTab: PracticeModeReportGrouping = PracticeModeReportGrouping.challenge;
 
-  protected getGameValue = (g: SimpleEntity) => g.id;
-  protected getGameSearchText = (g: SimpleEntity) => g.name;
+  protected getSimpleEntityValue = (g: SimpleEntity) => g.id;
+  protected getSimpleEntitySearchText = (g: SimpleEntity) => g.name;
   protected getSponsorValue = (s: ReportSponsor) => s.id;
   protected getSponsorSearchText = (s: ReportSponsor) => s.name;
 
   // parameter query models
+  protected collectionsQueryModel = new MultiSelectQueryParamModel<SimpleEntity>({
+    paramName: "collections",
+    options: this.reportsService.getPracticeCollections(),
+    serializer: (value: SimpleEntity) => value.id,
+    deserializer: (value: string, options?: SimpleEntity[]) => options?.find(c => c.id === value) || null
+  });
+
   protected gamesQueryModel: MultiSelectQueryParamModel<SimpleEntity> | null = new MultiSelectQueryParamModel<SimpleEntity>({
     paramName: "games",
     options: firstValueFrom(this.reportsService.getGames()),
     serializer: (value: SimpleEntity) => value.id,
-    deserializer: (value: string, options?: SimpleEntity[]) => options!.find(g => g.id === value) || null
+    deserializer: (value: string, options?: SimpleEntity[]) => options?.find(g => g.id === value) || null
   });
 
   protected practiceDateQueryModel: DateRangeQueryParamModel | null = new DateRangeQueryParamModel({
@@ -48,6 +58,11 @@ export class PracticeModeReportComponent
   protected seasonsQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("seasons");
   protected seriesQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("series");
   protected tracksQueryModel: MultiSelectQueryParamModel<string> | null = MultiSelectQueryParamModel.fromParamName("tracks");
+
+  // resources
+  protected readonly collectionsResource = resource({
+    loader: () => this.practiceService.challengeGroupList({ getRootOnly: true })
+  });
 
   constructor(protected reportService: PracticeModeReportService) {
     super();

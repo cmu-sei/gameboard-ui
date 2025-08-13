@@ -7,19 +7,15 @@
 
 @if (groupResource.hasValue())
 {
-<div class="breadcrumbs">
-    <div class="my-2">
-        <a routerLink="/admin/practice/content">« Back to all challenge collections</a>
-    </div>
+<div class="breadcrumbs my-3">
+    <a routerLink="/admin/practice/content">« All challenge collections</a>
 
     @if (groupResource.value().group.parentGroup)
     {
-    <div class="my-2">
-        <a [routerLink]="['/admin', 'practice', 'content', 'collection', groupResource.value().group.parentGroup?.id]">
-            « Back to
-            <strong>{{ groupResource.value().group.parentGroup?.name }}</strong>
-        </a>
-    </div>
+    <span class="mx-2">/</span>
+    <a [routerLink]="['/admin', 'practice', 'content', 'collection', groupResource.value().group.parentGroup?.id]">
+        {{ groupResource.value().group.parentGroup?.name }}
+    </a>
     }
 </div>
 
