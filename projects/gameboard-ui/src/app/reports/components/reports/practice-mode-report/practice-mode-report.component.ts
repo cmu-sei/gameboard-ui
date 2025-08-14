@@ -1,7 +1,7 @@
 import { Component, inject, resource } from '@angular/core';
+import { Observable, firstValueFrom } from 'rxjs';
 import { PracticeModeReportByChallengeRecord, PracticeModeReportGrouping, PracticeModeReportFlatParameters, PracticeModeReportOverallStats } from './practice-mode-report.models';
 import { ReportKey, ReportResults, ReportSponsor } from '@/reports/reports-models';
-import { Observable, firstValueFrom } from 'rxjs';
 import { SimpleEntity } from '@/api/models';
 import { ReportComponentBase } from '../report-base.component';
 import { PracticeModeReportService } from '@/reports/components/reports/practice-mode-report/practice-mode-report.service';
