@@ -11,6 +11,7 @@ export interface UpsertChallengeGroup {
   id: string;
   name: string;
   description: string;
+  hasChildGroups: boolean;
   isFeatured: boolean;
   previousImageUrl?: string;
   parentGroupId?: string;
@@ -45,8 +46,8 @@ export class ChallengeGroupUpsertDialogComponent {
     previousImageUrl: new FormControl(""),
     removeImage: new FormControl(false)
   });
-  protected existingGroupsResource = resource({ loader: () => this.practiceService.challengeGroupList() });
-  protected existingGroups = computed(() => this.existingGroupsResource.value());
+  protected availableParentGroupsResource = resource({ loader: () => this.practiceService.challengeGroupList({ getRootOnly: true }) });
+  protected availableParentGroups = computed(() => this.availableParentGroupsResource.value());
 
   constructor() {
     effect(() => {
@@ -70,7 +71,7 @@ export class ChallengeGroupUpsertDialogComponent {
         await this.practiceService.challengeGroupCreate(this.upsertGroupForm.value as CreatePracticeChallengeGroupRequest);
         this.saved.emit(this.upsertGroupForm.value as CreatePracticeChallengeGroupRequest);
       }
-      this.existingGroupsResource.reload();
+      this.availableParentGroupsResource.reload();
     }
     catch (err) {
       this.errors.push(err);

@@ -36,6 +36,7 @@
             <div class="text-center">
                 <app-confirm-button btnClass="btn btn-success btn-sm" [tooltip]="extendTooltip"
                     [disabled]="((activeChallenge.endsAt | epochMsToMsRemaining | async) || 0) > msPerHour"
+                    [tooltip]="((activeChallenge.endsAt | epochMsToMsRemaining | async) || 0) > msPerHour ? 'You can manually extend your session when less than an hour remains.' : ''"
                     (confirm)="extendSession(activeChallenge)">
                     Extend Session
                 </app-confirm-button>

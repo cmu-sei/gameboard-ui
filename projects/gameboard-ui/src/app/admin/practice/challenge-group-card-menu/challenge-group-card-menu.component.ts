@@ -43,6 +43,7 @@ export class ChallengeGroupCardMenuComponent {
         id: group.id,
         name: group.name,
         description: group.description,
+        hasChildGroups: !!group.childGroups.length,
         isFeatured: group.isFeatured,
         previousImageUrl: group.imageUrl,
         parentGroupId: group.parentGroup?.id
@@ -72,6 +73,7 @@ export class ChallengeGroupCardMenuComponent {
 
     this.editGroup.update(() => ({
       ...group,
+      hasChildGroups: !!group.childGroups.length,
       parentGroupId: group.parentGroup?.id,
       previousImageUrl: group.imageUrl,
     }));

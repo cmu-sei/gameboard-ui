@@ -10,16 +10,16 @@ import { CoreModule } from '@/core/core.module';
 import { UserService } from '@/utility/user.service';
 import { GetPracticeChallengeGroupsUserDataChallengeAttempt, GetPracticeChallengeGroupsUserDataResponseGroup } from '@/prac/models/get-practice-challenge-groups-user-data';
 import { ToPracticeCertificateLinkPipe } from '@/prac/pipes/to-practice-certificate-link.pipe';
-import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
+import { ChallengeGroupCardUserStatsLineComponent } from "../challenge-group-card-user-stats-line/challenge-group-card-user-stats-line.component";
 
 @Component({
   selector: 'app-challenge-group',
   imports: [
     CoreModule,
     ChallengeGroupUserCardComponent,
-    PluralizerPipe,
     SpinnerComponent,
-    ToPracticeCertificateLinkPipe
+    ToPracticeCertificateLinkPipe,
+    ChallengeGroupCardUserStatsLineComponent
   ],
   templateUrl: './challenge-group.component.html',
   styleUrl: './challenge-group.component.scss'

@@ -167,6 +167,7 @@ export class ChallengeGroupComponent {
     this.editingGroup.update(() => {
       return {
         ...group,
+        hasChildGroups: !!group.childGroups.length,
         parentGroupId: parentGroupId,
         previousImageUrl: group.imageUrl
       };

@@ -12,6 +12,7 @@ import { CoreModule } from '@/core/core.module';
 import { ActivatedRoute } from '@angular/router';
 import { GetPracticeChallengeGroupsUserDataResponseGroup } from '@/prac/models/get-practice-challenge-groups-user-data';
 import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
+import { ChallengeGroupCardUserStatsLineComponent } from "../challenge-group-card-user-stats-line/challenge-group-card-user-stats-line.component";
 
 @Component({
   selector: 'app-challenge-groups',
@@ -20,8 +21,10 @@ import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
     FontAwesomeModule,
     CoreModule,
     ChallengeGroupUserCardComponent,
+    ChallengeGroupCardUserStatsLineComponent,
     PluralizerPipe,
     SpinnerComponent,
+    ChallengeGroupCardUserStatsLineComponent
   ],
   templateUrl: './challenge-groups.component.html',
   styleUrl: './challenge-groups.component.scss'

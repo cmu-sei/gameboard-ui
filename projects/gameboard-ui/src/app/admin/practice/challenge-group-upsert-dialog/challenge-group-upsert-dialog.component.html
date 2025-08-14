@@ -45,16 +45,19 @@
             </div>
         </div>
 
+        @if (!this.group()?.hasChildGroups)
+        {
         <div class="form-group">
             <label for="parentGroupId" class="form-label">Parent Group</label>
             <select class="form-control" formControlName="parentGroupId">
                 <option [ngValue]="null">[no parent]</option>
 
-                @for(group of existingGroups(); track group.id)
+                @for(group of availableParentGroups(); track group.id)
                 {
                 <option [value]="group.id">{{ group.name }} ({{ group.challengeCount }} challenges)</option>
                 }
             </select>
         </div>
+        }
     </form>
 </app-modal-content>
