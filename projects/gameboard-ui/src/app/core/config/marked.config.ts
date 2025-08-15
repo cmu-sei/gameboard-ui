@@ -17,8 +17,6 @@ export function markedOptionsFactory(): MarkedOptions {
     };
 
     renderer.table = (tableTokens: Tokens.Table) => {
-        const rowsRendered: string[] = [];
-
         // Build header row
         const headerRendered = tableTokens.header.map((cell, i) => {
             const align = tableTokens.align[i];
