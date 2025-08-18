@@ -16,7 +16,15 @@
       <li class="breadcrumb-item">
         <a class="text-success" [routerLink]="['/practice', 'collections', group.id]">
           <fa-icon [icon]="fa.arrowLeft"></fa-icon>
-          Back to the <strong>{{ group.name }}</strong> collection
+          Back to the
+          <strong>
+            @if (group.parentGroup)
+            {
+            {{ group.parentGroup.name }}:
+            }
+            {{ group.name }}
+          </strong>
+          collection
         </a>
       </li>
       }

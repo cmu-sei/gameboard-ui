@@ -21,7 +21,8 @@
 
 <app-challenge-group-user-card [group]="groupResource.value()!.group">
     <app-challenge-group-card-menu menu-button [group]="groupResource.value()!.group"
-        (groupDeleted)="handleCollectionDeleted()" (groupSaved)="handleGroupSaved()"></app-challenge-group-card-menu>
+        (groupDeleted)="handleCollectionDeleted($event)"
+        (groupSaved)="handleGroupSaved()"></app-challenge-group-card-menu>
 </app-challenge-group-user-card>
 
 @if (canAddSubCollections())
@@ -54,7 +55,8 @@
         {
         <app-challenge-group-user-card class="d-block my-4" [group]="childGroup"
             [linkTo]="['/', 'admin', 'practice', 'content', 'collection', childGroup.id]">
-            <app-challenge-group-card-menu menu-button [group]="childGroup" (groupDeleted)="handleCollectionDeleted()"
+            <app-challenge-group-card-menu menu-button [group]="childGroup"
+                (groupDeleted)="handleCollectionDeleted($event)"
                 (groupSaved)="handleGroupSaved()"></app-challenge-group-card-menu>
         </app-challenge-group-user-card>
         }
@@ -173,6 +175,50 @@
                 </label>
             </div>
             }
+
+            @if (gamesMetaDataDivisions().length)
+            {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="addByRadio" id="addByGameDivision"
+                    value="gameDivision" [(ngModel)]="addChallengesByValue">
+                <label class="form-check-label" for="addByGameDivision">
+                    By game division
+                </label>
+            </div>
+            }
+
+            @if (gamesMetaDataSeasons().length)
+            {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="addByRadio" id="addByGameSeason" value="gameSeason"
+                    [(ngModel)]="addChallengesByValue">
+                <label class="form-check-label" for="addByGameSeason">
+                    By game season
+                </label>
+            </div>
+            }
+
+            @if (gamesMetaDataSeries().length)
+            {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="addByRadio" id="addByGameSeries" value="gameSeries"
+                    [(ngModel)]="addChallengesByValue">
+                <label class="form-check-label" for="addByGameSeries">
+                    By game series
+                </label>
+            </div>
+            }
+
+            @if (gamesMetaDataTracks().length)
+            {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="addByRadio" id="addByGameTrack" value="gameTrack"
+                    [(ngModel)]="addChallengesByValue">
+                <label class="form-check-label" for="addByGameTrack">
+                    By game track
+                </label>
+            </div>
+            }
         </div>
 
         @if (addChallengesByValue() === "challenge")
@@ -206,6 +252,50 @@
             <option [ngValue]="game">
                 {{ game.name }}
                 ({{ game.challengeCount }} {{ "challenge" | pluralizer:game.challengeCount }})
+            </option>
+            }
+        </select>
+        }
+        @else if (addChallengesByValue() === "gameDivision")
+        {
+        <select class="form-control" [(ngModel)]="selectedGameDivision">
+            @for (division of gamesMetaDataDivisions(); track division)
+            {
+            <option [ngValue]="division">
+                {{ division }}
+            </option>
+            }
+        </select>
+        }
+        @else if (addChallengesByValue() === "gameSeason")
+        {
+        <select class="form-control" [(ngModel)]="selectedGameSeason">
+            @for (season of gamesMetaDataSeasons(); track season)
+            {
+            <option [ngValue]="season">
+                {{ season }}
+            </option>
+            }
+        </select>
+        }
+        @else if (addChallengesByValue() === "gameSeries")
+        {
+        <select class="form-control" [(ngModel)]="selectedGameSeries">
+            @for (series of gamesMetaDataSeries(); track series)
+            {
+            <option [ngValue]="series">
+                {{ series }}
+            </option>
+            }
+        </select>
+        }
+        @else if (addChallengesByValue() === "gameTrack")
+        {
+        <select class="form-control" [(ngModel)]="selectedGameTrack">
+            @for (track of gamesMetaDataTracks(); track track)
+            {
+            <option [ngValue]="track">
+                {{ track }}
             </option>
             }
         </select>

@@ -3,8 +3,12 @@ import { GameCardContext } from "@/api/game-models";
 import { PagedArray, Search, SimpleEntity, TimestampRange } from "@/api/models";
 
 export interface ChallengesAddToGroupRequest {
-    addBySpecIds?: string[];
     addByGameId?: string;
+    addByGameDivision?: string;
+    addByGameSeason?: string;
+    addByGameSeries?: string;
+    addByGameTrack?: string;
+    addBySpecIds?: string[];
     addByTag?: string;
 }
 

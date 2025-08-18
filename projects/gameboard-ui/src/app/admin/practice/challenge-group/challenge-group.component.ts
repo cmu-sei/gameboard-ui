@@ -19,6 +19,17 @@ import { PracticeChallengeUrlPipe } from '@/prac/pipes/practice-challenge-url.pi
 import { ChallengeGroupUserCardComponent } from '@/prac/components/challenge-group-user-card/challenge-group-user-card.component';
 import { ListPracticeChallengeGroupsResponseGroup } from '@/prac/models/list-practice-challenge-groups';
 import { ChallengeGroupCardMenuComponent } from '../challenge-group-card-menu/challenge-group-card-menu.component';
+import { GameService } from '@/api/game.service';
+import { unique } from 'projects/gameboard-ui/src/tools/tools';
+
+type AddChallengesBy =
+  "challenge" |
+  "game" |
+  "gameDivision" |
+  "gameSeason" |
+  "gameSeries" |
+  "gameTrack" |
+  "tag";
 
 @Component({
   selector: 'app-challenge-group',
@@ -39,6 +50,8 @@ import { ChallengeGroupCardMenuComponent } from '../challenge-group-card-menu/ch
 export class ChallengeGroupComponent {
   private readonly activeRoute = inject(ActivatedRoute);
   private readonly groupId = toSignal(this.activeRoute.paramMap.pipe(map(p => p.get("id"))));
+
+  private readonly gamesService = inject(GameService);
   private readonly modalService = inject(ModalConfirmService);
   private readonly practiceService = inject(PracticeService);
   private readonly router = inject(Router);
@@ -66,13 +79,19 @@ export class ChallengeGroupComponent {
       return this.practiceService.gamesList();
     }
   });
+
+  // we use the game service to load series, tracks, seasons, and divisions. we compute these into 
+  // separate signals below
+  protected readonly gamesMetaDataResource = resource({
+    loader: () => firstValueFrom(this.gamesService.list({ filter: "practice", orderBy: "name" }))
+  });
   protected readonly groupResource = resource({
     request: () => ({ id: this.groupId() }),
     loader: ({ request }) => this.practiceService.challengeGroupGet(request.id!)
   });
   protected readonly settingsResource = resource({ loader: () => firstValueFrom(this.practiceService.getSettings()) });
 
-  protected readonly addChallengesByValue = model<"challenge" | "game" | "tag">("challenge");
+  protected readonly addChallengesByValue = model<AddChallengesBy>("challenge");
   protected readonly canAddSubCollections = computed(() => !this.groupResource.value()?.group.parentGroup);
   protected readonly challenges = computed(() => {
     // the API will reject duplicates, but hide any challenges already in the group
@@ -89,9 +108,45 @@ export class ChallengeGroupComponent {
   protected readonly editingGroup = signal<UpsertChallengeGroup | undefined>(undefined);
   protected errors: any[] = [];
   protected readonly fa = fa;
+  protected readonly gamesMetaDataDivisions = computed(() => {
+    const games = this.gamesMetaDataResource.value();
+    if (!games) {
+      return [];
+    }
+
+    return unique(games.map(g => g.division).filter(d => !!d).sort());
+  });
+  protected readonly gamesMetaDataSeasons = computed(() => {
+    const games = this.gamesMetaDataResource.value();
+    if (!games) {
+      return [];
+    }
+
+    return unique(games.map(g => g.season).filter(s => !!s).sort());
+  });
+  protected readonly gamesMetaDataSeries = computed(() => {
+    const games = this.gamesMetaDataResource.value();
+    if (!games) {
+      return [];
+    }
+
+    return unique(games.map(g => g.competition).filter(c => !!c).sort());
+  });
+  protected readonly gamesMetaDataTracks = computed(() => {
+    const games = this.gamesMetaDataResource.value();
+    if (!games) {
+      return [];
+    }
+
+    return unique(games.map(g => g.track).filter(t => !!t).sort());
+  });
   protected readonly group = computed(() => this.groupResource.value()?.group);
   protected readonly selectedChallenge = model<PracticeChallengeView>();
   protected readonly selectedGame = model<SimpleEntity>();
+  protected readonly selectedGameDivision = model<string>();
+  protected readonly selectedGameSeason = model<string>();
+  protected readonly selectedGameSeries = model<string>();
+  protected readonly selectedGameTrack = model<string>();
   protected readonly selectedTag = model<string>();
 
   constructor() {
@@ -101,8 +156,8 @@ export class ChallengeGroupComponent {
       this.title.set(group?.group.name || "Practice Challenge Group");
     });
 
-    // when challenges, games, and tags are loaded, automatically select the first one (so the add from x dropdowns
-    // aren't blank)
+    // when challenges, games, and tags are loaded, automatically select the first one 
+    // (so the add from x dropdowns aren't blank)
     effect(() => {
       const challenges = this.challengesResource.value();
       if (challenges?.length) {
@@ -136,6 +191,18 @@ export class ChallengeGroupComponent {
       case "game":
         addChallengesRequest.addByGameId = this.selectedGame()!.id;
         break;
+      case "gameDivision":
+        addChallengesRequest.addByGameDivision = this.selectedGameDivision();
+        break;
+      case "gameSeason":
+        addChallengesRequest.addByGameSeason = this.selectedGameSeason();
+        break;
+      case "gameSeries":
+        addChallengesRequest.addByGameSeries = this.selectedGameSeries();
+        break;
+      case "gameTrack":
+        addChallengesRequest.addByGameTrack = this.selectedGameTrack();
+        break;
       case "tag":
         addChallengesRequest.addByTag = this.selectedTag();
         break;
@@ -159,52 +226,18 @@ export class ChallengeGroupComponent {
     this.modalService.openTemplate(this.addChildGroupModalTemplate()!);
   }
 
-  protected handleOpenEditCollectionModal(group: ListPracticeChallengeGroupsResponseGroup, parentGroupId?: string) {
-    if (!this.editGroupModalTemplate()) {
-      throw new Error("Couldn't resolve the template.");
+  protected handleCollectionDeleted(group: ListPracticeChallengeGroupsResponseGroup) {
+    if (group.id !== this.groupId()) {
+      // a child group was deleted
+      this.childGroupsResource.reload();
+      return;
     }
 
-    this.editingGroup.update(() => {
-      return {
-        ...group,
-        hasChildGroups: !!group.childGroups.length,
-        parentGroupId: parentGroupId,
-        previousImageUrl: group.imageUrl
-      };
-    });
-
-    this.modalService.openTemplate(this.editGroupModalTemplate()!);
-  }
-
-  protected handleDeleteCollectionModal(group: ListPracticeChallengeGroupsResponseGroup, hasChildGroups: boolean) {
-    const childGroupsText = !hasChildGroups ? "" : " Its subcollections will also be deleted.";
-    this.modalService.openConfirm({
-      title: "Delete Collection",
-      subtitle: group.name,
-      bodyContent: `Are you sure you want to delete the collection **${group.name}**?${childGroupsText}\n\nChallenges in the collection will still be available in the Practice Area.`,
-      renderBodyAsMarkdown: true,
-      onConfirm: async () => {
-        try {
-          this.errors = [];
-          await this.practiceService.challengeGroupDelete(group.id);
-
-          if (group.id === this.groupResource.value()?.group?.id) {
-            // if the deleted group is this page's group, return to the group list screen
-            this.router.navigateByUrl("/admin/practice/content");
-          } else {
-            // otherwise, just reload
-            this.groupResource.reload();
-          }
-        }
-        catch (err) {
-          this.errors.push(err);
-        }
-      }
-    });
-  }
-
-  protected handleCollectionDeleted() {
-    this.childGroupsResource.reload();
+    if (group.parentGroup) {
+      this.router.navigateByUrl(`/admin/practice/content/collection/${group.parentGroup.id}`);
+    } else {
+      this.router.navigateByUrl("/admin/practice/content");
+    }
   }
 
   protected handleGroupSaved() {
