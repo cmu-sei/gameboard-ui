@@ -29,12 +29,14 @@
 
     @if (childGroupsResource.value()?.length)
     {
-    <h3 class="mt-5">Subcollections</h3>
-    @for(childGroup of childGroupsResource.value(); track childGroup.id)
-    {
-    <app-challenge-group-user-card class="d-block my-4" [group]="childGroup"
-        [linkTo]="['/', 'practice', 'collections', childGroup.id]"></app-challenge-group-user-card>
-    }
+    <div class="subcollections-container my-5">
+        <h3>Subcollections</h3>
+        @for(childGroup of childGroupsResource.value(); track childGroup.id)
+        {
+        <app-challenge-group-user-card class="d-block my-4" [group]="childGroup"
+            [linkTo]="['/', 'practice', 'collections', childGroup.id]"></app-challenge-group-user-card>
+        }
+    </div>
     }
 
     @if (groupResource.value()!.challenges.length)
