@@ -33,11 +33,15 @@ cf-console {
     background-color: rgba(0, 0, 0, 0.4);
     padding: 8px;
     font-size: 2rem;
+    text-align: center;
   }
 
   .is-view-only {
+    border: 2px solid red;
+  }
+
+  .view-only-warning {
     background-color: red;
-    border-radius: 6px;
     color: #fff;
     flex: 0 1 auto;
     font-weight: bold;

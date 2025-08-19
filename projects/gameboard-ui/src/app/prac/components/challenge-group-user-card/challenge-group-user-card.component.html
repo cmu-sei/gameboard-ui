@@ -1,0 +1,50 @@
+@if (group())
+{
+<div class="challenge-group-user-card">
+    @if(group().isFeatured)
+    {
+    <div class="featured-banner text-upper font-weight-bold pl-4 py-2" [routerLink]="linkTo()">
+        Featured
+    </div>
+    }
+
+    <div class="d-flex position-relative">
+        <div class="position-absolute menu-content-container">
+            <ng-content select="[menu-button]"></ng-content>
+        </div>
+        <img class="challenge-group-user-card-img cursor-pointer" [src]="group().imageUrl | challengeGroupCardImage"
+            alt="{{ group().name }} logo" [routerLink]="linkTo()">
+        <div class="group-info p-4">
+            <div class="group-name fs-14">
+                <a [routerLink]="linkTo()">
+                    {{group().name}}
+                </a>
+            </div>
+            <div class="group-stats text-muted text-upper font-weight-bold mb-4">
+                <!--
+                We default this stats line to something useful, but when it's shown in the player-facing practice area,
+                we allow it to be overridden because it shows the player's completion stats.
+                -->
+                <ng-content select="[group-stats-line]">
+                    <div class="d-flex">
+                        <div>{{ group().challengeCount }} {{ "challenge" | pluralizer:group().challengeCount }}</div>
+                        <div class="mx-1">&middot;</div>
+                        <div>{{ group().challengeMaxScoreTotal }} points</div>
+                    </div>
+                </ng-content>
+            </div>
+            <div class="group-description" [innerHTML]="group().description | markdown | async"></div>
+
+            @if(group().tags.length)
+            {
+            <div class="group-tags d-flex flex-wrap my-4 gap-1">
+                @for(tag of group().tags; track tag)
+                {
+                <app-colored-text-chip [text]="tag" size="small"></app-colored-text-chip>
+                }
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}

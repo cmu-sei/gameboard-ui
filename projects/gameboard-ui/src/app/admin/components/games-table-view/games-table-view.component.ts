@@ -1,29 +1,31 @@
 import { Component, inject, input, output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { firstValueFrom } from 'rxjs';
+import { GameToGameCenterLinkPipe } from '@/admin/pipes/game-to-game-center-link.pipe';
 import { Game, ListGamesResponseGame } from '@/api/game-models';
 import { CoreModule } from '@/core/core.module';
 import { GameToMetadataTextPipe } from '@/core/pipes/game-to-metadata-text.pipe';
-import { fa } from "@/services/font-awesome.service";
 import { GameInfoBubblesComponent } from '@/standalone/games/components/game-info-bubbles/game-info-bubbles.component';
-import { GameToGameCenterLinkPipe } from '@/admin/pipes/game-to-game-center-link.pipe';
 import { GameService } from '@/api/game.service';
-import { RouterService } from '@/services/router.service';
 import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
-import { Router } from '@angular/router';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
+import { fa } from "@/services/font-awesome.service";
+import { RouterService } from '@/services/router.service';
 
 @Component({
-    selector: 'app-games-table-view',
-    templateUrl: './games-table-view.component.html',
-    styleUrl: './games-table-view.component.scss',
-    imports: [
-        BsDropdownModule,
-        CoreModule,
-        GameInfoBubblesComponent,
-        GameToGameCenterLinkPipe,
-        GameToMetadataTextPipe,
-        ThemeBgDirective
-    ]
+  selector: 'app-games-table-view',
+  templateUrl: './games-table-view.component.html',
+  styleUrl: './games-table-view.component.scss',
+  imports: [
+    BsDropdownModule,
+    CoreModule,
+    GameInfoBubblesComponent,
+    GameToGameCenterLinkPipe,
+    GameToMetadataTextPipe,
+    PluralizerPipe,
+    ThemeBgDirective
+  ]
 })
 export class GamesTableViewComponent {
   cloneRequest = output<ListGamesResponseGame>();

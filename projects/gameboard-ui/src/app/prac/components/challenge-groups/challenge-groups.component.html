@@ -1,0 +1,82 @@
+<div class="container">
+    <h2>Challenge Collections</h2>
+
+    <div class="search-controls d-flex my-4">
+        <div class="flex-grow-1"></div>
+        <div>
+            <div class="input-group input-group-sm mx-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <fa-icon [icon]="fa.search"></fa-icon>
+                    </span>
+                </div>
+                <input type="search" placeholder="Search collections..." class="form-control border-0"
+                    [value]="searchTerm()" [appQueryParamModel]="{ name: 'searchTerm', debounce: 500 }">
+            </div>
+        </div>
+    </div>
+
+    @if(groupsResource.isLoading())
+    {
+    <app-spinner>Loading collections...</app-spinner>
+    }
+    @else if (!groupsResource.value()?.length)
+    {
+    <!--App logic should hide navigation to this page if no collections exist, but just in case...-->
+    <div class="text-muted text-center my-4">
+        No collections have been created yet. To start learning, you can head to the
+        <a routerLink="/practice/challenges">Practice Area's challenge repository</a> to
+        see what's available!
+    </div>
+    }
+
+    @else
+    {
+    @if (featuredGroups()?.length)
+    {
+    @for(group of featuredGroups(); track group.id)
+    {
+    <div *ngTemplateOutlet="groupCard; context: { $implicit: group }"></div>
+    }
+    <hr class="my-2 light">
+    }
+
+    @if (unfeaturedGroups()?.length)
+    {
+    @for(group of unfeaturedGroups(); track group.id)
+    {
+    <div *ngTemplateOutlet="groupCard; context: { $implicit: group }"></div>
+    }
+    }
+    }
+</div>
+
+<ng-template #groupCard let-group>
+    <app-challenge-group-user-card [group]="group" [linkTo]="['/', 'practice', 'collections', group.id]"
+        class="d-block my-4">
+        @if (localUserId())
+        {
+        <app-challenge-group-card-user-stats-line group-stats-line [group]="group"
+            [userData]="userDataResource.value()?.get(group.id)?.userData">
+        </app-challenge-group-card-user-stats-line>
+        } @else
+        {
+        <!--
+            we really want this to fall back to the default template for the projection slot specified in the component, but 
+            in spite of the fact that the above is wrapped in a conditional, it still seems to override the slot's template
+            (and produce nothing) when the condition fails
+        -->
+        <div class="d-flex" group-stats-line>
+            <!--We override the default stat line, which just shows the number of available points and challenges, with the user's data-->
+            <div class="user-challenges-total">
+                {{ group.challengeCount }}
+                {{ "challenge" | pluralizer:group.challengeCount }}
+            </div>
+
+            <div class="mx-2">&middot;</div>
+
+            <div>{{ group.challengeMaxScoreTotal }} points </div>
+        </div>
+        }
+    </app-challenge-group-user-card>
+</ng-template>

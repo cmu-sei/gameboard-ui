@@ -116,7 +116,7 @@ export class ObserveViewComponent {
           credentials: { accessTicket: console.accessTicket },
           url: console.url
         };
-        const consoleAppUrl = this.routerService.buildVmConsoleUrl(console.consoleId.challengeId, console.consoleId.name).toString();
+        const consoleAppUrl = this.routerService.buildVmConsoleUrl(console.consoleId.challengeId, console.consoleId.name, false, true).toString();
 
         if (teamsToPush.has(console.team.id)) {
           teamsToPush.get(console.team.id)!.consoles.push({

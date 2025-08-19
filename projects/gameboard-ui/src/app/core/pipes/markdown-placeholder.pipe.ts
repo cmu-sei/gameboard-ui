@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true
 })
 export class MarkdownPlaceholderPipe implements PipeTransform {
-  transform(header: string): string {
+  transform(header?: string): string {
     const paragraphs: string[] = [];
 
     if (header) {

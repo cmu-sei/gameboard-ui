@@ -1,6 +1,84 @@
-import { GameCardContext } from "@/api/game-models";
-import { PagedArray, Search, TimestampRange } from "@/api/models";
 import { DateTime } from "luxon";
+import { GameCardContext } from "@/api/game-models";
+import { PagedArray, Search, SimpleEntity, TimestampRange } from "@/api/models";
+
+export interface ChallengesAddToGroupRequest {
+    addByGameId?: string;
+    addByGameDivision?: string;
+    addByGameSeason?: string;
+    addByGameSeries?: string;
+    addByGameTrack?: string;
+    addBySpecIds?: string[];
+    addByTag?: string;
+}
+
+export interface ChallengesAddToGroupResponse {
+    addedChallengeSpecIds: string[];
+}
+
+export interface ChallengeTagsListResponse {
+    challengeTags: ChallengeTagsListResponseTag[];
+}
+
+export interface ChallengeTagsListResponseTag {
+    tag: string;
+    challengeCount: number;
+}
+
+export interface CreatePracticeChallengeGroupRequest {
+    name: string;
+    description: string;
+    image?: File;
+    isFeatured: boolean;
+    parentGroupId?: string;
+}
+
+export interface GetPracticeChallengeGroupResponse {
+    group: PracticeChallengeGroupDto;
+}
+
+export interface PracticeChallengeGroupDto {
+    id: string;
+    name: string;
+    description: string;
+    imageUrl?: string;
+    isFeatured: boolean;
+    challengeCount: number;
+    challengeMaxScoreTotal: number;
+    challenges: PracticeChallengeGroupDtoChallenge[];
+    tags: string[];
+    parentGroup?: SimpleEntity;
+    childGroups: SimpleEntity[];
+}
+
+export interface PracticeChallengeGroupDtoChallenge {
+    id: string;
+    name: string;
+    game: SimpleEntity;
+    description: string;
+    tags: string[];
+    launchData: PracticeChallengeGroupDtoChallengeLaunchData;
+    maxPossibleScore: number;
+}
+
+export interface PracticeChallengeGroupDtoChallengeLaunchData {
+    countCompletions: number;
+    countLaunches: number;
+    lastLaunch: DateTime;
+}
+
+export interface ListChallengesRequest {
+    searchTerm?: string;
+}
+
+export interface UpdateChallengeGroupRequest {
+    id: string;
+    name: string;
+    description: string;
+    image?: File;
+    isFeatured: boolean;
+    parentGroupId?: string;
+}
 
 export interface SearchPracticeChallengesRequest {
     filter: Search;

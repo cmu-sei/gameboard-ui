@@ -3,10 +3,8 @@
 FROM node:lts-alpine AS dev
 WORKDIR /app
 COPY package.json package-lock.json tools/ ./
-RUN npm install && \
-  sh fixup-wmks.sh
+RUN npm install
 COPY . .
-RUN if [ -e "wmks.tar" ]; then tar xf wmks.tar -C node_modules/vmware-wmks; fi
 RUN $(npm root)/.bin/ng build gameboard-ui -c production
 CMD ["npm", "start"]
 

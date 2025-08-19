@@ -12,7 +12,7 @@
 }
 
 <div class="layout-container">
-    <div class="console-status" tabindex="-1">
+    <div class="console-status" [class.is-view-only]="consoleIsViewOnly()" tabindex="-1">
         @if (expiresAt())
         {
         <div class="clock">
@@ -22,7 +22,7 @@
 
         @if(consoleIsViewOnly())
         {
-        <div class="is-view-only">
+        <div class="view-only-warning">
             View Only
         </div>
         }

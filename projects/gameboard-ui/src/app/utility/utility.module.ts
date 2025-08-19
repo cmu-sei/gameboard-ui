@@ -13,7 +13,6 @@ import { ImageManagerComponent } from './components/image-manager/image-manager.
 import { InplaceEditorComponent } from './components/inplace-editor/inplace-editor.component';
 
 import { LoginComponent } from './components/login/login.component';
-import { MessageBoardComponent } from './components/message-board/message-board.component';
 
 import { FormsModule } from '@angular/forms';
 import { MatchesTermPipe } from './pipes/matches-term.pipe';
@@ -25,6 +24,7 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { GameInfoBubblesComponent } from "../standalone/games/components/game-info-bubbles/game-info-bubbles.component";
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
+import { RelativeImagePipe } from '@/core/pipes/relative-image.pipe';
 
 const components = [
   ClipspanComponent,
@@ -50,8 +50,11 @@ const components = [
     ProgressbarModule,
     RouterModule,
     CoreModule,
+
+    // standalones
     ErrorDivComponent,
     GameInfoBubblesComponent,
+    RelativeImagePipe,
     SpinnerComponent
   ],
 })

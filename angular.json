@@ -37,6 +37,7 @@
               }
             ],
             "styles": [
+              "projects/gameboard-ui/src/assets/vendor/vmware-wmks/css/main-ui.css",
               "node_modules/toastify-js/src/toastify.css",
               "node_modules/vis-timeline/styles/vis-timeline-graph2d.css",
               "projects/gameboard-ui/src/styles.scss"
@@ -54,7 +55,10 @@
             },
             "scripts": [
               "node_modules/marked/marked.min.js",
-              "node_modules/emoji-toolkit/lib/js/joypixels.min.js"
+              "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery-ui-dist/jquery-ui.min.js",
+              "projects/gameboard-ui/src/assets/vendor/vmware-wmks/wmks.min.js"
             ],
             "browser": "projects/gameboard-ui/src/main.ts"
           },
@@ -64,7 +68,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "1mb",
-                  "maximumError": "3mb"
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",

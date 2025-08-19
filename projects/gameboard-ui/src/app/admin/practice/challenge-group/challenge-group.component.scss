@@ -1,0 +1,38 @@
+@import "../../../../scss/variables";
+
+.main-group-card {
+  width: 300px;
+}
+
+.layout-container {
+  display: flex;
+  gap: 1.5rem;
+
+  .quasi-sidebar {
+    flex: 0 1 auto;
+
+    .quasi-sidebar-content {
+      top: 14px;
+      position: sticky;
+    }
+  }
+}
+
+.group-challenges-header {
+  background-color: $body-bg;
+
+  img {
+    aspect-ratio: 16/9;
+    max-height: 3rem;
+    object-fit: cover;
+  }
+
+  h5 {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.challenge-title-cell {
+  width: 40%;
+}

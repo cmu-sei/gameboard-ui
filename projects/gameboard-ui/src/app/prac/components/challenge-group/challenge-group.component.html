@@ -1,0 +1,102 @@
+@if (groupResource.isLoading())
+{
+<app-spinner>Loading the collection...</app-spinner>
+}
+
+@if (groupResource.value())
+{
+<div class="container">
+    <div class="breadcrumbs mb-4">
+        <a routerLink="/practice/collections">
+            « All challenge collections
+        </a>
+
+        @if (groupResource.value()?.parentGroup)
+        {
+        <span class="mx-2"> / </span>
+        <a [routerLink]="['/', 'practice', 'collections', groupResource.value()!.parentGroup!.id]">
+            <!-- « Back to <strong></strong> -->
+            {{ groupResource.value()!.parentGroup!.name }}
+        </a>
+        }
+    </div>
+
+    <app-challenge-group-user-card [group]="groupResource.value()!">
+        <!--We override the default stat line, which just shows the number of available points and challenges, with the user's data-->
+        <app-challenge-group-card-user-stats-line group-stats-line [group]="groupResource.value()!"
+            [userData]="userChallengeGroupData().get(groupResource.value()!.id)?.userData"></app-challenge-group-card-user-stats-line>
+    </app-challenge-group-user-card>
+
+    @if (childGroupsResource.value()?.length)
+    {
+    <div class="subcollections-container my-5">
+        <h3>Subcollections</h3>
+        @for(childGroup of childGroupsResource.value(); track childGroup.id)
+        {
+        <app-challenge-group-user-card class="d-block my-4" [group]="childGroup"
+            [linkTo]="['/', 'practice', 'collections', childGroup.id]"></app-challenge-group-user-card>
+        }
+    </div>
+    }
+
+    @if (groupResource.value()!.challenges.length)
+    {
+    <h3 class="mt-5">Challenges</h3>
+
+    <div class="container mt-4">
+        <div class="row header-row">
+            <div class="col">Challenge</div>
+            <div class="col-2">Best Attempt</div>
+        </div>
+
+        @for(challenge of groupResource.value()!.challenges; track challenge.id)
+        {
+        <div class="row challenge-row">
+            <div class="col pl-0">
+                <div class="challenge-info d-flex fs-12">
+                    <a [routerLink]="['/', 'practice', 'challenges', challenge.id]">
+                        {{ challenge.name }}
+                    </a>
+                    <div class="text-muted ml-2">({{ challenge.maxPossibleScore }} points)</div>
+                </div>
+                <div class="challenge-description">{{ challenge.description }}</div>
+                <div class="challenge-tags d-flex gap-2 my-2">
+                    @for(tag of challenge.tags; track tag)
+                    {
+                    <app-colored-text-chip [text]="tag" size="small"></app-colored-text-chip>
+                    }
+                </div>
+            </div>
+
+            <div class="col-2">
+                @if(userChallengeData().has(challenge.id) && userChallengeData().get(challenge.id))
+                {
+                <div class="best-attempt-score font-weight-bold"
+                    [class.text-success]="userChallengeData().get(challenge.id)!.score >= challenge.maxPossibleScore"
+                    [class.text-warning]="userChallengeData().get(challenge.id)!.score < challenge.maxPossibleScore">
+                    {{ userChallengeData().get(challenge.id)!.score }} / {{ challenge.maxPossibleScore }} points
+                </div>
+                <div class="best-attempt-date text-muted">
+                    {{ userChallengeData().get(challenge.id)!.date | friendlyDateAndTime}}
+                </div>
+
+                @if (userChallengeData().get(challenge.id)?.certificateAwarded)
+                {
+                <div class="certificate-link mt-4">
+                    <a [routerLink]="challenge.id | toPracticeCertificateLink" target="_blank">
+                        Certificate Awarded
+                    </a>
+                </div>
+                }
+                }
+                @else
+                {
+                <div class="text-muted">(not attempted)</div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>
+}

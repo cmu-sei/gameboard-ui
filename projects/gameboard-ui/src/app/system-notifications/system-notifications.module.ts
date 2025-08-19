@@ -8,22 +8,25 @@ import { CoreModule } from '@/core/core.module';
 import { SystemNotificationsComponent } from './components/system-notifications/system-notifications.component';
 import { NotificationTypeToAlertTypePipe } from './pipes/notification-type-to-alert-type.pipe';
 import { MarkdownPlaceholderPipe } from '@/core/pipes/markdown-placeholder.pipe';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 const DECLARED = [
   AdminSystemNotificationsComponent,
   CreateEditSystemNotificationModalComponent,
+  NotificationTypeToAlertTypePipe,
   SystemNotificationTypeToTextPipe,
   SystemNotificationsComponent
 ];
 
 @NgModule({
-  declarations: [...DECLARED, NotificationTypeToAlertTypePipe],
+  declarations: [...DECLARED],
   imports: [
     CommonModule,
     FormsModule,
     CoreModule,
     // standalones
-    MarkdownPlaceholderPipe
+    MarkdownPlaceholderPipe,
+    PluralizerPipe,
   ],
   exports: [...DECLARED]
 })

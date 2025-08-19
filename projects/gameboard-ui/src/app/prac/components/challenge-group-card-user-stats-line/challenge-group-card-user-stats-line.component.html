@@ -1,0 +1,44 @@
+@if (group())
+{
+@if (userData())
+{
+<div class="d-flex gap-2">
+    @if (userData()?.challengesCompleteCount == group().challengeCount)
+    {
+    <div class="badge badge-success">Complete</div>
+    }
+    @else
+    {
+    <div>Your Progress: </div>
+    }
+
+    <div class="d-flex text-success">
+        <div class="user-challenges-total">
+            {{ userData()?.challengesCompleteCount || 0 }} /
+            {{ group().challengeCount }}
+            {{ "challenge" | pluralizer:group().challengeCount }}
+        </div>
+        <div class="mx-2">&middot;</div>
+
+        <div>
+            {{ userData()?.score || 0 }} /
+            {{ group().challengeMaxScoreTotal }} points
+        </div>
+    </div>
+</div>
+}
+@else
+{
+<div class="d-flex" group-stats-line>
+    <!--We override the default stat line, which just shows the number of available points and challenges, with the user's data-->
+    <div class="user-challenges-total">
+        {{ group().challengeCount }}
+        {{ "challenge" | pluralizer:group().challengeCount }}
+    </div>
+
+    <div class="mx-2">&middot;</div>
+
+    <div>{{ group().challengeMaxScoreTotal }} points </div>
+</div>
+}
+}

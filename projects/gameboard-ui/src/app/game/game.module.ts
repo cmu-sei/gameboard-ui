@@ -43,6 +43,7 @@ import { GameSessionAvailabilityWarningComponent } from "./components/game-sessi
 import { CountdownPipe } from '@/core/pipes/countdown.pipe';
 import { VmLinkComponent } from '@/standalone/games/components/vm-link/vm-link.component';
 import { ConsoleIdToUrlPipe } from '@/consoles/pipes/console-id-to-url.pipe';
+import { PluralizerPipe } from '@/core/pipes/pluralizer.pipe';
 
 const MODULE_DECLARATIONS = [
   ContinueToGameboardButtonComponent,
@@ -79,7 +80,7 @@ const MODULE_DECLARATIONS = [
       { path: 'external/:gameId/start/:playerId', canActivate: [AuthGuard, UserIsPlayingGuard], component: ExternalGameLoadingPageComponent },
       { path: 'external/:gameId/:teamId', canActivate: [AuthGuard, UserIsPlayingGuard, ExternalGameGuard], component: ExternalGamePageComponent },
       { path: ":gameId/scoreboard", component: ScoreboardPageComponent },
-      { path: ':id', component: GamePageComponent, children: [] }
+      { path: ':id', component: GamePageComponent }
     ]),
     CoreModule,
     UtilityModule,
@@ -90,10 +91,10 @@ const MODULE_DECLARATIONS = [
     CountdownPipe,
     ErrorDivComponent,
     FeedbackSubmissionFormComponent,
+    GameSessionAvailabilityWarningComponent,
+    PluralizerPipe,
     SafeUrlPipe,
     SpinnerComponent,
-    FeedbackSubmissionFormComponent,
-    GameSessionAvailabilityWarningComponent,
     VmLinkComponent
   ]
 })

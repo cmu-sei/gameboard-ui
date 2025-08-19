@@ -61,3 +61,34 @@ export function getAllProperties(obj: any) {
 
     return allProps.sort();
 }
+
+/**
+ * Serializes an object to FormData. Particularly useful for objects that
+ * can't be serialized to JSON for submission to the API (commonly, objects that have File
+ * properties). For these, we typically have the api accept multipart/form-data and serialize
+ * the object into a form with two values: the file, and the rest of the object.
+ * 
+ * NOTE: As implemented, does not work for complex objects (with object properties).
+ * 
+ * @param obj An object to serialize to FormData.
+ */
+export function toFormData<T>(obj: T, formPropertyName: string): FormData {
+    const formData = new FormData();
+
+    let k: keyof typeof obj;
+    for (k in obj) {
+        const value = obj[k];
+
+        if (value === undefined || value === null) {
+            continue;
+        }
+        else if (value instanceof Blob) {
+            formData.append(`${formPropertyName}.${String(k)}`, value);
+        }
+        if (obj[k]) {
+            formData.append(`${formPropertyName}.${String(k)}`, String(value));
+        }
+    }
+
+    return formData;
+}

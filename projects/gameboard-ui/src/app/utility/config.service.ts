@@ -11,11 +11,20 @@ import { Location, PlatformLocation } from '@angular/common';
 import { LocalStorageService, StorageKey } from '../services/local-storage.service';
 import { LogService } from '../services/log.service';
 import { Environment, EnvironmentSettings } from '../../environments/environment-typed';
+import { ConsoleClientType, LogLevel } from '@cmusei/console-forge';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
   private url = environment.settingsJson;
   private restorationComplete = false;
+
+  // console forge defaults if unspecified
+  public static defaultConsoleForgeConfig = {
+    consoleBackgroundStyle: "rgb(0, 0, 0)",
+    defaultConsoleClientType: "vmware" as ConsoleClientType,
+    logThreshold: LogLevel.DEBUG,
+    showBrowserNotificationsOnConsoleEvents: true
+  };
 
   basehref = '';
   environment: Environment = environment;
@@ -128,21 +137,29 @@ export class ConfigService {
   }
 
   load(): Observable<EnvironmentSettings> {
+    // console forge defaults if unspecified
+
     if (!environment.settingsJson) {
-      return of({} as EnvironmentSettings);
+      return of({
+        consoleForgeConfig: ConfigService.defaultConsoleForgeConfig
+      } as EnvironmentSettings);
     }
 
     return this.http.get<EnvironmentSettings>(this.basehref + this.url)
       .pipe(
         catchError((err: Error) => {
-          return of({} as EnvironmentSettings);
+          return of({ consoleForgeConfig: ConfigService.defaultConsoleForgeConfig } as EnvironmentSettings);
         }),
         tap(s => {
           if (!s || Object.keys(s).length == 0) {
             this.log.logError(`Unable to load settings file from url ${this.basehref + this.url}`);
           }
           if (s) {
-            this.environment.settings = { ...this.environment.settings, ...s };
+            this.environment.settings = {
+              consoleForgeConfig: ConfigService.defaultConsoleForgeConfig,
+              ...this.environment.settings,
+              ...s
+            };
             this.environment.settings.oidc = { ...this.environment.settings.oidc, ...s.oidc };
             this.settings$.next(this.environment.settings);
           }

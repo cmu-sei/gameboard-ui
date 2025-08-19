@@ -36,6 +36,7 @@ import { markedOptionsFactory } from './core/config/marked.config';
 import { MarkdownModule, MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { ThemeBgDirective } from './core/directives/theme-bg.directive';
 import { environment } from '../environments/environment';
+import { MessageBoardComponent } from './utility/components/message-board/message-board.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { environment } from '../environments/environment';
     ProgressbarModule.forRoot(),
 
     // standalones
+    MessageBoardComponent,
     ThemeBgDirective,
     UserNavItemComponent
   ],
@@ -73,7 +75,7 @@ import { environment } from '../environments/environment';
       useFactory: (config: ConfigService, log: LogService, userService: UserService) => new SignalRService(config, log, userService),
       deps: [ConfigService, LogService, UserService],
     },
-    provideConsoleForge(environment.settings.consoleForgeConfig),
+    provideConsoleForge(environment.settings.consoleForgeConfig || ConfigService.defaultConsoleForgeConfig),
     provideMarkdown({
       markedOptions: {
         provide: MARKED_OPTIONS,

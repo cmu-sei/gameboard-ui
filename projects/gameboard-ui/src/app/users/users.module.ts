@@ -17,6 +17,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
 import { UserDisplayNameEditorComponent } from './components/user-display-name-editor/user-display-name-editor.component';
+import { ErrorDivComponent } from "@/standalone/core/components/error-div/error-div.component";
 
 const DECLARED_COMPONENTS = [
   CertificatesComponent,
@@ -59,17 +60,16 @@ const DECLARED_COMPONENTS = [
             component: SettingsComponent,
             canActivate: [() => {
               const permissionsService = inject(UserRolePermissionsService);
-
               return permissionsService.can("Admin_View");
             }]
           }
         ]
       },
     ]),
-
     // imported standalones
     SpinnerComponent,
-    UserDisplayNameEditorComponent
+    UserDisplayNameEditorComponent,
+    ErrorDivComponent
   ]
 })
 export class UsersModule { }

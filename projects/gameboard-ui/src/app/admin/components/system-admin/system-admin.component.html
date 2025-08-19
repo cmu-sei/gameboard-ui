@@ -22,6 +22,13 @@
                 <li>Game Hub: <strong>{{ gameHubState$ | async }}</strong></li>
                 <li>Support Hub: <strong>{{ supportHubState$ | async }}</strong></li>
             </ul>
+
+            <h4 class="mt-5">Your console client configuration</h4>
+            <pre>
+                <code>
+                    {{ appConfigSettings?.settings?.consoleForgeConfig| json }}
+                </code>
+            </pre>
         </tab>
     </tabset>
 </div>

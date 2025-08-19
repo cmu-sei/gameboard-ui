@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, signal, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
@@ -111,6 +111,11 @@ export class PlayComponent implements OnChanges {
     if (this.autoPlay && this.playerId && this.challengeSpec && this.challengeSpec.id !== changes.challengeSpec?.currentValue) {
       await this.startChallenge({ challengeSpecId: changes.challengeSpec.currentValue.id, playerId: this.playerId });
     }
+  }
+
+  protected async handleConsoleTileReconnectRequest() {
+    const consoleData = await this.buildConsoleData(this.challenge);
+    this.consoles.update(() => consoleData);
   }
 
   protected async deployVms(challengeId: string) {

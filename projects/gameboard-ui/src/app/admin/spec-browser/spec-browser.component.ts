@@ -10,10 +10,10 @@ import { ExternalSpec } from '../../api/spec-models';
 import { SpecService } from '../../api/spec.service';
 
 @Component({
-    selector: 'app-spec-browser',
-    templateUrl: './spec-browser.component.html',
-    styleUrls: ['./spec-browser.component.scss'],
-    standalone: false
+  selector: 'app-spec-browser',
+  templateUrl: './spec-browser.component.html',
+  styleUrls: ['./spec-browser.component.scss'],
+  standalone: false
 })
 export class SpecBrowserComponent {
   @Output() selected = new EventEmitter<ExternalSpec>();
@@ -38,9 +38,5 @@ export class SpecBrowserComponent {
 
   select(spec: ExternalSpec): void {
     this.selected.emit(spec);
-  }
-
-  trackById(index: number, g: ExternalSpec): string {
-    return g.externalId;
   }
 }

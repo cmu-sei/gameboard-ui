@@ -1,13 +1,12 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, } from '@angular/core';
 import { NavigationEnd, ActivatedRoute, Params, Router, UrlTree } from '@angular/router';
-import { Subscription, filter } from 'rxjs';
+import { filter } from 'rxjs';
 import { ReportKey } from '@/reports/reports-models';
 import { PlayerMode } from '@/api/player-models';
 import { ConfigService } from '@/utility/config.service';
 import { UserService as LocalUser } from '@/utility/user.service';
 import { slug } from "@/../tools/functions";
 import { GameCenterTab } from '@/admin/components/game-center/game-center.models';
-import { SimpleEntity } from '@/api/models';
 import { ObjectService } from './object.service';
 
 export interface QueryParamsUpdate {
@@ -16,25 +15,13 @@ export interface QueryParamsUpdate {
 }
 
 @Injectable({ providedIn: 'root' })
-export class RouterService implements OnDestroy {
-  private _navEndSub?: Subscription;
-
+export class RouterService {
   constructor(
     private config: ConfigService,
     private localUser: LocalUser,
     private objectService: ObjectService,
     public route: ActivatedRoute,
     private router: Router) { }
-
-  public getCurrentPathBase(): string {
-    const urlTree = this.router.parseUrl(this.router.url);
-    urlTree.queryParams = {};
-    return urlTree.toString();
-  }
-
-  public getCurrentQueryParams(): Params {
-    return this.route.queryParams;
-  }
 
   public goHome(): void {
     this.router.navigateByUrl("/");
@@ -55,7 +42,7 @@ export class RouterService implements OnDestroy {
       throw new Error("Can't navigate to printable certificate if not authenticated.");
     }
 
-    return `user/${userId}/certificates/${mode}/${challengeSpecOrGameId}`;
+    return `/user/${userId}/certificates/${mode}/${challengeSpecOrGameId}`;
   }
 
   public getCertificateListUrl() {
@@ -91,6 +78,13 @@ export class RouterService implements OnDestroy {
     return this.buildAppUrlWithQueryParams(params, "practice");
   }
 
+  public getPracticeChallengeUrl(challenge: { id: string; name?: string }) {
+    if (challenge.name) {
+      return this.router.createUrlTree(["practice", "challenges", challenge.id, slug(challenge.name)]).toString();
+    }
+    return this.router.createUrlTree(["practice", "challenges", challenge.id]).toString();
+  }
+
   public getProfileUrl() {
     return this.router.createUrlTree(["user", "profile"]).toString();
   }
@@ -123,8 +117,8 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl("/user/certificates/practice");
   }
 
-  public toPracticeChallenge(challengeSpec: { id: string, name: string }) {
-    return this.router.navigateByUrl(`/practice/${challengeSpec.id}/${slug(challengeSpec.name)}`);
+  public toPracticeChallenge(challengeSpec: { id: string; name?: string }) {
+    return this.router.navigateByUrl(this.getPracticeChallengeUrl(challengeSpec));
   }
 
   public toCertificatePrintable(mode: PlayerMode, challengeSpecOrGameId: string) {
@@ -143,17 +137,18 @@ export class RouterService implements OnDestroy {
     return this.router.navigateByUrl(this.router.parseUrl(`/support/tickets/${highlightTicketKey}`));
   }
 
-  public buildVmConsoleUrl(challengeId: string, vmName: string, isPractice = false) {
+  public buildVmConsoleUrl(challengeId: string, vmName: string, enableActivityListener = false, forceViewOnly = false) {
     if (!vmName || !challengeId) {
       throw new Error(`Can't launch a VM console without a challengeId.`);
     }
 
-    return this.router.createUrlTree(["c", "console"], {
+    return this.router.createUrlTree([this.config.basehref, "c", "console"], {
       queryParams: {
         fullscreen: true,
         challengeId,
         console: vmName,
-        l: isPractice ? true : undefined
+        l: enableActivityListener ? true : undefined,
+        viewOnly: forceViewOnly ? true : undefined
       }
     });
   }
@@ -229,9 +224,5 @@ export class RouterService implements OnDestroy {
 
   private buildAppUrlWithQueryParams(queryParams: any, ...urlBits: string[]) {
     return this.router.createUrlTree([this.config.basehref || "", ...urlBits], { queryParams: { ...queryParams } });
-  }
-
-  ngOnDestroy(): void {
-    this._navEndSub?.unsubscribe();
   }
 }

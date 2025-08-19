@@ -10,33 +10,23 @@ import { MessageBoardComponent } from '@/utility/components/message-board/messag
 import { LayoutService } from '@/utility/layout.service';
 
 @Component({
-    selector: 'app-app-layout',
-    imports: [
-        // angular dependencies
-        CommonModule,
-        RouterModule,
-        // gb dependencies
-        AppNavComponent,
-        GameboardSignalRHubsComponent,
-        MessageBoardComponent,
-        SponsorSelectBannerComponent,
-        SystemNotificationsModule,
-    ],
-    templateUrl: './app-layout.component.html',
-    styleUrl: './app-layout.component.scss'
+  selector: 'app-app-layout',
+  imports: [
+    // angular dependencies
+    CommonModule,
+    RouterModule,
+    // gb dependencies
+    AppNavComponent,
+    GameboardSignalRHubsComponent,
+    SponsorSelectBannerComponent,
+  ],
+  templateUrl: './app-layout.component.html',
+  styleUrl: './app-layout.component.scss'
 })
 export class AppLayoutComponent {
   // services
   private readonly layoutService = inject(LayoutService);
 
   // state
-  protected stickyMenu$: Observable<boolean>;
-
-  constructor() {
-    this.stickyMenu$ = this.layoutService.stickyMenu$;
-  }
-
-  ngOnInit() {
-
-  }
+  protected stickyMenu$: Observable<boolean> = this.layoutService.stickyMenu$;
 }
