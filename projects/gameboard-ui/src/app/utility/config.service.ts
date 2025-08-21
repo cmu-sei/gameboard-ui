@@ -22,7 +22,7 @@ export class ConfigService {
   public static defaultConsoleForgeConfig = {
     consoleBackgroundStyle: "rgb(0, 0, 0)",
     defaultConsoleClientType: "vmware" as ConsoleClientType,
-    logThreshold: LogLevel.DEBUG,
+    logThreshold: LogLevel.WARNING,
     showBrowserNotificationsOnConsoleEvents: true
   };
 
