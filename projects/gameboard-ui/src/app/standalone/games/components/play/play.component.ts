@@ -25,6 +25,7 @@ import { ConsoleComponentConfig, ConsoleTileComponent } from '@cmusei/console-fo
 import { VmLinkComponent } from '../vm-link/vm-link.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfigService } from '@/utility/config.service';
+import { TooltipDirective } from 'ngx-bootstrap/tooltip';
 
 type PlayChallengeDeployState = "deployed" | "deploying" | "undeploying" | "undeployed";
 interface PlayConsole {
@@ -44,6 +45,7 @@ interface PlayConsole {
     SpinnerComponent,
     ToSupportCodePipe,
     ChallengeQuestionsComponent,
+    TooltipDirective,
     UtilityModule,
     FeedbackSubmissionFormComponent,
     VmLinkComponent
