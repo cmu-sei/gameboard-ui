@@ -5,15 +5,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CertificatesService } from '@/api/certificates.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { SpinnerComponent } from '@/standalone/core/components/spinner/spinner.component';
+import { ErrorDivComponent } from '@/standalone/core/components/error-div/error-div.component';
 
 @Component({
-    selector: 'app-certificate-previewer',
-    imports: [
-        CommonModule,
-        SpinnerComponent
-    ],
-    templateUrl: './certificate-previewer.component.html',
-    styleUrls: ['./certificate-previewer.component.scss']
+  selector: 'app-certificate-previewer',
+  imports: [
+    CommonModule,
+    ErrorDivComponent,
+    SpinnerComponent
+  ],
+  templateUrl: './certificate-previewer.component.html',
+  styleUrls: ['./certificate-previewer.component.scss']
 })
 export class CertificatePreviewerComponent implements OnInit {
   protected errors: any[] = [];
