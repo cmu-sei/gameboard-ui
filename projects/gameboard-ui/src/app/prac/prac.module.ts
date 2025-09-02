@@ -67,9 +67,10 @@ import { PracticeTabsLayoutComponent } from './components/practice-tabs-layout/p
               { path: "", pathMatch: 'full', redirectTo: "challenges" }
             ]
           },
-          // catch routes for :specId and :specId/:slug
           { path: "challenges/:specId/:slug", component: PracticeSessionComponent },
           { path: "challenges/:specId", component: PracticeSessionComponent },
+          { path: ":specId/:slug", redirectTo: "challenges/:specId/:slug" },
+          { path: ":specId", redirectTo: "challenges/:specId" }
         ]
       }
     ]),

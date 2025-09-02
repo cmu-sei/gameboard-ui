@@ -172,6 +172,12 @@
 
         <ng-container *ngIf="challenge && (deployState === 'deployed' || deployState === 'undeployed')">
             <div class="vm-controls-container my-4">
+                @if (deployState === 'deployed')
+                {
+                <button type="button" class="btn btn-sm btn-warning mr-2" (click)="handleConsoleTileReconnectRequest()"
+                    tooltip="Console preview disconnected? Click here to refresh it.">Refresh Consoles</button>
+                }
+
                 <app-confirm-button *ngIf="deployState === 'deployed'" btnClass="btn btn-sm btn-outline-warning mr-2"
                     (confirm)="undeployVms(challenge.id)">
                     <fa-icon [icon]="fa.trash"></fa-icon>
@@ -197,7 +203,7 @@
             <a [href]="console.linkUrl" target="_blank">
                 <cf-console-tile [config]="console.config"
                     (reconnectRequest)="handleConsoleTileReconnectRequest()"></cf-console-tile>
-                <p class="console-label">{{ console.name }}</p>
+                <p class="console-label btn-link text-success" placement="bottom">{{ console.name }}</p>
             </a>
         </li>
         }
