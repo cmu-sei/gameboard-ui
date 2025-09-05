@@ -26,20 +26,20 @@ export interface GameInfoBubbleProperties {
 }
 
 @Component({
-    selector: 'app-game-info-bubbles',
-    imports: [
-        CommonModule,
-        FontAwesomeModule,
-        IsLivePipe,
-        TooltipModule
-    ],
-    styles: [
-        "fa-icon { vertical-align: middle; }",
-        "li { margin-right: 1rem; padding: 0; text-align: center; vertical-align: middle; }",
-        "img { object-fit: contain }",
-        ".team-icon path { stroke: #00ffff; fill: #00ffff } "
-    ],
-    template: `
+  selector: 'app-game-info-bubbles',
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    IsLivePipe,
+    TooltipModule
+  ],
+  styles: [
+    "fa-icon { vertical-align: middle; }",
+    "li { margin-right: 1rem; padding: 0; text-align: center; vertical-align: middle; }",
+    "img { object-fit: contain }",
+    ".team-icon path { stroke: #00ffff; fill: #00ffff } "
+  ],
+  template: `
     <ul class="game-info-bubbles d-flex align-items-center py-0 px-2" *ngIf="game">
       <li *ngIf="(game | isLive) && game.playerMode !== 'practice'" class="rounded-circle">
         <fa-icon [size]="bubbleSize" [icon]="fa.towerBroadcast" tooltip="Live now!" animation="beat-fade" style="--fa-animation-duration: 3s; --fa-beat-scale; 1.1; --fa-animation-timing: ease-in-out;"></fa-icon>
@@ -90,8 +90,8 @@ export class GameInfoBubblesComponent implements OnChanges {
 
     const game = changes.game.currentValue;
 
-    this.engineModeIcon = game.mode == GameEngineMode.Standard ? fa.computer : fa.gamepad;
-    this.engineModeTooltip = game.mode == GameEngineMode.Standard ? "Standard VMs" : "External Host";
+    this.engineModeIcon = game.engineMode == GameEngineMode.Standard ? fa.computer : fa.gamepad;
+    this.engineModeTooltip = game.engineMode == GameEngineMode.Standard ? "Standard VMs" : "External Host";
 
     this.infoTooltip = {
       name: game.name,

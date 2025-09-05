@@ -12,11 +12,11 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
-    selector: 'app-session-start-controls',
-    templateUrl: './session-start-controls.component.html',
-    styleUrls: ['./session-start-controls.component.scss'],
-    providers: [UnsubscriberService],
-    standalone: false
+  selector: 'app-session-start-controls',
+  templateUrl: './session-start-controls.component.html',
+  styleUrls: ['./session-start-controls.component.scss'],
+  providers: [UnsubscriberService],
+  standalone: false
 })
 export class SessionStartControlsComponent implements OnInit {
   @Input() ctx!: GameContext;
@@ -25,6 +25,7 @@ export class SessionStartControlsComponent implements OnInit {
   @Output() onDoubleCheckChanged = new EventEmitter<boolean>();
   @Output() onRequestStart = new EventEmitter();
 
+  protected fa = fa;
   protected isDoubleChecking = false;
   protected isGameSyncStartReady = false;
   protected isConnectedToGameHub = false;
@@ -34,7 +35,6 @@ export class SessionStartControlsComponent implements OnInit {
   protected playerReadyCount = 0;
   protected playerNotReadyCount = 0;
   protected playerReadyPct = 0;
-  protected fa = fa;
 
   constructor(
     private gameHub: GameHubService,
