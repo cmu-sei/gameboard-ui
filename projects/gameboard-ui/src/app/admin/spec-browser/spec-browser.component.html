@@ -13,9 +13,6 @@
     aria-label="search term" aria-describedby="search-label">
 </div>
 
-<!-- filters -->
-<div></div>
-
 <!-- list -->
 <ng-container *ngFor="let item of list$ | async">
   <div class="card my-3 cursor-pointer" tabindex="0" (click)="select(item)">
