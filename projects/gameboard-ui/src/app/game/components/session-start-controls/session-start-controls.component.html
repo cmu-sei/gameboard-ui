@@ -1,5 +1,20 @@
 <div class="session-start-controls-component my-4">
     <alert type="warning">
+        <ul>
+            <li>After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.</li>
+
+            @if(ctx.game.maxTeamSize > 1)
+            {
+            <li>This will start the session for the team, so be sure your teammates are ready to start.</li>
+            <li>You cannot add or remove team members after your session has started.</li>
+            }
+
+            @if(!ctx.game.allowReset)
+            {
+            <li [hidden]="ctx.game.allowReset">You will not be able to reset the session after starting it.</li>
+            }
+        </ul>
+        <!-- 
         <p>
             After starting the session, the clock expires after {{ctx.game.sessionMinutes}} minutes.
         </p>
@@ -7,7 +22,7 @@
         <p *ngIf="ctx.game.maxTeamSize > 1">
             This will start the session for the team, so be sure your teammates are ready to start. You cannot
             add or remove team members after your session has started.
-        </p>
+        </p> -->
     </alert>
 
     <alert class="sync-start-message my-4" type="info" *ngIf="ctx.game.requireSynchronizedStart">

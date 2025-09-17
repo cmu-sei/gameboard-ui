@@ -8,6 +8,7 @@ import { SponsorSelectBannerComponent } from '@/components/sponsor-select-banner
 import { SystemNotificationsModule } from '@/system-notifications/system-notifications.module';
 import { MessageBoardComponent } from '@/utility/components/message-board/message-board.component';
 import { LayoutService } from '@/utility/layout.service';
+import { ThemeBgDirective } from '@/core/directives/theme-bg.directive';
 
 @Component({
   selector: 'app-app-layout',
@@ -19,6 +20,7 @@ import { LayoutService } from '@/utility/layout.service';
     AppNavComponent,
     GameboardSignalRHubsComponent,
     SponsorSelectBannerComponent,
+    ThemeBgDirective,
   ],
   templateUrl: './app-layout.component.html',
   styleUrl: './app-layout.component.scss'

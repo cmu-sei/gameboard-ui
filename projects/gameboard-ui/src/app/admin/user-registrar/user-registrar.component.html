@@ -87,11 +87,27 @@
       <span class="mr-2 fs-11">{{user.approvedName || user.name}}</span>
       <span *ngIf="user.name !== user.approvedName" class="text-muted">{{user.name}}</span><br />
 
-      <div class="d-flex align-items-center">
-        <div class="fs-08 mr-3 badge badge-success" *ngIf="user.role != 'member'">{{ user.role | titlecase }}</div>
-        <div class="btn-link fs-08" appCopyOnClick appCopyOnClickMessage="Copied user ID **$TEXT$** to your clipboard."
-          tooltip="Copy this user's ID to your clipboard">
-          {{ user.id | slice:0:8 }}</div>
+      @if (user.effectiveRole !== 'member')
+      {
+      <div class="d-flex align-items-center my-1">
+        <div class="fs-08 badge badge-success">
+          {{ user.effectiveRole | titlecase }}
+        </div>
+
+        @if (user.lastIdpAssignedRole && user.lastIdpAssignedRole !== user.appRole)
+        {
+        <div class="fs-08 mx-1 badge badge-warning cursor-pointer" (click)="showRoleConflictDialog(user)">
+          <fa-icon [icon]="fa.exclamationCircle"></fa-icon>
+          Identity Role Conflict
+        </div>
+        }
+      </div>
+      }
+
+      <div class="btn-link fs-08" [appCopyOnClick]="user.id"
+        [appCopyOnClickMessage]="'Copied ' + user.approvedName + ' to your clipboard.'"
+        tooltip="Copy this user's ID to your clipboard">
+        {{ user.id | slice:0:8 }}
       </div>
 
       <p *ngIf="user.lastLoginDate" class="text-muted fs-08 m-0">
@@ -153,7 +169,7 @@
         <h5>Role</h5>
 
         <div>
-          <select class="form-control" [(ngModel)]="user.role" (change)="update(user)">
+          <select class="form-control" [(ngModel)]="user.appRole" (change)="update(user)">
             <option *ngFor="let role of roles$ | async" [value]="role">{{ role | titlecase }}</option>
           </select>
         </div>

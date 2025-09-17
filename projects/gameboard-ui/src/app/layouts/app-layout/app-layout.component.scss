@@ -3,4 +3,8 @@
   left: 0px;
   position: sticky;
   z-index: 999;
+
+  > * {
+    position: sticky;
+  }
 }

@@ -1,35 +1,37 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, interval, merge, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
-import { ApiUser, TryCreateUsersResponse, UserRoleKey } from '../../api/user-models';
+import { ListUsersResponseUser, TryCreateUsersResponse, UserRoleKey } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { CreateUsersModalComponent } from '../components/create-users-modal/create-users-modal.component';
 import { ToastService } from '@/utility/services/toast.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { ConfigService } from '@/utility/config.service';
 
 type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 
 @Component({
-    selector: 'app-user-registrar',
-    templateUrl: './user-registrar.component.html',
-    styleUrls: ['./user-registrar.component.scss'],
-    standalone: false
+  selector: 'app-user-registrar',
+  templateUrl: './user-registrar.component.html',
+  styleUrls: ['./user-registrar.component.scss'],
+  standalone: false
 })
 export class UserRegistrarComponent {
+  private readonly config = inject(ConfigService);
   protected roles$: Observable<UserRoleKey[]>;
   protected isLoading = false;
   refresh$ = new BehaviorSubject<boolean>(true);
-  source$: Observable<ApiUser[]>;
-  source: ApiUser[] = [];
-  selected: ApiUser[] = [];
-  viewed: ApiUser | undefined = undefined;
-  viewChange$ = new BehaviorSubject<ApiUser | undefined>(this.viewed);
+  source$: Observable<ListUsersResponseUser[]>;
+  source: ListUsersResponseUser[] = [];
+  selected: ListUsersResponseUser[] = [];
+  viewed: ListUsersResponseUser | undefined = undefined;
+  viewChange$ = new BehaviorSubject<ListUsersResponseUser | undefined>(this.viewed);
   search: Search = { term: '', take: 200, sort: "name" };
   filter = '';
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique'];
@@ -79,7 +81,7 @@ export class UserRegistrarComponent {
     this.refresh$.next(true);
   }
 
-  view(u: ApiUser): void {
+  view(u: ListUsersResponseUser): void {
     this.viewed = this.viewed !== u ? u : undefined;
     this.viewChange$.next(this.viewed);
   }
@@ -88,7 +90,7 @@ export class UserRegistrarComponent {
     this.viewed = this.source.find(g => g.id === this.viewed?.id);
   }
 
-  delete(model: ApiUser): void {
+  delete(model: ListUsersResponseUser): void {
     this.api.delete(model.id).subscribe(() => {
       const found = this.source.find(f => f.id === model.id);
       if (found) {
@@ -100,9 +102,13 @@ export class UserRegistrarComponent {
     });
   }
 
-  async update(model: ApiUser) {
+  async update(model: ListUsersResponseUser) {
     try {
-      await firstValueFrom(this.api.update(model));
+      await firstValueFrom(this.api.update({
+        id: model.id,
+        sponsorId: model.sponsor.id,
+        role: model.appRole
+      }));
     }
     catch (err) {
       this.errors.push(err);
@@ -131,5 +137,25 @@ export class UserRegistrarComponent {
     catch (err) {
       this.errors.push(err);
     }
+  }
+
+  protected showRoleConflictDialog(user: ListUsersResponseUser) {
+    this.modalService.openConfirm({
+      title: "Identity Role Conflict",
+      subtitle: user.approvedName,
+      hideCancel: true,
+      renderBodyAsMarkdown: true,
+      bodyContent: `
+        **${user.approvedName}** has conflicting roles assigned. This happens when ${this.config.appName}
+        is configured to allow role assignment by the [identity provider](${this.config.settings$.value?.oidc?.authority}).
+        
+- **${this.config.appName} role:** ${user.appRole}
+- **Identity Provider role:** ${user.lastIdpAssignedRole || '_unassigned_'}
+
+Their effective role is currently **${user.effectiveRole}** - the greatest set of permissions among assigned roles. To resolve this issue, 
+update the user's Identity Provider role to match the role assigned in ${this.config.appName} or remove any Identity Provider 
+role assignments associated with ${this.config.appName}.
+      `.trim()
+    });
   }
 }

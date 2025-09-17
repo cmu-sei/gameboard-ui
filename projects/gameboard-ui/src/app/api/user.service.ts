@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, firstValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../utility/config.service';
-import { Announcement, ApiUser, ChangedUser, NewUser, RequestNameChangeRequest, RequestNameChangeResponse, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
+import { Announcement, ApiUser, ChangedUser, ListUsersResponseUser, NewUser, RequestNameChangeRequest, RequestNameChangeResponse, TreeNode, TryCreateUserResult, TryCreateUsersRequest, TryCreateUsersResponse, UpdateUserSettingsRequest, UserSettings } from './user-models';
 import { LogService } from '@/services/log.service';
 import { ApiUrlService } from '@/services/api-url.service';
 
@@ -25,8 +25,8 @@ export class UserService {
     private log: LogService
   ) { }
 
-  public list(filter: any): Observable<ApiUser[]> {
-    return this.http.get<ApiUser[]>(this.apiUrl.build("users"), { params: filter });
+  public list(filter: any): Observable<ListUsersResponseUser[]> {
+    return this.http.get<ListUsersResponseUser[]>(this.apiUrl.build("users"), { params: filter });
   }
 
   public retrieve(id: string): Observable<ApiUser> {
@@ -63,12 +63,6 @@ export class UserService {
     return this.http.post<any>(this.apiUrl.build("user/ticket"), null);
   }
 
-  public getDocs(): Observable<TreeNode> {
-    return this.http.get<string[]>(this.apiUrl.build("docs")).pipe(
-      map(r => this.mapToTree(r))
-    );
-  }
-
   public getSettings(): Observable<UserSettings> {
     return this.http.get<UserSettings>(this.apiUrl.build("user/settings"));
   }
@@ -87,30 +81,5 @@ export class UserService {
   public updateLoginEvents(): Observable<void> {
     this.log.logInfo("User login event recorded");
     return this.http.put<void>(this.apiUrl.build("user/login"), {});
-  }
-
-  private mapToTree(list: string[]): TreeNode {
-    const root: TreeNode = { name: '', path: `${this.config.apphost}doc`, folders: [], files: [] };
-    list.forEach(f => {
-      let path = f.split('/');
-      path.shift();
-      this.toNode(root, path);
-    });
-    return root;
-  }
-
-  private toNode(node: TreeNode, path: string[]): void {
-    if (path.length === 1) {
-      node.files.push(path[0]);
-      return;
-    }
-    const name = path.shift() || '';
-    let folder = node.folders.find(n => n.name === name);
-    if (!folder) {
-      folder = { name, path: `${node.path}/${name}`, folders: [], files: [] };
-      node.folders.push(folder);
-    }
-
-    this.toNode(folder, path);
   }
 }
