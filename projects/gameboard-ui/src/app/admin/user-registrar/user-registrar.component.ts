@@ -147,7 +147,7 @@ export class UserRegistrarComponent {
       renderBodyAsMarkdown: true,
       bodyContent: `
         **${user.approvedName}** has conflicting roles assigned. This happens when ${this.config.appName}
-        is configured to allow role assignment by the [identity provider](${this.config.settings$.value?.oidc?.authority}).
+        is configured to allow role assignment by the identity provider).
         
 - **${this.config.appName} role:** ${user.appRole}
 - **Identity Provider role:** ${user.lastIdpAssignedRole || '_unassigned_'}
