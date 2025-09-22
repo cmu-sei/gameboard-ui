@@ -105,7 +105,7 @@
       }
 
       <div class="btn-link fs-08" [appCopyOnClick]="user.id"
-        [appCopyOnClickMessage]="'Copied ' + user.approvedName + ' to your clipboard.'"
+        [appCopyOnClickMessage]="'Copied **' + user.approvedName + '**\'s ID to your clipboard.'"
         tooltip="Copy this user's ID to your clipboard">
         {{ user.id | slice:0:8 }}
       </div>
