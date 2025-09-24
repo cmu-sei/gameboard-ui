@@ -146,15 +146,18 @@ export class UserRegistrarComponent {
       hideCancel: true,
       renderBodyAsMarkdown: true,
       bodyContent: `
-        **${user.approvedName}** has conflicting roles assigned. This happens when ${this.config.appName}
-        is configured to allow role assignment by the identity provider).
+        **${user.approvedName}** has conflicting roles assigned. This can happen when ${this.config.appName}
+        is configured to allow role assignment by the identity provider.
         
 - **${this.config.appName} role:** ${user.appRole}
 - **Identity Provider role:** ${user.lastIdpAssignedRole || '_unassigned_'}
 
 Their effective role is currently **${user.effectiveRole}** - the greatest set of permissions among assigned roles. To resolve this issue, 
-update the user's Identity Provider role to match the role assigned in ${this.config.appName} or remove any Identity Provider 
-role assignments associated with ${this.config.appName}.
+do one of the following:
+
+- Update their ${this.config.appName} role to match their identity provider role
+- Update their Identity Provider role to match their ${this.config.appName} role
+- Remove any Identity Provider role assignments associated with ${this.config.appName}
       `.trim()
     });
   }
