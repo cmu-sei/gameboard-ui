@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { Component, OnInit } from '@angular/core';
 import { firstValueFrom, map, Observable, tap } from 'rxjs';
 import { TeamService } from '@/api/team.service';

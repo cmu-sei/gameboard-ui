@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { Component, inject } from "@angular/core";
 import { ReportViewUpdate } from "../../reports-models";
 import { ActiveReportService } from "@/reports/services/active-report.service";

@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { TicketSummary } from '@/api/support-models';
 import { SupportService } from '@/api/support.service';
 import { UnsubscriberService } from '@/services/unsubscriber.service';

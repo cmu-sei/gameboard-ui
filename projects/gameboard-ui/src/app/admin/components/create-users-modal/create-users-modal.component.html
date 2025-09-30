@@ -1,3 +1,6 @@
+<!-- Copyright 2025 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
 <app-modal-content title="Create Users" (confirm)="confirm()" [confirmDisabled]="!userIds.length"
     *ngIf="!isWorking; else loading">
     <div class="mb-4">

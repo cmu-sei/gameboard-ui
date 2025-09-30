@@ -1,3 +1,6 @@
+<!-- Copyright 2025 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
 <form #form="ngForm" [ngFormOptions]="{updateOn: 'blur'}" autocomplete="off">
     <ng-container *ngIf="game; else loading">
         <span class="f-2" [ngClass]="isDirty ? 'text-warning' : 'text-success'">

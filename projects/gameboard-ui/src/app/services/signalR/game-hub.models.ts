@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { SimpleEntity } from "@/api/models";
 import { SignalRHubEventType } from "./signalr-hub.models";
 import { GameEngineType } from "@/api/spec-models";

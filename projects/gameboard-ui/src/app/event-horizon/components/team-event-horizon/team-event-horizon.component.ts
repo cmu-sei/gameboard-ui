@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { EventHorizonDataItem, EventHorizonEventType, TeamEventHorizonViewModel } from '@/api/event-horizon.models';
 import { EventHorizonService } from '@/api/event-horizon.service';
 import { EventHorizonRenderingService } from '@/services/event-horizon-rendering.service';
