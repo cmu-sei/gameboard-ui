@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { Component, EventEmitter, Injectable, Input, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { v4 as uuid4 } from 'uuid';

@@ -1,3 +1,6 @@
+<!-- Copyright 2025 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
 <app-modal-content [title]="upsertGroupForm.value.id ? 'Edit Collection' : 'Create Collection'"
     [subtitle]="upsertGroupForm.value.id ? (upsertGroupForm.value.name || '') : ''"
     [confirmDisabled]="!upsertGroupForm.valid" (confirm)="(handleConfirm())">

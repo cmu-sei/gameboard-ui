@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { Component, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { debounceTime, filter, map, merge, mergeAll, mergeMap, Subject, withLatestFrom } from 'rxjs';
