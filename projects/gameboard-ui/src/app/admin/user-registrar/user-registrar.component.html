@@ -93,14 +93,6 @@
         <div class="fs-08 badge badge-success">
           {{ user.effectiveRole | titlecase }}
         </div>
-
-        @if (user.lastIdpAssignedRole && user.lastIdpAssignedRole !== user.appRole)
-        {
-        <div class="fs-08 mx-1 badge badge-warning cursor-pointer" (click)="showRoleConflictDialog(user)">
-          <fa-icon [icon]="fa.exclamationCircle"></fa-icon>
-          Identity Role Conflict
-        </div>
-        }
       </div>
       }
 
@@ -144,7 +136,7 @@
         <span>Delete</span>
       </app-confirm-button>
     </div>
-    <div *ngIf="viewed === user" class="col-12 mt-4">
+    <div *ngIf="viewed === user" [id]="user.id" class="col-12 mt-4">
       <div class="name-info mb-4">
         <h5>Name</h5>
         <div class="form-group mb-0 pb-1">
@@ -173,6 +165,30 @@
             <option *ngFor="let role of roles$ | async" [value]="role">{{ role | titlecase }}</option>
           </select>
         </div>
+
+        @if (user.lastIdpAssignedRole)
+        {
+        <div class="my-2">
+          <div>
+            <strong>Identity Provider Role:</strong>
+            {{ user.lastIdpAssignedRole | titlecase}}
+          </div>
+
+          <div>
+            <strong>Effective Role:</strong>
+            @if (user.lastIdpAssignedRole != user.appRole)
+            {
+            <button class="btn btn-link pt-0" (click)="showRoleConflictDialog(user)">
+              {{ user.effectiveRole | titlecase}}
+            </button>
+            }
+            @else
+            {
+            {{ user.effectiveRole | titlecase }}
+            }
+          </div>
+        </div>
+        }
       </div>
 
       <div class="api-key-info" *appIfHasPermission="'ApiKeys_CreateRevoke'">
@@ -187,4 +203,27 @@
   <div class="text-center">
     <app-spinner></app-spinner>
   </div>
+</ng-template>
+
+<ng-template #effectiveRoleModal>
+  <app-modal-content title="Effective Role" [subtitle]="viewed?.approvedName">
+    <strong>{{ viewed?.approvedName }}</strong> has two roles assigned - one from the identity provider, and another
+    from
+    {{appName}} itself.
+
+    <ul class="my-2">
+      <li>
+        <strong>{{appName}} role:</strong> {{ viewed?.appRole | titlecase }}
+      </li>
+      <li>
+        <strong>Identity Provider role:</strong>
+        {{ (viewed?.lastIdpAssignedRole || "unassigned") | titlecase}}
+      </li>
+    </ul>
+
+    <div class="mt-2">
+      Their effective role is currently <strong>{{ viewed?.effectiveRole | titlecase }}</strong> -
+      the greatest set of permissions among assigned roles.
+    </div>
+  </app-modal-content>
 </ng-template>

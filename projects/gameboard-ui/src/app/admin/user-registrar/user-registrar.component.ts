@@ -1,7 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, interval, merge, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
@@ -37,6 +37,8 @@ export class UserRegistrarComponent {
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique'];
   errors: any[] = [];
 
+  protected appName = this.config.appName;
+  protected effectiveRoleModal = viewChild<TemplateRef<any>>("effectiveRoleModal");
   protected fa = fa;
 
   constructor(
@@ -109,6 +111,7 @@ export class UserRegistrarComponent {
         sponsorId: model.sponsor.id,
         role: model.appRole
       }));
+      this.refresh$.next(true);
     }
     catch (err) {
       this.errors.push(err);
@@ -140,25 +143,10 @@ export class UserRegistrarComponent {
   }
 
   protected showRoleConflictDialog(user: ListUsersResponseUser) {
-    this.modalService.openConfirm({
-      title: "Identity Role Conflict",
-      subtitle: user.approvedName,
-      hideCancel: true,
-      renderBodyAsMarkdown: true,
-      bodyContent: `
-        **${user.approvedName}** has conflicting roles assigned. This can happen when ${this.config.appName}
-        is configured to allow role assignment by the identity provider.
-        
-- **${this.config.appName} role:** ${user.appRole}
-- **Identity Provider role:** ${user.lastIdpAssignedRole || '_unassigned_'}
-
-Their effective role is currently **${user.effectiveRole}** - the greatest set of permissions among assigned roles. To resolve this issue, 
-do one of the following:
-
-- Update their ${this.config.appName} role to match their identity provider role
-- Update their Identity Provider role to match their ${this.config.appName} role
-- Remove any Identity Provider role assignments associated with ${this.config.appName}
-      `.trim()
-    });
+    if (!this.effectiveRoleModal) {
+      this.errors.push("Can't resolve modal");
+      throw new Error("Can't resolve modal");
+    }
+    this.modalService.openTemplate(this.effectiveRoleModal()!);
   }
 }

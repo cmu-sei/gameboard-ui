@@ -42,7 +42,7 @@ export class UserService {
   }
 
   public update(model: ChangedUser): Observable<ApiUser> {
-    return this.http.put<any>(this.apiUrl.build("user"), model).pipe();
+    return this.http.put<ApiUser>(this.apiUrl.build("user"), model);
   }
 
   public delete(id: string): Observable<any> {
