@@ -1,3 +1,6 @@
+<!-- Copyright 2025 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
 <div *ngIf="parentSponsor(); else noParentHeader" class="parent-sponsor-button parent-header">
     <h2 class="parent-header">{{ parentSponsor()!.name }}</h2>
     <img [src]="parentSponsor() | sponsorToLogoUri" [alt]="parentSponsor()!.name">

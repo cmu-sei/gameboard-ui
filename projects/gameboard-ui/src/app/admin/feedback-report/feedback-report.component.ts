@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { Component, OnInit } from '@angular/core';
 import { faArrowLeft, faCaretDown, faCaretRight, faCaretLeft, faSync, faFileDownload } from '@fortawesome/free-solid-svg-icons';
 import { FeedbackQuestion, FeedbackReportDetails, FeedbackStats } from '../../api/feedback-models';

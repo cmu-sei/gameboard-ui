@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { NowService } from '@/services/now.service';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, map, of, timer } from 'rxjs';

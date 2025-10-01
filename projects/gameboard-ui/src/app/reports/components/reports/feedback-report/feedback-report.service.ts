@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { inject, Injectable } from '@angular/core';
 import { ReportResults, ReportResultsWithOverallStats } from '@/reports/reports-models';
 import { FeedbackReportParameters, FeedbackReportRecord, FeedbackReportStatSummary } from './feedback-report.models';

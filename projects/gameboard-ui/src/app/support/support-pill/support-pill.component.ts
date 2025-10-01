@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';

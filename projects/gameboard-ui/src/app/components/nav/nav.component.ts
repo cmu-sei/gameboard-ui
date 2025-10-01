@@ -1,3 +1,6 @@
+// Copyright 2025 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { TocFile, TocService } from '@/api/toc.service';

@@ -1,3 +1,6 @@
+<!-- Copyright 2025 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
 <div class="suggested-searches-component d-flex flex-wrap w-100">
     <a *ngFor="let search of searches" [routerLink]="['/practice']" [queryParams]="{ term: search }">
         <app-colored-text-chip class="d-block mb-2" [text]="search"></app-colored-text-chip>
