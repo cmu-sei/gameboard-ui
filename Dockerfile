@@ -1,8 +1,8 @@
 # multi-stage target: dev
-FROM node:lts-alpine AS dev
+FROM node:22-alpine AS dev
 WORKDIR /app
 COPY package.json package-lock.json tools/ ./
-RUN npm ci
+RUN npm install --frozen-lockfile
 COPY . .
 RUN $(npm root)/.bin/ng build gameboard-ui -c production
 
@@ -15,8 +15,8 @@ COPY --from=dev /app/nginx-static.conf /etc/nginx/conf.d/default.conf
 COPY --from=dev /app/nginx-basehref.sh /docker-entrypoint.d/90-basehref.sh
 
 # flush contents 
+RUN rm -rf /usr/share/nginx/html/*
 WORKDIR /usr/share/nginx/html
-RUN rm -rf .
 COPY --from=dev /app/dist/gameboard-ui/browser .
 COPY --from=dev /app/dist/gameboard-ui/browser/assets/oidc-silent.html .
 RUN chown -R nginx:nginx .
