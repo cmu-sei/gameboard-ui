@@ -1,20 +1,27 @@
 # multi-stage target: dev
-
 FROM node:lts-alpine AS dev
 WORKDIR /app
 COPY package.json package-lock.json tools/ ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN $(npm root)/.bin/ng build gameboard-ui -c production
-CMD ["npm", "start"]
 
 # multi-stage target: prod
-FROM nginx:1.27.4-alpine-slim@sha256:b05aceb5ec1844435cae920267ff9949887df5b88f70e11d8b2871651a596612
-WORKDIR /var/www
-COPY --from=dev /app/dist/gameboard-ui/browser .
-COPY --from=dev /app/dist/gameboard-ui/browser/assets/oidc-silent.html .
-COPY --from=dev /app/LICENSE.md ./LICENSE.md
+FROM nginxinc/nginx-unprivileged:stable-alpine
+USER root
+
+# copy nginx configuration
 COPY --from=dev /app/nginx-static.conf /etc/nginx/conf.d/default.conf
 COPY --from=dev /app/nginx-basehref.sh /docker-entrypoint.d/90-basehref.sh
+
+# flush contents 
+WORKDIR /usr/share/nginx/html
+RUN rm -rf .
+COPY --from=dev /app/dist/gameboard-ui/browser .
+COPY --from=dev /app/dist/gameboard-ui/browser/assets/oidc-silent.html .
+RUN chown -R nginx:nginx .
 RUN chmod +x /docker-entrypoint.d/90-basehref.sh
-EXPOSE 80
+
+# give up privileges and run
+USER nginx
+EXPOSE 8080
