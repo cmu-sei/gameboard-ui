@@ -1,8 +1,8 @@
 <!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
 <!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
 
-<div class="print-hide">
-    <div class="app-bar-container" [class.sticky-content]="(stickyMenu$ | async)">
+<div class="print-hide" [class.sticky-content]="(stickyMenu$ | async)">
+    <div class="app-bar-container" appThemeBg>
         <app-sponsor-select-banner></app-sponsor-select-banner>
         <div class="d-flex align-items-center" appThemeBg>
             <app-gameboard-signalr-hubs class="flex-grow-1"></app-gameboard-signalr-hubs>

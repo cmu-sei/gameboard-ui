@@ -87,11 +87,19 @@
       <span class="mr-2 fs-11">{{user.approvedName || user.name}}</span>
       <span *ngIf="user.name !== user.approvedName" class="text-muted">{{user.name}}</span><br />
 
-      <div class="d-flex align-items-center">
-        <div class="fs-08 mr-3 badge badge-success" *ngIf="user.role != 'member'">{{ user.role | titlecase }}</div>
-        <div class="btn-link fs-08" appCopyOnClick appCopyOnClickMessage="Copied user ID **$TEXT$** to your clipboard."
-          tooltip="Copy this user's ID to your clipboard">
-          {{ user.id | slice:0:8 }}</div>
+      @if (user.effectiveRole !== 'member')
+      {
+      <div class="d-flex align-items-center my-1">
+        <div class="fs-08 badge badge-success">
+          {{ user.effectiveRole | titlecase }}
+        </div>
+      </div>
+      }
+
+      <div class="btn-link fs-08" [appCopyOnClick]="user.id"
+        [appCopyOnClickMessage]="'Copied **' + user.approvedName + '**\'s ID to your clipboard.'"
+        tooltip="Copy this user's ID to your clipboard">
+        {{ user.id | slice:0:8 }}
       </div>
 
       <p *ngIf="user.lastLoginDate" class="text-muted fs-08 m-0">
@@ -128,7 +136,7 @@
         <span>Delete</span>
       </app-confirm-button>
     </div>
-    <div *ngIf="viewed === user" class="col-12 mt-4">
+    <div *ngIf="viewed === user" [id]="user.id" class="col-12 mt-4">
       <div class="name-info mb-4">
         <h5>Name</h5>
         <div class="form-group mb-0 pb-1">
@@ -153,10 +161,34 @@
         <h5>Role</h5>
 
         <div>
-          <select class="form-control" [(ngModel)]="user.role" (change)="update(user)">
+          <select class="form-control" [(ngModel)]="user.appRole" (change)="update(user)">
             <option *ngFor="let role of roles$ | async" [value]="role">{{ role | titlecase }}</option>
           </select>
         </div>
+
+        @if (user.lastIdpAssignedRole)
+        {
+        <div class="my-2">
+          <div>
+            <strong>Identity Provider Role:</strong>
+            {{ user.lastIdpAssignedRole | titlecase}}
+          </div>
+
+          <div>
+            <strong>Effective Role:</strong>
+            @if (user.lastIdpAssignedRole != user.appRole)
+            {
+            <button class="btn btn-link pt-0" (click)="showRoleConflictDialog(user)">
+              {{ user.effectiveRole | titlecase}}
+            </button>
+            }
+            @else
+            {
+            {{ user.effectiveRole | titlecase }}
+            }
+          </div>
+        </div>
+        }
       </div>
 
       <div class="api-key-info" *appIfHasPermission="'ApiKeys_CreateRevoke'">
@@ -171,4 +203,27 @@
   <div class="text-center">
     <app-spinner></app-spinner>
   </div>
+</ng-template>
+
+<ng-template #effectiveRoleModal>
+  <app-modal-content title="Effective Role" [subtitle]="viewed?.approvedName">
+    <strong>{{ viewed?.approvedName }}</strong> has two roles assigned - one from the identity provider, and another
+    from
+    {{appName}} itself.
+
+    <ul class="my-2">
+      <li>
+        <strong>{{appName}} role:</strong> {{ viewed?.appRole | titlecase }}
+      </li>
+      <li>
+        <strong>Identity Provider role:</strong>
+        {{ (viewed?.lastIdpAssignedRole || "unassigned") | titlecase}}
+      </li>
+    </ul>
+
+    <div class="mt-2">
+      Their effective role is currently <strong>{{ viewed?.effectiveRole | titlecase }}</strong> -
+      the greatest set of permissions among assigned roles.
+    </div>
+  </app-modal-content>
 </ng-template>

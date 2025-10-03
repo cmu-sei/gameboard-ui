@@ -1,8 +1,9 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { DateTime } from "luxon";
 import { SimpleEntity } from "./models";
-import { Sponsor } from "./sponsor-models";
+import { Sponsor, SponsorWithParent } from "./sponsor-models";
 import { UserRolePermissionKey } from "./user-role-permissions.models";
 
 export interface ApiUser {
@@ -17,6 +18,20 @@ export interface ApiUser {
   loginCount: number;
   role: UserRoleKey;
   rolePermissions: UserRolePermissionKey[]
+}
+
+export interface ListUsersResponseUser {
+  id: string;
+  name: string;
+  nameStatus: string;
+  approvedName: string;
+  sponsor: SponsorWithParent;
+  createdOn: DateTime;
+  lastLoginDate?: DateTime;
+  loginCount: number;
+  appRole: UserRoleKey;
+  lastIdpAssignedRole?: UserRoleKey;
+  effectiveRole: UserRoleKey;
 }
 
 export interface NewUser {

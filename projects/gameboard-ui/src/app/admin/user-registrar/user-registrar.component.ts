@@ -1,40 +1,44 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component } from '@angular/core';
+import { Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, interval, merge, Observable } from 'rxjs';
 import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { Search } from '../../api/models';
-import { ApiUser, TryCreateUsersResponse, UserRoleKey } from '../../api/user-models';
+import { ListUsersResponseUser, TryCreateUsersResponse, UserRoleKey } from '../../api/user-models';
 import { UserService } from '../../api/user.service';
 import { fa } from '@/services/font-awesome.service';
 import { ModalConfirmService } from '@/services/modal-confirm.service';
 import { CreateUsersModalComponent } from '../components/create-users-modal/create-users-modal.component';
 import { ToastService } from '@/utility/services/toast.service';
 import { UserRolePermissionsService } from '@/api/user-role-permissions.service';
+import { ConfigService } from '@/utility/config.service';
 
 type UserRegistrarSort = "name" | "lastLogin" | "createdOn";
 
 @Component({
-    selector: 'app-user-registrar',
-    templateUrl: './user-registrar.component.html',
-    styleUrls: ['./user-registrar.component.scss'],
-    standalone: false
+  selector: 'app-user-registrar',
+  templateUrl: './user-registrar.component.html',
+  styleUrls: ['./user-registrar.component.scss'],
+  standalone: false
 })
 export class UserRegistrarComponent {
+  private readonly config = inject(ConfigService);
   protected roles$: Observable<UserRoleKey[]>;
   protected isLoading = false;
   refresh$ = new BehaviorSubject<boolean>(true);
-  source$: Observable<ApiUser[]>;
-  source: ApiUser[] = [];
-  selected: ApiUser[] = [];
-  viewed: ApiUser | undefined = undefined;
-  viewChange$ = new BehaviorSubject<ApiUser | undefined>(this.viewed);
+  source$: Observable<ListUsersResponseUser[]>;
+  source: ListUsersResponseUser[] = [];
+  selected: ListUsersResponseUser[] = [];
+  viewed: ListUsersResponseUser | undefined = undefined;
+  viewChange$ = new BehaviorSubject<ListUsersResponseUser | undefined>(this.viewed);
   search: Search = { term: '', take: 200, sort: "name" };
   filter = '';
   reasons: string[] = ['disallowed', 'disallowed_pii', 'disallowed_unit', 'disallowed_agency', 'disallowed_explicit', 'disallowed_innuendo', 'disallowed_excessive_emojis', 'not_unique'];
   errors: any[] = [];
 
+  protected appName = this.config.appName;
+  protected effectiveRoleModal = viewChild<TemplateRef<any>>("effectiveRoleModal");
   protected fa = fa;
 
   constructor(
@@ -79,7 +83,7 @@ export class UserRegistrarComponent {
     this.refresh$.next(true);
   }
 
-  view(u: ApiUser): void {
+  view(u: ListUsersResponseUser): void {
     this.viewed = this.viewed !== u ? u : undefined;
     this.viewChange$.next(this.viewed);
   }
@@ -88,7 +92,7 @@ export class UserRegistrarComponent {
     this.viewed = this.source.find(g => g.id === this.viewed?.id);
   }
 
-  delete(model: ApiUser): void {
+  delete(model: ListUsersResponseUser): void {
     this.api.delete(model.id).subscribe(() => {
       const found = this.source.find(f => f.id === model.id);
       if (found) {
@@ -100,9 +104,14 @@ export class UserRegistrarComponent {
     });
   }
 
-  async update(model: ApiUser) {
+  async update(model: ListUsersResponseUser) {
     try {
-      await firstValueFrom(this.api.update(model));
+      await firstValueFrom(this.api.update({
+        id: model.id,
+        sponsorId: model.sponsor.id,
+        role: model.appRole
+      }));
+      this.refresh$.next(true);
     }
     catch (err) {
       this.errors.push(err);
@@ -131,5 +140,13 @@ export class UserRegistrarComponent {
     catch (err) {
       this.errors.push(err);
     }
+  }
+
+  protected showRoleConflictDialog(user: ListUsersResponseUser) {
+    if (!this.effectiveRoleModal) {
+      this.errors.push("Can't resolve modal");
+      throw new Error("Can't resolve modal");
+    }
+    this.modalService.openTemplate(this.effectiveRoleModal()!);
   }
 }
