@@ -41,6 +41,7 @@ yarn-error.log
 testem.log
 /typings
 thunder-tests
+projects/gameboard-ui/src/assets/settings.json
 
 # System Files
 .DS_Store

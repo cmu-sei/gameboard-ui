@@ -5,7 +5,7 @@ import { Environment } from "./environment-typed";
 
 export const environment: Environment = {
   production: false,
-  settingsJson: undefined,
+  settingsJson: 'assets/settings.json',
   settings: {
     appname: 'Gameboard',
     apphost: 'http://localhost:5002',
