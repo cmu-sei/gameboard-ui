@@ -126,6 +126,12 @@ app-root {
   min-height: 100vh;
 }
 
+:root {
+  // The height of the screen left for the app below the classification banner, for views that size
+  // themselves to fit the screen (consoles, external games). The same as 100vh with no banner.
+  --app-viewport-height: calc(100vh - var(--classification-banner-height, 0px));
+}
+
 /* APP UTILITY CLASSES */
 .font-fixed-width {
   font-family: monospace;

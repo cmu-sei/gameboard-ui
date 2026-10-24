@@ -49,6 +49,11 @@ export class WindowService implements OnDestroy {
   scrollToBottom() {
     setTimeout(() => {
       this.document.defaultView?.scrollTo(0, this.document.body.scrollHeight);
+
+      // With a classification banner, the page scrolls inside the app container instead of the window
+      // (see app.component.scss). Without one, the container doesn't scroll and this does nothing.
+      const appContainer = this.document.querySelector(".app-container");
+      appContainer?.scrollTo(0, appContainer.scrollHeight);
     }, 500);
   }
 }
