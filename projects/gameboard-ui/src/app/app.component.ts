@@ -7,18 +7,29 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { AuthService } from './utility/auth.service';
 import { ConfigService } from './utility/config.service';
+import { WindowService } from './services/window.service';
+import { resolveClassificationBanner } from './standalone/core/components/classification-banner/classification-banner.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
+    standalone: false,
+    host: {
+      '[class.has-classification-banner]': '!!classificationBanner',
+    }
 })
 export class AppComponent implements OnInit {
   private auth = inject(AuthService);
   private config = inject(ConfigService);
   private document = inject(DOCUMENT);
   private theme = inject(ThemeService);
+  private windowService = inject(WindowService);
+
+  protected readonly classificationBanner = resolveClassificationBanner(
+    this.config.environment.settings.HeaderBarSettings,
+    this.windowService.isFramed()
+  );
 
   private autoLogin: {
     enabled: boolean;

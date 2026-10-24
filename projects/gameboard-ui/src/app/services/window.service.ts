@@ -27,6 +27,12 @@ export class WindowService implements OnDestroy {
     return this.document.defaultView!;
   }
 
+  // True when Gameboard is loaded inside an iframe (for example, a console in an observer view).
+  isFramed(): boolean {
+    const window = this.get();
+    return window.top !== window.self;
+  }
+
   open(url: string | UrlTree) {
     this.document.defaultView?.open(url.toString(), "_blank");
   }

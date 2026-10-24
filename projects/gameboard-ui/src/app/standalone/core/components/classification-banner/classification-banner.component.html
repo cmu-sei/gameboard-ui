@@ -1,0 +1,9 @@
+<!-- Copyright 2026 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
+<section class="classification-banner" aria-label="Classification" [style.background-color]="banner().backgroundColor">
+    <div class="classification-text" [style.color]="banner().classificationTextColor"
+        [style.font-size.px]="banner().classificationTextFontSize">{{ banner().classificationText }}</div>
+    <div class="message-text" [style.color]="banner().messageTextColor"
+        [style.font-size.px]="banner().messageTextFontSize">{{ banner().messageText }}</div>
+</section>
