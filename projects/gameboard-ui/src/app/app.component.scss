@@ -4,3 +4,31 @@
 .app-container {
   min-height: 100vh;
 }
+
+// With a classification banner, the app is a column exactly as tall as the viewport: the banner
+// takes its own space at the top and everything else scrolls in the container below it. That keeps
+// the banner on screen without covering anything, and sticky elements (the nav, notifications)
+// stick just below it instead of sliding underneath.
+:host.has-classification-banner {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  .app-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
+// Print the whole page rather than the part visible in the scroll container.
+@media print {
+  :host.has-classification-banner {
+    display: block;
+    height: auto;
+
+    .app-container {
+      overflow: visible;
+    }
+  }
+}

@@ -17,10 +17,24 @@ export interface EnvironmentSettings {
     consoleForgeConfig?: Partial<ConsoleForgeConfig>;
     countdownStartSecondsAtMinute: number;
     custom_background?: string;
+    HeaderBarSettings?: Partial<HeaderBarSettings> | null;
     imghost: string;
     isProduction: boolean;
     oidc: AppUserManagerSettings;
     supporthost: string;
     tochost: string;
     tocfile?: string;
+}
+
+// The same shape the other Crucible apps read for their classification banner
+// (HeaderBarSettings in the shared UI settings), so one block configures all of them.
+export interface HeaderBarSettings {
+    enabled: boolean;
+    banner_background_color: string;
+    classification_text: string;
+    classification_text_color: string;
+    classification_text_fontsize: string;
+    message_text: string;
+    message_text_color: string;
+    message_text_fontsize: string;
 }
