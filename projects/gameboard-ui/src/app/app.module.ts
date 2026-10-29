@@ -37,6 +37,7 @@ import { MarkdownModule, MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { ThemeBgDirective } from './core/directives/theme-bg.directive';
 import { environment } from '../environments/environment';
 import { MessageBoardComponent } from './utility/components/message-board/message-board.component';
+import { ClassificationBannerComponent } from './standalone/core/components/classification-banner/classification-banner.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { MessageBoardComponent } from './utility/components/message-board/messag
     ProgressbarModule.forRoot(),
 
     // standalones
+    ClassificationBannerComponent,
     MessageBoardComponent,
     ThemeBgDirective,
     UserNavItemComponent

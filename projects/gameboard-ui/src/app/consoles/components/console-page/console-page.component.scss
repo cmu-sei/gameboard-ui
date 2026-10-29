@@ -8,12 +8,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: var(--app-viewport-height);
 }
 
+// Fill the screen below the classification banner (if there is one) rather than the whole
+// viewport, so the console fits without scrolling.
 cf-console {
   display: block;
-  height: 100vh;
+  height: var(--app-viewport-height);
   width: 100vw;
 }
 

@@ -1,0 +1,19 @@
+// Copyright 2026 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
+// Matches the comn-header-bar banner in Crucible.Common.Ui. Those apps inherit Open Sans and a normal
+// line height from their own styles, so they're set here explicitly rather than taking Gameboard's
+// Lato and Bootstrap's 1.5 line height, which would make the banner taller than everywhere else.
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.classification-banner {
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 500;
+  line-height: normal;
+  padding: 4px;
+  text-align: center;
+}

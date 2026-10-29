@@ -1,6 +1,11 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+// Open Sans is the font of the classification banner (as in the other Crucible apps). Nothing else in
+// Gameboard provides it, and an undeclared family silently falls back to a system font. The banner's
+// weight 500 resolves to this regular face.
+@use "@fontsource/open-sans/400" as open-sans-regular;
+
 @import "./scss/vis-timeline";
 @import "./scss/variables";
 @import "./scss/toastify";
@@ -111,6 +116,12 @@ input:disabled {
 app-root {
   display: block;
   min-height: 100vh;
+}
+
+:root {
+  // The height of the screen left for the app below the classification banner, for views that size
+  // themselves to fit the screen (consoles, external games). The same as 100vh with no banner.
+  --app-viewport-height: calc(100vh - var(--classification-banner-height, 0px));
 }
 
 /* APP UTILITY CLASSES */
