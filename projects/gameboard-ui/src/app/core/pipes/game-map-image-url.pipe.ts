@@ -2,8 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { ConfigService } from '@/utility/config.service';
-import { DOCUMENT } from '@angular/common';
-import { inject, Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform, DOCUMENT } from '@angular/core';
 
 @Pipe({
     name: 'gameMapImageUrl',
