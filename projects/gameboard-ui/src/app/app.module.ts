@@ -53,12 +53,12 @@ import { MessageBoardComponent } from './utility/components/message-board/messag
     CoreModule,
     UtilityModule,
     MarkdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    TypeaheadModule.forRoot(),
-    ButtonsModule.forRoot(),
-    ModalModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    ProgressbarModule.forRoot(),
+    TooltipModule,
+    TypeaheadModule,
+    ButtonsModule,
+    ModalModule,
+    BsDropdownModule,
+    ProgressbarModule,
 
     // standalones
     MessageBoardComponent,
