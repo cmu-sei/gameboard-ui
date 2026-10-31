@@ -38,7 +38,7 @@ export class AdminEnrollTeamModalComponent implements OnInit {
   protected searchTerm = "";
   protected selectedUsers: ApiUser[] = [];
   protected typeaheadSearch$ = new Observable((observer: Observer<string | undefined>) => observer.next(this.searchTerm)).pipe(
-    filter(s => s?.length >= 2),
+    filter(s => (s?.length ?? 0) >= 2),
     switchMap(search => this.userService.list({
       eligibleForGameId: this.game!.id,
       excludeIds: [...this.selectedUsers.map(u => u.id)],

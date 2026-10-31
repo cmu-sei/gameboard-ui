@@ -31,7 +31,7 @@ export class UserPickerComponent {
   private userService = inject(UserService);
 
   protected typeaheadSearch$ = new Observable((observer: Observer<string | undefined>) => observer.next(this.searchTerm)).pipe(
-    filter(s => s?.length >= 2),
+    filter(s => (s?.length ?? 0) >= 2),
     debounceTime(300),
     switchMap(search => this.userService.list({
       eligibleForGameId: this.eligibleForGameId,
