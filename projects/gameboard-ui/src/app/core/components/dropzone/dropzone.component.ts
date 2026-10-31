@@ -37,7 +37,7 @@ export class DropzoneComponent {
 
   @HostListener('dragleave', ['$event'])
   @HostListener('dragexit', ['$event'])
-  onLeave(event: DragEvent): boolean {
+  onLeave(event: Event): boolean {
     this.isDropping = false;
     return false;
   }
