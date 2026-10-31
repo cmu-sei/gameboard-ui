@@ -45,13 +45,13 @@ export class PracticeSessionComponent implements OnInit {
 
   private readonly challengeSpec: Signal<PracticeChallengeView | undefined>;
   protected readonly challengeGroupsResource = resource({
-    request: () => ({ challengeSpecId: this.challengeSpec()?.id }),
+    params: () => ({ challengeSpecId: this.challengeSpec()?.id }),
     loader: async req => {
-      if (!req.request.challengeSpecId) {
+      if (!req.params.challengeSpecId) {
         return [];
       }
 
-      return await this.practiceService.challengeGroupList({ containChallengeSpecId: req.request.challengeSpecId });
+      return await this.practiceService.challengeGroupList({ containChallengeSpecId: req.params.challengeSpecId });
     }
   });
 

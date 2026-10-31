@@ -68,13 +68,13 @@ export class ChallengeGroupComponent {
   protected readonly challengesResource = resource({ loader: () => this.practiceService.challengesList() });
   protected readonly challengeTagsResource = resource({ loader: () => this.practiceService.challengeTagsList() });
   protected readonly childGroupsResource = resource({
-    request: () => ({ parentGroupId: this.groupId() }),
+    params: () => ({ parentGroupId: this.groupId() }),
     loader: async req => {
-      if (!req.request.parentGroupId) {
+      if (!req.params.parentGroupId) {
         return [];
       }
 
-      return await this.practiceService.challengeGroupList({ parentGroupId: req.request.parentGroupId });
+      return await this.practiceService.challengeGroupList({ parentGroupId: req.params.parentGroupId });
     }
   });
   protected readonly gamesResource = resource({
@@ -89,8 +89,8 @@ export class ChallengeGroupComponent {
     loader: () => firstValueFrom(this.gamesService.list({ filter: "practice", orderBy: "name" }))
   });
   protected readonly groupResource = resource({
-    request: () => ({ id: this.groupId() }),
-    loader: ({ request }) => this.practiceService.challengeGroupGet(request.id!)
+    params: () => ({ id: this.groupId() }),
+    loader: ({ params }) => this.practiceService.challengeGroupGet(params.id!)
   });
   protected readonly settingsResource = resource({ loader: () => firstValueFrom(this.practiceService.getSettings()) });
 
