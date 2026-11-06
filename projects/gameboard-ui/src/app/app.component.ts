@@ -8,7 +8,7 @@ import { ThemeService } from './core/services/theme.service';
 import { AuthService } from './utility/auth.service';
 import { ConfigService } from './utility/config.service';
 import { WindowService } from './services/window.service';
-import { resolveClassificationBanner } from './standalone/core/components/classification-banner/classification-banner.component';
+import { isClassificationBannerShown } from './standalone/core/components/classification-banner/classification-banner.component';
 
 @Component({
     selector: 'app-root',
@@ -16,7 +16,7 @@ import { resolveClassificationBanner } from './standalone/core/components/classi
     styleUrls: ['./app.component.scss'],
     standalone: false,
     host: {
-      '[class.has-classification-banner]': '!!classificationBanner',
+      '[class.has-classification-banner]': 'showClassificationBanner',
     }
 })
 export class AppComponent implements OnInit {
@@ -26,8 +26,9 @@ export class AppComponent implements OnInit {
   private theme = inject(ThemeService);
   private windowService = inject(WindowService);
 
-  protected readonly classificationBanner = resolveClassificationBanner(
-    this.config.environment.settings.HeaderBarSettings,
+  protected readonly headerBarSettings = this.config.environment.settings.HeaderBarSettings ?? {};
+  protected readonly showClassificationBanner = isClassificationBannerShown(
+    this.headerBarSettings,
     this.windowService.isFramed()
   );
 

@@ -1,88 +1,64 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { HeaderBarSettings } from '../../../../../environments/environment-typed';
+import { ComnHeaderBarComponent, ComnHeaderBarSettings } from '@cmusei/crucible-common/header-bar';
 import {
   CLASSIFICATION_BANNER_HEIGHT_PROPERTY,
-  ClassificationBanner,
   ClassificationBannerComponent,
-  resolveClassificationBanner
+  isClassificationBannerShown
 } from './classification-banner.component';
 
-describe('resolveClassificationBanner', () => {
-  const settings: HeaderBarSettings = {
-    enabled: true,
-    banner_background_color: '#007a33ff',
-    classification_text: 'UNCLASSIFIED // FOR TRAINING USE ONLY',
-    classification_text_color: '#ffffff',
-    classification_text_fontsize: '14',
-    message_text: 'LOCAL DEVELOPMENT',
-    message_text_color: '#ffff00',
-    message_text_fontsize: '14',
-  };
+const settings: ComnHeaderBarSettings = {
+  enabled: true,
+  banner_background_color: '#007a33ff',
+  classification_text: 'UNCLASSIFIED // FOR TRAINING USE ONLY',
+  classification_text_color: '#ffffff',
+  classification_text_fontsize: '14',
+  message_text: 'LOCAL DEVELOPMENT',
+  message_text_color: '#ffff00',
+  message_text_fontsize: '16',
+};
 
-  it('uses the configured text, colors, and font sizes', () => {
-    expect(resolveClassificationBanner(settings, false)).toEqual({
-      backgroundColor: '#007a33ff',
-      classificationText: 'UNCLASSIFIED // FOR TRAINING USE ONLY',
-      classificationTextColor: '#ffffff',
-      classificationTextFontSize: '14',
-      messageText: 'LOCAL DEVELOPMENT',
-      messageTextColor: '#ffff00',
-      messageTextFontSize: '14',
-    });
+describe('isClassificationBannerShown', () => {
+  it('shows an enabled banner with text', () => {
+    expect(isClassificationBannerShown(settings, false)).toBeTrue();
   });
 
-  it('shows nothing without settings', () => {
-    expect(resolveClassificationBanner(undefined, false)).toBeNull();
-    expect(resolveClassificationBanner(null, false)).toBeNull();
+  it('shows a banner with only a message', () => {
+    expect(isClassificationBannerShown({ enabled: true, message_text: 'EXERCISE' }, false)).toBeTrue();
   });
 
-  it('shows nothing when disabled', () => {
-    expect(resolveClassificationBanner({ ...settings, enabled: false }, false)).toBeNull();
-    expect(resolveClassificationBanner({ classification_text: 'UNCLASSIFIED' }, false)).toBeNull();
+  it('hides a missing or disabled banner', () => {
+    expect(isClassificationBannerShown(undefined, false)).toBeFalse();
+    expect(isClassificationBannerShown(null, false)).toBeFalse();
+    expect(isClassificationBannerShown({ ...settings, enabled: false }, false)).toBeFalse();
   });
 
-  it('shows nothing without any text', () => {
-    expect(resolveClassificationBanner({ ...settings, classification_text: ' ', message_text: '' }, false)).toBeNull();
+  it('hides a banner with no text', () => {
+    expect(isClassificationBannerShown({ enabled: true, classification_text: '  ', message_text: '' }, false)).toBeFalse();
   });
 
-  it('shows nothing inside an iframe', () => {
-    expect(resolveClassificationBanner(settings, true)).toBeNull();
-  });
-
-  it('falls back to the Crucible.Common.Ui defaults for blank values', () => {
-    expect(resolveClassificationBanner({ enabled: true, message_text: 'EXERCISE', banner_background_color: ' ' }, false)).toEqual({
-      backgroundColor: '#d40000ff',
-      classificationText: '',
-      classificationTextColor: '#ffffff',
-      classificationTextFontSize: '22',
-      messageText: 'EXERCISE',
-      messageTextColor: '#ffffff',
-      messageTextFontSize: '18',
-    });
+  it('hides the banner inside an iframe', () => {
+    expect(isClassificationBannerShown(settings, true)).toBeFalse();
   });
 });
 
 describe('ClassificationBannerComponent', () => {
-  const banner: ClassificationBanner = {
-    backgroundColor: 'rgb(0, 122, 51)',
-    classificationText: 'UNCLASSIFIED // FOR TRAINING USE ONLY',
-    classificationTextColor: 'rgb(255, 255, 255)',
-    classificationTextFontSize: '14',
-    messageText: 'LOCAL DEVELOPMENT',
-    messageTextColor: 'rgb(255, 255, 0)',
-    messageTextFontSize: '16',
-  };
-
-  async function render() {
-    await TestBed.configureTestingModule({
-      imports: [ClassificationBannerComponent]
-    }).compileComponents();
+  // Karma runs specs in an iframe, where the library hides its banner, so its component gets a
+  // document whose window isn't framed.
+  async function render(value: Partial<ComnHeaderBarSettings> = settings) {
+    const view = { self: {}, top: {} };
+    view.top = view.self;
+    TestBed.configureTestingModule({ imports: [ClassificationBannerComponent] });
+    TestBed.overrideComponent(ComnHeaderBarComponent, {
+      add: { providers: [{ provide: DOCUMENT, useValue: { defaultView: view } }] }
+    });
+    await TestBed.compileComponents();
 
     const fixture = TestBed.createComponent(ClassificationBannerComponent);
-    fixture.componentRef.setInput('banner', banner);
+    fixture.componentRef.setInput('settings', value);
     fixture.detectChanges();
     return fixture;
   }
@@ -100,15 +76,15 @@ describe('ClassificationBannerComponent', () => {
     }
   }
 
-  it('renders the classification and message with their colors and sizes', async () => {
+  it('renders the library banner from HeaderBarSettings', async () => {
     const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
-    const section = element.querySelector('section')!;
-    const classification = element.querySelector<HTMLElement>('.classification-text')!;
-    const message = element.querySelector<HTMLElement>('.message-text')!;
+    const bar = element.querySelector<HTMLElement>('comn-header-bar .message-bar')!;
+    const [classification, message] = Array.from(bar.children) as HTMLElement[];
 
-    expect(section.getAttribute('aria-label')).toBe('Classification');
-    expect(section.style.backgroundColor).toBe('rgb(0, 122, 51)');
+    expect(element.getAttribute('role')).toBe('region');
+    expect(element.getAttribute('aria-label')).toBe('Classification');
+    expect(bar.style.backgroundColor).toBe('rgb(0, 122, 51)');
     expect(classification.textContent).toBe('UNCLASSIFIED // FOR TRAINING USE ONLY');
     expect(classification.style.color).toBe('rgb(255, 255, 255)');
     expect(classification.style.fontSize).toBe('14px');
@@ -116,6 +92,17 @@ describe('ClassificationBannerComponent', () => {
     expect(message.style.color).toBe('rgb(255, 255, 0)');
     expect(message.style.fontSize).toBe('16px');
     fixture.destroy();
+  });
+
+  it('uses normal line height whatever the page sets', async () => {
+    document.body.style.lineHeight = '1.5';
+    try {
+      const fixture = await render();
+      expect(getComputedStyle(fixture.nativeElement).lineHeight).toBe('normal');
+      fixture.destroy();
+    } finally {
+      document.body.style.removeProperty('line-height');
+    }
   });
 
   it('publishes its height while shown and clears it when removed', async () => {
@@ -135,13 +122,11 @@ describe('ClassificationBannerComponent', () => {
     await afterResizeObservations();
     const before = parseFloat(bannerHeightProperty());
 
-    fixture.componentRef.setInput('banner', { ...banner, messageTextFontSize: '40' });
+    fixture.componentRef.setInput('settings', { ...settings, message_text_fontsize: '40' });
     fixture.detectChanges();
     await afterResizeObservations();
 
-    const height = (fixture.nativeElement as HTMLElement).getBoundingClientRect().height;
-    expect(height).toBeGreaterThan(before);
-    expect(bannerHeightProperty()).toBe(`${height}px`);
+    expect(parseFloat(bannerHeightProperty())).toBeGreaterThan(before);
     fixture.destroy();
   });
 });

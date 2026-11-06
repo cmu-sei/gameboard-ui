@@ -2,59 +2,50 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input } from '@angular/core';
-import { HeaderBarSettings } from '../../../../../environments/environment-typed';
-
-export interface ClassificationBanner {
-  backgroundColor: string;
-  classificationText: string;
-  classificationTextColor: string;
-  classificationTextFontSize: string;
-  messageText: string;
-  messageTextColor: string;
-  messageTextFontSize: string;
-}
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input } from '@angular/core';
+import { ComnHeaderBarComponent, ComnHeaderBarSettings } from '@cmusei/crucible-common/header-bar';
 
 // The CSS custom property the banner keeps set to its own height while it's shown, so views sized
 // to the screen (see --app-viewport-height in styles.scss) can leave room for it.
 export const CLASSIFICATION_BANNER_HEIGHT_PROPERTY = '--classification-banner-height';
 
 /**
- * Resolves HeaderBarSettings the same way the comn-header-bar component in Crucible.Common.Ui does,
- * so a site configured once shows the same banner in Gameboard as in the other Crucible apps:
- * nothing unless the banner is enabled and has text, nothing inside an iframe (the parent page
- * shows its own), and the library's colors and font sizes for any value left blank.
+ * Whether crucible-common's banner shows for these settings: enabled, with some text, and not inside
+ * an iframe (the parent page shows its own). The app uses it to lay the page out around the banner.
  */
-export function resolveClassificationBanner(settings: Partial<HeaderBarSettings> | null | undefined, isFramed: boolean): ClassificationBanner | null {
+export function isClassificationBannerShown(settings: Partial<ComnHeaderBarSettings> | null | undefined, isFramed: boolean): boolean {
   if (!settings?.enabled || isFramed) {
-    return null;
+    return false;
   }
 
-  const banner: ClassificationBanner = {
-    backgroundColor: valueOrDefault(settings.banner_background_color, '#d40000ff'),
-    classificationText: valueOrDefault(settings.classification_text, ''),
-    classificationTextColor: valueOrDefault(settings.classification_text_color, '#ffffff'),
-    classificationTextFontSize: valueOrDefault(settings.classification_text_fontsize, '22'),
-    messageText: valueOrDefault(settings.message_text, ''),
-    messageTextColor: valueOrDefault(settings.message_text_color, '#ffffff'),
-    messageTextFontSize: valueOrDefault(settings.message_text_fontsize, '18'),
-  };
-
-  return banner.classificationText || banner.messageText ? banner : null;
+  return hasText(settings.classification_text) || hasText(settings.message_text);
 }
 
-function valueOrDefault(value: unknown, defaultValue: string): string {
-  return typeof value === 'string' && value.trim() ? value : defaultValue;
+function hasText(value: unknown): boolean {
+  return typeof value === 'string' && !!value.trim();
 }
 
+/**
+ * crucible-common's classification banner (comn-header-bar), fed from Gameboard's settings. The library
+ * renders it, with the same defaults as the other Crucible apps; this publishes its height for the
+ * views that size themselves to the screen.
+ */
 @Component({
   selector: 'app-classification-banner',
-  templateUrl: './classification-banner.component.html',
+  template: '<comn-header-bar [settings]="headerBarSettings()"></comn-header-bar>',
   styleUrl: './classification-banner.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [ComnHeaderBarComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'role': 'region',
+    'aria-label': 'Classification',
+  }
 })
 export class ClassificationBannerComponent {
-  public banner = input.required<ClassificationBanner>();
+  public settings = input.required<Partial<ComnHeaderBarSettings>>();
+
+  // The library reads each key with a default, so a partial block is fine.
+  protected readonly headerBarSettings = computed(() => this.settings() as ComnHeaderBarSettings);
 
   constructor() {
     const document = inject(DOCUMENT);

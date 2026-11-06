@@ -1,10 +1,8 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-// Open Sans is the font of the classification banner (as in the other Crucible apps). Nothing else in
-// Gameboard provides it, and an undeclared family silently falls back to a system font. The banner's
-// weight 500 resolves to this regular face.
-@use "@fontsource/open-sans/400" as open-sans-regular;
+// Open Sans, the font of the classification banner, from crucible-common as in the other Crucible apps.
+@use '@cmusei/crucible-common/fonts';
 
 @import "./scss/vis-timeline";
 @import "./scss/variables";

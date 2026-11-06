@@ -1,9 +1,10 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { DOCUMENT } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HeaderBarSettings } from '../environments/environment-typed';
+import { ComnHeaderBarComponent, ComnHeaderBarSettings } from '@cmusei/crucible-common/header-bar';
 import { AppComponent } from './app.component';
 import { ThemeService } from './core/services/theme.service';
 import { WindowService } from './services/window.service';
@@ -12,8 +13,8 @@ import { AuthService } from './utility/auth.service';
 import { ConfigService } from './utility/config.service';
 
 describe('AppComponent', () => {
-  async function render(headerBarSettings?: Partial<HeaderBarSettings>, isFramed = false) {
-    await TestBed.configureTestingModule({
+  async function render(headerBarSettings?: Partial<ComnHeaderBarSettings>, isFramed = false) {
+    TestBed.configureTestingModule({
       declarations: [AppComponent],
       imports: [ClassificationBannerComponent],
       providers: [
@@ -23,7 +24,14 @@ describe('AppComponent', () => {
         { provide: WindowService, useValue: { isFramed: () => isFramed } },
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    });
+    // Karma runs specs in an iframe, where the library hides its banner; isFramed above is what's tested.
+    const view = { self: {}, top: {} };
+    view.top = view.self;
+    TestBed.overrideComponent(ComnHeaderBarComponent, {
+      add: { providers: [{ provide: DOCUMENT, useValue: { defaultView: view } }] }
+    });
+    await TestBed.compileComponents();
 
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
