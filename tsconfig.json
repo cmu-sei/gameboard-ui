@@ -9,14 +9,17 @@
     "importHelpers": true,
     "lib": ["ES2019", "dom", "DOM.Iterable"],
     "module": "es2020",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "outDir": "./dist/out-tsc",
     "paths": {
       "@/*": ["./projects/gameboard-ui/src/app/*"],
-      "gameboard-consoles": ["./dist/gameboard-consoles"]
+      "gameboard-consoles": ["./dist/gameboard-consoles"],
+      // ng2-charts' typings import this chart.js file, which chart.js doesn't export; bundler resolution
+      // (needed for crucible-common's subpath exports) honors package exports, so map it directly.
+      "chart.js/dist/types/utils": ["./node_modules/chart.js/dist/types/utils"]
     },
     "sourceMap": true,
     "strict": true,

@@ -3,6 +3,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { HoldConfirmButtonComponent } from './hold-confirm-button.component';
 
 describe('HoldConfirmButtonComponent', () => {
@@ -11,7 +12,8 @@ describe('HoldConfirmButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HoldConfirmButtonComponent ]
+      imports: [ HoldConfirmButtonComponent ],
+      providers: [ UnsubscriberService ]
     })
     .compileComponents();
 

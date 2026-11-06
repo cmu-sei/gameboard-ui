@@ -27,6 +27,12 @@ export class WindowService implements OnDestroy {
     return this.document.defaultView!;
   }
 
+  // True when Gameboard is loaded inside an iframe (for example, a console in an observer view).
+  isFramed(): boolean {
+    const window = this.get();
+    return window.top !== window.self;
+  }
+
   open(url: string | UrlTree) {
     this.document.defaultView?.open(url.toString(), "_blank");
   }
@@ -43,6 +49,11 @@ export class WindowService implements OnDestroy {
   scrollToBottom() {
     setTimeout(() => {
       this.document.defaultView?.scrollTo(0, this.document.body.scrollHeight);
+
+      // With a classification banner, the page scrolls inside the app container instead of the window
+      // (see app.component.scss). Without one, the container doesn't scroll and this does nothing.
+      const appContainer = this.document.querySelector(".app-container");
+      appContainer?.scrollTo(0, appContainer.scrollHeight);
     }, 500);
   }
 }
