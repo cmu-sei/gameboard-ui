@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { ThemeService } from './core/services/theme.service';
 import { WindowService } from './services/window.service';
 import { ClassificationBannerComponent } from './standalone/core/components/classification-banner/classification-banner.component';
+import { ClassificationBannerService } from './standalone/core/components/classification-banner/classification-banner.service';
 import { AuthService } from './utility/auth.service';
 import { ConfigService } from './utility/config.service';
 
@@ -45,6 +46,21 @@ describe('AppComponent', () => {
     expect(app.classList.contains('has-classification-banner')).toBeTrue();
     expect(app.firstElementChild?.tagName).toBe('APP-CLASSIFICATION-BANNER');
     expect(app.querySelector('app-classification-banner')?.textContent).toContain('UNCLASSIFIED');
+    fixture.destroy();
+  });
+
+  it('prints the classification banner unless a page turns it off', async () => {
+    const fixture = await render({ enabled: true, classification_text: 'UNCLASSIFIED' });
+    const banner = () => (fixture.nativeElement as HTMLElement).querySelector('app-classification-banner')!;
+    expect(banner().classList.contains('print-hide')).toBeFalse();
+
+    TestBed.inject(ClassificationBannerService).setHiddenInPrint(true);
+    fixture.detectChanges();
+    expect(banner().classList.contains('print-hide')).toBeTrue();
+
+    TestBed.inject(ClassificationBannerService).setHiddenInPrint(false);
+    fixture.detectChanges();
+    expect(banner().classList.contains('print-hide')).toBeFalse();
     fixture.destroy();
   });
 
