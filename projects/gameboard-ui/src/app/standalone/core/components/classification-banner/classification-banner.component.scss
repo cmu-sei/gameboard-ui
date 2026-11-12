@@ -1,0 +1,16 @@
+// Copyright 2026 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
+// The banner sticks to the top of the window, which stays the page's scroller (so the keyboard scrolls
+// it from the start). Sticky elements below it offset themselves by --classification-banner-height.
+// Its z-index is Bootstrap's fixed level: above the page and its sticky parts, below modals.
+//
+// The library banner inherits line height, and Bootstrap's 1.5 would make it taller than in the
+// other Crucible apps (46px at the usual 14px sizes).
+:host {
+  display: block;
+  line-height: normal;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}

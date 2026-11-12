@@ -26,6 +26,7 @@ interface FixedToastOptions {
   duration: number;
   escapeMarkup: boolean;
   gravity: "top" | "bottom";
+  offset: { x: number | string, y: number | string };
   position: "center" | "right" | "left";
   showCloseIcon: boolean;
   style?: { [rule: string]: string };
@@ -42,6 +43,8 @@ export class ToastService {
     duration: 5000,
     escapeMarkup: false,
     gravity: "top",
+    // below the classification banner, if there is one
+    offset: { x: 0, y: "var(--classification-banner-height, 0px)" },
     position: "center",
     showCloseIcon: true
   };

@@ -48,7 +48,7 @@ $subtleSize: 0.9rem;
       background-color: inherit;
       border-top: solid 1px #fff;
       position: sticky;
-      top: 48px;
+      top: calc(var(--classification-banner-height, 0px) + 48px);
       z-index: 5;
     }
 
