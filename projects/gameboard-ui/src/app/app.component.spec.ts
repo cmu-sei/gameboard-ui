@@ -43,9 +43,20 @@ describe('AppComponent', () => {
     const fixture = await render({ enabled: true, classification_text: 'UNCLASSIFIED' });
     const app = fixture.nativeElement as HTMLElement;
 
-    expect(app.classList.contains('has-classification-banner')).toBeTrue();
     expect(app.firstElementChild?.tagName).toBe('APP-CLASSIFICATION-BANNER');
     expect(app.querySelector('app-classification-banner')?.textContent).toContain('UNCLASSIFIED');
+    fixture.destroy();
+  });
+
+  it('keeps the window as the scroller, with the banner stuck to its top', async () => {
+    const fixture = await render({ enabled: true, classification_text: 'UNCLASSIFIED' });
+    const app = fixture.nativeElement as HTMLElement;
+    const banner = getComputedStyle(app.querySelector('app-classification-banner')!);
+    const container = getComputedStyle(app.querySelector('.app-container')!);
+
+    expect(banner.position).toBe('sticky');
+    expect(banner.top).toBe('0px');
+    expect(container.overflowY).toBe('visible');
     fixture.destroy();
   });
 
@@ -68,7 +79,6 @@ describe('AppComponent', () => {
     const fixture = await render();
     const app = fixture.nativeElement as HTMLElement;
 
-    expect(app.classList.contains('has-classification-banner')).toBeFalse();
     expect(app.querySelector('app-classification-banner')).toBeNull();
     fixture.destroy();
   });
@@ -77,7 +87,6 @@ describe('AppComponent', () => {
     const fixture = await render({ enabled: true, classification_text: 'UNCLASSIFIED' }, true);
     const app = fixture.nativeElement as HTMLElement;
 
-    expect(app.classList.contains('has-classification-banner')).toBeFalse();
     expect(app.querySelector('app-classification-banner')).toBeNull();
     fixture.destroy();
   });
@@ -86,7 +95,6 @@ describe('AppComponent', () => {
     const fixture = await render({ enabled: false, classification_text: 'UNCLASSIFIED' });
     const app = fixture.nativeElement as HTMLElement;
 
-    expect(app.classList.contains('has-classification-banner')).toBeFalse();
     expect(app.querySelector('app-classification-banner')).toBeNull();
     fixture.destroy();
   });

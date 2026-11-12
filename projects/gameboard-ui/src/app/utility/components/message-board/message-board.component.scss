@@ -3,7 +3,7 @@
 
 .message-div {
   position: sticky;
-  top: 0;
+  top: var(--classification-banner-height, 0px);
   right: 0;
   width: 50%;
   margin: 0 auto;

@@ -120,6 +120,9 @@ app-root {
   // The height of the screen left for the app below the classification banner, for views that size
   // themselves to fit the screen (consoles, external games). The same as 100vh with no banner.
   --app-viewport-height: calc(100vh - var(--classification-banner-height, 0px));
+
+  // Keep anchors and focused elements the browser scrolls to from landing under the banner.
+  scroll-padding-top: var(--classification-banner-height, 0px);
 }
 
 /* APP UTILITY CLASSES */
@@ -651,7 +654,7 @@ th[align="left"] {
 .sticky-under-menu {
   background-color: inherit;
   position: sticky;
-  top: 48px;
+  top: calc(var(--classification-banner-height, 0px) + 48px);
   z-index: 999;
 }
 

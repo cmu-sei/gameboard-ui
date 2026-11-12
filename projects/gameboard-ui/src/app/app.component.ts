@@ -15,10 +15,7 @@ import { ClassificationBannerService } from './standalone/core/components/classi
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false,
-    host: {
-      '[class.has-classification-banner]': 'showClassificationBanner',
-    }
+    standalone: false
 })
 export class AppComponent implements OnInit {
   private auth = inject(AuthService);
