@@ -15,7 +15,7 @@
     flex: 0 1 auto;
 
     .quasi-sidebar-content {
-      top: 14px;
+      top: calc(var(--classification-banner-height, 0px) + 14px);
       position: sticky;
     }
   }

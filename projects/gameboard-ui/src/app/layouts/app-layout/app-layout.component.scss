@@ -2,7 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 .sticky-content {
-  top: 0px;
+  // below the classification banner, if there is one
+  top: var(--classification-banner-height, 0px);
   left: 0px;
   position: sticky;
   z-index: 999;

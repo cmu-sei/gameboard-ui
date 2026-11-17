@@ -1,7 +1,7 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
@@ -15,6 +15,7 @@ import { UnsubscriberService } from '@/services/unsubscriber.service';
 import { RouterService } from '@/services/router.service';
 import { ConfigService } from '@/utility/config.service';
 import { AppTitleService } from '@/services/app-title.service';
+import { ClassificationBannerService } from '@/standalone/core/components/classification-banner/classification-banner.service';
 
 @Component({
   selector: 'app-certificate-printer',
@@ -54,6 +55,12 @@ export class CertificatePrinterComponent {
     private titleService: AppTitleService,
     private unsub: UnsubscriberService) {
     this.titleService.set("Certificate");
+
+    // the certificate fills one landscape page, so print it without the classification banner
+    const classificationBanner = inject(ClassificationBannerService);
+    classificationBanner.setHiddenInPrint(true);
+    inject(DestroyRef).onDestroy(() => classificationBanner.setHiddenInPrint(false));
+
     this.unsub.add(this.route.queryParams.subscribe(async params => {
       await this.downloadCertificate(params.requestedNameOverride);
     }));

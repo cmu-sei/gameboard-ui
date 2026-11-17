@@ -9,7 +9,7 @@
 
 :host {
     position: sticky;
-    top: 0;
+    top: var(--classification-banner-height, 0px);
 }
 
 a {

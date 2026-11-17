@@ -6,6 +6,9 @@ import { Component, inject, OnInit, DOCUMENT } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { AuthService } from './utility/auth.service';
 import { ConfigService } from './utility/config.service';
+import { WindowService } from './services/window.service';
+import { isClassificationBannerShown } from './standalone/core/components/classification-banner/classification-banner.component';
+import { ClassificationBannerService } from './standalone/core/components/classification-banner/classification-banner.service';
 
 @Component({
     selector: 'app-root',
@@ -18,6 +21,14 @@ export class AppComponent implements OnInit {
   private config = inject(ConfigService);
   private document = inject(DOCUMENT);
   private theme = inject(ThemeService);
+  private windowService = inject(WindowService);
+  protected classificationBanner = inject(ClassificationBannerService);
+
+  protected readonly headerBarSettings = this.config.environment.settings.HeaderBarSettings ?? {};
+  protected readonly showClassificationBanner = isClassificationBannerShown(
+    this.headerBarSettings,
+    this.windowService.isFramed()
+  );
 
   private autoLogin: {
     enabled: boolean;

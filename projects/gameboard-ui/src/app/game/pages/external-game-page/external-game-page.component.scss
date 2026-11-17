@@ -4,7 +4,7 @@
 .external-game-page-component {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 50px);
+    min-height: calc(var(--app-viewport-height) - 50px);
 }
 
 iframe {
@@ -16,7 +16,7 @@ iframe {
     aspect-ratio: 16 /10 !important;
     display: flex;
     flex-grow: 1;
-    max-height: 100vh;
+    max-height: var(--app-viewport-height);
     width: 100%;
 }
 

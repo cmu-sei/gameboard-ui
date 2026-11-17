@@ -9,7 +9,7 @@ RUN $(npm root)/.bin/ng build gameboard-ui -c production
 CMD ["npm", "start"]
 
 # multi-stage target: prod
-FROM nginx:1.27.4-alpine-slim@sha256:b05aceb5ec1844435cae920267ff9949887df5b88f70e11d8b2871651a596612
+FROM nginx:1.31.7-alpine-slim@sha256:ebd058041a732a2b2dc0b606e34572dd8e0034de6a4aa4d50d8c13a240ac6005
 WORKDIR /var/www
 COPY --from=dev /app/dist/gameboard-ui/browser .
 COPY --from=dev /app/dist/gameboard-ui/browser/assets/oidc-silent.html .

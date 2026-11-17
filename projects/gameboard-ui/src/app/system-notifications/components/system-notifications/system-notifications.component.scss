@@ -1,3 +1,8 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+
+// Stick below the classification banner, if there is one, rather than at the top of the window.
+.sticky-top {
+  top: var(--classification-banner-height, 0px);
+}

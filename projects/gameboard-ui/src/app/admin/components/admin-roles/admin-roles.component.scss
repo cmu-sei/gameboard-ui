@@ -40,7 +40,7 @@
 }
 
 .sticky-header {
-  top: 48px;
+  top: calc(var(--classification-banner-height, 0px) + 48px);
   left: 0px;
   position: sticky;
   z-index: 999;
