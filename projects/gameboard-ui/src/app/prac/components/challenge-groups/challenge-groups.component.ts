@@ -39,30 +39,30 @@ export class ChallengeGroupsComponent {
   // models
   protected readonly fa = fa;
   protected readonly groupsResource = resource({
-    request: () => ({
+    params: () => ({
       searchTerm: this.searchTerm(),
       userId: this.localUserId()
     }),
     loader: req => this.practiceService.challengeGroupList({
       getRootOnly: true,
-      searchTerm: req.request.searchTerm,
+      searchTerm: req.params.searchTerm,
     })
   });
   protected readonly localUserId = toSignal(inject(UserService).user$.pipe(map(u => u?.id)));
   protected readonly searchTerm = toSignal(this.route.queryParams.pipe(map(qp => qp.searchTerm || "")));
   protected readonly userDataResource = resource({
-    request: () => ({
+    params: () => ({
       groupIds: this.groupsResource.value()?.map(g => g.id),
       userId: this.localUserId()
     }),
     loader: async req => {
       const userData = new Map<string, GetPracticeChallengeGroupsUserDataResponseGroup>();
 
-      if (!req.request.userId || !req.request.groupIds?.length) {
+      if (!req.params.userId || !req.params.groupIds?.length) {
         return userData;
       }
 
-      const response = await this.practiceService.challengeGroupsGetUserData({ challengeGroupIds: req.request.groupIds, userId: req.request.userId });
+      const response = await this.practiceService.challengeGroupsGetUserData({ challengeGroupIds: req.params.groupIds, userId: req.params.userId });
       for (const group of response.groups) {
         userData.set(group.id, group);
       }

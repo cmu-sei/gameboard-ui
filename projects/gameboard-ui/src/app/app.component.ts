@@ -1,9 +1,8 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT } from '@angular/common';
 import { Title } from '@angular/platform-browser';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, DOCUMENT } from '@angular/core';
 import { ThemeService } from './core/services/theme.service';
 import { AuthService } from './utility/auth.service';
 import { ConfigService } from './utility/config.service';

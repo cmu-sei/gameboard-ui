@@ -1,8 +1,7 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable, OnDestroy, DOCUMENT } from '@angular/core';
 import { UrlTree } from '@angular/router';
 import { BehaviorSubject, fromEvent, Subscription } from 'rxjs';
 

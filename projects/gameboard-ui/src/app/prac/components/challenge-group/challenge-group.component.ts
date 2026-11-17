@@ -35,37 +35,37 @@ export class ChallengeGroupComponent {
   private readonly title = inject(AppTitleService);
 
   protected readonly childGroupsResource = resource({
-    request: () => ({ groupId: this.groupId() }),
+    params: () => ({ groupId: this.groupId() }),
     loader: async req => {
-      if (!req.request.groupId) {
+      if (!req.params.groupId) {
         return [];
       }
 
-      return await this.practiceService.challengeGroupList({ parentGroupId: req.request.groupId });
+      return await this.practiceService.challengeGroupList({ parentGroupId: req.params.groupId });
     }
   });
 
   protected readonly groupResource = resource({
-    request: () => ({ groupId: this.groupId() }),
+    params: () => ({ groupId: this.groupId() }),
     loader: async req => {
-      if (!req.request.groupId) {
+      if (!req.params.groupId) {
         return null;
       }
 
-      const response = await this.practiceService.challengeGroupGet(req.request.groupId);
+      const response = await this.practiceService.challengeGroupGet(req.params.groupId);
       return response.group;
     }
   });
 
   protected readonly userDataResource = resource({
-    request: () => ({ group: this.groupResource.value(), userId: this.localUser.user$.value?.id }),
+    params: () => ({ group: this.groupResource.value(), userId: this.localUser.user$.value?.id }),
     loader: async req => {
-      if (!req.request.group || !req.request.userId) {
+      if (!req.params.group || !req.params.userId) {
         return null;
       }
 
-      const groupIds = [req.request.group.id, ...req.request.group.childGroups.map(g => g.id)];
-      const response = await this.practiceService.challengeGroupsGetUserData({ userId: req.request.userId, challengeGroupIds: groupIds });
+      const groupIds = [req.params.group.id, ...req.params.group.childGroups.map(g => g.id)];
+      const response = await this.practiceService.challengeGroupsGetUserData({ userId: req.params.userId, challengeGroupIds: groupIds });
       return response.groups
     }
   });

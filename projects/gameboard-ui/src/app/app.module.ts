@@ -54,12 +54,12 @@ import { ClassificationBannerComponent } from './standalone/core/components/clas
     CoreModule,
     UtilityModule,
     MarkdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    TypeaheadModule.forRoot(),
-    ButtonsModule.forRoot(),
-    ModalModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    ProgressbarModule.forRoot(),
+    TooltipModule,
+    TypeaheadModule,
+    ButtonsModule,
+    ModalModule,
+    BsDropdownModule,
+    ProgressbarModule,
 
     // standalones
     ClassificationBannerComponent,

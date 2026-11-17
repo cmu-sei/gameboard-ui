@@ -1,8 +1,8 @@
 // Copyright 2025 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, Output, signal, SimpleChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, signal, SimpleChanges, DOCUMENT } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { fa } from "@/services/font-awesome.service";
 import { RouterService } from '@/services/router.service';

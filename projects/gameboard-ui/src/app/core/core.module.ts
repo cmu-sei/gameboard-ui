@@ -243,8 +243,8 @@ const RELAYED_MODULES = [
         CommonModule,
         ProgressbarModule,
         TooltipModule,
-        PopoverModule.forRoot(),
-        TypeaheadModule.forRoot(),
+        PopoverModule,
+        TypeaheadModule,
         ...RELAYED_MODULES,
         // standalones
         CountdownPipe,

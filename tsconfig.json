@@ -7,7 +7,6 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "lib": ["ES2019", "dom", "DOM.Iterable"],
     "module": "es2020",
     "moduleResolution": "bundler",
     "noFallthroughCasesInSwitch": true,
