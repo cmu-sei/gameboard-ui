@@ -54,6 +54,7 @@
               }
             },
             "scripts": [
+              "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery-ui-dist/jquery-ui.min.js",
               "projects/gameboard-ui/src/assets/vendor/vmware-wmks/wmks.min.js"
